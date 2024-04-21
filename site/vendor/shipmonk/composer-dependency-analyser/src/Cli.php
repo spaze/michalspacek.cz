@@ -20,10 +20,13 @@ class Cli
         'ignore-dev-in-prod-deps' => false,
         'ignore-prod-only-in-dev-deps' => false,
         'ignore-unknown-classes' => false,
+        'ignore-unknown-functions' => false,
+        'ignore-unknown-symbols' => false,
         'composer-json' => true,
         'config' => true,
         'dump-usages' => true,
         'show-all-usages' => false,
+        'format' => true,
     ];
 
     /**
@@ -151,6 +154,10 @@ class Cli
             $options->ignoreUnknownClasses = true;
         }
 
+        if (isset($this->providedOptions['ignore-unknown-functions'])) {
+            $options->ignoreUnknownFunctions = true;
+        }
+
         if (isset($this->providedOptions['composer-json'])) {
             $options->composerJson = $this->providedOptions['composer-json']; // @phpstan-ignore-line type is ensured
         }
@@ -165,6 +172,10 @@ class Cli
 
         if (isset($this->providedOptions['show-all-usages'])) {
             $options->showAllUsages = true;
+        }
+
+        if (isset($this->providedOptions['format'])) {
+            $options->format = $this->providedOptions['format']; // @phpstan-ignore-line type is ensured
         }
 
         return $options;

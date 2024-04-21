@@ -13,6 +13,7 @@ parameters:
 			- vendor/shipmonk/composer-dependency-analyser/src/Analyser.php  # throws No error to ignore is reported on line
 			- vendor/shipmonk/composer-dependency-analyser/src/Cli.php  # throws No error to ignore is reported on line
 			- vendor/shipmonk/composer-dependency-analyser/src/ComposerJson.php  # throws No error to ignore is reported on line
+			- vendor/shipmonk/composer-dependency-analyser/src/UsedSymbolExtractor.php  # throws No error to ignore is reported on line
 			- vendor/spaze/sri-macros/src/Bridges/Latte/Nodes/SriNode.php  # throws No error to ignore is reported on line
 			- vendor/spaze/svg-icons-latte/src/Nodes/IconNode.php  # throws No error to ignore is reported on line
 			- vendor/symfony/translation-contracts/Test/*  # Symfony packages not installed
@@ -82,6 +83,12 @@ parameters:
 			message: 'use some logger instead'
 			allowIn:
 				- vendor/efabrica/phpstan-latte/tests/*.php  # https://github.com/efabrica-team/phpstan-latte/pull/232
+		-
+			function: 'phpinfo()'
+			message: 'might reveal session id or other tokens in cookies'
+			allowIn:
+				- vendor/spaze/phpinfo/src/PhpInfo.php
+				- vendor/tracy/tracy/src/Tracy/BlueScreen/BlueScreen.php
 		# bundled disallowed-execution-calls.neon
 		-
 			function: 'exec()'

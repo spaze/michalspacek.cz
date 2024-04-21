@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Helpers;
 use Nette\Application\Request;
@@ -28,12 +27,6 @@ readonly class Error
 
 		if ($e instanceof BadRequestException) {
 			[$module, , $sep] = Helpers::splitName($request->getPresenterName());
-			if (!is_string($module)) {
-				throw new ShouldNotHappenException(sprintf('Module should be a string, %s provided', get_debug_type($module)));
-			}
-			if (!is_string($sep)) {
-				throw new ShouldNotHappenException(sprintf('Separator should be a string, %s provided', get_debug_type($sep)));
-			}
 			return new ForwardResponse($request->setPresenterName($module . $sep . 'Error'));
 		}
 

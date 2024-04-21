@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Locale;
 
+use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\Routing\RouterFactory;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
-use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IRequest;
 use Tester\Assert;

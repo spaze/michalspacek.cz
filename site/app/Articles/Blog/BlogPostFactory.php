@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
+use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -14,7 +15,6 @@ use MichalSpacekCz\Twitter\TwitterCards;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use MichalSpacekCz\Utils\JsonUtils;
-use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Row;
 use Nette\Utils\JsonException;

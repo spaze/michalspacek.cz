@@ -8,6 +8,9 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 use ShipMonk\ComposerDependencyAnalyser\Exception\InvalidCliException;
 use ShipMonk\ComposerDependencyAnalyser\Exception\InvalidConfigException;
 use ShipMonk\ComposerDependencyAnalyser\Exception\InvalidPathException;
+use ShipMonk\ComposerDependencyAnalyser\Result\ConsoleFormatter;
+use ShipMonk\ComposerDependencyAnalyser\Result\JunitFormatter;
+use ShipMonk\ComposerDependencyAnalyser\Result\ResultFormatter;
 use Throwable;
 use function count;
 use function get_class;
@@ -32,6 +35,7 @@ Options:
     --composer-json <path>      Provide custom path to composer.json
     --config <path>             Provide path to php configuration file
                                 (must return \ShipMonk\ComposerDependencyAnalyser\Config\Configuration instance)
+    --format <format>           Change output format. Available values: console (default), junit
 
 Ignore options:
     (or use --config for better granularity)
@@ -64,7 +68,6 @@ EOD;
 
     /**
      * @throws InvalidConfigException
-     * @throws InvalidPathException
      */
     public function initConfiguration(
         CliOptions $options,
@@ -89,7 +92,7 @@ EOD;
                     return require $configPath;
                 })();
             } catch (Throwable $e) {
-                throw new InvalidConfigException(get_class($e) . " in {$e->getFile()}:{$e->getLine()}\n > " . $e->getMessage(), 0, $e);
+                throw new InvalidConfigException("Error while loading configuration from '$configPath':\n\n" . get_class($e) . " in {$e->getFile()}:{$e->getLine()}\n > " . $e->getMessage(), $e);
             }
 
             if (!$config instanceof Configuration) {
@@ -99,14 +102,19 @@ EOD;
             $config = new Configuration();
         }
 
-        $ignoreUnknown = $options->ignoreUnknownClasses === true;
+        $ignoreUnknownClasses = $options->ignoreUnknownClasses === true;
+        $ignoreUnknownFunctions = $options->ignoreUnknownFunctions === true;
         $ignoreUnused = $options->ignoreUnusedDeps === true;
         $ignoreShadow = $options->ignoreShadowDeps === true;
         $ignoreDevInProd = $options->ignoreDevInProdDeps === true;
         $ignoreProdOnlyInDev = $options->ignoreProdOnlyInDevDeps === true;
 
-        if ($ignoreUnknown) {
+        if ($ignoreUnknownClasses) {
             $config->ignoreErrors([ErrorType::UNKNOWN_CLASS]);
+        }
+
+        if ($ignoreUnknownFunctions) {
+            $config->ignoreErrors([ErrorType::UNKNOWN_FUNCTION]);
         }
 
         if ($ignoreUnused) {
@@ -126,8 +134,12 @@ EOD;
         }
 
         if ($config->shouldScanComposerAutoloadPaths()) {
-            foreach ($composerJson->autoloadPaths as $absolutePath => $isDevPath) {
-                $config->addPathToScan($absolutePath, $isDevPath);
+            try {
+                foreach ($composerJson->autoloadPaths as $absolutePath => $isDevPath) {
+                    $config->addPathToScan($absolutePath, $isDevPath);
+                }
+            } catch (InvalidPathException $e) {
+                throw new InvalidConfigException('Error while processing composer.json autoload path: ' . $e->getMessage(), $e);
             }
 
             if ($config->getPathsToScan() === []) {
@@ -208,6 +220,24 @@ EOD;
         }
 
         return $cliOptions;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function initFormatter(CliOptions $options): ResultFormatter
+    {
+        switch ($options->format) {
+            case 'junit':
+                return new JunitFormatter($this->cwd, $this->printer);
+
+            case 'console':
+            case null:
+                return new ConsoleFormatter($this->cwd, $this->printer);
+
+            default:
+                throw new InvalidConfigException("Invalid format option provided, allowed are 'console' or 'junit'.");
+        }
     }
 
 }

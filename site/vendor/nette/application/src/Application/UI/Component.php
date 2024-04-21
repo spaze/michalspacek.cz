@@ -73,6 +73,9 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 
 	protected function createComponent(string $name): ?Nette\ComponentModel\IComponent
 	{
+		if (method_exists($this, $method = 'createComponent' . $name)) {
+			(new AccessPolicy($this, new \ReflectionMethod($this, $method)))->checkAccess();
+		}
 		$res = parent::createComponent($name);
 		if ($res && !$res instanceof SignalReceiver && !$res instanceof StatePersistent) {
 			$type = $res::class;
@@ -106,9 +109,10 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 		}
 
 		$rm = $rc->getMethod($method);
+		(new AccessPolicy($this, $rm))->checkAccess();
 		$this->checkRequirements($rm);
 		try {
-			$args = $rc->combineArgs($rm, $params);
+			$args = ParameterConverter::toArguments($rm, $params);
 		} catch (Nette\InvalidArgumentException $e) {
 			throw new Nette\Application\BadRequestException($e->getMessage());
 		}
@@ -119,19 +123,11 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 
 
 	/**
-	 * Checks for requirements such as authorization.
+	 * Descendant can override this method to check for permissions.
+	 * It is called with the presenter class and the render*(), action*(), and handle*() methods.
 	 */
-	public function checkRequirements($element): void
+	public function checkRequirements(\ReflectionClass|\ReflectionMethod $element): void
 	{
-		if (
-			$element instanceof \ReflectionMethod
-			&& str_starts_with($element->getName(), 'handle')
-			&& !ComponentReflection::parseAnnotation($element, 'crossOrigin')
-			&& !$element->getAttributes(Nette\Application\Attributes\CrossOrigin::class)
-			&& !$this->getPresenter()->getHttpRequest()->isSameSite()
-		) {
-			$this->getPresenter()->detectedCsrf();
-		}
 	}
 
 
@@ -155,7 +151,7 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 		$reflection = $this->getReflection();
 		foreach ($reflection->getParameters() as $name => $meta) {
 			if (isset($params[$name])) { // nulls are ignored
-				if (!$reflection->convertType($params[$name], $meta['type'])) {
+				if (!ParameterConverter::convertType($params[$name], $meta['type'])) {
 					throw new Nette\Application\BadRequestException(sprintf(
 						"Value passed to persistent parameter '%s' in %s must be %s, %s given.",
 						$name,
@@ -180,7 +176,46 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 	 */
 	public function saveState(array &$params): void
 	{
-		$this->getReflection()->saveState($this, $params);
+		$this->saveStatePartial($params, static::getReflection());
+	}
+
+
+	/**
+	 * @internal used by presenter
+	 */
+	public function saveStatePartial(array &$params, ComponentReflection $reflection): void
+	{
+		$tree = Nette\Application\Helpers::getClassesAndTraits(static::class);
+
+		foreach ($reflection->getPersistentParams() as $name => $meta) {
+			if (isset($params[$name])) {
+				// injected value
+
+			} elseif (
+				array_key_exists($name, $params) // nulls are skipped
+				|| (isset($meta['since']) && !isset($tree[$meta['since']])) // not related
+				|| !isset($this->$name)
+			) {
+				continue;
+
+			} else {
+				$params[$name] = $this->$name; // object property value
+			}
+
+			if (!ParameterConverter::convertType($params[$name], $meta['type'])) {
+				throw new InvalidLinkException(sprintf(
+					"Value passed to persistent parameter '%s' in %s must be %s, %s given.",
+					$name,
+					$this instanceof Presenter ? 'presenter ' . $this->getName() : "component '{$this->getUniqueId()}'",
+					$meta['type'],
+					get_debug_type($params[$name]),
+				));
+			}
+
+			if ($params[$name] === $meta['def'] || ($meta['def'] === null && $params[$name] === '')) {
+				$params[$name] = null; // value transmit is unnecessary
+			}
+		}
 	}
 
 
@@ -255,7 +290,7 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 			$args = func_num_args() < 3 && is_array($args)
 				? $args
 				: array_slice(func_get_args(), 1);
-			return $this->getPresenter()->createRequest($this, $destination, $args, 'link');
+			return $this->getPresenter()->getLinkGenerator()->link($destination, $args, $this, 'link');
 
 		} catch (InvalidLinkException $e) {
 			return $this->getPresenter()->handleInvalidLink($e);
@@ -279,7 +314,7 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 
 	/**
 	 * Determines whether it links to the current page.
-	 * @param  string   $destination in format "[//] [[[module:]presenter:]action | signal! | this] [#fragment]"
+	 * @param  string   $destination in format "[[[module:]presenter:]action | signal! | this]"
 	 * @param  array|mixed  $args
 	 * @throws InvalidLinkException
 	 */
@@ -289,7 +324,7 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 			$args = func_num_args() < 3 && is_array($args)
 				? $args
 				: array_slice(func_get_args(), 1);
-			$this->getPresenter()->createRequest($this, $destination, $args, 'test');
+			$this->getPresenter()->getLinkGenerator()->createRequest($this, $destination, $args, 'test');
 		}
 
 		return $this->getPresenter()->getLastCreatedRequestFlag('current');
@@ -309,7 +344,8 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 			? $args
 			: array_slice(func_get_args(), 1);
 		$presenter = $this->getPresenter();
-		$presenter->redirectUrl($presenter->createRequest($this, $destination, $args, 'redirect'));
+		$presenter->saveGlobalState();
+		$presenter->redirectUrl($presenter->getLinkGenerator()->link($destination, $args, $this, 'redirect'));
 	}
 
 
@@ -327,7 +363,7 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 			: array_slice(func_get_args(), 1);
 		$presenter = $this->getPresenter();
 		$presenter->redirectUrl(
-			$presenter->createRequest($this, $destination, $args, 'redirect'),
+			$presenter->getLinkGenerator()->link($destination, $args, $this, 'redirect'),
 			Nette\Http\IResponse::S301_MovedPermanently,
 		);
 	}

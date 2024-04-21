@@ -72,6 +72,8 @@ This tool reads your `composer.json` and scans all paths listed in `autoload` & 
 ### Unknown classes
   - Any class that cannot be autoloaded gets reported as we cannot say if that one is shadowed or not
 
+### Unknown functions
+  - Any function that is used, but not defined during runtime gets reported as we cannot say if that one is shadowed or not
 
 ## Cli options:
 - `--composer-json path/to/composer.json` for custom path to composer.json
@@ -80,7 +82,9 @@ This tool reads your `composer.json` and scans all paths listed in `autoload` & 
 - `--help` display usage & cli options
 - `--verbose` to see more example classes & usages
 - `--show-all-usages` to see all usages
+- `--format` to use different output format, available are: console (default), junit
 - `--ignore-unknown-classes` to globally ignore unknown classes
+- `--ignore-unknown-functions` to globally ignore unknown functions
 - `--ignore-shadow-deps` to globally ignore shadow dependencies
 - `--ignore-unused-deps` to globally ignore unused dependencies
 - `--ignore-dev-in-prod-deps` to globally ignore dev dependencies in prod code
@@ -102,68 +106,39 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 $config = new Configuration();
 
 return $config
-    // disable scanning autoload & autoload-dev paths from composer.json
-    // with such option, you should add custom paths by addPathToScan() or addPathsToScan()
-    ->disableComposerAutoloadPathScan()
-
-    // report unused dependencies even for dev packages
-    // dev packages are often used only in CI, so this is not enabled by default
-    // but you may want to ignore those packages manually to be sure
-    ->enableAnalysisOfUnusedDevDependencies()
-
-    // do not report ignores that never matched any error
-    ->disableReportingUnmatchedIgnores()
-
-    // globally disable specific error type
-    ->ignoreErrors([ErrorType::DEV_DEPENDENCY_IN_PROD])
-
-    // overwrite file extensions to scan, defaults to 'php'
-    // applies only to directory scanning, not directly listed files
-    ->setFileExtensions(['php'])
-
-    // add extra path to scan
-    // for multiple paths at once, use addPathsToScan()
+     //// Adjusting scanned paths
     ->addPathToScan(__DIR__ . '/build', isDev: false)
-
-    // exclude path from scanning
-    // for multiple paths at once, use addPathsToExclude()
     ->addPathToExclude(__DIR__ . '/samples')
+    ->disableComposerAutoloadPathScan() // disable automatic scan of autoload & autoload-dev paths from composer.json
+    ->setFileExtensions(['php']) // applies only to directory scanning, not directly listed files
 
-    // ignore errors on specific paths
-    // this can be handy when DIC container file was passed as extra path, but you want to ignore shadow dependencies there
-    // for multiple paths at once, use ignoreErrorsOnPaths()
+    //// Ignoring errors
+    ->ignoreErrors([ErrorType::DEV_DEPENDENCY_IN_PROD])
     ->ignoreErrorsOnPath(__DIR__ . '/cache/DIC.php', [ErrorType::SHADOW_DEPENDENCY])
-
-    // ignore errors on specific packages
-    // you might have various reasons to ignore certain errors
-    // e.g. polyfills are often used in libraries, but those are obviously unused when running with latest PHP
-    // for multiple packages at once, use ignoreErrorsOnPackages()
     ->ignoreErrorsOnPackage('symfony/polyfill-php73', [ErrorType::UNUSED_DEPENDENCY])
-
-    // ignore errors on specific packages and paths
-    // for multiple, use ignoreErrorsOnPackagesAndPaths() or ignoreErrorsOnPackageAndPaths()
     ->ignoreErrorsOnPackageAndPath('symfony/console', __DIR__ . '/src/OptionalCommand.php', [ErrorType::SHADOW_DEPENDENCY])
 
-    // allow using classes not present in composer's autoloader
-    // e.g. a library may conditionally support some feature only when Memcached is available
+    //// Ignoring unknown symbols
     ->ignoreUnknownClasses(['Memcached'])
+    ->ignoreUnknownClassesRegex('~^DDTrace~')
+    ->ignoreUnknownFunctions(['opcache_invalidate'])
+    ->ignoreUnknownFunctionsRegex('~^opcache_~')
 
-    // allow using classes not present in composer's autoloader by regex
-    // e.g. when you want to ignore whole namespace of classes
-    ->ignoreUnknownClassesRegex('~^PHPStan\\.*?~')
+    //// Adjust analysis
+    ->enableAnalysisOfUnusedDevDependencies() // dev packages are often used only in CI, so this is not enabled by default
+    ->disableReportingUnmatchedIgnores() // do not report ignores that never matched any error
 
-    // force certain classes to be treated as used
-    // handy when dealing with dependencies in non-php files (e.g. DIC config), see example below
-    // beware that those are not validated and do not even trigger unknown class error
+    //// Use symbols from yaml/xml/neon files
+    // - designed for DIC config files (see below)
+    // - beware that those are not validated and do not even trigger unknown class error
     ->addForceUsedSymbols($classesExtractedFromNeonJsonYamlXmlEtc)
-;
 ```
 
 All paths are expected to exist. If you need some glob functionality, you can do it in your config file and pass the expanded list to e.g. `ignoreErrorsOnPaths`.
 
 ### Detecting classes from non-php files:
 
-Simplest fuzzy search for classnames within your yaml/neon/xml/json files might look like this:
+Some classes might be used only in your DIC config files. Here is a simple way to extract those:
 
 ```php
 $classNameRegex = '[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*'; // https://www.php.net/manual/en/language.oop5.basic.php
@@ -178,19 +153,16 @@ preg_match_all(
 $config->addForceUsedSymbols($matches[1]); // possibly filter by class_exists || interface_exists
 ```
 
-Similar approach should help you to avoid false positives in unused dependencies due to the usages being present in e.g. DIC config files only.
+Similar approach should help you to avoid false positives in unused dependencies.
 Another approach for DIC-only usages is to scan the generated php file, but that gave us worse results.
+
+### Scanning codebase located elsewhere:
+- This can be done by pointing `--composer-json` to `composer.json` of the other codebase
 
 ## Limitations:
 - Extension dependencies are not analysed (e.g. `ext-json`)
 - Files without namespace has limited support
-  - Only classes with use statements and FQNs are detected
-- Function and constant usages are not analysed
-  - Therefore, if some package contains only functions, it will be reported as unused
-
------
-
-Despite those limitations, our experience is that this composer-dependency-analyser works much better than composer-unused and composer-require-checker.
+  - Only symbols with use statements and FQNs are detected
 
 ## Contributing:
 - Check your code by `composer check`
@@ -200,4 +172,3 @@ Despite those limitations, our experience is that this composer-dependency-analy
 ## Supported PHP versions
 - Runtime requires PHP 7.2 - 8.3
 - Scanned codebase should use PHP >= 5.3
-  - This can be done by pointing `--composer-json` to codebase located elsewhere

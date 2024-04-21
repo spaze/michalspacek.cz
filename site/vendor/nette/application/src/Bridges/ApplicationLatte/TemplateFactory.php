@@ -47,33 +47,14 @@ class TemplateFactory implements UI\TemplateFactory
 			throw new Nette\InvalidArgumentException("Class $class does not implement " . Template::class . ' or it does not exist.');
 		}
 
-		$latte = $this->latteFactory->create();
+		$latte = $this->latteFactory->create($control);
 		$template = new $class($latte);
 		$presenter = $control?->getPresenterIfExists();
 
 		if (version_compare(Latte\Engine::VERSION, '3', '<')) {
 			$this->setupLatte2($latte, $control, $presenter, $template);
-
-		} else {
+		} elseif (!Nette\Utils\Arrays::some($latte->getExtensions(), fn($e) => $e instanceof UIExtension)) {
 			$latte->addExtension(new UIExtension($control));
-
-			if ($this->cacheStorage && class_exists(Nette\Bridges\CacheLatte\CacheExtension::class)) {
-				$latte->addExtension(new Nette\Bridges\CacheLatte\CacheExtension($this->cacheStorage));
-			}
-
-			if (class_exists(Nette\Bridges\FormsLatte\FormsExtension::class)) {
-				$latte->addExtension(new Nette\Bridges\FormsLatte\FormsExtension);
-			}
-		}
-
-		$latte->addFilter('modifyDate', fn($time, $delta, $unit = null) => $time
-				? Nette\Utils\DateTime::from($time)->modify($delta . $unit)
-				: null);
-
-		if (!isset($latte->getFilters()['translate'])) {
-			$latte->addFilter('translate', function (Latte\Runtime\FilterInfo $fi): void {
-				throw new Nette\InvalidStateException('Translator has not been set. Set translator using $template->setTranslator().');
-			});
 		}
 
 		// default parameters
@@ -148,5 +129,10 @@ class TemplateFactory implements UI\TemplateFactory
 			$latte->addFunction('isLinkCurrent', [$presenter, 'isLinkCurrent']);
 			$latte->addFunction('isModuleCurrent', [$presenter, 'isModuleCurrent']);
 		}
+
+		$latte->addFilter('modifyDate', fn($time, $delta, $unit = null) => $time
+				? Nette\Utils\DateTime::from($time)->modify($delta . $unit)
+				: null);
+
 	}
 }
