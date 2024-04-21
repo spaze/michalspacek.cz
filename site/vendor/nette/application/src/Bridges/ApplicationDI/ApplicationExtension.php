@@ -47,11 +47,12 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 				])->castTo('array'),
 				Expect::string()->dynamic(),
 			)->firstIsDefault(),
-			'catchExceptions' => Expect::anyOf('4xx', true, false)->firstIsDefault()->dynamic(),
+			'catchExceptions' => Expect::bool(false)->dynamic(),
 			'mapping' => Expect::anyOf(
 				Expect::string(),
 				Expect::arrayOf('string|array'),
 			),
+			'aliases' => Expect::arrayOf('string'),
 			'scanDirs' => Expect::anyOf(
 				Expect::arrayOf('string')->default($this->scanDirs)->mergeDefaults(),
 				false,
@@ -77,8 +78,6 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 			->setFactory(Nette\Application\Application::class);
 		if ($config->catchExceptions || !$this->debugMode) {
 			$application->addSetup('$error4xxPresenter', [is_array($config->errorPresenter) ? $config->errorPresenter['4xx'] : $config->errorPresenter]);
-		}
-		if ($config->catchExceptions === true || !$this->debugMode) {
 			$application->addSetup('$errorPresenter', [is_array($config->errorPresenter) ? $config->errorPresenter['5xx'] : $config->errorPresenter]);
 		}
 
@@ -101,6 +100,10 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 			$presenterFactory->addSetup('setMapping', [
 				is_string($config->mapping) ? ['*' => $config->mapping] : $config->mapping,
 			]);
+		}
+
+		if ($config->aliases) {
+			$presenterFactory->addSetup('setAliases', [$config->aliases]);
 		}
 
 		$builder->addDefinition($this->prefix('linkGenerator'))
@@ -151,6 +154,7 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/** @return string[] */
 	private function findPresenters(): array
 	{
 		$config = $this->getConfig();
