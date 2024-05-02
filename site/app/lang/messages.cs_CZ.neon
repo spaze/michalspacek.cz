@@ -69,6 +69,7 @@ label:
 	upckeys: "UPC Wi-Fi hesla"
 	pulse:
 		passwordstorages: Jak ukládají hesla
+	reportingApiDemos: "Ukázky Reporting API"
 	mytrainings: Školím
 	myarticles: Píšu články
 	allarticles: Všechny články
@@ -362,6 +363,7 @@ projects:
 	pulse:
 		passwordstorages: "Seznam firem, které nějakým způsobem zveřejnily způsob ukládání uživatelských hesel. Projektem se snažím ostatní firmy inspirovat k bezpečnému ukládání hesel."
 	upckeys: "Generování výrobcem přednastavených hesel pro některé routery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
+	reportingApiDemos: "Demo, ve kterém si můžete vyzkoušet posílání reportů z prohlížeče pomocí Reporting API, dále také Content Security Policy, Permissions Policy, NEL((Network Error Logging)), Trusted Types a další reporty jako např. //crash//, //deprecation// & //intervention// reporty."
 certificates:
 	admin:
 		validdays: "%count% den|%count% dny|%count% dní"

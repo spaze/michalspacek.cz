@@ -92,9 +92,9 @@
 	<a n:href="brightFuture!" title="{_messages.label.mode.light}" id="theme-light" class="tools"><small>{icon sun}</small></a>
 	{if !isset($headerLinks) || $headerLinks !== false}
 		<a n:foreach="$localeLinks as $localeLink" href="{$localeLink->getUrl()}" lang="{$localeLink->getLanguageCode()}" class="tools"><small>{icon flag} {$localeLink->getLanguageName()}</small></a>
-		<a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}"><small>{icon wifi} {_messages.label.upckeys}</small></a>
-		<a n:href=":Pulse:PasswordsStorages:" title="{_messages.label.pulse.passwordstorages}"><small>{icon key} {_messages.label.pulse.passwordstorages}</small></a>
 		<a n:href=":Www:Projects:" title="{_messages.label.otherprojects}" id="other-projects"><small>{icon dots-horizontal} {_messages.label.otherprojects}</small></a>
+		<a href="https://canhas.report/" title="{_messages.label.reportingApiDemos}"><small>{icon bulb} {_messages.label.reportingApiDemos}</small></a>
+		<a n:href=":Pulse:PasswordsStorages:" title="{_messages.label.pulse.passwordstorages}"><small>{icon key} {_messages.label.pulse.passwordstorages}</small></a>
 	{/if}
 </div>
 {ifset #footerScripts}{include #footerScripts}{/ifset}
