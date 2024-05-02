@@ -364,6 +364,7 @@ projects:
 		passwordstorages: "List of companies who have disclosed how they store user passwords. I'm trying to make more companies store passwords securely."
 	upckeys: "Default password generator for some UPC routers. Check your Wi-Fi and change your password if needed."
 	reportingApiDemos: "A browser reporting demo tool to demonstrate Reporting API, Content Security Policy, Permissions Policy, NEL((Network Error Logging)), Trusted Types and some more browser reporting like the crash, deprecation & intervention reports."
+	phpstanDisallowedCalls: "\"PHPStan\":https://phpstan.org/ extension to detect disallowed methods & functions, constants, namespaces, attributes & superglobals. Contains predefined config files to forbid calling dangerous or even insecure functions, and you can also add your own custom rules. With 7 million installs now, it is used by e.g. PrestaShop and many others, including \"this very website\":https://github.com/spaze/michalspacek.cz/blob/a1a5cfb79ff2726bc6f3629173506ef2b1ed7823/site/disallowed-calls.neon."
 certificates:
 	admin:
 		validdays: "%count% day ago|%count% days ago"

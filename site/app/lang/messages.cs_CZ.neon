@@ -364,6 +364,7 @@ projects:
 		passwordstorages: "Seznam firem, které nějakým způsobem zveřejnily způsob ukládání uživatelských hesel. Projektem se snažím ostatní firmy inspirovat k bezpečnému ukládání hesel."
 	upckeys: "Generování výrobcem přednastavených hesel pro některé routery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
 	reportingApiDemos: "Demo, ve kterém si můžete vyzkoušet posílání reportů z prohlížeče pomocí Reporting API, dále také Content Security Policy, Permissions Policy, NEL((Network Error Logging)), Trusted Types a další reporty jako např. //crash//, //deprecation// & //intervention// reporty."
+	phpstanDisallowedCalls: "Rozšíření pro \"PHPStan\":https://phpstan.org/ pro detekci zakázaných metod a funkcí, konstant, jmenných prostorů, atributů & superglobálních proměnných. Můžete použít přibalené konfigurační soubory, které zakazují volání nebezpečných funkcí, nebo si přidat vlastní pravidla. Má to něco kolem 7 milionů stažení, používá to např. PrestaShop a další, a samozřejmě i \"právě tento web\":https://github.com/spaze/michalspacek.cz/blob/a1a5cfb79ff2726bc6f3629173506ef2b1ed7823/site/disallowed-calls.neon."
 certificates:
 	admin:
 		validdays: "%count% den|%count% dny|%count% dní"
