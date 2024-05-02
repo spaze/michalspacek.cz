@@ -69,6 +69,7 @@ label:
 	upckeys: "UPC Wi-Fi keys"
 	pulse:
 		passwordstorages: Password storages
+	reportingApiDemos: "Reporting API demos"
 	mytrainings: My trainings
 	myarticles: My articles
 	allarticles: All articles
@@ -362,6 +363,7 @@ projects:
 	pulse:
 		passwordstorages: "List of companies who have disclosed how they store user passwords. I'm trying to make more companies store passwords securely."
 	upckeys: "Default password generator for some UPC routers. Check your Wi-Fi and change your password if needed."
+	reportingApiDemos: "A browser reporting demo tool to demonstrate Reporting API, Content Security Policy, Permissions Policy, NEL((Network Error Logging)), Trusted Types and some more browser reporting like the crash, deprecation & intervention reports."
 certificates:
 	admin:
 		validdays: "%count% day ago|%count% days ago"
