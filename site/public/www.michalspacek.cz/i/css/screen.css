@@ -457,6 +457,7 @@ div.notice {
 }
 #theme-dark { display: initial !important; }
 #theme-light { display: none !important; }
+.humbleicons.space-after { margin-right: 0.25em; }
 #footer .humbleicons { opacity: inherit; }
 @media print {
 	img { max-width: 75%; }
