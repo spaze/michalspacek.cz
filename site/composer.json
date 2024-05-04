@@ -56,7 +56,8 @@
 		"symfony/polyfill-mbstring": "*",
 		"symfony/polyfill-php73": "*",
 		"symfony/polyfill-php80": "*",
-		"symfony/polyfill-php81": "*"
+		"symfony/polyfill-php81": "*",
+		"symfony/process": "*"
 	},
 	"require-dev": {
 		"efabrica/phpstan-latte": "^0",
