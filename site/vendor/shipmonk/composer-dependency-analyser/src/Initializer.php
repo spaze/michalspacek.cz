@@ -55,15 +55,22 @@ EOD;
     /**
      * @var Printer
      */
-    private $printer;
+    private $stdOutPrinter;
+
+    /**
+     * @var Printer
+     */
+    private $stdErrPrinter;
 
     public function __construct(
         string $cwd,
-        Printer $printer
+        Printer $stdOutPrinter,
+        Printer $stdErrPrinter
     )
     {
-        $this->printer = $printer;
         $this->cwd = $cwd;
+        $this->stdOutPrinter = $stdOutPrinter;
+        $this->stdErrPrinter = $stdErrPrinter;
     }
 
     /**
@@ -85,7 +92,7 @@ EOD;
         }
 
         if (is_file($configPath)) {
-            $this->printer->printLine('<gray>Using config</gray> ' . $configPath);
+            $this->stdErrPrinter->printLine('<gray>Using config</gray> ' . $configPath);
 
             try {
                 $config = (static function () use ($configPath) {
@@ -190,17 +197,17 @@ EOD;
         $loaders = ClassLoader::getRegisteredLoaders();
 
         if (count($loaders) > 1) {
-            $this->printer->printLine("\nDetected multiple class loaders:");
+            $this->stdErrPrinter->printLine("\nDetected multiple class loaders:");
 
             foreach ($loaders as $vendorDir => $_) {
-                $this->printer->printLine(" • <gray>$vendorDir</gray>");
+                $this->stdErrPrinter->printLine(" • <gray>$vendorDir</gray>");
             }
 
-            $this->printer->printLine('');
+            $this->stdErrPrinter->printLine('');
         }
 
         if (count($loaders) === 0) {
-            $this->printer->printLine("\nNo composer class loader detected!\n");
+            $this->stdErrPrinter->printLine("\nNo composer class loader detected!\n");
         }
 
         return $loaders;
@@ -215,7 +222,7 @@ EOD;
         $cliOptions = (new Cli($cwd, $argv))->getProvidedOptions();
 
         if ($cliOptions->help !== null) {
-            $this->printer->printLine(self::$help);
+            $this->stdOutPrinter->printLine(self::$help);
             throw new InvalidCliException(''); // just exit
         }
 
@@ -227,17 +234,21 @@ EOD;
      */
     public function initFormatter(CliOptions $options): ResultFormatter
     {
-        switch ($options->format) {
-            case 'junit':
-                return new JunitFormatter($this->cwd, $this->printer);
+        $format = $options->format ?? 'console';
 
-            case 'console':
-            case null:
-                return new ConsoleFormatter($this->cwd, $this->printer);
+        if ($format === 'junit') {
+            if ($options->dumpUsages !== null) {
+                throw new InvalidConfigException("Cannot use 'junit' format with '--dump-usages' option.");
+            }
 
-            default:
-                throw new InvalidConfigException("Invalid format option provided, allowed are 'console' or 'junit'.");
+            return new JunitFormatter($this->cwd, $this->stdOutPrinter);
         }
+
+        if ($format === 'console') {
+            return new ConsoleFormatter($this->cwd, $this->stdOutPrinter);
+        }
+
+        throw new InvalidConfigException("Invalid format option provided, allowed are 'console' or 'junit'.");
     }
 
 }

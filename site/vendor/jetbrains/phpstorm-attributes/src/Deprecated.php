@@ -4,10 +4,9 @@ namespace JetBrains\PhpStorm;
 
 use Attribute;
 
-
 #[Attribute(Attribute::TARGET_FUNCTION | Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT | Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Deprecated {
-    const PHP_VERSIONS = [
+    public const PHP_VERSIONS = [
         "5.3",
         "5.4",
         "5.5",
@@ -18,6 +17,8 @@ class Deprecated {
         "7.3",
         "7.4",
         "8.0",
+        "8.1",
+        "8.2",
     ];
 
     /**
