@@ -167,7 +167,7 @@ class TalkSlides
 		if ($contentType === null) {
 			throw new MissingContentTypeException();
 		}
-		if ($removeFile && $originalFile !== null && empty($this->otherSlides[$originalFile])) {
+		if ($removeFile && $originalFile !== null && $this->otherSlides[$originalFile] === 0) {
 			$imageFilename = $this->talkMediaResources->getImageFilename($talkId, $originalFile);
 			if (file_exists($imageFilename)) {
 				$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");

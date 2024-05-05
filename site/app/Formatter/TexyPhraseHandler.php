@@ -113,7 +113,7 @@ readonly class TexyPhraseHandler
 	private function getBlogLink(string $url, string $locale): string
 	{
 		$args = explode('#', $url);
-		$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
+		$fragment = !isset($args[1]) || trim($args[1]) === '' ? '' : "#{$args[1]}";
 
 		$params = [];
 		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
