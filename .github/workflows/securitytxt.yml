@@ -5,6 +5,9 @@ on:
     - cron: '37 13 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   securitytxt:
     runs-on: ubuntu-latest

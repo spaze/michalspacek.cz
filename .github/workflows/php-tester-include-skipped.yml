@@ -5,6 +5,9 @@ on:
     - cron: '45 23 * * 4'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   tester-include-skipped:
     runs-on: ubuntu-latest

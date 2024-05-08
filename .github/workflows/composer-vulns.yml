@@ -6,6 +6,9 @@ on:
     - cron: '25 */2 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   composer-vulnz:
     runs-on: ubuntu-latest

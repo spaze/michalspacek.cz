@@ -5,6 +5,9 @@ on:
     - cron: '34 2 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   tls:
     runs-on: ubuntu-latest
