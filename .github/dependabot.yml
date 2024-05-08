@@ -22,5 +22,6 @@ updates:
 
   - package-ecosystem: "composer"
     directory: "/site"
+    vendor: true
     schedule:
       interval: "daily"
