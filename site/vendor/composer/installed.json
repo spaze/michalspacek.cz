@@ -883,17 +883,17 @@
         },
         {
             "name": "nette/forms",
-            "version": "v3.2.2",
-            "version_normalized": "3.2.2.0",
+            "version": "v3.2.3",
+            "version_normalized": "3.2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "a20fdb1f81f5b406cdc99a450e0a327d5790f9b5"
+                "reference": "441926313d3f7ef78e9bc6996661310ae6f1c2f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/a20fdb1f81f5b406cdc99a450e0a327d5790f9b5",
-                "reference": "a20fdb1f81f5b406cdc99a450e0a327d5790f9b5",
+                "url": "https://api.github.com/repos/nette/forms/zipball/441926313d3f7ef78e9bc6996661310ae6f1c2f7",
+                "reference": "441926313d3f7ef78e9bc6996661310ae6f1c2f7",
                 "shasum": ""
             },
             "require": {
@@ -916,7 +916,7 @@
             "suggest": {
                 "ext-intl": "to use date/time controls"
             },
-            "time": "2024-04-01T01:05:00+00:00",
+            "time": "2024-05-05T15:02:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -957,7 +957,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/forms/issues",
-                "source": "https://github.com/nette/forms/tree/v3.2.2"
+                "source": "https://github.com/nette/forms/tree/v3.2.3"
             },
             "install-path": "../nette/forms"
         },
