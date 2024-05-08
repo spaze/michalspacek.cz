@@ -77,12 +77,11 @@ readonly class TrainingApplicationAdminFormFactory
 		$this->addDeletableFieldCheckbox($companyInputs->getCompanyTaxId(), $form->addCheckbox('companyTaxIdSet'), $application->getCompanyTaxId());
 		$this->addDeletableFieldCheckbox($noteInput, $form->addCheckbox('noteSet'), $application->getNote());
 
-		$containerName = 'statusHistoryDelete';
-		$historyContainer = $form->addContainer($containerName);
+		$historyContainer = $form->addContainer('statusHistoryDelete');
 		foreach ($this->trainingApplicationStatusHistory->getStatusHistory($application->getId()) as $history) {
 			$historyContainer
 				->addSubmit((string)$history->getId())
-				->setValidationScope([$form[$containerName]])
+				->setValidationScope([$historyContainer])
 				->onClick[] = function (SubmitButton $button) use ($application, $onStatusHistoryDeleteSuccess): void {
 					$this->trainingApplicationStatusHistory->deleteHistoryRecord($application->getId(), (int)$button->getName());
 					$onStatusHistoryDeleteSuccess();
