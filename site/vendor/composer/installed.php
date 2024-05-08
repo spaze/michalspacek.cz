@@ -137,9 +137,9 @@
             'dev_requirement' => false,
         ),
         'nette/database' => array(
-            'pretty_version' => 'v3.2.0',
-            'version' => '3.2.0.0',
-            'reference' => '39f98a8c5a0e67d30424ca199e0630b678bcecd5',
+            'pretty_version' => 'v3.2.1',
+            'version' => '3.2.1.0',
+            'reference' => '1d9e2866d711ce16a94bd9c98abaf8378269cef6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/database',
             'aliases' => array(),
