@@ -161,9 +161,9 @@
             ),
         ),
         'nette/forms' => array(
-            'pretty_version' => 'v3.2.2',
-            'version' => '3.2.2.0',
-            'reference' => 'a20fdb1f81f5b406cdc99a450e0a327d5790f9b5',
+            'pretty_version' => 'v3.2.3',
+            'version' => '3.2.3.0',
+            'reference' => '441926313d3f7ef78e9bc6996661310ae6f1c2f7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/forms',
             'aliases' => array(),
