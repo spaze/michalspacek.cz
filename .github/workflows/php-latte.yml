@@ -13,15 +13,15 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@v4
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-latte-templates-cache-php${{ matrix.php-version }}
-    - uses: shivammathur/setup-php@v2
+    - uses: shivammathur/setup-php@c665c7a15b5295c2488ac8a87af9cb806cd72198 # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
