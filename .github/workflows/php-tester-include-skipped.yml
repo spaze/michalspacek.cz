@@ -5,6 +5,9 @@ on:
     - cron: '45 23 * * 4'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   tester-include-skipped:
     runs-on: ubuntu-latest
@@ -13,8 +16,8 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@v4
-    - uses: shivammathur/setup-php@v2
+    - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+    - uses: shivammathur/setup-php@c665c7a15b5295c2488ac8a87af9cb806cd72198 # v2
       with:
         coverage: pcov
         php-version: ${{ matrix.php-version }}
@@ -27,7 +30,7 @@ jobs:
       if: failure()
       run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
     - name: Upload test code coverage
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
       if: success()
       with:
         name: Test code coverage (PHP ${{ matrix.php-version }})
