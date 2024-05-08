@@ -550,16 +550,16 @@
         },
         {
             "name": "nette/database",
-            "version": "v3.2.0",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/database.git",
-                "reference": "39f98a8c5a0e67d30424ca199e0630b678bcecd5"
+                "reference": "1d9e2866d711ce16a94bd9c98abaf8378269cef6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/database/zipball/39f98a8c5a0e67d30424ca199e0630b678bcecd5",
-                "reference": "39f98a8c5a0e67d30424ca199e0630b678bcecd5",
+                "url": "https://api.github.com/repos/nette/database/zipball/1d9e2866d711ce16a94bd9c98abaf8378269cef6",
+                "reference": "1d9e2866d711ce16a94bd9c98abaf8378269cef6",
                 "shasum": ""
             },
             "require": {
@@ -619,9 +619,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/database/issues",
-                "source": "https://github.com/nette/database/tree/v3.2.0"
+                "source": "https://github.com/nette/database/tree/v3.2.1"
             },
-            "time": "2023-12-14T20:00:58+00:00"
+            "time": "2024-05-07T19:28:51+00:00"
         },
         {
             "name": "nette/di",
