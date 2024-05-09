@@ -8,23 +8,22 @@ updates:
   - package-ecosystem: "npm"
     directory: "/site"
     schedule:
-      interval: "daily"
+      interval: "monthly"
 
   - package-ecosystem: "npm"
     directory: "/site/vendor/nette/forms"
     schedule:
-      interval: "daily"
+      interval: "monthly"
 
   - package-ecosystem: "npm"
     directory: "/site/vendor/tracy/tracy"
     schedule:
-      interval: "daily"
+      interval: "monthly"
 
   - package-ecosystem: "composer"
     directory: "/site"
-    vendor: true
     schedule:
-      interval: "daily"
+      interval: "monthly"
     allow:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "all"
