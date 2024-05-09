@@ -286,12 +286,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'paragonie/random_compat' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '9.99.99',
-            ),
-        ),
         'paragonie/sodium_compat' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -625,24 +619,6 @@
             ),
         ),
         'symfony/polyfill-mbstring' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
-        'symfony/polyfill-php73' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
-        'symfony/polyfill-php80' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
-        'symfony/polyfill-php81' => array(
             'dev_requirement' => false,
             'replaced' => array(
                 0 => '*',

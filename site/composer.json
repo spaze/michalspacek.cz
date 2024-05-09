@@ -50,13 +50,9 @@
 	},
 	"replace": {
 		"nette/finder": "3.0",
-		"paragonie/random_compat": "9.99.99",
 		"paragonie/sodium_compat": "*",
 		"symfony/polyfill-ctype": "*",
 		"symfony/polyfill-mbstring": "*",
-		"symfony/polyfill-php73": "*",
-		"symfony/polyfill-php80": "*",
-		"symfony/polyfill-php81": "*",
 		"symfony/process": "*"
 	},
 	"require-dev": {
