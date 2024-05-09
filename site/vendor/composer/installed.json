@@ -1704,27 +1704,27 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.6.3",
-            "version_normalized": "2.6.3.0",
+            "version": "v3.0.0",
+            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938"
+                "reference": "df1e7fde177501eee2037dd159cf04f5f301a512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/58c3f47f650c94ec05a151692652a868995d2938",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/df1e7fde177501eee2037dd159cf04f5f301a512",
+                "reference": "df1e7fde177501eee2037dd159cf04f5f301a512",
                 "shasum": ""
             },
             "require": {
-                "php": "^7|^8"
+                "php": "^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6|^7|^8|^9",
-                "vimeo/psalm": "^1|^2|^3|^4"
+                "phpunit/phpunit": "^9",
+                "vimeo/psalm": "^4|^5"
             },
-            "time": "2022-06-14T06:56:20+00:00",
+            "time": "2024-05-08T12:36:18+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1774,22 +1774,22 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v5.1.1",
-            "version_normalized": "5.1.1.0",
+            "version": "v5.1.2",
+            "version_normalized": "5.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "a8f6c884db11fc6e4d3a533aa3ed596361a16221"
+                "reference": "aee234711b29cccb4a17aaaf6104fc542862fc1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/a8f6c884db11fc6e4d3a533aa3ed596361a16221",
-                "reference": "a8f6c884db11fc6e4d3a533aa3ed596361a16221",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/aee234711b29cccb4a17aaaf6104fc542862fc1e",
+                "reference": "aee234711b29cccb4a17aaaf6104fc542862fc1e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "paragonie/constant_time_encoding": "^2",
+                "paragonie/constant_time_encoding": "^2|^3",
                 "paragonie/hidden-string": "^1|^2",
                 "paragonie/sodium_compat": "^1|^2",
                 "php": "^8.1"
@@ -1798,7 +1798,7 @@
                 "phpunit/phpunit": "^9",
                 "vimeo/psalm": "^4"
             },
-            "time": "2024-04-19T23:29:37+00:00",
+            "time": "2024-05-08T12:59:43+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1842,35 +1842,34 @@
             "support": {
                 "docs": "https://github.com/paragonie/halite/tree/master/doc",
                 "issues": "https://github.com/paragonie/halite/issues",
-                "source": "https://github.com/paragonie/halite/tree/v5.1.1"
+                "source": "https://github.com/paragonie/halite/tree/v5.1.2"
             },
             "install-path": "../paragonie/halite"
         },
         {
             "name": "paragonie/hidden-string",
-            "version": "v2.0.0",
-            "version_normalized": "2.0.0.0",
+            "version": "v2.2.0",
+            "version_normalized": "2.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/hidden-string.git",
-                "reference": "151e53d55bfc67dd58087cdf8762dd8177ea7575"
+                "reference": "87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/hidden-string/zipball/151e53d55bfc67dd58087cdf8762dd8177ea7575",
-                "reference": "151e53d55bfc67dd58087cdf8762dd8177ea7575",
+                "url": "https://api.github.com/repos/paragonie/hidden-string/zipball/87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7",
+                "reference": "87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7",
                 "shasum": ""
             },
             "require": {
-                "paragonie/constant_time_encoding": "^2",
-                "paragonie/sodium_compat": "^1.6",
+                "paragonie/constant_time_encoding": "^2|^3",
                 "php": "^7.4|^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6|^7|^8|^9",
-                "vimeo/psalm": "^3|^4"
+                "phpunit/phpunit": "^9.5",
+                "vimeo/psalm": "^4"
             },
-            "time": "2020-12-06T15:07:44+00:00",
+            "time": "2024-05-08T12:45:06+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1896,6 +1895,10 @@
                 "stack trace",
                 "string"
             ],
+            "support": {
+                "issues": "https://github.com/paragonie/hidden-string/issues",
+                "source": "https://github.com/paragonie/hidden-string/tree/v2.2.0"
+            },
             "install-path": "../paragonie/hidden-string"
         },
         {
@@ -2071,17 +2074,17 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.28.0",
-            "version_normalized": "1.28.0.0",
+            "version": "1.29.0",
+            "version_normalized": "1.29.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "cd06d6b1a1b3c75b0b83f97577869fd85a3cd4fb"
+                "reference": "536889f2b340489d328f5ffb7b02bb6b183ddedc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/cd06d6b1a1b3c75b0b83f97577869fd85a3cd4fb",
-                "reference": "cd06d6b1a1b3c75b0b83f97577869fd85a3cd4fb",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/536889f2b340489d328f5ffb7b02bb6b183ddedc",
+                "reference": "536889f2b340489d328f5ffb7b02bb6b183ddedc",
                 "shasum": ""
             },
             "require": {
@@ -2098,7 +2101,7 @@
                 "phpunit/phpunit": "^9.5",
                 "symfony/process": "^5.2"
             },
-            "time": "2024-04-03T18:51:33+00:00",
+            "time": "2024-05-06T12:04:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2115,7 +2118,7 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.28.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.29.0"
             },
             "install-path": "../phpstan/phpdoc-parser"
         },
@@ -2502,12 +2505,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "ddcd0a72eec2dd32a4a4bb719a95201f753f12e8"
+                "reference": "99ba3993d1441627081b78b6a844776fc9ef264f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ddcd0a72eec2dd32a4a4bb719a95201f753f12e8",
-                "reference": "ddcd0a72eec2dd32a4a4bb719a95201f753f12e8",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/99ba3993d1441627081b78b6a844776fc9ef264f",
+                "reference": "99ba3993d1441627081b78b6a844776fc9ef264f",
                 "shasum": ""
             },
             "conflict": {
@@ -2721,7 +2724,7 @@
                 "getkirby/panel": "<2.5.14",
                 "getkirby/starterkit": "<=3.7.0.2",
                 "gilacms/gila": "<=1.15.4",
-                "gleez/cms": "<=1.2|==2",
+                "gleez/cms": "<=1.3|==2",
                 "globalpayments/php-sdk": "<2",
                 "gogentooss/samlbase": "<1.2.7",
                 "google/protobuf": "<3.15",
@@ -2789,7 +2792,7 @@
                 "kelvinmo/simplexrd": "<3.1.1",
                 "kevinpapst/kimai2": "<1.16.7",
                 "khodakhah/nodcms": "<=3",
-                "kimai/kimai": "<2.13",
+                "kimai/kimai": "<2.16",
                 "kitodo/presentation": "<3.2.3|>=3.3,<3.3.4",
                 "klaviyo/magento2-extension": ">=1,<3",
                 "knplabs/knp-snappy": "<=1.4.2",
@@ -2954,7 +2957,7 @@
                 "pimcore/demo": "<10.3",
                 "pimcore/ecommerce-framework-bundle": "<1.0.10",
                 "pimcore/perspective-editor": "<1.5.1",
-                "pimcore/pimcore": "<11.2.3",
+                "pimcore/pimcore": "<11.1.6.5-dev|>=11.2,<11.2.3",
                 "pixelfed/pixelfed": "<0.11.11",
                 "plotly/plotly.js": "<2.25.2",
                 "pocketmine/bedrock-protocol": "<8.0.2",
@@ -3132,7 +3135,7 @@
                 "topthink/thinkphp": "<=3.2.3",
                 "torrentpier/torrentpier": "<=2.4.1",
                 "tpwd/ke_search": "<4.0.3|>=4.1,<4.6.6|>=5,<5.0.2",
-                "tribalsystems/zenario": "<=9.4.59197",
+                "tribalsystems/zenario": "<9.5.60602",
                 "truckersmp/phpwhois": "<=4.3.1",
                 "ttskch/pagination-service-provider": "<1",
                 "twig/twig": "<1.44.7|>=2,<2.15.3|>=3,<3.4.3",
@@ -3250,7 +3253,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2024-05-03T21:04:13+00:00",
+            "time": "2024-05-08T14:04:15+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",

@@ -260,37 +260,31 @@
             'dev_requirement' => false,
         ),
         'paragonie/constant_time_encoding' => array(
-            'pretty_version' => 'v2.6.3',
-            'version' => '2.6.3.0',
-            'reference' => '58c3f47f650c94ec05a151692652a868995d2938',
+            'pretty_version' => 'v3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'df1e7fde177501eee2037dd159cf04f5f301a512',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/constant_time_encoding',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'paragonie/halite' => array(
-            'pretty_version' => 'v5.1.1',
-            'version' => '5.1.1.0',
-            'reference' => 'a8f6c884db11fc6e4d3a533aa3ed596361a16221',
+            'pretty_version' => 'v5.1.2',
+            'version' => '5.1.2.0',
+            'reference' => 'aee234711b29cccb4a17aaaf6104fc542862fc1e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/halite',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'paragonie/hidden-string' => array(
-            'pretty_version' => 'v2.0.0',
-            'version' => '2.0.0.0',
-            'reference' => '151e53d55bfc67dd58087cdf8762dd8177ea7575',
+            'pretty_version' => 'v2.2.0',
+            'version' => '2.2.0.0',
+            'reference' => '87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/hidden-string',
             'aliases' => array(),
             'dev_requirement' => false,
-        ),
-        'paragonie/random_compat' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '9.99.99',
-            ),
         ),
         'paragonie/sodium_compat' => array(
             'dev_requirement' => false,
@@ -332,9 +326,9 @@
             ),
         ),
         'phpstan/phpdoc-parser' => array(
-            'pretty_version' => '1.28.0',
-            'version' => '1.28.0.0',
-            'reference' => 'cd06d6b1a1b3c75b0b83f97577869fd85a3cd4fb',
+            'pretty_version' => '1.29.0',
+            'version' => '1.29.0.0',
+            'reference' => '536889f2b340489d328f5ffb7b02bb6b183ddedc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
@@ -418,7 +412,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'ddcd0a72eec2dd32a4a4bb719a95201f753f12e8',
+            'reference' => '99ba3993d1441627081b78b6a844776fc9ef264f',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -625,24 +619,6 @@
             ),
         ),
         'symfony/polyfill-mbstring' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
-        'symfony/polyfill-php73' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
-        'symfony/polyfill-php80' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
-        'symfony/polyfill-php81' => array(
             'dev_requirement' => false,
             'replaced' => array(
                 0 => '*',

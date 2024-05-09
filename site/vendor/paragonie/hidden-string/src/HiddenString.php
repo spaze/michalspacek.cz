@@ -3,6 +3,12 @@ declare(strict_types=1);
 namespace ParagonIE\HiddenString;
 
 use ParagonIE\ConstantTime\Binary;
+use Throwable;
+use TypeError;
+use function
+    hash_equals,
+    sodium_memzero,
+    str_repeat;
 
 /**
  * Class HiddenString
@@ -21,34 +27,30 @@ use ParagonIE\ConstantTime\Binary;
  */
 final class HiddenString
 {
-    /**
-     * @var string
-     */
     protected string $internalStringValue = '';
 
     /**
      * Disallow the contents from being accessed via __toString()?
-     *
-     * @var bool
      */
     protected bool $disallowInline = true;
 
     /**
      * Disallow the contents from being accessed via __sleep()?
-     *
-     * @var bool
      */
     protected bool $disallowSerialization = true;
 
     /**
      * HiddenString constructor.
+     *
      * @param string $value
+     *
      * @param bool $disallowInline
      * @param bool $disallowSerialization
      *
-     * @throws \TypeError
+     * @throws TypeError
      */
     public function __construct(
+        #[\SensitiveParameter]
         string $value,
         bool $disallowInline = true,
         bool $disallowSerialization = true
@@ -60,12 +62,14 @@ final class HiddenString
 
     /**
      * @param HiddenString $other
+     *
      * @return bool
-     * @throws \TypeError
+     *
+     * @throws TypeError
      */
     public function equals(HiddenString $other)
     {
-        return \hash_equals(
+        return hash_equals(
             $this->getString(),
             $other->getString()
         );
@@ -92,15 +96,16 @@ final class HiddenString
 
     /**
      * Wipe it from memory after it's been used.
+     *
      * @return void
      */
     public function __destruct()
     {
-        if (\is_callable('sodium_memzero')) {
+        if (is_callable('sodium_memzero')) {
             try {
-                \sodium_memzero($this->internalStringValue);
+                sodium_memzero($this->internalStringValue);
                 return;
-            } catch (\Throwable $ex) {
+            } catch (Throwable $ex) {
             }
         }
         if (is_null($this->internalStringValue)) {
@@ -109,7 +114,7 @@ final class HiddenString
 
         // Last-ditch attempt to wipe existing values if libsodium is not
         // available. Don't rely on this.
-        $zero = \str_repeat("\0", Binary::safeStrlen($this->internalStringValue));
+        $zero = str_repeat("\0", Binary::safeStrlen($this->internalStringValue));
         $this->internalStringValue = $this->internalStringValue ^ (
             $zero ^ $this->internalStringValue
         );
@@ -121,7 +126,8 @@ final class HiddenString
      * Explicit invocation -- get the raw string value
      *
      * @return string
-     * @throws \TypeError
+     *
+     * @throws TypeError
      */
     public function getString(): string
     {
@@ -133,8 +139,9 @@ final class HiddenString
      * Optionally, it can return an empty string.
      *
      * @return string
+     *
      * @throws MisuseException
-     * @throws \TypeError
+     * @throws TypeError
      */
     public function __toString(): string
     {
@@ -148,6 +155,7 @@ final class HiddenString
 
     /**
      * @return array
+     *
      * @throws MisuseException
      */
     public function __sleep(): array
@@ -169,14 +177,17 @@ final class HiddenString
      * the original string.
      *
      * @param string $string
+     *
      * @return string
-     * @throws \TypeError
+     *
+     * @throws TypeError
      */
-    public static function safeStrcpy(string $string): string
-    {
+    public static function safeStrcpy(
+        #[\SensitiveParameter]
+        string $string
+    ): string {
         $length = Binary::safeStrlen($string);
         $return = '';
-        /** @var int $chunk */
         $chunk = $length >> 1;
         if ($chunk < 1) {
             $chunk = 1;
