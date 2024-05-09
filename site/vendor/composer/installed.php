@@ -332,9 +332,9 @@
             ),
         ),
         'phpstan/phpdoc-parser' => array(
-            'pretty_version' => '1.28.0',
-            'version' => '1.28.0.0',
-            'reference' => 'cd06d6b1a1b3c75b0b83f97577869fd85a3cd4fb',
+            'pretty_version' => '1.29.0',
+            'version' => '1.29.0.0',
+            'reference' => '536889f2b340489d328f5ffb7b02bb6b183ddedc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
