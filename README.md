@@ -3,7 +3,7 @@
 
 [![PHP tests](https://github.com/spaze/michalspacek.cz/actions/workflows/php.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/php.yml)
 [![PHPStan Latte template tests](https://github.com/spaze/michalspacek.cz/actions/workflows/php-latte.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/php-latte.yml)
-[![Dependency vulnz checker](https://github.com/spaze/michalspacek.cz/actions/workflows/composer-vulns.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/composer-vulns.yml)
+[![Dependency vulnz checker](https://github.com/spaze/michalspacek.cz/actions/workflows/vulns.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/vulns.yml)
 [![SSL/TLS scans](https://github.com/spaze/michalspacek.cz/actions/workflows/tls.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/tls.yml)
 [![security.txt checks](https://github.com/spaze/michalspacek.cz/actions/workflows/securitytxt.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/securitytxt.yml)
 [![Scan for secrets](https://github.com/spaze/michalspacek.cz/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/gitleaks.yml)
