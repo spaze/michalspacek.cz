@@ -1704,27 +1704,27 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.6.3",
-            "version_normalized": "2.6.3.0",
+            "version": "v3.0.0",
+            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938"
+                "reference": "df1e7fde177501eee2037dd159cf04f5f301a512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/58c3f47f650c94ec05a151692652a868995d2938",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/df1e7fde177501eee2037dd159cf04f5f301a512",
+                "reference": "df1e7fde177501eee2037dd159cf04f5f301a512",
                 "shasum": ""
             },
             "require": {
-                "php": "^7|^8"
+                "php": "^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6|^7|^8|^9",
-                "vimeo/psalm": "^1|^2|^3|^4"
+                "phpunit/phpunit": "^9",
+                "vimeo/psalm": "^4|^5"
             },
-            "time": "2022-06-14T06:56:20+00:00",
+            "time": "2024-05-08T12:36:18+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1774,22 +1774,22 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v5.1.1",
-            "version_normalized": "5.1.1.0",
+            "version": "v5.1.2",
+            "version_normalized": "5.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "a8f6c884db11fc6e4d3a533aa3ed596361a16221"
+                "reference": "aee234711b29cccb4a17aaaf6104fc542862fc1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/a8f6c884db11fc6e4d3a533aa3ed596361a16221",
-                "reference": "a8f6c884db11fc6e4d3a533aa3ed596361a16221",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/aee234711b29cccb4a17aaaf6104fc542862fc1e",
+                "reference": "aee234711b29cccb4a17aaaf6104fc542862fc1e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "paragonie/constant_time_encoding": "^2",
+                "paragonie/constant_time_encoding": "^2|^3",
                 "paragonie/hidden-string": "^1|^2",
                 "paragonie/sodium_compat": "^1|^2",
                 "php": "^8.1"
@@ -1798,7 +1798,7 @@
                 "phpunit/phpunit": "^9",
                 "vimeo/psalm": "^4"
             },
-            "time": "2024-04-19T23:29:37+00:00",
+            "time": "2024-05-08T12:59:43+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1842,35 +1842,34 @@
             "support": {
                 "docs": "https://github.com/paragonie/halite/tree/master/doc",
                 "issues": "https://github.com/paragonie/halite/issues",
-                "source": "https://github.com/paragonie/halite/tree/v5.1.1"
+                "source": "https://github.com/paragonie/halite/tree/v5.1.2"
             },
             "install-path": "../paragonie/halite"
         },
         {
             "name": "paragonie/hidden-string",
-            "version": "v2.0.0",
-            "version_normalized": "2.0.0.0",
+            "version": "v2.2.0",
+            "version_normalized": "2.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/hidden-string.git",
-                "reference": "151e53d55bfc67dd58087cdf8762dd8177ea7575"
+                "reference": "87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/hidden-string/zipball/151e53d55bfc67dd58087cdf8762dd8177ea7575",
-                "reference": "151e53d55bfc67dd58087cdf8762dd8177ea7575",
+                "url": "https://api.github.com/repos/paragonie/hidden-string/zipball/87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7",
+                "reference": "87886ab8ed7abb61c8bcf8d67cd3d3527feedbf7",
                 "shasum": ""
             },
             "require": {
-                "paragonie/constant_time_encoding": "^2",
-                "paragonie/sodium_compat": "^1.6",
+                "paragonie/constant_time_encoding": "^2|^3",
                 "php": "^7.4|^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6|^7|^8|^9",
-                "vimeo/psalm": "^3|^4"
+                "phpunit/phpunit": "^9.5",
+                "vimeo/psalm": "^4"
             },
-            "time": "2020-12-06T15:07:44+00:00",
+            "time": "2024-05-08T12:45:06+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1896,6 +1895,10 @@
                 "stack trace",
                 "string"
             ],
+            "support": {
+                "issues": "https://github.com/paragonie/hidden-string/issues",
+                "source": "https://github.com/paragonie/hidden-string/tree/v2.2.0"
+            },
             "install-path": "../paragonie/hidden-string"
         },
         {
