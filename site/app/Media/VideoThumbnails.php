@@ -70,7 +70,7 @@ readonly class VideoThumbnails
 			$videoThumbnailAlternative->addCondition($form::Filled, true)
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
-		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative);
+		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative, $hasMainVideoThumbnail, $hasAlternativeVideoThumbnail);
 	}
 
 

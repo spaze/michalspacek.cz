@@ -104,13 +104,13 @@ readonly class TalkFormFactory
 			$this->setTalk($form, $talk, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess): void {
+		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess, $videoThumbnailFormFields): void {
 			$values = $form->getFormValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($talk) {
-				$removeVideoThumbnail = (bool)$values->removeVideoThumbnail;
-				$removeVideoThumbnailAlternative = (bool)$values->removeVideoThumbnailAlternative;
+				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
+				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $talk->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $talk->getVideo()->getThumbnailAlternativeFilename();
 				$this->talks->update(
