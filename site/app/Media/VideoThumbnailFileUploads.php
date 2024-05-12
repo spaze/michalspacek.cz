@@ -11,6 +11,8 @@ readonly class VideoThumbnailFileUploads
 	public function __construct(
 		private UploadControl $videoThumbnail,
 		private UploadControl $videoThumbnailAlternative,
+		private bool $hasVideoThumbnail,
+		private bool $hasAlternativeVideoThumbnail,
 	) {
 	}
 
@@ -24,6 +26,18 @@ readonly class VideoThumbnailFileUploads
 	public function getVideoThumbnailAlternative(): UploadControl
 	{
 		return $this->videoThumbnailAlternative;
+	}
+
+
+	public function hasVideoThumbnail(): bool
+	{
+		return $this->hasVideoThumbnail;
+	}
+
+
+	public function hasAlternativeVideoThumbnail(): bool
+	{
+		return $this->hasAlternativeVideoThumbnail;
 	}
 
 }

@@ -68,13 +68,13 @@ readonly class InterviewFormFactory
 			$this->setInterview($form, $interview, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess): void {
+		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess, $videoThumbnailFormFields): void {
 			$values = $form->getFormValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($interview) {
-				$removeVideoThumbnail = (bool)$values->removeVideoThumbnail;
-				$removeVideoThumbnailAlternative = (bool)$values->removeVideoThumbnailAlternative;
+				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
+				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $interview->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $interview->getVideo()->getThumbnailAlternativeFilename();
 				$this->interviews->update(
