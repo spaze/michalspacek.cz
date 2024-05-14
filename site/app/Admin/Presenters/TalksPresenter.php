@@ -104,12 +104,13 @@ class TalksPresenter extends BasePresenter
 		if (!$this->talk || !$this->slides || !$request) {
 			throw new ShouldNotHappenException('actionSlides() will be called first');
 		}
+		$talkId = $this->talk->getId();
 		return $this->talkSlidesFormFactory->create(
 			function (Html $message, string $type, int $talkId): never {
 				$this->flashMessage($message, $type);
 				$this->redirect('Talks:slides', $talkId);
 			},
-			$this->talk->getId(),
+			$talkId,
 			$this->slides,
 			$this->newCount,
 			$request,

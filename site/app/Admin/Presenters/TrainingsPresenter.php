@@ -292,12 +292,13 @@ class TrainingsPresenter extends BasePresenter
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionDate() or actionFiles() will be called first');
 		}
+		$trainingStart = $this->training->getStart();
 		return $this->trainingFileFormFactory->create(
 			function (Html|string $message, string $type): never {
 				$this->flashMessage($message, $type);
 				$this->redirect($this->getAction(), $this->getParameters());
 			},
-			$this->training->getStart(),
+			$trainingStart,
 			$this->applicationIdsAllowedFiles,
 		);
 	}
