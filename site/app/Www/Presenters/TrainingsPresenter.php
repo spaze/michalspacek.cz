@@ -140,6 +140,8 @@ class TrainingsPresenter extends BasePresenter
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionTraining() or actionSuccess() will be called first');
 		}
+		$name = $this->training->getName();
+		$action = $this->training->getAction();
 		return $this->trainingApplicationFactory->create(
 			function (string $name): never {
 				$this->redirect('success', $name);
@@ -147,8 +149,8 @@ class TrainingsPresenter extends BasePresenter
 			function (string $message): void {
 				$this->flashMessage($this->translator->translate($message), 'error');
 			},
-			$this->training->getAction(),
-			$this->training->getName(),
+			$action,
+			$name,
 			$this->dates,
 			$this->getTrainingSessionSection(),
 		);
@@ -163,6 +165,8 @@ class TrainingsPresenter extends BasePresenter
 		if ($this->training->getDiscontinuedId() !== null) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->getDiscontinuedId()}");
 		}
+		$trainingId = $this->training->getId();
+		$action = $this->training->getAction();
 		return $this->trainingApplicationPreliminaryFactory->create(
 			function (string $action): never {
 				$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
@@ -171,8 +175,8 @@ class TrainingsPresenter extends BasePresenter
 			function (string $message): void {
 				$this->flashMessage($this->translator->translate($message), 'error');
 			},
-			$this->training->getId(),
-			$this->training->getAction(),
+			$trainingId,
+			$action,
 		);
 	}
 
