@@ -28,8 +28,7 @@ class ContainerBuilder
 	/** @deprecated use ContainerBuilder::ThisContainer */
 	public const THIS_CONTAINER = self::ThisContainer;
 
-	/** @var array */
-	public $parameters = [];
+	public array $parameters = [];
 
 	/** @var Definition[] */
 	private array $definitions = [];
@@ -353,10 +352,6 @@ class ContainerBuilder
 		$defs = $this->definitions;
 		ksort($defs);
 		foreach ($defs as $name => $def) {
-			if ($def instanceof Definitions\ImportedDefinition) {
-				$meta['types'][$name] = $def->getType();
-			}
-
 			foreach ($def->getTags() as $tag => $value) {
 				$meta['tags'][$tag][$name] = $value;
 			}

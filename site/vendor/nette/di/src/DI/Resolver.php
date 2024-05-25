@@ -354,12 +354,11 @@ class Resolver
 		}
 
 		if ($item instanceof Definition) {
-			$name = current(array_keys($this->builder->getDefinitions(), $item, strict: true));
-			if ($name === false) {
-				throw new ServiceCreationException(sprintf("Service '%s' not found in definitions.", $item->getName()));
-			}
+			if ($this->builder->getDefinition($item->getName()) !== $item) {
+				throw new ServiceCreationException(sprintf("Service '%s' does not match the expected service.", $item->getName()));
 
-			$item = new Reference($name);
+			}
+			$item = new Reference($item->getName());
 		}
 
 		if ($item instanceof Reference) {
@@ -518,7 +517,7 @@ class Resolver
 
 	/**
 	 * Add missing arguments using autowiring.
-	 * @param  (callable(string $type, bool $single): (object|object[]|null))  $getter
+	 * @param  (callable(string, bool): (object|object[]|null))  $getter
 	 * @throws ServiceCreationException
 	 */
 	public static function autowireArguments(
@@ -592,7 +591,7 @@ class Resolver
 
 	/**
 	 * Resolves missing argument using autowiring.
-	 * @param  (callable(string $type, bool $single): (object|object[]|null))  $getter
+	 * @param  (callable(string, bool): (object|object[]|null))  $getter
 	 * @throws ServiceCreationException
 	 */
 	private static function autowireArgument(\ReflectionParameter $parameter, callable $getter): mixed
