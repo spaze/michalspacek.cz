@@ -28,6 +28,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\PhpInfo\\' => 14,
             'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
+            'Spaze\\PHPCSPhar\\' => 16,
             'Spaze\\NonceGenerator\\' => 21,
             'Spaze\\Exports\\' => 14,
             'Spaze\\Encryption\\' => 17,
@@ -116,6 +117,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\PHPStan\\Rules\\Disallowed\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/phpstan-disallowed-calls/src',
+        ),
+        'Spaze\\PHPCSPhar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/phpcs-phar/src',
         ),
         'Spaze\\NonceGenerator\\' => 
         array (

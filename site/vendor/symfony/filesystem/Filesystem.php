@@ -662,7 +662,7 @@ class Filesystem
                 throw new IOException(sprintf('Failed to write file "%s": ', $filename).self::$lastError, 0, null, $filename);
             }
 
-            self::box('chmod', $tmpFile, @fileperms($filename) ?: 0666 & ~umask());
+            self::box('chmod', $tmpFile, self::box('fileperms', $filename) ?: 0666 & ~umask());
 
             $this->rename($tmpFile, $filename, true);
         } finally {
@@ -695,6 +695,25 @@ class Filesystem
         if (false === self::box('file_put_contents', $filename, $content, \FILE_APPEND | ($lock ? \LOCK_EX : 0))) {
             throw new IOException(sprintf('Failed to write file "%s": ', $filename).self::$lastError, 0, null, $filename);
         }
+    }
+
+    /**
+     * Returns the content of a file as a string.
+     *
+     * @throws IOException If the file cannot be read
+     */
+    public function readFile(string $filename): string
+    {
+        if (is_dir($filename)) {
+            throw new IOException(sprintf('Failed to read file "%s": File is a directory.', $filename));
+        }
+
+        $content = self::box('file_get_contents', $filename);
+        if (false === $content) {
+            throw new IOException(sprintf('Failed to read file "%s": ', $filename).self::$lastError, 0, null, $filename);
+        }
+
+        return $content;
     }
 
     private function toIterable(string|iterable $files): iterable
