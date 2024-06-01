@@ -2,10 +2,9 @@
 <?php
 declare(strict_types = 1);
 
-if (is_file(__DIR__ . '/../../autoload.php')) {
-	require_once __DIR__ . '/../../autoload.php';
-}
+require_once __DIR__ . '/src/Autoloader.php';
+Spaze\PHPCSPhar\Autoloader::load();
 
-// Require is enough to execute the phar stub that will run the tool,
-// see https://www.php.net/phar.createdefaultstub for more info
-require_once __DIR__ . '/phpcs.phar';
+Spaze\PHPCSPhar\StandardsInstaller::install();
+$status = (new PHP_CodeSniffer\Runner())->runPHPCS();
+exit($status);

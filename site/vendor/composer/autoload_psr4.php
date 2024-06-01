@@ -18,6 +18,7 @@ return array(
     'Spaze\\SubresourceIntegrity\\' => array($vendorDir . '/spaze/sri-macros/src'),
     'Spaze\\PhpInfo\\' => array($vendorDir . '/spaze/phpinfo/src'),
     'Spaze\\PHPStan\\Rules\\Disallowed\\' => array($vendorDir . '/spaze/phpstan-disallowed-calls/src'),
+    'Spaze\\PHPCSPhar\\' => array($vendorDir . '/spaze/phpcs-phar/src'),
     'Spaze\\NonceGenerator\\' => array($vendorDir . '/spaze/nonce-generator/src'),
     'Spaze\\Exports\\' => array($vendorDir . '/spaze/feed-exports/src'),
     'Spaze\\Encryption\\' => array($vendorDir . '/spaze/encryption/src'),
