@@ -17,7 +17,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-    - uses: shivammathur/setup-php@c665c7a15b5295c2488ac8a87af9cb806cd72198 # v2
+    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: pcov
         php-version: ${{ matrix.php-version }}
