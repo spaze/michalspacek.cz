@@ -1,6 +1,6 @@
 contentSecurityPolicy:
 	snippets:
-		exploited.cz:
+		form-action@exploited.cz:
 			form-action:
 				- https://exploited.cz
 	policies:
