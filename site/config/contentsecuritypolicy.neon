@@ -1,5 +1,8 @@
 contentSecurityPolicy:
 	snippets:
+		connect-src@httpbin.org:
+			connect-src:
+				- https://httpbin.org
 		form-action@exploited.cz:
 			form-action:
 				- https://exploited.cz
