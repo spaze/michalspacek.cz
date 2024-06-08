@@ -52,8 +52,7 @@
 		"nette/finder": "3.0",
 		"paragonie/sodium_compat": "*",
 		"symfony/polyfill-ctype": "*",
-		"symfony/polyfill-mbstring": "*",
-		"symfony/process": "*"
+		"symfony/polyfill-mbstring": "*"
 	},
 	"require-dev": {
 		"efabrica/phpstan-latte": "^0",
