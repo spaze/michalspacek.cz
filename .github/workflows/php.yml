@@ -34,7 +34,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - name: Validate composer.json and composer.lock
       run: composer --working-dir=site validate
 
@@ -45,7 +45,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - run: make --directory=site check-file-patterns
 
   check-makefile:
@@ -55,7 +55,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: none
@@ -69,7 +69,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: none
@@ -83,7 +83,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: none
@@ -97,7 +97,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: none
@@ -111,7 +111,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: none
@@ -121,7 +121,7 @@ jobs:
   lint-xml:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - run: make --directory=site lint-xml-auto-install
 
   phpcs:
@@ -131,7 +131,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - name: Get PHP_CodeSniffer cache file pattern
       id: phpcs-cache
       run: echo "file=$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")" >> $GITHUB_OUTPUT
@@ -152,7 +152,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
@@ -173,7 +173,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
@@ -194,7 +194,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
       with:
         coverage: pcov
@@ -222,7 +222,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
         with:
           coverage: none
@@ -236,7 +236,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
         with:
           coverage: none
