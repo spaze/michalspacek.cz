@@ -46,6 +46,7 @@ ul {
 	padding: 0 1em;
 }
 li { padding: 0.4em 0; }
+dd { margin-bottom: 0.7em; }
 table {
 	border-spacing: 0;
 	white-space: nowrap;
