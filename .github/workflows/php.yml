@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: OS info
       run: cat /etc/os-release
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -56,7 +56,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -70,7 +70,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -84,7 +84,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -98,7 +98,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -112,7 +112,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -139,7 +139,7 @@ jobs:
       with:
         path: ${{ steps.phpcs-cache.outputs.file }}
         key: phpcs-cache-php${{ matrix.php-version }}
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -160,7 +160,7 @@ jobs:
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-cache-php${{ matrix.php-version }}
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -181,7 +181,7 @@ jobs:
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-vendor-cache-php${{ matrix.php-version }}
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
@@ -195,7 +195,7 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+    - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         coverage: pcov
         php-version: ${{ matrix.php-version }}
@@ -223,7 +223,7 @@ jobs:
           - "8.3"
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+      - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
@@ -237,7 +237,7 @@ jobs:
           - "8.3"
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # v2
+      - uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
