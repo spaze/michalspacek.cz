@@ -1,7 +1,5 @@
-html {
-	font-family: sans-serif;
-}
 body {
+	font: 1rem Arial, sans-serif;
 	margin: 0;
 	color: #222;
 	background-color: #DDD;
