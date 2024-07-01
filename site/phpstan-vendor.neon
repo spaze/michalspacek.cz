@@ -117,7 +117,6 @@ parameters:
 				- vendor/nette/caching/src/Caching/Cache.php
 				- vendor/nette/database/src/Database/*.php
 				- vendor/nette/di/src/DI/*.php
-				- vendor/nette/robot-loader/src/RobotLoader/RobotLoader.php
 				- vendor/nette/tester/src/Framework/*.php
 				- vendor/nette/tester/src/Runner/*.php
 				- vendor/php-parallel-lint/php-parallel-lint/src/Output.php
@@ -132,6 +131,7 @@ parameters:
 			function: 'hash()'
 			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
 			allowIn:
+				- vendor/nette/robot-loader/src/RobotLoader/RobotLoader.php
 				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
 				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
 				- vendor/symfony/cache/Traits/FilesystemCommonTrait.php
