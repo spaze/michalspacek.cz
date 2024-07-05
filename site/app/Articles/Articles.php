@@ -287,17 +287,16 @@ class Articles
 	}
 
 
-	public function buildArticle(Row $row): ArticlePublishedElsewhere
+	private function buildArticle(Row $row): ArticlePublishedElsewhere
 	{
-		$texy = $this->texyFormatter->getTexy();
 		$this->texyFormatter->setTopHeading(2);
 		return new ArticlePublishedElsewhere(
 			$row->id,
-			$this->texyFormatter->format($row->titleTexy, $texy),
+			$this->texyFormatter->format($row->titleTexy),
 			$row->titleTexy,
 			$row->href,
 			$row->published,
-			$this->texyFormatter->format($row->leadTexy, $texy),
+			$this->texyFormatter->format($row->leadTexy),
 			$row->leadTexy,
 			$row->sourceName,
 			$row->sourceHref,

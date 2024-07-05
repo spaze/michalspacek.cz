@@ -71,6 +71,8 @@ readonly class BlogPostFactory
 		bool $omitExports,
 	): BlogPost {
 		$texy = $this->texyFormatter->getTexy();
+		$texyFormatter = $this->texyFormatter->withTexy($texy);
+
 		if ($allowedTagsGroups) {
 			$allowedTags = [];
 			foreach ($allowedTagsGroups as $allowedTagsGroup) {
@@ -78,7 +80,7 @@ readonly class BlogPostFactory
 			}
 			$texy->allowedTags = $allowedTags;
 		}
-		$this->texyFormatter->setTopHeading(2);
+		$texyFormatter->setTopHeading(2);
 
 		$needsPreviewKey = $published === null || $published > new DateTime();
 		return new BlogPost(
@@ -87,16 +89,16 @@ readonly class BlogPostFactory
 			$localeId,
 			$locale,
 			$translationGroupId,
-			$this->texyFormatter->format($titleTexy, $texy),
+			$texyFormatter->format($titleTexy),
 			$titleTexy,
-			$leadTexy !== null ? $this->texyFormatter->formatBlock($leadTexy, $texy) : null,
+			$leadTexy !== null ? $texyFormatter->formatBlock($leadTexy) : null,
 			$leadTexy,
-			$this->texyFormatter->formatBlock($textTexy, $texy),
+			$texyFormatter->formatBlock($textTexy),
 			$textTexy,
 			$published,
 			$needsPreviewKey,
 			$previewKey,
-			$originallyTexy !== null ? $this->texyFormatter->formatBlock($originallyTexy, $texy) : null,
+			$originallyTexy !== null ? $texyFormatter->formatBlock($originallyTexy) : null,
 			$originallyTexy,
 			$ogImage,
 			$tags,

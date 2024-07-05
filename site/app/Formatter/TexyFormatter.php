@@ -146,9 +146,9 @@ class TexyFormatter
 	 *
 	 * Suitable for "inline" strings like headers.
 	 */
-	public function format(string $text, ?Texy $texy = null): Html
+	public function format(string $text): Html
 	{
-		$texy = $texy ?? $this->getTexy();
+		$texy = $this->texy ?? $this->getTexy();
 		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
 			return Strings::replace($texy->process($text), '~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1');
 		});
@@ -158,9 +158,9 @@ class TexyFormatter
 	/**
 	 * Format string.
 	 */
-	public function formatBlock(string $text, ?Texy $texy = null): Html
+	public function formatBlock(string $text): Html
 	{
-		$texy = $texy ?? $this->getTexy();
+		$texy = $this->texy ?? $this->getTexy();
 		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
 			return $texy->process($text);
 		});
@@ -211,6 +211,14 @@ class TexyFormatter
 	{
 		$this->cacheResult = false;
 		return $this;
+	}
+
+
+	public function withTexy(Texy $texy): self
+	{
+		$texyFormatter = clone $this;
+		$texyFormatter->texy = $texy;
+		return $texyFormatter;
 	}
 
 }
