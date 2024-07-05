@@ -46,6 +46,7 @@ parameters:
 			forms:
 				form: [action, method, target]
 				button: []
+				input: [type, name, value]
 	texyFormatter:
 		allowed:
 			longWords: true
