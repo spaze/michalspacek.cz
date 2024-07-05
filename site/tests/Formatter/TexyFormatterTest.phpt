@@ -128,7 +128,7 @@ class TexyFormatterTest extends TestCase
 		$text = '**anoff**';
 		$expected = '<strong>anoff</strong>';
 
-		$key = $this->texyFormatter->getCacheKey("{$text}|format");
+		$key = $this->texyFormatter->getCacheKey("{$text}|format", $this->texyFormatter->getTexy());
 		Assert::same($expected, $this->texyFormatter->format($text)->toHtml());
 		Assert::true($this->cacheInterface->getItem($key)->isHit());
 

@@ -64,7 +64,7 @@ class ArticlesTest extends TestCase
 				'slug' => null,
 				'href' => 'https://example.com/article-1',
 				'published' => new DateTime('3 years ago'),
-				'leadTexy' => 'Excerpt 1',
+				'leadTexy' => "Excerpt 1\n#########\nFoo",
 				'textTexy' => null,
 				'sourceName' => 'Source 1',
 				'sourceHref' => 'https://source1.example/',
@@ -155,6 +155,7 @@ class ArticlesTest extends TestCase
 		$this->database->addFetchAllResult($fetchResult);
 		$articles = $this->articles->getAll();
 		Assert::type(ArticlePublishedElsewhere::class, $articles[0]);
+		Assert::same("<h2 id=\"excerpt-1\">Excerpt 1</h2>\n\n<p>Foo</p>\n", $articles[0]->getSummary()?->render());
 		Assert::type(BlogPost::class, $articles[1]);
 		Assert::type(ArticlePublishedElsewhere::class, $articles[2]);
 		Assert::type(BlogPost::class, $articles[3]);
