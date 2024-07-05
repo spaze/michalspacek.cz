@@ -21,11 +21,13 @@ readonly class BlogPostPreview
 
 
 	/**
+	 * @param callable(): BlogPost $createPost
 	 * @param callable(?DefaultTemplate): void $sendTemplate
 	 */
-	public function sendPreview(BlogPost $post, DefaultTemplate $template, callable $sendTemplate): void
+	public function sendPreview(callable $createPost, DefaultTemplate $template, callable $sendTemplate): void
 	{
 		$this->texyFormatter->disableCache();
+		$post = $createPost();
 		$template->setFile(__DIR__ . '/../../Www/Presenters/templates/Post/default.latte');
 		$template->post = $post;
 		$template->edits = $post->hasId() ? $post->getEdits() : [];

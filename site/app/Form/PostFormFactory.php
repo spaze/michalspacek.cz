@@ -126,18 +126,25 @@ readonly class PostFormFactory
 
 		$submitButton = $form->addSubmit('submit', 'Přidat');
 		$caption = $this->translator->translate('messages.label.preview');
-		$form->addSubmit('preview', $caption)
-			->setHtmlAttribute('data-loading-value', 'Moment…')
+		$previewButton = $form->addSubmit('preview', $caption);
+		$previewButton->setHtmlAttribute('data-loading-value', 'Moment…')
 			->setHtmlAttribute('data-original-value', $caption)
 			->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
-				$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
-				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
+				$this->blogPostPreview->sendPreview(
+					function () use ($form, $post): BlogPost {
+						return $this->buildPost($form->getFormValues(), $post?->getId());
+					},
+					$template,
+					$sendTemplate,
+				);
 			};
 
-		$form->onValidate[] = function (UiForm $form) use ($post, $previewKeyInput): void {
-			$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
-			if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
-				$previewKeyInput->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
+		$form->onValidate[] = function (UiForm $form) use ($previewButton, $post, $previewKeyInput): void {
+			if ($form->isSubmitted() !== $previewButton) {
+				$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
+				if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
+					$previewKeyInput->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
+				}
 			}
 		};
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {

@@ -73,9 +73,15 @@ class BlogPostPreviewTest extends TestCase
 		$template = $this->templateFactory->createTemplate($presenter);
 		$rendered = '';
 		Assert::noError(function () use ($post, $template, &$rendered): void {
-			$this->blogPostPreview->sendPreview($post, $template, function (?DefaultTemplate $template) use (&$rendered): void {
-				$rendered = $template?->renderToString() ?? '';
-			});
+			$this->blogPostPreview->sendPreview(
+				function () use ($post): BlogPost {
+					return $post;
+				},
+				$template,
+				function (?DefaultTemplate $template) use (&$rendered): void {
+					$rendered = $template?->renderToString() ?? '';
+				},
+			);
 		});
 		Assert::contains('<p>Text <strong>something</strong></p>', $rendered);
 	}
