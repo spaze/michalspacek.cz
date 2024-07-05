@@ -16,6 +16,8 @@ use Texy\Texy;
 class TexyFormatter
 {
 
+	private const string CACHE_KEY_DELIMITER = '|';
+
 	private ?Texy $texy = null;
 
 	private bool $cacheResult = true;
@@ -146,8 +148,9 @@ class TexyFormatter
 	 */
 	public function format(string $text, ?Texy $texy = null): Html
 	{
-		return $this->replace("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
-			return Strings::replace(($texy ?? $this->getTexy())->process($text), '~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1');
+		$texy = $texy ?? $this->getTexy();
+		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
+			return Strings::replace($texy->process($text), '~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1');
 		});
 	}
 
@@ -157,8 +160,9 @@ class TexyFormatter
 	 */
 	public function formatBlock(string $text, ?Texy $texy = null): Html
 	{
-		return $this->replace("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
-			return ($texy ?? $this->getTexy())->process($text);
+		$texy = $texy ?? $this->getTexy();
+		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
+			return $texy->process($text);
 		});
 	}
 
@@ -166,10 +170,10 @@ class TexyFormatter
 	/**
 	 * @param callable(): string $callback
 	 */
-	private function replace(string $key, callable $callback): Html
+	private function replace(string $key, Texy $texy, callable $callback): Html
 	{
 		if ($this->cacheResult) {
-			$result = $this->cache->get($this->getCacheKey($key), function (ItemInterface $item, bool &$save) use ($callback): string {
+			$result = $this->cache->get($this->getCacheKey($key, $texy), function (ItemInterface $item, bool &$save) use ($callback): string {
 				$item->expiresAt(null);
 				$save = true;
 				return $callback();
@@ -194,11 +198,12 @@ class TexyFormatter
 	}
 
 
-	public function getCacheKey(string $text): string
+	public function getCacheKey(string $text, Texy $texy): string
 	{
+		$key = "{$text}|" . serialize($texy->allowedTags);
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
 		// Don't hash the locale to make it visible inside cache files
-		return Hash::nonCryptographic($text) . '.' . $this->translator->getDefaultLocale();
+		return Hash::nonCryptographic($key) . '.' . $this->translator->getDefaultLocale();
 	}
 
 
