@@ -17,8 +17,8 @@ use Latte\Compiler\Nodes\TemplateNode;
  */
 class Engine
 {
-	public const Version = '3.0.16';
-	public const VersionId = 30016;
+	public const Version = '3.0.17';
+	public const VersionId = 30017;
 
 	/** @deprecated use Engine::Version */
 	public const
@@ -50,6 +50,7 @@ class Engine
 	private bool $sandboxed = false;
 	private ?string $phpBinary = null;
 	private ?string $cacheKey;
+	private ?string $locale = null;
 
 
 	public function __construct()
@@ -562,6 +563,25 @@ class Engine
 	public function isStrictParsing(): bool
 	{
 		return $this->strictParsing;
+	}
+
+
+	/**
+	 * Sets locale for date and number formatting. See PHP intl extension.
+	 */
+	public function setLocale(?string $locale): static
+	{
+		if ($locale && !extension_loaded('intl')) {
+			throw new RuntimeException("Locate requires the 'intl' extension to be installed.");
+		}
+		$this->locale = $locale;
+		return $this;
+	}
+
+
+	public function getLocale(): ?string
+	{
+		return $this->locale;
 	}
 
 
