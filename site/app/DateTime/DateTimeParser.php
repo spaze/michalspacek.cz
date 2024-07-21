@@ -5,16 +5,16 @@ namespace MichalSpacekCz\DateTime;
 
 use Exception;
 use MichalSpacekCz\ShouldNotHappenException;
-use Nette\Utils\DateTime as NetteDateTime;
+use Nette\Utils\DateTime;
 
-class DateTime
+class DateTimeParser
 {
 
 	public function getDaysFromString(string $interval): int
 	{
-		$now = new NetteDateTime();
+		$now = new DateTime();
 		try {
-			$then = NetteDateTime::from($interval);
+			$then = DateTime::from($interval);
 		} catch (Exception $e) {
 			throw new ShouldNotHappenException("Cannot create an object from {$interval}", previous: $e);
 		}
