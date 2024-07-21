@@ -13,9 +13,9 @@
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	{control criticalCss}
 	{if $darkMode === null}
-		{styleSheet screen-main+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
+		{styleSheet screen-main + '@media (prefers-color-scheme: dark) {' + screen-main-dark + '}'}
 	{elseif $darkMode}
-		{styleSheet screen-main+screen-main-dark}
+		{styleSheet screen-main + screen-main-dark}
 	{else}
 		{styleSheet screen-main}
 	{/if}
@@ -23,7 +23,7 @@
 	{ifset #scriptsReplace}
 		{include #scriptsReplace}
 	{else}
-		{script app+scripts async, defer}
+		{script app + scripts async, defer}
 		{script netteForms async, defer}
 		{script remove-fbclid async, defer}
 	{/ifset}
