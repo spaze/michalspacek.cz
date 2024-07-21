@@ -45,7 +45,7 @@ class DateTimeFactoryTest extends TestCase
 		$niceDate = '2020-10-10 20:30:40';
 		$niceDateTime = new DateTimeImmutable("{$niceDate} UTC");
 		$newDateTime = $this->dateTimeFactory->createFrom($niceDateTime, 'Europe/Prague');
-		Assert::same($niceDate, $newDateTime->format('Y-m-d H:i:s'));
+		Assert::same($niceDate, $newDateTime->format(DateTimeFormat::MYSQL));
 		Assert::same('Europe/Prague', $newDateTime->getTimezone()->getName());
 		Assert::notSame($niceDateTime->getTimestamp(), $newDateTime->getTimestamp());
 	}

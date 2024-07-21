@@ -51,7 +51,7 @@
 				<tbody id="historie-container" class="hidden">
 				{formContainer statusHistoryDelete}
 				<tr n:foreach="$history as $record" class="row">
-					{var $statusTime = $record->getStatusTime()->format('Y-m-d H:i:s')}
+					{var $statusTime = $record->getStatusTime()->format(MichalSpacekCz\DateTime\DateTimeFormat::MYSQL)}
 					<td><code>{$record->getStatus()->value}</code></td>
 					<td><small>{$statusTime}</small><br></td>
 					<td class="center">

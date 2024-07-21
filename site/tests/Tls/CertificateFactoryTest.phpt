@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
-use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Nette\Utils\Json;
@@ -71,8 +71,8 @@ class CertificateFactoryTest extends TestCase
 		Assert::same('ec', $certs[0]->getCommonNameExt());
 		Assert::same('foo.example', $certs[1]->getCommonName());
 		Assert::null($certs[1]->getCommonNameExt());
-		Assert::same('2023-05-26T12:14:12.000000+00:00', $certs[0]->getNotBefore()->format(DateTime::DATE_RFC3339_MICROSECONDS));
-		Assert::same('2023-06-25T12:13:58.000000+00:00', $certs[0]->getNotAfter()->format(DateTime::DATE_RFC3339_MICROSECONDS));
+		Assert::same('2023-05-26T12:14:12.000000+00:00', $certs[0]->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS));
+		Assert::same('2023-06-25T12:13:58.000000+00:00', $certs[0]->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS));
 	}
 
 

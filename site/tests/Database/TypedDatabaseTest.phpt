@@ -5,10 +5,10 @@ namespace Database;
 
 use MichalSpacekCz\Database\Exceptions\TypedDatabaseTypeException;
 use MichalSpacekCz\Database\TypedDatabase;
-use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Utils\DateTime as NetteDateTime;
+use Nette\Utils\DateTime;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -108,22 +108,22 @@ class TypedDatabaseTest extends TestCase
 	public function testFetchPairsListDateTime(): void
 	{
 		$this->database->setFetchPairsDefaultResult([
-			1 => new NetteDateTime('2023-01-01 10:20:30'),
-			3 => new NetteDateTime('2023-01-03 10:20:30'),
-			5 => new NetteDateTime('2023-01-05 10:20:30'),
+			1 => new DateTime('2023-01-01 10:20:30'),
+			3 => new DateTime('2023-01-03 10:20:30'),
+			5 => new DateTime('2023-01-05 10:20:30'),
 		]);
 		$list = $this->typedDatabase->fetchPairsListDateTime('SELECT foo');
 		Assert::type('list', $list);
-		Assert::same('2023-01-01 10:20:30', $list[0]->format(DateTime::DATE_MYSQL));
-		Assert::same('2023-01-03 10:20:30', $list[1]->format(DateTime::DATE_MYSQL));
-		Assert::same('2023-01-05 10:20:30', $list[2]->format(DateTime::DATE_MYSQL));
+		Assert::same('2023-01-01 10:20:30', $list[0]->format(DateTimeFormat::MYSQL));
+		Assert::same('2023-01-03 10:20:30', $list[1]->format(DateTimeFormat::MYSQL));
+		Assert::same('2023-01-05 10:20:30', $list[2]->format(DateTimeFormat::MYSQL));
 	}
 
 
 	public function testFetchPairsListDateTimeInvalidType(): void
 	{
 		$this->database->setFetchPairsDefaultResult([
-			1 => new NetteDateTime('2023-01-01 10:20:30'),
+			1 => new DateTime('2023-01-01 10:20:30'),
 			3 => 'foo',
 		]);
 		Assert::exception(function (): void {
@@ -202,15 +202,15 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchFieldDateTime(): void
 	{
-		$this->database->setFetchFieldDefaultResult(new NetteDateTime());
-		Assert::type(NetteDateTime::class, $this->typedDatabase->fetchFieldDateTime('SELECT 808'));
+		$this->database->setFetchFieldDefaultResult(new DateTime());
+		Assert::type(DateTime::class, $this->typedDatabase->fetchFieldDateTime('SELECT 808'));
 	}
 
 
 	public function testFetchFieldDateTimeNullable(): void
 	{
-		$this->database->setFetchFieldDefaultResult(new NetteDateTime());
-		Assert::type(NetteDateTime::class, $this->typedDatabase->fetchFieldDateTimeNullable('SELECT 808'));
+		$this->database->setFetchFieldDefaultResult(new DateTime());
+		Assert::type(DateTime::class, $this->typedDatabase->fetchFieldDateTimeNullable('SELECT 808'));
 		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->typedDatabase->fetchFieldIntNullable('SELECT 808'));
 	}
@@ -221,7 +221,7 @@ class TypedDatabaseTest extends TestCase
 		$this->database->setFetchFieldDefaultResult('foo');
 		Assert::exception(function (): void {
 			$this->typedDatabase->fetchFieldDateTime('SELECT 808');
-		}, TypedDatabaseTypeException::class, NetteDateTime::class . ' expected, string given');
+		}, TypedDatabaseTypeException::class, DateTime::class . ' expected, string given');
 	}
 
 
@@ -230,7 +230,7 @@ class TypedDatabaseTest extends TestCase
 		$this->database->setFetchFieldDefaultResult('foo');
 		Assert::exception(function (): void {
 			$this->typedDatabase->fetchFieldDateTimeNullable('SELECT 808');
-		}, TypedDatabaseTypeException::class, NetteDateTime::class . '|null expected, string given');
+		}, TypedDatabaseTypeException::class, DateTime::class . '|null expected, string given');
 	}
 
 }

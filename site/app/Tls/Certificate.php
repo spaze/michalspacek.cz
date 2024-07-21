@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use JsonSerializable;
-use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use Override;
 
@@ -109,13 +109,13 @@ readonly class Certificate implements JsonSerializable
 		return [
 			'commonName' => $this->commonName,
 			'commonNameExt' => $this->commonNameExt,
-			'notBefore' => $this->notBefore->format(DateTime::DATE_RFC3339_MICROSECONDS),
+			'notBefore' => $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'notBeforeTz' => $this->notBefore->getTimezone()->getName(),
-			'notAfter' => $this->notAfter->format(DateTime::DATE_RFC3339_MICROSECONDS),
+			'notAfter' => $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'notAfterTz' => $this->notAfter->getTimezone()->getName(),
 			'expiringThreshold' => $this->expiringThreshold,
 			'serialNumber' => $this->serialNumber,
-			'now' => $this->now->format(DateTime::DATE_RFC3339_MICROSECONDS),
+			'now' => $this->now->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'nowTz' => $this->now->getTimezone()->getName(),
 		];
 	}

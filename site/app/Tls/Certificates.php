@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
-use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
@@ -109,8 +109,8 @@ readonly class Certificates
 					'OK %s%s from %s to %s',
 					$cert->getCommonName(),
 					$cert->getCommonNameExt() ?? '',
-					$cert->getNotBefore()->format(DateTime::DATE_RFC3339_MICROSECONDS),
-					$cert->getNotAfter()->format(DateTime::DATE_RFC3339_MICROSECONDS),
+					$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
+					$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
 				), 'cert');
 				$dbException = $e;
 			}

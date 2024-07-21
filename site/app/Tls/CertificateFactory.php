@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
-use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
@@ -102,7 +102,7 @@ readonly class CertificateFactory
 	 */
 	private function createDateTimeImmutable(string $time, string $timeZone): DateTimeImmutable
 	{
-		return $this->dateTimeFactory->createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
+		return $this->dateTimeFactory->createFromFormat(DateTimeFormat::RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
 	}
 
 
