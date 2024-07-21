@@ -21,21 +21,21 @@ readonly class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlac
 
 
 	#[Override]
-	public static function getPlaceholder(): string
+	public static function getId(): string
 	{
 		return 'TRAINING_DATE';
 	}
 
 
 	#[Override]
-	public function replace(string $placeholder): string
+	public function replace(string $value): string
 	{
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
-		if (!isset($upcoming[$placeholder]) || !$upcoming[$placeholder]->getDates()) {
+		if (!isset($upcoming[$value]) || !$upcoming[$value]->getDates()) {
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
-			foreach ($upcoming[$placeholder]->getDates() as $date) {
+			foreach ($upcoming[$value]->getDates() as $date) {
 				$trainingDate = $date->isTentative()
 					? $this->dateTimeFormatter->localeIntervalMonth($date->getStart(), $date->getEnd())
 					: $this->dateTimeFormatter->localeIntervalDay($date->getStart(), $date->getEnd());

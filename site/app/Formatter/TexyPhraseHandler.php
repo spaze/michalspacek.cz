@@ -141,7 +141,7 @@ readonly class TexyPhraseHandler
 	{
 		$el = Html::el()
 			->addHtml(Html::el()->setText(' '))
-			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', TrainingDateTexyFormatterPlaceholder::getPlaceholder(), $training)));
+			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', TrainingDateTexyFormatterPlaceholder::getId(), $training)));
 		return $el->render();
 	}
 
