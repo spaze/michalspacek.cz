@@ -184,7 +184,7 @@ class TexyFormatter
 
 		$replacements = [];
 		foreach ($this->placeholders as $placeholder) {
-			$replacements[$placeholder::getPlaceholder()] = $placeholder->replace(...);
+			$replacements[$placeholder::getId()] = $placeholder->replace(...);
 		}
 
 		$result = Strings::replace(

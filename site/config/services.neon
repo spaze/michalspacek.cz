@@ -35,9 +35,9 @@ services:
 		create: MichalSpacekCz\Database\TypedDatabase
 		autowired: MichalSpacekCz\Database\TypedDatabase
 	typedDatabase.pulse: MichalSpacekCz\Database\TypedDatabase(@database.pulse.explorer)
-	- MichalSpacekCz\DateTime\DateTime
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
+	- MichalSpacekCz\DateTime\DateTimeParser
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory
 	- MichalSpacekCz\EasterEgg\CrLfUrlInjections
 	- MichalSpacekCz\EasterEgg\FourOhFourButFound

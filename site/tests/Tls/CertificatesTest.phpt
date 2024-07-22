@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
-use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullLogger;
@@ -102,7 +102,7 @@ class CertificatesTest extends TestCase
 			$this->certificates->log($certificates, []);
 		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');
 		Assert::same($exception, $this->logger->getLogged()[0]);
-		$message = 'OK foo.example from ' . $this->notBefore->format(DateTime::DATE_RFC3339_MICROSECONDS) . ' to ' . $this->notAfter->format(DateTime::DATE_RFC3339_MICROSECONDS);
+		$message = 'OK foo.example from ' . $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS) . ' to ' . $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS);
 		Assert::same($message, $this->logger->getLogged()[1]);
 	}
 

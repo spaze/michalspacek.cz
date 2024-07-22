@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Test\Database;
 
 use DateTime;
 use DateTimeInterface;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\WillThrow;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -132,7 +133,7 @@ class Database extends Explorer
 	 */
 	private function formatValue(string|int|bool|DateTimeInterface|null $value): string|int|bool|null
 	{
-		return $value instanceof DateTimeInterface ? $value->format('Y-m-d H:i:s') : $value;
+		return $value instanceof DateTimeInterface ? $value->format(DateTimeFormat::MYSQL) : $value;
 	}
 
 

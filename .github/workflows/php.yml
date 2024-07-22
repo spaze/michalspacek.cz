@@ -40,10 +40,6 @@ jobs:
 
   check-file-patterns:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version:
-          - "8.3"
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - run: make --directory=site check-file-patterns

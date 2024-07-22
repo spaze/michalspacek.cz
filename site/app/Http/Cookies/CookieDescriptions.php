@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http\Cookies;
 
 use MichalSpacekCz\Application\Theme;
-use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeParser;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\User\Manager;
@@ -19,7 +19,7 @@ readonly class CookieDescriptions
 		private Theme $theme,
 		private Session $sessionHandler,
 		private TexyFormatter $texyFormatter,
-		private DateTime $dateTime,
+		private DateTimeParser $dateTimeParser,
 	) {
 	}
 
@@ -40,25 +40,25 @@ readonly class CookieDescriptions
 				CookieName::PermanentLogin->value,
 				true,
 				$this->texyFormatter->translate('messages.cookies.cookie.permanentLogin'),
-				$this->dateTime->getDaysFromString($this->authenticator->getPermanentLoginCookieLifetime()),
+				$this->dateTimeParser->getDaysFromString($this->authenticator->getPermanentLoginCookieLifetime()),
 			),
 			new CookieDescription(
 				CookieName::ReturningUser->value,
 				true,
 				$this->texyFormatter->translate('messages.cookies.cookie.returningUser'),
-				$this->dateTime->getDaysFromString($this->authenticator->getReturningUserCookieLifetime()),
+				$this->dateTimeParser->getDaysFromString($this->authenticator->getReturningUserCookieLifetime()),
 			),
 			new CookieDescription(
 				CookieName::Theme->value,
 				false,
 				$this->texyFormatter->translate('messages.cookies.cookie.theme'),
-				$this->dateTime->getDaysFromString($this->theme->getCookieLifetime()),
+				$this->dateTimeParser->getDaysFromString($this->theme->getCookieLifetime()),
 			),
 			new CookieDescription(
 				$this->sessionHandler->getName(),
 				false,
 				$this->texyFormatter->translate('messages.cookies.cookie.netteSession'),
-				$this->dateTime->getDaysFromString($cookieLifetime . ' seconds'),
+				$this->dateTimeParser->getDaysFromString($cookieLifetime . ' seconds'),
 			),
 			new CookieDescription(
 				Helpers::StrictCookieName,

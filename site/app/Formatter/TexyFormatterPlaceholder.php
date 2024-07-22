@@ -6,9 +6,9 @@ namespace MichalSpacekCz\Formatter;
 interface TexyFormatterPlaceholder
 {
 
-	public static function getPlaceholder(): string;
+	public static function getId(): string;
 
 
-	public function replace(string $placeholder): string;
+	public function replace(string $value): string;
 
 }

@@ -5,27 +5,16 @@ namespace MichalSpacekCz\DateTime;
 
 use Exception;
 use MichalSpacekCz\ShouldNotHappenException;
-use Nette\Utils\DateTime as NetteDateTime;
+use Nette\Utils\DateTime;
 
-class DateTime
+class DateTimeParser
 {
-
-	/**
-	 * Same as DATE_RFC3339_EXTENDED except it uses microseconds (`.u`) instead of milliseconds (`.v`).
-	 */
-	public const string DATE_RFC3339_MICROSECONDS = 'Y-m-d\TH:i:s.uP';
-
-	/**
-	 * Same as in \Nette\Database\Drivers\MySqlDriver::formatDateTime() but without the quotes.
-	 */
-	public const string DATE_MYSQL = 'Y-m-d H:i:s';
-
 
 	public function getDaysFromString(string $interval): int
 	{
-		$now = new NetteDateTime();
+		$now = new DateTime();
 		try {
-			$then = NetteDateTime::from($interval);
+			$then = DateTime::from($interval);
 		} catch (Exception $e) {
 			throw new ShouldNotHappenException("Cannot create an object from {$interval}", previous: $e);
 		}
