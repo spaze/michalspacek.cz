@@ -319,6 +319,11 @@ td.narrow input { width: 40px; }
 td.wider input, form.wide td.narrower input { width: 280px; }
 form.wide input, form.wide select, form.wide textarea, textarea.wide, td.wide input { width: 740px; }
 form.wide textarea, textarea.wide { height: 200px; }
+.blog form {
+	margin: 1em 0;
+	text-align: center;
+}
+.blog form input[type=text] { width: 85px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
