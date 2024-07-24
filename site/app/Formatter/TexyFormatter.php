@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder;
 use MichalSpacekCz\Utils\Hash;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
