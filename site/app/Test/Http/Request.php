@@ -212,7 +212,7 @@ class Request implements IRequest
 
 	public function setHeader(string $name, string $value): void
 	{
-		$this->headers[$name] = $value;
+		$this->headers[strtolower($name)] = $value;
 	}
 
 
