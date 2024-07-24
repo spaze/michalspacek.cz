@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnType;
+use MichalSpacekCz\Formatter\Placeholders\TrainingDateTexyFormatterPlaceholder;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\TrainingLocales;
 use Nette\Application\Application;

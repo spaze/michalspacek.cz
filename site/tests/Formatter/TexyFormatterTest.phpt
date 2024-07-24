@@ -9,6 +9,7 @@ namespace MichalSpacekCz\Formatter;
 use DateTime;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Utils\Html;
@@ -32,6 +33,7 @@ class TexyFormatterTest extends TestCase
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly AdapterInterface $cacheInterface,
+		Request $httpRequest,
 		Database $database,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
@@ -105,21 +107,23 @@ class TexyFormatterTest extends TestCase
 			'cs_CZ' => 'bezpecnost-php-aplikaci',
 			'en_US' => 'php-application-security',
 		]);
+		$httpRequest->setHeader('Sec-Fetch-Dest', 'iframe');
 		$this->expectedFormatted = "<strong>foo <a\n"
 			. "href=\"https://example.com/?dest=%2F%2F%3AWww%3ATrainings%3Atraining&amp;args=bezpecnost-php-aplikaci\">bar</a>\n"
-			. "<small>(messages.trainings.nextdates: <strong>5.–7. ledna 2020</strong> messages.label.remote, <strong>5.–7. února 2020</strong> Le city 2)</small></strong>";
+			. "<small>(messages.trainings.nextdates: <strong>5.–7. ledna 2020</strong> messages.label.remote, <strong>5.–7. února 2020</strong> Le city 2)</small></strong>\n"
+			. "Sec-Fetch-Dest: iframe";
 	}
 
 
 	public function testFormat(): void
 	{
-		Assert::same($this->expectedFormatted, $this->texyFormatter->format('**foo "bar":[training:' . self::TRAINING_ACTION . ']**')->toHtml());
+		Assert::same($this->expectedFormatted, $this->texyFormatter->format('**foo "bar":[training:' . self::TRAINING_ACTION . "]**\n''**FETCH_METADATA:Sec-Fetch-Dest**''")->toHtml());
 	}
 
 
 	public function testFormatBlock(): void
 	{
-		Assert::same("<p>{$this->expectedFormatted}</p>\n", $this->texyFormatter->formatBlock('**foo "bar":[training:' . self::TRAINING_ACTION . ']**')->toHtml());
+		Assert::same("<p>{$this->expectedFormatted}</p>\n", $this->texyFormatter->formatBlock('**foo "bar":[training:' . self::TRAINING_ACTION . "]**\n''**FETCH_METADATA:Sec-Fetch-Dest**''")->toHtml());
 	}
 
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Formatter;
+namespace MichalSpacekCz\Formatter\Placeholders;
 
 interface TexyFormatterPlaceholder
 {
