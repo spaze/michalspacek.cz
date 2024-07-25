@@ -8,6 +8,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
+use Override;
 
 /**
  * @property-read DefaultTemplate $template
@@ -20,6 +21,16 @@ class ForbiddenPresenter extends BasePresenter
 		private readonly IResponse $httpResponse,
 	) {
 		parent::__construct();
+	}
+
+
+	#[Override]
+	protected function startup(): void
+	{
+		parent::startup();
+		if ($this->getRequest()?->getMethod() !== Request::FORWARD) {
+			throw new BadRequestException("Direct access to '{$this->getName()}' is forbidden");
+		}
 	}
 
 
