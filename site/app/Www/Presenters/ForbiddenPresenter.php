@@ -4,18 +4,15 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
-use Nette\Application\UI\Presenter;
+use Nette\Application\BadRequestException;
+use Nette\Application\Request;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
 
 /**
- * A forbidden presenter.
- *
- * Does not extend BasePresenter to avoid loop in startup().
- *
  * @property-read DefaultTemplate $template
  */
-class ForbiddenPresenter extends Presenter
+class ForbiddenPresenter extends BasePresenter
 {
 
 	public function __construct(

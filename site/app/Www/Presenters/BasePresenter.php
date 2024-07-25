@@ -10,6 +10,7 @@ use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\User\Manager;
+use Nette\Application\Request;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -83,7 +84,7 @@ abstract class BasePresenter extends Presenter
 	{
 		parent::startup();
 		$this->httpResponse->addHeader('Vary', 'Cookie');
-		if ($this->authenticator->isForbidden()) {
+		if ($this->authenticator->isForbidden() && $this->getRequest()?->getMethod() !== Request::FORWARD) {
 			$this->forward(':Www:Forbidden:');
 		}
 	}
