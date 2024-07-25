@@ -393,3 +393,5 @@ cookies:
 		theme: "The value specifies the color mode in which the pages are displayed."
 		netteSession: "The cookie holds the session identifier."
 		netteSameSiteCheck: "Used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
+httpHeaders:
+	headerNotSent: "header not sent"
