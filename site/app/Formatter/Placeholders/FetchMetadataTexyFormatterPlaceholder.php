@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter\Placeholders;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Http\FetchMetadata\FetchMetadata;
 use MichalSpacekCz\Http\FetchMetadata\FetchMetadataHeader;
+use Nette\Utils\Html;
 use Override;
 
 /**
@@ -26,6 +28,7 @@ readonly class FetchMetadataTexyFormatterPlaceholder implements TexyFormatterPla
 
 	public function __construct(
 		private FetchMetadata $fetchMetadata,
+		private Translator $translator,
 	) {
 	}
 
@@ -48,6 +51,12 @@ readonly class FetchMetadataTexyFormatterPlaceholder implements TexyFormatterPla
 		}
 		$result = [];
 		foreach ($headers as $header => $value) {
+			if ($value === null) {
+				$value = Html::el('em')
+					->addText('[')
+					->addText($this->translator->translate('messages.httpHeaders.headerNotSent'))
+					->addText(']');
+			}
 			$result[] = "{$header}: {$value}";
 		}
 		return implode("\n", $result);
