@@ -34,10 +34,11 @@ class ForbiddenPresenter extends BasePresenter
 	}
 
 
-	public function actionDefault(): void
+	public function actionDefault(string $message): void
 	{
 		$this->httpResponse->setCode(IResponse::S403_Forbidden);
 		$this->template->pageTitle = $this->translator->translate('messages.title.forbidden');
+		$this->template->message = $this->translator->translate($message);
 	}
 
 }

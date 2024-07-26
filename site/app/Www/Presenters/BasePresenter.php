@@ -85,7 +85,7 @@ abstract class BasePresenter extends Presenter
 		parent::startup();
 		$this->httpResponse->addHeader('Vary', 'Cookie');
 		if ($this->authenticator->isForbidden() && $this->getRequest()?->getMethod() !== Request::FORWARD) {
-			$this->forward(':Www:Forbidden:');
+			$this->forward(':Www:Forbidden:', ['message' => 'messages.forbidden.spam']);
 		}
 	}
 
