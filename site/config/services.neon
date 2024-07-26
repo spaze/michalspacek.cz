@@ -81,6 +81,7 @@ services:
 	- MichalSpacekCz\Http\Cookies\CookieDescriptions
 	- MichalSpacekCz\Http\Cookies\Cookies
 	- MichalSpacekCz\Http\FetchMetadata\FetchMetadata
+	- MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy(reportOnly: true)
 	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)

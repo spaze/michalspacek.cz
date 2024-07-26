@@ -230,6 +230,7 @@ error:
 	410: "The requested URL is no longer available on this server and there's nowhere to be redirected to."
 forbidden:
 	spam: "Access forbidden for repeated spammy crap."
+	crossSite: "Cross-site request forbidden."
 interview:
 	detail: "Interview detail on the web"
 talks:

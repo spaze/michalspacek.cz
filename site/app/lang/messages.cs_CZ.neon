@@ -230,6 +230,7 @@ error:
 	410: "Požadované URL již není na tomto serveru k dispozici, ani není k dispozici žádná adresa k přesměrování."
 forbidden:
 	spam: "Přístup zakázán kvůli opakovanému spamování."
+	crossSite: "Cross-site požadavek odmítnut."
 interview:
 	detail: "Detail rozhovoru na webu"
 talks:
