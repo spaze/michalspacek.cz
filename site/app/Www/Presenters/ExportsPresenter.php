@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Feed\Exports;
+use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Utils\Hash;
 use Spaze\Exports\Bridges\Nette\Atom\Response;
 
@@ -17,6 +18,7 @@ class ExportsPresenter extends BasePresenter
 	}
 
 
+	#[ResourceIsolationPolicyCrossSite]
 	public function actionArticles(?string $param = null): never
 	{
 		$feed = $this->exports->getArticles($this->link('//this'), $param);
