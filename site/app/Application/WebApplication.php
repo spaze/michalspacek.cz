@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\EasterEgg\CrLfUrlInjections;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
+use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy;
 use MichalSpacekCz\Http\SecurityHeaders;
 use Nette\Application\Application;
 use Nette\Http\IRequest;
@@ -19,6 +20,7 @@ readonly class WebApplication
 		private SecurityHeaders $securityHeaders,
 		private Application $application,
 		private CrLfUrlInjections $crLfUrlInjections,
+		private ResourceIsolationPolicy $resourceIsolationPolicy,
 		private string $fqdn,
 	) {
 	}
@@ -28,6 +30,7 @@ readonly class WebApplication
 	{
 		$this->detectCrLfUrlInjectionAttempt();
 		$this->redirectToSecure();
+		$this->resourceIsolationPolicy->install();
 		$this->application->onResponse[] = function (): void {
 			$this->securityHeaders->sendHeaders();
 		};

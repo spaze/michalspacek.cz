@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Api\Presenters;
 
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
+use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
@@ -19,6 +20,7 @@ class CompanyPresenter extends BasePresenter
 	}
 
 
+	#[ResourceIsolationPolicyCrossSite]
 	public function actionDefault(?string $country, ?string $companyId): void
 	{
 		if ($country === null || $companyId === null) {
