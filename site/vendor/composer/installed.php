@@ -322,7 +322,7 @@
         'phpcsstandards/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.10.1',
+                0 => '3.10.2',
             ),
         ),
         'phpstan/phpdoc-parser' => array(
@@ -335,9 +335,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.11.7',
-            'version' => '1.11.7.0',
-            'reference' => '52d2bbfdcae7f895915629e4694e9497d0f8e28d',
+            'pretty_version' => '1.11.8',
+            'version' => '1.11.8.0',
+            'reference' => '6adbd118e6c0515dd2f36b06cde1d6da40f1b8ec',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -353,9 +353,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-nette' => array(
-            'pretty_version' => '1.3.2',
-            'version' => '1.3.2.0',
-            'reference' => '1cdc8a09fd0066a3472a5eefc522ceaff5a8781d',
+            'pretty_version' => '1.3.3',
+            'version' => '1.3.3.0',
+            'reference' => '5f97dfaa487b628888e67ea24ddf6187ac041e9f',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-nette',
             'aliases' => array(),
@@ -412,7 +412,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'd8b471f69a97a8929180bbface097ac2b4e70d05',
+            'reference' => '0816697098823477b1a95d07d2b94bf3cfe1a2f8',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -502,9 +502,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpcs-phar' => array(
-            'pretty_version' => '3.10.1.1',
-            'version' => '3.10.1.1',
-            'reference' => '12cb250f680472045d8136e05b9104cbb904389d',
+            'pretty_version' => '3.10.2',
+            'version' => '3.10.2.0',
+            'reference' => '60355972606c75dbc563d9c9bc161fb5392d662d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/phpcs-phar',
             'aliases' => array(),
@@ -558,13 +558,13 @@
         'squizlabs/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.10.1',
+                0 => '3.10.2',
             ),
         ),
         'symfony/cache' => array(
-            'pretty_version' => 'v7.1.2',
-            'version' => '7.1.2.0',
-            'reference' => 'e933e1d947ffb88efcdd34a2bd51561cab7deaae',
+            'pretty_version' => 'v7.1.3',
+            'version' => '7.1.3.0',
+            'reference' => '8ac37acee794372f9732fe8a61a8221f6762148e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/cache',
             'aliases' => array(),
@@ -634,9 +634,9 @@
             'dev_requirement' => false,
         ),
         'symfony/translation' => array(
-            'pretty_version' => 'v7.1.1',
-            'version' => '7.1.1.0',
-            'reference' => 'cf5ae136e124fc7681b34ce9fac9d5b9ae8ceee3',
+            'pretty_version' => 'v7.1.3',
+            'version' => '7.1.3.0',
+            'reference' => '8d5e50c813ba2859a6dfc99a0765c550507934a1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
