@@ -68,7 +68,7 @@ class ResourceIsolationPolicyTest extends TestCase
 		$this->installPolicy(true);
 		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, 'cross-site');
 		$this->callPresenterAction();
-		Assert::same(['GET :Www:Homepage:default foo, waldo'], $this->logger->getLogged());
+		Assert::same(['GET :Www:Homepage:default; param names: foo, waldo; headers: Sec-Fetch-Dest: [not sent], Sec-Fetch-Mode: [not sent], Sec-Fetch-Site: cross-site, Sec-Fetch-User: [not sent]'], $this->logger->getLogged());
 		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
 	}
 
