@@ -32,7 +32,17 @@ readonly class ResourceIsolationPolicy
 				$presenter->onStartup[] = function () use ($presenter): void {
 					if (!$this->isRequestAllowed($presenter)) {
 						if ($this->reportOnly) {
-							$message = sprintf('%s %s %s', $this->httpRequest->getMethod(), $presenter->getAction(true), implode(', ', array_keys($presenter->getParameters())));
+							$headers = [];
+							foreach ($this->fetchMetadata->getAllHeaders() as $header => $value) {
+								$headers[] = sprintf('%s: %s', $header, $value ?? '[not sent]');
+							}
+							$message = sprintf(
+								'%s %s; param names: %s; headers: %s',
+								$this->httpRequest->getMethod(),
+								$presenter->getAction(true),
+								implode(', ', array_keys($presenter->getParameters())),
+								implode(', ', $headers),
+							);
 							Debugger::log($message, 'cross-site');
 						} else {
 							$presenter->forward(':Www:Forbidden:', ['message' => 'messages.forbidden.crossSite']);
