@@ -37,8 +37,9 @@ readonly class ResourceIsolationPolicy
 								$headers[] = sprintf('%s: %s', $header, $value ?? '[not sent]');
 							}
 							$message = sprintf(
-								'%s %s; param names: %s; headers: %s',
+								'%s %s; action: %s; param names: %s; headers: %s',
 								$this->httpRequest->getMethod(),
+								$this->httpRequest->getUrl()->getAbsoluteUrl(),
 								$presenter->getAction(true),
 								implode(', ', array_keys($presenter->getParameters())),
 								implode(', ', $headers),
