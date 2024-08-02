@@ -14,7 +14,7 @@ services:
 	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
 	- MichalSpacekCz\Application\SanitizedPhpInfo
-	- MichalSpacekCz\Application\Theme
+	- MichalSpacekCz\Application\Theme\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
 	- MichalSpacekCz\Articles\ArticleHeaderIconsFactory
@@ -58,6 +58,7 @@ services:
 	- MichalSpacekCz\Form\SignInHoneypotFormFactory
 	- MichalSpacekCz\Form\TalkFormFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Form\TalkSlidesFormFactory
+	- MichalSpacekCz\Form\ThemeFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory

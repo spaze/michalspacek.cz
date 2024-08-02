@@ -177,7 +177,7 @@ button:disabled { cursor: not-allowed; }
 	right: 0;
 	padding: 0 10px;
 }
-#header-links a {
+#header-links a, #header-links button {
 	display: block;
 	float: right;
 	background-color: rgba(0, 0, 0, 0.04);
@@ -186,9 +186,14 @@ button:disabled { cursor: not-allowed; }
 	margin-left: 10px;
 	text-decoration: none;
 }
-#header-links a.tools { background-color: rgba(0, 0, 255, 0.04); }
+#header-links button {
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+}
+#header-links a.tools, #header-links button { background-color: rgba(0, 0, 255, 0.04); }
 #header-links a:hover { background-color: rgba(0, 0, 0, 0.08); }
-#header-links a.tools:hover { background-color: rgba(0, 0, 255, 0.08); }
+#header-links a.tools:hover, #header-links button:hover { background-color: rgba(0, 0, 255, 0.08); }
 .print { display: none; }
 .single-column { padding: 0 10px 0.5em 10px; }
 .with-sidebar { padding-bottom: 0.5em; }
@@ -324,6 +329,7 @@ form.wide textarea, textarea.wide { height: 200px; }
 	text-align: center;
 }
 .blog form input[type=text] { width: 85px; }
+.blog#header-links form { margin: inherit; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }

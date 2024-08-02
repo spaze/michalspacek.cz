@@ -36,9 +36,9 @@ small a, .small a { color: #C9C9C9 !important; }
 blockquote, .indent { border-left-color: #2B2B2B; }
 tr.dateLine td, li.dateLine { border-top-color: #2B2B2B; }
 #header-links a { background-color: rgba(255, 255, 255, 0.06); }
-#header-links a.tools { background-color: rgba(0, 255, 0, 0.08); }
+#header-links a.tools, #header-links button { background-color: rgba(0, 255, 0, 0.08); }
 #header-links a:hover { background-color: rgba(255, 255, 255, 0.12); }
-#header-links a.tools:hover { background-color: rgba(0, 255, 0, 0.16); }
+#header-links a.tools:hover, #header-links button:hover { background-color: rgba(0, 255, 0, 0.16); }
 #header-icons small a, #footer a { color: #A9A9A9; }
 #header-icons small a:hover, #footer a:hover { color: #00D700; }
 .discarded, #statuses .discarded, .lighter { opacity: 0.5; }
