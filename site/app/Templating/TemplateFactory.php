@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Templating;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\Theme;
+use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\TemplateFactory as UiTemplateFactory;

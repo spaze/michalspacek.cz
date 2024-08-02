@@ -6,9 +6,10 @@ namespace MichalSpacekCz\Www\Presenters;
 use DateTimeInterface;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
-use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
+use MichalSpacekCz\Form\ThemeFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\Request;
 use Nette\Application\UI\InvalidLinkException;
@@ -27,7 +28,7 @@ abstract class BasePresenter extends Presenter
 
 	private LocaleLinkGenerator $localeLinkGenerator;
 
-	private Theme $theme;
+	private ThemeFormFactory $themeFormFactory;
 
 	private IResponse $httpResponse;
 
@@ -55,9 +56,9 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * @internal
 	 */
-	public function injectTheme(Theme $theme): void
+	public function injectThemeFormFactory(ThemeFormFactory $themeFormFactory): void
 	{
-		$this->theme = $theme;
+		$this->themeFormFactory = $themeFormFactory;
 	}
 
 
@@ -147,22 +148,6 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	public function handleDarkFuture(): never
-	{
-		$this->theme->setDarkMode();
-		$this->httpResponse->setExpiration(null);
-		$this->redirectPermanent('this');
-	}
-
-
-	public function handleBrightFuture(): never
-	{
-		$this->theme->setLightMode();
-		$this->httpResponse->setExpiration(null);
-		$this->redirectPermanent('this');
-	}
-
-
 	#[Override]
 	public function lastModified(string|int|DateTimeInterface|null $lastModified, string $etag = null, string $expire = null): void
 	{
@@ -177,6 +162,15 @@ abstract class BasePresenter extends Presenter
 	protected function createComponentCriticalCss(): CriticalCss
 	{
 		return $this->criticalCssFactory->create();
+	}
+
+
+	protected function createComponentTheme(): UiForm
+	{
+		return $this->themeFormFactory->create(function (): void {
+			$this->httpResponse->setExpiration(null);
+			$this->redirect('this');
+		});
 	}
 
 }

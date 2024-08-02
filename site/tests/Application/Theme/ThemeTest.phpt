@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application;
+namespace MichalSpacekCz\Application\Theme;
 
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
@@ -9,7 +9,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class ThemeTest extends TestCase
@@ -36,7 +36,7 @@ class ThemeTest extends TestCase
 	public function testSetLightMode(): void
 	{
 		$this->theme->setLightMode();
-		Assert::same('bright', $this->response->getCookie('future')[0]->getValue());
+		Assert::same('light', $this->response->getCookie('future')[0]->getValue());
 	}
 
 
@@ -60,7 +60,7 @@ class ThemeTest extends TestCase
 	}
 
 
-	public function testIsDarkModeValueBright(): void
+	public function testIsDarkModeValueLegacy(): void
 	{
 		$this->request->setCookie(self::COOKIE, 'bright');
 		Assert::false($this->theme->isDarkMode());
@@ -70,7 +70,7 @@ class ThemeTest extends TestCase
 	public function testIsDarkModeValueLight(): void
 	{
 		$this->request->setCookie(self::COOKIE, 'light');
-		Assert::null($this->theme->isDarkMode());
+		Assert::false($this->theme->isDarkMode());
 	}
 
 }

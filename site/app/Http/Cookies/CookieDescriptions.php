@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\Cookies;
 
-use MichalSpacekCz\Application\Theme;
+use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\DateTime\DateTimeParser;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
