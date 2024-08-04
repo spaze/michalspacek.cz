@@ -335,9 +335,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.11.8',
-            'version' => '1.11.8.0',
-            'reference' => '6adbd118e6c0515dd2f36b06cde1d6da40f1b8ec',
+            'pretty_version' => '1.11.9',
+            'version' => '1.11.9.0',
+            'reference' => 'e370bcddadaede0c1716338b262346f40d296f82',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -353,9 +353,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-nette' => array(
-            'pretty_version' => '1.3.3',
-            'version' => '1.3.3.0',
-            'reference' => '5f97dfaa487b628888e67ea24ddf6187ac041e9f',
+            'pretty_version' => '1.3.5',
+            'version' => '1.3.5.0',
+            'reference' => '30650e627dad1f3a72b44eb4e45501a446a4a04d',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-nette',
             'aliases' => array(),
@@ -412,7 +412,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '0816697098823477b1a95d07d2b94bf3cfe1a2f8',
+            'reference' => '25b3df97450d4b8ae46ab6c6a2441db776b3e00d',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
