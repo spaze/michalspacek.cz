@@ -66,7 +66,7 @@ class TrainingApplication
 		private readonly ?float $priceVat,
 		private readonly string $priceWithCurrency,
 		private readonly string $priceVatWithCurrency,
-		private readonly ?float $discount,
+		private readonly ?int $discount,
 		private ?int $invoiceId,
 		private readonly ?DateTime $paid,
 		private readonly string $accessToken,
@@ -323,7 +323,7 @@ class TrainingApplication
 	}
 
 
-	public function getDiscount(): ?float
+	public function getDiscount(): ?int
 	{
 		return $this->discount;
 	}
