@@ -13,11 +13,6 @@ parameters:
 	netteLinks:
 		applicationMapping: # Copy of mapping from common.neon
 			*: MichalSpacekCz\*\Presenters\*Presenter
-	ignoreErrors:
-		- # https://github.com/phpstan/phpstan-nette/issues/144
-			message: '#^Strict comparison using !== between string and never will always evaluate to true#'
-			path: app/Talks/TalkFactory.php
-			count: 1
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
