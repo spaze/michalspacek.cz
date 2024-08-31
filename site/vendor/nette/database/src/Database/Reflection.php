@@ -16,13 +16,11 @@ final class Reflection
 {
 	/** @var array<string, Table> */
 	public readonly array $tables;
-	private ?string $schema;
 
 
 	public function __construct(
 		private readonly Driver $driver,
 	) {
-		$this->schema = $this->driver->isSupported(Driver::SUPPORT_SCHEMA) ? 'public' : null;
 		unset($this->tables);
 	}
 
@@ -37,7 +35,21 @@ final class Reflection
 	public function getTable(string $name): Table
 	{
 		$name = $this->getFullName($name);
-		return $this->tables[$name] ?? throw new \InvalidArgumentException("Table '$name' not found.");
+		return $this->tables[$name]
+			?? $this->tryGetTable($name)
+			?? throw new \InvalidArgumentException("Table '$name' not found.");
+	}
+
+
+	private function tryGetTable(string $name): ?Table
+	{
+		try {
+			$table = new Table($this, $name);
+			$table->columns;
+			return $table;
+		} catch (DriverException) {
+		}
+		return null;
 	}
 
 
@@ -50,9 +62,7 @@ final class Reflection
 
 	private function getFullName(string $name): string
 	{
-		return $this->schema !== null && !str_contains($name, '.')
-			? $this->schema . '.' . $name
-			: $name;
+		return $name;
 	}
 
 

@@ -17,22 +17,25 @@ use Nette\Database\Explorer;
 /**
  * Filtered table representation.
  * Selection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * @template T of ActiveRow
+ * @implements \Iterator<T>
+ * @implements \ArrayAccess<T>
  */
 class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 {
-	protected Explorer $explorer;
+	protected readonly Explorer $explorer;
 
 	/** back compatibility */
 	protected Explorer $context;
-	protected Conventions $conventions;
-	protected ?Nette\Caching\Cache $cache;
+	protected readonly Conventions $conventions;
+	protected readonly ?Nette\Caching\Cache $cache;
 	protected SqlBuilder $sqlBuilder;
 
 	/** table name */
-	protected string $name;
+	protected readonly string $name;
 
 	/** @var string|string[]|null primary key field name */
-	protected string|array|null $primary;
+	protected readonly string|array|null $primary;
 
 	/** primary column sequence name, false for autodetection */
 	protected string|bool|null $primarySequence = false;
@@ -78,7 +81,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		$this->name = $tableName;
 
 		$this->cache = $cacheStorage
-			? new Nette\Caching\Cache($cacheStorage, 'Nette.Database.' . md5($explorer->getConnection()->getDsn()))
+			? new Nette\Caching\Cache($cacheStorage, 'Nette.Database.' . hash('xxh128', $explorer->getConnection()->getDsn()))
 			: null;
 		$this->primary = $conventions->getPrimary($tableName);
 		$this->sqlBuilder = new SqlBuilder($tableName, $explorer);
@@ -169,6 +172,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns row specified by primary key.
+	 * @return T
 	 */
 	public function get(mixed $key): ?ActiveRow
 	{
@@ -179,6 +183,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Fetches single row object.
+	 * @return T
 	 */
 	public function fetch(): ?ActiveRow
 	{
@@ -211,15 +216,15 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Fetches all rows as associative array.
 	 */
-	public function fetchPairs(string|int|null $key = null, string|int|null $value = null): array
+	public function fetchPairs(string|int|\Closure|null $keyOrCallback = null, string|int|null $value = null): array
 	{
-		return Nette\Database\Helpers::toPairs($this->fetchAll(), $key, $value);
+		return Nette\Database\Helpers::toPairs($this->fetchAll(), $keyOrCallback, $value);
 	}
 
 
 	/**
 	 * Fetches all rows.
-	 * @return ActiveRow[]
+	 * @return T[]
 	 */
 	public function fetchAll(): array
 	{
@@ -446,7 +451,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 			return $this->explorer->query($query, ...$selection->getSqlBuilder()->getParameters())->fetch()->groupaggregate;
 		} else {
 			$selection->select($function);
-			foreach ($selection->fetch() as $val) {
+			foreach ($selection->fetch() ?? [] as $val) {
 				return $val;
 			}
 			return null;
@@ -649,7 +654,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		}
 
 		$key[] = $trace;
-		return $this->generalCacheKey = md5(serialize($key));
+		return $this->generalCacheKey = hash('xxh128', serialize($key));
 	}
 
 
@@ -761,6 +766,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Inserts row in a table. Returns ActiveRow or number of affected rows for Selection or table without primary key.
 	 * @param  iterable|Selection  $data  [$column => $value]|\Traversable|Selection for INSERT ... SELECT
+	 * @return T|array|int|bool
 	 */
 	public function insert(iterable $data): ActiveRow|array|int|bool
 	{
@@ -964,6 +970,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
+	/** @return T|false */
 	public function current(): ActiveRow|false
 	{
 		return ($key = current($this->keys)) !== false
@@ -1010,6 +1017,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Returns specified row.
 	 * @param  string  $key
+	 * @return ?T
 	 */
 	public function offsetGet($key): ?ActiveRow
 	{

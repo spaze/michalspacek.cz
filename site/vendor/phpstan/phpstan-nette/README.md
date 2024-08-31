@@ -1,4 +1,4 @@
-# Nette Framework class reflection extension for PHPStan
+# Nette Framework extension for PHPStan
 
 [![Build](https://github.com/phpstan/phpstan-nette/workflows/Build/badge.svg)](https://github.com/phpstan/phpstan-nette/actions)
 [![Latest Stable Version](https://poser.pugx.org/phpstan/phpstan-nette/v/stable)](https://packagist.org/packages/phpstan/phpstan-nette)
@@ -18,6 +18,7 @@ This extension provides following features:
 * Magic [Nette\Object and Nette\SmartObject](https://doc.nette.org/en/2.4/php-language-enhancements) properties
 * Event listeners through the `on*` properties
 * Defines early terminating method calls for Presenter methods to prevent `Undefined variable` errors
+* Understand the exact array shape coming from `Nette\Utils\Strings::match()` and `Nette\Utils\Strings::matchAll()` based on pattern
 
 It also contains these framework-specific rules (can be enabled separately):
 

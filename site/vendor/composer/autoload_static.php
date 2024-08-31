@@ -540,6 +540,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Bridges\\HttpDI\\SessionExtension' => __DIR__ . '/..' . '/nette/http/src/Bridges/HttpDI/SessionExtension.php',
         'Nette\\Bridges\\HttpTracy\\SessionPanel' => __DIR__ . '/..' . '/nette/http/src/Bridges/HttpTracy/SessionPanel.php',
         'Nette\\Bridges\\MailDI\\MailExtension' => __DIR__ . '/..' . '/nette/mail/src/Bridges/MailDI/MailExtension.php',
+        'Nette\\Bridges\\Psr\\PsrCacheAdapter' => __DIR__ . '/..' . '/nette/caching/src/Bridges/Psr/PsrCacheAdapter.php',
         'Nette\\Bridges\\SecurityDI\\SecurityExtension' => __DIR__ . '/..' . '/nette/security/src/Bridges/SecurityDI/SecurityExtension.php',
         'Nette\\Bridges\\SecurityHttp\\CookieStorage' => __DIR__ . '/..' . '/nette/security/src/Bridges/SecurityHttp/CookieStorage.php',
         'Nette\\Bridges\\SecurityHttp\\SessionStorage' => __DIR__ . '/..' . '/nette/security/src/Bridges/SecurityHttp/SessionStorage.php',

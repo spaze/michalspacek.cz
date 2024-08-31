@@ -300,8 +300,23 @@ final class Helpers
 
 
 	/** @internal */
+	public static function tryEnumConversion(mixed $value, $reflection): mixed
+	{
+		if ($value !== null
+			&& $reflection
+			&& ($type = Nette\Utils\Type::fromReflection($reflection)?->getSingleName())
+			&& is_a($type, \BackedEnum::class, allow_string: true)
+		) {
+			return $type::from($value);
+		}
+
+		return $value;
+	}
+
+
+	/** @internal */
 	public static function getSupportedImages(): array
 	{
-		return array_map(fn($type) => Image::typeToMimeType($type), Image::getSupportedTypes());
+		return array_values(array_map(fn($type) => Image::typeToMimeType($type), Image::getSupportedTypes()));
 	}
 }

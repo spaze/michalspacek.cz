@@ -15,6 +15,7 @@
 	<rule ref="PSR12">
 		<exclude name="Generic.Files.LineLength.TooLong"/>
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsed"/>
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsedHeredocCloser"/>
 		<exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
 		<exclude name="PSR12.Classes.AnonClassDeclaration.CloseBraceAfterBody"/> <!-- 1 blank line checked by Squiz.WhiteSpace.FunctionSpacing.AfterLast -->
 		<exclude name="PSR12.Classes.OpeningBraceSpace.Found"/> <!-- 1 blank like required by Squiz.WhiteSpace.FunctionSpacing.BeforeFirst -->

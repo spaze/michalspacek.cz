@@ -17,8 +17,8 @@ use Nette;
  */
 class Structure implements IStructure
 {
-	protected Connection $connection;
-	protected Nette\Caching\Cache $cache;
+	protected readonly Connection $connection;
+	protected readonly Nette\Caching\Cache $cache;
 
 	/** @var array{tables: array, columns: array, primary: array, aliases: array, hasMany: array, belongsTo: array} */
 	protected array $structure;
@@ -28,7 +28,7 @@ class Structure implements IStructure
 	public function __construct(Connection $connection, Nette\Caching\Storage $cacheStorage)
 	{
 		$this->connection = $connection;
-		$this->cache = new Nette\Caching\Cache($cacheStorage, 'Nette.Database.Structure.' . md5($this->connection->getDsn()));
+		$this->cache = new Nette\Caching\Cache($cacheStorage, 'Nette.Database.Structure.' . hash('xxh128', $connection->getDsn()));
 	}
 
 
@@ -94,7 +94,7 @@ class Structure implements IStructure
 		$this->needStructure();
 		$table = $this->resolveFQTableName($table);
 
-		if (!$this->connection->getDriver()->isSupported(Driver::SUPPORT_SEQUENCE)) {
+		if (!$this->connection->getDriver()->isSupported(Driver::SupportSequence)) {
 			return null;
 		}
 

@@ -145,6 +145,7 @@ final class CoreExtension extends Latte\Extension
 			'join' => [$this->filters, 'implode'],
 			'last' => [$this->filters, 'last'],
 			'length' => [$this->filters, 'length'],
+			'localDate' => [$this->filters, 'localDate'],
 			'lower' => extension_loaded('mbstring')
 				? [$this->filters, 'lower']
 				: fn() => throw new RuntimeException('Filter |lower requires mbstring extension.'),

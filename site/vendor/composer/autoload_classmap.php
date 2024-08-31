@@ -332,6 +332,7 @@ return array(
     'Nette\\Bridges\\HttpDI\\SessionExtension' => $vendorDir . '/nette/http/src/Bridges/HttpDI/SessionExtension.php',
     'Nette\\Bridges\\HttpTracy\\SessionPanel' => $vendorDir . '/nette/http/src/Bridges/HttpTracy/SessionPanel.php',
     'Nette\\Bridges\\MailDI\\MailExtension' => $vendorDir . '/nette/mail/src/Bridges/MailDI/MailExtension.php',
+    'Nette\\Bridges\\Psr\\PsrCacheAdapter' => $vendorDir . '/nette/caching/src/Bridges/Psr/PsrCacheAdapter.php',
     'Nette\\Bridges\\SecurityDI\\SecurityExtension' => $vendorDir . '/nette/security/src/Bridges/SecurityDI/SecurityExtension.php',
     'Nette\\Bridges\\SecurityHttp\\CookieStorage' => $vendorDir . '/nette/security/src/Bridges/SecurityHttp/CookieStorage.php',
     'Nette\\Bridges\\SecurityHttp\\SessionStorage' => $vendorDir . '/nette/security/src/Bridges/SecurityHttp/SessionStorage.php',
