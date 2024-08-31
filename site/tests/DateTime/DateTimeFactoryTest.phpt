@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\DateTime;
 
 use DateTimeImmutable;
+use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -38,16 +39,30 @@ class DateTimeFactoryTest extends TestCase
 
 	public function testCreateFrom(): void
 	{
-		Assert::exception(function (): void {
-			$this->dateTimeFactory->createFrom(new DateTimeImmutable(), 'Europe/Brno');
-		}, InvalidTimezoneException::class, "Invalid timezone 'Europe/Brno'");
-
 		$niceDate = '2020-10-10 20:30:40';
 		$niceDateTime = new DateTimeImmutable("{$niceDate} UTC");
 		$newDateTime = $this->dateTimeFactory->createFrom($niceDateTime, 'Europe/Prague');
 		Assert::same($niceDate, $newDateTime->format(DateTimeFormat::MYSQL));
 		Assert::same('Europe/Prague', $newDateTime->getTimezone()->getName());
 		Assert::notSame($niceDateTime->getTimestamp(), $newDateTime->getTimestamp());
+	}
+
+
+	public function testCreateFromInvalidTimezone(): void
+	{
+		$e = Assert::exception(function (): void {
+			$this->dateTimeFactory->createFrom(new DateTimeImmutable(), 'Europe/Brno');
+		}, CannotCreateDateTimeObjectException::class, 'Cannot create a DateTime or DateTimeImmutable object');
+		if (!$e instanceof CannotCreateDateTimeObjectException) {
+			Assert::fail('Exception is of a wrong type ' . get_debug_type($e));
+		} else {
+			$previous = $e->getPrevious();
+			if (!$previous instanceof InvalidTimeZoneException) {
+				Assert::fail('Previous exception is of a wrong type ' . get_debug_type($previous));
+			} else {
+				Assert::same("Invalid timezone 'Europe/Brno'", $previous->getMessage());
+			}
+		}
 	}
 
 }
