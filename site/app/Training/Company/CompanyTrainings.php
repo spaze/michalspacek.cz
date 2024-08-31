@@ -109,20 +109,18 @@ readonly class CompanyTrainings
 
 	private function createFromDatabaseRow(Row $row): CompanyTraining
 	{
-		if (isset($row->alternativeDurationPriceText)) {
-			$price = $this->prices->resolvePriceVat($row->alternativeDurationPrice);
-			$alternativeDurationPriceText = $this->texyFormatter->translate($row->alternativeDurationPriceText, [
-				$price->getPriceWithCurrency(),
-				$price->getPriceVatWithCurrency(),
-			]);
-		}
+		$price = $this->prices->resolvePriceVat($row->alternativeDurationPrice);
+		$alternativeDurationPriceText = $this->texyFormatter->translate($row->alternativeDurationPriceText, [
+			$price->getPriceWithCurrency(),
+			$price->getPriceVatWithCurrency(),
+		]);
 		return new CompanyTraining(
 			$row->id,
 			$row->action,
 			$this->texyFormatter->translate($row->name),
-			$row->description ? $this->texyFormatter->translate($row->description) : null,
+			$this->texyFormatter->translate($row->description),
 			$this->texyFormatter->translate($row->content),
-			$row->upsell ? $this->texyFormatter->translate($row->upsell) : null,
+			$this->texyFormatter->translate($row->upsell),
 			$row->prerequisites ? $this->texyFormatter->translate($row->prerequisites) : null,
 			$row->audience ? $this->texyFormatter->translate($row->audience) : null,
 			$row->capacity,
@@ -133,7 +131,7 @@ readonly class CompanyTrainings
 			(bool)$row->custom,
 			$this->texyFormatter->translate($row->duration),
 			$this->texyFormatter->translate($row->alternativeDuration),
-			$alternativeDurationPriceText ?? null,
+			$alternativeDurationPriceText,
 			$row->successorId,
 			$row->discontinuedId,
 		);

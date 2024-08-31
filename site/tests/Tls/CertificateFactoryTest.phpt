@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -81,9 +82,9 @@ class CertificateFactoryTest extends TestCase
 		$row = new Row();
 		$row->cn = 'foo.example';
 		$row->ext = 'ec';
-		$row->notBefore = new DateTimeImmutable('2020-10-05 04:03:02');
+		$row->notBefore = new DateTime('2020-10-05 04:03:02');
 		$row->notBeforeTimezone = 'UTC';
-		$row->notAfter = new DateTimeImmutable('2021-11-06 14:13:12');
+		$row->notAfter = new DateTime('2021-11-06 14:13:12');
 		$row->notAfterTimezone = 'Europe/Prague';
 
 		$certificate = $this->certificateFactory->fromDatabaseRow($row);

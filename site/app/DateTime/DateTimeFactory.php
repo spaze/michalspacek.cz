@@ -9,7 +9,6 @@ use DateTimeZone;
 use Exception;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
-use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 
 readonly class DateTimeFactory
 {
@@ -36,14 +35,12 @@ readonly class DateTimeFactory
 
 
 	/**
-	 * @throws InvalidTimezoneException
 	 * @throws CannotCreateDateTimeObjectException
 	 */
-	public function createFrom(DateTimeInterface $dateTime, ?string $timezoneId = null): DateTimeImmutable
+	public function createFrom(DateTimeInterface $dateTime, string $timezoneId): DateTimeImmutable
 	{
-		$timezone = $timezoneId !== null ? $this->dateTimeZoneFactory->get($timezoneId) : null;
 		try {
-			return new DateTimeImmutable($dateTime->format('Y-m-d H:i:s.u'), $timezone);
+			return new DateTimeImmutable($dateTime->format('Y-m-d H:i:s.u'), $this->dateTimeZoneFactory->get($timezoneId));
 		} catch (Exception $e) {
 			throw new CannotCreateDateTimeObjectException($e);
 		}

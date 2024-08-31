@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="app/Articles/Articles.php">
     <MixedArgument>
       <code><![CDATA[$result->slugTags]]></code>
@@ -666,10 +666,8 @@
   </file>
   <file src="app/Training/Company/CompanyTrainings.php">
     <MixedArgument>
-      <code><![CDATA[$alternativeDurationPriceText ?? null]]></code>
       <code><![CDATA[$row->action]]></code>
       <code><![CDATA[$row->alternativeDuration]]></code>
-      <code><![CDATA[$row->alternativeDurationPrice]]></code>
       <code><![CDATA[$row->alternativeDurationPrice]]></code>
       <code><![CDATA[$row->alternativeDurationPriceText]]></code>
       <code><![CDATA[$row->audience]]></code>
@@ -698,8 +696,6 @@
       <code><![CDATA[$row->end]]></code>
       <code><![CDATA[$row->feedbackHref]]></code>
       <code><![CDATA[$row->labelJson]]></code>
-      <code><![CDATA[$row->labelJson]]></code>
-      <code><![CDATA[$row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null]]></code>
       <code><![CDATA[$row->note]]></code>
       <code><![CDATA[$row->price]]></code>
       <code><![CDATA[$row->remoteNotes]]></code>
