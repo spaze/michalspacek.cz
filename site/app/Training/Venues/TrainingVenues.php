@@ -85,6 +85,20 @@ readonly class TrainingVenues
 
 	private function createFromDatabaseRow(Row $row): TrainingVenue
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->name));
+		assert($row->nameExtended === null || is_string($row->nameExtended));
+		assert(is_string($row->href));
+		assert(is_string($row->address));
+		assert(is_string($row->city));
+		assert($row->descriptionTexy === null || is_string($row->descriptionTexy));
+		assert($row->action === null || is_string($row->action));
+		assert($row->entrance === null || is_string($row->entrance));
+		assert($row->entranceNavigation === null || is_string($row->entranceNavigation));
+		assert($row->streetview === null || is_string($row->streetview));
+		assert($row->parkingTexy === null || is_string($row->parkingTexy));
+		assert($row->publicTransportTexy === null || is_string($row->publicTransportTexy));
+
 		return new TrainingVenue(
 			$row->id,
 			$row->name,
@@ -92,15 +106,15 @@ readonly class TrainingVenues
 			$row->href,
 			$row->address,
 			$row->city,
-			$row->descriptionTexy ? $this->texyFormatter->format($row->descriptionTexy) : null,
+			$row->descriptionTexy !== null ? $this->texyFormatter->format($row->descriptionTexy) : null,
 			$row->descriptionTexy,
 			$row->action,
 			$row->entrance,
 			$row->entranceNavigation,
 			$row->streetview,
-			$row->parkingTexy ? $this->texyFormatter->format($row->parkingTexy) : null,
+			$row->parkingTexy !== null ? $this->texyFormatter->format($row->parkingTexy) : null,
 			$row->parkingTexy,
-			$row->publicTransportTexy ? $this->texyFormatter->format($row->publicTransportTexy) : null,
+			$row->publicTransportTexy !== null ? $this->texyFormatter->format($row->publicTransportTexy) : null,
 			$row->publicTransportTexy,
 		);
 	}

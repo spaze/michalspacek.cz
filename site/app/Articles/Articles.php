@@ -210,13 +210,17 @@ class Articles
 					AND l.locale = ?
 			LIMIT 1';
 		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new DateTime(), $this->translator->getDefaultLocale());
-		if ($result) {
-			$tags = $result->tags !== null ? $this->tags->unserialize($result->tags) : [];
-			$slugTags = $result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : [];
-			foreach ($slugTags as $key => $slug) {
-				if ($slug === $tag) {
-					return $tags[$key] ?? null;
-				}
+		if (!$result) {
+			return null;
+		}
+		assert($result->tags === null || is_string($result->tags));
+		assert($result->slugTags === null || is_string($result->slugTags));
+
+		$tags = $result->tags !== null ? $this->tags->unserialize($result->tags) : [];
+		$slugTags = $result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : [];
+		foreach ($slugTags as $key => $slug) {
+			if ($slug === $tag) {
+				return $tags[$key] ?? null;
 			}
 		}
 		return null;
@@ -289,6 +293,14 @@ class Articles
 
 	private function buildArticle(Row $row): ArticlePublishedElsewhere
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->titleTexy));
+		assert(is_string($row->href));
+		assert($row->published instanceof DateTime);
+		assert(is_string($row->leadTexy));
+		assert(is_string($row->sourceName));
+		assert(is_string($row->sourceHref));
+
 		$this->texyFormatter->setTopHeading(2);
 		return new ArticlePublishedElsewhere(
 			$row->id,

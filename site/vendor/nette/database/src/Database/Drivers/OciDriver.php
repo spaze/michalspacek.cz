@@ -97,7 +97,8 @@ class OciDriver implements Nette\Database\Driver
 	public function getTables(): array
 	{
 		$tables = [];
-		foreach ($this->connection->query('SELECT * FROM cat') as $row) {
+		$rows = $this->connection->query('SELECT * FROM cat');
+		while ($row = $rows->fetch()) {
 			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
 				$tables[] = [
 					'name' => $row[0],
@@ -136,6 +137,6 @@ class OciDriver implements Nette\Database\Driver
 
 	public function isSupported(string $item): bool
 	{
-		return $item === self::SUPPORT_SEQUENCE || $item === self::SUPPORT_SUBSELECT;
+		return $item === self::SupportSequence || $item === self::SupportSubselect;
 	}
 }

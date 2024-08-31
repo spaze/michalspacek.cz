@@ -126,13 +126,24 @@ readonly class Interviews
 	 */
 	private function createFromDatabaseRow(Row $row): Interview
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->action));
+		assert(is_string($row->title));
+		assert($row->description === null || is_string($row->description));
+		assert($row->date instanceof DateTime);
+		assert(is_string($row->href));
+		assert($row->audioHref === null || is_string($row->audioHref));
+		assert($row->audioEmbed === null || is_string($row->audioEmbed));
+		assert($row->videoEmbed === null || is_string($row->videoEmbed));
+		assert(is_string($row->sourceName));
+		assert(is_string($row->sourceHref));
 
 		return new Interview(
 			$row->id,
 			$row->action,
 			$row->title,
 			$row->description,
-			$row->description ? $this->texyFormatter->formatBlock($row->description) : null,
+			$row->description !== null ? $this->texyFormatter->formatBlock($row->description) : null,
 			$row->date,
 			$row->href,
 			$row->audioHref,

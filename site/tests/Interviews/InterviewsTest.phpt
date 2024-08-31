@@ -58,9 +58,25 @@ class InterviewsTest extends TestCase
 				'sourceName' => 'Sauce',
 				'sourceHref' => 'https://source.href.example',
 			],
+			[
+				'id' => 3,
+				'action' => 'action-3',
+				'title' => 'Action 3',
+				'description' => null,
+				'date' => new DateTime(),
+				'href' => 'https://example.com',
+				'audioHref' => null,
+				'audioEmbed' => null,
+				'videoHref' => null,
+				'videoThumbnail' => null,
+				'videoThumbnailAlternative' => null,
+				'videoEmbed' => null,
+				'sourceName' => 'Source Name',
+				'sourceHref' => 'https://source.example',
+			],
 		]);
 		$interviews = $this->interviews->getAll();
-		Assert::count(2, $interviews);
+		Assert::count(3, $interviews);
 		Assert::same(1, $interviews[0]->getId());
 		Assert::same("<p>desc<strong>rip</strong></p>\n", $interviews[0]->getDescription()?->render());
 		Assert::same('desc**rip**', $interviews[0]->getDescriptionTexy());
@@ -73,6 +89,8 @@ class InterviewsTest extends TestCase
 		Assert::same('https://video.href.example', $interviews[1]->getVideo()->getVideoHref());
 		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.jpg', $interviews[1]->getVideo()->getThumbnailUrl());
 		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.webp', $interviews[1]->getVideo()->getThumbnailAlternativeUrl());
+		Assert::same(3, $interviews[2]->getId());
+		Assert::null($interviews[2]->getDescription());
 	}
 
 

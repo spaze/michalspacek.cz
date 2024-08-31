@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training\Company;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
 use MichalSpacekCz\Training\Prices;
@@ -95,9 +94,9 @@ readonly class CompanyTrainings
 
 		$trainings = [];
 		foreach ($result as $training) {
-			if (!is_string($training->action)) {
-				throw new ShouldNotHappenException('Action should be a string but is ' . get_debug_type($training->action));
-			}
+			assert(is_string($training->action));
+			assert(is_string($training->name));
+
 			if (!isset($public[$training->action])) {
 				$trainings[$training->action] = $this->texyFormatter->translate($training->name);
 			}
@@ -109,6 +108,26 @@ readonly class CompanyTrainings
 
 	private function createFromDatabaseRow(Row $row): CompanyTraining
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->action));
+		assert(is_string($row->name));
+		assert(is_string($row->description));
+		assert(is_string($row->content));
+		assert(is_string($row->upsell));
+		assert($row->prerequisites === null || is_string($row->prerequisites));
+		assert($row->audience === null || is_string($row->audience));
+		assert($row->capacity === null || is_int($row->capacity));
+		assert(is_int($row->price));
+		assert(is_int($row->alternativeDurationPrice));
+		assert($row->studentDiscount === null || is_int($row->studentDiscount));
+		assert($row->materials === null || is_string($row->materials));
+		assert(is_int($row->custom));
+		assert(is_string($row->duration));
+		assert(is_string($row->alternativeDuration));
+		assert(is_string($row->alternativeDurationPriceText));
+		assert($row->successorId === null || is_int($row->successorId));
+		assert($row->discontinuedId === null || is_int($row->discontinuedId));
+
 		$price = $this->prices->resolvePriceVat($row->alternativeDurationPrice);
 		$alternativeDurationPriceText = $this->texyFormatter->translate($row->alternativeDurationPriceText, [
 			$price->getPriceWithCurrency(),
@@ -121,13 +140,13 @@ readonly class CompanyTrainings
 			$this->texyFormatter->translate($row->description),
 			$this->texyFormatter->translate($row->content),
 			$this->texyFormatter->translate($row->upsell),
-			$row->prerequisites ? $this->texyFormatter->translate($row->prerequisites) : null,
-			$row->audience ? $this->texyFormatter->translate($row->audience) : null,
+			$row->prerequisites !== null ? $this->texyFormatter->translate($row->prerequisites) : null,
+			$row->audience !== null ? $this->texyFormatter->translate($row->audience) : null,
 			$row->capacity,
 			$row->price,
 			$row->alternativeDurationPrice,
 			$row->studentDiscount,
-			$row->materials ? $this->texyFormatter->translate($row->materials) : null,
+			$row->materials !== null ? $this->texyFormatter->translate($row->materials) : null,
 			(bool)$row->custom,
 			$this->texyFormatter->translate($row->duration),
 			$this->texyFormatter->translate($row->alternativeDuration),

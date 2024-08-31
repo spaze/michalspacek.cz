@@ -26,7 +26,7 @@ class Helpers
 
 	public static array $typePatterns = [
 		'^_' => IStructure::FIELD_TEXT, // PostgreSQL arrays
-		'(TINY|SMALL|SHORT|MEDIUM|BIG|LONG)(INT)?|INT(EGER|\d+| IDENTITY)?|(SMALL|BIG|)SERIAL\d*|COUNTER|YEAR|BYTE|LONGLONG|UNSIGNED BIG INT' => IStructure::FIELD_INTEGER,
+		'(TINY|SMALL|SHORT|MEDIUM|BIG|LONG)(INT)?|INT(EGER|\d+| IDENTITY| UNSIGNED)?|(SMALL|BIG|)SERIAL\d*|COUNTER|YEAR|BYTE|LONGLONG|UNSIGNED BIG INT' => IStructure::FIELD_INTEGER,
 		'(NEW)?DEC(IMAL)?(\(.*)?|NUMERIC|(SMALL)?MONEY|CURRENCY|NUMBER' => IStructure::FIELD_DECIMAL,
 		'REAL|DOUBLE( PRECISION)?|FLOAT\d*' => IStructure::FIELD_FLOAT,
 		'BOOL(EAN)?' => IStructure::FIELD_BOOL,
@@ -216,10 +216,9 @@ class Helpers
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
 			} elseif ($type === IStructure::FIELD_FLOAT || $type === IStructure::FIELD_DECIMAL) {
-				if (is_string($value) && ($pos = strpos($value, '.')) !== false) {
-					$value = rtrim(rtrim($pos === 0 ? "0$value" : $value, '0'), '.');
+				if (is_string($value) && str_starts_with($value, '.')) {
+					$value = '0' . $value;
 				}
-
 				$row[$key] = (float) $value;
 
 			} elseif ($type === IStructure::FIELD_BOOL) {
@@ -328,17 +327,16 @@ class Helpers
 	/**
 	 * Reformat source to key -> value pairs.
 	 */
-	public static function toPairs(array $rows, string|int|null $key = null, string|int|null $value = null): array
+	public static function toPairs(array $rows, string|int|\Closure|null $key, string|int|null $value): array
 	{
-		if (!$rows) {
-			return [];
-		}
-
-		$keys = array_keys((array) reset($rows));
-		if (!count($keys)) {
-			throw new \LogicException('Result set does not contain any column.');
-
-		} elseif ($key === null && $value === null) {
+		if ($key === null && $value === null) {
+			if (!$rows) {
+				return [];
+			}
+			$keys = array_keys((array) reset($rows));
+			if (!count($keys)) {
+				throw new \LogicException('Result set does not contain any column.');
+			}
 			if (count($keys) === 1) {
 				[$value] = $keys;
 			} else {
@@ -350,6 +348,15 @@ class Helpers
 		if ($key === null) {
 			foreach ($rows as $row) {
 				$return[] = ($value === null ? $row : $row[$value]);
+			}
+		} elseif ($key instanceof \Closure) {
+			foreach ($rows as $row) {
+				$tuple = $key($row);
+				if (count($tuple) === 1) {
+					$return[] = $tuple[0];
+				} else {
+					$return[$tuple[0]] = $tuple[1];
+				}
 			}
 		} else {
 			foreach ($rows as $row) {
@@ -381,5 +388,18 @@ class Helpers
 		}
 
 		return implode(', ', $duplicates);
+	}
+
+
+	/** @return array{type: string, length: ?null, scale: ?null, parameters: ?string} */
+	public static function parseColumnType(string $type): array
+	{
+		preg_match('/^([^(]+)(?:\((?:(\d+)(?:,(\d+))?|([^)]+))\))?/', $type, $m, PREG_UNMATCHED_AS_NULL);
+		return [
+			'type' => $m[1],
+			'length' => isset($m[2]) ? (int) $m[2] : null,
+			'scale' => isset($m[3]) ? (int) $m[3] : null,
+			'parameters' => $m[4] ?? null,
+		];
 	}
 }

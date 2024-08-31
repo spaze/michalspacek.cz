@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplicationFactory;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Database\Explorer;
+use Nette\Database\Row;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
@@ -52,12 +53,7 @@ readonly class PreliminaryTrainings
 			$this->translator->getDefaultLocale(),
 		);
 		foreach ($result as $row) {
-			$training = new PreliminaryTraining(
-				$row->idTraining,
-				$row->action,
-				$row->name = $this->translator->translate($row->name),
-			);
-			$trainings[$training->getId()] = $training;
+			$trainings[$this->createFromDatabaseRow($row)->getId()] = $this->createFromDatabaseRow($row);
 		}
 
 		$applications = $this->database->fetchAll(
@@ -171,6 +167,20 @@ readonly class PreliminaryTrainings
 			}
 		}
 		return $applications;
+	}
+
+
+	private function createFromDatabaseRow(Row $row): PreliminaryTraining
+	{
+		assert(is_int($row->idTraining));
+		assert(is_string($row->action));
+		assert(is_string($row->name));
+
+		return new PreliminaryTraining(
+			$row->idTraining,
+			$row->action,
+			$this->translator->translate($row->name),
+		);
 	}
 
 }

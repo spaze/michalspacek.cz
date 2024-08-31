@@ -200,6 +200,9 @@ class TrainingApplicationStatuses
 		if (!$prevStatus) {
 			throw new TrainingApplicationDoesNotExistException($applicationId);
 		}
+		assert(is_int($prevStatus->statusId));
+		assert($prevStatus->statusTime instanceof DateTime);
+		assert(is_string($prevStatus->statusTimeTimeZone));
 
 		$datetime = new DateTime($date ?? '');
 

@@ -17,8 +17,8 @@ use Latte\Compiler\Nodes\TemplateNode;
  */
 class Engine
 {
-	public const Version = '3.0.17';
-	public const VersionId = 30017;
+	public const Version = '3.0.18';
+	public const VersionId = 30018;
 
 	/** @deprecated use Engine::Version */
 	public const
@@ -567,12 +567,12 @@ class Engine
 
 
 	/**
-	 * Sets locale for date and number formatting. See PHP intl extension.
+	 * Sets the locale. It uses the same identifiers as the PHP intl extension.
 	 */
 	public function setLocale(?string $locale): static
 	{
 		if ($locale && !extension_loaded('intl')) {
-			throw new RuntimeException("Locate requires the 'intl' extension to be installed.");
+			throw new RuntimeException("Setting a locale requires the 'intl' extension to be installed.");
 		}
 		$this->locale = $locale;
 		return $this;

@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Articles\Blog;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -61,6 +62,38 @@ class BlogPostRecommendedLinksTest extends TestCase
 		Assert::exception(function () use ($json): void {
 			$this->recommendedLinks->getFromJson($json);
 		}, ShouldNotHappenException::class, 'Decoded data > link should have url and text keys, but has these: text');
+	}
+
+
+	public function testGetFromJsonInvalidText(): void
+	{
+		$json = Json::encode([['url' => 303, 'text' => 'foo']]);
+		Assert::exception(function () use ($json): void {
+			$this->recommendedLinks->getFromJson($json);
+		}, ShouldNotHappenException::class, "Decoded data > link > url should be a string, but it's a int");
+	}
+
+
+	public function testGetFromJsonInvalidUrl(): void
+	{
+		$json = Json::encode([['url' => 'foo', 'text' => 808]]);
+		Assert::exception(function () use ($json): void {
+			$this->recommendedLinks->getFromJson($json);
+		}, ShouldNotHappenException::class, "Decoded data > link > text should be a string, but it's a int");
+	}
+
+
+	public function testGetFromInvalidJson(): void
+	{
+		Assert::exception(function (): void {
+			$this->recommendedLinks->getFromJson('');
+		}, JsonException::class, 'Syntax error');
+		Assert::exception(function (): void {
+			$this->recommendedLinks->getFromJson(Json::encode(1337));
+		}, ShouldNotHappenException::class, "Decoded data should be an array, but it's a int");
+		Assert::exception(function (): void {
+			$this->recommendedLinks->getFromJson(Json::encode('foo'));
+		}, ShouldNotHappenException::class, "Decoded data should be an array, but it's a string");
 	}
 
 }

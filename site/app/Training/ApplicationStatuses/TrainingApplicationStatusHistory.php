@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\ApplicationStatuses;
 
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
@@ -89,6 +90,8 @@ class TrainingApplicationStatusHistory
 		if (!$result) {
 			return;
 		}
+		assert(is_int($result->statusId));
+		assert($result->statusTime instanceof DateTime);
 
 		Debugger::log(sprintf(
 			'Deleting status history record for application id: %d, history record id: %d, status: %d, status time: %s',

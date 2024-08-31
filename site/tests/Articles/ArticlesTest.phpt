@@ -77,6 +77,8 @@ class ArticlesTest extends TestCase
 				'cspSnippets' => null,
 				'allowedTags' => null,
 				'twitterCardId' => null,
+				'twitterCard' => null,
+				'twitterCardTitle' => null,
 				'omitExports' => null,
 			],
 			[
@@ -101,6 +103,8 @@ class ArticlesTest extends TestCase
 				'cspSnippets' => null,
 				'allowedTags' => null,
 				'twitterCardId' => null,
+				'twitterCard' => null,
+				'twitterCardTitle' => null,
 				'omitExports' => null,
 			],
 			[
@@ -125,6 +129,8 @@ class ArticlesTest extends TestCase
 				'cspSnippets' => null,
 				'allowedTags' => null,
 				'twitterCardId' => null,
+				'twitterCard' => null,
+				'twitterCardTitle' => null,
 				'omitExports' => null,
 			],
 			[
@@ -149,6 +155,8 @@ class ArticlesTest extends TestCase
 				'cspSnippets' => null,
 				'allowedTags' => null,
 				'twitterCardId' => null,
+				'twitterCard' => null,
+				'twitterCardTitle' => null,
 				'omitExports' => null,
 			],
 		];
@@ -193,6 +201,7 @@ class ArticlesTest extends TestCase
 		]);
 		Assert::same('HTTP Secure', $this->articles->getLabelByTag('https'));
 		Assert::same('HTTP/2', $this->articles->getLabelByTag('http-2'));
+		Assert::null($this->articles->getLabelByTag('http-1337'));
 	}
 
 }

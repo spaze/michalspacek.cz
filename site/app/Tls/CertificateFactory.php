@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\DateTimeFormat;
@@ -33,6 +34,13 @@ readonly class CertificateFactory
 	 */
 	public function fromDatabaseRow(Row $row): Certificate
 	{
+		assert(is_string($row->cn));
+		assert($row->ext === null || is_string($row->ext));
+		assert($row->notBefore instanceof DateTime);
+		assert(is_string($row->notBeforeTimezone));
+		assert($row->notAfter instanceof DateTime);
+		assert(is_string($row->notAfterTimezone));
+
 		return new Certificate(
 			$row->cn,
 			$row->ext,
