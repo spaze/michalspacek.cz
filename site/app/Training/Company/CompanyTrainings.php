@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training\Company;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
 use MichalSpacekCz\Training\Prices;
@@ -95,9 +94,9 @@ readonly class CompanyTrainings
 
 		$trainings = [];
 		foreach ($result as $training) {
-			if (!is_string($training->action)) {
-				throw new ShouldNotHappenException('Action should be a string but is ' . get_debug_type($training->action));
-			}
+			assert(is_string($training->action));
+			assert(is_string($training->name));
+
 			if (!isset($public[$training->action])) {
 				$trainings[$training->action] = $this->texyFormatter->translate($training->name);
 			}
