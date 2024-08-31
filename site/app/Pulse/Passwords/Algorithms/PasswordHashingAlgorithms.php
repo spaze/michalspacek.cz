@@ -38,6 +38,12 @@ readonly class PasswordHashingAlgorithms
 		if (!$row) {
 			return null;
 		}
+		assert(is_int($row->id));
+		assert(is_string($row->algo));
+		assert(is_string($row->alias));
+		assert(is_int($row->salted));
+		assert(is_int($row->stretched));
+
 		return new PasswordHashingAlgorithm($row->id, $row->algo, $row->alias, (bool)$row->salted, (bool)$row->stretched);
 	}
 

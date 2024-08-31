@@ -109,6 +109,26 @@ readonly class CompanyTrainings
 
 	private function createFromDatabaseRow(Row $row): CompanyTraining
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->action));
+		assert(is_string($row->name));
+		assert(is_string($row->description));
+		assert(is_string($row->content));
+		assert(is_string($row->upsell));
+		assert($row->prerequisites === null || is_string($row->prerequisites));
+		assert($row->audience === null || is_string($row->audience));
+		assert($row->capacity === null || is_int($row->capacity));
+		assert(is_int($row->price));
+		assert(is_int($row->alternativeDurationPrice));
+		assert($row->studentDiscount === null || is_int($row->studentDiscount));
+		assert($row->materials === null || is_string($row->materials));
+		assert(is_int($row->custom));
+		assert(is_string($row->duration));
+		assert(is_string($row->alternativeDuration));
+		assert(is_string($row->alternativeDurationPriceText));
+		assert($row->successorId === null || is_int($row->successorId));
+		assert($row->discontinuedId === null || is_int($row->discontinuedId));
+
 		$price = $this->prices->resolvePriceVat($row->alternativeDurationPrice);
 		$alternativeDurationPriceText = $this->texyFormatter->translate($row->alternativeDurationPriceText, [
 			$price->getPriceWithCurrency(),

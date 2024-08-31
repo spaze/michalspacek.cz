@@ -127,6 +127,9 @@ readonly class Manager implements Authenticator
 		if (!$user) {
 			throw new AuthenticationException('The username is incorrect.', self::IdentityNotFound);
 		}
+		assert(is_string($user->password));
+		assert(is_int($user->userId));
+
 		try {
 			$hash = $this->passwordEncryption->decrypt((string)$user->password);
 			if (!$this->passwords->verify($password, $hash)) {
@@ -350,6 +353,11 @@ readonly class Manager implements Authenticator
 		if (!$row) {
 			return null;
 		}
+		assert(is_int($row->id));
+		assert(is_string($row->token));
+		assert(is_int($row->userId));
+		assert(is_string($row->username));
+
 		$authToken = new UserAuthToken($row->id, $row->token, $row->userId, $row->username);
 		return hash_equals($authToken->getToken(), $this->hashToken($values[1])) ? $authToken : null;
 	}

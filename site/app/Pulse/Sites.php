@@ -38,6 +38,10 @@ readonly class Sites
 		if (!$row) {
 			return null;
 		}
+		assert(is_int($row->id));
+		assert(is_string($row->url));
+		assert(is_string($row->alias));
+
 		return new Site($row->id, $row->url, $row->alias);
 	}
 

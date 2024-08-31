@@ -123,6 +123,28 @@ readonly class BlogPostFactory
 	 */
 	public function createFromDatabaseRow(Row $row): BlogPost
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->slug));
+		assert(is_int($row->localeId));
+		assert(is_string($row->locale));
+		assert($row->translationGroupId === null || is_int($row->translationGroupId));
+		assert(is_string($row->titleTexy));
+		assert($row->leadTexy === null || is_string($row->leadTexy));
+		assert(is_string($row->textTexy));
+		assert($row->published instanceof DateTime);
+		assert($row->previewKey === null || is_string($row->previewKey));
+		assert($row->originallyTexy === null || is_string($row->originallyTexy));
+		assert($row->ogImage === null || is_string($row->ogImage));
+		assert($row->tags === null || is_string($row->tags));
+		assert($row->slugTags === null || is_string($row->slugTags));
+		assert($row->recommended === null || is_string($row->recommended));
+		assert($row->twitterCardId === null || is_int($row->twitterCardId));
+		assert($row->twitterCard === null || is_string($row->twitterCard));
+		assert($row->twitterCardTitle === null || is_string($row->twitterCardTitle));
+		assert($row->cspSnippets === null || is_string($row->cspSnippets));
+		assert($row->allowedTags === null || is_string($row->allowedTags));
+		assert($row->omitExports === null || is_int($row->omitExports));
+
 		return $this->create(
 			$row->id,
 			$row->slug,

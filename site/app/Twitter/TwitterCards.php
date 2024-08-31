@@ -51,6 +51,10 @@ readonly class TwitterCards
 
 	private function createFromDatabaseRow(Row $row): TwitterCard
 	{
+		assert(is_int($row->cardId));
+		assert(is_string($row->card));
+		assert(is_string($row->title));
+
 		return $this->buildCard($row->cardId, $row->card, $row->title);
 	}
 

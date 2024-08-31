@@ -23,6 +23,11 @@ readonly class VideoFactory
 	 */
 	public function createFromDatabaseRow(Row $row): Video
 	{
+		assert(is_int($row->id));
+		assert($row->videoHref === null || is_string($row->videoHref));
+		assert($row->videoThumbnail === null || is_string($row->videoThumbnail));
+		assert($row->videoThumbnailAlternative === null || is_string($row->videoThumbnailAlternative));
+
 		return new Video(
 			$row->videoHref,
 			$row->videoThumbnail,

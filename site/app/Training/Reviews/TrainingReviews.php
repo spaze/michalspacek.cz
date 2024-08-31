@@ -197,6 +197,18 @@ readonly class TrainingReviews
 
 	private function createFromDatabaseRow(Row $row): TrainingReview
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->name));
+		assert(is_string($row->company));
+		assert($row->jobTitle === null || is_string($row->jobTitle));
+		assert(is_string($row->review));
+		assert(is_string($row->reviewTexy));
+		assert($row->href === null || is_string($row->href));
+		assert(is_int($row->hidden));
+		assert($row->ranking === null || is_int($row->ranking) && $row->ranking > 0);
+		assert($row->note === null || is_string($row->note));
+		assert(is_int($row->dateId));
+
 		return new TrainingReview(
 			$row->id,
 			$row->name,

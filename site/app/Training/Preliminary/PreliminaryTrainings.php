@@ -172,6 +172,10 @@ readonly class PreliminaryTrainings
 
 	private function createFromDatabaseRow(Row $row): PreliminaryTraining
 	{
+		assert(is_int($row->idTraining));
+		assert(is_string($row->action));
+		assert(is_string($row->name));
+
 		return new PreliminaryTraining(
 			$row->idTraining,
 			$row->action,

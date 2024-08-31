@@ -26,6 +26,36 @@ readonly class TrainingDateFactory
 
 	public function get(Row $row): TrainingDate
 	{
+		assert(is_int($row->dateId));
+		assert(is_string($row->action));
+		assert(is_int($row->trainingId));
+		assert($row->start instanceof DateTime);
+		assert($row->end instanceof DateTime);
+		assert($row->labelJson === null || is_string($row->labelJson));
+		assert(is_int($row->public));
+		assert(is_string($row->status));
+		assert(is_string($row->name));
+		assert(is_int($row->remote));
+		assert($row->venueId === null || is_int($row->venueId));
+		assert($row->venueAction === null || is_string($row->venueAction));
+		assert($row->venueHref === null || is_string($row->venueHref));
+		assert($row->venueName === null || is_string($row->venueName));
+		assert($row->venueNameExtended === null || is_string($row->venueNameExtended));
+		assert($row->venueAddress === null || is_string($row->venueAddress));
+		assert($row->venueCity === null || is_string($row->venueCity));
+		assert($row->venueDescription === null || is_string($row->venueDescription));
+		assert($row->note === null || is_string($row->note));
+		assert($row->cooperationId === null || is_int($row->cooperationId));
+		assert($row->cooperationDescription === null || is_string($row->cooperationDescription));
+		assert($row->price === null || is_int($row->price));
+		assert(is_int($row->hasCustomPrice));
+		assert($row->studentDiscount === null || is_int($row->studentDiscount));
+		assert(is_int($row->hasCustomStudentDiscount));
+		assert($row->remoteUrl === null || is_string($row->remoteUrl));
+		assert($row->remoteNotes === null || is_string($row->remoteNotes));
+		assert($row->videoHref === null || is_string($row->videoHref));
+		assert($row->feedbackHref === null || is_string($row->feedbackHref));
+
 		$status = TrainingDateStatus::from($row->status);
 		return new TrainingDate(
 			$row->dateId,

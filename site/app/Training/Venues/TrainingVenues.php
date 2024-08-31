@@ -85,6 +85,20 @@ readonly class TrainingVenues
 
 	private function createFromDatabaseRow(Row $row): TrainingVenue
 	{
+		assert(is_int($row->id));
+		assert(is_string($row->name));
+		assert($row->nameExtended === null || is_string($row->nameExtended));
+		assert(is_string($row->href));
+		assert(is_string($row->address));
+		assert(is_string($row->city));
+		assert($row->descriptionTexy === null || is_string($row->descriptionTexy));
+		assert($row->action === null || is_string($row->action));
+		assert($row->entrance === null || is_string($row->entrance));
+		assert($row->entranceNavigation === null || is_string($row->entranceNavigation));
+		assert($row->streetview === null || is_string($row->streetview));
+		assert($row->parkingTexy === null || is_string($row->parkingTexy));
+		assert($row->publicTransportTexy === null || is_string($row->publicTransportTexy));
+
 		return new TrainingVenue(
 			$row->id,
 			$row->name,
