@@ -25,7 +25,7 @@ class Database extends Explorer
 	/** @var array<string, array<int, array<string, string|int|bool|null>>> */
 	private array $queriesArrayParams = [];
 
-	/** @var array<string, int|string|bool|DateTime|null> */
+	/** @var array<string, int|string|DateTime|null> */
 	private array $fetchResult = [];
 
 	private mixed $fetchFieldDefaultResult = null;
@@ -156,7 +156,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param array<string, int|string|bool|DateTime|null> $fetchResult
+	 * @param array<string, int|string|DateTime|null> $fetchResult
 	 */
 	public function setFetchResult(array $fetchResult): void
 	{
@@ -230,7 +230,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param list<array<string, int|string|bool|DateTime|null>> $fetchAllDefaultResult
+	 * @param list<array<string, int|string|DateTime|null>> $fetchAllDefaultResult
 	 * @return void
 	 */
 	public function setFetchAllDefaultResult(array $fetchAllDefaultResult): void
@@ -240,7 +240,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param list<array<string, int|string|bool|DateTime|null>> $fetchAllResult
+	 * @param list<array<string, int|string|DateTime|null>> $fetchAllResult
 	 * @return void
 	 */
 	public function addFetchAllResult(array $fetchAllResult): void
@@ -250,7 +250,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param list<array<string, int|string|bool|DateTime|null>> $fetchAllResult
+	 * @param list<array<string, int|string|DateTime|null>> $fetchAllResult
 	 * @return list<Row>
 	 */
 	private function getRows(array $fetchAllResult): array
@@ -278,7 +278,7 @@ class Database extends Explorer
 	/**
 	 * Almost the same as Row::from() but with better/simpler types.
 	 *
-	 * @param array<string, int|string|bool|DateTime|null> $array
+	 * @param array<string, int|string|DateTime|null> $array
 	 */
 	private function createRow(array $array): Row
 	{
