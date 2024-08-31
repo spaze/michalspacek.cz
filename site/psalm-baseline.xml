@@ -2,17 +2,8 @@
 <files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="app/Articles/Articles.php">
     <MixedArgument>
-      <code><![CDATA[$result->slugTags]]></code>
-      <code><![CDATA[$result->tags]]></code>
-      <code><![CDATA[$row->href]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->leadTexy]]></code>
-      <code><![CDATA[$row->published]]></code>
       <code><![CDATA[$row->slugTags]]></code>
-      <code><![CDATA[$row->sourceHref]]></code>
-      <code><![CDATA[$row->sourceName]]></code>
       <code><![CDATA[$row->tags]]></code>
-      <code><![CDATA[$row->titleTexy]]></code>
     </MixedArgument>
   </file>
   <file src="app/Articles/Blog/BlogPostEdits.php">
@@ -20,30 +11,6 @@
       <code><![CDATA[$editedAt]]></code>
       <code><![CDATA[$row->editedAtTimezone]]></code>
       <code><![CDATA[$row->summaryTexy]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Articles/Blog/BlogPostFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->allowedTags]]></code>
-      <code><![CDATA[$row->cspSnippets]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->leadTexy]]></code>
-      <code><![CDATA[$row->locale]]></code>
-      <code><![CDATA[$row->localeId]]></code>
-      <code><![CDATA[$row->ogImage]]></code>
-      <code><![CDATA[$row->originallyTexy]]></code>
-      <code><![CDATA[$row->previewKey]]></code>
-      <code><![CDATA[$row->published]]></code>
-      <code><![CDATA[$row->recommended]]></code>
-      <code><![CDATA[$row->slug]]></code>
-      <code><![CDATA[$row->slugTags]]></code>
-      <code><![CDATA[$row->tags]]></code>
-      <code><![CDATA[$row->textTexy]]></code>
-      <code><![CDATA[$row->titleTexy]]></code>
-      <code><![CDATA[$row->translationGroupId]]></code>
-      <code><![CDATA[$row->twitterCard]]></code>
-      <code><![CDATA[$row->twitterCardId]]></code>
-      <code><![CDATA[$row->twitterCardTitle]]></code>
     </MixedArgument>
   </file>
   <file src="app/Articles/Blog/BlogPostLocaleUrls.php">
@@ -338,34 +305,6 @@
       <code><![CDATA[$options['ssl']['peer_certificate'] ?? null]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Interviews/Interviews.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->audioEmbed]]></code>
-      <code><![CDATA[$row->audioHref]]></code>
-      <code><![CDATA[$row->date]]></code>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->href]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->sourceHref]]></code>
-      <code><![CDATA[$row->sourceName]]></code>
-      <code><![CDATA[$row->title]]></code>
-      <code><![CDATA[$row->videoEmbed]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Media/VideoFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->videoHref]]></code>
-      <code><![CDATA[$row->videoHref]]></code>
-      <code><![CDATA[$row->videoThumbnail]]></code>
-      <code><![CDATA[$row->videoThumbnail]]></code>
-      <code><![CDATA[$row->videoThumbnailAlternative]]></code>
-      <code><![CDATA[$row->videoThumbnailAlternative]]></code>
-    </MixedArgument>
-  </file>
   <file src="app/Media/VideoThumbnails.php">
     <MixedArgument>
       <code><![CDATA[$values->videoThumbnail]]></code>
@@ -387,24 +326,16 @@
   <file src="app/Pulse/Companies.php">
     <MixedArgument>
       <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->name]]></code>
       <code><![CDATA[$row->sortName]]></code>
-      <code><![CDATA[$row->sortName]]></code>
-      <code><![CDATA[$row->tradeName]]></code>
       <code><![CDATA[$row->tradeName]]></code>
     </MixedArgument>
   </file>
   <file src="app/Pulse/Passwords/Algorithms/PasswordHashingAlgorithms.php">
     <MixedArgument>
       <code><![CDATA[$row->algo]]></code>
-      <code><![CDATA[$row->algo]]></code>
       <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->id]]></code>
     </MixedArgument>
   </file>
@@ -443,40 +374,10 @@
       <code><![CDATA[$sorter]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Passwords/Storage/StorageRegistryFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->algoAlias]]></code>
-      <code><![CDATA[$row->algoId]]></code>
-      <code><![CDATA[$row->algoName]]></code>
-      <code><![CDATA[$row->attributes]]></code>
-      <code><![CDATA[$row->companyAlias]]></code>
-      <code><![CDATA[$row->companyId]]></code>
-      <code><![CDATA[$row->companyName]]></code>
-      <code><![CDATA[$row->disclosureAdded]]></code>
-      <code><![CDATA[$row->disclosureArchive]]></code>
-      <code><![CDATA[$row->disclosureId]]></code>
-      <code><![CDATA[$row->disclosureNote]]></code>
-      <code><![CDATA[$row->disclosurePublished]]></code>
-      <code><![CDATA[$row->disclosureType]]></code>
-      <code><![CDATA[$row->disclosureTypeAlias]]></code>
-      <code><![CDATA[$row->disclosureUrl]]></code>
-      <code><![CDATA[$row->from]]></code>
-      <code><![CDATA[$row->note]]></code>
-      <code><![CDATA[$row->sharedWith]]></code>
-      <code><![CDATA[$row->siteAlias]]></code>
-      <code><![CDATA[$row->siteId]]></code>
-      <code><![CDATA[$row->siteUrl]]></code>
-      <code><![CDATA[$row->sortName]]></code>
-      <code><![CDATA[$row->tradeName]]></code>
-    </MixedArgument>
-  </file>
   <file src="app/Pulse/Sites.php">
     <MixedArgument>
       <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->alias]]></code>
       <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->url]]></code>
       <code><![CDATA[$row->url]]></code>
     </MixedArgument>
   </file>
@@ -504,51 +405,9 @@
       <code><![CDATA[$slide->title]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Talks/TalkFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->date]]></code>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->duration]]></code>
-      <code><![CDATA[$row->event]]></code>
-      <code><![CDATA[$row->eventHref]]></code>
-      <code><![CDATA[$row->favorite]]></code>
-      <code><![CDATA[$row->filenamesTalkId]]></code>
-      <code><![CDATA[$row->href]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->locale]]></code>
-      <code><![CDATA[$row->localeId]]></code>
-      <code><![CDATA[$row->ogImage]]></code>
-      <code><![CDATA[$row->slidesEmbed]]></code>
-      <code><![CDATA[$row->slidesHref]]></code>
-      <code><![CDATA[$row->slidesNote]]></code>
-      <code><![CDATA[$row->slidesNote]]></code>
-      <code><![CDATA[$row->slidesTalkId]]></code>
-      <code><![CDATA[$row->supersededByAction]]></code>
-      <code><![CDATA[$row->supersededById]]></code>
-      <code><![CDATA[$row->supersededByTitle]]></code>
-      <code><![CDATA[$row->title]]></code>
-      <code><![CDATA[$row->transcript]]></code>
-      <code><![CDATA[$row->transcript]]></code>
-      <code><![CDATA[$row->translationGroupId]]></code>
-      <code><![CDATA[$row->videoEmbed]]></code>
-      <code><![CDATA[$url ?? null]]></code>
-    </MixedArgument>
-  </file>
   <file src="app/Talks/Talks.php">
     <MixedArgument>
       <code><![CDATA[$row['favorite']]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Tls/CertificateFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->cn]]></code>
-      <code><![CDATA[$row->ext]]></code>
-      <code><![CDATA[$row->notAfter]]></code>
-      <code><![CDATA[$row->notAfterTimezone]]></code>
-      <code><![CDATA[$row->notBefore]]></code>
-      <code><![CDATA[$row->notBeforeTimezone]]></code>
     </MixedArgument>
   </file>
   <file src="app/Tls/CertificateGatherer.php">
@@ -602,117 +461,11 @@
   </file>
   <file src="app/Training/ApplicationStatuses/TrainingApplicationStatusHistory.php">
     <MixedArgument>
-      <code><![CDATA[$result->statusId]]></code>
-      <code><![CDATA[$result->statusTime->format(DateTimeInterface::ATOM)]]></code>
       <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->status]]></code>
       <code><![CDATA[$row->statusId]]></code>
       <code><![CDATA[$row->statusTime]]></code>
       <code><![CDATA[$row->statusTimeTimeZone]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/ApplicationStatuses/TrainingApplicationStatuses.php">
-    <MixedArgument>
-      <code><![CDATA[$prevStatus->statusId]]></code>
-      <code><![CDATA[$prevStatus->statusTime->format(DateTimeInterface::ATOM)]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Applications/TrainingApplicationFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->accessToken]]></code>
-      <code><![CDATA[$row->city]]></code>
-      <code><![CDATA[$row->company]]></code>
-      <code><![CDATA[$row->companyId]]></code>
-      <code><![CDATA[$row->companyTaxId]]></code>
-      <code><![CDATA[$row->country]]></code>
-      <code><![CDATA[$row->dateId]]></code>
-      <code><![CDATA[$row->discount]]></code>
-      <code><![CDATA[$row->email]]></code>
-      <code><![CDATA[$row->feedbackHref]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->invoiceId]]></code>
-      <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->note]]></code>
-      <code><![CDATA[$row->paid]]></code>
-      <code><![CDATA[$row->price]]></code>
-      <code><![CDATA[$row->priceVat]]></code>
-      <code><![CDATA[$row->remoteNotes]]></code>
-      <code><![CDATA[$row->remoteUrl]]></code>
-      <code><![CDATA[$row->sourceAlias]]></code>
-      <code><![CDATA[$row->sourceName]]></code>
-      <code><![CDATA[$row->sourceName]]></code>
-      <code><![CDATA[$row->status]]></code>
-      <code><![CDATA[$row->statusTime]]></code>
-      <code><![CDATA[$row->street]]></code>
-      <code><![CDATA[$row->trainingAction]]></code>
-      <code><![CDATA[$row->trainingEnd]]></code>
-      <code><![CDATA[$row->trainingId]]></code>
-      <code><![CDATA[$row->trainingName]]></code>
-      <code><![CDATA[$row->trainingStart]]></code>
-      <code><![CDATA[$row->vatRate]]></code>
-      <code><![CDATA[$row->venueAction]]></code>
-      <code><![CDATA[$row->venueAddress]]></code>
-      <code><![CDATA[$row->venueCity]]></code>
-      <code><![CDATA[$row->venueName]]></code>
-      <code><![CDATA[$row->venueNameExtended]]></code>
-      <code><![CDATA[$row->videoHref]]></code>
-      <code><![CDATA[$row->zip]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Applications/TrainingApplicationSources.php">
-    <MixedArgument>
-      <code><![CDATA[current($matches)]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Company/CompanyTrainings.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->alternativeDuration]]></code>
-      <code><![CDATA[$row->alternativeDurationPrice]]></code>
-      <code><![CDATA[$row->alternativeDurationPriceText]]></code>
-      <code><![CDATA[$row->audience]]></code>
-      <code><![CDATA[$row->capacity]]></code>
-      <code><![CDATA[$row->content]]></code>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->discontinuedId]]></code>
-      <code><![CDATA[$row->duration]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->materials]]></code>
-      <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->prerequisites]]></code>
-      <code><![CDATA[$row->price]]></code>
-      <code><![CDATA[$row->studentDiscount]]></code>
-      <code><![CDATA[$row->successorId]]></code>
-      <code><![CDATA[$row->upsell]]></code>
-      <code><![CDATA[$training->name]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Dates/TrainingDateFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->cooperationDescription]]></code>
-      <code><![CDATA[$row->cooperationId]]></code>
-      <code><![CDATA[$row->dateId]]></code>
-      <code><![CDATA[$row->end]]></code>
-      <code><![CDATA[$row->feedbackHref]]></code>
-      <code><![CDATA[$row->labelJson]]></code>
-      <code><![CDATA[$row->note]]></code>
-      <code><![CDATA[$row->price]]></code>
-      <code><![CDATA[$row->remoteNotes]]></code>
-      <code><![CDATA[$row->remoteUrl]]></code>
-      <code><![CDATA[$row->start]]></code>
-      <code><![CDATA[$row->status]]></code>
-      <code><![CDATA[$row->studentDiscount]]></code>
-      <code><![CDATA[$row->trainingId]]></code>
-      <code><![CDATA[$row->venueAction]]></code>
-      <code><![CDATA[$row->venueAddress]]></code>
-      <code><![CDATA[$row->venueCity]]></code>
-      <code><![CDATA[$row->venueDescription]]></code>
-      <code><![CDATA[$row->venueHref]]></code>
-      <code><![CDATA[$row->venueId]]></code>
-      <code><![CDATA[$row->venueName]]></code>
-      <code><![CDATA[$row->venueNameExtended]]></code>
-      <code><![CDATA[$row->videoHref]]></code>
     </MixedArgument>
   </file>
   <file src="app/Training/Dates/TrainingDateStatuses.php">
@@ -726,79 +479,9 @@
       <code><![CDATA[$row->href]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/Files/TrainingFileFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->added]]></code>
-      <code><![CDATA[$row->fileId]]></code>
-      <code><![CDATA[$row->fileName]]></code>
-      <code><![CDATA[$row->start]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Preliminary/PreliminaryTrainings.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->idTraining]]></code>
-    </MixedArgument>
-  </file>
   <file src="app/Training/Reviews/TrainingReviews.php">
     <MixedArgument>
-      <code><![CDATA[$row->company]]></code>
-      <code><![CDATA[$row->dateId]]></code>
-      <code><![CDATA[$row->href]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->jobTitle]]></code>
-      <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->note]]></code>
       <code><![CDATA[$row->ranking]]></code>
-      <code><![CDATA[$row->review]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Trainings/TrainingFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->audience]]></code>
-      <code><![CDATA[$row->capacity]]></code>
-      <code><![CDATA[$row->content]]></code>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->discontinuedId]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->materials]]></code>
-      <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->prerequisites]]></code>
-      <code><![CDATA[$row->price]]></code>
-      <code><![CDATA[$row->studentDiscount]]></code>
-      <code><![CDATA[$row->successorId]]></code>
-      <code><![CDATA[$row->upsell]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Training/Venues/TrainingVenues.php">
-    <MixedArgument>
-      <code><![CDATA[$row->action]]></code>
-      <code><![CDATA[$row->address]]></code>
-      <code><![CDATA[$row->city]]></code>
-      <code><![CDATA[$row->descriptionTexy]]></code>
-      <code><![CDATA[$row->descriptionTexy]]></code>
-      <code><![CDATA[$row->entrance]]></code>
-      <code><![CDATA[$row->entranceNavigation]]></code>
-      <code><![CDATA[$row->href]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->nameExtended]]></code>
-      <code><![CDATA[$row->parkingTexy]]></code>
-      <code><![CDATA[$row->parkingTexy]]></code>
-      <code><![CDATA[$row->publicTransportTexy]]></code>
-      <code><![CDATA[$row->publicTransportTexy]]></code>
-      <code><![CDATA[$row->streetview]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/Twitter/TwitterCards.php">
-    <MixedArgument>
-      <code><![CDATA[$row->card]]></code>
-      <code><![CDATA[$row->card]]></code>
-      <code><![CDATA[$row->cardId]]></code>
-      <code><![CDATA[$row->cardId]]></code>
-      <code><![CDATA[$row->title]]></code>
-      <code><![CDATA[$row->title]]></code>
     </MixedArgument>
   </file>
   <file src="app/UpcKeys/Presenters/HomepagePresenter.php">
@@ -817,15 +500,6 @@
   <file src="app/UpcKeys/Ubee.php">
     <MixedArgument>
       <code><![CDATA[$row->mac]]></code>
-    </MixedArgument>
-  </file>
-  <file src="app/User/Manager.php">
-    <MixedArgument>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->token]]></code>
-      <code><![CDATA[$row->userId]]></code>
-      <code><![CDATA[$row->username]]></code>
-      <code><![CDATA[$user->userId]]></code>
     </MixedArgument>
   </file>
   <file src="tests/Feed/ExportsTest.phpt">
