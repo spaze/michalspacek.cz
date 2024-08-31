@@ -139,7 +139,7 @@ readonly class BlogPostFactory
 			$row->tags !== null ? $this->tags->unserialize($row->tags) : [],
 			$row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : [],
 			empty($row->recommended) ? [] : $this->recommendedLinks->getFromJson($row->recommended),
-			$row->twitterCardId !== null ? $this->twitterCards->buildCard($row->twitterCardId, $row->twitterCard, $row->twitterCardTitle) : null,
+			isset($row->twitterCardId, $row->twitterCard, $row->twitterCardTitle) ? $this->twitterCards->buildCard($row->twitterCardId, $row->twitterCard, $row->twitterCardTitle) : null,
 			$row->cspSnippets !== null ? $this->jsonUtils->decodeListOfStrings($row->cspSnippets) : [],
 			$row->allowedTags !== null ? $this->jsonUtils->decodeListOfStrings($row->allowedTags) : [],
 			(bool)$row->omitExports,

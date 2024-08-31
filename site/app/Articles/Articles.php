@@ -210,13 +210,14 @@ class Articles
 					AND l.locale = ?
 			LIMIT 1';
 		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new DateTime(), $this->translator->getDefaultLocale());
-		if ($result) {
-			$tags = $result->tags !== null ? $this->tags->unserialize($result->tags) : [];
-			$slugTags = $result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : [];
-			foreach ($slugTags as $key => $slug) {
-				if ($slug === $tag) {
-					return $tags[$key] ?? null;
-				}
+		if (!$result) {
+			return null;
+		}
+		$tags = $result->tags !== null ? $this->tags->unserialize($result->tags) : [];
+		$slugTags = $result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : [];
+		foreach ($slugTags as $key => $slug) {
+			if ($slug === $tag) {
+				return $tags[$key] ?? null;
 			}
 		}
 		return null;

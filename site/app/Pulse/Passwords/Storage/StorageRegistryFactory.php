@@ -50,9 +50,7 @@ readonly class StorageRegistryFactory
 			$algorithm = new StorageAlgorithm($algoKey, $hashingAlgorithm, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
 			$addSite = !$registry->hasSite($siteId);
 			if ($addSite) {
-				if ($row->siteId === null) {
-					$registry->addSite(new StorageWildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey, $algorithm));
-				} else {
+				if (isset($row->siteId, $row->siteUrl, $row->siteAlias)) {
 					$registry->addSite(new StorageSpecificSite(
 						$this->rating,
 						$siteId,
@@ -63,6 +61,8 @@ readonly class StorageRegistryFactory
 						$storageKey,
 						$algorithm,
 					));
+				} else {
+					$registry->addSite(new StorageWildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey, $algorithm));
 				}
 			}
 			if (!$registry->hasStorage($storageKey)) {

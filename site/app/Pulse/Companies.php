@@ -51,7 +51,10 @@ readonly class Companies
 				WHERE name = ?',
 			$name,
 		);
-		return $row ? new Company($row->id, $row->name, $row->tradeName, $row->alias, $row->sortName) : null;
+		if (!$row) {
+			return null;
+		}
+		return new Company($row->id, $row->name, $row->tradeName, $row->alias, $row->sortName);
 	}
 
 
