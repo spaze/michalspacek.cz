@@ -131,7 +131,7 @@ readonly class Manager implements Authenticator
 		assert(is_int($user->userId));
 
 		try {
-			$hash = $this->passwordEncryption->decrypt((string)$user->password);
+			$hash = $this->passwordEncryption->decrypt($user->password);
 			if (!$this->passwords->verify($password, $hash)) {
 				throw new AuthenticationException('The password is incorrect.', self::InvalidCredential);
 			} elseif ($this->passwords->needsRehash($hash)) {
