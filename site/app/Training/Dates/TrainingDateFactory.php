@@ -35,7 +35,7 @@ readonly class TrainingDateFactory
 			$this->lastFreeSeats($row->start, $status),
 			$row->start,
 			$row->end,
-			$row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null,
+			$this->getLabelFromJson($row->labelJson),
 			$row->labelJson,
 			(bool)$row->public,
 			$status,
@@ -68,6 +68,19 @@ readonly class TrainingDateFactory
 	{
 		$now = new DateTime();
 		return ($start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $start > $now && $status !== TrainingDateStatus::Tentative);
+	}
+
+
+	private function getLabelFromJson(?string $json): ?string
+	{
+		if ($json !== null) {
+			$labels = Json::decode($json);
+			$label = $labels->{$this->translator->getDefaultLocale()} ?? null;
+			if (!is_string($label)) {
+				return null;
+			}
+		}
+		return $label ?? null;
 	}
 
 }

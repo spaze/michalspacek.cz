@@ -696,8 +696,6 @@
       <code><![CDATA[$row->end]]></code>
       <code><![CDATA[$row->feedbackHref]]></code>
       <code><![CDATA[$row->labelJson]]></code>
-      <code><![CDATA[$row->labelJson]]></code>
-      <code><![CDATA[$row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null]]></code>
       <code><![CDATA[$row->note]]></code>
       <code><![CDATA[$row->price]]></code>
       <code><![CDATA[$row->remoteNotes]]></code>
