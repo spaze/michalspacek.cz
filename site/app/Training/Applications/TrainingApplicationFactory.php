@@ -84,7 +84,7 @@ readonly class TrainingApplicationFactory
 			$this->trainingFiles,
 			$row->id,
 			$row->name,
-			$row->email ? $this->emailEncryption->decrypt($row->email) : null,
+			$row->email !== null ? $this->emailEncryption->decrypt($row->email) : null,
 			(bool)$row->familiar,
 			$row->company,
 			$row->street,

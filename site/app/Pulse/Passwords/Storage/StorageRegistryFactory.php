@@ -84,7 +84,7 @@ readonly class StorageRegistryFactory
 						$siteId,
 						$row->siteUrl,
 						$row->siteAlias,
-						$row->sharedWith ? $this->getSharedWith($row->sharedWith) : [],
+						$row->sharedWith !== null ? $this->getSharedWith($row->sharedWith) : [],
 						$registry->getCompany($row->companyId),
 						$storageKey,
 						$algorithm,

@@ -106,15 +106,15 @@ readonly class TrainingVenues
 			$row->href,
 			$row->address,
 			$row->city,
-			$row->descriptionTexy ? $this->texyFormatter->format($row->descriptionTexy) : null,
+			$row->descriptionTexy !== null ? $this->texyFormatter->format($row->descriptionTexy) : null,
 			$row->descriptionTexy,
 			$row->action,
 			$row->entrance,
 			$row->entranceNavigation,
 			$row->streetview,
-			$row->parkingTexy ? $this->texyFormatter->format($row->parkingTexy) : null,
+			$row->parkingTexy !== null ? $this->texyFormatter->format($row->parkingTexy) : null,
 			$row->parkingTexy,
-			$row->publicTransportTexy ? $this->texyFormatter->format($row->publicTransportTexy) : null,
+			$row->publicTransportTexy !== null ? $this->texyFormatter->format($row->publicTransportTexy) : null,
 			$row->publicTransportTexy,
 		);
 	}

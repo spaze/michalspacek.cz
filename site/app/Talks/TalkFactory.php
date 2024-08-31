@@ -63,9 +63,11 @@ readonly class TalkFactory
 		assert($row->supersededByTitle === null || is_string($row->supersededByTitle));
 		assert(is_int($row->publishSlides));
 
-		if ($this->translator->getDefaultLocale() !== $row->locale && $row->action) {
+		if ($this->translator->getDefaultLocale() !== $row->locale && $row->action !== null) {
 			$links = $this->localeLinkGenerator->links('Www:Talks:talk', $this->localeLinkGenerator->defaultParams(['name' => $row->action]));
 			$url = isset($links[$row->locale]) ? $links[$row->locale]->getUrl() : null;
+		} else {
+			$url = null;
 		}
 		return new Talk(
 			$row->id,
@@ -73,10 +75,10 @@ readonly class TalkFactory
 			$row->locale,
 			$row->translationGroupId,
 			$row->action,
-			$url ?? null,
+			$url,
 			$this->texyFormatter->format($row->title),
 			$row->title,
-			$row->description ? $this->texyFormatter->formatBlock($row->description) : null,
+			$row->description !== null ? $this->texyFormatter->formatBlock($row->description) : null,
 			$row->description,
 			$row->date,
 			$row->duration,
@@ -84,7 +86,7 @@ readonly class TalkFactory
 			(bool)$row->hasSlides,
 			$row->slidesHref,
 			$row->slidesEmbed,
-			$row->slidesNote ? $this->texyFormatter->formatBlock($row->slidesNote) : null,
+			$row->slidesNote !== null ? $this->texyFormatter->formatBlock($row->slidesNote) : null,
 			$row->slidesNote,
 			$this->videoFactory->createFromDatabaseRow($row),
 			$row->videoEmbed,
@@ -92,7 +94,7 @@ readonly class TalkFactory
 			$row->event,
 			$row->eventHref,
 			$row->ogImage,
-			$row->transcript ? $this->texyFormatter->formatBlock($row->transcript) : null,
+			$row->transcript !== null ? $this->texyFormatter->formatBlock($row->transcript) : null,
 			$row->transcript,
 			$row->favorite,
 			$row->slidesTalkId,

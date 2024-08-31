@@ -143,7 +143,7 @@ readonly class Interviews
 			$row->action,
 			$row->title,
 			$row->description,
-			$row->description ? $this->texyFormatter->formatBlock($row->description) : null,
+			$row->description !== null ? $this->texyFormatter->formatBlock($row->description) : null,
 			$row->date,
 			$row->href,
 			$row->audioHref,
