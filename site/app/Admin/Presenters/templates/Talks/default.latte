@@ -3,7 +3,7 @@
 	<a n:href="Talks:talk $item->getId()"><strong n:tag-if="$upcoming">{$item->getTitle()}</strong></a>
 	<small n:if="$item->getLocale() !== $defaultLocale">{icon flag} {_"messages.locales.{$item->getLocale()}"}</small>
 	<small><strong class="date">{$item->getDate()|localeDay}</strong>, {$item->getEvent()}</small>
-	<span n:if="$item->isHasSlides()" title="{_messages.label.slides}">{icon images}</span>
+	<span n:if="$item->hasSlides()" title="{_messages.label.slides}">{icon images}</span>
 	<span n:if="$item->getVideo()->getVideoHref()" title="{_messages.label.videorecording}">{icon camera-video}</span>
 	<small>(<a n:href="slides $item->getId()">upravit slajdy</a>)</small>
 </li>
