@@ -126,7 +126,7 @@ readonly class Talk
 	}
 
 
-	public function isHasSlides(): bool
+	public function hasSlides(): bool
 	{
 		return $this->hasSlides;
 	}
