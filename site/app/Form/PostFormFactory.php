@@ -128,16 +128,16 @@ readonly class PostFormFactory
 		$caption = $this->translator->translate('messages.label.preview');
 		$previewButton = $form->addSubmit('preview', $caption);
 		$previewButton->setHtmlAttribute('data-loading-value', 'Moment…')
-			->setHtmlAttribute('data-original-value', $caption)
-			->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
-				$this->blogPostPreview->sendPreview(
-					function () use ($form, $post): BlogPost {
-						return $this->buildPost($form->getFormValues(), $post?->getId());
-					},
-					$template,
-					$sendTemplate,
-				);
-			};
+			->setHtmlAttribute('data-original-value', $caption);
+		$previewButton->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
+			$this->blogPostPreview->sendPreview(
+				function () use ($form, $post): BlogPost {
+					return $this->buildPost($form->getFormValues(), $post?->getId());
+				},
+				$template,
+				$sendTemplate,
+			);
+		};
 
 		$form->onValidate[] = function (UiForm $form) use ($previewButton, $post, $previewKeyInput): void {
 			if ($form->isSubmitted() !== $previewButton) {
