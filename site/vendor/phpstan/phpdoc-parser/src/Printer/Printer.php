@@ -31,6 +31,7 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTextNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PropertyTagValueNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PureUnlessCallableIsImpureTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\RequireExtendsTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\RequireImplementsTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode;
@@ -322,6 +323,9 @@ final class Printer
 		if ($node instanceof ParamClosureThisTagValueNode) {
 			return trim("{$node->type} {$node->parameterName} {$node->description}");
 		}
+		if ($node instanceof PureUnlessCallableIsImpureTagValueNode) {
+			return trim("{$node->parameterName} {$node->description}");
+		}
 		if ($node instanceof PropertyTagValueNode) {
 			$type = $this->printType($node->type);
 			return trim("{$type} {$node->propertyName} {$node->description}");
@@ -335,9 +339,10 @@ final class Printer
 			return trim($type . ' ' . $node->description);
 		}
 		if ($node instanceof TemplateTagValueNode) {
-			$bound = $node->bound !== null ? ' of ' . $this->printType($node->bound) : '';
+			$upperBound = $node->bound !== null ? ' of ' . $this->printType($node->bound) : '';
+			$lowerBound = $node->lowerBound !== null ? ' super ' . $this->printType($node->lowerBound) : '';
 			$default = $node->default !== null ? ' = ' . $this->printType($node->default) : '';
-			return trim("{$node->name}{$bound}{$default} {$node->description}");
+			return trim("{$node->name}{$upperBound}{$lowerBound}{$default} {$node->description}");
 		}
 		if ($node instanceof ThrowsTagValueNode) {
 			$type = $this->printType($node->type);

@@ -14,8 +14,8 @@
 	],
 	"replace": {
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"phpcsstandards/php_codesniffer": "3.10.2",
-		"squizlabs/php_codesniffer": "3.10.2"
+		"phpcsstandards/php_codesniffer": "3.10.3",
+		"squizlabs/php_codesniffer": "3.10.3"
 	},
 	"require": {
 		"composer-runtime-api": "^2.1"

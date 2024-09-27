@@ -753,6 +753,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\OutOfRangeException' => __DIR__ . '/..' . '/nette/utils/src/exceptions.php',
         'Nette\\PhpGenerator\\Attribute' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Attribute.php',
         'Nette\\PhpGenerator\\ClassLike' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/ClassLike.php',
+        'Nette\\PhpGenerator\\ClassManipulator' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/ClassManipulator.php',
         'Nette\\PhpGenerator\\ClassType' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/ClassType.php',
         'Nette\\PhpGenerator\\Closure' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Closure.php',
         'Nette\\PhpGenerator\\Constant' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Constant.php',

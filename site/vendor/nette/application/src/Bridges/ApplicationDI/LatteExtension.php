@@ -39,6 +39,7 @@ final class LatteExtension extends Nette\DI\CompilerExtension
 			'strictTypes' => Expect::bool(false),
 			'strictParsing' => Expect::bool(false),
 			'phpLinter' => Expect::string(),
+			'locale' => Expect::string(),
 		]);
 	}
 
@@ -66,7 +67,8 @@ final class LatteExtension extends Nette\DI\CompilerExtension
 			}
 		} else {
 			$latteFactory->addSetup('setStrictParsing', [$config->strictParsing])
-				->addSetup('enablePhpLinter', [$config->phpLinter]);
+				->addSetup('enablePhpLinter', [$config->phpLinter])
+				->addSetup('setLocale', [$config->locale]);
 
 			$builder->getDefinition($this->prefix('latteFactory'))
 				->getResultDefinition()
@@ -80,6 +82,9 @@ final class LatteExtension extends Nette\DI\CompilerExtension
 			}
 
 			foreach ($config->extensions as $extension) {
+				if ($extension === Latte\Essential\TranslatorExtension::class) {
+					$extension = new Statement($extension, [new Nette\DI\Definitions\Reference(Nette\Localization\Translator::class)]);
+				}
 				$this->addExtension($extension);
 			}
 		}
