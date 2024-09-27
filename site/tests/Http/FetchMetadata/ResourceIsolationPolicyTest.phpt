@@ -11,7 +11,9 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
+use Nette\Application\IPresenter;
 use Nette\Application\Request as NetteRequest;
+use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Utils\Helpers;
@@ -43,6 +45,11 @@ class ResourceIsolationPolicyTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->httpResponse->setCode(IResponse::S200_OK);
+		$this->application->onPresenter[] = function (Application $application, IPresenter $presenter): void {
+			if ($presenter instanceof Presenter) {
+				$presenter->autoCanonicalize = false;
+			}
+		};
 	}
 
 
@@ -131,7 +138,7 @@ class ResourceIsolationPolicyTest extends TestCase
 	private function callPresenterAction(): string
 	{
 		return Helpers::capture(function (): void {
-			$this->application->processRequest(new NetteRequest(self::PRESENTER_NAME, params: ['foo' => 'bar', 'waldo' => 'fred']));
+			$this->application->processRequest(new NetteRequest(self::PRESENTER_NAME, IRequest::Get, params: ['foo' => 'bar', 'waldo' => 'fred']));
 		});
 	}
 
