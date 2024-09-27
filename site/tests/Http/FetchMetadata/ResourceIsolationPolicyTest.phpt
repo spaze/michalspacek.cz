@@ -1,10 +1,13 @@
 <?php
+/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\FetchMetadata;
 
+use DateTime;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Articles\ArticlesMock;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\NullLogger;
@@ -37,6 +40,7 @@ class ResourceIsolationPolicyTest extends TestCase
 		private readonly NullLogger $logger,
 		private readonly FetchMetadata $fetchMetadata,
 		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly ArticlesMock $articles,
 	) {
 	}
 
@@ -125,9 +129,53 @@ class ResourceIsolationPolicyTest extends TestCase
 	}
 
 
-	private function installPolicy(bool $readOnly): void
+	public function testCrossSiteNavigationsEnforcingPolicy(): void
 	{
-		$this->httpRequest->setMethod(IRequest::Get);
+		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, 'cross-site');
+		$this->httpRequest->setHeader(FetchMetadataHeader::Mode->value, 'navigate');
+
+		$this->installPolicy(false, IRequest::Post);
+		$content = $this->callPresenterAction();
+		Assert::notContains('messages.homepage.aboutme', $content);
+		Assert::contains('messages.forbidden.crossSite', $content);
+		Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode());
+
+		$this->installPolicy(false);
+		$content = $this->callPresenterAction();
+		Assert::contains('messages.homepage.aboutme', $content);
+		Assert::notContains('messages.forbidden.crossSite', $content);
+		Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode());
+
+		$this->httpRequest->setHeader(FetchMetadataHeader::Dest->value, 'object');
+		$content = $this->callPresenterAction();
+		Assert::notContains('messages.homepage.aboutme', $content);
+		Assert::contains('messages.forbidden.crossSite', $content);
+		Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode());
+
+		$this->httpRequest->setHeader(FetchMetadataHeader::Dest->value, 'embed');
+		$content = $this->callPresenterAction();
+		Assert::notContains('messages.homepage.aboutme', $content);
+		Assert::contains('messages.forbidden.crossSite', $content);
+		Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode());
+	}
+
+
+	public function testCallableCrossSiteEnforcingPolicy(): void
+	{
+		$this->installPolicy(false);
+		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, 'cross-site');
+		$this->articles->addBlogPost(1, new DateTime(), 'blog post');
+
+		$content = $this->callPresenterAction('Www:Exports', [Presenter::ActionKey => 'articles']);
+		Assert::contains('Title blog post', $content);
+		Assert::notContains('messages.forbidden.crossSite', $content);
+		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
+	}
+
+
+	private function installPolicy(bool $readOnly, string $httpMethod = IRequest::Get): void
+	{
+		$this->httpRequest->setMethod($httpMethod);
 		$presenter = $this->applicationPresenter->createUiPresenter(self::PRESENTER_NAME, 'Foo', 'bar');
 		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 		$resourceIsolationPolicy = new ResourceIsolationPolicy($this->fetchMetadata, $this->httpRequest, $this->application, $readOnly);
@@ -135,10 +183,14 @@ class ResourceIsolationPolicyTest extends TestCase
 	}
 
 
-	private function callPresenterAction(): string
+	/**
+	 * @param array<string, string> $params
+	 */
+	private function callPresenterAction(string $presenterName = self::PRESENTER_NAME, array $params = ['foo' => 'bar', 'waldo' => 'fred']): string
 	{
-		return Helpers::capture(function (): void {
-			$this->application->processRequest(new NetteRequest(self::PRESENTER_NAME, IRequest::Get, params: ['foo' => 'bar', 'waldo' => 'fred']));
+		return Helpers::capture(function () use ($presenterName, $params): void {
+			$request = new NetteRequest($presenterName, $this->httpRequest->getMethod(), params: $params);
+			$this->application->processRequest($request);
 		});
 	}
 
