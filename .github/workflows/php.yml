@@ -34,14 +34,14 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - name: Validate composer.json and composer.lock
       run: composer --working-dir=site validate
 
   check-file-patterns:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - run: make --directory=site check-file-patterns
 
   check-makefile:
@@ -51,7 +51,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         coverage: none
@@ -65,7 +65,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         coverage: none
@@ -75,7 +75,7 @@ jobs:
   check-sri-macros-concat:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - run: make --directory=site check-sri-macros-concat
 
   lint-php:
@@ -85,7 +85,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         coverage: none
@@ -99,7 +99,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         coverage: none
@@ -113,7 +113,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         coverage: none
@@ -123,7 +123,7 @@ jobs:
   lint-xml:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - run: make --directory=site lint-xml-auto-install
 
   phpcs:
@@ -133,7 +133,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - name: Get PHP_CodeSniffer cache file pattern
       id: phpcs-cache
       run: echo "file=$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")" >> $GITHUB_OUTPUT
@@ -154,7 +154,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
@@ -175,7 +175,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
@@ -196,7 +196,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
     - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         coverage: pcov
@@ -224,7 +224,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
       - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
         with:
           coverage: none
@@ -238,7 +238,7 @@ jobs:
         php-version:
           - "8.3"
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
       - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
         with:
           coverage: none
