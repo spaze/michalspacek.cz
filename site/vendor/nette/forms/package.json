@@ -5,7 +5,7 @@
 		"@rollup/plugin-json": "^6.1.0",
 		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@rollup/plugin-terser": "^0.4.4",
-		"@rollup/plugin-typescript": "^11.1.6",
+		"@rollup/plugin-typescript": "^12.1.0",
 		"@stylistic/eslint-plugin": "^2.1.0",
 		"eslint": "^9.8.0",
 		"globals": "^15.3.0",
