@@ -12,6 +12,7 @@ namespace Nette\Schema\Elements;
 use Nette;
 use Nette\Schema\Context;
 use Nette\Schema\Helpers;
+use Nette\Schema\MergeMode;
 use Nette\Schema\Schema;
 
 
@@ -28,15 +29,16 @@ final class Structure implements Schema
 	/** @var array{?int, ?int} */
 	private array $range = [null, null];
 	private bool $skipDefaults = false;
+	private MergeMode $mergeMode = MergeMode::AppendKeys;
 
 
 	/**
-	 * @param  Schema[]  $items
+	 * @param  Schema[]  $shape
 	 */
-	public function __construct(array $items)
+	public function __construct(array $shape)
 	{
-		(function (Schema ...$items) {})(...array_values($items));
-		$this->items = $items;
+		(function (Schema ...$items) {})(...array_values($shape));
+		$this->items = $shape;
 		$this->castTo('object');
 		$this->required = true;
 	}
@@ -76,6 +78,26 @@ final class Structure implements Schema
 	}
 
 
+	public function mergeMode(MergeMode $mode): self
+	{
+		$this->mergeMode = $mode;
+		return $this;
+	}
+
+
+	public function extend(array|self $shape): self
+	{
+		$shape = $shape instanceof self ? $shape->items : $shape;
+		return new self(array_merge($this->items, $shape));
+	}
+
+
+	public function getShape(): array
+	{
+		return $this->items;
+	}
+
+
 	/********************* processing ****************d*g**/
 
 
@@ -111,31 +133,28 @@ final class Structure implements Schema
 
 	public function merge(mixed $value, mixed $base): mixed
 	{
-		if (is_array($value) && isset($value[Helpers::PreventMerging])) {
+		if ($this->mergeMode === MergeMode::Replace || (is_array($value) && isset($value[Helpers::PreventMerging]))) {
 			unset($value[Helpers::PreventMerging]);
 			$base = null;
 		}
 
 		if (is_array($value) && is_array($base)) {
-			$index = 0;
+			$index = $this->mergeMode === MergeMode::OverwriteKeys ? null : 0;
 			foreach ($value as $key => $val) {
 				if ($key === $index) {
 					$base[] = $val;
 					$index++;
-				} elseif (array_key_exists($key, $base)) {
-					$itemSchema = $this->items[$key] ?? $this->otherItems;
-					$base[$key] = $itemSchema
-						? $itemSchema->merge($val, $base[$key])
-						: Helpers::merge($val, $base[$key]);
 				} else {
-					$base[$key] = $val;
+					$base[$key] = array_key_exists($key, $base) && ($itemSchema = $this->items[$key] ?? $this->otherItems)
+						? $itemSchema->merge($val, $base[$key])
+						: $val;
 				}
 			}
 
 			return $base;
 		}
 
-		return Helpers::merge($value, $base);
+		return $value ?? $base;
 	}
 
 

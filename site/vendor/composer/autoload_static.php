@@ -799,6 +799,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Schema\\Elements\\Type' => __DIR__ . '/..' . '/nette/schema/src/Schema/Elements/Type.php',
         'Nette\\Schema\\Expect' => __DIR__ . '/..' . '/nette/schema/src/Schema/Expect.php',
         'Nette\\Schema\\Helpers' => __DIR__ . '/..' . '/nette/schema/src/Schema/Helpers.php',
+        'Nette\\Schema\\MergeMode' => __DIR__ . '/..' . '/nette/schema/src/Schema/MergeMode.php',
         'Nette\\Schema\\Message' => __DIR__ . '/..' . '/nette/schema/src/Schema/Message.php',
         'Nette\\Schema\\Processor' => __DIR__ . '/..' . '/nette/schema/src/Schema/Processor.php',
         'Nette\\Schema\\Schema' => __DIR__ . '/..' . '/nette/schema/src/Schema/Schema.php',
