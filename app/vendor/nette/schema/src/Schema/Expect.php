@@ -24,7 +24,6 @@ use Nette\Schema\Elements\Type;
  * @method static Type float($default = null)
  * @method static Type bool($default = null)
  * @method static Type null()
- * @method static Type array($default = [])
  * @method static Type list($default = [])
  * @method static Type mixed($default = null)
  * @method static Type email($default = null)
@@ -95,6 +94,17 @@ final class Expect
 	}
 
 
+	/**
+	 * @param  mixed[]  $shape
+	 */
+	public static function array(?array $shape = []): Structure|Type
+	{
+		return Nette\Utils\Arrays::first($shape ?? []) instanceof Schema
+			? (new Structure($shape))->castTo('array')
+			: (new Type('array'))->default($shape);
+	}
+
+
 	public static function arrayOf(string|Schema $valueType, string|Schema|null $keyType = null): Type
 	{
 		return (new Type('array'))->items($valueType, $keyType);
@@ -104,17 +114,5 @@ final class Expect
 	public static function listOf(string|Schema $type): Type
 	{
 		return (new Type('list'))->items($type);
-	}
-
-
-	/**
-	 * @param  Schema[]  $shape
-	 */
-	public static function tuple(array $shape): Structure
-	{
-		if (!array_is_list($shape)) {
-			throw new Nette\InvalidArgumentException('Tuple shape must be indexed array.');
-		}
-		return (new Structure($shape))->castTo('array')->mergeMode(MergeMode::Replace);
 	}
 }

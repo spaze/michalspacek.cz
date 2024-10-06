@@ -591,7 +591,6 @@ return array(
     'Nette\\Schema\\Elements\\Type' => $vendorDir . '/nette/schema/src/Schema/Elements/Type.php',
     'Nette\\Schema\\Expect' => $vendorDir . '/nette/schema/src/Schema/Expect.php',
     'Nette\\Schema\\Helpers' => $vendorDir . '/nette/schema/src/Schema/Helpers.php',
-    'Nette\\Schema\\MergeMode' => $vendorDir . '/nette/schema/src/Schema/MergeMode.php',
     'Nette\\Schema\\Message' => $vendorDir . '/nette/schema/src/Schema/Message.php',
     'Nette\\Schema\\Processor' => $vendorDir . '/nette/schema/src/Schema/Processor.php',
     'Nette\\Schema\\Schema' => $vendorDir . '/nette/schema/src/Schema/Schema.php',
