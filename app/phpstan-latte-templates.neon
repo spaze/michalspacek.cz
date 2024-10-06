@@ -1,11 +1,11 @@
 parameters:
 	tmpDir: /tmp/phpstan/michalspacek.cz-latte-templates
 	paths:
-		- app
+		- src
 	level: max
 	latte:
 		strictMode: true
-		engineBootstrap: app/PhpStan/latteEngine.php
+		engineBootstrap: src/PhpStan/latteEngine.php
 		applicationMapping: # Copy of mapping from common.neon
 			*: MichalSpacekCz\*\Presenters\*Presenter
 		features:
@@ -13,7 +13,7 @@ parameters:
 	ignoreErrors:
 		- # `{input "applications-{$application->id}" ...}` is an `$application->id` input in `applications` container https://github.com/efabrica-team/phpstan-latte/pull/380 or https://github.com/efabrica-team/phpstan-latte/issues/400
 			message: '#^Call to an undefined method Nette\\Forms\\Controls\\BaseControl\|Statuses_[a-f0-9]+_applications::getControl\(\)#'
-			path: app/Admin/Presenters/templates/Trainings/date.latte
+			path: src/Admin/Presenters/templates/Trainings/date.latte
 		- "#^Presenter name must be alphanumeric string, '' is invalid\\.$#"
 
 includes:

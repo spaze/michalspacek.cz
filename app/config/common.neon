@@ -68,7 +68,7 @@ translation:
 		whitelist: %locales.all%
 	localeResolvers!: []
 	dirs:
-		- %siteDir%/app/lang
+		- %siteDir%/src/lang
 
 subresourceIntegrity:
 	hashingAlgos:

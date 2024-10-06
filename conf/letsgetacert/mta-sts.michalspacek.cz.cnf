@@ -2,5 +2,5 @@ CN=mta-sts.michalspacek.cz
 PRIVKEY_CMD="ecparam -genkey -name prime256v1 -out %s"
 CERT_DIR=/etc/nginx/certs
 SUBJECT="/C=CZ/ST=Prague/L=Prague/O=mta-sts.michalspacek.cz/emailAddress=$SUBJECT_EMAIL/CN=$CN"
-WEBROOT_DIR=/srv/www/michalspacek.cz/site/public
+WEBROOT_DIR=/srv/www/michalspacek.cz/app/public
 DOMAINS="mta-sts=mta-sts.michalspacek.cz"

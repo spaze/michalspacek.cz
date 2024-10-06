@@ -37,7 +37,7 @@ return array(
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-deprecation-rules/src', $vendorDir . '/phpstan/phpstan-nette/src'),
     'PHPStanNetteLinks\\' => array($vendorDir . '/metisfw/phpstan-nette-links/src'),
-    'MichalSpacekCz\\' => array($baseDir . '/app'),
+    'MichalSpacekCz\\' => array($baseDir . '/src'),
     'JetBrains\\PhpStorm\\' => array($vendorDir . '/jetbrains/phpstorm-attributes/src'),
     'Efabrica\\PHPStanLatte\\' => array($vendorDir . '/efabrica/phpstan-latte/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),

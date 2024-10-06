@@ -28,4 +28,4 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: make --directory=site phpstan-latte-templates
+    - run: make --directory=app phpstan-latte-templates

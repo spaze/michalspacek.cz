@@ -77,7 +77,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"MichalSpacekCz\\": "app/"
+			"MichalSpacekCz\\": "src/"
 		}
 	}
 }

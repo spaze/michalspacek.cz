@@ -61,7 +61,7 @@ jobs:
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
-      - run: php site/bin/certmonitor.php --colors --no-ipv6
+      - run: php app/bin/certmonitor.php --colors --no-ipv6
         env:
           CERTMONITOR_USER: ${{ secrets.CERTMONITOR_USER }}
           CERTMONITOR_KEY: ${{ secrets.CERTMONITOR_KEY }}
