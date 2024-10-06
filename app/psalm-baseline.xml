@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
-  <file src="app/Articles/Articles.php">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="src/Articles/Articles.php">
     <MixedArgument>
       <code><![CDATA[$row->slugTags]]></code>
       <code><![CDATA[$row->tags]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Articles/Blog/BlogPostEdits.php">
+  <file src="src/Articles/Blog/BlogPostEdits.php">
     <MixedArgument>
       <code><![CDATA[$editedAt]]></code>
       <code><![CDATA[$row->editedAtTimezone]]></code>
       <code><![CDATA[$row->summaryTexy]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Articles/Blog/BlogPostLocaleUrls.php">
+  <file src="src/Articles/Blog/BlogPostLocaleUrls.php">
     <MixedArgument>
       <code><![CDATA[$row->locale]]></code>
       <code><![CDATA[$row->previewKey]]></code>
@@ -22,7 +22,7 @@
       <code><![CDATA[$row->slugTags]]></code>
     </MixedArgument>
   </file>
-  <file src="app/CompanyInfo/CompanyRegisterRegisterUz.php">
+  <file src="src/CompanyInfo/CompanyRegisterRegisterUz.php">
     <MixedArgument>
       <code><![CDATA[$unit->ico]]></code>
       <code><![CDATA[$unit->mesto]]></code>
@@ -32,23 +32,23 @@
       <code><![CDATA[$units->id]]></code>
     </MixedArgument>
   </file>
-  <file src="app/EasterEgg/CrLfUrlInjections.php">
+  <file src="src/EasterEgg/CrLfUrlInjections.php">
     <MixedArgument>
       <code><![CDATA[$match[1]]]></code>
     </MixedArgument>
   </file>
-  <file src="app/EasterEgg/WinterIsComing.php">
+  <file src="src/EasterEgg/WinterIsComing.php">
     <MixedArgument>
       <code><![CDATA[$input->getValue()]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/ChangePasswordFormFactory.php">
+  <file src="src/Form/ChangePasswordFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->newPassword]]></code>
       <code><![CDATA[$values->password]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/InterviewFormFactory.php">
+  <file src="src/Form/InterviewFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->action]]></code>
       <code><![CDATA[$values->action]]></code>
@@ -74,7 +74,7 @@
       <code><![CDATA[$values->videoHref]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/PostFormFactory.php">
+  <file src="src/Form/PostFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->lead === '' ? null : $values->lead]]></code>
       <code><![CDATA[$values->locale]]></code>
@@ -90,7 +90,7 @@
       <code><![CDATA[empty($values->editSummary) ? null : $values->editSummary]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/Pulse/PasswordsStorageAlgorithmFormFactory.php">
+  <file src="src/Form/Pulse/PasswordsStorageAlgorithmFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->algo->new->algo]]></code>
       <code><![CDATA[$values->company->id]]></code>
@@ -98,12 +98,12 @@
       <code><![CDATA[$values->site->new->url]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/SignInFormFactory.php">
+  <file src="src/Form/SignInFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->password]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TalkFormFactory.php">
+  <file src="src/Form/TalkFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->action]]></code>
       <code><![CDATA[$values->action]]></code>
@@ -149,12 +149,12 @@
       <code><![CDATA[$values->videoHref]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TalkSlidesFormFactory.php">
+  <file src="src/Form/TalkSlidesFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->deleteReplaced]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingApplicationAdminFormFactory.php">
+  <file src="src/Form/TrainingApplicationAdminFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$dateId]]></code>
       <code><![CDATA[$values->citySet ? $values->city : null]]></code>
@@ -176,7 +176,7 @@
       <code><![CDATA[trim($values->vatRate) !== '' ? $values->vatRate / 100 : null]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingApplicationMultipleFormFactory.php">
+  <file src="src/Form/TrainingApplicationMultipleFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$application->city]]></code>
       <code><![CDATA[$application->company]]></code>
@@ -193,20 +193,20 @@
       <code><![CDATA[$values->status]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingApplicationPreliminaryFormFactory.php">
+  <file src="src/Form/TrainingApplicationPreliminaryFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->email]]></code>
       <code><![CDATA[$values->name]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingApplicationStatusesFormFactory.php">
+  <file src="src/Form/TrainingApplicationStatusesFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$values->date]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingDateFormFactory.php">
+  <file src="src/Form/TrainingDateFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->cooperation]]></code>
       <code><![CDATA[$values->cooperation]]></code>
@@ -239,18 +239,18 @@
       <code><![CDATA[$values->videoHref]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingFileFormFactory.php">
+  <file src="src/Form/TrainingFileFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->file]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingInvoiceFormFactory.php">
+  <file src="src/Form/TrainingInvoiceFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->invoice]]></code>
       <code><![CDATA[$values->paid]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingMailsOutboxFormFactory.php">
+  <file src="src/Form/TrainingMailsOutboxFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$data->additional]]></code>
       <code><![CDATA[$data->cc ?: null]]></code>
@@ -263,7 +263,7 @@
       <code><![CDATA[$id]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/TrainingReviewFormFactory.php">
+  <file src="src/Form/TrainingReviewFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->company]]></code>
       <code><![CDATA[$values->company]]></code>
@@ -283,29 +283,29 @@
       <code><![CDATA[$values->review]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Form/UpcKeysSsidFormFactory.php">
+  <file src="src/Form/UpcKeysSsidFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->ssid]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Formatter/TexyFormatter.php">
+  <file src="src/Formatter/TexyFormatter.php">
     <MixedArgument>
       <code><![CDATA[$matches[2]]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Formatter/TexyPhraseHandler.php">
+  <file src="src/Formatter/TexyPhraseHandler.php">
     <MixedArgument>
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$texy::CONTENT_TEXTUAL]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Http/Client/HttpClient.php">
+  <file src="src/Http/Client/HttpClient.php">
     <MixedArgument>
       <code><![CDATA[$options['ssl']['peer_certificate'] ?? null]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Media/VideoThumbnails.php">
+  <file src="src/Media/VideoThumbnails.php">
     <MixedArgument>
       <code><![CDATA[$values->videoThumbnail]]></code>
       <code><![CDATA[$values->videoThumbnail]]></code>
@@ -313,7 +313,7 @@
       <code><![CDATA[$values->videoThumbnailAlternative]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Net/DnsResolver.php">
+  <file src="src/Net/DnsResolver.php">
     <MixedArgument>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
@@ -323,7 +323,7 @@
       <code><![CDATA[$record]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Companies.php">
+  <file src="src/Pulse/Companies.php">
     <MixedArgument>
       <code><![CDATA[$row->alias]]></code>
       <code><![CDATA[$row->id]]></code>
@@ -332,21 +332,21 @@
       <code><![CDATA[$row->tradeName]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Passwords/Algorithms/PasswordHashingAlgorithms.php">
+  <file src="src/Pulse/Passwords/Algorithms/PasswordHashingAlgorithms.php">
     <MixedArgument>
       <code><![CDATA[$row->algo]]></code>
       <code><![CDATA[$row->alias]]></code>
       <code><![CDATA[$row->id]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Passwords/Disclosures/PasswordHashingDisclosures.php">
+  <file src="src/Pulse/Passwords/Disclosures/PasswordHashingDisclosures.php">
     <MixedArgument>
       <code><![CDATA[$row->alias]]></code>
       <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->type]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Passwords/Passwords.php">
+  <file src="src/Pulse/Passwords/Passwords.php">
     <MixedArgument>
       <code><![CDATA[$disclosure->archive]]></code>
       <code><![CDATA[$disclosure->disclosureType]]></code>
@@ -369,19 +369,19 @@
       <code><![CDATA[$values->algo->note]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Passwords/PasswordsSorting.php">
+  <file src="src/Pulse/Passwords/PasswordsSorting.php">
     <MixedArgument>
       <code><![CDATA[$sorter]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Pulse/Sites.php">
+  <file src="src/Pulse/Sites.php">
     <MixedArgument>
       <code><![CDATA[$row->alias]]></code>
       <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->url]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Talks/Slides/TalkSlides.php">
+  <file src="src/Talks/Slides/TalkSlides.php">
     <MixedArgument>
       <code><![CDATA[$filename]]></code>
       <code><![CDATA[$filename]]></code>
@@ -405,17 +405,17 @@
       <code><![CDATA[$slide->title]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Talks/Talks.php">
+  <file src="src/Talks/Talks.php">
     <MixedArgument>
       <code><![CDATA[$row['favorite']]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Tls/CertificateGatherer.php">
+  <file src="src/Tls/CertificateGatherer.php">
     <MixedArgument>
       <code><![CDATA[$ipAddress]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/ApplicationForm/TrainingApplicationFormSpam.php">
+  <file src="src/Training/ApplicationForm/TrainingApplicationFormSpam.php">
     <MixedArgument>
       <code><![CDATA[$values->company ?? self::FIELD_MISSING_VALUE]]></code>
       <code><![CDATA[$values->companyId ?? self::FIELD_MISSING_VALUE]]></code>
@@ -424,7 +424,7 @@
       <code><![CDATA[$values->note ?? '']]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/ApplicationForm/TrainingApplicationFormSuccess.php">
+  <file src="src/Training/ApplicationForm/TrainingApplicationFormSuccess.php">
     <MixedArgument>
       <code><![CDATA[$values->city]]></code>
       <code><![CDATA[$values->city]]></code>
@@ -459,7 +459,7 @@
       <code><![CDATA[$values->zip]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/ApplicationStatuses/TrainingApplicationStatusHistory.php">
+  <file src="src/Training/ApplicationStatuses/TrainingApplicationStatusHistory.php">
     <MixedArgument>
       <code><![CDATA[$row->id]]></code>
       <code><![CDATA[$row->status]]></code>
@@ -468,36 +468,36 @@
       <code><![CDATA[$row->statusTimeTimeZone]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/Dates/TrainingDateStatuses.php">
+  <file src="src/Training/Dates/TrainingDateStatuses.php">
     <MixedArgument>
       <code><![CDATA[$row->status]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/Discontinued/DiscontinuedTrainings.php">
+  <file src="src/Training/Discontinued/DiscontinuedTrainings.php">
     <MixedArgument>
       <code><![CDATA[$row->description]]></code>
       <code><![CDATA[$row->href]]></code>
     </MixedArgument>
   </file>
-  <file src="app/Training/Reviews/TrainingReviews.php">
+  <file src="src/Training/Reviews/TrainingReviews.php">
     <MixedArgument>
       <code><![CDATA[$row->ranking]]></code>
     </MixedArgument>
   </file>
-  <file src="app/UpcKeys/Presenters/HomepagePresenter.php">
+  <file src="src/UpcKeys/Presenters/HomepagePresenter.php">
     <MixedArgument>
       <code><![CDATA[$error ?? null]]></code>
       <code><![CDATA[$keys ?? []]]></code>
     </MixedArgument>
   </file>
-  <file src="app/UpcKeys/Technicolor.php">
+  <file src="src/UpcKeys/Technicolor.php">
     <MixedArgument>
       <code><![CDATA[$row->key]]></code>
       <code><![CDATA[$row->serial]]></code>
       <code><![CDATA[$row->type]]></code>
     </MixedArgument>
   </file>
-  <file src="app/UpcKeys/Ubee.php">
+  <file src="src/UpcKeys/Ubee.php">
     <MixedArgument>
       <code><![CDATA[$row->mac]]></code>
     </MixedArgument>

@@ -197,7 +197,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'MichalSpacekCz\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app',
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'JetBrains\\PhpStorm\\' => 
         array (

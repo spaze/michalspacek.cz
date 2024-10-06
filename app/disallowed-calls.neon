@@ -55,7 +55,7 @@ parameters:
 			superglobal: '$_SERVER'
 			message: 'use Application\ServerEnv instead'
 			allowIn:
-				- app/Application/ServerEnv.php
+				- src/Application/ServerEnv.php
 				- tests/Application/ServerEnvTest.phpt
 	disallowedClasses:
 		-
@@ -64,14 +64,14 @@ parameters:
 				- 'Nette\Forms\Form'
 			message: 'use MichalSpacekCz\Form\UiForm for better type declarations'
 			allowIn:
-				- app/Form/UiForm.php
-				- app/Form/Controls/TrainingControlsFactory.php
+				- src/Form/UiForm.php
+				- src/Form/Controls/TrainingControlsFactory.php
 		-
 			class:
 				- 'Spaze\PhpInfo\PhpInfo'
 			message: 'use MichalSpacekCz\Application\SanitizedPhpInfo with additional sanitization'
 			allowIn:
-				- app/Application/SanitizedPhpInfo.php
+				- src/Application/SanitizedPhpInfo.php
 
 includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon

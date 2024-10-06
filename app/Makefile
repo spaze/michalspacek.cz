@@ -9,7 +9,7 @@ npm-audit:
 	npm audit
 
 cs-fix:
-	vendor/bin/phpcbf app/ public/ tests/
+	vendor/bin/phpcbf src/ public/ tests/
 
 check-file-patterns:
 	bin/check-file-patterns.sh
@@ -24,13 +24,13 @@ check-sri-macros-concat:
 	bin/check-sri-macros-concat.sh
 
 lint-php:
-	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub app/ public/ stubs/ tests/
+	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub src/ public/ stubs/ tests/
 
 lint-latte:
-	bin/latte-lint.php app/
+	bin/latte-lint.php src/
 
 lint-neon:
-	vendor/nette/neon/bin/neon-lint app/
+	vendor/nette/neon/bin/neon-lint src/
 
 lint-xml:
 	bin/xmllint.sh
@@ -39,7 +39,7 @@ lint-xml-auto-install:
 	bin/xmllint.sh --auto-install-with-apt-fast
 
 phpcs:
-	vendor/bin/phpcs app/ public/ tests/
+	vendor/bin/phpcs src/ public/ tests/
 
 phpstan:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon
@@ -54,7 +54,7 @@ psalm:
 	vendor/bin/psalm.phar
 
 tester:
-	vendor/nette/tester/src/tester -s -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/
+	vendor/nette/tester/src/tester -s -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
 
 tester-include-skipped:
 	TEST_CASE_RUNNER_INCLUDE_SKIPPED=1 \
