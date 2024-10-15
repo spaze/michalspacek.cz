@@ -36,7 +36,7 @@ lint-xml:
 	bin/xmllint.sh
 
 lint-xml-auto-install:
-	bin/xmllint.sh --auto-install-with-apt-fast
+	bin/xmllint.sh --auto-install-with-apt
 
 phpcs:
 	vendor/bin/phpcs src/ public/ tests/
