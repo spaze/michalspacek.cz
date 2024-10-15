@@ -1,18 +1,18 @@
 #!/bin/bash
 
-OPT_AUTO_INSTALL_WITH_APT_FAST="--auto-install-with-apt-fast"
+OPT_AUTO_INSTALL_WITH_APT="--auto-install-with-apt"
 
 function install() {
-	apt-fast --yes --no-install-recommends install libxml2-utils
+	sudo apt --yes --no-install-recommends install libxml2-utils
 }
 
 
 if ! hash xmllint 2>/dev/null; then
 	if [ $# -eq 0 ]; then
-		echo "xmllint is required but it's not installed, install it with e.g. apt install libxml2-utils, or run $0 $OPT_AUTO_INSTALL_WITH_APT_FAST"
+		echo "xmllint is required but it's not installed, install it with e.g. apt install libxml2-utils, or run $0 $OPT_AUTO_INSTALL_WITH_APT"
 		exit 1
 	else
-		if [ "$1" = "$OPT_AUTO_INSTALL_WITH_APT_FAST" ]; then
+		if [ "$1" = "$OPT_AUTO_INSTALL_WITH_APT" ]; then
 			echo "xmllint is required, will be installed automatically"
 			install
 			if ! install; then
