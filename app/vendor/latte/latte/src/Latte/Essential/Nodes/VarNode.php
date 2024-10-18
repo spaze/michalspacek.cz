@@ -10,6 +10,9 @@ declare(strict_types=1);
 namespace Latte\Essential\Nodes;
 
 use Latte\Compiler\Nodes\Php\Expression\AssignNode;
+use Latte\Compiler\Nodes\Php\Expression\AssignOpNode;
+use Latte\Compiler\Nodes\Php\Expression\AuxiliaryNode;
+use Latte\Compiler\Nodes\Php\Expression\TernaryNode;
 use Latte\Compiler\Nodes\Php\Expression\VariableNode;
 use Latte\Compiler\Nodes\Php\Scalar\NullNode;
 use Latte\Compiler\Nodes\StatementNode;
@@ -69,15 +72,17 @@ class VarNode extends StatementNode
 		foreach ($this->assignments as $assign) {
 			if ($this->default) {
 				assert($assign->var instanceof VariableNode);
-				$res[] = $context->format(
-					'%node ??= array_key_exists(%raw, get_defined_vars()) ? null : %node',
+				$assign = new AssignOpNode(
 					$assign->var,
-					$context->encodeString($assign->var->name),
-					$assign->expr,
+					'??',
+					new TernaryNode(
+						new AuxiliaryNode(fn() => 'array_key_exists(' . $context->encodeString($assign->var->name) . ', get_defined_vars())'),
+						new NullNode,
+						$assign->expr,
+					),
 				);
-			} else {
-				$res[] = $assign->print($context);
 			}
+			$res[] = $assign->print($context);
 		}
 
 		return $context->format(

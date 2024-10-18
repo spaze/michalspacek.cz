@@ -17,8 +17,8 @@ use Latte\Compiler\Nodes\TemplateNode;
  */
 class Engine
 {
-	public const Version = '3.0.19';
-	public const VersionId = 30019;
+	public const Version = '3.0.20';
+	public const VersionId = 30020;
 
 	/** @deprecated use Engine::Version */
 	public const
