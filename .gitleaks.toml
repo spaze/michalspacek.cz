@@ -44,7 +44,8 @@ keywords = [
 [allowlist]
 paths = [
   '''js/openpgp\.min\.js''',
-  # Paths otherwise .gitignored should be listed here if you want to run with --no-git
+  '''site/vendor/''',
+  # Paths otherwise .gitignored should be listed here if you want to use `gitleaks directory`
   '''i/build/''',
   '''site/temp/cache/''',
 ]

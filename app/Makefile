@@ -61,7 +61,7 @@ tester-include-skipped:
 	$(MAKE) tester
 
 gitleaks:
-	gitleaks detect --verbose --source $(realpath ..)
+	gitleaks git --verbose $(realpath ..)
 
 composer-dependency-analyser:
 	vendor/bin/composer-dependency-analyser --verbose
