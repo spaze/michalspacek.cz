@@ -15,12 +15,21 @@ parameters:
 		-
 			function: 'setcookie()'
 			message: 'use methods from MichalSpacekCz\Http\Cookies'
+		-
+			function: 'preg_*()'
+			message: 'use the Preg class from composer/pcre'
 	disallowedStaticCalls:
 		-
 			method: 'Tester\Environment::skip()'
 			message: 'use TestCaseRunner::skip() instead, it can ignore skipping with an environment variable'
 			allowInMethods:
 				- 'MichalSpacekCz\Test\TestCaseRunner::skip()'
+		-
+			method:
+				- 'Nette\Utils\Strings::match()'
+				- 'Nette\Utils\Strings::matchAll()'
+				- 'Nette\Utils\Strings::replace()'
+			message: 'use the Preg or Regex class from composer/pcre for better static analysis'
 	disallowedMethodCalls:
 		-
 			method:

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Composer\Pcre\Regex;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
@@ -61,8 +62,11 @@ readonly class TexyPhraseHandler
 		}
 
 		// "title":[link-en_US:Module:Presenter:action params]
-		if (str_starts_with($url, 'link-') && preg_match("/^link-{$localeRegExp}:(.*)\\z/", $url, $matches)) {
-			$link->URL = $this->getLink($matches[2], $matches[1]);
+		if (str_starts_with($url, 'link-')) {
+			$result = Regex::matchStrictGroups("/^link-{$localeRegExp}:(.*)\\z/", $url);
+			if ($result->matched) {
+				$link->URL = $this->getLink($result->matches[2], $result->matches[1]);
+			}
 		}
 
 		// "title":[blog:post#fragment]
@@ -71,8 +75,11 @@ readonly class TexyPhraseHandler
 		}
 
 		// "title":[blog-en_US:post#fragment]
-		if (str_starts_with($url, 'blog-') && preg_match("/^blog-{$localeRegExp}:(.*)\\z/", $url, $matches)) {
-			$link->URL = $this->getBlogLink($matches[2], $matches[1]);
+		if (str_starts_with($url, 'blog-')) {
+			$result = Regex::matchStrictGroups("/^blog-{$localeRegExp}:(.*)\\z/", $url);
+			if ($result->matched) {
+				$link->URL = $this->getBlogLink($result->matches[2], $result->matches[1]);
+			}
 		}
 
 		// "title":[inhouse-training:training]

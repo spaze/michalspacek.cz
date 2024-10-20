@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use Composer\Pcre\Regex;
 use DateTime;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
@@ -95,10 +96,11 @@ readonly class Technicolor implements UpcWiFiRouter
 				continue;
 			}
 
-			if (!preg_match('/([^,]+),([^,]+),(\d+)/', $line, $matches)) {
+			$result = Regex::matchStrictGroups('/([^,]+),([^,]+),(\d+)/', $line);
+			if (!$result->matched) {
 				throw new UpcKeysApiIncorrectTokensException($json, $line);
 			}
-			[, $serial, $key, $type] = $matches;
+			[, $serial, $key, $type] = $result->matches;
 			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, (int)$type);
 		}
 		ksort($keys);
@@ -186,8 +188,7 @@ readonly class Technicolor implements UpcWiFiRouter
 	 */
 	private function buildKey(string $serial, string $key, int $type): WiFiKey
 	{
-		preg_match('/^[a-z]+/i', $serial, $matches);
-		$prefix = current($matches);
+		$prefix = Regex::match('/^[a-z]+/i', $serial)->matches[0] ?? false;
 		if ($prefix === false || !in_array($prefix, self::PREFIXES)) {
 			throw new UpcKeysApiUnknownPrefixException($serial);
 		}

@@ -32,11 +32,6 @@
       <code><![CDATA[$units->id]]></code>
     </MixedArgument>
   </file>
-  <file src="src/EasterEgg/CrLfUrlInjections.php">
-    <MixedArgument>
-      <code><![CDATA[$match[1]]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/EasterEgg/WinterIsComing.php">
     <MixedArgument>
       <code><![CDATA[$input->getValue()]]></code>

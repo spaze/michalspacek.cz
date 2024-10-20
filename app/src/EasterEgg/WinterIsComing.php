@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use Composer\Pcre\Regex;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
-use Nette\Utils\Strings;
 
 class WinterIsComing
 {
@@ -42,7 +42,7 @@ class WinterIsComing
 				is_string($input->getValue())
 				&& (
 					Arrays::contains(self::EMAILS, $input->getValue())
-					|| Strings::match($input->getValue(), '/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/') !== null
+					|| Regex::isMatch('/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/', $input->getValue())
 				)
 			) {
 				$this->sendSyntaxError($input);
