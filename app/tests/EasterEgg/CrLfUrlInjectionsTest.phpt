@@ -64,7 +64,7 @@ class CrLfUrlInjectionsTest extends TestCase
 			Assert::same(IResponse::S204_NoContent, $this->response->getCode());
 			Assert::same('U WOT M8', $this->response->getReason());
 			Assert::count($cookies, $this->response->getCookie('crlfinjection'));
-			if ($cookies > 1) {
+			if ($cookies > 0) {
 				Assert::same('1337', $this->response->getCookie('crlfinjection')[0]->getValue());
 			}
 		} else {
