@@ -22,3 +22,4 @@ includes:
 	- vendor/phpstan/phpstan-deprecation-rules/rules.neon
 	- vendor/metisfw/phpstan-nette-links/extension.neon
 	- vendor/metisfw/phpstan-nette-links/rules.neon
+	- vendor/composer/pcre/extension.neon

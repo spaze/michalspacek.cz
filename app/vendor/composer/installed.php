@@ -10,6 +10,15 @@
         'dev' => true,
     ),
     'versions' => array(
+        'composer/pcre' => array(
+            'pretty_version' => '3.3.1',
+            'version' => '3.3.1.0',
+            'reference' => '63aaeac21d7e775ff9bc9d45021e1745c97521c4',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/./pcre',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'contributte/translation' => array(
             'pretty_version' => 'v2.0.5',
             'version' => '2.0.5.0',

@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Composer\Pcre\Regex;
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder;
 use MichalSpacekCz\Utils\Hash;
 use Nette\Utils\Html;
-use Nette\Utils\Strings;
 use Stringable;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -151,7 +151,7 @@ class TexyFormatter
 	{
 		$texy = $this->texy ?? $this->getTexy();
 		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
-			return Strings::replace($texy->process($text), '~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1');
+			return Regex::replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', $texy->process($text))->result;
 		});
 	}
 
@@ -188,13 +188,13 @@ class TexyFormatter
 			$replacements[$placeholder::getId()] = $placeholder->replace(...);
 		}
 
-		$result = Strings::replace(
-			$result,
+		$result = Regex::replaceCallbackStrictGroups(
 			'~\*\*([^:]+):([^*]+)\*\*~',
 			function (array $matches) use ($replacements): string {
 				return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
 			},
-		);
+			$result,
+		)->result;
 		return Html::el()->setHtml($result);
 	}
 

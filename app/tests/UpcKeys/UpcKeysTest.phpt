@@ -19,6 +19,22 @@ class UpcKeysTest extends TestCase
 	}
 
 
+	public function testIsValidSsid(): void
+	{
+		Assert::false($this->upcKeys->isValidSsid('ABC1234567'));
+		Assert::false($this->upcKeys->isValidSsid('UPC 1234567'));
+		Assert::false($this->upcKeys->isValidSsid('UPC123456'));
+		Assert::false($this->upcKeys->isValidSsid('UPC 123456'));
+		Assert::true($this->upcKeys->isValidSsid('upc0000000'));
+		Assert::true($this->upcKeys->isValidSsid('UPC0000000'));
+		Assert::true($this->upcKeys->isValidSsid('upc1234567'));
+		Assert::true($this->upcKeys->isValidSsid('UPC1234567'));
+		Assert::true($this->upcKeys->isValidSsid('upc9999999'));
+		Assert::true($this->upcKeys->isValidSsid('UPC9999999'));
+		Assert::false($this->upcKeys->isValidSsid('UPC12345AF'));
+	}
+
+
 	public function testGetTextResponse(): void
 	{
 		Assert::same('', $this->upcKeys->getTextResponse(null, null, [])->getSource());

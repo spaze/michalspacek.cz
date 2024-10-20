@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Applications;
 
+use Composer\Pcre\Regex;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Utils\Strings;
@@ -60,9 +61,9 @@ readonly class TrainingApplicationSources
 	 */
 	public function getSourceNameInitials(string $name): string
 	{
-		$name = Strings::replace($name, '/,? s\.r\.o./', '');
-		$matches = Strings::matchAll($name, '/(?<=\s|\b)\pL/u', PREG_PATTERN_ORDER);
-		return Strings::upper(implode('', current($matches)));
+		$replace = Regex::replace('/,? s\.r\.o./', '', $name);
+		$matches = Regex::matchAll('/(?<=\s|\b)\pL/u', $replace->result);
+		return Strings::upper(implode('', $matches->matches[0]));
 	}
 
 }

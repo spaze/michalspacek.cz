@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Composer\Pcre\Regex;
 use MichalSpacekCz\Form\Controls\FormControlsFactory;
 use Nette\Http\IRequest;
 use Nette\Utils\Html;
@@ -27,7 +28,7 @@ readonly class SignInHoneypotFormFactory
 			$values = $form->getFormValues();
 			Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->httpRequest->getRemoteAddress()}", 'honeypot');
 			$creds = $values->username . ':' . $values->password;
-			if (preg_match('~\slimit\s~i', $creds)) {
+			if (Regex::isMatch('~\slimit\s~i', $creds)) {
 				$message = Html::el()
 					->setText("No, no, no, no, no, no, no, no, no, no, no, no there's ")
 					->addHtml(Html::el('a')
@@ -37,7 +38,7 @@ readonly class SignInHoneypotFormFactory
 					->addText('!');
 			} elseif (stripos($creds, 'honeypot') !== false) {
 				$message = 'Jo jo, honeypot, přesně tak';
-			} elseif (preg_match('~\sor\s~i', $creds)) {
+			} elseif (Regex::isMatch('~\sor\s~i', $creds)) {
 				$message = 'Dobrej pokusql!';
 			} else {
 				$message = 'Špatné uživatelské jméno nebo heslo';

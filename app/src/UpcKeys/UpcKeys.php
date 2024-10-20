@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use Composer\Pcre\Regex;
 use Nette\Application\Responses\TextResponse;
-use Nette\Utils\Strings;
 
 class UpcKeys
 {
@@ -101,7 +101,7 @@ class UpcKeys
 	public function isValidSsid(string $ssid): bool
 	{
 		// Inspired by Nette\Forms\Validator::validatePattern()
-		return (bool)Strings::match($ssid, sprintf("\x01^(%s)\\z\x01u", self::SSID_VALID_PATTERN));
+		return Regex::isMatch(sprintf("\x01^(%s)\\z\x01u", self::SSID_VALID_PATTERN), $ssid);
 	}
 
 

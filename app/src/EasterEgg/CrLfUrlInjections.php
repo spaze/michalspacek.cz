@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use Composer\Pcre\Regex;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
-use Nette\Utils\Strings;
 
 readonly class CrLfUrlInjections
 {
@@ -26,12 +26,12 @@ readonly class CrLfUrlInjections
 		if (!str_contains($url, "\r") && !str_contains($url, "\n")) {
 			return false;
 		}
-		$matches = Strings::matchAll($url, sprintf('/Set\-Cookie:%s=([a-z0-9]+)/i', self::COOKIE_NAME));
-		foreach ($matches as $match) {
+		$matches = Regex::matchAllStrictGroups(sprintf('/Set\-Cookie:%s=([a-z0-9]+)/i', self::COOKIE_NAME), $url);
+		foreach ($matches->matches[1] as $match) {
 			// Don't use any cookie name from the request to avoid e.g. session fixation
 			$this->httpResponse->setCookie(
 				self::COOKIE_NAME,
-				$match[1],
+				$match,
 				time() - 31337 * 1337,
 				'/expired=31337*1337seconds/(1.3years)/ago',
 			);

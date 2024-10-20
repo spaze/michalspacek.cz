@@ -41,4 +41,5 @@ return array(
     'JetBrains\\PhpStorm\\' => array($vendorDir . '/jetbrains/phpstorm-attributes/src'),
     'Efabrica\\PHPStanLatte\\' => array($vendorDir . '/efabrica/phpstan-latte/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),
+    'Composer\\Pcre\\' => array($vendorDir . '/composer/pcre/src'),
 );

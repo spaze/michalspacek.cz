@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\ApplicationForm;
 
+use Composer\Pcre\Regex;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use stdClass;
 
@@ -17,7 +18,7 @@ class TrainingApplicationFormSpam
 
 	public function check(stdClass $values): void
 	{
-		if (preg_match('~\s+href="\s*https?://~', $values->note ?? '')) {
+		if (Regex::isMatch('~\s+href="\s*https?://~', $values->note ?? '')) {
 			throw new SpammyApplicationException();
 		} elseif (
 			ctype_lower($values->name ?? self::FIELD_MISSING_VALUE)

@@ -66,6 +66,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'C' => 
         array (
             'Contributte\\Translation\\' => 24,
+            'Composer\\Pcre\\' => 14,
         ),
     );
 
@@ -210,6 +211,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Contributte\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/contributte/translation/src',
+        ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
     );
 
