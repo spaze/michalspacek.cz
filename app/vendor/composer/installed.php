@@ -170,9 +170,9 @@
             ),
         ),
         'nette/forms' => array(
-            'pretty_version' => 'v3.2.4',
-            'version' => '3.2.4.0',
-            'reference' => 'e61535036669a78bcafb061dcfa46da827fcf377',
+            'pretty_version' => 'v3.2.5',
+            'version' => '3.2.5.0',
+            'reference' => '7e59cee3a16e0382f83680c94babb85a0a167dd0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/forms',
             'aliases' => array(),
@@ -251,9 +251,9 @@
             'dev_requirement' => false,
         ),
         'nette/tester' => array(
-            'pretty_version' => 'v2.5.3',
-            'version' => '2.5.3.0',
-            'reference' => 'ee0a4b8402a8c1831db547ec0a56d18196906b51',
+            'pretty_version' => 'v2.5.4',
+            'version' => '2.5.4.0',
+            'reference' => 'c11863785779e87b40adebf150364f2e5938c111',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/tester',
             'aliases' => array(),
@@ -421,7 +421,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '2db4b93f047a03be06ec0a890d252e1c8c635f74',
+            'reference' => 'bae581ca4125f92b1ad4d316ac691fa2d5231649',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(

@@ -36,9 +36,6 @@ abstract class MultiChoiceControl extends BaseControl
 	public function loadHttpData(): void
 	{
 		$this->value = array_keys(array_flip($this->getHttpData(Nette\Forms\Form::DataText)));
-		if (is_array($this->disabled)) {
-			$this->value = array_diff($this->value, array_keys($this->disabled));
-		}
 	}
 
 
@@ -68,11 +65,7 @@ abstract class MultiChoiceControl extends BaseControl
 
 		$values = array_keys($flip);
 		if ($this->checkDefaultValue && ($diff = array_diff($values, array_keys($this->items)))) {
-			$set = Nette\Utils\Strings::truncate(
-				implode(', ', array_map(fn($s) => var_export($s, return: true), array_keys($this->items))),
-				70,
-				'...',
-			);
+			$set = Nette\Utils\Strings::truncate(implode(', ', array_map(fn($s) => var_export($s, return: true), array_keys($this->items))), 70, '...');
 			$vals = (count($diff) > 1 ? 's' : '') . " '" . implode("', '", $diff) . "'";
 			throw new Nette\InvalidArgumentException("Value$vals are out of allowed set [$set] in field '{$this->getName()}'.");
 		}
@@ -87,7 +80,7 @@ abstract class MultiChoiceControl extends BaseControl
 	 */
 	public function getValue(): array
 	{
-		return array_values(array_intersect($this->value, array_keys($this->items)));
+		return array_keys($this->getSelectedItems());
 	}
 
 
@@ -97,15 +90,6 @@ abstract class MultiChoiceControl extends BaseControl
 	public function getRawValue(): array
 	{
 		return $this->value;
-	}
-
-
-	/**
-	 * Is any item selected?
-	 */
-	public function isFilled(): bool
-	{
-		return $this->getValue() !== [];
 	}
 
 
@@ -134,7 +118,10 @@ abstract class MultiChoiceControl extends BaseControl
 	 */
 	public function getSelectedItems(): array
 	{
-		return array_intersect_key($this->items, array_flip($this->value));
+		$selected = array_intersect_key($this->items, array_flip($this->value));
+		return is_array($this->disabled)
+			? array_diff_key($selected, $this->disabled)
+			: $selected;
 	}
 
 
@@ -149,7 +136,6 @@ abstract class MultiChoiceControl extends BaseControl
 
 		parent::setDisabled(false);
 		$this->disabled = array_fill_keys($value, value: true);
-		$this->value = array_diff($this->value, $value);
 		return $this;
 	}
 
