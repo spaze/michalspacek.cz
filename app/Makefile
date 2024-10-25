@@ -1,4 +1,4 @@
-.PHONY: test composer-audit npm-audit cs-fix check-file-patterns check-makefile check-application-mapping check-sri-macros-concat lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped gitleaks composer-dependency-analyser
+.PHONY: test composer-audit npm-audit cs-fix check-file-patterns check-makefile check-application-mapping check-sri-macros-concat lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt
 
 test: composer-audit npm-audit check-file-patterns check-makefile check-application-mapping check-sri-macros-concat lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
 
@@ -65,3 +65,6 @@ gitleaks:
 
 composer-dependency-analyser:
 	vendor/bin/composer-dependency-analyser --verbose
+
+update-security-txt:
+	bin/update-security.txt.sh
