@@ -354,9 +354,13 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/**
 	 * Adds input for email.
 	 */
-	public function addEmail(string $name, string|Stringable|null $label = null): Controls\TextInput
+	public function addEmail(
+		string $name,
+		string|Stringable|null $label = null,
+		int $maxLength = 255,
+	): Controls\TextInput
 	{
-		return $this[$name] = (new Controls\TextInput($label))
+		return $this[$name] = (new Controls\TextInput($label, $maxLength))
 			->addRule(Form::Email);
 	}
 
@@ -573,7 +577,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/********************* extension methods ****************d*g**/
 
 
-	public function __call(string $name, array $args): mixed
+	public function __call(string $name, array $args)
 	{
 		if (isset(self::$extMethods[$name])) {
 			return (self::$extMethods[$name])($this, ...$args);
