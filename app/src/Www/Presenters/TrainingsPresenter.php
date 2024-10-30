@@ -9,6 +9,8 @@ use MichalSpacekCz\Form\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Http\Robots\Robots;
+use MichalSpacekCz\Http\Robots\RobotsRule;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
@@ -61,6 +63,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingFilesDownload $trainingFilesDownload,
 		private readonly Translator $translator,
 		private readonly Session $sessionHandler,
+		private readonly Robots $robots,
 	) {
 		parent::__construct();
 	}
@@ -228,6 +231,7 @@ class TrainingsPresenter extends BasePresenter
 		if (count($application->getFiles()) === 0) {
 			throw new BadRequestException('No files for application id ' . $application->getId());
 		}
+		$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
 
 		$this->template->trainingTitle = $training->getName();
 		$this->template->trainingName = ($training->isCustom() ? null : $training->getAction());

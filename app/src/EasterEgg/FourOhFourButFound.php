@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use MichalSpacekCz\Http\Robots\Robots;
+use MichalSpacekCz\Http\Robots\RobotsRule;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
@@ -17,6 +19,7 @@ readonly class FourOhFourButFound
 
 	public function __construct(
 		private IRequest $httpRequest,
+		private readonly Robots $robots,
 	) {
 	}
 
@@ -39,6 +42,7 @@ readonly class FourOhFourButFound
 
 	private function sendIt(Presenter $presenter, string $template): never
 	{
+		$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
 		$presenter->sendResponse(new TextResponse(file_get_contents($template)));
 	}
 
