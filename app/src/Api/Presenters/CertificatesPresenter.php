@@ -9,7 +9,6 @@ use MichalSpacekCz\Tls\CertificateFactory;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
-use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
 use Override;
 use Tracy\Debugger;
