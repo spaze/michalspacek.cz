@@ -2,7 +2,7 @@
 
 echo "Wrong file patterns:"
 
-APP_FILES=$(find app/ -regex ".*\.phpt?$")
+APP_FILES=$(find src/ -regex ".*\.phpt?$")
 BAD_APP_FILES=$(echo "$APP_FILES" | grep --invert-match "\.php$")
 TEST_FILES=$(find tests/ -mindepth 2 -regex ".*\.phpt?$")
 BAD_TEST_FILES=$(echo "$TEST_FILES" | grep --invert-match "Test.phpt")
