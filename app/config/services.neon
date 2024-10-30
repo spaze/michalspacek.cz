@@ -85,6 +85,7 @@ services:
 	- MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy(reportOnly: true)
 	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\Redirections
+	- MichalSpacekCz\Http\Robots\Robots
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)

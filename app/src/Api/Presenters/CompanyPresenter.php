@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Api\Presenters;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Http\SecurityHeaders;
-use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 
 class CompanyPresenter extends BasePresenter
