@@ -51,10 +51,10 @@ class User
 	/** default role for authenticated user without own identity */
 	public string $authenticatedRole = 'authenticated';
 
-	/** @var callable[]  function (User $sender): void; Occurs when the user is successfully logged in */
+	/** @var array<callable(self): void>  Occurs when the user is successfully logged in */
 	public array $onLoggedIn = [];
 
-	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
+	/** @var array<callable(self): void>  Occurs when the user is logged out */
 	public array $onLoggedOut = [];
 
 	private ?IIdentity $identity = null;
@@ -81,18 +81,18 @@ class User
 
 	/**
 	 * Conducts the authentication process. Parameters are optional.
-	 * @param  string|IIdentity  $user  name or Identity
+	 * @param  string|IIdentity  $username  name or Identity
 	 * @throws AuthenticationException if authentication was not successful
 	 */
 	public function login(
-		string|IIdentity $user,
+		string|IIdentity $username,
 		#[\SensitiveParameter]
 		?string $password = null,
 	): void
 	{
 		$this->logout(true);
-		if ($user instanceof IIdentity) {
-			$this->identity = $user;
+		if ($username instanceof IIdentity) {
+			$this->identity = $username;
 		} else {
 			$authenticator = $this->getAuthenticator();
 			$this->identity = $authenticator instanceof Authenticator
