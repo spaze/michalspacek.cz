@@ -60,16 +60,16 @@ readonly class Manager implements Authenticator
 	/**
 	 * Performs an authentication.
 	 *
-	 * @param string $user
+	 * @param string $username
 	 * @param string $password
 	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */
 	#[Override]
-	public function authenticate(string $user, string $password): IIdentity
+	public function authenticate(string $username, string $password): IIdentity
 	{
-		$userId = $this->verifyPassword($user, $password);
-		return $this->getIdentity($userId, $user);
+		$userId = $this->verifyPassword($username, $password);
+		return $this->getIdentity($userId, $username);
 	}
 
 
