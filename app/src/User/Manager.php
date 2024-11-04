@@ -28,6 +28,7 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
+use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
 
@@ -58,12 +59,8 @@ readonly class Manager implements Authenticator
 
 
 	/**
-	 * Performs an authentication.
-	 *
-	 * @param string $username
-	 * @param string $password
-	 * @return IIdentity
 	 * @throws AuthenticationException
+	 * @throws SodiumException
 	 */
 	#[Override]
 	public function authenticate(string $username, string $password): IIdentity
@@ -73,13 +70,6 @@ readonly class Manager implements Authenticator
 	}
 
 
-	/**
-	 * Get identity object.
-	 *
-	 * @param int $id User id
-	 * @param string $username Username
-	 * @return SimpleIdentity
-	 */
 	public function getIdentity(int $id, string $username): SimpleIdentity
 	{
 		return new SimpleIdentity($id, [], ['username' => $username]);
@@ -108,8 +98,8 @@ readonly class Manager implements Authenticator
 
 
 	/**
-	 * @return int User id
 	 * @throws AuthenticationException
+	 * @throws SodiumException
 	 */
 	private function verifyPassword(string $username, string $password): int
 	{
@@ -146,12 +136,10 @@ readonly class Manager implements Authenticator
 
 
 	/**
-	 * @param User $user
-	 * @param string $password
-	 * @param string $newPassword
 	 * @throws AuthenticationException
 	 * @throws HaliteAlert
 	 * @throws IdentityException
+	 * @throws SodiumException
 	 */
 	public function changePassword(User $user, string $password, string $newPassword): void
 	{
@@ -167,6 +155,7 @@ readonly class Manager implements Authenticator
 
 	/**
 	 * @throws HaliteAlert
+	 * @throws SodiumException
 	 */
 	private function updatePassword(int $userId, string $newPassword): void
 	{
@@ -206,7 +195,6 @@ readonly class Manager implements Authenticator
 	/**
 	 * Hash token used for permanent login.
 	 *
-	 * @param string $token
 	 * @return non-empty-string SHA-512 hash of the token
 	 */
 	private function hashToken(string $token): string
@@ -220,8 +208,6 @@ readonly class Manager implements Authenticator
 	 *
 	 * Selector and token are regenerated if selector already exists in the table.
 	 *
-	 * @param User $user
-	 * @param int $type
 	 * @return non-empty-string Concatenation of selector, separator, token
 	 * @throws Exception
 	 */
@@ -252,7 +238,6 @@ readonly class Manager implements Authenticator
 	/**
 	 * Store permanent login token in database and send a cookie to the browser.
 	 *
-	 * @param User $user
 	 * @throws Exception
 	 */
 	public function storePermanentLogin(User $user): void
@@ -264,8 +249,6 @@ readonly class Manager implements Authenticator
 
 	/**
 	 * Delete all permanent login tokens and delete the cookie in the browser.
-	 *
-	 * @param User $user
 	 */
 	public function clearPermanentLogin(User $user): void
 	{
@@ -277,7 +260,6 @@ readonly class Manager implements Authenticator
 	/**
 	 * Regenerate permanent login token.
 	 *
-	 * @param User $user
 	 * @throws Exception
 	 */
 	public function regeneratePermanentLogin(User $user): void
