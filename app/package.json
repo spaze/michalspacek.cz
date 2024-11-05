@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "humbleicons": "^1.9.0",
-    "openpgp": "^5.11.2"
+    "openpgp": "^6.0.0"
   }
 }

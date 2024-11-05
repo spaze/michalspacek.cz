@@ -38,11 +38,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 		private readonly TrainingFiles $trainingFiles,
 		Session $sessionHandler,
 	) {
-		$trainingFilesSessionSection = $sessionHandler->getSection('training', TrainingFilesSessionSection::class);
-		if (!$trainingFilesSessionSection instanceof TrainingFilesSessionSection) {
-			throw new ShouldNotHappenException();
-		}
-		$this->trainingFilesSessionSection = $trainingFilesSessionSection;
+		$this->trainingFilesSessionSection = $sessionHandler->getSection('training', TrainingFilesSessionSection::class);
 		$this->sessionSection = $sessionHandler->getSection('training');
 	}
 

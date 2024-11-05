@@ -50,11 +50,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 		private readonly TrainingFiles $trainingFiles,
 		Session $sessionHandler,
 	) {
-		$trainingApplicationSessionSection = $sessionHandler->getSection('training', TrainingApplicationSessionSection::class);
-		if (!$trainingApplicationSessionSection instanceof TrainingApplicationSessionSection) {
-			throw new ShouldNotHappenException();
-		}
-		$this->trainingApplicationSessionSection = $trainingApplicationSessionSection;
+		$this->trainingApplicationSessionSection = $sessionHandler->getSection('training', TrainingApplicationSessionSection::class);
 		$this->sessionSection = $sessionHandler->getSection('training');
 	}
 

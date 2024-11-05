@@ -7,7 +7,6 @@ use finfo;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
-use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
@@ -79,11 +78,7 @@ readonly class TrainingFilesDownload
 
 	private function getSessionSection(): TrainingFilesSessionSection
 	{
-		$session = $this->sessionHandler->getSection('training', TrainingFilesSessionSection::class);
-		if (!$session instanceof TrainingFilesSessionSection) {
-			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($session), TrainingApplicationSessionSection::class));
-		}
-		return $session;
+		return $this->sessionHandler->getSection('training', TrainingFilesSessionSection::class);
 	}
 
 }

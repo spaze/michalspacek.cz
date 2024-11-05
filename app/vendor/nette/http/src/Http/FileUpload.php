@@ -33,29 +33,29 @@ final class FileUpload
 	/** @deprecated */
 	public const IMAGE_MIME_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/webp'];
 
-	private string $name;
-	private string|null $fullPath;
+	private readonly string $name;
+	private readonly ?string $fullPath;
 	private string|false|null $type = null;
 	private string|false|null $extension = null;
-	private int $size;
+	private readonly int $size;
 	private string $tmpName;
-	private int $error;
+	private readonly int $error;
 
 
 	public function __construct(?array $value)
 	{
 		foreach (['name', 'size', 'tmp_name', 'error'] as $key) {
 			if (!isset($value[$key]) || !is_scalar($value[$key])) {
-				$this->error = UPLOAD_ERR_NO_FILE;
-				return; // or throw exception?
+				$value = [];
+				break;
 			}
 		}
 
-		$this->name = $value['name'];
+		$this->name = $value['name'] ?? '';
 		$this->fullPath = $value['full_path'] ?? null;
-		$this->size = $value['size'];
-		$this->tmpName = $value['tmp_name'];
-		$this->error = $value['error'];
+		$this->size = $value['size'] ?? 0;
+		$this->tmpName = $value['tmp_name'] ?? '';
+		$this->error = $value['error'] ?? UPLOAD_ERR_NO_FILE;
 	}
 
 
@@ -80,7 +80,7 @@ final class FileUpload
 
 	/**
 	 * Returns the sanitized file name. The resulting name contains only ASCII characters [a-zA-Z0-9.-].
-	 * If the name does not contain such characters, it returns 'unknown'. If the file is JPEG, PNG, GIF, or WebP image,
+	 * If the name does not contain such characters, it returns 'unknown'. If the file is an image supported by PHP,
 	 * it returns the correct file extension. Do not blindly trust the value returned by this method.
 	 */
 	public function getSanitizedName(): string
@@ -89,9 +89,9 @@ final class FileUpload
 		$name = str_replace(['-.', '.-'], '.', $name);
 		$name = trim($name, '.-');
 		$name = $name === '' ? 'unknown' : $name;
-		if ($ext = $this->getSuggestedExtension()) {
+		if ($this->isImage()) {
 			$name = preg_replace('#\.[^.]+$#D', '', $name);
-			$name .= '.' . $ext;
+			$name .= '.' . $this->getSuggestedExtension();
 		}
 
 		return $name;
@@ -174,7 +174,7 @@ final class FileUpload
 
 
 	/**
-	 * Returns the error code. It is be one of UPLOAD_ERR_XXX constants.
+	 * Returns the error code. It has to be one of UPLOAD_ERR_XXX constants.
 	 * @see http://php.net/manual/en/features.file-upload.errors.php
 	 */
 	public function getError(): int
