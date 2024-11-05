@@ -179,9 +179,9 @@
             'dev_requirement' => false,
         ),
         'nette/http' => array(
-            'pretty_version' => 'v3.3.0',
-            'version' => '3.3.0.0',
-            'reference' => 'c779293fb79e6d2a16d474cd19dce866615f3b9c',
+            'pretty_version' => 'v3.3.1',
+            'version' => '3.3.1.0',
+            'reference' => '5f8f07d4242cb48c6b33d89daa3ea6ddf9668cfc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/http',
             'aliases' => array(),
