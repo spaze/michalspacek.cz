@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\ApplicationForm;
 
 use DateTime;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -149,11 +148,7 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 
 	private function getTrainingSessionSection(): TrainingApplicationSessionSection
 	{
-		$session = $this->session->getSection('section', TrainingApplicationSessionSection::class);
-		if (!$session instanceof TrainingApplicationSessionSection) {
-			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($session), TrainingApplicationSessionSection::class));
-		}
-		return $session;
+		return $this->session->getSection('section', TrainingApplicationSessionSection::class);
 	}
 
 }

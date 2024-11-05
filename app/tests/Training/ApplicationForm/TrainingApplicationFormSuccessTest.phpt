@@ -89,11 +89,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 			'note' => self::NOTE,
 			'country' => self::COUNTRY,
 		]);
-		$sectionSection = $session->getSection('section', TrainingApplicationSessionSection::class);
-		if (!$sectionSection instanceof TrainingApplicationSessionSection) {
-			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($sectionSection), TrainingApplicationSessionSection::class));
-		}
-		$this->sessionSection = $sectionSection;
+		$this->sessionSection = $session->getSection('section', TrainingApplicationSessionSection::class);
 		$parentClass = (new ReflectionClass($this->sessionSection))->getParentClass();
 		if (!$parentClass) {
 			throw new ShouldNotHappenException(sprintf('Parent class of %s should exist', $this->sessionSection::class));
