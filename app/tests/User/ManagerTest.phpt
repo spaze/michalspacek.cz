@@ -17,10 +17,12 @@ use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
 use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\DI\Container;
+use Nette\Security\AuthenticationException;
 use Nette\Security\Passwords;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
+use PDOException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tester\Assert;
 use Tester\TestCase;
@@ -141,9 +143,17 @@ class ManagerTest extends TestCase
 	{
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity('e1337', [], ['username' => '303']));
-		Assert::exception(function (): void {
-			$this->authenticator->changePassword($this->user, 'hunter2', 'hunter3');
+		$oldPassword = 'hunter2';
+		$newPassword = 'hunter3';
+		$e = Assert::exception(function () use ($oldPassword, $newPassword): void {
+			$this->authenticator->changePassword($this->user, $oldPassword, $newPassword);
 		}, IdentityIdNotIntException::class, 'Identity id is of type string, not an integer');
+		if (!$e instanceof IdentityIdNotIntException) {
+			Assert::fail('Exception is of a wrong type ' . get_debug_type($e));
+		} else {
+			Assert::notContains($oldPassword, $e->getTraceAsString());
+			Assert::notContains($newPassword, $e->getTraceAsString());
+		}
 	}
 
 
@@ -204,6 +214,71 @@ class ManagerTest extends TestCase
 		}
 
 		Assert::null($this->authenticator->verifyReturningUser("foo:not{$token}"));
+	}
+
+
+	public function testAuthenticate(): void
+	{
+		$userId = 1337;
+		$username = '303';
+		$password = 'hunter42';
+		Assert::exception(function (): void {
+			$this->authenticator->authenticate('foo', 'bar');
+		}, AuthenticationException::class, 'The username is incorrect.');
+		$this->database->setFetchResult([
+			'userId' => $userId,
+			'username' => $username,
+			'password' => $this->passwordEncryption->encrypt($this->passwords->hash($password)),
+		]);
+		Assert::exception(function () use ($username): void {
+			$this->authenticator->authenticate($username, 'bar');
+		}, AuthenticationException::class, 'The password is incorrect.');
+		$identity = $this->authenticator->authenticate($username, $password);
+		Assert::same($userId, $identity->getId());
+		Assert::same($username, $identity->getData()['username']);
+	}
+
+
+	public function testAuthenticateRehashPasswords(): void
+	{
+		$userId = 1337;
+		$username = 'foo';
+		$password = 'bar';
+		$hash = password_hash($password, PASSWORD_DEFAULT);
+		$this->database->setFetchResult([
+			'userId' => $userId,
+			'username' => $username,
+			'password' => $this->passwordEncryption->encrypt($hash),
+		]);
+		Assert::noError(function () use ($username, $password): void {
+			$this->authenticator->authenticate($username, $password);
+		});
+		$params = $this->database->getParamsForQuery('UPDATE users SET password = ? WHERE id_user = ?');
+		if (!is_string($params[0])) {
+			Assert::fail('Encrypted data is of a wrong type ' . get_debug_type($params[0]));
+		} else {
+			Assert::notSame($hash, $this->passwordEncryption->decrypt($params[0]));
+		}
+		if (!is_int($params[1])) {
+			Assert::fail('User id is of a wrong type ' . get_debug_type($params[0]));
+		} else {
+			Assert::same($userId, $params[1]);
+		}
+	}
+
+
+	public function testAuthenticateException(): void
+	{
+		$password = 'hunter2';
+		$this->database->willThrow(new PDOException());
+		$e = Assert::exception(function () use ($password): void {
+			$this->authenticator->authenticate('foo', $password);
+		}, AuthenticationException::class);
+		if (!$e instanceof AuthenticationException) {
+			Assert::fail('Exception is of a wrong type ' . get_debug_type($e));
+		} else {
+			Assert::notContains($password, $e->getTraceAsString());
+		}
 	}
 
 }

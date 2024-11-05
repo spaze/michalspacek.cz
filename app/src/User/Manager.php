@@ -28,6 +28,7 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
+use SensitiveParameter;
 use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
@@ -63,8 +64,11 @@ readonly class Manager implements Authenticator
 	 * @throws SodiumException
 	 */
 	#[Override]
-	public function authenticate(string $username, string $password): IIdentity
-	{
+	public function authenticate(
+		string $username,
+		#[SensitiveParameter]
+		string $password,
+	): IIdentity {
 		$userId = $this->verifyPassword($username, $password);
 		return $this->getIdentity($userId, $username);
 	}
@@ -101,8 +105,11 @@ readonly class Manager implements Authenticator
 	 * @throws AuthenticationException
 	 * @throws SodiumException
 	 */
-	private function verifyPassword(string $username, string $password): int
-	{
+	private function verifyPassword(
+		string $username,
+		#[SensitiveParameter]
+		string $password,
+	): int {
 		$user = $this->database->fetch(
 			'SELECT
 				id_user AS userId,
@@ -141,8 +148,13 @@ readonly class Manager implements Authenticator
 	 * @throws IdentityException
 	 * @throws SodiumException
 	 */
-	public function changePassword(User $user, string $password, string $newPassword): void
-	{
+	public function changePassword(
+		User $user,
+		#[SensitiveParameter]
+		string $password,
+		#[SensitiveParameter]
+		string $newPassword,
+	): void {
 		$userId = $user->getId();
 		if (!is_int($userId)) {
 			throw new IdentityIdNotIntException(get_debug_type($userId));
