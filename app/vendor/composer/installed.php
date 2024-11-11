@@ -40,15 +40,6 @@
                 0 => '*',
             ),
         ),
-        'efabrica/phpstan-latte' => array(
-            'pretty_version' => '0.17.1',
-            'version' => '0.17.1.0',
-            'reference' => '81d2fe1924c9fd3eaaa4cd15088c73db6db28f77',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../efabrica/phpstan-latte',
-            'aliases' => array(),
-            'dev_requirement' => true,
-        ),
         'grogy/php-parallel-lint' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -90,15 +81,6 @@
             'install_path' => __DIR__ . '/../latte/latte',
             'aliases' => array(),
             'dev_requirement' => false,
-        ),
-        'metisfw/phpstan-nette-links' => array(
-            'pretty_version' => 'v0.2',
-            'version' => '0.2.0.0',
-            'reference' => 'f06db43c326475e753c8f8b3e1dbf539a27022f4',
-            'type' => 'phpstan-extension',
-            'install_path' => __DIR__ . '/../metisfw/phpstan-nette-links',
-            'aliases' => array(),
-            'dev_requirement' => true,
         ),
         'nette/application' => array(
             'pretty_version' => 'v3.2.6',

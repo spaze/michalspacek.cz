@@ -173,67 +173,6 @@
             "install-path": "../contributte/translation"
         },
         {
-            "name": "efabrica/phpstan-latte",
-            "version": "0.17.1",
-            "version_normalized": "0.17.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/efabrica-team/phpstan-latte.git",
-                "reference": "81d2fe1924c9fd3eaaa4cd15088c73db6db28f77"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/81d2fe1924c9fd3eaaa4cd15088c73db6db28f77",
-                "reference": "81d2fe1924c9fd3eaaa4cd15088c73db6db28f77",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "latte/latte": "^2.11.6 | ^3.0.4",
-                "nette/finder": "^2.5|^3.0",
-                "nette/utils": "^3.2|^4.0",
-                "php": ">=7.4 <8.4",
-                "phpstan/phpstan": "^1.10.50",
-                "phpstan/phpstan-nette": "^1.2.6"
-            },
-            "require-dev": {
-                "efabrica/coding-standard": "^0.7",
-                "nette/application": "^3.1.6",
-                "nette/forms": "^3.1.12",
-                "nikic/php-parser": "^4.19",
-                "phpstan/phpstan-strict-rules": "^1.4",
-                "phpunit/phpunit": "^9.5",
-                "spaze/phpstan-disallowed-calls": "^2.11 | ^3.0"
-            },
-            "time": "2024-07-18T09:52:29+00:00",
-            "type": "library",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "rules.neon"
-                    ]
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Efabrica\\PHPStanLatte\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "keywords": [
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
-                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.17.1"
-            },
-            "install-path": "../efabrica/phpstan-latte"
-        },
-        {
             "name": "jetbrains/phpstorm-attributes",
             "version": "1.1",
             "version_normalized": "1.1.0.0",
@@ -366,65 +305,6 @@
                 "source": "https://github.com/nette/latte/tree/v3.0.20"
             },
             "install-path": "../latte/latte"
-        },
-        {
-            "name": "metisfw/phpstan-nette-links",
-            "version": "v0.2",
-            "version_normalized": "0.2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MetisFW/phpstan-nette-links.git",
-                "reference": "f06db43c326475e753c8f8b3e1dbf539a27022f4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/MetisFW/phpstan-nette-links/zipball/f06db43c326475e753c8f8b3e1dbf539a27022f4",
-                "reference": "f06db43c326475e753c8f8b3e1dbf539a27022f4",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.10",
-                "phpstan/phpstan-nette": "^1.2.9"
-            },
-            "require-dev": {
-                "nette/application": "^3.0",
-                "nette/di": "^2.3.0 || ^3.0.0",
-                "nette/forms": "^3.0",
-                "nette/utils": "^2.3.0 || ^3.0.0",
-                "nikic/php-parser": "^4.13.2",
-                "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-php-parser": "^1.1",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpstan/phpstan-strict-rules": "^1.0",
-                "phpunit/phpunit": "^9.5"
-            },
-            "time": "2023-11-15T12:05:17+00:00",
-            "type": "phpstan-extension",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "extension.neon",
-                        "rules.neon"
-                    ]
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "PHPStanNetteLinks\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Nette Framework link checking extension for PHPStan",
-            "support": {
-                "issues": "https://github.com/MetisFW/phpstan-nette-links/issues",
-                "source": "https://github.com/MetisFW/phpstan-nette-links/tree/v0.2"
-            },
-            "install-path": "../metisfw/phpstan-nette-links"
         },
         {
             "name": "nette/application",
@@ -5129,9 +5009,7 @@
     ],
     "dev": true,
     "dev-package-names": [
-        "efabrica/phpstan-latte",
         "jetbrains/phpstorm-attributes",
-        "metisfw/phpstan-nette-links",
         "nette/tester",
         "php-parallel-lint/php-console-highlighter",
         "php-parallel-lint/php-parallel-lint",
