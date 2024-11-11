@@ -35,7 +35,6 @@ parameters:
 			- vendor/composer/pcre/src/Regex.php
 			- vendor/contributte/translation/src/DI/TranslationExtension.php
 			- vendor/contributte/translation/src/Latte/Macros.php
-			- vendor/metisfw/phpstan-nette-links/src/Nette/PresenterResolver.php
 	ignoreErrors:
 		-
 			message: '#^Cannot access constant#'
