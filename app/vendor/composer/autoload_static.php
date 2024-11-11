@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit247de957f14f643f393d210a332dd05b
 {
     public static $files = array (
-        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'd507e002f7fce7f0c6dbf1f22edcb902' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/functions.php',
     );
@@ -49,7 +49,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
-            'PHPStanNetteLinks\\' => 18,
         ),
         'M' => 
         array (
@@ -58,10 +57,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'J' => 
         array (
             'JetBrains\\PhpStorm\\' => 19,
-        ),
-        'E' => 
-        array (
-            'Efabrica\\PHPStanLatte\\' => 22,
         ),
         'C' => 
         array (
@@ -192,10 +187,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
             1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
         ),
-        'PHPStanNetteLinks\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/metisfw/phpstan-nette-links/src',
-        ),
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -203,10 +194,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'JetBrains\\PhpStorm\\' => 
         array (
             0 => __DIR__ . '/..' . '/jetbrains/phpstorm-attributes/src',
-        ),
-        'Efabrica\\PHPStanLatte\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/efabrica/phpstan-latte/src',
         ),
         'Contributte\\Translation\\' => 
         array (

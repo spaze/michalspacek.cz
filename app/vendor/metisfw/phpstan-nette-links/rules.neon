@@ -1,4 +1,0 @@
-rules:
-	- PHPStanNetteLinks\Rule\Nette\ComponentLinksRule
-	- PHPStanNetteLinks\Rule\Nette\PresenterLinksRule
-	- PHPStanNetteLinks\Rule\Nette\LinkGeneratorLinksRule
