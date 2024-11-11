@@ -6,7 +6,6 @@ use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Generic\TemplateTypeMap;
 use PHPStan\Type\Type;
@@ -15,11 +14,9 @@ use PHPStan\Type\VoidType;
 class NetteObjectEventListenerMethodReflection implements MethodReflection
 {
 
-	/** @var string */
-	private $name;
+	private string $name;
 
-	/** @var ClassReflection */
-	private $declaringClass;
+	private ClassReflection $declaringClass;
 
 	public function __construct(string $name, ClassReflection $declaringClass)
 	{
@@ -47,9 +44,6 @@ class NetteObjectEventListenerMethodReflection implements MethodReflection
 		return false;
 	}
 
-	/**
-	 * @return ParametersAcceptor[]
-	 */
 	public function getVariants(): array
 	{
 		return [
@@ -58,7 +52,7 @@ class NetteObjectEventListenerMethodReflection implements MethodReflection
 				TemplateTypeMap::createEmpty(),
 				[],
 				true,
-				new VoidType()
+				new VoidType(),
 			),
 		];
 	}

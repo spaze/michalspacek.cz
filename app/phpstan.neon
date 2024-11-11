@@ -8,7 +8,7 @@ parameters:
 	fileExtensions:
 		- php
 		- phpt
-	level: max
+	level: 9
 	checkMissingOverrideMethodAttribute: true
 
 includes:
