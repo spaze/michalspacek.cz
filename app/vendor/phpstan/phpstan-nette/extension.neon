@@ -37,9 +37,6 @@ parameters:
 		- Nette\Http\SessionSection
 		- Nette\Security\Identity
 		- Nette\Security\SimpleIdentity
-	featureToggles:
-		skipCheckGenericClasses:
-			- Nette\Application\UI\Multiplier
 	earlyTerminatingMethodCalls:
 		Nette\Application\UI\Component:
 			- error
@@ -52,14 +49,6 @@ parameters:
 			- sendTemplate
 			- terminate
 			- forward
-
-conditionalTags:
-	PHPStan\Type\Nette\StringsMatchDynamicReturnTypeExtension:
-		phpstan.broker.dynamicStaticMethodReturnTypeExtension: %featureToggles.narrowPregMatches%
-	PHPStan\Type\Nette\StringsMatchAllDynamicReturnTypeExtension:
-		phpstan.broker.dynamicStaticMethodReturnTypeExtension: %featureToggles.narrowPregMatches%
-	PHPStan\Type\Nette\StringsReplaceCallbackClosureTypeExtension:
-		phpstan.staticMethodParameterClosureTypeExtension: %featureToggles.narrowPregMatches%
 
 services:
 	-
@@ -126,9 +115,15 @@ services:
 
 	-
 		class: PHPStan\Type\Nette\StringsMatchAllDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicStaticMethodReturnTypeExtension
 
 	-
 		class: PHPStan\Type\Nette\StringsMatchDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicStaticMethodReturnTypeExtension
 
 	-
 		class: PHPStan\Type\Nette\StringsReplaceCallbackClosureTypeExtension
+		tags:
+			- phpstan.staticMethodParameterClosureTypeExtension

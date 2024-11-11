@@ -6,7 +6,6 @@ use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Generic\TemplateTypeMap;
 use PHPStan\Type\MixedType;
@@ -18,11 +17,9 @@ use function substr;
 class HtmlMethodReflection implements MethodReflection
 {
 
-	/** @var string */
-	private $name;
+	private string $name;
 
-	/** @var ClassReflection */
-	private $declaringClass;
+	private ClassReflection $declaringClass;
 
 	public function __construct(string $name, ClassReflection $declaringClass)
 	{
@@ -45,9 +42,6 @@ class HtmlMethodReflection implements MethodReflection
 		return false;
 	}
 
-	/**
-	 * @return ParametersAcceptor[]
-	 */
 	public function getVariants(): array
 	{
 		return [
@@ -56,7 +50,7 @@ class HtmlMethodReflection implements MethodReflection
 				TemplateTypeMap::createEmpty(),
 				[],
 				true,
-				substr($this->name, 0, 3) === 'get' ? new MixedType() : new ObjectType('Nette\Utils\Html')
+				substr($this->name, 0, 3) === 'get' ? new MixedType() : new ObjectType('Nette\Utils\Html'),
 			),
 		];
 	}
