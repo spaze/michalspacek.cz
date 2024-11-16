@@ -472,7 +472,16 @@ div.notice {
 .humbleicons.space-after { margin-right: 0.25em; }
 #footer .humbleicons { opacity: inherit; }
 @media print {
-	img { max-width: 75%; }
+	body {
+		color: #222 !important;
+		background-color: #FFF !important;
+	}
+	img {
+		max-width: 75%;
+		opacity: 1 !important;
+	}
+	code, .highlight pre code { background-color: #F5F5F5 !important; }
+	.column-sidebar .widget { background-color: #FAFAFA !important; }
 	.print { display: block; }
 	hr, #header-links, #menu, #footer, h2#detail { display: none; }
 	.nobreak { page-break-inside: avoid; }
