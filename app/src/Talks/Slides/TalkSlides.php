@@ -75,7 +75,7 @@ class TalkSlides
 	 */
 	public function getSlides(Talk $talk): TalkSlideCollection
 	{
-		$slides = $this->database->fetchAll(
+		$slides = $this->typedDatabase->fetchAll(
 			'SELECT
 				id_slide AS id,
 				alias,
@@ -92,7 +92,7 @@ class TalkSlides
 
 		$filenames = [];
 		if ($talk->getFilenamesTalkId() !== null) {
-			$result = $this->database->fetchAll(
+			$result = $this->typedDatabase->fetchAll(
 				'SELECT
 					number,
 					filename,

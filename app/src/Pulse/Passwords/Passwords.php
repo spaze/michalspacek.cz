@@ -73,7 +73,7 @@ readonly class Passwords
 			'ps.from' => false,
 			'disclosurePublished' => true,
 		];
-		$storages = $this->storageRegistryFactory->get($this->database->fetchAll($query, $orderBy), $sort);
+		$storages = $this->storageRegistryFactory->get($this->typedDatabase->fetchAll($query, $orderBy), $sort);
 		$searchMatcher = new SearchMatcher($search, $storages);
 		foreach ($storages->getSites() as $site) {
 			if (($rating !== null && $site->getRating()->name !== $rating) || !$searchMatcher->match($site)) {
@@ -133,7 +133,7 @@ readonly class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->storageRegistryFactory->get($this->database->fetchAll($query, $sites), $this->sorting->getDefaultSort());
+		return $this->storageRegistryFactory->get($this->typedDatabase->fetchAll($query, $sites), $this->sorting->getDefaultSort());
 	}
 
 
@@ -186,7 +186,7 @@ readonly class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->storageRegistryFactory->get($this->database->fetchAll($query, $companies), $this->sorting->getDefaultSort());
+		return $this->storageRegistryFactory->get($this->typedDatabase->fetchAll($query, $companies), $this->sorting->getDefaultSort());
 	}
 
 
@@ -233,7 +233,7 @@ readonly class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->storageRegistryFactory->get($this->database->fetchAll($query, $companyId), $this->sorting->getDefaultSort());
+		return $this->storageRegistryFactory->get($this->typedDatabase->fetchAll($query, $companyId), $this->sorting->getDefaultSort());
 	}
 
 

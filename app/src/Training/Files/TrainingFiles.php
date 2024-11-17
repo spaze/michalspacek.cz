@@ -17,7 +17,7 @@ readonly class TrainingFiles
 
 	public function __construct(
 		private Explorer $database,
-		private readonly TypedDatabase $typedDatabase,
+		private TypedDatabase $typedDatabase,
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingFileFactory $trainingFileFactory,
 		private TrainingFilesStorage $trainingFilesStorage,
@@ -27,7 +27,7 @@ readonly class TrainingFiles
 
 	public function getFiles(TrainingApplication $application): TrainingFilesCollection
 	{
-		$rows = $this->database->fetchAll(
+		$rows = $this->typedDatabase->fetchAll(
 			'SELECT
 				f.added,
 				f.id_file AS fileId,

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\UpcKeys;
 
 use Composer\Pcre\Regex;
 use DateTime;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
@@ -28,6 +29,7 @@ readonly class Technicolor implements UpcWiFiRouter
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private HttpClient $httpClient,
 		private string $apiUrl,
 		private string $apiKey,
@@ -117,7 +119,7 @@ readonly class Technicolor implements UpcWiFiRouter
 	 */
 	private function fetchKeys(string $ssid): array
 	{
-		$rows = $this->database->fetchAll(
+		$rows = $this->typedDatabase->fetchAll(
 			'SELECT
 				k.serial,
 				k.key,
@@ -130,6 +132,9 @@ readonly class Technicolor implements UpcWiFiRouter
 		);
 		$result = [];
 		foreach ($rows as $row) {
+			assert(is_string($row->serial));
+			assert(is_string($row->key));
+			assert(is_int($row->type));
 			$result["{$row->type}-{$row->serial}"] = $this->buildKey($row->serial, $row->key, $row->type);
 		}
 		ksort($result);
