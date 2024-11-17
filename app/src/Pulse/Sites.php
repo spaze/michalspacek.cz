@@ -28,6 +28,9 @@ readonly class Sites
 		$rows = $this->typedDatabase->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
 		$sites = [];
 		foreach ($rows as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->url));
+			assert(is_string($row->alias));
 			$sites[] = new Site($row->id, $row->url, $row->alias);
 		}
 		return $sites;

@@ -22,8 +22,9 @@ class OpenSsl
 			throw new OpenSslException();
 		}
 		if (
-			!isset($info['subject']['commonName'], $info['validFrom_time_t'], $info['validTo_time_t'], $info['serialNumberHex'])
+			!isset($info['subject'])
 			|| !is_array($info['subject'])
+			|| !isset($info['subject']['commonName'], $info['validFrom_time_t'], $info['validTo_time_t'], $info['serialNumberHex'])
 			|| !is_string($info['subject']['commonName'])
 			|| !is_int($info['validFrom_time_t'])
 			|| !is_int($info['validTo_time_t'])

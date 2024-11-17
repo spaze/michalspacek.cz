@@ -255,7 +255,10 @@ readonly class Talks
 
 		$result = [];
 		foreach ($this->typedDatabase->fetchAll($query) as $row) {
-			$result[] = $this->texyFormatter->substitute($row['favorite'], [$row['title'], $row['action']]);
+			assert(is_string($row->action));
+			assert(is_string($row->title));
+			assert(is_string($row->favorite));
+			$result[] = $this->texyFormatter->substitute($row->favorite, [$row->title, $row->action]);
 		}
 
 		return $result;

@@ -31,6 +31,9 @@ readonly class TrainingDateStatuses
 		);
 		$statuses = [];
 		foreach ($result as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->status));
+			assert(is_string($row->description));
 			$status = TrainingDateStatus::from($row->status);
 			if ($status->id() !== $row->id || $status->description() !== $row->description) {
 				throw new ShouldNotHappenException("Training data status enum doesn't match database values for status '{$status->value}'");

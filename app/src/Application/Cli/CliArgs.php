@@ -7,7 +7,7 @@ readonly class CliArgs
 {
 
 	/**
-	 * @param array<string, mixed> $args
+	 * @param array<array-key, mixed> $args
 	 */
 	public function __construct(
 		private array $args,

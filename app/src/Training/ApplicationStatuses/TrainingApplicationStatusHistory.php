@@ -49,6 +49,11 @@ class TrainingApplicationStatusHistory
 			);
 			$items = [];
 			foreach ($rows as $row) {
+				assert(is_int($row->id));
+				assert(is_int($row->statusId));
+				assert(is_string($row->status));
+				assert($row->statusTime instanceof DateTime);
+				assert(is_string($row->statusTimeTimeZone));
 				$items[] = new TrainingApplicationStatusHistoryItem(
 					$row->id,
 					$row->statusId,

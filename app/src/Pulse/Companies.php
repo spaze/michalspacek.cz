@@ -34,6 +34,11 @@ readonly class Companies
 		);
 		$companies = [];
 		foreach ($rows as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->name));
+			assert(is_string($row->tradeName) || $row->tradeName === null);
+			assert(is_string($row->alias));
+			assert(is_string($row->sortName));
 			$companies[] = new Company($row->id, $row->name, $row->tradeName, $row->alias, $row->sortName);
 		}
 		return $companies;
