@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use DateTime;
+use MichalSpacekCz\Database\TypedDatabase;
 use Nette\Database\Explorer;
 
 readonly class Companies
@@ -11,6 +12,7 @@ readonly class Companies
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 	) {
 	}
 
@@ -20,7 +22,7 @@ readonly class Companies
 	 */
 	public function getAll(): array
 	{
-		$rows = $this->database->fetchAll(
+		$rows = $this->typedDatabase->fetchAll(
 			'SELECT
 				id,
 				name,

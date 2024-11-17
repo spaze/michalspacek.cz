@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Dates;
 
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\ShouldNotHappenException;
-use Nette\Database\Explorer;
 
 readonly class TrainingDateStatuses
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 	) {
 	}
 
@@ -20,7 +20,7 @@ readonly class TrainingDateStatuses
 	 */
 	public function getStatuses(): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				s.id_status AS id,
 				s.status,

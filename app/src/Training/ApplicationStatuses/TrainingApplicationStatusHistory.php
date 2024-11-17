@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training\ApplicationStatuses;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use Nette\Database\Explorer;
@@ -20,6 +21,7 @@ class TrainingApplicationStatusHistory
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
 	}
@@ -32,7 +34,7 @@ class TrainingApplicationStatusHistory
 	public function getStatusHistory(int $applicationId): array
 	{
 		if (!isset($this->statusHistory[$applicationId])) {
-			$rows = $this->database->fetchAll(
+			$rows = $this->typedDatabase->fetchAll(
 				'SELECT
 					h.id_status_log AS id,
 					h.key_status AS statusId,
