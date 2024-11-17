@@ -76,7 +76,8 @@ img { border: none; }
 abbr.dtstart, abbr.dtend { text-decoration: none !important; }
 abbr[data-title] {
 	position: relative;
-	text-decoration: underline dotted;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
 }
 abbr[data-title]:hover::after, abbr[data-title]:focus::after {
 	content: attr(data-title);
