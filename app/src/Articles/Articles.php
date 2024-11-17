@@ -180,6 +180,8 @@ class Articles
 		$result = [];
 		$rows = $this->typedDatabase->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale());
 		foreach ($rows as $row) {
+			assert(is_string($row->tags));
+			assert(is_string($row->slugTags));
 			$tags = $this->tags->unserialize($row->tags);
 			$slugTags = $this->tags->unserialize($row->slugTags);
 			foreach ($slugTags as $key => $slugTag) {

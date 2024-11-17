@@ -102,12 +102,22 @@ class TalkSlides
 				$talk->getFilenamesTalkId(),
 			);
 			foreach ($result as $row) {
+				assert(is_int($row->number));
+				assert(is_string($row->filename));
+				assert(is_string($row->filenameAlternative));
 				$filenames[$row->number] = [$row->filename, $row->filenameAlternative];
 			}
 		}
 
 		$result = new TalkSlideCollection($talk->getId());
 		foreach ($slides as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->alias));
+			assert(is_int($row->number));
+			assert(is_string($row->filename));
+			assert(is_string($row->filenameAlternative));
+			assert(is_string($row->title));
+			assert(is_string($row->speakerNotesTexy));
 			if (isset($filenames[$row->number])) {
 				$filename = $filenames[$row->number][0];
 				$filenameAlternative = $filenames[$row->number][1];
