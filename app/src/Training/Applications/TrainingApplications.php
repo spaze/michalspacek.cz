@@ -37,7 +37,7 @@ class TrainingApplications
 	 */
 	public function getByStatus(TrainingApplicationStatus $status): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				a.id_application AS id,
 				a.name,
@@ -114,7 +114,7 @@ class TrainingApplications
 	public function getByDate(int $dateId): array
 	{
 		if (!isset($this->byDate[$dateId])) {
-			$result = $this->database->fetchAll(
+			$result = $this->typedDatabase->fetchAll(
 				'SELECT
 					a.id_application AS id,
 					a.name,

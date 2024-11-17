@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use DateTime;
+use MichalSpacekCz\Database\TypedDatabase;
 use Nette\Database\Explorer;
 
 readonly class Sites
@@ -14,6 +15,7 @@ readonly class Sites
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 	) {
 	}
 
@@ -23,7 +25,7 @@ readonly class Sites
 	 */
 	public function getAll(): array
 	{
-		$rows = $this->database->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
+		$rows = $this->typedDatabase->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
 		$sites = [];
 		foreach ($rows as $row) {
 			$sites[] = new Site($row->id, $row->url, $row->alias);

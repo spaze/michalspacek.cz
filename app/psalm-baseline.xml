@@ -485,13 +485,6 @@
       <code><![CDATA[$keys ?? []]]></code>
     </MixedArgument>
   </file>
-  <file src="src/UpcKeys/Technicolor.php">
-    <MixedArgument>
-      <code><![CDATA[$row->key]]></code>
-      <code><![CDATA[$row->serial]]></code>
-      <code><![CDATA[$row->type]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/UpcKeys/Ubee.php">
     <MixedArgument>
       <code><![CDATA[$row->mac]]></code>

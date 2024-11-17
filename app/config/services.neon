@@ -31,6 +31,7 @@ services:
 		create: MichalSpacekCz\Database\TypedDatabase
 		autowired: MichalSpacekCz\Database\TypedDatabase
 	typedDatabase.pulse: MichalSpacekCz\Database\TypedDatabase(@database.pulse.explorer)
+	typedDatabase.upcKeys: MichalSpacekCz\Database\TypedDatabase(@database.upcKeys.explorer)
 	dateTimeFactory: MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeParser
@@ -94,7 +95,7 @@ services:
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
-	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer)
+	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.explorer, @typedDatabase.pulse)
@@ -102,7 +103,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
-	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer)
+	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Slides\TalkSlides
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
@@ -157,7 +158,7 @@ services:
 	- MichalSpacekCz\Training\Venues\TrainingVenues
 	- MichalSpacekCz\Twitter\TwitterCards
 	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.explorer, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
-	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.explorer)
+	- MichalSpacekCz\UpcKeys\Ubee(@typedDatabase.upcKeys)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
 	- MichalSpacekCz\Utils\Strings

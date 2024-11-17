@@ -23,7 +23,7 @@ readonly class PasswordHashingAlgorithms
 	 */
 	public function getAlgorithms(): array
 	{
-		$rows = $this->database->fetchAll('SELECT id, algo, alias, salted, stretched FROM password_algos ORDER BY algo');
+		$rows = $this->typedDatabase->fetchAll('SELECT id, algo, alias, salted, stretched FROM password_algos ORDER BY algo');
 		$algorithms = [];
 		foreach ($rows as $row) {
 			$algorithms[] = new PasswordHashingAlgorithm($row->id, $row->algo, $row->alias, (bool)$row->salted, (bool)$row->stretched);

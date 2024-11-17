@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Company;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
@@ -17,6 +18,7 @@ readonly class CompanyTrainings
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private TexyFormatter $texyFormatter,
 		private UpcomingTrainingDates $upcomingTrainingDates,
 		private Translator $translator,
@@ -74,7 +76,7 @@ readonly class CompanyTrainings
 	 */
 	public function getWithoutPublicUpcoming(): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				a.action,
 				t.name

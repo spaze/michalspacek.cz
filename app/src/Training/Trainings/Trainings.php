@@ -135,7 +135,7 @@ class Trainings
 	 */
 	public function getNames(): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				t.id_training AS id,
 				a.action,
@@ -181,7 +181,7 @@ class Trainings
 	 */
 	public function getNamesIncludingCustomDiscontinued(): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				t.id_training AS id,
 				a.action,

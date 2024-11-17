@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Dates;
 
 use Contributte\Translation\Translator;
-use Nette\Database\Explorer;
+use MichalSpacekCz\Database\TypedDatabase;
 
 class UpcomingTrainingDates
 {
@@ -14,7 +14,7 @@ class UpcomingTrainingDates
 
 
 	public function __construct(
-		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly Translator $translator,
 		private readonly TrainingDateFactory $trainingDateFactory,
 	) {
@@ -129,7 +129,7 @@ class UpcomingTrainingDates
 					d.start";
 
 			$upcoming = [];
-			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, TrainingDateStatus::Tentative->value, TrainingDateStatus::Confirmed->value, $this->translator->getDefaultLocale()) as $row) {
+			foreach ($this->typedDatabase->fetchAll($query, $includeNonPublic, $includeNonPublic, TrainingDateStatus::Tentative->value, TrainingDateStatus::Confirmed->value, $this->translator->getDefaultLocale()) as $row) {
 				if ($venueId !== null && $venueId !== $row->venueId) {
 					continue;
 				}
