@@ -218,6 +218,7 @@ parameters:
 				- 'Nette\Utils\Strings::match()'
 				- 'Nette\Utils\Strings::matchAll()'
 				- 'Nette\Utils\Strings::replace()'
+				- 'Nette\Utils\Strings::split()'
 			allowIn:
 				- vendor/contributte/*.php
 				- vendor/nette/*.php

@@ -12,6 +12,9 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	/** @var array<string, string> */
 	private array $allLinks = [];
 
+	/** @var array<string, array<string, string|null>> */
+	private array $allLinksParams = [];
+
 
 	/** @noinspection PhpMissingParentConstructorInspection Intentionally */
 	public function __construct()
@@ -52,7 +55,17 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	#[Override]
 	public function allLinks(string $destination, array $params = []): array
 	{
+		$this->allLinksParams = $params;
 		return $this->allLinks;
+	}
+
+
+	/**
+	 * @return array<string, array<string, string|null>>
+	 */
+	public function getAllLinksParams(): array
+	{
+		return $this->allLinksParams;
 	}
 
 }

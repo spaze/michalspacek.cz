@@ -29,6 +29,7 @@ parameters:
 				- 'Nette\Utils\Strings::match()'
 				- 'Nette\Utils\Strings::matchAll()'
 				- 'Nette\Utils\Strings::replace()'
+				- 'Nette\Utils\Strings::split()'
 			message: 'use the Preg or Regex class from composer/pcre for better static analysis'
 	disallowedMethodCalls:
 		-
