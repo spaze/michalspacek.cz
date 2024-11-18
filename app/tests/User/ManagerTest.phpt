@@ -7,7 +7,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User;
 
 use MichalSpacekCz\Http\Cookies\CookieName;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -45,9 +44,7 @@ class ManagerTest extends TestCase
 		Container $container,
 	) {
 		$service = $container->getService('passwordEncryption');
-		if (!$service instanceof SymmetricKeyEncryption) {
-			throw new ShouldNotHappenException(sprintf('passwordEncryption should be a %s instance, but it is a %s', SymmetricKeyEncryption::class, $service::class));
-		}
+		assert($service instanceof SymmetricKeyEncryption);
 		$this->passwordEncryption = $service;
 	}
 

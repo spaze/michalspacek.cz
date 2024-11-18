@@ -95,7 +95,7 @@ class DiscontinuedTrainingsTest extends TestCase
 			],
 		]);
 		$this->discontinuedTrainings->maybeMarkAsDiscontinued($template, 302);
-		Assert::type(DiscontinuedTraining::class, $template->discontinued[0]);
+		assert(is_array($template->discontinued) && $template->discontinued[0] instanceof DiscontinuedTraining);
 		Assert::same('foo', $template->discontinued[0]->getDescription());
 		Assert::same(['intro', 'classes'], $template->discontinued[0]->getTrainings());
 		Assert::same('https://foo.example', $template->discontinued[0]->getNewHref());
