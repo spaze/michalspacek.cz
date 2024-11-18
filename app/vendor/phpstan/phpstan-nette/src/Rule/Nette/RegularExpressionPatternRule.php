@@ -9,6 +9,7 @@ use PhpParser\Node\Expr\StaticCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\ObjectType;
 use function in_array;
 use function sprintf;
 use function strtolower;
@@ -51,8 +52,8 @@ class RegularExpressionPatternRule implements Rule
 		if (!$staticCall->class instanceof Node\Name || !$staticCall->name instanceof Node\Identifier) {
 			return [];
 		}
-		$className = $scope->resolveName($staticCall->class);
-		if ($className !== Strings::class) {
+		$caller = $scope->resolveTypeByName($staticCall->class);
+		if (!(new ObjectType(Strings::class))->isSuperTypeOf($caller)->yes()) {
 			return [];
 		}
 		$methodName = strtolower((string) $staticCall->name);

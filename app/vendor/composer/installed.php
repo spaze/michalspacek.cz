@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'composer/pcre' => array(
-            'pretty_version' => '3.3.1',
-            'version' => '3.3.1.0',
-            'reference' => '63aaeac21d7e775ff9bc9d45021e1745c97521c4',
+            'pretty_version' => '3.3.2',
+            'version' => '3.3.2.0',
+            'reference' => 'b2bed4734f0cc156ee1fe9c0da2550420d99a21e',
             'type' => 'library',
             'install_path' => __DIR__ . '/./pcre',
             'aliases' => array(),
@@ -65,9 +65,9 @@
             ),
         ),
         'jetbrains/phpstorm-attributes' => array(
-            'pretty_version' => '1.1',
-            'version' => '1.1.0.0',
-            'reference' => '22fb28d679deceedba8366dbae65cc8ebfc17e26',
+            'pretty_version' => '1.2',
+            'version' => '1.2.0.0',
+            'reference' => '64de815a4509c29e00d5e3474087fd24c171afc2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../jetbrains/phpstorm-attributes',
             'aliases' => array(),
@@ -313,7 +313,7 @@
         'phpcsstandards/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.10.3',
+                0 => '3.11.1',
             ),
         ),
         'phpstan/phpdoc-parser' => array(
@@ -326,9 +326,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.0.1',
-            'version' => '2.0.1.0',
-            'reference' => 'ab4e9b4415a5fc9e4d27f7fe16c8bc9d067dcd6d',
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'reference' => '6c98c7600fc717b2c78c11ef60040d5b1e359c82',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -344,9 +344,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-nette' => array(
-            'pretty_version' => '2.0.0',
-            'version' => '2.0.0.0',
-            'reference' => 'cacb6983bbdf44d5c3a7222e5ca74f61f8531806',
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => '200d1926c57f6feda0d0f3056985fceccd8003c0',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-nette',
             'aliases' => array(),
@@ -403,7 +403,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'e63317470a1b96346be224a68f9e64567e1001c3',
+            'reference' => '9f1d9b2460cdd0422e8cfd58763bf3156ad7f487',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -493,9 +493,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpcs-phar' => array(
-            'pretty_version' => '3.10.3',
-            'version' => '3.10.3.0',
-            'reference' => '382b8f366b45130cb9f424441b82fad37605e7e4',
+            'pretty_version' => '3.11.1',
+            'version' => '3.11.1.0',
+            'reference' => 'b3ced1b725e7463914dcc9e0a641d4bb2dc94f4e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/phpcs-phar',
             'aliases' => array(),
@@ -511,9 +511,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v4.0.0',
-            'version' => '4.0.0.0',
-            'reference' => '7c3c42222498719765041d205d89adb4b008fe59',
+            'pretty_version' => 'v4.0.1',
+            'version' => '4.0.1.0',
+            'reference' => '0f030fd3fb770ee7c262445c8ad3c0b470a32ac5',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
@@ -549,7 +549,7 @@
         'squizlabs/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.10.3',
+                0 => '3.11.1',
             ),
         ),
         'symfony/cache' => array(
