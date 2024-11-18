@@ -66,8 +66,10 @@ class TexyPhraseHandlerTest extends TestCase
 			$this->defaultLocale => $defaultLocaleUrl,
 			self::EN_LOCALE => $enLocaleUrl,
 		]);
-		$this->assertUrl('title', $defaultLocaleUrl, '"title":[link:Module:Presenter:action params]');
-		$this->assertUrl('title', $enLocaleUrl, '"title":[link-' . self::EN_LOCALE . ':Module:Presenter:action params]');
+		$this->assertUrl('title', $defaultLocaleUrl, '"title":[link:Module:Presenter:action params,foo]');
+		Assert::same(['params', 'foo'], $this->localeLinkGenerator->getAllLinksParams()[$this->defaultLocale]);
+		$this->assertUrl('title', $enLocaleUrl, '"title":[link-' . self::EN_LOCALE . ':Module:Presenter:action params , bar]');
+		Assert::same(['params', 'bar'], $this->localeLinkGenerator->getAllLinksParams()[self::EN_LOCALE]);
 	}
 
 
