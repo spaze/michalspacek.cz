@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Composer\Pcre\Preg;
 use Composer\Pcre\Regex;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
@@ -16,7 +17,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
-use Nette\Utils\Strings;
 use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
@@ -109,7 +109,7 @@ readonly class TexyPhraseHandler
 
 	private function getLink(string $url, string $locale): string
 	{
-		$args = Strings::split($url, '/[\s,]+/');
+		$args = Preg::split('/[\s,]+/', $url);
 		$action = array_shift($args);
 		if (Arrays::contains([self::TRAINING_ACTION, self::COMPANY_TRAINING_ACTION], $action)) {
 			$args = [$this->trainingLocales->getLocaleActions($args[0])[$locale]];
