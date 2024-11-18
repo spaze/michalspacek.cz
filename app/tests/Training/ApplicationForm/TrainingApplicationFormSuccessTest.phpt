@@ -8,7 +8,6 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 use DateTime;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\UiForm;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\NullMailer;
@@ -68,9 +67,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 		NullSession $session,
 	) {
 		$presenter = $presenterFactory->createPresenter('Www:Homepage'); // Has to be a real presenter that extends Ui\Presenter
-		if (!$presenter instanceof Presenter) {
-			throw new ShouldNotHappenException();
-		}
+		assert($presenter instanceof Presenter);
 		PrivateProperty::setValue($application, 'presenter', $presenter);
 		$this->form = new UiForm($presenter, 'form');
 		$trainingControlsFactory->addAttendee($this->form);
@@ -91,9 +88,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 		]);
 		$this->sessionSection = $session->getSection('section', TrainingApplicationSessionSection::class);
 		$parentClass = (new ReflectionClass($this->sessionSection))->getParentClass();
-		if (!$parentClass) {
-			throw new ShouldNotHappenException(sprintf('Parent class of %s should exist', $this->sessionSection::class));
-		}
+		assert($parentClass instanceof ReflectionClass);
 		$this->sessionSectionParentGet = $parentClass->getMethod('get');
 		$this->sessionSectionParentSet = $parentClass->getMethod('set');
 	}
@@ -275,11 +270,8 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	private function sessionSectionGet(string $name): string|int|array
 	{
 		$result = $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
-		if (!is_string($result) && !is_int($result) && !is_array($result)) {
-			throw new ShouldNotHappenException(sprintf('Session data type is %s, but should be string|int|array', get_debug_type($result)));
-		} else {
-			return $result;
-		}
+		assert(is_string($result) || is_int($result) || is_array($result));
+		return $result;
 	}
 
 }
