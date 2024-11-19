@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
+use MichalSpacekCz\Application\Exceptions\ParameterNotStringException;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 use Throwable;
@@ -24,6 +25,26 @@ class AppRequest
 			throw new NoOriginalRequestException();
 		}
 		return $requestParam;
+	}
+
+
+	/**
+	 * @return array<string, string|null>
+	 * @throws NoOriginalRequestException
+	 * @throws ParameterNotStringException
+	 */
+	public function getOriginalRequestStringParameters(?Request $request): array
+	{
+		$params = [];
+		foreach ($this->getOriginalRequest($request)->getParameters() as $name => $value) {
+			$name = (string)$name;
+			if ($value === null || is_string($value)) {
+				$params[$name] = $value;
+			} else {
+				throw new ParameterNotStringException($name, get_debug_type($value));
+			}
+		}
+		return $params;
 	}
 
 
