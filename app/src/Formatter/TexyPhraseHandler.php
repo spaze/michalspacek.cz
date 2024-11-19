@@ -135,7 +135,7 @@ readonly class TexyPhraseHandler
 
 
 	/**
-	 * @param non-empty-array<string, array<string, string|null>> $params
+	 * @param non-empty-array<string, list<string>|array<string, string|null>> $params
 	 */
 	private function getLinkWithParams(string $destination, array $params, string $locale): string
 	{

@@ -290,8 +290,6 @@
   </file>
   <file src="src/Formatter/TexyPhraseHandler.php">
     <MixedArgument>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$texy::CONTENT_TEXTUAL]]></code>
     </MixedArgument>
   </file>
