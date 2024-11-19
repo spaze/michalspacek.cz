@@ -12,7 +12,7 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	/** @var array<string, string> */
 	private array $allLinks = [];
 
-	/** @var array<string, array<string, string|null>> */
+	/** @var array<string, list<string>|array<string, string|null>> */
 	private array $allLinksParams = [];
 
 
@@ -61,7 +61,7 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 
 
 	/**
-	 * @return array<string, array<string, string|null>>
+	 * @return array<string, list<string>|array<string, string|null>>
 	 */
 	public function getAllLinksParams(): array
 	{
