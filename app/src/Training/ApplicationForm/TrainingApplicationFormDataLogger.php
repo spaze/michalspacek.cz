@@ -16,7 +16,7 @@ class TrainingApplicationFormDataLogger
 		$logSession = $applicationId !== null ? "id => '{$applicationId}', dateId => '{$dateId}'" : null;
 		$logValues = [];
 		foreach ((array)$values as $key => $value) {
-			$logValues[] = "{$key} => '{$value}'";
+			$logValues[] = sprintf('%s => %s', $key, is_string($value) ? "'{$value}'" : get_debug_type($value));
 		}
 		$message = sprintf(
 			'Application session data for %s: %s, form values: %s',
