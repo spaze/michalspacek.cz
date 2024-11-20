@@ -80,12 +80,13 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 		$values = new stdClass();
 		$values->key1 = 'value1';
 		$values->key2 = 'value2';
+		$values->key3 = 1336;
 		$trainingName = 'foo';
 
 		$session = $this->getTrainingSessionSection();
 		$session->setApplicationForTraining($trainingName, $this->getApplication());
 		$this->formDataLogger->log($values, $trainingName, self::DATE_ID, $session);
-		$expected = sprintf("Application session data for foo: id => '%s', dateId => '%s', form values: key1 => 'value1', key2 => 'value2'", self::APPLICATION_ID, self::DATE_ID);
+		$expected = sprintf("Application session data for foo: id => '%s', dateId => '%s', form values: key1 => 'value1', key2 => 'value2', key3 => int", self::APPLICATION_ID, self::DATE_ID);
 		Assert::same([$expected], $this->logger->getLogged());
 	}
 
