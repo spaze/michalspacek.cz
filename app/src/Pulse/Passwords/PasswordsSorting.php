@@ -34,6 +34,14 @@ class PasswordsSorting
 		self::NEWLY_ADDED_LAST => 'newly added last',
 	];
 
+	private readonly Collator $collator;
+
+
+	public function __construct()
+	{
+		$this->collator = new Collator('en_US');
+	}
+
 
 	public function sort(StorageRegistry $storages, string $sort): StorageRegistry
 	{
@@ -44,11 +52,7 @@ class PasswordsSorting
 					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
 						$result = $sort === self::RATING_A_F ? $siteA->getRating()->name <=> $siteB->getRating()->name : $siteB->getRating()->name <=> $siteA->getRating()->name;
 						if ($result === 0) {
-							static $collator;
-							if (!$collator) {
-								$collator = new Collator('en_US');
-							}
-							$result = $collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
+							$result = $this->collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $this->collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
 							if ($result === 0) {
 								$subKeyA = $siteA instanceof StorageSpecificSite ? $siteA->getUrl() : $siteA->getLatestAlgorithm()->getAlias();
 								$subKeyB = $siteB instanceof StorageSpecificSite ? $siteB->getUrl() : $siteB->getLatestAlgorithm()->getAlias();
