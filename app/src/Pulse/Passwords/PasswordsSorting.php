@@ -91,6 +91,9 @@ class PasswordsSorting
 	}
 
 
+	/**
+	 * @param callable(StorageRegistry, StorageSite, StorageSite, string): int $callback
+	 */
 	private function sortSites(StorageRegistry $storages, Storage $a, Storage $b, string $sort, callable $callback): int
 	{
 		if (count($a->getSites()) > 1 || count($b->getSites()) > 1) {
