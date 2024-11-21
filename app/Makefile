@@ -48,7 +48,7 @@ psalm:
 	vendor/bin/psalm.phar
 
 tester:
-	vendor/nette/tester/src/tester -s -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
+	vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
 
 tester-include-skipped:
 	TEST_CASE_RUNNER_INCLUDE_SKIPPED=1 \
