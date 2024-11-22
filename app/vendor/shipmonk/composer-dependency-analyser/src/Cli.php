@@ -3,11 +3,15 @@
 namespace ShipMonk\ComposerDependencyAnalyser;
 
 use ShipMonk\ComposerDependencyAnalyser\Exception\InvalidCliException;
+use function array_keys;
 use function array_slice;
 use function is_dir;
 use function is_file;
+use function levenshtein;
+use function strlen;
 use function strpos;
 use function substr;
+use function trim;
 
 class Cli
 {
@@ -16,6 +20,7 @@ class Cli
         'version' => false,
         'help' => false,
         'verbose' => false,
+        'disable-ext-analysis' => false,
         'ignore-shadow-deps' => false,
         'ignore-unused-deps' => false,
         'ignore-dev-in-prod-deps' => false,
@@ -54,7 +59,8 @@ class Cli
             $startsWithDashDash = strpos($arg, '--') === 0;
 
             if ($startsWithDash && !$startsWithDashDash) {
-                throw new InvalidCliException("Unknown option $arg, see --help");
+                $suggestedOption = $this->suggestOption($arg);
+                throw new InvalidCliException("Unknown option $arg, $suggestedOption");
             }
 
             if (!$startsWithDashDash) {
@@ -62,7 +68,8 @@ class Cli
                     throw new InvalidCliException("Cannot pass paths ($arg) to analyse as arguments, use --config instead.");
                 }
 
-                throw new InvalidCliException("Unknown argument $arg, see --help");
+                $suggestedOption = $this->suggestOption($arg);
+                throw new InvalidCliException("Unknown argument $arg, $suggestedOption");
             }
 
             /** @var string $noDashesArg this is never false as we know it starts with -- */
@@ -70,7 +77,8 @@ class Cli
             $optionName = $this->getKnownOptionName($noDashesArg);
 
             if ($optionName === null) {
-                throw new InvalidCliException("Unknown option $arg, see --help");
+                $suggestedOption = $this->suggestOption($noDashesArg);
+                throw new InvalidCliException("Unknown option $arg, $suggestedOption");
             }
 
             if ($this->isOptionWithRequiredValue($optionName)) {
@@ -91,6 +99,10 @@ class Cli
                     $this->providedOptions[$optionName] = $optionArgument;
                 }
             } else {
+                if ($this->getOptionArgumentAfterAssign($arg) !== null) {
+                    throw new InvalidCliException("Option --$optionName does not accept arguments, see --help");
+                }
+
                 $this->providedOptions[$optionName] = true;
             }
         }
@@ -115,7 +127,10 @@ class Cli
     private function getKnownOptionName(string $option): ?string
     {
         foreach (self::OPTIONS as $knownOption => $needsArgument) {
-            if (strpos($option, $knownOption) === 0) {
+            if (
+                strpos($option, $knownOption) === 0
+                && (strlen($option) === strlen($knownOption) || $option[strlen($knownOption)] === '=')
+            ) {
                 return $knownOption;
             }
         }
@@ -137,6 +152,10 @@ class Cli
 
         if (isset($this->providedOptions['verbose'])) {
             $options->verbose = true;
+        }
+
+        if (isset($this->providedOptions['disable-ext-analysis'])) {
+            $options->disableExtAnalysis = true;
         }
 
         if (isset($this->providedOptions['ignore-shadow-deps'])) {
@@ -184,6 +203,31 @@ class Cli
         }
 
         return $options;
+    }
+
+    /**
+     * Params inspired by tracy/tracy
+     */
+    private function suggestOption(string $input): string
+    {
+        $value = trim($input, '-');
+        $options = array_keys(self::OPTIONS);
+
+        $bestGuess = null;
+        $minDistance = (strlen($value) / 4 + 1) * 10 + .1;
+
+        foreach ($options as $option) {
+            $distance = levenshtein($option, $value, 9, 11, 9);
+
+            if ($distance > 0 && $distance < $minDistance) {
+                $minDistance = $distance;
+                $bestGuess = $option;
+            }
+        }
+
+        return $bestGuess === null
+            ? 'see --help'
+            : "did you mean --$bestGuess?";
     }
 
 }

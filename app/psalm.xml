@@ -23,6 +23,9 @@
 		<extension name="php"/>
 		<extension name="phpt"/>
 	</fileExtensions>
+	<enableExtensions>
+		<extension name="simplexml"/>
+	</enableExtensions>
 	<universalObjectCrates>
 		<class name="Nette\Bridges\ApplicationLatte\DefaultTemplate"/>
 		<class name="Nette\Database\Row"/>
