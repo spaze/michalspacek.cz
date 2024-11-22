@@ -6,6 +6,9 @@ use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 return (new Configuration())
+	->setFileExtensions(['php', 'phpt'])
+	->addPathToScan(__DIR__ . '/tests', true)
+
 	// Add classes from services.neon and extensions.neon
 	->addForceUsedSymbols(DiServices::getAllClasses())
 
@@ -18,7 +21,6 @@ return (new Configuration())
 	->ignoreErrorsOnExtensions([
 		'ext-gd', // Used by e.g. Nette\Http\FileUpload::toImage which is used by MichalSpacekCz\Media\VideoThumbnails::validateUpload()
 		'ext-pcntl', // Used by latte/latte Latte\Tools\Linter and nette/tester's Tester\Runner\CliTester
-		'ext-simplexml', // Used in MichalSpacekCz\Feed\ExportsTest
 	], [ErrorType::UNUSED_DEPENDENCY])
 
 	// shipmonk/composer-dependency-analyser#203
