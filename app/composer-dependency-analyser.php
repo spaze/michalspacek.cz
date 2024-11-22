@@ -15,6 +15,12 @@ return (new Configuration())
 	// It's used, believe me
 	->ignoreErrorsOnPackage('latte/latte', [ErrorType::UNUSED_DEPENDENCY])
 
+	->ignoreErrorsOnExtensions([
+		'ext-gd', // Used by e.g. Nette\Http\FileUpload::toImage which is used by MichalSpacekCz\Media\VideoThumbnails::validateUpload()
+		'ext-pcntl', // Used by latte/latte Latte\Tools\Linter and nette/tester's Tester\Runner\CliTester
+		'ext-simplexml', // Used in MichalSpacekCz\Feed\ExportsTest
+	], [ErrorType::UNUSED_DEPENDENCY])
+
 	// TestCaseRunner is used only in tests
 	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/src/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 ;
