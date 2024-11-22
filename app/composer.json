@@ -16,7 +16,6 @@
 		"ext-pcntl": "*",
 		"ext-pdo": "*",
 		"ext-simplexml": "*",
-		"ext-sodium": "*",
 		"composer/pcre": "^3.3.1",
 		"contributte/translation": "^2.0",
 		"latte/latte": "^3.0.3",
