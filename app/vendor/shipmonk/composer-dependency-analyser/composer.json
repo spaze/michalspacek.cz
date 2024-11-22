@@ -26,15 +26,15 @@
     "require-dev": {
         "ext-dom": "*",
         "ext-libxml": "*",
-        "editorconfig-checker/editorconfig-checker": "^10.3.0",
-        "ergebnis/composer-normalize": "^2.19",
-        "phpcompatibility/php-compatibility": "^9.3",
-        "phpstan/phpstan": "^1.10.63",
-        "phpstan/phpstan-phpunit": "^1.1.1",
-        "phpstan/phpstan-strict-rules": "^1.2.3",
-        "phpunit/phpunit": "^8.5.28 || ^9.5.20",
-        "shipmonk/name-collision-detector": "^2.0.0",
-        "slevomat/coding-standard": "^8.0.1"
+        "editorconfig-checker/editorconfig-checker": "^10.6.0",
+        "ergebnis/composer-normalize": "^2.19.0",
+        "phpcompatibility/php-compatibility": "^9.3.5",
+        "phpstan/phpstan": "^1.12.3",
+        "phpstan/phpstan-phpunit": "^1.4.0",
+        "phpstan/phpstan-strict-rules": "^1.6.0",
+        "phpunit/phpunit": "^8.5.39 || ^9.6.20",
+        "shipmonk/name-collision-detector": "^2.1.1",
+        "slevomat/coding-standard": "^8.15.0"
     },
     "autoload": {
         "psr-4": {
@@ -67,15 +67,20 @@
             "@check:types",
             "@check:tests",
             "@check:self",
-            "@check:collisions"
+            "@check:collisions",
+            "@check:scripts"
         ],
         "check:collisions": "detect-collisions src tests",
-        "check:composer": "composer normalize --dry-run --no-check-lock --no-update-lock",
+        "check:composer": [
+            "composer normalize --dry-run --no-check-lock --no-update-lock",
+            "composer validate --strict"
+        ],
         "check:cs": "phpcs",
         "check:ec": "ec src tests",
+        "check:scripts": "phpstan analyse -vv --ansi --level=6 scripts/*.php",
         "check:self": "bin/composer-dependency-analyser",
         "check:tests": "phpunit -vvv tests",
-        "check:types": "phpstan analyse -vvv --ansi",
+        "check:types": "phpstan analyse -vv --ansi",
         "fix:cs": "phpcbf"
     }
 }

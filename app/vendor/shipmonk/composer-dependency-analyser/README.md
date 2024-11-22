@@ -5,7 +5,7 @@
 - ⚙️ **Configurable:** Fine-grained ignores via PHP config
 - 🕸️ **Lightweight:** No composer dependencies
 - 🍰 **Easy-to-use:** No config needed for first try
-- ✨ **Compatible:** PHP 7.2 - 8.3
+- ✨ **Compatible:** PHP 7.2 - 8.4
 
 ## Comparison:
 
@@ -49,7 +49,7 @@ Found unused dependencies!
 ```
 
 ## Detected issues:
-This tool reads your `composer.json` and scans all paths listed in `autoload` & `autoload-dev` sections while analysing:
+This tool reads your `composer.json` and scans all paths listed in `autoload` & `autoload-dev` sections while analysing you dependencies (both **packages and PHP extensions**).
 
 ### Shadowed dependencies
   - Those are dependencies of your dependencies, which are not listed in `composer.json`
@@ -84,6 +84,7 @@ This tool reads your `composer.json` and scans all paths listed in `autoload` & 
 - `--verbose` to see more example classes & usages
 - `--show-all-usages` to see all usages
 - `--format` to use different output format, available are: `console` (default), `junit`
+- `--disable-ext-analysis` to disable php extensions analysis (e.g. `ext-xml`)
 - `--ignore-unknown-classes` to globally ignore unknown classes
 - `--ignore-unknown-functions` to globally ignore unknown functions
 - `--ignore-shadow-deps` to globally ignore shadow dependencies
@@ -128,6 +129,7 @@ return $config
     //// Adjust analysis
     ->enableAnalysisOfUnusedDevDependencies() // dev packages are often used only in CI, so this is not enabled by default
     ->disableReportingUnmatchedIgnores() // do not report ignores that never matched any error
+    ->disableExtensionsAnalysis() // do not analyse ext-* dependencies
 
     //// Use symbols from yaml/xml/neon files
     // - designed for DIC config files (see below)
@@ -160,8 +162,14 @@ Another approach for DIC-only usages is to scan the generated php file, but that
 ### Scanning codebase located elsewhere:
 - This can be done by pointing `--composer-json` to `composer.json` of the other codebase
 
-## Limitations:
-- Extension dependencies are not analysed (e.g. `ext-json`)
+### Disable colored output:
+- Set `NO_COLOR` environment variable to disable colored output:
+```
+NO_COLOR=1 vendor/bin/composer-dependency-analyser
+```
+
+## Recommendations:
+- For precise `ext-*` analysis, your enabled extensions of your php runtime should be superset of those used in the scanned project
 
 ## Contributing:
 - Check your code by `composer check`
@@ -169,5 +177,5 @@ Another approach for DIC-only usages is to scan the generated php file, but that
 - All functionality must be tested
 
 ## Supported PHP versions
-- Runtime requires PHP 7.2 - 8.3
+- Runtime requires PHP 7.2 - 8.4
 - Scanned codebase should use PHP >= 5.3

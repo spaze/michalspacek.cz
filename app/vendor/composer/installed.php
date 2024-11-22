@@ -403,7 +403,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '9f1d9b2460cdd0422e8cfd58763bf3156ad7f487',
+            'reference' => 'b33a18b5d222c63472a4b41f6fa3e15e591c9595',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -412,9 +412,9 @@
             'dev_requirement' => true,
         ),
         'shipmonk/composer-dependency-analyser' => array(
-            'pretty_version' => '1.7.0',
-            'version' => '1.7.0.0',
-            'reference' => 'bca862b2830a453734aee048eb0cdab82e5c9da3',
+            'pretty_version' => '1.8.1',
+            'version' => '1.8.1.0',
+            'reference' => '0acd9d94be4d9397055ff012d0abf2ae88072e99',
             'type' => 'library',
             'install_path' => __DIR__ . '/../shipmonk/composer-dependency-analyser',
             'aliases' => array(),
