@@ -21,6 +21,9 @@ return (new Configuration())
 		'ext-simplexml', // Used in MichalSpacekCz\Feed\ExportsTest
 	], [ErrorType::UNUSED_DEPENDENCY])
 
+	// shipmonk/composer-dependency-analyser#203
+	->ignoreErrorsOnExtensionAndPath('ext-session', 'src/EasterEgg/PhpInfoCookieSanitization.php', [ErrorType::SHADOW_DEPENDENCY])
+
 	// TestCaseRunner is used only in tests
 	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/src/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 ;
