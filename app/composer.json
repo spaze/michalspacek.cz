@@ -10,7 +10,6 @@
 		"ext-fileinfo": "*",
 		"ext-gd": "*",
 		"ext-intl": "*",
-		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
 		"ext-pcntl": "*",
