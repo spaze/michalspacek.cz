@@ -113,7 +113,7 @@ class TrainingFilesDownloadTest extends TestCase
 		$sessionSection = $this->session->getSection('training');
 		$sessionSection->set('applicationId', self::APPLICATION_ID);
 		$sessionSection->set('token', self::TOKEN);
-		$filename = basename(__FILE__);
+		$filename = 'file.zip';
 		$filesDir = __DIR__ . '/';
 		$this->database->setFetchResult([
 			'added' => new DateTime(),
@@ -125,7 +125,7 @@ class TrainingFilesDownloadTest extends TestCase
 		$response = $this->trainingFilesDownload->getFileResponse('foo');
 		Assert::same($filesDir . $filename, $response->getFile());
 		Assert::same($filename, $response->getName());
-		Assert::same('text/x-php', $response->getContentType());
+		Assert::same('application/zip', $response->getContentType());
 	}
 
 
