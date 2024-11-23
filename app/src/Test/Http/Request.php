@@ -57,14 +57,14 @@ class Request implements IRequest
 
 
 	#[Override]
-	public function getQuery(string $key = null)
+	public function getQuery(?string $key = null)
 	{
 		return $key === null ? $this->url->getQueryParameters() : $this->url->getQueryParameter($key);
 	}
 
 
 	#[Override]
-	public function getPost(string $key = null)
+	public function getPost(?string $key = null)
 	{
 		return func_num_args() === 0 ? $this->post : $this->post[$key] ?? null;
 	}

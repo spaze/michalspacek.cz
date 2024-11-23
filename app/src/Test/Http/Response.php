@@ -85,7 +85,7 @@ class Response implements IResponse
 
 
 	#[Override]
-	public function setContentType(string $type, string $charset = null): self
+	public function setContentType(string $type, ?string $charset = null): self
 	{
 		$this->contentType = $type;
 		$this->contentCharset = $charset;
@@ -147,11 +147,11 @@ class Response implements IResponse
 		string $name,
 		string $value,
 		string|int|DateTimeInterface|null $expire,
-		string $path = null,
-		string $domain = null,
-		bool $secure = null,
-		bool $httpOnly = null,
-		string $sameSite = null,
+		?string $path = null,
+		?string $domain = null,
+		?bool $secure = null,
+		?bool $httpOnly = null,
+		?string $sameSite = null,
 	): self {
 		$this->cookies[$name][] = new Cookie(
 			$name,
@@ -166,7 +166,7 @@ class Response implements IResponse
 
 
 	#[Override]
-	public function deleteCookie(string $name, string $path = null, string $domain = null, bool $secure = null): void
+	public function deleteCookie(string $name, ?string $path = null, ?string $domain = null, ?bool $secure = null): void
 	{
 		unset($this->cookies[$name]);
 	}
