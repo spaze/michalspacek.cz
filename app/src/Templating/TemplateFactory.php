@@ -25,7 +25,7 @@ readonly class TemplateFactory implements UiTemplateFactory
 
 
 	#[Override]
-	public function createTemplate(Control $control = null, string $class = null): DefaultTemplate
+	public function createTemplate(?Control $control = null, ?string $class = null): DefaultTemplate
 	{
 		$template = $this->templateFactory->createTemplate($control, $class);
 		if (!$template instanceof DefaultTemplate) {
