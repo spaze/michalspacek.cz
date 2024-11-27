@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-use DateTime;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use Nette\Database\Explorer;
 
 readonly class Sites
@@ -16,6 +16,7 @@ readonly class Sites
 	public function __construct(
 		private Explorer $database,
 		private TypedDatabase $typedDatabase,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -63,7 +64,7 @@ readonly class Sites
 			'alias' => $alias,
 			'shared_with' => $sharedWith ?: null,
 			'key_companies' => $companyId,
-			'added' => new DateTime(),
+			'added' => $this->dateTimeFactory->create(),
 		]);
 		return (int)$this->database->getInsertId();
 	}
