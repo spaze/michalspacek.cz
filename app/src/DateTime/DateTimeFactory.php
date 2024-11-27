@@ -10,11 +10,11 @@ use Exception;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 
-readonly class DateTimeFactory
+class DateTimeFactory
 {
 
 	public function __construct(
-		private DateTimeZoneFactory $dateTimeZoneFactory,
+		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
 	}
 
@@ -44,6 +44,12 @@ readonly class DateTimeFactory
 		} catch (Exception $e) {
 			throw new CannotCreateDateTimeObjectException($e);
 		}
+	}
+
+
+	public function create(string $datetime = 'now', ?DateTimeZone $timezone = null): DateTimeImmutable
+	{
+		return new DateTimeImmutable($datetime, $timezone);
 	}
 
 }

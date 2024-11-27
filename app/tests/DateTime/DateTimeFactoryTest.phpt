@@ -20,6 +20,7 @@ class DateTimeFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly DateTimeFactory $dateTimeFactory,
+		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
 	}
 
@@ -63,6 +64,15 @@ class DateTimeFactoryTest extends TestCase
 				Assert::same("Invalid timezone 'Europe/Brno'", $previous->getMessage());
 			}
 		}
+	}
+
+
+	public function testCreate(): void
+	{
+		Assert::same(
+			'2024-11-12T02:03:04.000000+01:00',
+			$this->dateTimeFactory->create('2024-11-12 02:03:04', $this->dateTimeZoneFactory->get('Europe/Amsterdam'))->format(DateTimeFormat::RFC3339_MICROSECONDS),
+		);
 	}
 
 }
