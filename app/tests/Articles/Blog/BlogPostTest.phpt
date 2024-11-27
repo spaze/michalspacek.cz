@@ -37,7 +37,7 @@ class BlogPostTest extends TestCase
 	{
 		$post = $this->buildBlogPost();
 		$insertId = 1337;
-		$this->database->setInsertId((string)$insertId);
+		$this->database->setDefaultInsertId((string)$insertId);
 		$insertedPost = $this->blogPosts->add($post);
 		Assert::null($post->getId());
 		Assert::same($insertId, $insertedPost->getId());

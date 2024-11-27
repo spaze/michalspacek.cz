@@ -49,7 +49,7 @@ class TrainingApplicationStorageTest extends TestCase
 		]);
 		$this->database->addFetchFieldResult(self::STATUS_CREATED); // For ApplicationStatuses::getStatusId() in TrainingApplicationStorage::insertApplication()
 		$this->database->addFetchFieldResult(self::SOURCE_ID); // For TrainingApplicationSources::getSourceId in TrainingApplicationStorage::insertApplication()
-		$this->database->setInsertId((string)self::INSERT_ID);
+		$this->database->setDefaultInsertId((string)self::INSERT_ID);
 		$this->database->setFetchResult([ // For ApplicationStatuses::setStatus() in ApplicationStatuses::updateStatusCallbackReturnId()
 			'statusId' => self::STATUS_CREATED,
 			'statusTime' => new DateTime(),

@@ -17,7 +17,12 @@ class Database extends Explorer
 	use WillThrow;
 
 
-	private string $insertId = '';
+	private string $defaultInsertId = '';
+
+	/** @var list<string> */
+	private array $insertIds = [];
+
+	private int $insertIdsPosition = 0;
 
 	/** @var array<string, array<string|int, string|int|bool|null>> */
 	private array $queriesScalarParams = [];
@@ -54,6 +59,9 @@ class Database extends Explorer
 
 	public function reset(): void
 	{
+		$this->defaultInsertId = '';
+		$this->insertIds = [];
+		$this->insertIdsPosition = 0;
 		$this->queriesScalarParams = [];
 		$this->queriesArrayParams = [];
 		$this->fetchResult = [];
@@ -88,16 +96,22 @@ class Database extends Explorer
 	}
 
 
-	public function setInsertId(string $insertId): void
+	public function setDefaultInsertId(string $insertId): void
 	{
-		$this->insertId = $insertId;
+		$this->defaultInsertId = $insertId;
+	}
+
+
+	public function addInsertId(string $insertId): void
+	{
+		$this->insertIds[] = $insertId;
 	}
 
 
 	#[Override]
 	public function getInsertId(?string $sequence = null): string
 	{
-		return $this->insertId;
+		return $this->insertIds[$this->insertIdsPosition++] ?? $this->defaultInsertId;
 	}
 
 

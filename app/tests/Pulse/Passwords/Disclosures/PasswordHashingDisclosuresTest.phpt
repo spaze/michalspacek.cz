@@ -77,7 +77,7 @@ class PasswordHashingDisclosuresTest extends TestCase
 
 	public function testAddDisclosure(): void
 	{
-		$this->database->setInsertId('123');
+		$this->database->setDefaultInsertId('123');
 		$lastInsertId = $this->disclosures->addDisclosure(1, 'https://example.com/', 'https://archive.example.com/', 'note', 'now');
 		Assert::same(123, $lastInsertId);
 	}

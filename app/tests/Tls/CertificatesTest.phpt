@@ -54,7 +54,7 @@ class CertificatesTest extends TestCase
 
 	public function testLog(): void
 	{
-		$this->database->setInsertId('42');
+		$this->database->setDefaultInsertId('42');
 		$certificates = [
 			new Certificate('foo.example', null, $this->notBefore, $this->notAfter, 0, null),
 			new Certificate('bar.example', null, $this->notBefore, $this->notAfter, 0, null),
