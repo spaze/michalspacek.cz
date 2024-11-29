@@ -21,6 +21,7 @@ use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
 use Texy\Modifier;
+use Texy\Texy;
 
 readonly class TexyPhraseHandler
 {
@@ -98,7 +99,7 @@ readonly class TexyPhraseHandler
 			$trainingLink = $this->proceed($invocation, $phrase, $content, $modifier, $link);
 			if ($trainingLink !== false) {
 				$el->add($trainingLink);
-				$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
+				$el->add($texy->protect($this->getTrainingSuffix($name), Texy::CONTENT_TEXTUAL));
 				return $el;
 			}
 		}

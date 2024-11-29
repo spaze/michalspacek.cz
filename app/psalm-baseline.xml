@@ -266,11 +266,6 @@
       <code><![CDATA[$matches[2]]]></code>
     </MixedArgument>
   </file>
-  <file src="src/Formatter/TexyPhraseHandler.php">
-    <MixedArgument>
-      <code><![CDATA[$texy::CONTENT_TEXTUAL]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/Media/VideoThumbnails.php">
     <MixedArgument>
       <code><![CDATA[$values->videoThumbnail]]></code>
