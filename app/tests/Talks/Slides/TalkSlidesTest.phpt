@@ -126,7 +126,7 @@ class TalkSlidesTest extends TestCase
 				'alias' => 'alias-2',
 				'number' => 4,
 				'filename' => 'filename2.jpg',
-				'filenameAlternative' => null,
+				'filenameAlternative' => '',
 				'title' => 'Title 2',
 				'speakerNotesTexy' => 'speaker **notes** 2',
 			],
