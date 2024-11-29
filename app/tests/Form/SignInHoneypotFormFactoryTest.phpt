@@ -54,7 +54,7 @@ class SignInHoneypotFormFactoryTest extends TestCase
 
 
 	/** @dataProvider getCredentials */
-	public function testCreateOnsuccess(string $username, string $password, string $error): void
+	public function testCreateOnSuccess(string $username, string $password, string $error): void
 	{
 		$this->setValue('username', $username);
 		$this->setValue('password', $password);
