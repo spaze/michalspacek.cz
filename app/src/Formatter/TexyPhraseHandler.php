@@ -110,6 +110,9 @@ readonly class TexyPhraseHandler
 	private function getLink(string $url, string $locale): string
 	{
 		$args = Preg::split('/[\s,]+/', $url);
+		if ($args === []) {
+			throw new ShouldNotHappenException('Preg::split() should always return a non-empty array');
+		}
 		$action = array_shift($args);
 		if (Arrays::contains([self::TRAINING_ACTION, self::COMPANY_TRAINING_ACTION], $action)) {
 			$args = [$this->trainingLocales->getLocaleActions($args[0])[$locale]];
