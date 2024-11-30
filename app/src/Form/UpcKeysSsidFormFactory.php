@@ -32,6 +32,7 @@ readonly class UpcKeysSsidFormFactory
 			->setHtmlAttribute('data-alt', 'Wait…');
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->ssid));
 			$ssid = strtoupper(trim($values->ssid));
 			$onSuccess($ssid);
 		};

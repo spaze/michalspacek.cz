@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use DateTimeInterface;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 
 readonly class TrainingFileFormFactory
@@ -28,6 +29,7 @@ readonly class TrainingFileFormFactory
 		$form->addSubmit('submit', 'Přidat');
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
 			$values = $form->getFormValues();
+			assert($values->file instanceof FileUpload);
 			if ($values->file->isOk()) {
 				$filename = $this->trainingFiles->addFile($trainingStart, $values->file, $applicationIdsAllowedFiles);
 				$message = Html::el()->setText('Soubor ')
