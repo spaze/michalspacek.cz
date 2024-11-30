@@ -5,11 +5,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\ApplicationForm;
 
-use Generator;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -26,45 +24,79 @@ class TrainingApplicationFormSpamTest extends TestCase
 	}
 
 
-	public function getValues(): Generator
+	/**
+	 * @return list<array{name:string, companyId:string|null, companyTaxId:string|null, company:string|null, note:string|null, isNice:bool}>
+	 */
+	public function getValues(): array
 	{
-		$values = new stdClass();
-		$values->note = 'foo href="https:// example" bar baz';
-		yield [$values, false];
-
-		$values = new stdClass();
-		$values->name = 'zggnbijhah';
-		$values->companyId = 'vwetyeofcx';
-		$values->companyTaxId = 'tyqvukaims';
-		$values->company = 'qzpormrfcq';
-		yield [$values, false];
-
-		$values = new stdClass();
-		$values->name = 'zggnbijhah';
-		yield [$values, false];
-
-		yield [new stdClass(), false];
-		$values = new stdClass();
-		$values->name = 'foo bar';
-		yield [$values, true];
-
-		$values = new stdClass();
-		$values->companyId = 'foobar1';
-		yield [$values, true];
-
-		$values = new stdClass();
-		$values->companyTaxId = 'foobar1';
-		yield [$values, true];
+		return [
+			[
+				'name' => 'foo bar',
+				'companyId' => null,
+				'companyTaxId' => null,
+				'company' => null,
+				'note' => 'foo href="https:// example" bar baz',
+				'isNice' => false,
+			],
+			[
+				'name' => 'zggnbijhah',
+				'companyId' => 'vwetyeofcx',
+				'companyTaxId' => 'tyqvukaims',
+				'company' => 'qzpormrfcq',
+				'note' => null,
+				'isNice' => false,
+			],
+			[
+				'name' => 'zggnbijhah',
+				'companyId' => null,
+				'companyTaxId' => null,
+				'company' => null,
+				'note' => null,
+				'isNice' => false,
+			],
+			[
+				'name' => 'foo bar',
+				'companyId' => null,
+				'companyTaxId' => null,
+				'company' => null,
+				'note' => null,
+				'isNice' => true,
+			],
+			[
+				'name' => '',
+				'companyId' => 'foobar1',
+				'companyTaxId' => null,
+				'company' => null,
+				'note' => null,
+				'isNice' => true,
+			],
+			[
+				'name' => '',
+				'companyId' => null,
+				'companyTaxId' => 'foobar1',
+				'company' => null,
+				'note' => null,
+				'isNice' => true,
+			],
+			[
+				'name' => '',
+				'companyId' => null,
+				'companyTaxId' => null,
+				'company' => 'comp any',
+				'note' => null,
+				'isNice' => true,
+			],
+		];
 	}
 
 
 	/**
 	 * @dataProvider getValues
 	 */
-	public function testIsSpam(stdClass $values, bool $isNice): void
+	public function testIsSpam(string $name, ?string $companyId, ?string $companyTaxId, ?string $company, ?string $note, bool $isNice): void
 	{
-		$check = function () use ($values): void {
-			$this->formSpam->check($values);
+		$check = function () use ($name, $company, $companyId, $companyTaxId, $note): void {
+			$this->formSpam->check($name, $company, $companyId, $companyTaxId, $note);
 		};
 		if ($isNice) {
 			Assert::noError($check);

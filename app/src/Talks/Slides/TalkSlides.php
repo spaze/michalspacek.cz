@@ -217,11 +217,14 @@ class TalkSlides
 		$lastNumber = 0;
 		try {
 			foreach ($slides as $slide) {
+				assert($slide->replace instanceof FileUpload);
+				assert($slide->replaceAlternative instanceof FileUpload);
+				assert(is_int($slide->number));
 				$width = self::SLIDE_MAX_WIDTH;
 				$height = self::SLIDE_MAX_HEIGHT;
 				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), false, null, $width, $height);
 				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), false, null, $width, $height);
-				$lastNumber = (int)$slide->number;
+				$lastNumber = $slide->number;
 				$this->database->query(
 					'INSERT INTO talk_slides',
 					[
@@ -259,6 +262,14 @@ class TalkSlides
 			}
 		}
 		foreach ($slides as $id => $slide) {
+			assert($slide->replace instanceof FileUpload || $slide->replace === null);
+			assert($slide->replaceAlternative instanceof FileUpload || $slide->replaceAlternative === null);
+			assert(is_string($slide->alias));
+			assert(is_int($slide->number));
+			assert(is_string($slide->filename));
+			assert(is_string($slide->filenameAlternative));
+			assert(is_string($slide->title));
+			assert(is_string($slide->speakerNotes));
 			$width = self::SLIDE_MAX_WIDTH;
 			$height = self::SLIDE_MAX_HEIGHT;
 

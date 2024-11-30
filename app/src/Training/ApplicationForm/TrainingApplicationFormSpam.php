@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use stdClass;
 
 class TrainingApplicationFormSpam
 {
@@ -16,15 +15,18 @@ class TrainingApplicationFormSpam
 	private const string FIELD_MISSING_VALUE = 'missing';
 
 
-	public function check(stdClass $values): void
+	/**
+	 * @throws SpammyApplicationException
+	 */
+	public function check(string $name, ?string $company = null, ?string $companyId = null, ?string $companyTaxId = null, ?string $note = null): void
 	{
-		if (Regex::isMatch('~\s+href="\s*https?://~', $values->note ?? '')) {
+		if (Regex::isMatch('~\s+href="\s*https?://~', $note ?? self::FIELD_MISSING_VALUE)) {
 			throw new SpammyApplicationException();
 		} elseif (
-			ctype_lower($values->name ?? self::FIELD_MISSING_VALUE)
-			&& ctype_lower($values->company ?? self::FIELD_MISSING_VALUE)
-			&& ctype_lower($values->companyId ?? self::FIELD_MISSING_VALUE)
-			&& ctype_lower($values->companyTaxId ?? self::FIELD_MISSING_VALUE)
+			ctype_lower($name)
+			&& ctype_lower($company ?? self::FIELD_MISSING_VALUE)
+			&& ctype_lower($companyId ?? self::FIELD_MISSING_VALUE)
+			&& ctype_lower($companyTaxId ?? self::FIELD_MISSING_VALUE)
 		) {
 			throw new SpammyApplicationException();
 		}

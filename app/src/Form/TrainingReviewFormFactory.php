@@ -51,9 +51,9 @@ readonly class TrainingReviewFormFactory
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka odkazu je %d znaků', 200);
 		$form->addCheckbox('hidden', 'Skrýt:');
-		$form->addText('ranking', 'Pořadí:')
+		$form->addInteger('ranking', 'Pořadí:')
 			->setRequired(false)
-			->setHtmlType('number');
+			->addRule(Form::Min, 'Minimální hodnota pořadí je %d', 0);
 		$form->addText('note', 'Poznámka:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka poznámky je %d znaků', 2000);
@@ -64,17 +64,25 @@ readonly class TrainingReviewFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $review, $dateId): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->name));
+			assert(is_string($values->company));
+			assert(is_string($values->jobTitle));
+			assert(is_string($values->review));
+			assert(is_string($values->href));
+			assert(is_bool($values->hidden));
+			assert(is_int($values->ranking) || $values->ranking === null);
+			assert(is_string($values->note));
 			if ($review) {
 				$this->trainingReviews->updateReview(
 					$review->getId(),
 					$dateId,
 					$values->name,
 					$values->company,
-					$values->jobTitle ?: null,
+					$values->jobTitle !== '' ? $values->jobTitle : null,
 					$values->review,
-					$values->href ?: null,
+					$values->href !== '' ? $values->href : null,
 					$values->hidden,
-					$values->ranking ?: null,
+					$values->ranking !== 0 ? $values->ranking : null,
 					$values->note ?: null,
 				);
 			} else {
@@ -82,11 +90,11 @@ readonly class TrainingReviewFormFactory
 					$dateId,
 					$values->name,
 					$values->company,
-					$values->jobTitle ?: null,
+					$values->jobTitle !== '' ? $values->jobTitle : null,
 					$values->review,
-					$values->href ?: null,
+					$values->href !== '' ? $values->href : null,
 					$values->hidden,
-					$values->ranking ?: null,
+					$values->ranking !== 0 ? $values->ranking : null,
 					$values->note ?: null,
 				);
 			}

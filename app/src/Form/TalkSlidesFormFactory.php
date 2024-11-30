@@ -11,6 +11,7 @@ use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 readonly class TalkSlidesFormFactory
@@ -61,6 +62,9 @@ readonly class TalkSlidesFormFactory
 		$form->onSuccess[] = function (UiForm $form) use ($slides, $onSuccess, $talkId): void {
 			try {
 				$values = $form->getFormValues();
+				assert($values->slides instanceof ArrayHash);
+				assert($values->new instanceof ArrayHash);
+				assert(is_bool($values->deleteReplaced));
 				$this->talkSlides->saveSlides($talkId, $slides, (array)$values->slides, array_values((array)$values->new), $values->deleteReplaced);
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
@@ -96,7 +100,6 @@ readonly class TalkSlidesFormFactory
 			->setRequired('Zadejte prosím alias')
 			->addRule(Form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addInteger('number', 'Slajd:')
-			->setHtmlType('number')
 			->setDefaultValue(1)
 			->setHtmlAttribute('class', 'right slide-nr')
 			->setRequired('Zadejte prosím číslo slajdu');

@@ -27,8 +27,10 @@ readonly class TrainingApplicationPreliminaryFormFactory
 		$form->addSubmit('signUp', 'Odeslat');
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError, $trainingId, $action): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->name));
+			assert(is_string($values->email));
 			try {
-				$this->formSpam->check($values);
+				$this->formSpam->check($values->name);
 				$this->trainingApplicationStorage->addPreliminaryInvitation($trainingId, $values->name, $values->email);
 				$onSuccess($action);
 			} catch (SpammyApplicationException) {
