@@ -32,9 +32,7 @@ class UpcKeysSsidFormFactoryTest extends TestCase
 			},
 			null,
 		);
-		$presenter = $applicationPresenter->createUiPresenter('UpcKeys:Homepage', 'foo', 'default');
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$this->form->setParent($presenter);
+		$applicationPresenter->anchorForm($this->form);
 	}
 
 

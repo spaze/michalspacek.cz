@@ -13,9 +13,7 @@ use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
-use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Application\Application;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -29,7 +27,6 @@ class PasswordsTest extends TestCase
 	public function __construct(
 		private readonly Passwords $passwords,
 		private readonly Database $database,
-		private readonly Application $application,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly PasswordsStorageAlgorithmFormFactory $formFactory,
 		private readonly DateTimeMachineFactory $dateTimeFactory,
@@ -583,10 +580,7 @@ class PasswordsTest extends TestCase
 			},
 			1,
 		);
-		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Pulse', 'foo', 'slides');
-		PrivateProperty::setValue($this->application, 'presenter', $presenter);
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$form->setParent($presenter);
+		$this->applicationPresenter->anchorForm($form);
 		return $form;
 	}
 

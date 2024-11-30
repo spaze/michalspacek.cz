@@ -44,9 +44,7 @@ class SignInFormFactoryTest extends TestCase
 		$httpRequest->setRemoteAddress('127.31.33.7');
 		$this->form = $formFactory->create(function () {
 		});
-		$presenter = $applicationPresenter->createUiPresenter('Admin:Sign', 'foo', 'in');
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$this->form->setParent($presenter);
+		$applicationPresenter->anchorForm($this->form);
 
 		$service = $container->getService('passwordEncryption');
 		assert($service instanceof SymmetricKeyEncryption);
