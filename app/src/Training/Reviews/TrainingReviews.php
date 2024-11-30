@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Reviews;
 
-use DateTime;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingReviewNotFoundException;
 use Nette\Database\Explorer;
@@ -17,6 +17,7 @@ readonly class TrainingReviews
 		private Explorer $database,
 		private TypedDatabase $typedDatabase,
 		private TexyFormatter $texyFormatter,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -176,7 +177,7 @@ readonly class TrainingReviews
 
 	public function addReview(int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden, ?int $ranking, ?string $note): void
 	{
-		$datetime = new DateTime();
+		$datetime = $this->dateTimeFactory->create();
 		$timeZone = $datetime->getTimezone()->getName();
 		$this->database->query(
 			'INSERT INTO training_reviews ?',

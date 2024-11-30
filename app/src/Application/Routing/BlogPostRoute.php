@@ -31,7 +31,7 @@ class BlogPostRoute extends Route
 	 * Maps HTTP request to a Request object.
 	 *
 	 * @param IRequest $httpRequest
-	 * @return array<string, string>|null
+	 * @return array<array-key, mixed>|null
 	 */
 	#[Override]
 	public function match(IRequest $httpRequest): ?array

@@ -23,7 +23,7 @@ class NettePresenter extends Presenter
 	public function actionMicro(string $callback): void
 	{
 		sleep(random_int(5, 20));
-		$rce = $this->cve202015227->rce($callback, $this->getParameters());
+		$rce = $this->cve202015227->rce($callback, $this);
 		$this->setView($rce->view->value);
 		$this->template->eth0RxPackets = $rce->eth0RxPackets;
 		$this->template->eth1RxPackets = $rce->eth1RxPackets;

@@ -121,9 +121,6 @@ readonly class InterviewFormFactory
 			}
 			$onSuccess();
 		};
-
-		$this->videoThumbnails->addOnValidateUploads($form, $videoThumbnailFormFields);
-
 		return $form;
 	}
 

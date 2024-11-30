@@ -15,7 +15,6 @@ use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Utils\Html;
 use Override;
-use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -50,16 +49,17 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 
 	public function testLogNoValuesNoSession(): void
 	{
-		$this->formDataLogger->log(new stdClass(), 'foo', self::DATE_ID, null);
+		$this->formDataLogger->log([], 'foo', self::DATE_ID, null);
 		Assert::same(['Application session data for foo: undefined, form values: empty'], $this->logger->getLogged());
 	}
 
 
 	public function testLogNoSession(): void
 	{
-		$values = new stdClass();
-		$values->key1 = 'value1';
-		$values->key2 = 'value2';
+		$values = [
+			'key1' => 'value1',
+			'key2' => 'value2',
+		];
 		$this->formDataLogger->log($values, 'foo', self::DATE_ID, null);
 		Assert::same(["Application session data for foo: undefined, form values: key1 => 'value1', key2 => 'value2'"], $this->logger->getLogged());
 	}
@@ -67,9 +67,10 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 
 	public function testLogEmptySession(): void
 	{
-		$values = new stdClass();
-		$values->key1 = 'value1';
-		$values->key2 = 'value2';
+		$values = [
+			'key1' => 'value1',
+			'key2' => 'value2',
+		];
 		$this->formDataLogger->log($values, 'foo', self::DATE_ID, $this->getTrainingSessionSection());
 		Assert::same(["Application session data for foo: empty, form values: key1 => 'value1', key2 => 'value2'"], $this->logger->getLogged());
 	}
@@ -77,10 +78,11 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 
 	public function testLog(): void
 	{
-		$values = new stdClass();
-		$values->key1 = 'value1';
-		$values->key2 = 'value2';
-		$values->key3 = 1336;
+		$values = [
+			'key1' => 'value1',
+			'key2' => 'value2',
+			'key3' => 1336,
+		];
 		$trainingName = 'foo';
 
 		$session = $this->getTrainingSessionSection();
