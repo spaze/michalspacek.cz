@@ -10,6 +10,7 @@ use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
@@ -42,13 +43,13 @@ readonly class TalkFormFactory
 			->setPrompt('- vyberte -');
 		$form->addText('action', 'Akce:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka akce je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka akce je %d znaků', 200);
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
-			->addRule($form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka popisu je %d znaků', 65535);
+			->addRule(Form::MaxLength, 'Maximální délka popisu je %d znaků', 65535);
 		$this->trainingControlsFactory->addDate(
 			$form->addText('date', 'Datum:'),
 			true,
@@ -57,7 +58,7 @@ readonly class TalkFormFactory
 		);
 		$form->addText('href', 'Odkaz na přednášku:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na přednášku je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na přednášku je %d znaků', 200);
 		$form->addText('duration', 'Délka:')
 			->setHtmlType('number');
 		$form->addSelect('slidesTalk', 'Použít slajdy z:', $allTalks)
@@ -66,35 +67,35 @@ readonly class TalkFormFactory
 			->setPrompt('Vyberte prosím přednášku, ze které se použijí soubory pro slajdy');
 		$form->addText('slidesHref', 'Odkaz na slajdy:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na slajdy je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na slajdy je %d znaků', 200);
 		$form->addText('slidesEmbed', 'Embed odkaz na slajdy:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
 		$form->addTextArea('slidesNote', 'Poznámka ke slajdům:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka poznámek je %d znaků', 65535);
+			->addRule(Form::MaxLength, 'Maximální délka poznámek je %d znaků', 65535);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
 		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $talk?->getVideo()->getThumbnailFilename() !== null, $talk?->getVideo()->getThumbnailAlternativeContentType() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$form->addText('event', 'Událost:')
 			->setRequired('Zadejte prosím událost')
-			->addRule($form::MaxLength, 'Maximální délka události je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka události je %d znaků', 200);
 		$form->addText('eventHref', 'Odkaz na událost:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na událost je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na událost je %d znaků', 200);
 		$form->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 		$form->addTextArea('transcript', 'Přepis:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka přepisu je %d znaků', 65535);
+			->addRule(Form::MaxLength, 'Maximální délka přepisu je %d znaků', 65535);
 		$form->addTextArea('favorite', 'Popis pro oblíbené:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
+			->addRule(Form::MaxLength, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
 		$form->addSelect('supersededBy', 'Nahrazeno přednáškou:', $allTalks)
 			->setPrompt('Vyberte prosím přednášku, kterou se tato nahradí');
 		$form->addCheckbox('publishSlides', 'Publikovat slajdy:');

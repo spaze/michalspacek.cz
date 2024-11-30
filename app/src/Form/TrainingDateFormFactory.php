@@ -11,6 +11,7 @@ use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 
 readonly class TrainingDateFormFactory
 {
@@ -71,12 +72,12 @@ readonly class TrainingDateFormFactory
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím začátek')
-			->addRule($form::Pattern, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
+			->addRule(Form::Pattern, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 		$end = $form->addText('end', 'Konec:')
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
-			->addRule($form::Pattern, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
+			->addRule(Form::Pattern, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 		$form->onValidate[] = function () use ($start, $end): void {
 			$this->trainingDatesFormValidator->validateFormStartEnd($start, $end);
 		};
@@ -92,15 +93,15 @@ readonly class TrainingDateFormFactory
 
 		$checkboxPublic = $form->addCheckbox('public', 'Veřejné:');
 		$checkboxRemote = $form->addCheckbox('remote', 'Online:');
-		$checkboxRemote->addConditionOn($selectVenue, $form::Filled)
-			->addConditionOn($checkboxPublic, $form::Filled)
-			->addRule($form::Blank, 'Je vybráno místo, veřejné školení nemůže být online');
-		$selectVenue->addConditionOn($checkboxRemote, $form::Blank)
+		$checkboxRemote->addConditionOn($selectVenue, Form::Filled)
+			->addConditionOn($checkboxPublic, Form::Filled)
+			->addRule(Form::Blank, 'Je vybráno místo, veřejné školení nemůže být online');
+		$selectVenue->addConditionOn($checkboxRemote, Form::Blank)
 			->setRequired('Vyberte prosím místo nebo školení označte jako online');
 
 		$form->addText('remoteUrl', 'Online URL:')
-			->addRule($form::URL, 'Online URL musí být validní URL')
-			->addRule($form::MaxLength, 'Maximální délka URL je %d znaků', 200);
+			->addRule(Form::URL, 'Online URL musí být validní URL')
+			->addRule(Form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 
 		$format = "Bez HTML značek,\nodřádkování bude v pozvánce zachováno";
 		$form->addTextArea('remoteNotes', 'Online poznámky:')
@@ -108,7 +109,7 @@ readonly class TrainingDateFormFactory
 			->setHtmlAttribute('title', $format);
 
 		$form->addSelect('cooperation', 'Spolupráce:', [0 => 'žádná'] + $this->trainings->getCooperations())
-			->addRule($form::Integer);
+			->addRule(Form::Integer);
 		$this->trainingControlsFactory->addNote($form);
 
 		$price = $form->addText('price', 'Cena bez DPH:')
@@ -127,11 +128,11 @@ readonly class TrainingDateFormFactory
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná sleva');
 
 		$form->addText('videoHref', 'Odkaz na záznam:')
-			->addRule($form::URL, 'Odkaz na záznam musí být validní URL')
-			->addRule($form::MaxLength, 'Maximální délka URL je %d znaků', 200);
+			->addRule(Form::URL, 'Odkaz na záznam musí být validní URL')
+			->addRule(Form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 		$form->addText('feedbackHref', 'Odkaz na feedback formulář:')
-			->addRule($form::URL, 'Odkaz na feedback formulář musí být validní URL')
-			->addRule($form::MaxLength, 'Maximální délka URL je %d znaků', 200);
+			->addRule(Form::URL, 'Odkaz na feedback formulář musí být validní URL')
+			->addRule(Form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 
 		$submit = $form->addSubmit('submit', 'Přidat');
 		if ($date) {

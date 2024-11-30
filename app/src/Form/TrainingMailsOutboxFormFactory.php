@@ -12,6 +12,7 @@ use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Form;
 use stdClass;
 
 readonly class TrainingMailsOutboxFormFactory
@@ -129,14 +130,14 @@ readonly class TrainingMailsOutboxFormFactory
 						->setHtmlAttribute('placeholder', 'Faktura č.')
 						->setHtmlAttribute('title', 'Faktura č.')
 						->setDefaultValue($application->getInvoiceId())
-						->addConditionOn($send, $form::Filled)
-						->addRule($form::Filled, 'Chybí číslo faktury');
+						->addConditionOn($send, Form::Filled)
+						->addRule(Form::Filled, 'Chybí číslo faktury');
 					$applicationIdsContainer->addUpload('invoice')
 						->setHtmlAttribute('title', 'Faktura v PDF')
 						->setHtmlAttribute('accept', 'application/pdf')
-						->addConditionOn($send, $form::Filled)
-						->addRule($form::Filled, 'Chybí faktura')
-						->addRule($form::MimeType, 'Faktura není v PDF', 'application/pdf');
+						->addConditionOn($send, Form::Filled)
+						->addRule(Form::Filled, 'Chybí faktura')
+						->addRule(Form::MimeType, 'Faktura není v PDF', 'application/pdf');
 					$applicationIdsContainer->addEmail('cc', 'Cc:')->setRequired(false);
 					break;
 			}

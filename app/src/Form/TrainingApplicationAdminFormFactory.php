@@ -15,6 +15,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 
 readonly class TrainingApplicationAdminFormFactory
 {
@@ -125,14 +126,14 @@ readonly class TrainingApplicationAdminFormFactory
 		$form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule($form::Float)
+			->addRule(Form::Float)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('vatRate', 'DPH:')
 			->setHtmlType('number');
 		$form->addText('priceVat', 'Cena s DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule($form::Float)
+			->addRule(Form::Float)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('discount', 'Sleva:')
 			->setHtmlType('number');

@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 readonly class TrainingApplicationFormFactory
@@ -63,7 +64,7 @@ readonly class TrainingApplicationFormFactory
 			$form->addSelect('trainingId', $this->translator->translate('label.trainingdate'), $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -')
-				->addRule($form::Integer);
+				->addRule(Form::Integer);
 		}
 
 		$this->trainingControlsFactory->addAttendee($form);
