@@ -7,9 +7,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Talks\Slides\TalkSlide;
 use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
-use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Application\Application;
 use Nette\Application\Request;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
@@ -24,7 +22,6 @@ class TalkSlidesFormFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
-		private readonly Application $application,
 		private readonly ApplicationPresenter $applicationPresenter,
 	) {
 	}
@@ -47,10 +44,7 @@ class TalkSlidesFormFactoryTest extends TestCase
 			0,
 			new Request('foo'),
 		);
-		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Talks', 'foo', 'slides');
-		PrivateProperty::setValue($this->application, 'presenter', $presenter);
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$form->setParent($presenter);
+		$this->applicationPresenter->anchorForm($form);
 		Assert::noError(function () use (&$result, $form): void {
 			$result = Arrays::invoke($form->onSuccess, $form);
 		});

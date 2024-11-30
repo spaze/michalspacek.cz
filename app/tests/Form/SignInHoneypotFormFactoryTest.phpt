@@ -28,9 +28,7 @@ class SignInHoneypotFormFactoryTest extends TestCase
 		ApplicationPresenter $applicationPresenter,
 	) {
 		$this->form = $signInHoneypotFormFactory->create();
-		$presenter = $applicationPresenter->createUiPresenter('Admin:Honeypot', 'foo', 'signIn');
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$this->form->setParent($presenter);
+		$applicationPresenter->anchorForm($this->form);
 	}
 
 
