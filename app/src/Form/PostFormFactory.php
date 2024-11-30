@@ -23,6 +23,7 @@ use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -61,27 +62,27 @@ readonly class PostFormFactory
 			->setPrompt('- vyberte -');
 		$form->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
-			->addRule($form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
+			->addRule(Form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
 		$form->addText('slug', 'Slug:')
-			->addRule($form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
+			->addRule(Form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
 		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$previewKeyInput = $form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
 			->setDefaultValue(Random::generate(9, '0-9a-zA-Z'))
-			->addRule($form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
+			->addRule(Form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
 		$form->addTextArea('lead', 'Perex:')
-			->addCondition($form::Filled)
-			->addRule($form::MinLength, 'Perex musí mít alespoň %d znaky', 3);
+			->addCondition(Form::Filled)
+			->addRule(Form::MinLength, 'Perex musí mít alespoň %d znaky', 3);
 		$form->addTextArea('text', 'Text:')
 			->setRequired('Zadejte prosím text')
-			->addRule($form::MinLength, 'Text musí mít alespoň %d znaky', 3);
+			->addRule(Form::MinLength, 'Text musí mít alespoň %d znaky', 3);
 		$form->addTextArea('originally', 'Původně vydáno:')
-			->addCondition($form::Filled)
-			->addRule($form::MinLength, 'Původně vydáno musí mít alespoň %d znaky', 3);
+			->addCondition(Form::Filled)
+			->addRule(Form::MinLength, 'Původně vydáno musí mít alespoň %d znaky', 3);
 		$form->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 
 		$cards = ['' => 'Žádná karta'];
 		foreach ($this->twitterCards->getAll() as $card) {
@@ -96,10 +97,10 @@ readonly class PostFormFactory
 		$editSummaryInput = $form->addText('editSummary', 'Shrnutí editace:');
 		$editSummaryInput->setRequired(false)
 			->setDisabled(true)
-			->addCondition($form::Filled)
-			->addRule($form::MinLength, 'Shrnutí editace musí mít alespoň %d znaky', 3)
+			->addCondition(Form::Filled)
+			->addRule(Form::MinLength, 'Shrnutí editace musí mít alespoň %d znaky', 3)
 			->endCondition()
-			->addRule($form::MaxLength, 'Maximální délka shrnutí editace je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka shrnutí editace je %d znaků', 200);
 
 		$label = Html::el()->addText(Html::el('span', ['title' => 'Content Security Policy'])->setText('CSP'))->addText(' snippety:');
 		$items = [];
