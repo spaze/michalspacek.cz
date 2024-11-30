@@ -35,9 +35,7 @@ class TrainingFileFormFactoryTest extends TestCase
 			new DateTimeImmutable(),
 			[],
 		);
-		$presenter = $applicationPresenter->createUiPresenter('Admin:Trainings', 'foo', 'file');
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$this->form->setParent($presenter);
+		$applicationPresenter->anchorForm($this->form);
 	}
 
 
