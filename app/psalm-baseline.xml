@@ -71,11 +71,6 @@
       <code><![CDATA[$values->site->new->url]]></code>
     </MixedArgument>
   </file>
-  <file src="src/Form/SignInFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->password]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/Form/TalkFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->action]]></code>
@@ -210,11 +205,6 @@
       <code><![CDATA[$values->venue]]></code>
       <code><![CDATA[$values->videoHref]]></code>
       <code><![CDATA[$values->videoHref]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/TrainingFileFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->file]]></code>
     </MixedArgument>
   </file>
   <file src="src/Form/TrainingInvoiceFormFactory.php">

@@ -30,7 +30,7 @@ class TalkSlidesFormFactoryTest extends TestCase
 	}
 
 
-	public function testCreateOnsuccess(): void
+	public function testCreateOnSuccess(): void
 	{
 		$talkId = 123;
 		$onSuccessMessage = $onSuccessType = $onSuccessTalkId = $result = null;

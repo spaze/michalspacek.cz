@@ -43,6 +43,7 @@ services:
 	database.pulse.explorer: @database.default.explorer
 	dateTimeFactory: MichalSpacekCz\Test\DateTime\DateTimeMachineFactory
 	httpClient: MichalSpacekCz\Test\Http\Client\HttpClientMock
+	- MichalSpacekCz\Test\Form\FormComponents
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
@@ -50,6 +51,7 @@ services:
 	mail.mailer: MichalSpacekCz\Test\NullMailer
 	translation.translator: MichalSpacekCz\Test\NoOpTranslator(availableLocales: [cs_CZ, en_US], defaultLocale: cs_CZ)
 	tracy.logger: MichalSpacekCz\Test\NullLogger
+	security.userStorage: MichalSpacekCz\Test\Security\NullUserStorage
 	- MichalSpacekCz\Test\TestCaseRunner
 	trainingFilesStorage: MichalSpacekCz\Test\Training\TrainingFilesNullStorage
 	cache.storage: Nette\Caching\Storages\DevNullStorage
