@@ -71,17 +71,14 @@ readonly class VideoThumbnails
 			$videoThumbnailAlternative->addCondition(Form::Filled, true)
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
-		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative, $hasMainVideoThumbnail, $hasAlternativeVideoThumbnail);
-	}
-
-
-	public function addOnValidateUploads(UiForm $form, VideoThumbnailFileUploads $formFields): void
-	{
-		$form->onValidate[] = function (UiForm $form) use ($formFields): void {
+		$form->onValidate[] = function (UiForm $form) use ($videoThumbnail, $videoThumbnailAlternative): void {
 			$values = $form->getFormValues();
-			$this->validateUpload($values->videoThumbnail, $formFields->getVideoThumbnail());
-			$this->validateUpload($values->videoThumbnailAlternative, $formFields->getVideoThumbnailAlternative());
+			assert($values->videoThumbnail instanceof FileUpload);
+			assert($values->videoThumbnailAlternative instanceof FileUpload);
+			$this->validateUpload($values->videoThumbnail, $videoThumbnail);
+			$this->validateUpload($values->videoThumbnailAlternative, $videoThumbnailAlternative);
 		};
+		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative, $hasMainVideoThumbnail, $hasAlternativeVideoThumbnail);
 	}
 
 

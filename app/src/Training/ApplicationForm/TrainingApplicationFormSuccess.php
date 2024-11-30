@@ -21,7 +21,6 @@ use Nette\Utils\Html;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use PDOException;
 use SodiumException;
-use stdClass;
 use Tracy\Debugger;
 
 readonly class TrainingApplicationFormSuccess
@@ -57,11 +56,22 @@ readonly class TrainingApplicationFormSuccess
 		TrainingApplicationSessionSection $sessionSection,
 	): void {
 		$values = $form->getFormValues();
+		assert(is_string($values->name));
+		assert(is_string($values->email));
+		assert(is_string($values->company));
+		assert(is_string($values->street));
+		assert(is_string($values->city));
+		assert(is_string($values->zip));
+		assert(is_string($values->country));
+		assert(is_string($values->companyId));
+		assert(is_string($values->companyTaxId));
+		assert(is_string($values->note));
 		try {
-			$this->formSpam->check($values);
+			$this->formSpam->check($values->name, $values->company, $values->companyId, $values->companyTaxId, $values->note);
 			if ($multipleDates) {
-				$this->checkTrainingDate($values, $action, $dates, $sessionSection);
-				$date = $dates[$values->trainingId] ?? false;
+				assert(is_int($values->trainingId));
+				$this->checkTrainingDate((array)$values, $action, $values->trainingId, $dates, $sessionSection);
+				$date = $dates[$values->trainingId];
 			} else {
 				$date = reset($dates);
 			}
@@ -153,14 +163,15 @@ readonly class TrainingApplicationFormSuccess
 
 
 	/**
+	 * @param array<array-key, mixed> $values
 	 * @param array<int, TrainingDate> $dates
 	 * @throws TrainingDateNotUpcomingException
 	 */
-	private function checkTrainingDate(stdClass $values, string $name, array $dates, TrainingApplicationSessionSection $sessionSection): void
+	private function checkTrainingDate(array $values, string $name, int $dateId, array $dates, TrainingApplicationSessionSection $sessionSection): void
 	{
-		if (!isset($dates[$values->trainingId])) {
-			$this->formDataLogger->log($values, $name, $values->trainingId, $sessionSection);
-			throw new TrainingDateNotUpcomingException($values->trainingId, $dates);
+		if (!isset($dates[$dateId])) {
+			$this->formDataLogger->log($values, $name, $dateId, $sessionSection);
+			throw new TrainingDateNotUpcomingException($dateId, $dates);
 		}
 	}
 

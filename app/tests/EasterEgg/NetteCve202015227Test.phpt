@@ -7,6 +7,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
+use Nette\Application\UI\Component;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -25,7 +26,7 @@ class NetteCve202015227Test extends TestCase
 	public function testRceUnknownCallback(): void
 	{
 		Assert::exception(function (): void {
-			$this->cve202015227->rce('foo', ['bar' => 'baz']);
+			$this->cve202015227->rce('foo', $this->createComponent(['bar' => 'baz']));
 		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown callback 'foo'");
 	}
 
@@ -33,7 +34,7 @@ class NetteCve202015227Test extends TestCase
 	public function testRceEmptyParam(): void
 	{
 		Assert::exception(function (): void {
-			$this->cve202015227->rce('exec', ['bar' => 'baz']);
+			$this->cve202015227->rce('exec', $this->createComponent(['bar' => 'baz']));
 		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Empty param 'command' for callback 'exec'");
 	}
 
@@ -41,21 +42,21 @@ class NetteCve202015227Test extends TestCase
 	public function testRceUnknownValue(): void
 	{
 		Assert::exception(function (): void {
-			$this->cve202015227->rce('exec', ['command' => 'baz']);
+			$this->cve202015227->rce('exec', $this->createComponent(['command' => 'baz']));
 		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown value 'baz' for callback 'exec' and param 'command'");
 	}
 
 
 	public function testRceLs(): void
 	{
-		$rce = $this->cve202015227->rce('exec', ['command' => 'ls foo']);
+		$rce = $this->cve202015227->rce('exec', $this->createComponent(['command' => 'ls foo']));
 		Assert::same(NetteCve202015227View::Ls, $rce->view);
 	}
 
 
 	public function testRceIfconfig(): void
 	{
-		$rce = $this->cve202015227->rce('exec', ['command' => 'ifconfig bar']);
+		$rce = $this->cve202015227->rce('exec', $this->createComponent(['command' => 'ifconfig bar']));
 		Assert::same(NetteCve202015227View::Ifconfig, $rce->view);
 		Assert::type('string', $rce->eth0RxPackets);
 		Assert::type('string', $rce->eth1RxPackets);
@@ -74,7 +75,7 @@ class NetteCve202015227Test extends TestCase
 
 	public function testRceWget(): void
 	{
-		$rce = $this->cve202015227->rce('shell_exec', ['cmd' => 'wget example.com']);
+		$rce = $this->cve202015227->rce('shell_exec', $this->createComponent(['cmd' => 'wget example.com']));
 		Assert::same(NetteCve202015227View::Wget, $rce->view);
 	}
 
@@ -82,7 +83,7 @@ class NetteCve202015227Test extends TestCase
 	/** @dataProvider getCommands */
 	public function testRceNotFound(NetteCve202015227View $view, string $command, string $cmd): void
 	{
-		$rce = $this->cve202015227->rce('shell_exec', ['cmd' => $cmd]);
+		$rce = $this->cve202015227->rce('shell_exec', $this->createComponent(['cmd' => $cmd]));
 		Assert::same($view, $rce->view);
 		Assert::same($command, $rce->command);
 	}
@@ -139,6 +140,18 @@ class NetteCve202015227Test extends TestCase
 				'cmd' => 'sa.exe something',
 			],
 		];
+	}
+
+
+	/**
+	 * @param array<string, string> $params
+	 */
+	private function createComponent(array $params): Component
+	{
+		$component = new class extends Component {
+		};
+		$component->loadState($params);
+		return $component;
 	}
 
 }

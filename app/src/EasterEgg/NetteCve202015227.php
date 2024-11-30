@@ -5,6 +5,7 @@ namespace MichalSpacekCz\EasterEgg;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\RouteList;
+use Nette\Application\UI\Component;
 
 /**
  * Nette CVE-2020-15227, here to easter-egg some bots
@@ -19,10 +20,7 @@ use Nette\Application\Routers\RouteList;
 class NetteCve202015227
 {
 
-	/**
-	 * @param array<string, string> $params
-	 */
-	public function rce(string $callback, array $params): NetteCve202015227Rce
+	public function rce(string $callback, Component $component): NetteCve202015227Rce
 	{
 		$callback = strtolower($callback);
 		$paramNames = [
@@ -40,7 +38,8 @@ class NetteCve202015227
 
 		$data = [];
 
-		$param = $params[$paramNames[$callback]] ?? null;
+		$param = $component->getParameters()[$paramNames[$callback]] ?? null;
+		assert(is_string($param) || $param === null);
 		if ($param === null) {
 			throw new BadRequestException(sprintf("[%s] Empty param '%s' for callback '%s'", __CLASS__, $paramNames[$callback], $callback));
 		}

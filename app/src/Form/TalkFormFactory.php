@@ -182,9 +182,6 @@ readonly class TalkFormFactory
 			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'));
 			$onSuccess($message);
 		};
-
-		$this->videoThumbnails->addOnValidateUploads($form, $videoThumbnailFormFields);
-
 		return $form;
 	}
 
