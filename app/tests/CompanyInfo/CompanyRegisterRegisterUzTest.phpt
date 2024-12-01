@@ -7,6 +7,7 @@ namespace MichalSpacekCz\CompanyInfo;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Schema\Processor;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -19,9 +20,11 @@ class CompanyRegisterRegisterUzTest extends TestCase
 	private readonly CompanyRegisterRegisterUz $registerUz;
 
 
-	public function __construct()
-	{
-		$this->registerUz = new CompanyRegisterRegisterUz(new HttpClient());
+	public function __construct(
+		Processor $schemaProcessor,
+	) {
+		// Need a real HttpClient, not the mock one used in other tests
+		$this->registerUz = new CompanyRegisterRegisterUz($schemaProcessor, new HttpClient());
 	}
 
 
