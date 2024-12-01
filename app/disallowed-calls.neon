@@ -23,7 +23,7 @@ parameters:
 			method: 'Tester\Environment::skip()'
 			message: 'use TestCaseRunner::skip() instead, it can ignore skipping with an environment variable'
 			allowInMethods:
-				- 'MichalSpacekCz\Test\TestCaseRunner::skip()'
+				- 'MichalSpacekCz\Test\TestCaseRunner::needsInternet()'
 		-
 			method:
 				- 'Nette\Utils\Strings::match()'
