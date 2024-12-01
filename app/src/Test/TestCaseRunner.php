@@ -57,18 +57,16 @@ class TestCaseRunner
 	}
 
 
-	public static function skip(string $message): void
+	public static function needsInternet(): void
 	{
 		if (getenv(self::INCLUDE_SKIPPED_ENV_VAR_NAME) === self::INCLUDE_SKIPPED_ENV_VAR_VALUE) {
 			return;
 		}
-		Environment::skip($message);
-	}
-
-
-	public static function includeSkippedEnvVarUsage(): string
-	{
-		return self::INCLUDE_SKIPPED_ENV_VAR_NAME . '=' . self::INCLUDE_SKIPPED_ENV_VAR_VALUE;
+		Environment::skip(sprintf(
+			'The test uses the Internet, to not skip the test case run it with `%s=%s`',
+			TestCaseRunner::INCLUDE_SKIPPED_ENV_VAR_NAME,
+			TestCaseRunner::INCLUDE_SKIPPED_ENV_VAR_VALUE,
+		));
 	}
 
 }
