@@ -11,6 +11,7 @@ use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
@@ -107,8 +108,32 @@ readonly class TalkFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess, $videoThumbnailFormFields): void {
 			$values = $form->getFormValues();
-			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
-			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
+			assert($values->videoThumbnail instanceof FileUpload);
+			assert($values->videoThumbnailAlternative instanceof FileUpload);
+			assert(is_int($values->locale));
+			assert(is_int($values->translationGroup) || $values->translationGroup === null);
+			assert(is_string($values->action));
+			assert(is_string($values->title));
+			assert(is_string($values->description));
+			assert(is_string($values->date));
+			assert(is_string($values->duration));
+			assert(is_string($values->href));
+			assert(is_int($values->slidesTalk) || $values->slidesTalk === null);
+			assert(is_int($values->filenamesTalk) || $values->filenamesTalk === null);
+			assert(is_string($values->slidesHref));
+			assert(is_string($values->slidesEmbed));
+			assert(is_string($values->slidesNote));
+			assert(is_string($values->videoHref));
+			assert(is_string($values->videoEmbed));
+			assert(is_string($values->event));
+			assert(is_string($values->eventHref));
+			assert(is_string($values->ogImage));
+			assert(is_string($values->transcript));
+			assert(is_string($values->favorite));
+			assert(is_int($values->supersededBy) || $values->supersededBy === null);
+			assert(is_bool($values->publishSlides));
+			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
+			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
 			if ($talk) {
 				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
 				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
@@ -141,7 +166,7 @@ readonly class TalkFormFactory
 					$values->supersededBy,
 					$values->publishSlides,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($talk->getId(), $values);
+				$this->videoThumbnails->saveVideoThumbnailFiles($talk->getId(), $values->videoThumbnail, $values->videoThumbnailAlternative);
 				if ($removeVideoThumbnail && $thumbnailFilename !== null) {
 					$this->videoThumbnails->deleteFile($talk->getId(), $thumbnailFilename);
 				}
@@ -176,7 +201,7 @@ readonly class TalkFormFactory
 					$values->supersededBy,
 					$values->publishSlides,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($talkId, $values);
+				$this->videoThumbnails->saveVideoThumbnailFiles($talkId, $values->videoThumbnail, $values->videoThumbnailAlternative);
 				$message = Html::el()->setText('Přednáška přidána ');
 			}
 			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'));
