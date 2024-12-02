@@ -11,32 +11,6 @@
       <code><![CDATA[$values->password]]></code>
     </MixedArgument>
   </file>
-  <file src="src/Form/InterviewFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->audioEmbed]]></code>
-      <code><![CDATA[$values->audioEmbed]]></code>
-      <code><![CDATA[$values->audioHref]]></code>
-      <code><![CDATA[$values->audioHref]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->sourceHref]]></code>
-      <code><![CDATA[$values->sourceHref]]></code>
-      <code><![CDATA[$values->sourceName]]></code>
-      <code><![CDATA[$values->sourceName]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/Form/PostFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->lead === '' ? null : $values->lead]]></code>
@@ -59,52 +33,6 @@
       <code><![CDATA[$values->company->id]]></code>
       <code><![CDATA[$values->company->new->name]]></code>
       <code><![CDATA[$values->site->new->url]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/TalkFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->event]]></code>
-      <code><![CDATA[$values->event]]></code>
-      <code><![CDATA[$values->eventHref]]></code>
-      <code><![CDATA[$values->eventHref]]></code>
-      <code><![CDATA[$values->favorite]]></code>
-      <code><![CDATA[$values->favorite]]></code>
-      <code><![CDATA[$values->filenamesTalk]]></code>
-      <code><![CDATA[$values->filenamesTalk]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->locale]]></code>
-      <code><![CDATA[$values->locale]]></code>
-      <code><![CDATA[$values->ogImage]]></code>
-      <code><![CDATA[$values->ogImage]]></code>
-      <code><![CDATA[$values->publishSlides]]></code>
-      <code><![CDATA[$values->publishSlides]]></code>
-      <code><![CDATA[$values->slidesEmbed]]></code>
-      <code><![CDATA[$values->slidesEmbed]]></code>
-      <code><![CDATA[$values->slidesHref]]></code>
-      <code><![CDATA[$values->slidesHref]]></code>
-      <code><![CDATA[$values->slidesNote]]></code>
-      <code><![CDATA[$values->slidesNote]]></code>
-      <code><![CDATA[$values->slidesTalk]]></code>
-      <code><![CDATA[$values->slidesTalk]]></code>
-      <code><![CDATA[$values->supersededBy]]></code>
-      <code><![CDATA[$values->supersededBy]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->transcript]]></code>
-      <code><![CDATA[$values->transcript]]></code>
-      <code><![CDATA[$values->translationGroup]]></code>
-      <code><![CDATA[$values->translationGroup]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
     </MixedArgument>
   </file>
   <file src="src/Form/TrainingApplicationAdminFormFactory.php">
@@ -208,12 +136,6 @@
   <file src="src/Formatter/TexyFormatter.php">
     <MixedArgument>
       <code><![CDATA[$matches[2]]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Media/VideoThumbnails.php">
-    <MixedArgument>
-      <code><![CDATA[$values->videoThumbnail]]></code>
-      <code><![CDATA[$values->videoThumbnailAlternative]]></code>
     </MixedArgument>
   </file>
   <file src="src/Pulse/Passwords/PasswordsSorting.php">

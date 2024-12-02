@@ -65,7 +65,7 @@ readonly class TalkSlidesFormFactory
 				assert($values->slides instanceof ArrayHash);
 				assert($values->new instanceof ArrayHash);
 				assert(is_bool($values->deleteReplaced));
-				$this->talkSlides->saveSlides($talkId, $slides, (array)$values->slides, array_values((array)$values->new), $values->deleteReplaced);
+				$this->talkSlides->saveSlides($talkId, $slides, $values->slides, $values->new, $values->deleteReplaced);
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {

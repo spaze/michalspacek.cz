@@ -13,7 +13,6 @@ use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Callback;
 use Nette\Utils\ImageException;
-use stdClass;
 
 readonly class VideoThumbnails
 {
@@ -114,18 +113,18 @@ readonly class VideoThumbnails
 	/**
 	 * @throws ContentTypeException
 	 */
-	public function getUploadedMainFileBasename(stdClass $values): ?string
+	public function getUploadedMainFileBasename(FileUpload $thumbnail): ?string
 	{
-		return $this->getUploadedFileBasename($values->videoThumbnail, $this->supportedImageFileFormats->getMainExtensionByContentType(...));
+		return $this->getUploadedFileBasename($thumbnail, $this->supportedImageFileFormats->getMainExtensionByContentType(...));
 	}
 
 
 	/**
 	 * @throws ContentTypeException
 	 */
-	public function getUploadedAlternativeFileBasename(stdClass $values): ?string
+	public function getUploadedAlternativeFileBasename(FileUpload $thumbnail): ?string
 	{
-		return $this->getUploadedFileBasename($values->videoThumbnailAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...));
+		return $this->getUploadedFileBasename($thumbnail, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...));
 	}
 
 
@@ -149,15 +148,15 @@ readonly class VideoThumbnails
 	/**
 	 * @throws ContentTypeException
 	 */
-	public function saveVideoThumbnailFiles(int $id, stdClass $values): void
+	public function saveVideoThumbnailFiles(int $id, FileUpload $videoThumbnail, FileUpload $videoThumbnailAlternative): void
 	{
-		$basename = $this->getUploadedMainFileBasename($values);
+		$basename = $this->getUploadedMainFileBasename($videoThumbnail);
 		if ($basename !== null) {
-			$values->videoThumbnail->move($this->mediaResources->getImageFilename($id, $basename));
+			$videoThumbnail->move($this->mediaResources->getImageFilename($id, $basename));
 		}
-		$basename = $this->getUploadedAlternativeFileBasename($values);
+		$basename = $this->getUploadedAlternativeFileBasename($videoThumbnailAlternative);
 		if ($basename !== null) {
-			$values->videoThumbnailAlternative->move($this->mediaResources->getImageFilename($id, $basename));
+			$videoThumbnailAlternative->move($this->mediaResources->getImageFilename($id, $basename));
 		}
 	}
 

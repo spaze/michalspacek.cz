@@ -9,6 +9,7 @@ use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Http\FileUpload;
 
 readonly class InterviewFormFactory
 {
@@ -71,8 +72,21 @@ readonly class InterviewFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess, $videoThumbnailFormFields): void {
 			$values = $form->getFormValues();
-			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
-			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
+			assert($values->videoThumbnail instanceof FileUpload);
+			assert($values->videoThumbnailAlternative instanceof FileUpload);
+			assert(is_string($values->action));
+			assert(is_string($values->title));
+			assert(is_string($values->description));
+			assert(is_string($values->date));
+			assert(is_string($values->href));
+			assert(is_string($values->audioHref));
+			assert(is_string($values->audioEmbed));
+			assert(is_string($values->videoHref));
+			assert(is_string($values->videoEmbed));
+			assert(is_string($values->sourceName));
+			assert(is_string($values->sourceHref));
+			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
+			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
 			if ($interview) {
 				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
 				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
@@ -94,7 +108,7 @@ readonly class InterviewFormFactory
 					$values->sourceName,
 					$values->sourceHref,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values->videoThumbnail, $values->videoThumbnailAlternative);
 				if ($removeVideoThumbnail && $thumbnailFilename !== null) {
 					$this->videoThumbnails->deleteFile($interview->getId(), $thumbnailFilename);
 				}
@@ -117,7 +131,7 @@ readonly class InterviewFormFactory
 					$values->sourceName,
 					$values->sourceHref,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($interviewId, $values);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interviewId, $values->videoThumbnail, $values->videoThumbnailAlternative);
 			}
 			$onSuccess();
 		};

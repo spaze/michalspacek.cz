@@ -26,6 +26,8 @@ readonly class SignInHoneypotFormFactory
 		$this->controlsFactory->addSignIn($form);
 		$form->onSuccess[] = function (UiForm $form): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->username));
+			assert(is_string($values->password));
 			Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->httpRequest->getRemoteAddress()}", 'honeypot');
 			$creds = $values->username . ':' . $values->password;
 			if (Regex::isMatch('~\slimit\s~i', $creds)) {
