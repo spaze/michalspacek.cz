@@ -32,9 +32,11 @@ readonly class SignInFormFactory
 		$this->controlsFactory->addSignIn($form);
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->username));
+			assert(is_string($values->password));
 			$this->user->setExpiration('30 minutes', true);
 			try {
-				$this->user->login((string)$values->username, $values->password);
+				$this->user->login($values->username, $values->password);
 				Debugger::log("Successful sign-in attempt ({$values->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
 				if ($values->remember) {
 					$this->authenticator->storePermanentLogin($this->user);

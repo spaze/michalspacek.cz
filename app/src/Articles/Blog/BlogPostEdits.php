@@ -3,17 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Articles\Blog;
 
+use DateTime;
 use MichalSpacekCz\Articles\ArticleEdit;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use Nette\Database\Explorer;
 
 readonly class BlogPostEdits
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private DateTimeZoneFactory $dateTimeZoneFactory,
 		private TexyFormatter $texyFormatter,
 	) {
@@ -34,10 +35,12 @@ readonly class BlogPostEdits
 			WHERE key_blog_post = ?
 			ORDER BY edited_at DESC';
 		$edits = [];
-		foreach ($this->database->fetchAll($sql, $postId) as $row) {
-			$editedAt = $row->editedAt;
-			$editedAt->setTimezone($this->dateTimeZoneFactory->get($row->editedAtTimezone));
-			$edits[] = new ArticleEdit($editedAt, $this->texyFormatter->format($row->summaryTexy), $row->summaryTexy);
+		foreach ($this->typedDatabase->fetchAll($sql, $postId) as $row) {
+			assert($row->editedAt instanceof DateTime);
+			assert(is_string($row->editedAtTimezone));
+			assert(is_string($row->summaryTexy));
+			$row->editedAt->setTimezone($this->dateTimeZoneFactory->get($row->editedAtTimezone));
+			$edits[] = new ArticleEdit($row->editedAt, $this->texyFormatter->format($row->summaryTexy), $row->summaryTexy);
 		}
 		return $edits;
 	}

@@ -5,10 +5,16 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
+use DateTimeImmutable;
+use MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -21,7 +27,17 @@ class PasswordsTest extends TestCase
 	public function __construct(
 		private readonly Passwords $passwords,
 		private readonly Database $database,
+		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly PasswordsStorageAlgorithmFormFactory $formFactory,
+		private readonly DateTimeMachineFactory $dateTimeFactory,
 	) {
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
@@ -344,6 +360,228 @@ class PasswordsTest extends TestCase
 			Assert::same(6, $site->getAlgorithms()[$sha256Key]->getDisclosures()[0]->getId());
 			Assert::same([$sha256Key], array_keys($site->getHistoricalAlgorithms()));
 		}
+	}
+
+
+	public function testAddStorage(): void
+	{
+		// Company
+		$this->database->addFetchAllResult([
+			[
+				'id' => 1,
+				'name' => 'Slevomat.cz, s.r.o.',
+				'tradeName' => null,
+				'alias' => 'slevomat.cz',
+				'sortName' => 'Slevomat.cz, s.r.o.',
+			],
+		]);
+		// Site
+		$this->database->addFetchAllResult([
+			[
+				'id' => 2,
+				'url' => 'https://site.example',
+				'alias' => 'site.example',
+			],
+		]);
+		// Algorithm
+		$this->database->addFetchAllResult([
+			[
+				'id' => 3,
+				'algo' => 'bcrypt',
+				'alias' => 'bcrypt',
+				'salted' => 1,
+				'stretched' => 1,
+			],
+		]);
+		// Disclosure types
+		$this->database->addFetchAllResult([
+			[
+				'id' => 4,
+				'type' => 'Twitter',
+				'alias' => 'twitter',
+			],
+		]);
+		// Disclosure id
+		$this->database->addFetchFieldResult(5);
+		// Storage id
+		$this->database->addFetchFieldResult(6);
+
+		$form = $this->getForm();
+		$form->setDefaults([
+			'company' => [
+				'id' => '1',
+			],
+			'site' => [
+				'id' => '2',
+			],
+			'algo' => [
+				'id' => '3',
+			],
+			'disclosure' => [
+				'new' => [
+					[
+						'url' => 'https://disclosure.example/',
+						'archive' => 'https://archive.disclosure.example/',
+						'disclosureType' => '4',
+						'note' => 'note',
+						'published' => '2020-11-22',
+					],
+				],
+			],
+		]);
+
+		$this->passwords->addStorage($form->getFormValues());
+		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO companies'));
+		Assert::same(
+			[['key_password_disclosures' => 5, 'key_password_storages' => 6]],
+			$this->database->getParamsArrayForQuery('INSERT INTO password_disclosures_password_storages'),
+			'Passwords::pairDisclosureStorage() result not as expected',
+		);
+	}
+
+
+	public function testAddStorageNewItems(): void
+	{
+		// Company
+		$this->database->addFetchAllResult([]);
+		// Site
+		$this->database->addFetchAllResult([]);
+		// Algorithm
+		$this->database->addFetchAllResult([]);
+		// Disclosure types
+		$this->database->addFetchAllResult([
+			[
+				'id' => 4,
+				'type' => 'Twitter',
+				'alias' => 'twitter',
+			],
+		]);
+		// companies id
+		$this->database->addInsertId('5');
+		// sites id
+		$this->database->addInsertId('6');
+		// password_algos id
+		$this->database->addInsertId('7');
+		// password_disclosures id
+		$this->database->addInsertId('8');
+		// password_storages id
+		$this->database->addInsertId('9');
+
+		$form = $this->getForm();
+		$form->setDefaults([
+			'company' => [
+				'new' => [
+					'name' => 'Slevomat.cz, s.r.o.',
+					'dba' => '',
+					'alias' => 'slevomat.cz',
+				],
+				'id' => null,
+			],
+			'site' => [
+				'new' => [
+					'url' => 'https://sl.example',
+					'alias' => 'sl.example',
+					'sharedWith' => '',
+				],
+				'id' => null,
+			],
+			'algo' => [
+				'new' => [
+					'algoName' => 'JavasCrypt',
+					'alias' => 'javascrypt',
+					'salted' => true,
+					'stretched' => true,
+				],
+				'id' => null,
+				'from' => '2001-02-03 04:05:06',
+				'fromConfirmed' => true,
+				'attributes' => '{"foo":"bar"}',
+				'note' => 'algo note',
+			],
+			'disclosure' => [
+				'new' => [
+					[
+						'url' => 'https://di.example/',
+						'archive' => 'https://ar.di.example/',
+						'disclosureType' => '4',
+						'note' => 'note',
+						'published' => '2020-11-22',
+					],
+				],
+			],
+		]);
+		$this->dateTimeFactory->setDateTime(new DateTimeImmutable('2020-01-01 12:34:56'));
+
+		$this->passwords->addStorage($form->getFormValues());
+		Assert::same(
+			[[
+				'name' => 'Slevomat.cz, s.r.o.',
+				'trade_name' => null,
+				'alias' => 'slevomat.cz',
+				'added' => '2020-01-01 12:34:56',
+			]],
+			$this->database->getParamsArrayForQuery('INSERT INTO companies'),
+		);
+		Assert::same(
+			[[
+				'url' => 'https://sl.example',
+				'alias' => 'sl.example',
+				'shared_with' => null,
+				'key_companies' => 5,
+				'added' => '2020-01-01 12:34:56',
+			]],
+			$this->database->getParamsArrayForQuery('INSERT INTO sites'),
+		);
+		Assert::same(
+			[[
+				'algo' => 'JavasCrypt',
+				'alias' => 'javascrypt',
+				'salted' => true,
+				'stretched' => true,
+			]],
+			$this->database->getParamsArrayForQuery('INSERT INTO password_algos'),
+		);
+		Assert::same(
+			[[
+				'key_password_disclosure_types' => 4,
+				'url' => 'https://di.example/',
+				'archive' => 'https://ar.di.example/',
+				'note' => 'note',
+				'published' => '2020-01-01 12:34:56',
+				'added' => '2020-01-01 12:34:56',
+			]],
+			$this->database->getParamsArrayForQuery('INSERT INTO password_disclosures'),
+		);
+		Assert::same(
+			[[
+				'key_companies' => null,
+				'key_password_algos' => 7,
+				'key_sites' => 6,
+				'from' => '2001-02-03 04:05:06',
+				'from_confirmed' => true,
+				'attributes' => '{"foo":"bar"}',
+				'note' => 'algo note',
+			]],
+			$this->database->getParamsArrayForQuery('INSERT INTO password_storages'),
+		);
+		Assert::same(
+			[['key_password_disclosures' => 8, 'key_password_storages' => 9]],
+			$this->database->getParamsArrayForQuery('INSERT INTO password_disclosures_password_storages'),
+			'Passwords::pairDisclosureStorage() result not as expected',
+		);
+	}
+
+
+	private function getForm(): UiForm
+	{
+		$form = $this->formFactory->create(
+			function (): void {
+				// This won't be called in this test anyway
+			},
+			1,
+		);
+		$this->applicationPresenter->anchorForm($form);
+		return $form;
 	}
 
 }

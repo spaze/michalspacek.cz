@@ -40,7 +40,7 @@ class LocaleLinkGenerator
 	 * Generates localized URLs.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
-	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
+	 * @param array<string, list<string>|array<string, string|null>> $params of locale => [position|name => value]
 	 * @return array<string, LocaleLink> of locale => URL
 	 * @throws InvalidLinkException
 	 */
@@ -82,8 +82,8 @@ class LocaleLinkGenerator
 	/**
 	 * Set default params.
 	 *
-	 * @param array<string, array<string, string|null>> $params
-	 * @param array<string, string|null> $defaultParams
+	 * @param array<string, list<string>|array<string, string|null>> $params
+	 * @param list<string>|array<string, string|null> $defaultParams
 	 */
 	public function setDefaultParams(array &$params, array $defaultParams): void
 	{
@@ -95,7 +95,7 @@ class LocaleLinkGenerator
 	 * Generates all URLs, including a link to the current language version.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
-	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
+	 * @param array<string, list<string>|array<string, string|null>> $params of locale => [position|name => value]
 	 * @return array<string, string> of locale => URL
 	 */
 	public function allLinks(string $destination, array $params = []): array
@@ -114,9 +114,9 @@ class LocaleLinkGenerator
 
 
 	/**
-	 * @param array<string, array<string, string|null>> $params
+	 * @param array<string, list<string>|array<string, string|null>> $params
 	 * @param string $locale
-	 * @return array<string, string|null>
+	 * @return list<string>|array<string, string|null>
 	 */
 	private function getParams(array $params, string $locale): array
 	{

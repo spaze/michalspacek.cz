@@ -3,16 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Discontinued;
 
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Database\TypedDatabase;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
-use Nette\Database\Explorer;
 use Nette\Http\IResponse;
 
 readonly class DiscontinuedTrainings
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private IResponse $httpResponse,
 	) {
 	}
@@ -25,7 +24,7 @@ readonly class DiscontinuedTrainings
 	 */
 	public function getAllDiscontinued(): array
 	{
-		$query = $this->database->fetchAll(
+		$query = $this->typedDatabase->fetchAll(
 			'SELECT
 				td.id_trainings_discontinued AS id,
 				td.description,
@@ -39,16 +38,16 @@ readonly class DiscontinuedTrainings
 		);
 		$trainings = [];
 		foreach ($query as $row) {
-			$id = $row->id;
-			if (!is_int($id)) {
-				throw new ShouldNotHappenException(sprintf("Discontinued training id is a %s not an integer", get_debug_type($id)));
+			assert(is_int($row->id));
+			assert(is_string($row->description));
+			assert(is_string($row->href));
+			assert(is_string($row->training));
+			$trainings[$row->id]['description'] = $row->description;
+			$trainings[$row->id]['href'] = $row->href;
+			if (!isset($trainings[$row->id]['trainings'])) {
+				$trainings[$row->id]['trainings'] = [];
 			}
-			$trainings[$id]['description'] = (string)$row->description;
-			$trainings[$id]['href'] = (string)$row->href;
-			if (!isset($trainings[$id]['trainings'])) {
-				$trainings[$id]['trainings'] = [];
-			}
-			$trainings[$id]['trainings'][] = (string)$row->training;
+			$trainings[$row->id]['trainings'][] = $row->training;
 		}
 		$result = [];
 		foreach ($trainings as $training) {
@@ -65,7 +64,7 @@ readonly class DiscontinuedTrainings
 			return;
 		}
 
-		$query = $this->database->fetchAll(
+		$query = $this->typedDatabase->fetchAll(
 			'SELECT
 			td.description,
 			t.name AS training,
@@ -80,9 +79,12 @@ readonly class DiscontinuedTrainings
 		);
 		$trainings = [];
 		foreach ($query as $row) {
+			assert(is_string($row->training));
 			$trainings[] = $row->training;
 		}
 		if (isset($row)) {
+			assert(is_string($row->description));
+			assert(is_string($row->href));
 			$template->discontinued = [new DiscontinuedTraining($row->description, $trainings, $row->href)];
 			$this->httpResponse->setCode(IResponse::S410_Gone);
 			return;

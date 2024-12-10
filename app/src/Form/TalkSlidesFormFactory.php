@@ -10,6 +10,8 @@ use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
 use Nette\Forms\Container;
+use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 readonly class TalkSlidesFormFactory
@@ -60,7 +62,10 @@ readonly class TalkSlidesFormFactory
 		$form->onSuccess[] = function (UiForm $form) use ($slides, $onSuccess, $talkId): void {
 			try {
 				$values = $form->getFormValues();
-				$this->talkSlides->saveSlides($talkId, $slides, (array)$values->slides, array_values((array)$values->new), $values->deleteReplaced);
+				assert($values->slides instanceof ArrayHash);
+				assert($values->new instanceof ArrayHash);
+				assert(is_bool($values->deleteReplaced));
+				$this->talkSlides->saveSlides($talkId, $slides, $values->slides, $values->new, $values->deleteReplaced);
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {
@@ -93,9 +98,8 @@ readonly class TalkSlidesFormFactory
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')
-			->addRule($form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
+			->addRule(Form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addInteger('number', 'Slajd:')
-			->setHtmlType('number')
 			->setDefaultValue(1)
 			->setHtmlAttribute('class', 'right slide-nr')
 			->setRequired('Zadejte prosím číslo slajdu');
@@ -103,17 +107,17 @@ readonly class TalkSlidesFormFactory
 			->setRequired('Zadejte prosím titulek');
 		$upload = $container->addUpload('replace', 'Nahradit:')
 			->setDisabled($disableSlideUploads)
-			->addRule($form::MimeType, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
+			->addRule(Form::MimeType, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
 			->setHtmlAttribute('title', "Nahradit soubor ({$supportedImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getMainContentTypes()));
 		$container->addText('filename', 'Soubor:')
 			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('class', 'slide-filename')
-			->addConditionOn($upload, $form::Blank)
+			->addConditionOn($upload, Form::Blank)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
 			->setDisabled($disableSlideUploads)
-			->addRule($form::MimeType, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
+			->addRule(Form::MimeType, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Nahradit alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
 		$container->addText('filenameAlternative', 'Soubor:')

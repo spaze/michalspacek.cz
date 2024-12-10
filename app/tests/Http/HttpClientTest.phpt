@@ -71,6 +71,7 @@ class HttpClientTest extends TestCase
 			],
 		];
 		Assert::same($expected, $params['options']);
+		assert(is_callable($params['notification']));
 		Assert::noError(function () use ($params): void {
 			call_user_func($params['notification'], 303, STREAM_NOTIFY_SEVERITY_INFO, 'ok', 808);
 		});

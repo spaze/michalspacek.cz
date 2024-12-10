@@ -52,14 +52,12 @@ class TalkSlidesTest extends TestCase
 		$slides = new TalkSlideCollection(303);
 		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null));
 		$slides->add(new TalkSlide(2, 'slide2', 2, 'slide2.jpg', 'slide-alt.jpg', null, 'Title 2', Html::fromText('Notes 2'), 'Notes 2', null, null, null));
-		$updateSlides = [
-			1 => $this->buildSlideArrayHash(1, 'foo1', 'Title 1', 'Speaker notes 1', 'slide1.jpg', null, 'slide-alt1.jpg', null),
-			2 => $this->buildSlideArrayHash(2, 'foo2', 'Title 2', 'Speaker notes 2', 'slide2.jpg', null, 'slide-alt2.jpg', null),
-		];
-		$newSlides = [
-			$this->buildSlideArrayHash(3, 'new1', 'New 1', 'New notes 1', null, new FileUpload(null), null, new FileUpload(null)),
-			$this->buildSlideArrayHash(4, 'new2', 'New 2', 'New notes 2', null, new FileUpload(null), null, new FileUpload(null)),
-		];
+		$updateSlides = new ArrayHash();
+		$updateSlides[1] = $this->buildSlideArrayHash(1, 'foo1', 'Title 1', 'Speaker notes 1', 'slide1.jpg', null, 'slide-alt1.jpg', null);
+		$updateSlides[2] = $this->buildSlideArrayHash(2, 'foo2', 'Title 2', 'Speaker notes 2', 'slide2.jpg', null, 'slide-alt2.jpg', null);
+		$newSlides = new ArrayHash();
+		$newSlides[0] = $this->buildSlideArrayHash(3, 'new1', 'New 1', 'New notes 1', null, new FileUpload(null), null, new FileUpload(null));
+		$newSlides[1] = $this->buildSlideArrayHash(4, 'new2', 'New 2', 'New notes 2', null, new FileUpload(null), null, new FileUpload(null));
 		$this->talkSlides->saveSlides(303, $slides, $updateSlides, $newSlides, false);
 		Assert::same(['slide1.jpg' => 0, 'slide-alt.jpg' => 1, 'slide2.jpg' => 0], PrivateProperty::getValue($this->talkSlides, 'otherSlides'));
 		$paramsUpdate = $this->database->getParamsArrayForQuery('UPDATE talk_slides SET ? WHERE id_slide = ?');
@@ -126,7 +124,7 @@ class TalkSlidesTest extends TestCase
 				'alias' => 'alias-2',
 				'number' => 4,
 				'filename' => 'filename2.jpg',
-				'filenameAlternative' => null,
+				'filenameAlternative' => '',
 				'title' => 'Title 2',
 				'speakerNotesTexy' => 'speaker **notes** 2',
 			],

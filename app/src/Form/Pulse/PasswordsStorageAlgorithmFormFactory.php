@@ -12,6 +12,7 @@ use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Sites;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 readonly class PasswordsStorageAlgorithmFormFactory
@@ -49,13 +50,13 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		$newCompanyContainer->addText('dba', 'Trade name:')
 			->setHtmlAttribute('title', '"doing business as"');
 		$inputAlias = $newCompanyContainer->addText('alias', 'Alias:');
-		$inputAlias->addConditionOn($inputName, $form::Filled)
+		$inputAlias->addConditionOn($inputName, Form::Filled)
 			->setRequired('Enter new company alias');
 
-		$selectCompany->addConditionOn($inputName, $form::Blank)
+		$selectCompany->addConditionOn($inputName, Form::Blank)
 			->setRequired('Choose company or add a new one');
-		$inputName->addConditionOn($selectCompany, $form::Filled)
-			->addRule($form::Blank, "Company already selected, can't add a new one");
+		$inputName->addConditionOn($selectCompany, Form::Filled)
+			->addRule(Form::Blank, "Company already selected, can't add a new one");
 
 		// Site
 		$siteContainer = $form->addContainer('site');
@@ -71,22 +72,22 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		$inputAlias = $newSiteContainer->addText('alias', 'Alias:');
 		$newSiteContainer->addText('sharedWith', 'Storage shared with:');
 
-		$selectSite->addConditionOn($inputUrl, $form::Blank)
+		$selectSite->addConditionOn($inputUrl, Form::Blank)
 			->setRequired('Choose site or add a new one');
-		$inputUrl->addCondition($form::Filled) // intentionally addCondition(), there's a matching endCondition() below
-			->addRule($form::URL, 'Incorrect site URL')
+		$inputUrl->addCondition(Form::Filled) // intentionally addCondition(), there's a matching endCondition() below
+			->addRule(Form::URL, 'Incorrect site URL')
 			->endCondition()
-			->addConditionOn($selectSite, $form::Filled)
-			->addRule($form::Blank, $message = "Site already selected, can't add a new one")
+			->addConditionOn($selectSite, Form::Filled)
+			->addRule(Form::Blank, $message = "Site already selected, can't add a new one")
 			->endCondition()
 			->addCondition(function () use ($inputName, $selectSite): bool {
 				return (!empty($inputName->getValue()) && $selectSite->getValue() !== Sites::ALL);
 			})
 			->setRequired('New site required when adding a new company');
-		$inputAlias->addConditionOn($selectSite, $form::Filled)
-			->addRule($form::Blank, $message)
+		$inputAlias->addConditionOn($selectSite, Form::Filled)
+			->addRule(Form::Blank, $message)
 			->endCondition()
-			->addConditionOn($inputUrl, $form::Filled)
+			->addConditionOn($inputUrl, Form::Filled)
 			->setRequired('Enter new site alias');
 
 		// Algo
@@ -112,14 +113,14 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		$newAlgoContainer->addCheckbox('salted', 'Salted:');
 		$newAlgoContainer->addCheckbox('stretched', 'Stretched:');
 
-		$selectAlgo->addConditionOn($inputAlgo, $form::Blank)
+		$selectAlgo->addConditionOn($inputAlgo, Form::Blank)
 			->setRequired('Choose algorithm or add a new one');
-		$inputAlgo->addConditionOn($selectAlgo, $form::Filled)
-			->addRule($form::Blank, $message = "Algorithm already selected, can't add a new one");
-		$inputAlias->addConditionOn($selectAlgo, $form::Filled)
-			->addRule($form::Blank, $message)
+		$inputAlgo->addConditionOn($selectAlgo, Form::Filled)
+			->addRule(Form::Blank, $message = "Algorithm already selected, can't add a new one");
+		$inputAlias->addConditionOn($selectAlgo, Form::Filled)
+			->addRule(Form::Blank, $message)
 			->endCondition()
-			->addConditionOn($inputAlgo, $form::Filled)
+			->addConditionOn($inputAlgo, Form::Filled)
 			->setRequired('Enter new algorithm alias');
 
 		// Disclosures
@@ -147,17 +148,17 @@ readonly class PasswordsStorageAlgorithmFormFactory
 			if ($i == 0) {
 				$selectDisclosure->setRequired('Enter at least one disclosure type');
 			} else {
-				$selectDisclosure->addConditionOn($inputUrl, $form::Filled)
+				$selectDisclosure->addConditionOn($inputUrl, Form::Filled)
 					->setRequired('Enter disclosure type');
 			}
-			$inputUrl->addCondition($form::Filled) // intentionally addCondition(), there's a matching endCondition() below
-				->addRule($form::URL, 'Incorrect disclosure URL')
+			$inputUrl->addCondition(Form::Filled) // intentionally addCondition(), there's a matching endCondition() below
+				->addRule(Form::URL, 'Incorrect disclosure URL')
 				->endCondition()
-				->addConditionOn($selectDisclosure, $form::Filled)
+				->addConditionOn($selectDisclosure, Form::Filled)
 				->setRequired('Enter disclosure URL');
-			$inputArchive->addConditionOn($inputUrl, $form::Filled)
+			$inputArchive->addConditionOn($inputUrl, Form::Filled)
 				->setRequired('Enter disclosure archive');
-			$inputPublished->addConditionOn($selectDisclosure, $form::Filled)
+			$inputPublished->addConditionOn($selectDisclosure, Form::Filled)
 				->setRequired('Enter disclosure publish date');
 		}
 

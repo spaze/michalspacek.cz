@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test\Application;
 
 use Closure;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\PrivateProperty;
 use Nette\Application\AbortException;
@@ -76,6 +77,14 @@ readonly class ApplicationPresenter
 		$presenter->setParent(null, $name); // Set the name and also rename it
 		$presenter->changeAction($action);
 		return $presenter;
+	}
+
+
+	public function anchorForm(UiForm $form): void
+	{
+		$presenter = $this->createUiPresenter('Www:Homepage', 'foo', 'default');
+		/** @noinspection PhpInternalEntityUsedInspection */
+		$form->setParent($presenter);
 	}
 
 }

@@ -75,7 +75,7 @@ class TalkSlides
 	 */
 	public function getSlides(Talk $talk): TalkSlideCollection
 	{
-		$slides = $this->database->fetchAll(
+		$slides = $this->typedDatabase->fetchAll(
 			'SELECT
 				id_slide AS id,
 				alias,
@@ -92,7 +92,7 @@ class TalkSlides
 
 		$filenames = [];
 		if ($talk->getFilenamesTalkId() !== null) {
-			$result = $this->database->fetchAll(
+			$result = $this->typedDatabase->fetchAll(
 				'SELECT
 					number,
 					filename,
@@ -102,12 +102,22 @@ class TalkSlides
 				$talk->getFilenamesTalkId(),
 			);
 			foreach ($result as $row) {
+				assert(is_int($row->number));
+				assert(is_string($row->filename));
+				assert(is_string($row->filenameAlternative));
 				$filenames[$row->number] = [$row->filename, $row->filenameAlternative];
 			}
 		}
 
 		$result = new TalkSlideCollection($talk->getId());
 		foreach ($slides as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->alias));
+			assert(is_int($row->number));
+			assert(is_string($row->filename));
+			assert(is_string($row->filenameAlternative));
+			assert(is_string($row->title));
+			assert(is_string($row->speakerNotesTexy));
 			if (isset($filenames[$row->number])) {
 				$filename = $filenames[$row->number][0];
 				$filenameAlternative = $filenames[$row->number][1];
@@ -194,24 +204,24 @@ class TalkSlides
 
 
 	/**
-	 * Insert slides.
-	 *
-	 * @param int $talkId
-	 * @param list<ArrayHash<int|string|FileUpload|null>> $slides
 	 * @throws DuplicatedSlideException
 	 * @throws ContentTypeException
 	 * @throws SlideImageUploadFailedException
 	 */
-	private function addSlides(int $talkId, array $slides): void
+	private function addSlides(int $talkId, ArrayHash $slides): void
 	{
 		$lastNumber = 0;
 		try {
 			foreach ($slides as $slide) {
+				assert($slide instanceof ArrayHash);
+				assert($slide->replace instanceof FileUpload);
+				assert($slide->replaceAlternative instanceof FileUpload);
+				assert(is_int($slide->number));
 				$width = self::SLIDE_MAX_WIDTH;
 				$height = self::SLIDE_MAX_HEIGHT;
 				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), false, null, $width, $height);
 				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), false, null, $width, $height);
-				$lastNumber = (int)$slide->number;
+				$lastNumber = $slide->number;
 				$this->database->query(
 					'INSERT INTO talk_slides',
 					[
@@ -232,16 +242,13 @@ class TalkSlides
 
 
 	/**
-	 * Update slides.
-	 *
-	 * @param array<int, ArrayHash<int|string|FileUpload|null>> $slides
 	 * @param bool $removeFiles Remove old files?
 	 * @throws DuplicatedSlideException
 	 * @throws ContentTypeException
 	 * @throws SlideImageUploadFailedException
 	 * @throws TalkSlideDoesNotExistException
 	 */
-	private function updateSlides(int $talkId, TalkSlideCollection $originalSlides, array $slides, bool $removeFiles): void
+	private function updateSlides(int $talkId, TalkSlideCollection $originalSlides, ArrayHash $slides, bool $removeFiles): void
 	{
 		foreach ($originalSlides as $slide) {
 			foreach ($slide->getAllFilenames() as $filename) {
@@ -249,6 +256,15 @@ class TalkSlides
 			}
 		}
 		foreach ($slides as $id => $slide) {
+			assert($slide instanceof ArrayHash);
+			assert($slide->replace instanceof FileUpload || $slide->replace === null);
+			assert($slide->replaceAlternative instanceof FileUpload || $slide->replaceAlternative === null);
+			assert(is_string($slide->alias));
+			assert(is_int($slide->number));
+			assert(is_string($slide->filename));
+			assert(is_string($slide->filenameAlternative));
+			assert(is_string($slide->title));
+			assert(is_string($slide->speakerNotes));
 			$width = self::SLIDE_MAX_WIDTH;
 			$height = self::SLIDE_MAX_HEIGHT;
 
@@ -297,14 +313,12 @@ class TalkSlides
 
 
 	/**
-	 * @param array<int, ArrayHash<int|string|FileUpload|null>> $updateSlides
-	 * @param list<ArrayHash<int|string|FileUpload|null>> $newSlides
 	 * @throws ContentTypeException
 	 * @throws DuplicatedSlideException
 	 * @throws SlideImageUploadFailedException
 	 * @throws TalkSlideDoesNotExistException
 	 */
-	public function saveSlides(int $talkId, TalkSlideCollection $originalSlides, array $updateSlides, array $newSlides, bool $deleteReplaced): void
+	public function saveSlides(int $talkId, TalkSlideCollection $originalSlides, ArrayHash $updateSlides, ArrayHash $newSlides, bool $deleteReplaced): void
 	{
 		$this->otherSlides = [];
 		$this->database->beginTransaction();

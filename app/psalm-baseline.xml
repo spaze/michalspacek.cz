@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="src/Articles/Articles.php">
-    <MixedArgument>
-      <code><![CDATA[$row->slugTags]]></code>
-      <code><![CDATA[$row->tags]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Articles/Blog/BlogPostEdits.php">
-    <MixedArgument>
-      <code><![CDATA[$editedAt]]></code>
-      <code><![CDATA[$row->editedAtTimezone]]></code>
-      <code><![CDATA[$row->summaryTexy]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Articles/Blog/BlogPostLocaleUrls.php">
-    <MixedArgument>
-      <code><![CDATA[$row->locale]]></code>
-      <code><![CDATA[$row->previewKey]]></code>
-      <code><![CDATA[$row->published]]></code>
-      <code><![CDATA[$row->slug]]></code>
-      <code><![CDATA[$row->slugTags]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/CompanyInfo/CompanyRegisterRegisterUz.php">
-    <MixedArgument>
-      <code><![CDATA[$unit->ico]]></code>
-      <code><![CDATA[$unit->mesto]]></code>
-      <code><![CDATA[$unit->nazovUJ]]></code>
-      <code><![CDATA[$unit->psc]]></code>
-      <code><![CDATA[$unit->ulica]]></code>
-      <code><![CDATA[$units->id]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/EasterEgg/WinterIsComing.php">
     <MixedArgument>
       <code><![CDATA[$input->getValue()]]></code>
@@ -41,32 +9,6 @@
     <MixedArgument>
       <code><![CDATA[$values->newPassword]]></code>
       <code><![CDATA[$values->password]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/InterviewFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->audioEmbed]]></code>
-      <code><![CDATA[$values->audioEmbed]]></code>
-      <code><![CDATA[$values->audioHref]]></code>
-      <code><![CDATA[$values->audioHref]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->sourceHref]]></code>
-      <code><![CDATA[$values->sourceHref]]></code>
-      <code><![CDATA[$values->sourceName]]></code>
-      <code><![CDATA[$values->sourceName]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
     </MixedArgument>
   </file>
   <file src="src/Form/PostFormFactory.php">
@@ -91,62 +33,6 @@
       <code><![CDATA[$values->company->id]]></code>
       <code><![CDATA[$values->company->new->name]]></code>
       <code><![CDATA[$values->site->new->url]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/SignInFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->password]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/TalkFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->action]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->date]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->description]]></code>
-      <code><![CDATA[$values->event]]></code>
-      <code><![CDATA[$values->event]]></code>
-      <code><![CDATA[$values->eventHref]]></code>
-      <code><![CDATA[$values->eventHref]]></code>
-      <code><![CDATA[$values->favorite]]></code>
-      <code><![CDATA[$values->favorite]]></code>
-      <code><![CDATA[$values->filenamesTalk]]></code>
-      <code><![CDATA[$values->filenamesTalk]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->href]]></code>
-      <code><![CDATA[$values->locale]]></code>
-      <code><![CDATA[$values->locale]]></code>
-      <code><![CDATA[$values->ogImage]]></code>
-      <code><![CDATA[$values->ogImage]]></code>
-      <code><![CDATA[$values->publishSlides]]></code>
-      <code><![CDATA[$values->publishSlides]]></code>
-      <code><![CDATA[$values->slidesEmbed]]></code>
-      <code><![CDATA[$values->slidesEmbed]]></code>
-      <code><![CDATA[$values->slidesHref]]></code>
-      <code><![CDATA[$values->slidesHref]]></code>
-      <code><![CDATA[$values->slidesNote]]></code>
-      <code><![CDATA[$values->slidesNote]]></code>
-      <code><![CDATA[$values->slidesTalk]]></code>
-      <code><![CDATA[$values->slidesTalk]]></code>
-      <code><![CDATA[$values->supersededBy]]></code>
-      <code><![CDATA[$values->supersededBy]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->title]]></code>
-      <code><![CDATA[$values->transcript]]></code>
-      <code><![CDATA[$values->transcript]]></code>
-      <code><![CDATA[$values->translationGroup]]></code>
-      <code><![CDATA[$values->translationGroup]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoEmbed]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
-      <code><![CDATA[$values->videoHref]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/TalkSlidesFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->deleteReplaced]]></code>
     </MixedArgument>
   </file>
   <file src="src/Form/TrainingApplicationAdminFormFactory.php">
@@ -186,12 +72,6 @@
       <code><![CDATA[$values->date]]></code>
       <code><![CDATA[$values->source]]></code>
       <code><![CDATA[$values->status]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/TrainingApplicationPreliminaryFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->email]]></code>
-      <code><![CDATA[$values->name]]></code>
     </MixedArgument>
   </file>
   <file src="src/Form/TrainingApplicationStatusesFormFactory.php">
@@ -234,11 +114,6 @@
       <code><![CDATA[$values->videoHref]]></code>
     </MixedArgument>
   </file>
-  <file src="src/Form/TrainingFileFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->file]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/Form/TrainingInvoiceFormFactory.php">
     <MixedArgument>
       <code><![CDATA[$values->invoice]]></code>
@@ -258,110 +133,9 @@
       <code><![CDATA[$id]]></code>
     </MixedArgument>
   </file>
-  <file src="src/Form/TrainingReviewFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->company]]></code>
-      <code><![CDATA[$values->company]]></code>
-      <code><![CDATA[$values->hidden]]></code>
-      <code><![CDATA[$values->hidden]]></code>
-      <code><![CDATA[$values->href ?: null]]></code>
-      <code><![CDATA[$values->href ?: null]]></code>
-      <code><![CDATA[$values->jobTitle ?: null]]></code>
-      <code><![CDATA[$values->jobTitle ?: null]]></code>
-      <code><![CDATA[$values->name]]></code>
-      <code><![CDATA[$values->name]]></code>
-      <code><![CDATA[$values->note ?: null]]></code>
-      <code><![CDATA[$values->note ?: null]]></code>
-      <code><![CDATA[$values->ranking ?: null]]></code>
-      <code><![CDATA[$values->ranking ?: null]]></code>
-      <code><![CDATA[$values->review]]></code>
-      <code><![CDATA[$values->review]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Form/UpcKeysSsidFormFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$values->ssid]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/Formatter/TexyFormatter.php">
     <MixedArgument>
       <code><![CDATA[$matches[2]]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Formatter/TexyPhraseHandler.php">
-    <MixedArgument>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$texy::CONTENT_TEXTUAL]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Http/Client/HttpClient.php">
-    <MixedArgument>
-      <code><![CDATA[$options['ssl']['peer_certificate'] ?? null]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Media/VideoThumbnails.php">
-    <MixedArgument>
-      <code><![CDATA[$values->videoThumbnail]]></code>
-      <code><![CDATA[$values->videoThumbnail]]></code>
-      <code><![CDATA[$values->videoThumbnailAlternative]]></code>
-      <code><![CDATA[$values->videoThumbnailAlternative]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Net/DnsResolver.php">
-    <MixedArgument>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Pulse/Companies.php">
-    <MixedArgument>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->name]]></code>
-      <code><![CDATA[$row->sortName]]></code>
-      <code><![CDATA[$row->tradeName]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Pulse/Passwords/Algorithms/PasswordHashingAlgorithms.php">
-    <MixedArgument>
-      <code><![CDATA[$row->algo]]></code>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Pulse/Passwords/Disclosures/PasswordHashingDisclosures.php">
-    <MixedArgument>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->type]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Pulse/Passwords/Passwords.php">
-    <MixedArgument>
-      <code><![CDATA[$disclosure->archive]]></code>
-      <code><![CDATA[$disclosure->disclosureType]]></code>
-      <code><![CDATA[$disclosure->note]]></code>
-      <code><![CDATA[$disclosure->published]]></code>
-      <code><![CDATA[$disclosure->url]]></code>
-      <code><![CDATA[$newAlgo->algoName]]></code>
-      <code><![CDATA[$newAlgo->alias]]></code>
-      <code><![CDATA[$newAlgo->salted]]></code>
-      <code><![CDATA[$newAlgo->stretched]]></code>
-      <code><![CDATA[$newCompany->alias]]></code>
-      <code><![CDATA[$newCompany->dba]]></code>
-      <code><![CDATA[$newCompany->name]]></code>
-      <code><![CDATA[$newSite->alias]]></code>
-      <code><![CDATA[$newSite->sharedWith]]></code>
-      <code><![CDATA[$newSite->url]]></code>
-      <code><![CDATA[$values->algo->attributes]]></code>
-      <code><![CDATA[$values->algo->from]]></code>
-      <code><![CDATA[$values->algo->fromConfirmed]]></code>
-      <code><![CDATA[$values->algo->note]]></code>
     </MixedArgument>
   </file>
   <file src="src/Pulse/Passwords/PasswordsSorting.php">
@@ -369,109 +143,15 @@
       <code><![CDATA[$sorter]]></code>
     </MixedArgument>
   </file>
-  <file src="src/Pulse/Sites.php">
-    <MixedArgument>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->url]]></code>
-    </MixedArgument>
-  </file>
   <file src="src/Talks/Slides/TalkSlides.php">
     <MixedArgument>
-      <code><![CDATA[$filename]]></code>
-      <code><![CDATA[$filename]]></code>
-      <code><![CDATA[$filenameAlternative]]></code>
-      <code><![CDATA[$filenameAlternative]]></code>
       <code><![CDATA[$replace ?? $slide->filename ?? '']]></code>
       <code><![CDATA[$replaceAlternative ?? $slide->filenameAlternative ?? '']]></code>
-      <code><![CDATA[$row->alias]]></code>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->number]]></code>
-      <code><![CDATA[$row->speakerNotesTexy]]></code>
-      <code><![CDATA[$row->title]]></code>
-      <code><![CDATA[$slide->alias]]></code>
-      <code><![CDATA[$slide->number]]></code>
-      <code><![CDATA[$slide->number]]></code>
-      <code><![CDATA[$slide->replace]]></code>
-      <code><![CDATA[$slide->replace]]></code>
-      <code><![CDATA[$slide->replaceAlternative]]></code>
-      <code><![CDATA[$slide->replaceAlternative]]></code>
-      <code><![CDATA[$slide->speakerNotes]]></code>
-      <code><![CDATA[$slide->title]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Talks/Talks.php">
-    <MixedArgument>
-      <code><![CDATA[$row['favorite']]]></code>
     </MixedArgument>
   </file>
   <file src="src/Tls/CertificateGatherer.php">
     <MixedArgument>
       <code><![CDATA[$ipAddress]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Training/ApplicationForm/TrainingApplicationFormSpam.php">
-    <MixedArgument>
-      <code><![CDATA[$values->company ?? self::FIELD_MISSING_VALUE]]></code>
-      <code><![CDATA[$values->companyId ?? self::FIELD_MISSING_VALUE]]></code>
-      <code><![CDATA[$values->companyTaxId ?? self::FIELD_MISSING_VALUE]]></code>
-      <code><![CDATA[$values->name ?? self::FIELD_MISSING_VALUE]]></code>
-      <code><![CDATA[$values->note ?? '']]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Training/ApplicationForm/TrainingApplicationFormSuccess.php">
-    <MixedArgument>
-      <code><![CDATA[$values->city]]></code>
-      <code><![CDATA[$values->city]]></code>
-      <code><![CDATA[$values->city]]></code>
-      <code><![CDATA[$values->company]]></code>
-      <code><![CDATA[$values->company]]></code>
-      <code><![CDATA[$values->company]]></code>
-      <code><![CDATA[$values->companyId]]></code>
-      <code><![CDATA[$values->companyId]]></code>
-      <code><![CDATA[$values->companyId]]></code>
-      <code><![CDATA[$values->companyTaxId]]></code>
-      <code><![CDATA[$values->companyTaxId]]></code>
-      <code><![CDATA[$values->companyTaxId]]></code>
-      <code><![CDATA[$values->country]]></code>
-      <code><![CDATA[$values->country]]></code>
-      <code><![CDATA[$values->country]]></code>
-      <code><![CDATA[$values->email]]></code>
-      <code><![CDATA[$values->email]]></code>
-      <code><![CDATA[$values->email]]></code>
-      <code><![CDATA[$values->name]]></code>
-      <code><![CDATA[$values->name]]></code>
-      <code><![CDATA[$values->name]]></code>
-      <code><![CDATA[$values->note]]></code>
-      <code><![CDATA[$values->note]]></code>
-      <code><![CDATA[$values->note]]></code>
-      <code><![CDATA[$values->street]]></code>
-      <code><![CDATA[$values->street]]></code>
-      <code><![CDATA[$values->street]]></code>
-      <code><![CDATA[$values->trainingId]]></code>
-      <code><![CDATA[$values->zip]]></code>
-      <code><![CDATA[$values->zip]]></code>
-      <code><![CDATA[$values->zip]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Training/ApplicationStatuses/TrainingApplicationStatusHistory.php">
-    <MixedArgument>
-      <code><![CDATA[$row->id]]></code>
-      <code><![CDATA[$row->status]]></code>
-      <code><![CDATA[$row->statusId]]></code>
-      <code><![CDATA[$row->statusTime]]></code>
-      <code><![CDATA[$row->statusTimeTimeZone]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Training/Dates/TrainingDateStatuses.php">
-    <MixedArgument>
-      <code><![CDATA[$row->status]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/Training/Discontinued/DiscontinuedTrainings.php">
-    <MixedArgument>
-      <code><![CDATA[$row->description]]></code>
-      <code><![CDATA[$row->href]]></code>
     </MixedArgument>
   </file>
   <file src="src/Training/Reviews/TrainingReviews.php">
@@ -483,18 +163,6 @@
     <MixedArgument>
       <code><![CDATA[$error ?? null]]></code>
       <code><![CDATA[$keys ?? []]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/UpcKeys/Technicolor.php">
-    <MixedArgument>
-      <code><![CDATA[$row->key]]></code>
-      <code><![CDATA[$row->serial]]></code>
-      <code><![CDATA[$row->type]]></code>
-    </MixedArgument>
-  </file>
-  <file src="src/UpcKeys/Ubee.php">
-    <MixedArgument>
-      <code><![CDATA[$row->mac]]></code>
     </MixedArgument>
   </file>
   <file src="tests/Feed/ExportsTest.phpt">

@@ -7,6 +7,7 @@ use DateTime;
 use Exception;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostWithoutIdException;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
@@ -24,6 +25,7 @@ readonly class BlogPosts
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private BlogPostLoader $loader,
 		private BlogPostFactory $factory,
 		private Cache $exportsCache,
@@ -144,7 +146,7 @@ readonly class BlogPosts
 				ON l.id_locale = bp.key_locale
 			ORDER BY
 				published, slug';
-		foreach ($this->database->fetchAll($sql) as $row) {
+		foreach ($this->typedDatabase->fetchAll($sql) as $row) {
 			$posts[] = $this->factory->createFromDatabaseRow($row);
 		}
 		return $posts;

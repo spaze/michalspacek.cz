@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tags;
 
+use Composer\Pcre\Preg;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use MichalSpacekCz\Utils\JsonUtils;
@@ -27,7 +28,7 @@ readonly class Tags
 	 */
 	public function toArray(string $tags): array
 	{
-		$values = Strings::split($tags, '/\s*,\s*/');
+		$values = Preg::split('/\s*,\s*/', $tags);
 		return array_values(array_filter($values));
 	}
 
