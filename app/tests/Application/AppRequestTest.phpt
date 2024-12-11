@@ -8,6 +8,7 @@ use DateTime;
 use Error;
 use Exception;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
+use MichalSpacekCz\Application\Exceptions\ParameterNotStringException;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Request;
@@ -60,6 +61,26 @@ class AppRequestTest extends TestCase
 		$request = new Request('foo');
 		$request->setParameters(['request' => $original]);
 		Assert::same($original, $this->appRequest->getOriginalRequest($request));
+	}
+
+
+	public function testGetOriginalRequestStringParameters(): void
+	{
+		$original = new Request('bar', params: ['foo' => 'bar', 1 => 'one']);
+		$request = new Request('foo');
+		$request->setParameters(['request' => $original]);
+		Assert::same(['foo' => 'bar', '1' => 'one'], $this->appRequest->getOriginalRequestStringParameters($request));
+	}
+
+
+	public function testGetOriginalRequestStringParametersException(): void
+	{
+		$original = new Request('bar', params: ['foo' => 'bar', 'one' => 1]);
+		$request = new Request('foo');
+		$request->setParameters(['request' => $original]);
+		Assert::exception(function () use ($request): void {
+			$this->appRequest->getOriginalRequestStringParameters($request);
+		}, ParameterNotStringException::class, "Component parameter 'one' is not a string but it's a int");
 	}
 
 

@@ -5,10 +5,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Form\FormComponents;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 use Override;
+use Stringable;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -22,13 +23,12 @@ class SignInHoneypotFormFactoryTest extends TestCase
 
 
 	public function __construct(
+		private readonly FormComponents $formComponents,
 		SignInHoneypotFormFactory $signInHoneypotFormFactory,
 		ApplicationPresenter $applicationPresenter,
 	) {
 		$this->form = $signInHoneypotFormFactory->create();
-		$presenter = $applicationPresenter->createUiPresenter('Admin:Honeypot', 'foo', 'signIn');
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$this->form->setParent($presenter);
+		$applicationPresenter->anchorForm($this->form);
 	}
 
 
@@ -56,21 +56,12 @@ class SignInHoneypotFormFactoryTest extends TestCase
 	/** @dataProvider getCredentials */
 	public function testCreateOnSuccess(string $username, string $password, string $error): void
 	{
-		$this->setValue('username', $username);
-		$this->setValue('password', $password);
+		$this->formComponents->setValue($this->form, 'username', $username);
+		$this->formComponents->setValue($this->form, 'password', $password);
 		Arrays::invoke($this->form->onSuccess, $this->form);
-		Assert::same($error, (string)$this->form->getErrors()[0]);
-	}
-
-
-	private function setValue(string $component, string $value): void
-	{
-		$field = $this->form->getComponent($component);
-		if (!$field instanceof TextInput) {
-			Assert::fail('Field is of a wrong type ' . $field::class);
-		} else {
-			$field->setDefaultValue($value);
-		}
+		$formError = $this->form->getErrors()[0];
+		assert(is_string($formError) || $formError instanceof Stringable);
+		Assert::same($error, (string)$formError);
 	}
 
 }

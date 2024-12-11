@@ -8,6 +8,8 @@ use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
+use Nette\Http\FileUpload;
 
 readonly class InterviewFormFactory
 {
@@ -29,10 +31,10 @@ readonly class InterviewFormFactory
 		$form = $this->factory->create();
 		$form->addText('action', 'Akce:')
 			->setRequired('Zadejte prosím akci')
-			->addRule($form::MaxLength, 'Maximální délka akce je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka akce je %d znaků', 200);
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
-			->addRule($form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false);
 		$this->trainingControlsFactory->addDate(
@@ -43,26 +45,26 @@ readonly class InterviewFormFactory
 		);
 		$form->addText('href', 'Odkaz na rozhovor:')
 			->setRequired('Zadejte prosím odkaz na rozhovor')
-			->addRule($form::MaxLength, 'Maximální délka odkazu na rozhovor je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na rozhovor je %d znaků', 200);
 		$form->addText('audioHref', 'Odkaz na audio:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na audio je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na audio je %d znaků', 200);
 		$form->addText('audioEmbed', 'Embed odkaz na audio:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka embed odkazu na audio je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na audio je %d znaků', 200);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
 		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->getVideo()->getThumbnailFilename() !== null, $interview?->getVideo()->getThumbnailAlternativeFilename() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$form->addText('sourceName', 'Název zdroje:')
 			->setRequired('Zadejte prosím název zdroje')
-			->addRule($form::MaxLength, 'Maximální délka názvu zdroje je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka názvu zdroje je %d znaků', 200);
 		$form->addText('sourceHref', 'Odkaz na zdroj:')
 			->setRequired('Zadejte prosím odkaz na zdroj')
-			->addRule($form::MaxLength, 'Maximální délka odkazu na zdroj je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka odkazu na zdroj je %d znaků', 200);
 		$submit = $form->addSubmit('submit', 'Přidat');
 		if ($interview) {
 			$this->setInterview($form, $interview, $submit);
@@ -70,8 +72,21 @@ readonly class InterviewFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess, $videoThumbnailFormFields): void {
 			$values = $form->getFormValues();
-			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
-			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
+			assert($values->videoThumbnail instanceof FileUpload);
+			assert($values->videoThumbnailAlternative instanceof FileUpload);
+			assert(is_string($values->action));
+			assert(is_string($values->title));
+			assert(is_string($values->description));
+			assert(is_string($values->date));
+			assert(is_string($values->href));
+			assert(is_string($values->audioHref));
+			assert(is_string($values->audioEmbed));
+			assert(is_string($values->videoHref));
+			assert(is_string($values->videoEmbed));
+			assert(is_string($values->sourceName));
+			assert(is_string($values->sourceHref));
+			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
+			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
 			if ($interview) {
 				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
 				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
@@ -93,7 +108,7 @@ readonly class InterviewFormFactory
 					$values->sourceName,
 					$values->sourceHref,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values->videoThumbnail, $values->videoThumbnailAlternative);
 				if ($removeVideoThumbnail && $thumbnailFilename !== null) {
 					$this->videoThumbnails->deleteFile($interview->getId(), $thumbnailFilename);
 				}
@@ -116,13 +131,10 @@ readonly class InterviewFormFactory
 					$values->sourceName,
 					$values->sourceHref,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($interviewId, $values);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interviewId, $values->videoThumbnail, $values->videoThumbnailAlternative);
 			}
 			$onSuccess();
 		};
-
-		$this->videoThumbnails->addOnValidateUploads($form, $videoThumbnailFormFields);
-
 		return $form;
 	}
 

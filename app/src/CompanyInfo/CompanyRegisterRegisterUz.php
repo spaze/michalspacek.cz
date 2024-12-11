@@ -9,6 +9,10 @@ use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use Nette\Http\IResponse;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Override;
@@ -28,6 +32,7 @@ readonly class CompanyRegisterRegisterUz implements CompanyRegister
 
 
 	public function __construct(
+		private Processor $schemaProcessor,
 		private HttpClient $httpClient,
 	) {
 	}
@@ -54,17 +59,46 @@ readonly class CompanyRegisterRegisterUz implements CompanyRegister
 		if (empty($units->id)) {
 			throw new CompanyNotFoundException();
 		}
-		$unit = $this->call('uctovna-jednotka', ['id' => reset($units->id)]);
-
+		try {
+			/** @var Structure $expectArray */
+			$expectArray = $this->schemaProcessor->process(
+				Expect::type(Structure::class),
+				Expect::array([
+					Expect::int()->required(),
+				]),
+			);
+			$schema = Expect::structure([
+				'id' => $expectArray->otherItems()->required(),
+			])->otherItems();
+			/** @var object{id:array{0:int}} $data */
+			$data = $this->schemaProcessor->process($schema, $units);
+		} catch (ValidationException $e) {
+			throw new CompanyInfoException($e->getMessage(), previous: $e);
+		}
+		$unit = $this->call('uctovna-jednotka', ['id' => $data->id[0]]);
+		try {
+			$schema = Expect::structure([
+				'ico' => Expect::string()->required(),
+				'dic' => Expect::string(),
+				'nazovUJ' => Expect::string()->required(),
+				'ulica' => Expect::string()->required(),
+				'mesto' => Expect::string()->required(),
+				'psc' => Expect::string()->required(),
+			])->otherItems();
+			/** @var object{ico:string, dic?:string, nazovUJ:string, ulica:string, mesto:string, psc:string} $data */
+			$data = $this->schemaProcessor->process($schema, $unit);
+		} catch (ValidationException $e) {
+			throw new CompanyInfoException($e->getMessage(), previous: $e);
+		}
 		return new CompanyInfoDetails(
 			IResponse::S200_OK,
 			'OK',
-			$unit->ico,
-			isset($unit->dic) && is_string($unit->dic) ? strtoupper(self::COUNTRY_CODE) . $unit->dic : '',
-			$unit->nazovUJ,
-			$unit->ulica,
-			$unit->mesto,
-			$unit->psc,
+			$data->ico,
+			isset($data->dic) ? strtoupper(self::COUNTRY_CODE) . $data->dic : '',
+			$data->nazovUJ,
+			$data->ulica,
+			$data->mesto,
+			$data->psc,
 			self::COUNTRY_CODE,
 		);
 	}
@@ -72,7 +106,7 @@ readonly class CompanyRegisterRegisterUz implements CompanyRegister
 
 	/**
 	 * @param string $method
-	 * @param array<string, string> $parameters
+	 * @param array<string, string|int> $parameters
 	 * @return stdClass JSON object
 	 * @throws CompanyInfoException
 	 */

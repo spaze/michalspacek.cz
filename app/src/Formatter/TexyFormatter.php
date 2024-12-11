@@ -105,7 +105,7 @@ class TexyFormatter
 	public function getTexy(): Texy
 	{
 		$this->texy = new Texy();
-		$this->texy->allowedTags = $this->texy::NONE;
+		$this->texy->allowedTags = Texy::NONE;
 		$this->texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		$this->texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
 		$this->texy->figureModule->widthDelta = false; // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">

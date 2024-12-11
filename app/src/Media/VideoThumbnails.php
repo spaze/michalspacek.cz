@@ -9,10 +9,10 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
 use Nette\Forms\Controls\UploadControl;
+use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Callback;
 use Nette\Utils\ImageException;
-use stdClass;
 
 readonly class VideoThumbnails
 {
@@ -45,42 +45,39 @@ readonly class VideoThumbnails
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$videoThumbnail = $form->addUpload('videoThumbnail', 'Video náhled:')
-			->addRule($form::MimeType, "%label musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
+			->addRule(Form::MimeType, "%label musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
 			->setHtmlAttribute('title', "Vyberte soubor ({$supportedImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getMainContentTypes()));
 		$videoThumbnailAlternative = $form->addUpload('videoThumbnailAlternative', 'Alternativní video náhled:')
-			->addRule($form::MimeType, "%label musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
+			->addRule(Form::MimeType, "%label musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Vyberte alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
 		if ($hasMainVideoThumbnail) {
 			$form->addCheckbox('removeVideoThumbnail', 'Odstranit')
-				->addCondition($form::Filled, true)
+				->addCondition(Form::Filled, true)
 				->toggle('#videoThumbnailFormField', false)
-				->addConditionOn($videoThumbnail, $form::Filled, true)
-				->addRule($form::Blank, 'Nelze zároveň nahrávat a mazat video náhled');
-			$videoThumbnail->addCondition($form::Filled, true)
+				->addConditionOn($videoThumbnail, Form::Filled, true)
+				->addRule(Form::Blank, 'Nelze zároveň nahrávat a mazat video náhled');
+			$videoThumbnail->addCondition(Form::Filled, true)
 				->toggle('#currentVideoThumbnail', false);
 		}
 		if ($hasAlternativeVideoThumbnail) {
 			$form->addCheckbox('removeVideoThumbnailAlternative', 'Odstranit')
-				->addCondition($form::Filled, true)
+				->addCondition(Form::Filled, true)
 				->toggle('#videoThumbnailAlternativeFormField', false)
-				->addConditionOn($videoThumbnailAlternative, $form::Filled, true)
-				->addRule($form::Blank, 'Nelze zároveň nahrávat a mazat alternativní video náhled');
-			$videoThumbnailAlternative->addCondition($form::Filled, true)
+				->addConditionOn($videoThumbnailAlternative, Form::Filled, true)
+				->addRule(Form::Blank, 'Nelze zároveň nahrávat a mazat alternativní video náhled');
+			$videoThumbnailAlternative->addCondition(Form::Filled, true)
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
-		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative, $hasMainVideoThumbnail, $hasAlternativeVideoThumbnail);
-	}
-
-
-	public function addOnValidateUploads(UiForm $form, VideoThumbnailFileUploads $formFields): void
-	{
-		$form->onValidate[] = function (UiForm $form) use ($formFields): void {
+		$form->onValidate[] = function (UiForm $form) use ($videoThumbnail, $videoThumbnailAlternative): void {
 			$values = $form->getFormValues();
-			$this->validateUpload($values->videoThumbnail, $formFields->getVideoThumbnail());
-			$this->validateUpload($values->videoThumbnailAlternative, $formFields->getVideoThumbnailAlternative());
+			assert($values->videoThumbnail instanceof FileUpload);
+			assert($values->videoThumbnailAlternative instanceof FileUpload);
+			$this->validateUpload($values->videoThumbnail, $videoThumbnail);
+			$this->validateUpload($values->videoThumbnailAlternative, $videoThumbnailAlternative);
 		};
+		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative, $hasMainVideoThumbnail, $hasAlternativeVideoThumbnail);
 	}
 
 
@@ -116,18 +113,18 @@ readonly class VideoThumbnails
 	/**
 	 * @throws ContentTypeException
 	 */
-	public function getUploadedMainFileBasename(stdClass $values): ?string
+	public function getUploadedMainFileBasename(FileUpload $thumbnail): ?string
 	{
-		return $this->getUploadedFileBasename($values->videoThumbnail, $this->supportedImageFileFormats->getMainExtensionByContentType(...));
+		return $this->getUploadedFileBasename($thumbnail, $this->supportedImageFileFormats->getMainExtensionByContentType(...));
 	}
 
 
 	/**
 	 * @throws ContentTypeException
 	 */
-	public function getUploadedAlternativeFileBasename(stdClass $values): ?string
+	public function getUploadedAlternativeFileBasename(FileUpload $thumbnail): ?string
 	{
-		return $this->getUploadedFileBasename($values->videoThumbnailAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...));
+		return $this->getUploadedFileBasename($thumbnail, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...));
 	}
 
 
@@ -151,15 +148,15 @@ readonly class VideoThumbnails
 	/**
 	 * @throws ContentTypeException
 	 */
-	public function saveVideoThumbnailFiles(int $id, stdClass $values): void
+	public function saveVideoThumbnailFiles(int $id, FileUpload $videoThumbnail, FileUpload $videoThumbnailAlternative): void
 	{
-		$basename = $this->getUploadedMainFileBasename($values);
+		$basename = $this->getUploadedMainFileBasename($videoThumbnail);
 		if ($basename !== null) {
-			$values->videoThumbnail->move($this->mediaResources->getImageFilename($id, $basename));
+			$videoThumbnail->move($this->mediaResources->getImageFilename($id, $basename));
 		}
-		$basename = $this->getUploadedAlternativeFileBasename($values);
+		$basename = $this->getUploadedAlternativeFileBasename($videoThumbnailAlternative);
 		if ($basename !== null) {
-			$values->videoThumbnailAlternative->move($this->mediaResources->getImageFilename($id, $basename));
+			$videoThumbnailAlternative->move($this->mediaResources->getImageFilename($id, $basename));
 		}
 	}
 

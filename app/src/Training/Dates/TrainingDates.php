@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training\Dates;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
@@ -23,6 +24,7 @@ class TrainingDates
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly Translator $translator,
@@ -94,7 +96,7 @@ class TrainingDates
 	 */
 	public function getWithUnpaid(): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -252,7 +254,7 @@ class TrainingDates
 	 */
 	public function getAllTrainings(): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -310,7 +312,7 @@ class TrainingDates
 	 */
 	public function getAllTrainingsInterval(string $from, string $to = ''): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -375,7 +377,7 @@ class TrainingDates
 			return $this->pastWithPersonalData;
 		}
 
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT DISTINCT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -450,7 +452,7 @@ class TrainingDates
 	 */
 	public function getDates(int $trainingId): array
 	{
-		$result = $this->database->fetchAll(
+		$result = $this->typedDatabase->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,

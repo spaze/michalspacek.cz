@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use Nette\Forms\Form;
 
 readonly class TrainingInvoiceFormFactory
 {
@@ -27,7 +28,7 @@ readonly class TrainingInvoiceFormFactory
 		$form = $this->factory->create();
 		$form->addText('invoice', 'Faktura:')
 			->setRequired('Zadejte prosím číslo faktury')
-			->addRule($form::IsIn, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);
+			->addRule(Form::IsIn, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);
 		$this->trainingControlsFactory->addPaidDate($form->addText('paid', 'Zaplaceno:'), true);
 		$form->addSubmit('submit', 'Zaplaceno');
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError): void {

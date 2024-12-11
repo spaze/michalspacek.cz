@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Manager;
+use Nette\Forms\Form;
 use Nette\Security\User;
 
 readonly class ChangePasswordFormFactory
@@ -36,11 +37,11 @@ readonly class ChangePasswordFormFactory
 			->setHtmlAttribute('autocomplete', 'new-password')
 			->setHtmlAttribute('passwordrules', 'minlength: 42; required: lower; required: upper; required: digit; required: [ !#$%&*+,./:;=?@_~];')
 			->setRequired('Zadejte prosím nové heslo')
-			->addRule($form::MinLength, 'Nové heslo musí mít alespoň %d znaků', 15);
+			->addRule(Form::MinLength, 'Nové heslo musí mít alespoň %d znaků', 15);
 		$form->addPassword('newPasswordVerify', 'Nové heslo pro kontrolu:')
 			->setHtmlAttribute('autocomplete', 'new-password')
 			->setRequired('Zadejte prosím nové heslo pro kontrolu')
-			->addRule($form::Equal, 'Hesla se neshodují', $newPassword);
+			->addRule(Form::Equal, 'Hesla se neshodují', $newPassword);
 		$form->addSubmit('save', 'Uložit');
 
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {

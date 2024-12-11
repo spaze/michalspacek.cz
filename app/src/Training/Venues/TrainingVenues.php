@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Venues;
 
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
 use Nette\Database\Explorer;
@@ -13,6 +14,7 @@ readonly class TrainingVenues
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private TexyFormatter $texyFormatter,
 	) {
 	}
@@ -56,7 +58,7 @@ readonly class TrainingVenues
 	 */
 	public function getAll(): array
 	{
-		$rows = $this->database->fetchAll(
+		$rows = $this->typedDatabase->fetchAll(
 			'SELECT
 				v.id_venue AS id,
 				v.name,

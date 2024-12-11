@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Http\Client;
 
 use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\Http\Exceptions\HttpStreamException;
+use OpenSSLCertificate;
 
 class HttpClient
 {
@@ -107,7 +108,14 @@ class HttpClient
 		if ($result === false) {
 			throw new HttpClientRequestException($request->getUrl());
 		}
-		return new HttpClientResponse($request, $result, $options['ssl']['peer_certificate'] ?? null);
+		if (is_array($options['ssl'])) {
+			$certificate = isset($options['ssl']['peer_certificate']) && $options['ssl']['peer_certificate'] instanceof OpenSSLCertificate
+				? $options['ssl']['peer_certificate']
+				: null;
+		} else {
+			$certificate = null;
+		}
+		return new HttpClientResponse($request, $result, $certificate);
 	}
 
 }

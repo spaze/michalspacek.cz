@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Disclosures;
 
-use DateTime;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Database\Explorer;
 
@@ -15,6 +15,7 @@ readonly class PasswordHashingDisclosures
 		private Explorer $database,
 		private TypedDatabase $typedDatabase,
 		private Rating $rating,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -24,9 +25,12 @@ readonly class PasswordHashingDisclosures
 	 */
 	public function getDisclosureTypes(): array
 	{
-		$rows = $this->database->fetchAll('SELECT id, alias, type FROM password_disclosure_types ORDER BY type');
+		$rows = $this->typedDatabase->fetchAll('SELECT id, alias, type FROM password_disclosure_types ORDER BY type');
 		$types = [];
 		foreach ($rows as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->alias));
+			assert(is_string($row->type));
 			$types[] = new PasswordHashingDisclosureType($row->id, $row->alias, $row->type);
 		}
 		return $types;
@@ -59,11 +63,7 @@ readonly class PasswordHashingDisclosures
 
 	public function getDisclosureId(string $url, string $archive): ?int
 	{
-		$id = $this->typedDatabase->fetchFieldIntNullable('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
-		if ($id === null) {
-			return null;
-		}
-		return $id;
+		return $this->typedDatabase->fetchFieldIntNullable('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
 	}
 
 
@@ -77,8 +77,8 @@ readonly class PasswordHashingDisclosures
 			'url' => $url,
 			'archive' => $archive,
 			'note' => (empty($note) ? null : $note),
-			'published' => (empty($published) ? null : new DateTime($published)),
-			'added' => new DateTime(),
+			'published' => (empty($published) ? null : $this->dateTimeFactory->create($published)),
+			'added' => $this->dateTimeFactory->create(),
 		]);
 		return (int)$this->database->getInsertId();
 	}

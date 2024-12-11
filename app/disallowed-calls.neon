@@ -23,12 +23,13 @@ parameters:
 			method: 'Tester\Environment::skip()'
 			message: 'use TestCaseRunner::skip() instead, it can ignore skipping with an environment variable'
 			allowInMethods:
-				- 'MichalSpacekCz\Test\TestCaseRunner::skip()'
+				- 'MichalSpacekCz\Test\TestCaseRunner::needsInternet()'
 		-
 			method:
 				- 'Nette\Utils\Strings::match()'
 				- 'Nette\Utils\Strings::matchAll()'
 				- 'Nette\Utils\Strings::replace()'
+				- 'Nette\Utils\Strings::split()'
 			message: 'use the Preg or Regex class from composer/pcre for better static analysis'
 	disallowedMethodCalls:
 		-
@@ -55,6 +56,12 @@ parameters:
 			message: 'use MichalSpacekCz\DateTime\DateTimeZoneFactory::get() instead, throws a more specific exception'
 			allowInMethods:
 				- 'MichalSpacekCz\DateTime\DateTimeZoneFactory::get()'
+		-
+			method:
+				- 'Nette\Forms\Container::getValues()'
+				- 'Nette\Forms\Container::getUntrustedValues()'
+			message: 'use methods from MichalSpacekCz\Form\UiForm instead'
+
 	disallowedConstants:
 		-
 			constant: 'LIBXML_NOENT'
@@ -67,14 +74,6 @@ parameters:
 				- src/Application/ServerEnv.php
 				- tests/Application/ServerEnvTest.phpt
 	disallowedClasses:
-		-
-			class:
-				- 'Nette\Application\UI\Form'
-				- 'Nette\Forms\Form'
-			message: 'use MichalSpacekCz\Form\UiForm for better type declarations'
-			allowIn:
-				- src/Form/UiForm.php
-				- src/Form/Controls/TrainingControlsFactory.php
 		-
 			class:
 				- 'Spaze\PhpInfo\PhpInfo'

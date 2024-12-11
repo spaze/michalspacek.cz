@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Composer\Pcre\Preg;
 use Composer\Pcre\Regex;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
@@ -16,11 +17,11 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
-use Nette\Utils\Strings;
 use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
 use Texy\Modifier;
+use Texy\Texy;
 
 readonly class TexyPhraseHandler
 {
@@ -98,7 +99,7 @@ readonly class TexyPhraseHandler
 			$trainingLink = $this->proceed($invocation, $phrase, $content, $modifier, $link);
 			if ($trainingLink !== false) {
 				$el->add($trainingLink);
-				$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
+				$el->add($texy->protect($this->getTrainingSuffix($name), Texy::CONTENT_TEXTUAL));
 				return $el;
 			}
 		}
@@ -109,7 +110,10 @@ readonly class TexyPhraseHandler
 
 	private function getLink(string $url, string $locale): string
 	{
-		$args = Strings::split($url, '/[\s,]+/');
+		$args = Preg::split('/[\s,]+/', $url);
+		if ($args === []) {
+			throw new ShouldNotHappenException('Preg::split() should always return a non-empty array');
+		}
 		$action = array_shift($args);
 		if (Arrays::contains([self::TRAINING_ACTION, self::COMPANY_TRAINING_ACTION], $action)) {
 			$args = [$this->trainingLocales->getLocaleActions($args[0])[$locale]];
@@ -135,7 +139,7 @@ readonly class TexyPhraseHandler
 
 
 	/**
-	 * @param non-empty-array<string, array<string, string|null>> $params
+	 * @param non-empty-array<string, list<string>|array<string, string|null>> $params
 	 */
 	private function getLinkWithParams(string $destination, array $params, string $locale): string
 	{

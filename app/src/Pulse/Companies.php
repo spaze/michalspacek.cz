@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-use DateTime;
+use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use Nette\Database\Explorer;
 
 readonly class Companies
@@ -11,6 +12,8 @@ readonly class Companies
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -20,7 +23,7 @@ readonly class Companies
 	 */
 	public function getAll(): array
 	{
-		$rows = $this->database->fetchAll(
+		$rows = $this->typedDatabase->fetchAll(
 			'SELECT
 				id,
 				name,
@@ -32,6 +35,11 @@ readonly class Companies
 		);
 		$companies = [];
 		foreach ($rows as $row) {
+			assert(is_int($row->id));
+			assert(is_string($row->name));
+			assert(is_string($row->tradeName) || $row->tradeName === null);
+			assert(is_string($row->alias));
+			assert(is_string($row->sortName));
 			$companies[] = new Company($row->id, $row->name, $row->tradeName, $row->alias, $row->sortName);
 		}
 		return $companies;
@@ -75,7 +83,7 @@ readonly class Companies
 			'name' => $name,
 			'trade_name' => (empty($tradeName) ? null : $tradeName),
 			'alias' => $alias,
-			'added' => new DateTime(),
+			'added' => $this->dateTimeFactory->create(),
 		]);
 		return (int)$this->database->getInsertId();
 	}
