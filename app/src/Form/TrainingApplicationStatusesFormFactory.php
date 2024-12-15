@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 readonly class TrainingApplicationStatusesFormFactory
@@ -48,7 +49,10 @@ readonly class TrainingApplicationStatusesFormFactory
 
 		$submitStatuses->onClick[] = function () use ($form, $onSuccess): void {
 			$values = $form->getFormValues();
+			assert($values->applications instanceof ArrayHash);
+			assert(is_string($values->date));
 			foreach ($values->applications as $id => $status) {
+				assert(is_string($status));
 				if ($status) {
 					$this->trainingApplicationStatuses->updateStatus($id, $status, $values->date);
 				}

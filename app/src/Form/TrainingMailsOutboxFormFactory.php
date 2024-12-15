@@ -13,7 +13,8 @@ use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Form;
-use stdClass;
+use Nette\Http\FileUpload;
+use Nette\Utils\ArrayHash;
 
 readonly class TrainingMailsOutboxFormFactory
 {
@@ -145,11 +146,11 @@ readonly class TrainingMailsOutboxFormFactory
 		$form->addSubmit('submit', 'Odeslat');
 		$form->onSuccess[] = function (UiForm $form) use ($applications, $onSuccess): void {
 			$values = $form->getFormValues();
+			assert($values->applications instanceof ArrayHash);
 			$sent = 0;
 			foreach ($values->applications as $id => $data) {
-				if (!$data instanceof stdClass) {
-					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", stdClass::class, get_debug_type($data)));
-				}
+				assert($data instanceof ArrayHash);
+				assert(is_string($data->additional));
 				if (empty($data->send) || !isset($applications[$id])) {
 					continue;
 				}
@@ -171,12 +172,16 @@ readonly class TrainingMailsOutboxFormFactory
 				}
 
 				if ($nextStatus === TrainingApplicationStatus::MaterialsSent) {
-					$this->trainingMails->sendMaterials($applications[$id], $template, $data->feedbackRequest ?? false, $additional);
+					assert(is_bool($data->feedbackRequest));
+					$this->trainingMails->sendMaterials($applications[$id], $template, $data->feedbackRequest, $additional);
 					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::MaterialsSent);
 					$sent++;
 				}
 
 				if (in_array($nextStatus, [TrainingApplicationStatus::InvoiceSent, TrainingApplicationStatus::InvoiceSentAfter])) {
+					assert($data->invoice instanceof FileUpload);
+					assert(is_string($data->invoiceId));
+					assert(is_string($data->cc));
 					if ($data->invoice->isOk()) {
 						$this->trainingApplicationStorage->updateApplicationInvoiceData($id, $data->invoiceId);
 						$applications[$id]->setInvoiceId((int)$data->invoiceId);

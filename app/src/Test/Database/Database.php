@@ -56,6 +56,8 @@ class Database extends Explorer
 
 	private int $fetchAllResultsPosition = 0;
 
+	private ?ResultSet $resultSet = null;
+
 
 	public function reset(): void
 	{
@@ -74,6 +76,7 @@ class Database extends Explorer
 		$this->fetchAllDefaultResult = [];
 		$this->fetchAllResults = [];
 		$this->fetchAllResultsPosition = 0;
+		$this->resultSet = null;
 		$this->wontThrow();
 	}
 
@@ -135,7 +138,7 @@ class Database extends Explorer
 				$this->queriesScalarParams[$sql][] = $this->formatValue($param);
 			}
 		}
-		return new ResultSet();
+		return $this->resultSet ?? new ResultSet();
 	}
 
 
@@ -260,6 +263,12 @@ class Database extends Explorer
 	public function addFetchAllResult(array $fetchAllResult): void
 	{
 		$this->fetchAllResults[] = $this->getRows($fetchAllResult);
+	}
+
+
+	public function setResultSet(ResultSet $resultSet): void
+	{
+		$this->resultSet = $resultSet;
 	}
 
 

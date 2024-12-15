@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Articles\Blog;
 
-use DateTime;
 use Exception;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostWithoutIdException;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
@@ -30,6 +30,7 @@ readonly class BlogPosts
 		private BlogPostFactory $factory,
 		private Cache $exportsCache,
 		private Tags $tags,
+		private DateTimeFactory $dateTimeFactory,
 		private int $updatedInfoThreshold,
 	) {
 	}
@@ -229,7 +230,7 @@ readonly class BlogPosts
 				],
 				$postId,
 			);
-			$editedAt = new DateTime();
+			$editedAt = $this->dateTimeFactory->create();
 			if ($editSummary !== null) {
 				$timeZone = $editedAt->getTimezone()->getName();
 				$this->database->query(

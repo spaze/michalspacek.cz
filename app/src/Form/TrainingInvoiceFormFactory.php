@@ -33,6 +33,8 @@ readonly class TrainingInvoiceFormFactory
 		$form->addSubmit('submit', 'Zaplaceno');
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->invoice));
+			assert(is_string($values->paid));
 			$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 			if ($count === null) {
 				$onError();
