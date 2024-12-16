@@ -31,7 +31,7 @@ readonly class TrainingMailsOutboxFormFactory
 
 	/**
 	 * @param callable(int): void $onSuccess
-	 * @param list<TrainingApplication> $applications
+	 * @param array<int, TrainingApplication> $applications
 	 */
 	public function create(callable $onSuccess, array $applications): UiForm
 	{
