@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 
@@ -71,7 +72,7 @@ readonly class TrainingApplicationMultipleFormFactory
 					$application->note,
 					$trainingDate->getPrice(),
 					$trainingDate->getStudentDiscount(),
-					$values->status,
+					TrainingApplicationStatus::from($values->status),
 					$values->source,
 					$values->date,
 				);
