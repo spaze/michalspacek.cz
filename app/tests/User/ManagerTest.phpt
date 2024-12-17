@@ -119,7 +119,7 @@ class ManagerTest extends TestCase
 		$newPassword = 'hunter3';
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337, [], ['username' => '303']));
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'userId' => 1337,
 			'username' => '303',
 			'password' => $this->passwordEncryption->encrypt($this->passwords->hash($oldPassword)),
@@ -163,7 +163,7 @@ class ManagerTest extends TestCase
 		$hash = hash('sha512', $token);
 		$userId = 1338;
 		$username = '🍪🍪🍪';
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => $tokenId,
 			'token' => $hash,
 			'userId' => $userId,
@@ -194,7 +194,7 @@ class ManagerTest extends TestCase
 		$hash = hash('sha512', $token);
 		$userId = 1338;
 		$username = '🍕🍕🍕';
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => $tokenId,
 			'token' => $hash,
 			'userId' => $userId,
@@ -222,7 +222,7 @@ class ManagerTest extends TestCase
 		Assert::exception(function (): void {
 			$this->authenticator->authenticate('foo', 'bar');
 		}, AuthenticationException::class, 'The username is incorrect.');
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'userId' => $userId,
 			'username' => $username,
 			'password' => $this->passwordEncryption->encrypt($this->passwords->hash($password)),
@@ -242,7 +242,7 @@ class ManagerTest extends TestCase
 		$username = 'foo';
 		$password = 'bar';
 		$hash = password_hash($password, PASSWORD_DEFAULT);
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'userId' => $userId,
 			'username' => $username,
 			'password' => $this->passwordEncryption->encrypt($hash),

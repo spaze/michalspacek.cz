@@ -51,7 +51,7 @@ class ChangePasswordFormFactoryTest extends TestCase
 	{
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(self::USER_ID, [], ['username' => self::USERNAME]));
 		PrivateProperty::setValue($this->user, 'authenticated', true);
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'userId' => self::USER_ID,
 			'username' => self::USERNAME,
 			'password' => $this->passwordEncryption->encrypt($this->passwords->hash(self::PASSWORD)),

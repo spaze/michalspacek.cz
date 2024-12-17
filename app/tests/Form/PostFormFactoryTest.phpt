@@ -61,7 +61,7 @@ class PostFormFactoryTest extends TestCase
 		$this->database->addFetchAllResult([$twitterCardResult]);
 		$this->database->addFetchPairsResult([self::LOCALE_ID => 'en_US']);
 		// For onSuccess queries
-		$this->database->setFetchResult($twitterCardResult);
+		$this->database->setFetchDefaultResult($twitterCardResult);
 		// Upcoming trainings
 		$this->database->addFetchAllResult([]);
 		// Blog post edits

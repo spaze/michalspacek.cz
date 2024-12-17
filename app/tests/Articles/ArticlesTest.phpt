@@ -195,7 +195,7 @@ class ArticlesTest extends TestCase
 	public function testGetLabelByTag(): void
 	{
 		Assert::null($this->articles->getLabelByTag('foo'));
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'tags' => '["HTTP Secure", "HTTP/2"]',
 			'slugTags' => '["https", "http-2"]',
 		]);

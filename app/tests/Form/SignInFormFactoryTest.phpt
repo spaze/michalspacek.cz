@@ -77,7 +77,7 @@ class SignInFormFactoryTest extends TestCase
 	 */
 	public function testCreateOnSuccess(string $username, string $password, ?string $message): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'userId' => 123,
 			'username' => 'root',
 			'password' => $this->passwordEncryption->encrypt($this->passwords->hash('hunter2')),

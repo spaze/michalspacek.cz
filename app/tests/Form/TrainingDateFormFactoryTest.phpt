@@ -59,7 +59,7 @@ class TrainingDateFormFactoryTest extends TestCase
 			'discontinuedId' => null,
 		];
 		// For Trainings::getById()
-		$this->database->setFetchResult($training);
+		$this->database->setFetchDefaultResult($training);
 		$this->database->addFetchAllResult([$training]);
 		$this->database->addFetchAllResult([
 			[

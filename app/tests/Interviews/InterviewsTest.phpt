@@ -96,7 +96,7 @@ class InterviewsTest extends TestCase
 
 	public function testGet(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => 1,
 			'action' => 'action-1',
 			'title' => 'Action 1',
@@ -124,7 +124,7 @@ class InterviewsTest extends TestCase
 
 	public function testGetById(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => 2,
 			'action' => 'action-2',
 			'title' => 'Action 2',

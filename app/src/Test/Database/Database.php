@@ -31,7 +31,12 @@ class Database extends Explorer
 	private array $queriesArrayParams = [];
 
 	/** @var array<string, int|string|DateTime|null> */
-	private array $fetchResult = [];
+	private array $fetchDefaultResult = [];
+
+	/** @var list<array<string, int|string|DateTime|null>> */
+	private array $fetchResults = [];
+
+	private int $fetchResultsPosition = 0;
 
 	private mixed $fetchFieldDefaultResult = null;
 
@@ -66,7 +71,9 @@ class Database extends Explorer
 		$this->insertIdsPosition = 0;
 		$this->queriesScalarParams = [];
 		$this->queriesArrayParams = [];
-		$this->fetchResult = [];
+		$this->fetchDefaultResult = [];
+		$this->fetchResults = [];
+		$this->fetchResultsPosition = 0;
 		$this->fetchPairsDefaultResult = [];
 		$this->fetchPairsResults = [];
 		$this->fetchPairsResultsPosition = 0;
@@ -173,11 +180,20 @@ class Database extends Explorer
 
 
 	/**
+	 * @param array<string, int|string|DateTime|null> $fetchDefaultResult
+	 */
+	public function setFetchDefaultResult(array $fetchDefaultResult): void
+	{
+		$this->fetchDefaultResult = $fetchDefaultResult;
+	}
+
+
+	/**
 	 * @param array<string, int|string|DateTime|null> $fetchResult
 	 */
-	public function setFetchResult(array $fetchResult): void
+	public function addFetchResult(array $fetchResult): void
 	{
-		$this->fetchResult = $fetchResult;
+		$this->fetchResults[] = $fetchResult;
 	}
 
 
@@ -188,7 +204,7 @@ class Database extends Explorer
 	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
 	{
-		$row = $this->createRow($this->fetchResult);
+		$row = $this->createRow($this->fetchResults[$this->fetchResultsPosition++] ?? $this->fetchDefaultResult);
 		return $row->count() > 0 ? $row : null;
 	}
 

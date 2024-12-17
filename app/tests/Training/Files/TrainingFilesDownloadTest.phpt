@@ -115,7 +115,7 @@ class TrainingFilesDownloadTest extends TestCase
 		$sessionSection->set('token', self::TOKEN);
 		$filename = 'file.zip';
 		$filesDir = __DIR__ . '/';
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'added' => new DateTime(),
 			'fileId' => 1337,
 			'fileName' => $filename,
@@ -131,7 +131,7 @@ class TrainingFilesDownloadTest extends TestCase
 
 	private function setApplicationFetchResult(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => self::APPLICATION_ID,
 			'name' => null,
 			'email' => null,
