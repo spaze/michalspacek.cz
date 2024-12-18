@@ -24,10 +24,10 @@ class Database extends Explorer
 
 	private int $insertIdsPosition = 0;
 
-	/** @var array<string, array<string|int, string|int|bool|null>> */
+	/** @var array<string, array<string|int, string|int|float|bool|null>> */
 	private array $queriesScalarParams = [];
 
-	/** @var array<string, array<int, array<string, string|int|bool|null>>> */
+	/** @var array<string, array<int, array<string, string|int|float|bool|null>>> */
 	private array $queriesArrayParams = [];
 
 	/** @var array<string, int|string|DateTime|null> */
@@ -155,14 +155,14 @@ class Database extends Explorer
 	 * For example datetime is stored without timezone info.
 	 * The DateTime format here is the same as in \Nette\Database\Drivers\MySqlDriver::formatDateTime() but without the quotes.
 	 */
-	private function formatValue(string|int|bool|DateTimeInterface|null $value): string|int|bool|null
+	private function formatValue(string|int|float|bool|DateTimeInterface|null $value): string|int|float|bool|null
 	{
 		return $value instanceof DateTimeInterface ? $value->format(DateTimeFormat::MYSQL) : $value;
 	}
 
 
 	/**
-	 * @return array<string|int, string|int|bool|DateTimeInterface|null>
+	 * @return array<string|int, string|int|float|bool|DateTimeInterface|null>
 	 */
 	public function getParamsForQuery(string $query): array
 	{
@@ -171,7 +171,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @return array<int, array<string, string|int|bool|DateTimeInterface|null>>
+	 * @return array<int, array<string, string|int|float|bool|DateTimeInterface|null>>
 	 */
 	public function getParamsArrayForQuery(string $query): array
 	{

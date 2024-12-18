@@ -91,7 +91,35 @@ readonly class TrainingApplicationAdminFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($application, $onSuccess): void {
 			$values = $form->getFormValues();
-			$dateId = $values->date ?? null;
+			assert(is_bool($values->nameSet));
+			assert(is_string($values->name));
+			assert(is_bool($values->emailSet));
+			assert(is_string($values->email));
+			assert(is_bool($values->companySet));
+			assert(is_string($values->company));
+			assert(is_bool($values->streetSet));
+			assert(is_string($values->street));
+			assert(is_bool($values->citySet));
+			assert(is_string($values->city));
+			assert(is_bool($values->zipSet));
+			assert(is_string($values->zip));
+			assert(is_bool($values->countrySet));
+			assert(is_string($values->country));
+			assert(is_bool($values->companyIdSet));
+			assert(is_string($values->companyId));
+			assert(is_bool($values->companyTaxIdSet));
+			assert(is_string($values->companyTaxId));
+			assert(is_bool($values->noteSet));
+			assert(is_string($values->note));
+			assert(is_string($values->source));
+			assert(is_float($values->price) || $values->price === null);
+			assert(is_string($values->vatRate));
+			assert(is_float($values->priceVat) || $values->priceVat === null);
+			assert(is_string($values->discount));
+			assert(is_string($values->invoiceId) || $values->invoiceId === null);
+			assert(is_string($values->paid));
+			assert(is_bool($values->familiar));
+			assert(is_int($values->date) || $values->date === null);
 			$this->trainingApplicationStorage->updateApplicationData(
 				$application->getId(),
 				$values->nameSet ? $values->name : null,
@@ -105,16 +133,16 @@ readonly class TrainingApplicationAdminFormFactory
 				$values->companyTaxIdSet ? $values->companyTaxId : null,
 				$values->noteSet ? $values->note : null,
 				$values->source,
-				(is_float($values->price) ? $values->price : null),
-				(trim($values->vatRate) !== '' ? $values->vatRate / 100 : null),
-				(is_float($values->priceVat) ? $values->priceVat : null),
-				(trim($values->discount) !== '' ? (int)$values->discount : null),
+				$values->price,
+				trim($values->vatRate) !== '' ? (float)$values->vatRate / 100 : null,
+				$values->priceVat,
+				trim($values->discount) !== '' ? (int)$values->discount : null,
 				$values->invoiceId,
 				$values->paid,
 				$values->familiar,
-				$dateId,
+				$values->date,
 			);
-			$onSuccess($dateId);
+			$onSuccess($values->date);
 		};
 		$this->setApplication($form, $application);
 		return $form;

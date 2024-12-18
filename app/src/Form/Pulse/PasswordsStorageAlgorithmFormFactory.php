@@ -189,7 +189,18 @@ readonly class PasswordsStorageAlgorithmFormFactory
 	 */
 	private function validatePasswordsStorages(UiForm $form, ArrayHash $values): void
 	{
+		assert($values->company instanceof ArrayHash);
+		assert($values->company->new instanceof ArrayHash);
+		assert(is_string($values->company->new->name));
+		assert($values->site instanceof ArrayHash);
+		assert(is_int($values->site->id) || $values->site->id === Sites::ALL || $values->site->id === null);
+		assert($values->site->new instanceof ArrayHash);
+		assert(is_string($values->site->new->url));
+		assert($values->algo instanceof ArrayHash);
+		assert($values->algo->new instanceof ArrayHash);
+		assert(is_string($values->algo->new->algoName));
 		if (empty($values->company->new->name)) {
+			assert(is_int($values->company->id));
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
 			$specificSites = array_filter($storages->getSites(), function ($site) {
 				return $site instanceof StorageSpecificSite;

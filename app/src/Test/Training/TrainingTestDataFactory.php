@@ -29,12 +29,14 @@ readonly class TrainingTestDataFactory
 		bool $familiar = false,
 		TrainingApplicationStatus $status = TrainingApplicationStatus::Attended,
 		?int $dateId = null,
+		string $trainingAction = 'action',
 		string $trainingName = 'Training Name',
 		?DateTime $trainingStart = null,
 		?DateTime $trainingEnd = null,
 		bool $remote = false,
 		?string $remoteUrl = null,
 		?string $feedbackHref = null,
+		string $sourceAlias = 'michal-spacek',
 	): TrainingApplication {
 		return new TrainingApplication(
 			$this->applicationStatuses,
@@ -59,7 +61,7 @@ readonly class TrainingTestDataFactory
 			false,
 			$dateId,
 			null,
-			'action',
+			$trainingAction,
 			Html::fromText($trainingName),
 			$trainingStart,
 			$trainingEnd,
@@ -83,7 +85,7 @@ readonly class TrainingTestDataFactory
 			null,
 			null,
 			'accessToken',
-			'michal-spacek',
+			$sourceAlias,
 			'Michal Špaček',
 			'MŠ',
 		);

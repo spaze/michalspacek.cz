@@ -9,6 +9,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
+use Nette\Utils\ArrayHash;
 
 readonly class TrainingApplicationMultipleFormFactory
 {
@@ -56,7 +57,22 @@ readonly class TrainingApplicationMultipleFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($trainingDate, $onSuccess): void {
 			$values = $form->getFormValues();
+			assert($values->applications instanceof ArrayHash);
+			assert(is_string($values->country));
+			assert(is_string($values->status));
+			assert(is_string($values->source));
+			assert(is_string($values->date));
 			foreach ($values->applications as $application) {
+				assert($application instanceof ArrayHash);
+				assert(is_string($application->name));
+				assert(is_string($application->email));
+				assert(is_string($application->company));
+				assert(is_string($application->street));
+				assert(is_string($application->city));
+				assert(is_string($application->zip));
+				assert(is_string($application->companyId));
+				assert(is_string($application->companyTaxId));
+				assert(is_string($application->note));
 				$this->trainingApplicationStorage->insertApplication(
 					$trainingDate->getTrainingId(),
 					$trainingDate->getId(),
