@@ -12,6 +12,7 @@ use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Training\TrainingFilesNullStorage;
+use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\RedirectResponse;
@@ -37,6 +38,7 @@ class TrainingFilesDownloadTest extends TestCase
 		private readonly Database $database,
 		private readonly NullSession $session,
 		private readonly TrainingFilesNullStorage $storage,
+		private readonly TrainingTestDataFactory $dataFactory,
 		Application $application,
 	) {
 		$this->presenter = new UiPresenterMock();
@@ -55,7 +57,7 @@ class TrainingFilesDownloadTest extends TestCase
 	public function testStartRedirect(): void
 	{
 		$this->database->setFetchFieldDefaultResult(123); // For Statuses::getStatusId()
-		$this->setApplicationFetchResult(); // For TrainingApplications::getApplicationByToken()
+		$this->database->setFetchDefaultResult($this->dataFactory->getDatabaseResultData(self::APPLICATION_ID)); // For TrainingApplications::getApplicationByToken()
 		Assert::true($this->applicationPresenter->expectSendResponse(function (): void {
 			$this->trainingFilesDownload->start('action', self::TOKEN);
 		}));
@@ -84,7 +86,7 @@ class TrainingFilesDownloadTest extends TestCase
 		$sessionSection = $this->session->getSection('training');
 		$sessionSection->set('applicationId', self::APPLICATION_ID);
 		$sessionSection->set('token', self::TOKEN);
-		$this->setApplicationFetchResult(); // For TrainingApplications::getApplicationById()
+		$this->database->setFetchDefaultResult($this->dataFactory->getDatabaseResultData(self::APPLICATION_ID)); // For TrainingApplications::getApplicationById()
 		Assert::same(self::APPLICATION_ID, $this->trainingFilesDownload->start('action', null)->getId());
 	}
 
@@ -126,53 +128,6 @@ class TrainingFilesDownloadTest extends TestCase
 		Assert::same($filesDir . $filename, $response->getFile());
 		Assert::same($filename, $response->getName());
 		Assert::same('application/zip', $response->getContentType());
-	}
-
-
-	private function setApplicationFetchResult(): void
-	{
-		$this->database->setFetchDefaultResult([
-			'id' => self::APPLICATION_ID,
-			'name' => null,
-			'email' => null,
-			'familiar' => 0,
-			'company' => null,
-			'street' => null,
-			'city' => null,
-			'zip' => null,
-			'country' => null,
-			'companyId' => null,
-			'companyTaxId' => null,
-			'note' => null,
-			'status' => 'ATTENDED',
-			'statusTime' => new DateTime(),
-			'dateId' => null,
-			'trainingId' => null,
-			'trainingAction' => 'action',
-			'trainingName' => 'Le //Name//',
-			'trainingStart' => null,
-			'trainingEnd' => null,
-			'publicDate' => 1,
-			'remote' => 1,
-			'remoteUrl' => 'https://remote.example/',
-			'remoteNotes' => null,
-			'videoHref' => null,
-			'feedbackHref' => null,
-			'venueAction' => null,
-			'venueName' => null,
-			'venueNameExtended' => null,
-			'venueAddress' => null,
-			'venueCity' => null,
-			'price' => null,
-			'vatRate' => null,
-			'priceVat' => null,
-			'discount' => null,
-			'invoiceId' => null,
-			'paid' => null,
-			'accessToken' => 'token',
-			'sourceAlias' => 'michal-spacek',
-			'sourceName' => 'Michal Špaček',
-		]);
 	}
 
 }

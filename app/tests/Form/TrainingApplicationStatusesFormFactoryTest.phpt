@@ -10,11 +10,8 @@ use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
-use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
@@ -36,9 +33,7 @@ class TrainingApplicationStatusesFormFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly TrainingApplicationStatuses $applicationStatuses,
-		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly TrainingFiles $trainingFiles,
+		private readonly TrainingTestDataFactory $dataFactory,
 		TrainingApplicationStatusesFormFactory $formFactory,
 		ApplicationPresenter $applicationPresenter,
 		DateTimeMachineFactory $dateTimeFactory,
@@ -60,7 +55,7 @@ class TrainingApplicationStatusesFormFactoryTest extends TestCase
 					$this->result = $message->toHtml();
 				}
 			},
-			[$this->buildApplication()],
+			[$dataFactory->getTrainingApplication(self::APPLICATION_ID, status: TrainingApplicationStatus::Reminded)],
 		);
 		$applicationPresenter->anchorForm($this->form);
 		$this->form->setDefaults([
@@ -102,7 +97,7 @@ class TrainingApplicationStatusesFormFactoryTest extends TestCase
 
 	public function testCreateOnClickFamiliar(): void
 	{
-		$this->addApplicationFetchResult();
+		$this->database->addFetchResult($this->dataFactory->getDatabaseResultData(self::APPLICATION_ID));
 		$statusDateTime = new DateTime('2024-10-20 07:08:09');
 		// For TrainingApplicationStatuses::setStatus()
 		$this->database->addFetchResult([
@@ -115,109 +110,6 @@ class TrainingApplicationStatusesFormFactoryTest extends TestCase
 		Arrays::invoke($familiar->onClick);
 		Assert::same('Tykání nastaveno pro 1 účastníků ve stavu <code>ATTENDED</code>', $this->result);
 		Assert::same([self::APPLICATION_ID], $this->database->getParamsForQuery('UPDATE training_applications SET familiar = TRUE WHERE id_application = ?'));
-	}
-
-
-	private function addApplicationFetchResult(): void
-	{
-		$this->database->addFetchResult([
-			'id' => self::APPLICATION_ID,
-			'name' => null,
-			'email' => null,
-			'familiar' => 0,
-			'company' => null,
-			'street' => null,
-			'city' => null,
-			'zip' => null,
-			'country' => null,
-			'companyId' => null,
-			'companyTaxId' => null,
-			'note' => null,
-			'status' => 'ATTENDED',
-			'statusTime' => new DateTime(),
-			'dateId' => null,
-			'trainingId' => null,
-			'trainingAction' => 'action',
-			'trainingName' => 'Le //Name//',
-			'trainingStart' => null,
-			'trainingEnd' => null,
-			'publicDate' => 1,
-			'remote' => 1,
-			'remoteUrl' => 'https://remote.example/',
-			'remoteNotes' => null,
-			'videoHref' => null,
-			'feedbackHref' => null,
-			'venueAction' => null,
-			'venueName' => null,
-			'venueNameExtended' => null,
-			'venueAddress' => null,
-			'venueCity' => null,
-			'price' => null,
-			'vatRate' => null,
-			'priceVat' => null,
-			'discount' => null,
-			'invoiceId' => null,
-			'paid' => null,
-			'accessToken' => 'token',
-			'sourceAlias' => 'michal-spacek',
-			'sourceName' => 'Michal Špaček',
-		]);
-	}
-
-
-	private function buildApplication(): TrainingApplication
-	{
-		return new TrainingApplication(
-			$this->applicationStatuses,
-			$this->trainingMailMessageFactory,
-			$this->trainingFiles,
-			self::APPLICATION_ID,
-			null,
-			null,
-			false,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			TrainingApplicationStatus::Reminded,
-			new DateTime(),
-			true,
-			false,
-			false,
-			null,
-			null,
-			'action',
-			Html::fromText('Name'),
-			null,
-			null,
-			false,
-			false,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			'',
-			'',
-			null,
-			null,
-			null,
-			'accessToken',
-			'michal-spacek',
-			'Michal Špaček',
-			'MŠ',
-		);
 	}
 
 }

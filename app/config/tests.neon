@@ -54,6 +54,7 @@ services:
 	security.userStorage: MichalSpacekCz\Test\Security\NullUserStorage
 	- MichalSpacekCz\Test\TestCaseRunner
 	trainingFilesStorage: MichalSpacekCz\Test\Training\TrainingFilesNullStorage
+	- MichalSpacekCz\Test\Training\TrainingTestDataFactory
 	cache.storage: Nette\Caching\Storages\DevNullStorage
 	netteHttpResponse:  # Needed for User\Manager because https://github.com/nette/http/issues/200
 		create: Nette\Http\Response

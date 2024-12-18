@@ -7,11 +7,8 @@ use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
-use MichalSpacekCz\Training\Files\TrainingFiles;
-use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -24,15 +21,14 @@ class TrainingMailMessageFactoryTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly TrainingApplicationStatuses $applicationStatuses,
-		private readonly TrainingFiles $trainingFiles,
+		private readonly TrainingTestDataFactory $dataFactory,
 	) {
 	}
 
 
 	public function testGetMailMessage(): void
 	{
-		$application = $this->getApplication();
+		$application = $this->dataFactory->getTrainingApplication(1, null, null);
 		Assert::exception(function () use ($application): void {
 			$this->trainingMailMessageFactory->getMailMessage($application);
 		}, ShouldNotHappenException::class, "Unsupported next status: '<null>'");
@@ -43,14 +39,14 @@ class TrainingMailMessageFactoryTest extends TestCase
 		$application->setNextStatus(TrainingApplicationStatus::MaterialsSent);
 		Assert::same('materials', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 
-		$application = $this->getApplication(true);
+		$application = $this->dataFactory->getTrainingApplication(1, familiar: true);
 		$application->setNextStatus(TrainingApplicationStatus::MaterialsSent);
 		Assert::same('materialsFamiliar', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 
 		$application->setNextStatus(TrainingApplicationStatus::InvoiceSent);
 		Assert::same('invoice', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 
-		$application = $this->getApplication(status: TrainingApplicationStatus::ProFormaInvoiceSent);
+		$application = $this->dataFactory->getTrainingApplication(1, status: TrainingApplicationStatus::ProFormaInvoiceSent);
 		$application->setNextStatus(TrainingApplicationStatus::InvoiceSent);
 		Assert::same('invoiceAfterProforma', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 
@@ -62,11 +58,11 @@ class TrainingMailMessageFactoryTest extends TestCase
 			$this->trainingMailMessageFactory->getMailMessage($application);
 		}, ShouldNotHappenException::class, "Training application id '1' with next status 'REMINDED' should have both training start and end set");
 
-		$application = $this->getApplication(trainingStart: new DateTime(), trainingEnd: new DateTime());
+		$application = $this->dataFactory->getTrainingApplication(1, trainingStart: new DateTime(), trainingEnd: new DateTime());
 		$application->setNextStatus(TrainingApplicationStatus::Reminded);
 		Assert::same('reminder', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 
-		$application = $this->getApplication(isRemote: true, trainingStart: new DateTime(), trainingEnd: new DateTime());
+		$application = $this->dataFactory->getTrainingApplication(1, trainingStart: new DateTime(), trainingEnd: new DateTime(), remote: true);
 		$application->setNextStatus(TrainingApplicationStatus::Reminded);
 		Assert::same('reminderRemote', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 	}
@@ -83,65 +79,9 @@ class TrainingMailMessageFactoryTest extends TestCase
 				'statusTimeTimeZone' => 'Europe/Prague',
 			],
 		]);
-		$application = $this->getApplication();
+		$application = $this->dataFactory->getTrainingApplication(1, null, null);
 		$application->setNextStatus(TrainingApplicationStatus::InvoiceSentAfter);
 		Assert::same('invoiceAfterProforma', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
-	}
-
-
-	private function getApplication(bool $familiar = false, TrainingApplicationStatus $status = TrainingApplicationStatus::Attended, bool $isRemote = false, ?DateTime $trainingStart = null, ?DateTime $trainingEnd = null): TrainingApplication
-	{
-		return new TrainingApplication(
-			$this->applicationStatuses,
-			$this->trainingMailMessageFactory,
-			$this->trainingFiles,
-			1,
-			null,
-			null,
-			$familiar,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			$status,
-			new DateTime(),
-			true,
-			false,
-			false,
-			null,
-			null,
-			'action',
-			Html::fromText('Name'),
-			$trainingStart,
-			$trainingEnd,
-			false,
-			$isRemote,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			'',
-			'',
-			null,
-			null,
-			null,
-			'accessToken',
-			'michal-spacek',
-			'Michal Špaček',
-			'MŠ',
-		);
 	}
 
 }

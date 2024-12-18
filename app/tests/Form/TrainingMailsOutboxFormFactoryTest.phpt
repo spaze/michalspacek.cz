@@ -10,14 +10,10 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
-use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Application\Application;
 use Nette\Utils\Arrays;
-use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -38,10 +34,8 @@ class TrainingMailsOutboxFormFactoryTest extends TestCase
 		private readonly TrainingMailsOutboxFormFactory $formFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Application $application,
-		private readonly TrainingApplicationStatuses $applicationStatuses,
-		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly TrainingFiles $trainingFiles,
 		private readonly NullMailer $mailer,
+		private readonly TrainingTestDataFactory $dataFactory,
 	) {
 		$this->trainingStart = new DateTime('2024-04-03 02:01:00');
 	}
@@ -63,7 +57,16 @@ class TrainingMailsOutboxFormFactoryTest extends TestCase
 
 		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Emails', 'Admin:Emails', 'default');
 		PrivateProperty::setValue($this->application, 'presenter', $presenter);
-		$application = $this->buildApplication();
+		$application = $this->dataFactory->getTrainingApplication(
+			3212,
+			name: 'John Doe',
+			email: 'email@example.com',
+			trainingStart: $this->trainingStart,
+			trainingEnd: new DateTime('2024-04-05 06:07:08'),
+			remote: true,
+			remoteUrl: 'https://zoom.example/',
+			feedbackHref: self::FEEDBACK_URL,
+		);
 
 		$application->setNextStatus(TrainingApplicationStatus::Reminded);
 		$form = $this->formFactory->create(
@@ -101,62 +104,6 @@ class TrainingMailsOutboxFormFactoryTest extends TestCase
 		Assert::same(1, $this->sent);
 		Assert::same('Materiály ze školení Training Name', $this->mailer->getMail()->getSubject());
 		Assert::notContains(self::FEEDBACK_URL, $this->mailer->getMail()->getBody());
-	}
-
-
-	private function buildApplication(): TrainingApplication
-	{
-		return new TrainingApplication(
-			$this->applicationStatuses,
-			$this->trainingMailMessageFactory,
-			$this->trainingFiles,
-			3212,
-			'John Doe',
-			'email@example.com',
-			false,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			TrainingApplicationStatus::Attended,
-			new DateTime(),
-			true,
-			false,
-			false,
-			null,
-			null,
-			'action',
-			Html::fromText('Training Name'),
-			$this->trainingStart,
-			new DateTime('2024-04-05 06:07:08'),
-			false,
-			true,
-			'https://zoom.example/',
-			null,
-			null,
-			self::FEEDBACK_URL,
-			null,
-			null,
-			null,
-			null,
-			null,
-			150,
-			10,
-			165,
-			'',
-			'',
-			null,
-			null,
-			null,
-			'accessToken',
-			'michal-spacek',
-			'Michal Špaček',
-			'MŠ',
-		);
 	}
 
 }
