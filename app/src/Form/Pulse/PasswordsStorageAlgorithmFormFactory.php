@@ -206,7 +206,7 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		if (!empty($values->site->new->url) && $this->sites->getByUrl($values->site->new->url)) {
 			$form->addError('Can\'t add new site, duplicated URL');
 		}
-		if (!empty($values->algo->new->algo) && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algo)) {
+		if (!empty($values->algo->new->algoName) && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName)) {
 			$form->addError('Can\'t add new algorithm, duplicated name');
 		}
 	}
