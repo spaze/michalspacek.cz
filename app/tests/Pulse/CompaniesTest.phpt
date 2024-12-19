@@ -56,7 +56,7 @@ class CompaniesTest extends TestCase
 
 	public function testGetByName(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => 123,
 			'name' => 'One',
 			'tradeName' => 'dba',

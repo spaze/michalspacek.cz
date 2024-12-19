@@ -46,6 +46,8 @@ readonly class ChangePasswordFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
 			$values = $form->getFormValues();
+			assert(is_string($values->password));
+			assert(is_string($values->newPassword));
 			$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 			$onSuccess();
 		};

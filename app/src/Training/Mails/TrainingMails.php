@@ -79,7 +79,7 @@ readonly class TrainingMails
 
 
 	/**
-	 * @return list<TrainingApplication>
+	 * @return array<int, TrainingApplication> id => application
 	 * @throws TrainingDateDoesNotExistException
 	 * @throws HaliteAlert
 	 * @throws SodiumException
@@ -150,7 +150,7 @@ readonly class TrainingMails
 			}
 		}
 
-		return array_values($applications);
+		return $applications;
 	}
 
 

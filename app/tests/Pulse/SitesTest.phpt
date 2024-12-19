@@ -48,7 +48,7 @@ class SitesTest extends TestCase
 
 	public function testGetByUrl(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => 123,
 			'url' => 'https://example.com/',
 			'alias' => 'one',

@@ -3,16 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Files;
 
-use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Applications\TrainingApplication;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
-use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
+use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Utils\Html;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -33,9 +28,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 
 
 	public function __construct(
-		private readonly TrainingApplicationStatuses $applicationStatuses,
-		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly TrainingFiles $trainingFiles,
+		private readonly TrainingTestDataFactory $dataFactory,
 		Session $sessionHandler,
 	) {
 		$this->trainingFilesSessionSection = $sessionHandler->getSection('training', TrainingFilesSessionSection::class);
@@ -56,7 +49,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 		Assert::same(self::TOKEN, $this->sessionSection->get(self::TOKEN_KEY));
 		Assert::null($this->sessionSection->get(self::APPLICATION_ID_KEY));
 
-		$this->trainingFilesSessionSection->setValues(self::TOKEN, $this->buildApplication());
+		$this->trainingFilesSessionSection->setValues(self::TOKEN, $this->dataFactory->getTrainingApplication(self::APPLICATION_ID));
 		Assert::same(self::TOKEN, $this->sessionSection->get(self::TOKEN_KEY));
 		Assert::same(self::APPLICATION_ID, $this->sessionSection->get(self::APPLICATION_ID_KEY));
 	}
@@ -100,62 +93,6 @@ class TrainingFilesSessionSectionTest extends TestCase
 
 		$this->sessionSection->set(self::TOKEN_KEY, self::TOKEN);
 		Assert::same(self::TOKEN, $this->trainingFilesSessionSection->getToken());
-	}
-
-
-	private function buildApplication(): TrainingApplication
-	{
-		return new TrainingApplication(
-			$this->applicationStatuses,
-			$this->trainingMailMessageFactory,
-			$this->trainingFiles,
-			self::APPLICATION_ID,
-			null,
-			null,
-			false,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			TrainingApplicationStatus::Attended,
-			new DateTime(),
-			true,
-			false,
-			false,
-			null,
-			null,
-			'action',
-			Html::fromText('Name'),
-			null,
-			null,
-			false,
-			false,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			'',
-			'',
-			null,
-			null,
-			null,
-			'accessToken',
-			'michal-spacek',
-			'Michal Špaček',
-			'MŠ',
-		);
 	}
 
 }

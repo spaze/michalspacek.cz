@@ -104,7 +104,7 @@ class TrainingDatesTest extends TestCase
 
 	public function testGet(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'dateId' => 1,
 			'trainingId' => 1,
 			'action' => 'action-1',
@@ -223,7 +223,7 @@ class TrainingDatesTest extends TestCase
 	 */
 	public function testLastFreeSeats(DateTime $start, TrainingDateStatus $status, bool $lastFreeSeats): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'dateId' => 1,
 			'trainingId' => 1,
 			'action' => 'action-1',

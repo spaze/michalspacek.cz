@@ -106,7 +106,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 		$this->database->addFetchFieldResult(1); // For Statuses::getStatusId() in TrainingApplicationStorage::insertApplication()
 		$this->database->addFetchFieldResult(303); // For TrainingApplicationSources::getSourceId in TrainingApplicationStorage::insertApplication()
 		$this->database->addFetchFieldResult(4); // For Statuses::getStatusId() in Statuses::setStatus()
-		$this->database->setFetchResult([ // For $prevStatus in Statuses::setStatus()
+		$this->database->setFetchDefaultResult([ // For $prevStatus in Statuses::setStatus()
 			'statusId' => 1,
 			'statusTime' => new DateTime('-2 days'),
 			'statusTimeTimeZone' => 'Europe/Prague',

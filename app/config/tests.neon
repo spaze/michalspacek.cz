@@ -37,7 +37,7 @@ parameters:
 services:
 	- MichalSpacekCz\Test\Application\ApplicationPresenter
 	articles: MichalSpacekCz\Test\Articles\ArticlesMock
-	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock
+	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock(languages: %locales.languages%)
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
 	database.pulse.explorer: @database.default.explorer
@@ -54,6 +54,7 @@ services:
 	security.userStorage: MichalSpacekCz\Test\Security\NullUserStorage
 	- MichalSpacekCz\Test\TestCaseRunner
 	trainingFilesStorage: MichalSpacekCz\Test\Training\TrainingFilesNullStorage
+	- MichalSpacekCz\Test\Training\TrainingTestDataFactory
 	cache.storage: Nette\Caching\Storages\DevNullStorage
 	netteHttpResponse:  # Needed for User\Manager because https://github.com/nette/http/issues/200
 		create: Nette\Http\Response

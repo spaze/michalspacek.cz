@@ -14,7 +14,6 @@ use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use MichalSpacekCz\Twitter\TwitterCards;
@@ -153,16 +152,15 @@ readonly class PostFormFactory
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post) {
-					$this->blogPosts->update($newPost, empty($values->editSummary) ? null : $values->editSummary, $post->getSlugTags());
+					assert(is_string($values->editSummary));
+					$this->blogPosts->update($newPost, $values->editSummary === '' ? null : $values->editSummary, $post->getSlugTags());
 					$onSuccessEdit($newPost);
 				} else {
 					$onSuccessAdd($this->blogPosts->add($newPost));
 				}
 			} catch (UniqueConstraintViolationException) {
 				$slug = $form->getComponent('slug');
-				if (!$slug instanceof TextInput) {
-					throw new ShouldNotHappenException(sprintf("The 'slug' component should be '%s' but it's a %s", TextInput::class, get_debug_type($slug)));
-				}
+				assert($slug instanceof TextInput);
 				$slug->addError($this->texyFormatter->translate('messages.blog.admin.duplicateslug'));
 			}
 		};
@@ -181,33 +179,33 @@ readonly class PostFormFactory
 	 */
 	private function buildPost(stdClass $values, ?int $postId): BlogPost
 	{
-		$title = $values->title;
-		if (!is_string($title)) {
-			throw new ShouldNotHappenException("Title should be a string, but it's a " . get_debug_type($title));
-		}
-		$slug = $values->slug;
-		if (!is_string($slug)) {
-			throw new ShouldNotHappenException("Slug should be a string, but it's a " . get_debug_type($slug));
-		}
-		$twitterCard = $values->twitterCard;
-		if (!is_string($twitterCard)) {
-			throw new ShouldNotHappenException("Twitter card should be a string, but it's a " . get_debug_type($twitterCard));
-		}
+		assert(is_int($values->translationGroup) || $values->translationGroup === null);
+		assert(is_string($values->title));
+		assert(is_string($values->slug));
+		assert(is_int($values->locale));
+		assert(is_string($values->lead));
+		assert(is_string($values->text));
+		assert(is_string($values->published));
+		assert(is_string($values->previewKey));
+		assert(is_string($values->originally));
+		assert(is_string($values->ogImage));
+		assert(is_string($values->tags));
+		assert(is_string($values->recommended));
+		assert(is_string($values->twitterCard));
+		assert(is_array($values->cspSnippets) && array_is_list($values->cspSnippets));
+		assert(is_array($values->allowedTags) && array_is_list($values->allowedTags));
+		assert(is_bool($values->omitExports));
+		/** @var list<string> $cspSnippets */
 		$cspSnippets = $values->cspSnippets;
-		if (!is_array($cspSnippets) || !array_is_list($cspSnippets)) {
-			throw new ShouldNotHappenException("CSP snippets should be a list<string>, but it's a " . get_debug_type($cspSnippets));
-		}
+		/** @var list<string> $allowedTagsGroups */
 		$allowedTagsGroups = $values->allowedTags;
-		if (!is_array($allowedTagsGroups) || !array_is_list($allowedTagsGroups)) {
-			throw new ShouldNotHappenException("Allowed tags groups should be a list<string>, but it's a " . get_debug_type($allowedTagsGroups));
-		}
 		return $this->blogPostFactory->create(
 			$postId,
-			$slug === '' ? Strings::webalize($title) : $slug,
+			$values->slug === '' ? Strings::webalize($values->title) : $values->slug,
 			$values->locale,
 			$this->locales->getLocaleById($values->locale),
-			$values->translationGroup === '' ? null : $values->translationGroup,
-			$title,
+			$values->translationGroup,
+			$values->title,
 			$values->lead === '' ? null : $values->lead,
 			$values->text,
 			$values->published === '' ? null : new DateTime($values->published),
@@ -217,10 +215,10 @@ readonly class PostFormFactory
 			$values->tags === '' ? [] : $this->tags->toArray($values->tags),
 			$values->tags === '' ? [] : $this->tags->toSlugArray($values->tags),
 			$values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [],
-			$twitterCard === '' ? null : $this->twitterCards->getCard($twitterCard),
+			$values->twitterCard === '' ? null : $this->twitterCards->getCard($values->twitterCard),
 			$cspSnippets,
 			$allowedTagsGroups,
-			(bool)$values->omitExports,
+			$values->omitExports,
 		);
 	}
 

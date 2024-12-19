@@ -24,14 +24,19 @@ class Database extends Explorer
 
 	private int $insertIdsPosition = 0;
 
-	/** @var array<string, array<string|int, string|int|bool|null>> */
+	/** @var array<string, array<string|int, string|int|float|bool|null>> */
 	private array $queriesScalarParams = [];
 
-	/** @var array<string, array<int, array<string, string|int|bool|null>>> */
+	/** @var array<string, array<int, array<string, string|int|float|bool|null>>> */
 	private array $queriesArrayParams = [];
 
 	/** @var array<string, int|string|DateTime|null> */
-	private array $fetchResult = [];
+	private array $fetchDefaultResult = [];
+
+	/** @var list<array<string, int|string|DateTime|null>> */
+	private array $fetchResults = [];
+
+	private int $fetchResultsPosition = 0;
 
 	private mixed $fetchFieldDefaultResult = null;
 
@@ -56,6 +61,8 @@ class Database extends Explorer
 
 	private int $fetchAllResultsPosition = 0;
 
+	private ?ResultSet $resultSet = null;
+
 
 	public function reset(): void
 	{
@@ -64,7 +71,9 @@ class Database extends Explorer
 		$this->insertIdsPosition = 0;
 		$this->queriesScalarParams = [];
 		$this->queriesArrayParams = [];
-		$this->fetchResult = [];
+		$this->fetchDefaultResult = [];
+		$this->fetchResults = [];
+		$this->fetchResultsPosition = 0;
 		$this->fetchPairsDefaultResult = [];
 		$this->fetchPairsResults = [];
 		$this->fetchPairsResultsPosition = 0;
@@ -74,6 +83,7 @@ class Database extends Explorer
 		$this->fetchAllDefaultResult = [];
 		$this->fetchAllResults = [];
 		$this->fetchAllResultsPosition = 0;
+		$this->resultSet = null;
 		$this->wontThrow();
 	}
 
@@ -135,7 +145,7 @@ class Database extends Explorer
 				$this->queriesScalarParams[$sql][] = $this->formatValue($param);
 			}
 		}
-		return new ResultSet();
+		return $this->resultSet ?? new ResultSet();
 	}
 
 
@@ -145,14 +155,14 @@ class Database extends Explorer
 	 * For example datetime is stored without timezone info.
 	 * The DateTime format here is the same as in \Nette\Database\Drivers\MySqlDriver::formatDateTime() but without the quotes.
 	 */
-	private function formatValue(string|int|bool|DateTimeInterface|null $value): string|int|bool|null
+	private function formatValue(string|int|float|bool|DateTimeInterface|null $value): string|int|float|bool|null
 	{
 		return $value instanceof DateTimeInterface ? $value->format(DateTimeFormat::MYSQL) : $value;
 	}
 
 
 	/**
-	 * @return array<string|int, string|int|bool|DateTimeInterface|null>
+	 * @return array<string|int, string|int|float|bool|DateTimeInterface|null>
 	 */
 	public function getParamsForQuery(string $query): array
 	{
@@ -161,7 +171,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @return array<int, array<string, string|int|bool|DateTimeInterface|null>>
+	 * @return array<int, array<string, string|int|float|bool|DateTimeInterface|null>>
 	 */
 	public function getParamsArrayForQuery(string $query): array
 	{
@@ -170,11 +180,20 @@ class Database extends Explorer
 
 
 	/**
+	 * @param array<string, int|string|DateTime|null> $fetchDefaultResult
+	 */
+	public function setFetchDefaultResult(array $fetchDefaultResult): void
+	{
+		$this->fetchDefaultResult = $fetchDefaultResult;
+	}
+
+
+	/**
 	 * @param array<string, int|string|DateTime|null> $fetchResult
 	 */
-	public function setFetchResult(array $fetchResult): void
+	public function addFetchResult(array $fetchResult): void
 	{
-		$this->fetchResult = $fetchResult;
+		$this->fetchResults[] = $fetchResult;
 	}
 
 
@@ -185,7 +204,7 @@ class Database extends Explorer
 	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
 	{
-		$row = $this->createRow($this->fetchResult);
+		$row = $this->createRow($this->fetchResults[$this->fetchResultsPosition++] ?? $this->fetchDefaultResult);
 		return $row->count() > 0 ? $row : null;
 	}
 
@@ -260,6 +279,12 @@ class Database extends Explorer
 	public function addFetchAllResult(array $fetchAllResult): void
 	{
 		$this->fetchAllResults[] = $this->getRows($fetchAllResult);
+	}
+
+
+	public function setResultSet(ResultSet $resultSet): void
+	{
+		$this->resultSet = $resultSet;
 	}
 
 

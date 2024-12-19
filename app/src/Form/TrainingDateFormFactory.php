@@ -117,6 +117,7 @@ readonly class TrainingDateFormFactory
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná cena');
 		$form->onValidate[] = function (UiForm $form) use ($price): void {
 			$values = $form->getFormValues();
+			assert(is_int($values->training));
 			$training = $this->trainings->getById($values->training);
 			if ($values->price === '' && $training->getPrice() === null) {
 				$price->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
@@ -141,6 +142,22 @@ readonly class TrainingDateFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $date): void {
 			$values = $form->getFormValues();
+			assert(is_int($values->training));
+			assert(is_int($values->venue) || $values->venue === null);
+			assert(is_bool($values->remote));
+			assert(is_string($values->start));
+			assert(is_string($values->end));
+			assert(is_string($values->label));
+			assert(is_int($values->status));
+			assert(is_bool($values->public));
+			assert(is_int($values->cooperation));
+			assert(is_string($values->note));
+			assert(is_string($values->price));
+			assert(is_string($values->studentDiscount));
+			assert(is_string($values->remoteUrl));
+			assert(is_string($values->remoteNotes));
+			assert(is_string($values->videoHref));
+			assert(is_string($values->feedbackHref));
 			if ($date) {
 				$this->trainingDates->update(
 					$date->getId(),

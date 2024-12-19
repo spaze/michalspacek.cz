@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use Nette\Database\Explorer;
@@ -32,6 +33,7 @@ class TrainingApplicationStatuses
 		private readonly Explorer $database,
 		private readonly TypedDatabase $typedDatabase,
 		private readonly TrainingApplicationStatusHistory $statusHistory,
+		private readonly DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -204,7 +206,7 @@ class TrainingApplicationStatuses
 		assert($prevStatus->statusTime instanceof DateTime);
 		assert(is_string($prevStatus->statusTimeTimeZone));
 
-		$datetime = new DateTime($date ?? '');
+		$datetime = $this->dateTimeFactory->create($date ?? '');
 
 		Debugger::log(sprintf(
 			'Changing status for application id: %d; old status: %s, old status time: %s; new status: %s, new status time: %s',

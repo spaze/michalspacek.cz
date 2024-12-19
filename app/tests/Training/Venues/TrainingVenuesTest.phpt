@@ -30,7 +30,7 @@ class TrainingVenuesTest extends TestCase
 		}, TrainingVenueNotFoundException::class, "Training venue 'foo' doesn't exist");
 
 
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => 1,
 			'name' => 'Name',
 			'nameExtended' => null,

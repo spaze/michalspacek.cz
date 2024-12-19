@@ -7,15 +7,11 @@ namespace MichalSpacekCz\Training\Applications;
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
-use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
-use Nette\Utils\Html;
 use Override;
 use stdClass;
 use Tester\Assert;
@@ -29,25 +25,13 @@ class TrainingApplicationSessionSectionTest extends TestCase
 
 	private const int APPLICATION_ID = 303;
 	private const int DATE_ID = 909;
-	private const string NAME = 'Foo';
-	private const string EMAIL = 'foo@example.example';
-	private const string COMPANY = 'Teh Company';
-	private const string STREET = 'Street';
-	private const string CITY = 'City';
-	private const string ZIP = '303808';
-	private const string COUNTRY = 'Country';
-	private const string COMPANY_ID = '31337';
-	private const string COMPANY_TAX_ID = 'CZ31337';
-	private const string NOTE = 'Note';
 
 	private TrainingApplicationSessionSection $trainingApplicationSessionSection;
 	private SessionSection $sessionSection;
 
 
 	public function __construct(
-		private readonly TrainingApplicationStatuses $applicationStatuses,
-		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly TrainingFiles $trainingFiles,
+		private readonly TrainingTestDataFactory $dataFactory,
 		Session $sessionHandler,
 	) {
 		$this->trainingApplicationSessionSection = $sessionHandler->getSection('training', TrainingApplicationSessionSection::class);
@@ -64,7 +48,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 
 	public function testSetApplicationForTraining(): void
 	{
-		$application = $this->buildApplication();
+		$application = $this->dataFactory->getTrainingApplication(self::APPLICATION_ID, null, null);
 		$this->sessionSection->set('application', ['foo' => 'bar']);
 		$this->trainingApplicationSessionSection->setApplicationForTraining('training-action', $application);
 		Assert::same(['foo' => 'bar', 'training-action' => ['id' => $application->getId(), 'dateId' => $application->getDateId()]], $this->sessionSection->get('application'));
@@ -192,62 +176,6 @@ class TrainingApplicationSessionSectionTest extends TestCase
 		foreach (array_keys($values) as $key) {
 			Assert::null($this->sessionSection->get($key), $key);
 		}
-	}
-
-
-	private function buildApplication(): TrainingApplication
-	{
-		return new TrainingApplication(
-			$this->applicationStatuses,
-			$this->trainingMailMessageFactory,
-			$this->trainingFiles,
-			self::APPLICATION_ID,
-			self::NAME,
-			self::EMAIL,
-			false,
-			self::COMPANY,
-			self::STREET,
-			self::CITY,
-			self::ZIP,
-			self::COUNTRY,
-			self::COMPANY_ID,
-			self::COMPANY_TAX_ID,
-			self::NOTE,
-			TrainingApplicationStatus::Attended,
-			new DateTime(),
-			true,
-			false,
-			false,
-			self::DATE_ID,
-			null,
-			'action',
-			Html::fromText('Name'),
-			null,
-			null,
-			false,
-			false,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			'',
-			'',
-			null,
-			null,
-			null,
-			'accessToken',
-			'michal-spacek',
-			'Michal Špaček',
-			'MŠ',
-		);
 	}
 
 

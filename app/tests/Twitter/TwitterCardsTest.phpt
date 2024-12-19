@@ -58,7 +58,7 @@ class TwitterCardsTest extends TestCase
 
 	public function testGetCard(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'cardId' => 3,
 			'card' => 'summary',
 			'title' => 'Summary',

@@ -6,7 +6,9 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 readonly class TrainingApplicationStatusesFormFactory
@@ -48,9 +50,12 @@ readonly class TrainingApplicationStatusesFormFactory
 
 		$submitStatuses->onClick[] = function () use ($form, $onSuccess): void {
 			$values = $form->getFormValues();
+			assert($values->applications instanceof ArrayHash);
+			assert(is_string($values->date));
 			foreach ($values->applications as $id => $status) {
+				assert(is_string($status));
 				if ($status) {
-					$this->trainingApplicationStatuses->updateStatus($id, $status, $values->date);
+					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::from($status), $values->date);
 				}
 			}
 			$onSuccess(null);
@@ -68,7 +73,7 @@ readonly class TrainingApplicationStatusesFormFactory
 
 			$statuses = [];
 			foreach ($attendedStatuses as $status) {
-				$statuses[] = Html::el('code')->setText($status);
+				$statuses[] = Html::el('code')->setText($status->value);
 			}
 			$message = Html::el()
 				->setText('Tykání nastaveno pro ' . $total . ' účastníků ve stavu ')

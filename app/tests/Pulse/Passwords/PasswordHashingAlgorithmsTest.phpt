@@ -57,7 +57,7 @@ class PasswordHashingAlgorithmsTest extends TestCase
 
 	public function testGetAlgorithmByName(): void
 	{
-		$this->database->setFetchResult([
+		$this->database->setFetchDefaultResult([
 			'id' => 303,
 			'algo' => 'Arr-gone',
 			'alias' => 'arr-gone',

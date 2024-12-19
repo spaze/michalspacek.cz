@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Mails\TrainingMails;
 class EmailsPresenter extends BasePresenter
 {
 
-	/** @var list<TrainingApplication> */
+	/** @var array<int, TrainingApplication> */
 	private array $applications = [];
 
 
