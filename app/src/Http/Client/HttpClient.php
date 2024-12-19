@@ -108,7 +108,7 @@ class HttpClient
 		if ($result === false) {
 			throw new HttpClientRequestException($request->getUrl());
 		}
-		if (is_array($options['ssl'])) {
+		if (isset($options['ssl']) && is_array($options['ssl'])) {
 			$certificate = isset($options['ssl']['peer_certificate']) && $options['ssl']['peer_certificate'] instanceof OpenSSLCertificate
 				? $options['ssl']['peer_certificate']
 				: null;
