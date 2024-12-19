@@ -15,7 +15,7 @@ use Nette\Database\Conventions\StaticConventions;
 
 
 /**
- * Database explorer.
+ * Provides high-level database layer with ActiveRow pattern.
  */
 class Explorer
 {
@@ -79,6 +79,9 @@ class Explorer
 	}
 
 
+	/**
+	 * Returns table selection.
+	 */
 	public function table(string $table): Table\Selection
 	{
 		return new Table\Selection($this, $this->conventions, $table, $this->cacheStorage);
@@ -117,6 +120,16 @@ class Explorer
 
 
 	/**
+	 * Shortcut for query()->fetchAssoc()
+	 * @param  literal-string  $sql
+	 */
+	public function fetchAssoc(#[Language('SQL')] string $sql, #[Language('GenericSQL')] ...$params): ?array
+	{
+		return $this->connection->query($sql, ...$params)->fetchAssoc();
+	}
+
+
+	/**
 	 * Shortcut for query()->fetchField()
 	 * @param  literal-string  $sql
 	 */
@@ -127,12 +140,22 @@ class Explorer
 
 
 	/**
-	 * Shortcut for query()->fetchFields()
+	 * Shortcut for query()->fetchList()
+	 * @param  literal-string  $sql
+	 */
+	public function fetchList(#[Language('SQL')] string $sql, #[Language('GenericSQL')] ...$params): ?array
+	{
+		return $this->connection->query($sql, ...$params)->fetchList();
+	}
+
+
+	/**
+	 * Shortcut for query()->fetchList()
 	 * @param  literal-string  $sql
 	 */
 	public function fetchFields(#[Language('SQL')] string $sql, #[Language('GenericSQL')] ...$params): ?array
 	{
-		return $this->connection->query($sql, ...$params)->fetchFields();
+		return $this->connection->query($sql, ...$params)->fetchList();
 	}
 
 
@@ -156,6 +179,9 @@ class Explorer
 	}
 
 
+	/**
+	 * Creates SQL literal value.
+	 */
 	public static function literal(string $value, ...$params): SqlLiteral
 	{
 		return new SqlLiteral($value, $params);

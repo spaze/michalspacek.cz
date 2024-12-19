@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace Nette\Database;
 
 use Nette;
+use Nette\Utils\Arrays;
 use PDO;
 
 
 /**
- * Represents a result set.
+ * Represents a database result set.
  */
 class ResultSet implements \Iterator, IRowContainer
 {
@@ -72,9 +73,7 @@ class ResultSet implements \Iterator, IRowContainer
 	}
 
 
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	public function getPdoStatement(): ?\PDOStatement
 	{
 		return $this->pdoStatement;
@@ -131,7 +130,7 @@ class ResultSet implements \Iterator, IRowContainer
 
 
 	/**
-	 * Displays complete result set as HTML table for debug purposes.
+	 * Displays result set as HTML table.
 	 */
 	public function dump(): void
 	{
@@ -178,11 +177,18 @@ class ResultSet implements \Iterator, IRowContainer
 	}
 
 
+	/********************* fetch ****************d*g**/
+
+
 	/**
-	 * Fetches single row object.
+	 * Returns the next row as an associative array or null if there are no more rows.
 	 */
-	public function fetch(): ?Row
+	public function fetchAssoc(?string $path = null): ?array
 	{
+		if ($path !== null) {
+			return Arrays::associate($this->fetchAll(), $path);
+		}
+
 		$data = $this->pdoStatement ? $this->pdoStatement->fetch() : null;
 		if (!$data) {
 			$this->pdoStatement->closeCursor();
@@ -193,40 +199,56 @@ class ResultSet implements \Iterator, IRowContainer
 			trigger_error("Found duplicate columns in database result set: $duplicates.");
 		}
 
-		$row = new Row;
-		foreach ($this->normalizeRow($data) as $key => $value) {
-			if ($key !== '') {
-				$row->$key = $value;
-			}
+		return $this->normalizeRow($data);
+	}
+
+
+	/**
+	 * Returns the next row as an object Row or null if there are no more rows.
+	 */
+	public function fetch(): ?Row
+	{
+		$data = $this->fetchAssoc();
+		if ($data === null) {
+			return null;
 		}
 
 		$this->lastRowKey++;
-		return $this->lastRow = $row;
+		return $this->lastRow = Arrays::toObject($data, new Row);
 	}
 
 
 	/**
-	 * Fetches single field.
+	 * Returns the first field of the next row or null if there are no more rows.
 	 */
 	public function fetchField(): mixed
 	{
-		$row = $this->fetch();
-		return $row ? $row[0] : null;
+		$row = $this->fetchAssoc();
+		return $row ? reset($row) : null;
 	}
 
 
 	/**
-	 * Fetches array of fields.
+	 * Returns the next row as indexed array or null if there are no more rows.
+	 */
+	public function fetchList(): ?array
+	{
+		$row = $this->fetchAssoc();
+		return $row ? array_values($row) : null;
+	}
+
+
+	/**
+	 * Alias for fetchList().
 	 */
 	public function fetchFields(): ?array
 	{
-		$row = $this->fetch();
-		return $row ? array_values((array) $row) : null;
+		return $this->fetchList();
 	}
 
 
 	/**
-	 * Fetches all rows as associative array.
+	 * Returns all rows as associative array.
 	 */
 	public function fetchPairs(string|int|\Closure|null $keyOrCallback = null, string|int|null $value = null): array
 	{
@@ -235,21 +257,12 @@ class ResultSet implements \Iterator, IRowContainer
 
 
 	/**
-	 * Fetches all rows.
+	 * Returns all rows.
 	 * @return Row[]
 	 */
 	public function fetchAll(): array
 	{
 		$this->rows ??= iterator_to_array($this);
 		return $this->rows;
-	}
-
-
-	/**
-	 * Fetches all rows and returns associative tree.
-	 */
-	public function fetchAssoc(string $path): array
-	{
-		return Nette\Utils\Arrays::associate($this->fetchAll(), $path);
 	}
 }

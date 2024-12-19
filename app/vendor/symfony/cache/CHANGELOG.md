@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+7.2
+---
+
+ * `igbinary_serialize()` is no longer used instead of `serialize()` by default when the igbinary extension is installed,
+   due to behavior compatibilities between the two
+ * Add optional `Psr\Clock\ClockInterface` parameter to `ArrayAdapter`
+
 7.1
 ---
 
