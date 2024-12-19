@@ -158,7 +158,7 @@ services:
 	- MichalSpacekCz\Training\Trainings\Trainings
 	- MichalSpacekCz\Training\Venues\TrainingVenues
 	- MichalSpacekCz\Twitter\TwitterCards
-	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.explorer, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
+	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.explorer, @typedDatabase.upcKeys, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
 	- MichalSpacekCz\UpcKeys\Ubee(@typedDatabase.upcKeys)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
