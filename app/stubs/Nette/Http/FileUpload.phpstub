@@ -1,0 +1,18 @@
+<?php
+// Copied from https://github.com/phpstan/phpstan-nette/pull/166,
+// can be removed once the PR is merged and released.
+
+namespace Nette\Http;
+
+class FileUpload
+{
+
+	/**
+	 * @return array{0:positive-int, 1:positive-int}|null
+	 */
+	public function getImageSize(): ?array
+	{
+		// nothing
+	}
+
+}
