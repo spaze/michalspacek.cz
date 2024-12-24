@@ -403,7 +403,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '4aa68d3ea343b9576b5fdebef1332f701a7bc994',
+            'reference' => '5a88337185d08d54ac102bc6eb137fc432ea70fb',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
