@@ -23,4 +23,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Used to comment on PRs
           GITLEAKS_VERSION: latest
-          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false # Can re-enable when https://github.com/gitleaks/gitleaks/pull/1673 is released
