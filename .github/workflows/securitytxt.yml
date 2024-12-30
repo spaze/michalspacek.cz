@@ -22,7 +22,7 @@ jobs:
           - www.michalspacek.com
           - upcwifikeys.com
     steps:
-    - uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
+    - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # v2
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
