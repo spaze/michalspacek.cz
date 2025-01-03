@@ -23,9 +23,6 @@ return (new Configuration())
 		'ext-pcntl', // Used by latte/latte Latte\Tools\Linter and nette/tester's Tester\Runner\CliTester
 	], [ErrorType::UNUSED_DEPENDENCY])
 
-	// shipmonk/composer-dependency-analyser#203
-	->ignoreErrorsOnExtensionAndPath('ext-session', 'src/EasterEgg/PhpInfoCookieSanitization.php', [ErrorType::SHADOW_DEPENDENCY])
-
 	// TestCaseRunner is used only in tests
 	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/src/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 ;
