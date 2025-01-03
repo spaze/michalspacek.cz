@@ -190,6 +190,7 @@ class TexyFormatter
 
 		$result = Regex::replaceCallbackStrictGroups(
 			'~\*\*([^:]+):([^*]+)\*\*~',
+			/** @param array<int, string> $matches */
 			function (array $matches) use ($replacements): string {
 				return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
 			},

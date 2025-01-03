@@ -9,7 +9,6 @@
 	findUnusedCode="true"
 	findUnusedPsalmSuppress="true"
 	maxStringLength="2600"
-	errorBaseline="psalm-baseline.xml"
 >
 	<projectFiles>
 		<directory name="." />

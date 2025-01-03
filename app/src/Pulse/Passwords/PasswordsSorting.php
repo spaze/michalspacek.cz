@@ -45,46 +45,38 @@ class PasswordsSorting
 
 	public function sort(StorageRegistry $storages, string $sort): StorageRegistry
 	{
-		switch ($sort) {
-			case self::RATING_A_F:
-			case self::RATING_F_A:
-				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
-					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
-						$result = $sort === self::RATING_A_F ? $siteA->getRating()->name <=> $siteB->getRating()->name : $siteB->getRating()->name <=> $siteA->getRating()->name;
+		$sorter = match ($sort) {
+			self::RATING_A_F, self::RATING_F_A => function (Storage $a, Storage $b) use ($storages, $sort): int {
+				return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
+					$result = $sort === self::RATING_A_F ? $siteA->getRating()->name <=> $siteB->getRating()->name : $siteB->getRating()->name <=> $siteA->getRating()->name;
+					if ($result === 0) {
+						$result = $this->collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $this->collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
 						if ($result === 0) {
-							$result = $this->collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $this->collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
-							if ($result === 0) {
-								$subKeyA = $siteA instanceof StorageSpecificSite ? $siteA->getUrl() : $siteA->getLatestAlgorithm()->getAlias();
-								$subKeyB = $siteB instanceof StorageSpecificSite ? $siteB->getUrl() : $siteB->getLatestAlgorithm()->getAlias();
-								$result = $subKeyA <=> $subKeyB;
-							}
+							$subKeyA = $siteA instanceof StorageSpecificSite ? $siteA->getUrl() : $siteA->getLatestAlgorithm()->getAlias();
+							$subKeyB = $siteB instanceof StorageSpecificSite ? $siteB->getUrl() : $siteB->getLatestAlgorithm()->getAlias();
+							$result = $subKeyA <=> $subKeyB;
 						}
-						return $result;
-					});
-				};
-				break;
-			case self::NEWEST_DISCLOSURES_FIRST:
-			case self::NEWEST_DISCLOSURES_LAST:
-				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
-					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
-						return $sort === self::NEWEST_DISCLOSURES_LAST
-							? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished()
-							: $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
-					});
-				};
-				break;
-			case self::NEWLY_ADDED_FIRST:
-			case self::NEWLY_ADDED_LAST:
-				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
-					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
-						$addedA = $siteA->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
-						$addedB = $siteB->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
-						return $sort === self::NEWLY_ADDED_LAST ? $addedA <=> $addedB : $addedB <=> $addedA;
-					});
-				};
-				break;
-		}
-		if (isset($sorter)) {
+					}
+					return $result;
+				});
+			},
+			self::NEWEST_DISCLOSURES_FIRST, self::NEWEST_DISCLOSURES_LAST => function (Storage $a, Storage $b) use ($storages, $sort): int {
+				return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
+					return $sort === self::NEWEST_DISCLOSURES_LAST
+						? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished()
+						: $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
+				});
+			},
+			self::NEWLY_ADDED_FIRST, self::NEWLY_ADDED_LAST => function (Storage $a, Storage $b) use ($storages, $sort): int {
+				return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
+					$addedA = $siteA->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
+					$addedB = $siteB->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
+					return $sort === self::NEWLY_ADDED_LAST ? $addedA <=> $addedB : $addedB <=> $addedA;
+				});
+			},
+			default => null,
+		};
+		if ($sorter !== null) {
 			$storages->sortStorages($sorter);
 		}
 		return $storages;

@@ -267,6 +267,8 @@ class TalkSlides
 			assert(is_string($slide->speakerNotes));
 			$width = self::SLIDE_MAX_WIDTH;
 			$height = self::SLIDE_MAX_HEIGHT;
+			$slideFilename = $slide->filename;
+			$slideFilenameAlternative = $slide->filenameAlternative;
 
 			if (isset($slide->replace, $slide->replaceAlternative)) {
 				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides->getByNumber($slide->number)->getFilename(), $width, $height);
@@ -279,11 +281,11 @@ class TalkSlides
 					}
 				}
 			} else {
-				$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
+				$replace = $replaceAlternative = $slideFilename = $slideFilenameAlternative = null;
 			}
 
 			try {
-				$this->updateSlidesRow($talkId, $slide->alias, $slide->number, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
+				$this->updateSlidesRow($talkId, $slide->alias, $slide->number, $replace ?? $slideFilename ?? '', $replaceAlternative ?? $slideFilenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
 			} catch (UniqueConstraintViolationException $e) {
 				throw new DuplicatedSlideException($slide->number, previous: $e);
 			}

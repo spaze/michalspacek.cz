@@ -7,6 +7,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingReviewNotFoundException;
+use MichalSpacekCz\Training\Exceptions\TrainingReviewRankingInvalidException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -24,6 +25,7 @@ readonly class TrainingReviews
 
 	/**
 	 * @return list<TrainingReview>
+	 * @throws TrainingReviewRankingInvalidException
 	 */
 	public function getVisibleReviews(int $id, ?int $limit = null): array
 	{
@@ -62,6 +64,7 @@ readonly class TrainingReviews
 	 * Get all reviews including hidden by training id.
 	 *
 	 * @return list<TrainingReview>
+	 * @throws TrainingReviewRankingInvalidException
 	 */
 	public function getAllReviews(int $id): array
 	{
@@ -95,6 +98,7 @@ readonly class TrainingReviews
 
 	/**
 	 * @throws TrainingReviewNotFoundException
+	 * @throws TrainingReviewRankingInvalidException
 	 */
 	public function getReview(int $reviewId): TrainingReview
 	{
@@ -127,6 +131,7 @@ readonly class TrainingReviews
 
 	/**
 	 * @return list<TrainingReview>
+	 * @throws TrainingReviewRankingInvalidException
 	 */
 	public function getReviewsByDateId(int $dateId): array
 	{
@@ -198,6 +203,9 @@ readonly class TrainingReviews
 	}
 
 
+	/**
+	 * @throws TrainingReviewRankingInvalidException
+	 */
 	private function createFromDatabaseRow(Row $row): TrainingReview
 	{
 		assert(is_int($row->id));
@@ -205,13 +213,14 @@ readonly class TrainingReviews
 		assert(is_string($row->company));
 		assert($row->jobTitle === null || is_string($row->jobTitle));
 		assert(is_string($row->review));
-		assert(is_string($row->reviewTexy));
 		assert($row->href === null || is_string($row->href));
 		assert(is_int($row->hidden));
-		assert($row->ranking === null || is_int($row->ranking) && $row->ranking > 0);
+		assert($row->ranking === null || is_int($row->ranking));
 		assert($row->note === null || is_string($row->note));
 		assert(is_int($row->dateId));
-
+		if ($row->ranking !== null && $row->ranking <= 0) {
+			throw new TrainingReviewRankingInvalidException($row->id, $row->ranking);
+		}
 		return new TrainingReview(
 			$row->id,
 			$row->name,

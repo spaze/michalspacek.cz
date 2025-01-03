@@ -38,11 +38,12 @@ class WinterIsComing
 	public function ruleEmail(): callable
 	{
 		return function (TextInput $input) {
+			$value = $input->getValue();
 			if (
-				is_string($input->getValue())
+				is_string($value)
 				&& (
-					Arrays::contains(self::EMAILS, $input->getValue())
-					|| Regex::isMatch('/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/', $input->getValue())
+					Arrays::contains(self::EMAILS, $value)
+					|| Regex::isMatch('/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/', $value)
 				)
 			) {
 				$this->sendSyntaxError($input);
