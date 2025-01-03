@@ -326,9 +326,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.0.4',
-            'version' => '2.0.4.0',
-            'reference' => '50d276fc3bf1430ec315f2f109bbde2769821524',
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
+            'reference' => '2392d360fdf54ea253aa6c68cad1d4ba2e54e927',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -403,7 +403,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '5a88337185d08d54ac102bc6eb137fc432ea70fb',
+            'reference' => '43628df4c324d77a9e4e6e5b7d0479586b5ee2b6',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -412,9 +412,9 @@
             'dev_requirement' => true,
         ),
         'shipmonk/composer-dependency-analyser' => array(
-            'pretty_version' => '1.8.1',
-            'version' => '1.8.1.0',
-            'reference' => '0acd9d94be4d9397055ff012d0abf2ae88072e99',
+            'pretty_version' => '1.8.2',
+            'version' => '1.8.2.0',
+            'reference' => 'f374f5366028fd7ece8aeaffa76895d73dc0a05a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../shipmonk/composer-dependency-analyser',
             'aliases' => array(),
@@ -625,9 +625,9 @@
             'dev_requirement' => false,
         ),
         'symfony/translation' => array(
-            'pretty_version' => 'v7.2.0',
-            'version' => '7.2.0.0',
-            'reference' => 'dc89e16b44048ceecc879054e5b7f38326ab6cc5',
+            'pretty_version' => 'v7.2.2',
+            'version' => '7.2.2.0',
+            'reference' => 'e2674a30132b7cc4d74540d6c2573aa363f05923',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
