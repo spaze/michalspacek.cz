@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'spaze/michalspacek.cz',
-        'pretty_version' => '1.3.3.7',
-        'version' => '1.3.3.7',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '53ccdd4e3bfed40f4fe0a708fec39406a888c21a',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -466,9 +466,9 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => '1.3.3.7',
-            'version' => '1.3.3.7',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '53ccdd4e3bfed40f4fe0a708fec39406a888c21a',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
