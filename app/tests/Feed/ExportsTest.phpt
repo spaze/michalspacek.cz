@@ -15,6 +15,7 @@ use Nette\Caching\Storage;
 use Nette\Utils\Html;
 use Override;
 use SimpleXMLElement;
+use Spaze\Exports\Atom\Feed;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -70,14 +71,7 @@ class ExportsTest extends TestCase
 	{
 		$this->articles->addBlogPost(1, new DateTime(), 'one');
 		$this->articles->addBlogPost(2, new DateTime(), 'two');
-		$feed = $this->exports->getArticles('https://example.com/');
-		$xml = simplexml_load_string((string)$feed);
-		if ($xml === false || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
-			Assert::fail('Cannot load the feed');
-		} else {
-			$this->assertEntry($xml->entry[0], 'one');
-			$this->assertEntry($xml->entry[1], 'two');
-		}
+		$this->assertEntries('one', null, 'two', null);
 	}
 
 
@@ -92,14 +86,12 @@ class ExportsTest extends TestCase
 		];
 		$this->articles->addBlogPost(1, new DateTime(), 'one', $editsOne);
 		$this->articles->addBlogPost(2, new DateTime(), 'two', $editsTwo);
-		$feed = $this->exports->getArticles('https://example.com/');
-		$xml = simplexml_load_string((string)$feed);
-		if ($xml === false || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
-			Assert::fail('Cannot load the feed');
-		} else {
-			$this->assertEntry($xml->entry[0], 'one', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>14.3.</strong> Edit one one</em></li><li><em><strong>14.4.</strong> Edit one two</em></li></ul>Text one');
-			$this->assertEntry($xml->entry[1], 'two', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>15.3.</strong> Edit two one</em></li></ul>Text two');
-		}
+		$this->assertEntries(
+			'one',
+			'<h3>messages.blog.post.edits</h3><ul><li><em><strong>14.3.</strong> Edit one one</em></li><li><em><strong>14.4.</strong> Edit one two</em></li></ul>Text one',
+			'two',
+			'<h3>messages.blog.post.edits</h3><ul><li><em><strong>15.3.</strong> Edit two one</em></li></ul>Text two',
+		);
 	}
 
 
@@ -108,16 +100,7 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(1, new DateTime(), 'one');
 		$this->articles->addBlogPost(2, new DateTime(), 'two', omitExports: true);
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: false);
-		$feed = $this->exports->getArticles('https://example.com/');
-		$xml = simplexml_load_string((string)$feed);
-		if ($xml === false || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
-			Assert::fail('Cannot load the feed');
-		} else {
-			$this->assertEntry($xml->entry[0], 'one');
-			$this->assertEntry($xml->entry[1], 'three');
-			Assert::count(2, $xml->entry);
-			Assert::notNull($feed->getUpdated());
-		}
+		$this->assertEntries('one', null, 'three', null);
 	}
 
 
@@ -126,25 +109,42 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(1, new DateTime(), 'one', omitExports: true);
 		$this->articles->addBlogPost(2, new DateTime(), 'two', omitExports: true);
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: true);
-		$feed = $this->exports->getArticles('https://example.com/');
-		$xml = simplexml_load_string((string)$feed);
-		if ($xml === false || $xml->entry === null) {
-			Assert::fail('Cannot load the feed');
-		} else {
-			Assert::count(0, $xml->entry);
-			Assert::null($feed->getUpdated());
-		}
+		[$feed, $count] = $this->getEntries();
+		Assert::same(0, $count);
+		Assert::null($feed->getUpdated());
 	}
 
 
-	private function assertEntry(SimpleXMLElement $entry, string $suffix, ?string $text = null): void
+	/**
+	 * @return array{0: Feed, 1:non-negative-int, 2: SimpleXMLElement|null, 3: SimpleXMLElement|null}
+	 */
+	private function getEntries(): array
 	{
-		$link = "https://example.com/{$suffix}";
-		Assert::same($link, (string)$entry->id, $suffix);
-		Assert::same("Excerpt {$suffix}", (string)$entry->summary, $suffix);
-		Assert::same("Title {$suffix}", (string)$entry->title, $suffix);
-		Assert::same($link, $entry->link !== null ? (string)$entry->link['href'] : null, $suffix);
-		Assert::same($text ?? "Text {$suffix}", (string)$entry->content, $suffix);
+		$feed = $this->exports->getArticles('https://example.com/');
+		$xml = simplexml_load_string((string)$feed);
+		assert($xml instanceof SimpleXMLElement);
+		assert($xml->entry instanceof SimpleXMLElement);
+		return [$feed, count($xml->entry), $xml->entry[0], $xml->entry[1]];
+	}
+
+
+	private function assertEntries(string $suffix1, ?string $text1, string $suffix2, ?string $text2): void
+	{
+		[$feed, $count, $entry1, $entry2] = $this->getEntries();
+		assert($entry1 instanceof SimpleXMLElement);
+		assert($entry2 instanceof SimpleXMLElement);
+		Assert::same(2, $count);
+		Assert::same("https://example.com/$suffix1", (string)$entry1->id);
+		Assert::same("Excerpt $suffix1", (string)$entry1->summary);
+		Assert::same("Title $suffix1", (string)$entry1->title);
+		Assert::same("https://example.com/$suffix1", $entry1->link !== null ? (string)$entry1->link['href'] : null);
+		Assert::same($text1 ?? "Text $suffix1", (string)$entry1->content);
+		Assert::same("https://example.com/$suffix2", (string)$entry2->id);
+		Assert::same("Excerpt $suffix2", (string)$entry2->summary);
+		Assert::same("Title $suffix2", (string)$entry2->title);
+		Assert::same("https://example.com/$suffix2", $entry2->link !== null ? (string)$entry2->link['href'] : null);
+		Assert::same($text2 ?? "Text $suffix2", (string)$entry2->content);
+		Assert::notNull($feed->getUpdated());
 	}
 
 

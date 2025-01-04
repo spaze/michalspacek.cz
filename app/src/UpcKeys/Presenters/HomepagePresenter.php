@@ -37,6 +37,8 @@ class HomepagePresenter extends BasePresenter
 	public function actionDefault(?string $ssid = null, string $format = 'html'): void
 	{
 		$this->ssid = $ssid;
+		$error = null;
+		$keys = [];
 		if ($this->ssid !== null) {
 			if ($this->upcKeys->isValidSsid($this->ssid)) {
 				if ($this->ssid !== strtoupper($this->ssid)) {
@@ -53,12 +55,12 @@ class HomepagePresenter extends BasePresenter
 		}
 
 		$this->template->ssid = $this->ssid;
-		$this->template->error = $error ?? null;
-		$this->template->keys = isset($keys) && !isset($error) ? $keys : null;
+		$this->template->error = $error;
+		$this->template->keys = $keys !== [] && $error === null ? $keys : null;
 		switch ($format) {
 			case 'text':
 				$this->httpResponse->setContentType('text/plain');
-				$this->sendResponse($this->upcKeys->getTextResponse($this->ssid, $error ?? null, $keys ?? []));
+				$this->sendResponse($this->upcKeys->getTextResponse($this->ssid, $error, $keys));
 				// no break, Presenter::sendResponse() is in earlyTerminatingMethodCalls defined in the phpstan-nette extension config
 			case 'html':
 				$this->template->filterTypes = WiFiBand::getKnown();
@@ -69,8 +71,8 @@ class HomepagePresenter extends BasePresenter
 			case 'json':
 				$this->sendJson(array_filter([
 					'ssid' => $this->ssid,
-					'error' => $error ?? null,
-					'keys' => $keys ?? null,
+					'error' => $error,
+					'keys' => $keys,
 				]));
 				// no break, Presenter::sendJson() is in earlyTerminatingMethodCalls defined in the phpstan-nette extension config
 			default:

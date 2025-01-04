@@ -44,12 +44,13 @@ readonly class CertificateGatherer
 		$certificates = [];
 		$records = $this->dnsResolver->getRecords($hostname, $includeIpv6 ? DNS_A | DNS_AAAA : DNS_A);
 		foreach ($records as $record) {
+			$ipAddress = null;
 			if ($record->getIpv6() !== null) {
 				$ipAddress = "[{$record->getIpv6()}]";
 			} elseif ($record->getIp() !== null) {
 				$ipAddress = $record->getIp();
 			}
-			if (!isset($ipAddress)) {
+			if ($ipAddress === null) {
 				throw new DnsGetRecordException("No IPv4/v6 address for {$hostname}");
 			}
 			$certificates[$ipAddress] = $this->fetchCertificate($hostname, $ipAddress);

@@ -2,7 +2,6 @@
 	"name": "spaze/michalspacek.cz",
 	"type": "project",
 	"description": "Source code for my site",
-	"version": "1.3.3.7",
 	"license": "MIT",
 	"require": {
 		"php": "^8.3",
@@ -61,7 +60,7 @@
 		"phpstan/phpstan": "^2.0",
 		"phpstan/phpstan-deprecation-rules": "^2.0",
 		"phpstan/phpstan-nette": "^2.0",
-		"psalm/phar": "^5.14",
+		"psalm/phar": "^5.26.1",
 		"roave/security-advisories": "dev-latest",
 		"shipmonk/composer-dependency-analyser": "^1.3",
 		"spaze/coding-standard": "^1.7.1",
