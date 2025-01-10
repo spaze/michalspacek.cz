@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '53ccdd4e3bfed40f4fe0a708fec39406a888c21a',
+        'reference' => 'a80820cc549bcb1f1dc305f0dc92f9bb559f1846',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -326,9 +326,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.1.0',
-            'version' => '2.1.0.0',
-            'reference' => '2392d360fdf54ea253aa6c68cad1d4ba2e54e927',
+            'pretty_version' => '2.1.1',
+            'version' => '2.1.1.0',
+            'reference' => 'cd6e973e04b4c2b94c86e8612b5a65f0da0e08e7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -403,7 +403,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '43628df4c324d77a9e4e6e5b7d0479586b5ee2b6',
+            'reference' => 'a717959d5f0bf7c9a881efdbb7ec0da4454a14ac',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -468,7 +468,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '53ccdd4e3bfed40f4fe0a708fec39406a888c21a',
+            'reference' => 'a80820cc549bcb1f1dc305f0dc92f9bb559f1846',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -511,9 +511,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v4.0.1',
-            'version' => '4.0.1.0',
-            'reference' => '0f030fd3fb770ee7c262445c8ad3c0b470a32ac5',
+            'pretty_version' => 'v4.1.1',
+            'version' => '4.1.1.0',
+            'reference' => '3ea4de4944c58f3acfb1de6e991c9907076f7eec',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
