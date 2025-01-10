@@ -211,6 +211,11 @@ parameters:
 				- vendor/nette/*.php
 	disallowedStaticCalls:
 		-
+			method: 'Tracy\Debugger::dump()'
+			message: 'use logger instead'
+			allowIn:
+				- vendor/tracy/tracy/src/Tracy/functions.php
+		-
 			method: 'Tracy\Debugger::barDump()'
 			message: 'use logger instead, debug bar is not visible in production'
 			allowIn:
