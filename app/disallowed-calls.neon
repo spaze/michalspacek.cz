@@ -17,6 +17,8 @@ parameters:
 			message: 'use methods from MichalSpacekCz\Http\Cookies'
 		-
 			function: 'preg_*()'
+			exclude:
+				- 'preg_quote()'
 			message: 'use the Preg class from composer/pcre'
 	disallowedStaticCalls:
 		-
