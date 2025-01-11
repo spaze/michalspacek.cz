@@ -1,4 +1,4 @@
-.PHONY: test composer-audit npm-audit cs-fix check-file-patterns check-makefile check-sri-macros-concat lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-vendor psalm tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt
+.PHONY: test composer-audit npm-audit cs-fix check-file-patterns check-makefile check-sri-macros-concat lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-vendor psalm psalm-clear-cache tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt
 
 test: composer-audit npm-audit check-file-patterns check-makefile check-sri-macros-concat lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
 
@@ -46,6 +46,9 @@ phpstan-vendor:
 
 psalm:
 	php8.3 vendor/bin/psalm.phar
+
+psalm-clear-cache:
+	php8.3 vendor/bin/psalm.phar --clear-cache
 
 tester:
 	vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
