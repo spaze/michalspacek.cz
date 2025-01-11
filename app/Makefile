@@ -45,7 +45,7 @@ phpstan-vendor:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon
 
 psalm:
-	vendor/bin/psalm.phar
+	php8.3 vendor/bin/psalm.phar
 
 tester:
 	vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
