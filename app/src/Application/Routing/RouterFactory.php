@@ -102,7 +102,7 @@ class RouterFactory
 	/**
 	 * @noinspection RequiredAttributes Because <param> is not an HTML tag here
 	 */
-	public function createRouter(): RouteList
+	public function createRouter(): LocaleRouter
 	{
 		$router = new RouteList();
 		foreach ($this->availableLocales as $locale) {
@@ -147,7 +147,7 @@ class RouterFactory
 			new RouterFactoryRoute('<presenter>', 'Homepage', 'default'), // Intentionally no action, use presenter-specific route if you need actions
 		]);
 
-		return $router;
+		return new LocaleRouter($this->localeRouters, $router);
 	}
 
 

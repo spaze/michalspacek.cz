@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application\Locale;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LinkGenerator;
-use MichalSpacekCz\Application\Routing\RouterFactory;
+use MichalSpacekCz\Application\Routing\LocaleRouter;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator as NetteLinkGenerator;
@@ -26,7 +26,7 @@ class LocaleLinkGenerator
 	 * @param array<string, array{code:string, name:string}> $languages
 	 */
 	public function __construct(
-		private readonly RouterFactory $routerFactory,
+		private readonly LocaleRouter $localeRouter,
 		private readonly IRequest $httpRequest,
 		private readonly IPresenterFactory $presenterFactory,
 		private readonly LinkGenerator $linkGenerator,
@@ -47,7 +47,7 @@ class LocaleLinkGenerator
 	public function links(string $destination, array $params = []): array
 	{
 		$links = [];
-		foreach ($this->routerFactory->getLocaleRouters() as $locale => $routers) {
+		foreach ($this->localeRouter->getLocaleRouters() as $locale => $routers) {
 			foreach ($routers->getRouters() as $router) {
 				if (!$router instanceof RouteList) {
 					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", RouteList::class, get_debug_type($router)));
