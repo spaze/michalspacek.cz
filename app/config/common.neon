@@ -32,6 +32,7 @@ di:
 	export:
 		parameters: false
 		tags: false
+	lazy: true
 
 latte:
 	strictParsing: true

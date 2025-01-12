@@ -8,6 +8,7 @@ services:
 	- MichalSpacekCz\Application\LinkGenerator
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
+	- @MichalSpacekCz\Application\Routing\LocaleRouter::getRouteList
 	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
 	- MichalSpacekCz\Application\SanitizedPhpInfo

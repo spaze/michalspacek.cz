@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application\Locale;
 
 use MichalSpacekCz\Application\LinkGenerator;
-use MichalSpacekCz\Application\Routing\RouterFactory;
+use MichalSpacekCz\Application\Routing\LocaleRouter;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
@@ -25,12 +25,12 @@ class LocaleLinkGeneratorTest extends TestCase
 
 	public function __construct(
 		private readonly NoOpTranslator $translator,
-		RouterFactory $routerFactory,
+		LocaleRouter $localeRouter,
 		IRequest $httpRequest,
 		IPresenterFactory $presenterFactory,
 		LinkGenerator $linkGenerator,
 	) {
-		$this->localeLinkGenerator = new LocaleLinkGenerator($routerFactory, $httpRequest, $presenterFactory, $linkGenerator, $translator, [
+		$this->localeLinkGenerator = new LocaleLinkGenerator($localeRouter, $httpRequest, $presenterFactory, $linkGenerator, $translator, [
 			'cs_CZ' => [
 				'code' => 'cs',
 				'name' => 'Česky',
