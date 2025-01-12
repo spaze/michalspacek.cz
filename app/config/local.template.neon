@@ -4,7 +4,7 @@ di:
 mail:
 	smtp: true
 	host: localhost
-	port: 25
+	port: 2525
 
 contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them, unless the directive ends with !
 	policies:
