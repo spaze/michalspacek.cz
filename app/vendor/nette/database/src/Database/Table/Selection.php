@@ -131,6 +131,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
+	/** @return static<T> */
 	public function setPrimarySequence(string $sequence): static
 	{
 		$this->primarySequence = $sequence;
@@ -183,7 +184,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/**
-	 * Fetches next row of result.
+	 * Returns the next row or null if there are no more rows.
 	 * @return T|null
 	 */
 	public function fetch(): ?ActiveRow
@@ -215,7 +216,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/**
-	 * Fetches all rows as associative array.
+	 * Returns all rows as associative array, where first argument specifies key column and second value column.
+	 * For duplicate keys, the last value is used. When using null as key, array is indexed from zero.
+	 * Alternatively accepts callback returning value or key-value pairs.
+	 * @return array<T|mixed>
 	 */
 	public function fetchPairs(string|int|\Closure|null $keyOrCallback = null, string|int|null $value = null): array
 	{
@@ -224,7 +228,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/**
-	 * Fetches all rows.
+	 * Returns all rows.
 	 * @return T[]
 	 */
 	public function fetchAll(): array
@@ -235,6 +239,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns all rows as associative tree.
+	 * @deprecated
 	 */
 	public function fetchAssoc(string $path): array
 	{
@@ -249,6 +254,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Adds select clause, more calls append to the end.
 	 * @param  string  $columns  for example "column, MD5(column) AS column_md5"
+	 * @return static<T>
 	 */
 	public function select(string $columns, ...$params): static
 	{
@@ -260,6 +266,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds condition for primary key.
+	 * @return static<T>
 	 */
 	public function wherePrimary(mixed $key): static
 	{
@@ -284,6 +291,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Adds where condition, more calls append with AND.
 	 * @param  string|array  $condition  possibly containing ?
+	 * @return static<T>
 	 */
 	public function where(string|array $condition, ...$params): static
 	{
@@ -296,6 +304,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * Adds ON condition when joining specified table, more calls appends with AND.
 	 * @param  string  $tableChain  table chain or table alias for which you need additional left join condition
 	 * @param  string  $condition  possibly containing ?
+	 * @return static<T>
 	 */
 	public function joinWhere(string $tableChain, string $condition, ...$params): static
 	{
@@ -332,6 +341,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * More calls appends with AND.
 	 * @param  array  $parameters ['column1' => 1, 'column2 > ?' => 2, 'full condition']
 	 * @throws Nette\InvalidArgumentException
+	 * @return static<T>
 	 */
 	public function whereOr(array $parameters): static
 	{
@@ -366,6 +376,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Adds ORDER BY clause, more calls appends to the end.
 	 * @param  string  $columns  for example 'column1, column2 DESC'
+	 * @return static<T>
 	 */
 	public function order(string $columns, ...$params): static
 	{
@@ -377,6 +388,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets LIMIT clause, more calls rewrite old values.
+	 * @return static<T>
 	 */
 	public function limit(?int $limit, ?int $offset = null): static
 	{
@@ -388,6 +400,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets OFFSET using page number, more calls rewrite old values.
+	 * @return static<T>
 	 */
 	public function page(int $page, int $itemsPerPage, &$numOfPages = null): static
 	{
@@ -405,6 +418,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets GROUP BY clause, more calls rewrite old value.
+	 * @return static<T>
 	 */
 	public function group(string $columns, ...$params): static
 	{
@@ -416,6 +430,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets HAVING clause, more calls rewrite old value.
+	 * @return static<T>
 	 */
 	public function having(string $having, ...$params): static
 	{
@@ -427,6 +442,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Aliases table. Example ':book:book_tag.tag', 'tg'
+	 * @return static<T>
 	 */
 	public function alias(string $tableChain, string $alias): static
 	{
@@ -548,21 +564,24 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
+	/** @deprecated */
 	protected function createRow(array $row): ActiveRow
 	{
-		return new ActiveRow($row, $this);
+		return $this->explorer->createActiveRow($row, $this);
 	}
 
 
+	/** @deprecated */
 	public function createSelectionInstance(?string $table = null): self
 	{
-		return new self($this->explorer, $this->conventions, $table ?: $this->name, $this->cache?->getStorage());
+		return $this->explorer->table($table ?: $this->name);
 	}
 
 
+	/** @deprecated */
 	protected function createGroupedSelectionInstance(string $table, string $column): GroupedSelection
 	{
-		return new GroupedSelection($this->explorer, $this->conventions, $table, $column, $this, $this->cache?->getStorage());
+		return $this->explorer->createGroupedSelection($this, $table, $column);
 	}
 
 
@@ -952,6 +971,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		if (!$prototype) {
 			$prototype = $this->createGroupedSelectionInstance($table, $column);
 			$prototype->where("$table.$column", array_keys((array) $this->rows));
+			$prototype->getSpecificCacheKey();
 		}
 
 		$clone = clone $prototype;
