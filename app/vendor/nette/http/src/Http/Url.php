@@ -332,7 +332,7 @@ class Url implements \JsonSerializable
 	public function canonicalize(): static
 	{
 		$this->path = preg_replace_callback(
-			'#[^!$&\'()*+,/:;=@%]+#',
+			'#[^!$&\'()*+,/:;=@%"]+#',
 			fn(array $m): string => rawurlencode($m[0]),
 			self::unescape($this->path, '%/'),
 		);
@@ -408,5 +408,41 @@ class Url implements \JsonSerializable
 		$s = preg_replace("#([$sep])([^[$sep=]+)([^$sep]*)#", '&0[$2]$3', '&' . $s);
 		parse_str($s, $res);
 		return $res[0] ?? [];
+	}
+
+
+	/**
+	 * Determines if URL is absolute, ie if it starts with a scheme followed by colon.
+	 */
+	public static function isAbsolute(string $url): bool
+	{
+		return (bool) preg_match('#^[a-z][a-z0-9+.-]*:#i', $url);
+	}
+
+
+	/**
+	 * Normalizes a path by handling and removing relative path references like '.', '..' and directory traversal.
+	 */
+	public static function removeDotSegments(string $path): string
+	{
+		$prefix = $segment = '';
+		if (str_starts_with($path, '/')) {
+			$prefix = '/';
+			$path = substr($path, 1);
+		}
+		$segments = explode('/', $path);
+		$res = [];
+		foreach ($segments as $segment) {
+			if ($segment === '..') {
+				array_pop($res);
+			} elseif ($segment !== '.') {
+				$res[] = $segment;
+			}
+		}
+
+		if ($segment === '.' || $segment === '..') {
+			$res[] = '';
+		}
+		return $prefix . implode('/', $res);
 	}
 }

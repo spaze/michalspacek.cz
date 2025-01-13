@@ -21,21 +21,13 @@ use Tracy;
 class ConnectionPanel implements Tracy\IBarPanel
 {
 	public int $maxQueries = 100;
-
 	public string $name;
-
 	public bool|string $explain = true;
-
 	public bool $disabled = false;
-
 	public float $performanceScale = 0.25;
-
 	private float $totalTime = 0;
-
 	private int $count = 0;
-
 	private array $queries = [];
-
 	private Tracy\BlueScreen $blueScreen;
 
 
@@ -78,30 +70,24 @@ class ConnectionPanel implements Tracy\IBarPanel
 
 		$this->count++;
 
-		$source = null;
 		$trace = $result instanceof \PDOException
-			? $result->getTrace()
+			? array_map(fn($row) => array_diff_key($row, ['args' => null]), $result->getTrace())
 			: debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
 		foreach ($trace as $row) {
-			if (
-				(isset($row['file'])
-				&& preg_match('~\.(php.?|phtml)$~', $row['file'])
-				&& !$this->blueScreen->isCollapsed($row['file']))
-				&& ($row['class'] ?? '') !== self::class
-				&& !is_a($row['class'] ?? '', Connection::class, allow_string: true)
-			) {
-				$source = [$row['file'], (int) $row['line']];
+			if (preg_match('~\.(php.?|phtml)$~', $row['file'] ?? '') && !$this->blueScreen->isCollapsed($row['file'])) {
 				break;
 			}
+			array_shift($trace);
 		}
 
 		if ($result instanceof Nette\Database\ResultSet) {
 			$this->totalTime += $result->getTime();
 			if ($this->count < $this->maxQueries) {
-				$this->queries[] = [$connection, $result->getQueryString(), $result->getParameters(), $source, $result->getTime(), $result->getRowCount(), null];
+				$this->queries[] = [$connection, $result->getQueryString(), $result->getParameters(), $trace, $result->getTime(), $result->getRowCount(), null];
 			}
 		} elseif ($result instanceof \PDOException && $this->count < $this->maxQueries) {
-			$this->queries[] = [$connection, $result->queryString, null, $source, null, null, $result->getMessage()];
+			$this->queries[] = [$connection, $result->queryString, null, $trace, null, null, $result->getMessage()];
 		}
 	}
 
@@ -132,7 +118,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 			$name = $this->name;
 			$count = $this->count;
 			$totalTime = $this->totalTime;
-			require __DIR__ . '/templates/ConnectionPanel.tab.phtml';
+			require __DIR__ . '/dist/tab.phtml';
 		});
 	}
 
@@ -170,7 +156,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 			$count = $this->count;
 			$totalTime = $this->totalTime;
 			$performanceScale = $this->performanceScale;
-			require __DIR__ . '/templates/ConnectionPanel.panel.phtml';
+			require __DIR__ . '/dist/panel.phtml';
 		});
 	}
 }
