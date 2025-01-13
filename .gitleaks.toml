@@ -23,7 +23,7 @@ keywords = [
   "prod",
 ]
 
-[rules.allowlist]
+[[rules.allowlists]]
 stopwords = [
   # Database column names
   '''_talk''',
