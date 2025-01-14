@@ -152,8 +152,9 @@ readonly class PostFormFactory
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post) {
-					assert(is_string($values->editSummary));
-					$this->blogPosts->update($newPost, $values->editSummary === '' ? null : $values->editSummary, $post->getSlugTags());
+					$editSummary = $values->editSummary ?? null;
+					assert($editSummary === null || is_string($editSummary));
+					$this->blogPosts->update($newPost, $editSummary, $post->getSlugTags());
 					$onSuccessEdit($newPost);
 				} else {
 					$onSuccessAdd($this->blogPosts->add($newPost));
