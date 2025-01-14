@@ -396,3 +396,5 @@ cookies:
 		netteSameSiteCheck: "Používá se pro detekci \"//same-site//\":[blog:co-znamena-origin-site-etld-etld-plus-1-public-suffix-a-psl#same-site] požadavků."
 httpHeaders:
 	headerNotSent: "hlavička neposlána"
+forms:
+	validateSlugParamsError: "%label musí odpovídat formátu %d"

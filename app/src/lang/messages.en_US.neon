@@ -396,3 +396,5 @@ cookies:
 		netteSameSiteCheck: "Used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
 httpHeaders:
 	headerNotSent: "header not sent"
+forms:
+	validateSlugParamsError: "%label must match %d"
