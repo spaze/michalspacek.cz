@@ -20,6 +20,7 @@ readonly class TalkFormFactory
 
 	public function __construct(
 		private FormFactory $factory,
+		private FormValidators $validators,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Talks $talks,
 		private LinkGenerator $linkGenerator,
@@ -42,9 +43,10 @@ readonly class TalkFormFactory
 		$form->addSelect('locale', 'Jazyk:', $this->locales->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
-		$form->addText('action', 'Akce:')
+		$actionInput = $form->addText('action', 'Akce:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka akce je %d znaků', 200);
+		$this->validators->addValidateSlugRules($actionInput);
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
 			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);

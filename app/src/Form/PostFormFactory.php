@@ -36,6 +36,7 @@ readonly class PostFormFactory
 
 	public function __construct(
 		private FormFactory $factory,
+		private FormValidators $validators,
 		private Translator $translator,
 		private BlogPosts $blogPosts,
 		private BlogPostFactory $blogPostFactory,
@@ -62,8 +63,9 @@ readonly class PostFormFactory
 		$form->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
 			->addRule(Form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
-		$form->addText('slug', 'Slug:')
+		$slugInput = $form->addText('slug', 'Slug:')
 			->addRule(Form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
+		$this->validators->addValidateSlugRules($slugInput);
 		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$previewKeyInput = $form->addText('previewKey', 'Klíč pro náhled:')
@@ -152,8 +154,9 @@ readonly class PostFormFactory
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post) {
-					assert(is_string($values->editSummary));
-					$this->blogPosts->update($newPost, $values->editSummary === '' ? null : $values->editSummary, $post->getSlugTags());
+					$editSummary = $values->editSummary ?? null;
+					assert($editSummary === null || is_string($editSummary));
+					$this->blogPosts->update($newPost, $editSummary, $post->getSlugTags());
 					$onSuccessEdit($newPost);
 				} else {
 					$onSuccessAdd($this->blogPosts->add($newPost));

@@ -19,6 +19,7 @@ readonly class TalkSlidesFormFactory
 
 	public function __construct(
 		private FormFactory $factory,
+		private FormValidators $validators,
 		private TalkSlides $talkSlides,
 		private TexyFormatter $texyFormatter,
 		private SupportedImageFileFormats $supportedImageFileFormats,
@@ -96,9 +97,9 @@ readonly class TalkSlidesFormFactory
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$disableSlideUploads = (bool)$filenamesTalkId;
-		$container->addText('alias', 'Alias:')
-			->setRequired('Zadejte prosím alias')
-			->addRule(Form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
+		$aliasInput = $container->addText('alias', 'Alias:')
+			->setRequired('Zadejte prosím alias');
+		$this->validators->addValidateSlugRules($aliasInput);
 		$container->addInteger('number', 'Slajd:')
 			->setDefaultValue(1)
 			->setHtmlAttribute('class', 'right slide-nr')

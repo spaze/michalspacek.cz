@@ -48,6 +48,7 @@ services:
 	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
+	- MichalSpacekCz\Form\FormValidators
 	- MichalSpacekCz\Form\InterviewFormFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
