@@ -39,6 +39,8 @@ class FourOhFourButFoundTest extends TestCase
 			['/etc/foo?file=..%2F..%2F..%2Fetc%2Fpasswd', 'rick:x:1337:1337:Astley'],
 			['/etc/foo?file=../../../etc/passwd&foo/bar', 'rick:x:1337:1337:Astley'],
 			['/etc/foo?file=..%2F..%2F..%2Fetc%2Fpasswd&foo/bar', 'rick:x:1337:1337:Astley'],
+			['/?%adfoo', 'Parse error'],
+			['/?%ad=/etc/passwd&bar', 'Parse error'],
 		];
 	}
 
@@ -57,13 +59,8 @@ class FourOhFourButFoundTest extends TestCase
 				$this->fourOhFourButFound->sendItMaybe($presenter);
 			}));
 			$response = $presenter->getResponse();
-			if (!$response instanceof TextResponse) {
-				Assert::fail('Response is of a wrong type ' . get_debug_type($response));
-			} elseif (!is_string($response->getSource())) {
-				Assert::fail('Source should be a string but is ' . get_debug_type($response->getSource()));
-			} else {
-				Assert::contains($contains, $response->getSource());
-			}
+			assert($response instanceof TextResponse && is_string($response->getSource()));
+			Assert::contains($contains, $response->getSource());
 		}
 	}
 

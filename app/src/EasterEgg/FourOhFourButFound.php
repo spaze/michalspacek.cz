@@ -38,4 +38,13 @@ readonly class FourOhFourButFound
 		}
 	}
 
+
+	/**
+	 * @return list<string>
+	 */
+	public function getRequestSubstrings(): array
+	{
+		return array_keys(self::TEMPLATES);
+	}
+
 }

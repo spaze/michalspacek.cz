@@ -398,3 +398,4 @@ httpHeaders:
 	headerNotSent: "hlavička neposlána"
 forms:
 	validateSlugParamsError: "%label musí odpovídat formátu %d"
+	validateSlugParamsEasterEgg: "%label nemůže být '%value', protože to spustí Easter egg"
