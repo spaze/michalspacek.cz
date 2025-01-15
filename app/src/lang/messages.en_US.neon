@@ -398,3 +398,4 @@ httpHeaders:
 	headerNotSent: "header not sent"
 forms:
 	validateSlugParamsError: "%label must match %d"
+	validateSlugParamsEasterEgg: "%label can't be '%value', because that's used by an Easter egg"

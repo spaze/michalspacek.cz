@@ -3,47 +3,48 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use MichalSpacekCz\Application\ServerEnv;
 use MichalSpacekCz\Http\Robots\Robots;
 use MichalSpacekCz\Http\Robots\RobotsRule;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
-use Nette\Http\IRequest;
 
 readonly class FourOhFourButFound
 {
 
 	private const array TEMPLATES = [
+		'?%ad' => __DIR__ . '/templates/phpCve20244577.html',
 		'/etc/passwd' => __DIR__ . '/templates/etcPasswd.html',
 	];
 
 
 	public function __construct(
-		private IRequest $httpRequest,
-		private readonly Robots $robots,
+		private Robots $robots,
 	) {
 	}
 
 
 	public function sendItMaybe(Presenter $presenter): void
 	{
-		$url = $this->httpRequest->getUrl();
+		$url = ServerEnv::tryGetString('REQUEST_URI');
+		if ($url === null) {
+			return;
+		}
 		foreach (self::TEMPLATES as $request => $template) {
-			if (str_contains($url->getPath(), $request)) {
-				$this->sendIt($presenter, $template);
-			} else {
-				$query = $url->getQuery();
-				if ($query && str_contains(urldecode($query), $request)) {
-					$this->sendIt($presenter, $template);
-				}
+			if (str_contains($url, $request) || str_contains(urldecode($url), $request)) {
+				$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
+				$presenter->sendResponse(new TextResponse(file_get_contents($template)));
 			}
 		}
 	}
 
 
-	private function sendIt(Presenter $presenter, string $template): never
+	/**
+	 * @return list<string>
+	 */
+	public function getRequestSubstrings(): array
 	{
-		$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
-		$presenter->sendResponse(new TextResponse(file_get_contents($template)));
+		return array_keys(self::TEMPLATES);
 	}
 
 }

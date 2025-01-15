@@ -10,6 +10,7 @@ use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
+use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use MichalSpacekCz\Form\ThemeFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
@@ -37,6 +38,8 @@ abstract class BasePresenter extends Presenter
 	private CriticalCssFactory $criticalCssFactory;
 
 	private ComponentParameters $componentParameters;
+
+	private FourOhFourButFound $fourOhFourButFound;
 
 
 	/**
@@ -93,6 +96,15 @@ abstract class BasePresenter extends Presenter
 	}
 
 
+	/**
+	 * @internal
+	 */
+	public function injectFourOhFourButFound(FourOhFourButFound $fourOhFourButFound): void
+	{
+		$this->fourOhFourButFound = $fourOhFourButFound;
+	}
+
+
 	#[Override]
 	protected function startup(): void
 	{
@@ -101,6 +113,7 @@ abstract class BasePresenter extends Presenter
 		if ($this->authenticator->isForbidden() && $this->getRequest()?->getMethod() !== Request::FORWARD) {
 			$this->forward(':Www:Forbidden:', ['message' => 'messages.forbidden.spam']);
 		}
+		$this->fourOhFourButFound->sendItMaybe($this);
 	}
 
 

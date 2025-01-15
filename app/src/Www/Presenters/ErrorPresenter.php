@@ -9,7 +9,6 @@ use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\Exceptions\ParameterNotStringException;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
-use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -32,7 +31,6 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	public function __construct(
 		private readonly LocaleLinkGenerator $localeLinkGenerator,
-		private readonly FourOhFourButFound $fourOhFourButFound,
 		private readonly AppRequest $appRequest,
 		private readonly Translator $translator,
 	) {
@@ -70,7 +68,6 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	public function actionDefault(BadRequestException $exception): void
 	{
-		$this->fourOhFourButFound->sendItMaybe($this);
 		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BadRequest);
 		$this->template->errorCode = $code;
 		$this->template->pageTitle = $this->translator->translate("messages.title.error{$code}");
