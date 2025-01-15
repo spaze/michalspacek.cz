@@ -7,10 +7,8 @@ namespace MichalSpacekCz\EasterEgg;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
-use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Responses\TextResponse;
-use Nette\Http\UrlScript;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -22,7 +20,6 @@ class FourOhFourButFoundTest extends TestCase
 
 	public function __construct(
 		private readonly FourOhFourButFound $fourOhFourButFound,
-		private readonly Request $request,
 		private readonly ApplicationPresenter $applicationPresenter,
 	) {
 	}
@@ -50,7 +47,7 @@ class FourOhFourButFoundTest extends TestCase
 	public function testSendItMaybe(string $url, ?string $contains): void
 	{
 		$presenter = new UiPresenterMock();
-		$this->request->setUrl(new UrlScript($url));
+		$_SERVER['REQUEST_URI'] = $url;
 		if ($contains === null) {
 			Assert::false($this->applicationPresenter->expectSendResponse(function () use ($presenter): void {
 				$this->fourOhFourButFound->sendItMaybe($presenter);
