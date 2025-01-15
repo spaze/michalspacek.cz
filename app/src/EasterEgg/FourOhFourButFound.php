@@ -13,6 +13,7 @@ readonly class FourOhFourButFound
 {
 
 	private const array TEMPLATES = [
+		'?%ad' => __DIR__ . '/templates/phpCve20244577.html',
 		'/etc/passwd' => __DIR__ . '/templates/etcPasswd.html',
 	];
 
