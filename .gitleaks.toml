@@ -2,36 +2,6 @@
 useDefault = true  # The default config file is https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
 
 [[rules]]
-# This is the same as the "Generic API Key" rule from the default config file except
-# it has a lower entropy and adds a few more keywords to both the "regex" and "keywords" fields
-description = "Generic API Key, with extra keywords and lower entropy"
-id = "generic-api-key-extra-keywords"
-regex = '''(?i)(?:key|api|token|secret|client|passwd|password|auth|access|dev|prod)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:=|\|\|:|<=|=>|:)(?:'|\"|\s|=|\x60){0,5}([0-9a-z\-_.=]{10,150})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
-secretGroup = 1
-entropy = 3
-keywords = [
-  "key",
-  "api",
-  "token",
-  "secret",
-  "client",
-  "passwd",
-  "password",
-  "auth",
-  "access",
-  "dev",
-  "prod",
-]
-
-[[rules.allowlists]]
-stopwords = [
-  # Database column names
-  '''_talk''',
-  '''_status''',
-  '''_training''',
-]
-
-[[rules]]
 id = "michalspacek.cz-encryption-keys"
 description = "Identified an encryption key, risking data decryption and unauthorized access to sensitive information."
 regex = '''(?:mspe|msee|msse)(?:test)?_([a-fA-F0-9]{32,64})'''
