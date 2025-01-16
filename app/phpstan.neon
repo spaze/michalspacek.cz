@@ -10,8 +10,6 @@ parameters:
 		- phpt
 	level: max
 	checkMissingOverrideMethodAttribute: true
-	stubFiles:
-		- stubs/Nette/Http/FileUpload.phpstub
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon

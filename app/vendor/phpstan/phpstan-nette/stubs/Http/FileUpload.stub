@@ -1,6 +1,4 @@
 <?php
-// Copied from https://github.com/phpstan/phpstan-nette/pull/166,
-// can be removed once the PR is merged and released.
 
 namespace Nette\Http;
 
