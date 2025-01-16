@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '507634a28b2ae2dbe3035b63408159d9d07360c7',
+        'reference' => '41b377e0f5a84b490a6a58bbbcfafe32cbb2df99',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -344,9 +344,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-nette' => array(
-            'pretty_version' => '2.0.1',
-            'version' => '2.0.1.0',
-            'reference' => '200d1926c57f6feda0d0f3056985fceccd8003c0',
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'reference' => '7ff60d93371de7855216bb3b2d9f47f984322ede',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-nette',
             'aliases' => array(),
@@ -403,7 +403,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'a717959d5f0bf7c9a881efdbb7ec0da4454a14ac',
+            'reference' => 'e7a38fcc13e4ddfe9a28d5c7bf50aa9a9da758ec',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -468,7 +468,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '507634a28b2ae2dbe3035b63408159d9d07360c7',
+            'reference' => '41b377e0f5a84b490a6a58bbbcfafe32cbb2df99',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
