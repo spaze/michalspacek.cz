@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\ComponentParameters;
-use MichalSpacekCz\Application\Exceptions\ParameterNotStringException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
@@ -32,7 +30,6 @@ class CompanyTrainingsPresenter extends BasePresenter
 		private readonly TrainingReviews $trainingReviews,
 		private readonly Prices $prices,
 		private readonly Translator $translator,
-		private readonly ComponentParameters $componentParameters,
 	) {
 		parent::__construct();
 	}
@@ -72,13 +69,12 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for trainings.
 	 *
-	 * @return array<string, array<string, string|null>>
-	 * @throws ParameterNotStringException
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction, $this->componentParameters->getStringParameters($this));
+		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction, $this->getParameters());
 	}
 
 }

@@ -19,7 +19,7 @@ readonly class LinkGenerator
 	/**
 	 * Same as `Nette\Application\LinkGenerator::link()` but will always return just string, not string|null.
 	 *
-	 * @param array<int|string, string|null> $args
+	 * @param array<array-key, mixed> $args
 	 * @throws InvalidLinkException
 	 */
 	public function link(string $destination, array $args = [], ?NetteLinkGenerator $linkGenerator = null): string

@@ -47,8 +47,8 @@ readonly class TrainingLocales
 	/**
 	 * Translated locale parameters for trainings.
 	 *
-	 * @param array<string, string|null> $defaultParams
-	 * @return array<string, array<string, string|null>>
+	 * @param array<array-key, mixed> $defaultParams
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	public function getLocaleLinkParams(?string $trainingAction, array $defaultParams): array
 	{

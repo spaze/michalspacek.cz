@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use DateTimeInterface;
-use MichalSpacekCz\Application\ComponentParameters;
-use MichalSpacekCz\Application\Exceptions\ParameterNotStringException;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Css\CriticalCss;
@@ -36,8 +34,6 @@ abstract class BasePresenter extends Presenter
 	private IResponse $httpResponse;
 
 	private CriticalCssFactory $criticalCssFactory;
-
-	private ComponentParameters $componentParameters;
 
 	private FourOhFourButFound $fourOhFourButFound;
 
@@ -90,15 +86,6 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * @internal
 	 */
-	public function injectComponentParameters(ComponentParameters $componentParameters): void
-	{
-		$this->componentParameters = $componentParameters;
-	}
-
-
-	/**
-	 * @internal
-	 */
 	public function injectFourOhFourButFound(FourOhFourButFound $fourOhFourButFound): void
 	{
 		$this->fourOhFourButFound = $fourOhFourButFound;
@@ -117,9 +104,6 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	/**
-	 * @throws ParameterNotStringException
-	 */
 	#[Override]
 	public function beforeRender(): void
 	{
@@ -138,8 +122,7 @@ abstract class BasePresenter extends Presenter
 
 
 	/**
-	 * @return array<string, array<string, string|null>>
-	 * @throws ParameterNotStringException
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	protected function getLocaleLinksGeneratorParams(): array
 	{
@@ -170,12 +153,11 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * Default parameters for locale links.
 	 *
-	 * @return array<string, array<string, string|null>>
-	 * @throws ParameterNotStringException
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->localeLinkGenerator->defaultParams($this->componentParameters->getStringParameters($this));
+		return $this->localeLinkGenerator->defaultParams($this->getParameters());
 	}
 
 
