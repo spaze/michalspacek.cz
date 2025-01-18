@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Www\Presenters;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
-use MichalSpacekCz\Application\Exceptions\ParameterNotStringException;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -114,13 +113,12 @@ class ErrorPresenter extends BaseErrorPresenter
 	 *
 	 * @return array<string, array<string, string|null>>
 	 * @throws NoOriginalRequestException
-	 * @throws ParameterNotStringException
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
-		$params = $this->appRequest->getOriginalRequestStringParameters($this->getRequest());
-		return $this->localeLinkGenerator->defaultParams($params);
+		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $this->localeLinkGenerator->defaultParams($requestParam->getParameters());
 	}
 
 }

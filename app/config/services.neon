@@ -3,7 +3,6 @@ services:
 	cliArgs:
 		type: MichalSpacekCz\Application\Cli\CliArgs
 		imported: true
-	- MichalSpacekCz\Application\ComponentParameters
 	- MichalSpacekCz\Application\Error
 	- MichalSpacekCz\Application\LinkGenerator
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
