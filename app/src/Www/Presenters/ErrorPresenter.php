@@ -111,7 +111,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * Get original parameters for locale links.
 	 *
-	 * @return array<string, array<string, string|null>>
+	 * @return array<string, array<array-key, mixed>>
 	 * @throws NoOriginalRequestException
 	 */
 	#[Override]

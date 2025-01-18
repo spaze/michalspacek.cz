@@ -122,7 +122,7 @@ abstract class BasePresenter extends Presenter
 
 
 	/**
-	 * @return array<string, array<string, string|null>>
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	protected function getLocaleLinksGeneratorParams(): array
 	{
@@ -153,7 +153,7 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * Default parameters for locale links.
 	 *
-	 * @return array<string, array<string, string|null>>
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{
