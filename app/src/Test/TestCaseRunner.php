@@ -19,7 +19,7 @@ class TestCaseRunner
 
 
 	/**
-	 * @param class-string<TestCase> $test
+	 * @param class-string $test
 	 * @return void
 	 */
 	public static function run(string $test): void
@@ -53,7 +53,11 @@ class TestCaseRunner
 		} catch (ReflectionException) {
 			// pass, __construct() does not exist
 		}
-		(new $test(...$params))->run();
+		$testCase = new $test(...$params);
+		if (!$testCase instanceof TestCase) {
+			throw new LogicException(sprintf("%s() can only be used to run tests that extend %s", __METHOD__, TestCase::class));
+		}
+		$testCase->run();
 	}
 
 
