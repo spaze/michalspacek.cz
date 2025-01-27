@@ -6,6 +6,7 @@ namespace MichalSpacekCz\DependencyInjection;
 use MichalSpacekCz\DependencyInjection\Exceptions\DiServicesConfigInvalidException;
 use Nette\Neon\Entity;
 use Nette\Neon\Neon;
+use Nette\Utils\Json;
 
 class DiServices
 {
@@ -74,7 +75,7 @@ class DiServices
 		} elseif (is_string($item->value)) {
 			return $item->value;
 		}
-		$message = is_array($item) ? sprintf("Unsupported array '%s'", json_encode($item)) : sprintf("Unsupported item '%s'", get_debug_type($item));
+		$message = is_array($item) ? sprintf("Unsupported array '%s'", Json::encode($item)) : sprintf("Unsupported item '%s'", get_debug_type($item));
 		throw new DiServicesConfigInvalidException($file, $section, $message);
 	}
 
