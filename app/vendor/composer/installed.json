@@ -1739,17 +1739,17 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v5.1.2",
-            "version_normalized": "5.1.2.0",
+            "version": "v5.1.3",
+            "version_normalized": "5.1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "aee234711b29cccb4a17aaaf6104fc542862fc1e"
+                "reference": "ef9c72278377d634cd4e08f8ec30198feb7ad167"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/aee234711b29cccb4a17aaaf6104fc542862fc1e",
-                "reference": "aee234711b29cccb4a17aaaf6104fc542862fc1e",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/ef9c72278377d634cd4e08f8ec30198feb7ad167",
+                "reference": "ef9c72278377d634cd4e08f8ec30198feb7ad167",
                 "shasum": ""
             },
             "require": {
@@ -1763,7 +1763,7 @@
                 "phpunit/phpunit": "^9",
                 "vimeo/psalm": "^4"
             },
-            "time": "2024-05-08T12:59:43+00:00",
+            "time": "2025-01-23T21:33:58+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1807,7 +1807,7 @@
             "support": {
                 "docs": "https://github.com/paragonie/halite/tree/master/doc",
                 "issues": "https://github.com/paragonie/halite/issues",
-                "source": "https://github.com/paragonie/halite/tree/v5.1.2"
+                "source": "https://github.com/paragonie/halite/tree/v5.1.3"
             },
             "install-path": "../paragonie/halite"
         },
@@ -2468,12 +2468,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "fb6b00411f2c212631318ab412b2208632e507ba"
+                "reference": "43863a277154d140db783fe2ba50166fae26bb2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fb6b00411f2c212631318ab412b2208632e507ba",
-                "reference": "fb6b00411f2c212631318ab412b2208632e507ba",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/43863a277154d140db783fe2ba50166fae26bb2d",
+                "reference": "43863a277154d140db783fe2ba50166fae26bb2d",
                 "shasum": ""
             },
             "conflict": {
@@ -2611,7 +2611,7 @@
                 "doctrine/mongodb-odm": "<1.0.2",
                 "doctrine/mongodb-odm-bundle": "<3.0.1",
                 "doctrine/orm": ">=1,<1.2.4|>=2,<2.4.8|>=2.5,<2.5.1|>=2.8.3,<2.8.4",
-                "dolibarr/dolibarr": "<19.0.2",
+                "dolibarr/dolibarr": "<19.0.2|==21.0.0.0-beta",
                 "dompdf/dompdf": "<2.0.4",
                 "doublethreedigital/guest-entries": "<3.1.2",
                 "drupal/core": ">=6,<6.38|>=7,<7.102|>=8,<10.2.11|>=10.3,<10.3.9|>=11,<11.0.8",
@@ -2946,7 +2946,7 @@
                 "phpfastcache/phpfastcache": "<6.1.5|>=7,<7.1.2|>=8,<8.0.7",
                 "phpmailer/phpmailer": "<6.5",
                 "phpmussel/phpmussel": ">=1,<1.6",
-                "phpmyadmin/phpmyadmin": "<5.2.1",
+                "phpmyadmin/phpmyadmin": "<5.2.2",
                 "phpmyfaq/phpmyfaq": "<3.2.5|==3.2.5|>=3.2.10,<=4.0.1",
                 "phpoffice/common": "<0.2.9",
                 "phpoffice/phpexcel": "<1.8.1",
@@ -2980,6 +2980,7 @@
                 "prestashop/gamification": "<2.3.2",
                 "prestashop/prestashop": "<8.1.6",
                 "prestashop/productcomments": "<5.0.2",
+                "prestashop/ps_contactinfo": "<=3.3.2",
                 "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "prestashop/ps_linklist": "<3.1",
@@ -3293,7 +3294,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2025-01-21T22:04:49+00:00",
+            "time": "2025-01-27T21:04:44+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -3806,17 +3807,17 @@
         },
         {
             "name": "spaze/phpcs-phar",
-            "version": "3.11.2",
-            "version_normalized": "3.11.2.0",
+            "version": "3.11.3",
+            "version_normalized": "3.11.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpcs-phar.git",
-                "reference": "b1deb9736970e23f0477ef128b6f96560f247467"
+                "reference": "7211504501964af6411cd5b75f6c381629570ea7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpcs-phar/zipball/b1deb9736970e23f0477ef128b6f96560f247467",
-                "reference": "b1deb9736970e23f0477ef128b6f96560f247467",
+                "url": "https://api.github.com/repos/spaze/phpcs-phar/zipball/7211504501964af6411cd5b75f6c381629570ea7",
+                "reference": "7211504501964af6411cd5b75f6c381629570ea7",
                 "shasum": ""
             },
             "require": {
@@ -3824,14 +3825,14 @@
             },
             "replace": {
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
-                "phpcsstandards/php_codesniffer": "3.11.2",
-                "squizlabs/php_codesniffer": "3.11.2"
+                "phpcsstandards/php_codesniffer": "3.11.3",
+                "squizlabs/php_codesniffer": "3.11.3"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4"
             },
-            "time": "2024-12-11T18:24:38+00:00",
+            "time": "2025-01-23T18:24:13+00:00",
             "bin": [
                 "phpcbf",
                 "phpcs"
@@ -3860,7 +3861,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpcs-phar/issues",
-                "source": "https://github.com/spaze/phpcs-phar/tree/3.11.2"
+                "source": "https://github.com/spaze/phpcs-phar/tree/3.11.3"
             },
             "install-path": "../spaze/phpcs-phar"
         },
@@ -3921,17 +3922,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v4.2.0",
-            "version_normalized": "4.2.0.0",
+            "version": "v4.2.1",
+            "version_normalized": "4.2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "676796f9a9bb31861e11e7a9a20d9a671fe43743"
+                "reference": "eb3841ed93768e5754970e6da03d93d3a06c1e6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/676796f9a9bb31861e11e7a9a20d9a671fe43743",
-                "reference": "676796f9a9bb31861e11e7a9a20d9a671fe43743",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/eb3841ed93768e5754970e6da03d93d3a06c1e6a",
+                "reference": "eb3841ed93768e5754970e6da03d93d3a06c1e6a",
                 "shasum": ""
             },
             "require": {
@@ -3947,7 +3948,7 @@
                 "phpunit/phpunit": "^8.5.14 || ^10.1 || ^11.0",
                 "spaze/coding-standard": "^1.7"
             },
-            "time": "2025-01-22T16:21:14+00:00",
+            "time": "2025-01-23T17:42:09+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -3979,7 +3980,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v4.2.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v4.2.1"
             },
             "funding": [
                 {
