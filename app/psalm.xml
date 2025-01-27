@@ -77,11 +77,6 @@
 				<referencedProperty name="Nette\Forms\Form::$httpRequest" /> <!-- Marked as @internal -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
-		<UnsafeInstantiation>
-			<errorLevel type="suppress">
-				<file name="src/Test/TestCaseRunner.php" /> <!-- Correct params are figured for each TestCase child in MichalSpacekCz\Test\TestCaseRunner::run() -->
-			</errorLevel>
-		</UnsafeInstantiation>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
