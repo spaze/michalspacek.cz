@@ -15,7 +15,7 @@ class PhpDocNode implements Node
 	use NodeAttributes;
 
 	/** @var PhpDocChildNode[] */
-	public $children;
+	public array $children;
 
 	/**
 	 * @param PhpDocChildNode[] $children
@@ -31,9 +31,7 @@ class PhpDocNode implements Node
 	 */
 	public function getTags(): array
 	{
-		return array_filter($this->children, static function (PhpDocChildNode $child): bool {
-			return $child instanceof PhpDocTagNode;
-		});
+		return array_filter($this->children, static fn (PhpDocChildNode $child): bool => $child instanceof PhpDocTagNode);
 	}
 
 
@@ -42,9 +40,7 @@ class PhpDocNode implements Node
 	 */
 	public function getTagsByName(string $tagName): array
 	{
-		return array_filter($this->getTags(), static function (PhpDocTagNode $tag) use ($tagName): bool {
-			return $tag->name === $tagName;
-		});
+		return array_filter($this->getTags(), static fn (PhpDocTagNode $tag): bool => $tag->name === $tagName);
 	}
 
 
@@ -55,9 +51,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof VarTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof VarTagValueNode,
 		);
 	}
 
@@ -69,9 +63,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ParamTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ParamTagValueNode,
 		);
 	}
 
@@ -83,9 +75,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof TypelessParamTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof TypelessParamTagValueNode,
 		);
 	}
 
@@ -97,9 +87,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ParamImmediatelyInvokedCallableTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ParamImmediatelyInvokedCallableTagValueNode,
 		);
 	}
 
@@ -111,9 +99,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ParamLaterInvokedCallableTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ParamLaterInvokedCallableTagValueNode,
 		);
 	}
 
@@ -125,9 +111,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ParamClosureThisTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ParamClosureThisTagValueNode,
 		);
 	}
 
@@ -138,9 +122,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof PureUnlessCallableIsImpureTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof PureUnlessCallableIsImpureTagValueNode,
 		);
 	}
 
@@ -151,9 +133,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof TemplateTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof TemplateTagValueNode,
 		);
 	}
 
@@ -165,9 +145,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ExtendsTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ExtendsTagValueNode,
 		);
 	}
 
@@ -179,9 +157,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ImplementsTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ImplementsTagValueNode,
 		);
 	}
 
@@ -193,9 +169,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof UsesTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof UsesTagValueNode,
 		);
 	}
 
@@ -207,9 +181,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ReturnTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ReturnTagValueNode,
 		);
 	}
 
@@ -221,9 +193,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ThrowsTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ThrowsTagValueNode,
 		);
 	}
 
@@ -235,9 +205,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof MixinTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof MixinTagValueNode,
 		);
 	}
 
@@ -248,9 +216,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof RequireExtendsTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof RequireExtendsTagValueNode,
 		);
 	}
 
@@ -261,9 +227,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof RequireImplementsTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof RequireImplementsTagValueNode,
 		);
 	}
 
@@ -274,9 +238,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName('@deprecated'), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof DeprecatedTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof DeprecatedTagValueNode,
 		);
 	}
 
@@ -288,9 +250,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof PropertyTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof PropertyTagValueNode,
 		);
 	}
 
@@ -302,9 +262,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof PropertyTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof PropertyTagValueNode,
 		);
 	}
 
@@ -316,9 +274,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof PropertyTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof PropertyTagValueNode,
 		);
 	}
 
@@ -330,9 +286,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof MethodTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof MethodTagValueNode,
 		);
 	}
 
@@ -344,9 +298,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof TypeAliasTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof TypeAliasTagValueNode,
 		);
 	}
 
@@ -358,9 +310,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof TypeAliasImportTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof TypeAliasImportTagValueNode,
 		);
 	}
 
@@ -372,9 +322,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof AssertTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof AssertTagValueNode,
 		);
 	}
 
@@ -386,9 +334,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof AssertTagPropertyValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof AssertTagPropertyValueNode,
 		);
 	}
 
@@ -400,9 +346,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof AssertTagMethodValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof AssertTagMethodValueNode,
 		);
 	}
 
@@ -414,9 +358,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof SelfOutTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof SelfOutTagValueNode,
 		);
 	}
 
@@ -428,9 +370,7 @@ class PhpDocNode implements Node
 	{
 		return array_filter(
 			array_column($this->getTagsByName($tagName), 'value'),
-			static function (PhpDocTagValueNode $value): bool {
-				return $value instanceof ParamOutTagValueNode;
-			}
+			static fn (PhpDocTagValueNode $value): bool => $value instanceof ParamOutTagValueNode,
 		);
 	}
 
@@ -442,7 +382,7 @@ class PhpDocNode implements Node
 				$s = (string) $child;
 				return $s === '' ? '' : ' ' . $s;
 			},
-			$this->children
+			$this->children,
 		);
 		return "/**\n *" . implode("\n *", $children) . "\n */";
 	}

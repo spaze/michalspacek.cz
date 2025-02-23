@@ -6,7 +6,6 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SlevomatCodingStandard\Helpers\FixerHelper;
 use SlevomatCodingStandard\Helpers\ScopeHelper;
-use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
 use function count;
 use const T_BITWISE_AND;
@@ -23,11 +22,10 @@ class RequireArrowFunctionSniff implements Sniff
 
 	public const CODE_REQUIRED_ARROW_FUNCTION = 'RequiredArrowFunction';
 
-	/** @var bool */
-	public $allowNested = true;
+	public bool $allowNested = true;
 
-	/** @var bool|null */
-	public $enable = null;
+	/** @deprecated */
+	public bool $enable = true;
 
 	/**
 	 * @return array<int, (int|string)>
@@ -45,12 +43,6 @@ class RequireArrowFunctionSniff implements Sniff
 	 */
 	public function process(File $phpcsFile, $closurePointer): void
 	{
-		$this->enable = SniffSettingsHelper::isEnabledByPhpVersion($this->enable, 70400);
-
-		if (!$this->enable) {
-			return;
-		}
-
 		$tokens = $phpcsFile->getTokens();
 
 		$returnPointer = TokenHelper::findNextEffective($phpcsFile, $tokens[$closurePointer]['scope_opener'] + 1);
@@ -65,7 +57,7 @@ class RequireArrowFunctionSniff implements Sniff
 				$phpcsFile,
 				T_BITWISE_AND,
 				$useOpenParenthesisPointer + 1,
-				$tokens[$useOpenParenthesisPointer]['parenthesis_closer']
+				$tokens[$useOpenParenthesisPointer]['parenthesis_closer'],
 			) !== null) {
 				return;
 			}
@@ -76,7 +68,7 @@ class RequireArrowFunctionSniff implements Sniff
 				$phpcsFile,
 				[T_CLOSURE, T_FN],
 				$tokens[$closurePointer]['scope_opener'] + 1,
-				$tokens[$closurePointer]['scope_closer']
+				$tokens[$closurePointer]['scope_closer'],
 			);
 			if ($closureOrArrowFunctionPointer !== null) {
 				return;
@@ -94,12 +86,12 @@ class RequireArrowFunctionSniff implements Sniff
 			$phpcsFile,
 			T_USE,
 			$tokens[$closurePointer]['parenthesis_closer'] + 1,
-			$tokens[$closurePointer]['scope_opener']
+			$tokens[$closurePointer]['scope_opener'],
 		);
 		$nonWhitespacePointerBeforeScopeOpener = TokenHelper::findPreviousExcluding(
 			$phpcsFile,
 			T_WHITESPACE,
-			$tokens[$closurePointer]['scope_opener'] - 1
+			$tokens[$closurePointer]['scope_opener'] - 1,
 		);
 
 		$nonWhitespacePointerAfterUseParenthesisCloser = null;
@@ -108,7 +100,7 @@ class RequireArrowFunctionSniff implements Sniff
 			$nonWhitespacePointerAfterUseParenthesisCloser = TokenHelper::findNextExcluding(
 				$phpcsFile,
 				T_WHITESPACE,
-				$useParenthesiCloserPointer + 1
+				$useParenthesiCloserPointer + 1,
 			);
 		}
 
@@ -119,7 +111,7 @@ class RequireArrowFunctionSniff implements Sniff
 			FixerHelper::removeBetween(
 				$phpcsFile,
 				$tokens[$closurePointer]['parenthesis_closer'],
-				$nonWhitespacePointerAfterUseParenthesisCloser
+				$nonWhitespacePointerAfterUseParenthesisCloser,
 			);
 		}
 

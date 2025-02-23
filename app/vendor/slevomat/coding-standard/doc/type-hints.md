@@ -1,5 +1,14 @@
 ## Type hints
 
+#### SlevomatCodingStandard.TypeHints.ClassConstantTypeHint 🔧
+
+* Checks for missing typehints in case they can be declared natively.
+* Reports useless `@var` annotation (or whole documentation comment) because the type of constant is always clear.
+
+Sniff provides the following settings:
+
+* `enableNativeTypeHint`: enforces native typehint. It's on by default if you're on PHP 8.3+
+
 #### SlevomatCodingStandard.TypeHints.DeclareStrictTypes 🔧
 
 Enforces having `declare(strict_types = 1)` at the top of each PHP file. Allows configuring how many newlines should be between the `<?php` opening tag and the `declare` statement.
@@ -22,6 +31,18 @@ Sniff provides the following settings:
 #### SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
 
 Disallows usage of "mixed" type hint in phpDocs.
+
+#### SlevomatCodingStandard.TypeHints.DNFTypeHintFormat 🔧
+
+Checks format of DNF type hints.
+
+Sniff provides the following settings:
+
+* `enable`: either to enable or not this sniff. By default, it is enabled for PHP versions 8.0 or higher.
+* `withSpacesAroundOperators`: `yes` requires spaces around `|` and `&`, `no` requires no space around `|`and `&`. None is set by default so both are enabled.
+* `withSpacesInsideParentheses`: `yes` requires spaces inside parentheses, `no` requires no spaces inside parentheses. None is set by default so both are enabled.
+* `shortNullable`: `yes` requires usage of `?` for nullable type hint, `no` disallows it. None is set by default so both are enabled.
+* `nullPosition`: `first` requires `null` on first position in the type hint, `last` requires last position. None is set by default so `null` can be everywhere.
 
 #### SlevomatCodingStandard.TypeHints.LongTypeHints 🔧
 
@@ -74,7 +95,6 @@ This sniff can cause an error if you're overriding or implementing a parent meth
 
 Sniff provides the following settings:
 
-* `enableNativeTypeHint`: enforces to transform `@var int` into native `int` typehint. It's on by default if you're on PHP 7.4+
 * `enableMixedTypeHint`: enforces to transform `@var mixed` into native `mixed` typehint. It's on by default if you're on PHP 8.0+. It can be enabled only when `enableNativeTypeHint` is enabled too.
 * `enableUnionTypeHint`: enforces to transform `@var string|int` into native `string|int` typehint. It's on by default if you're on PHP 8.0+. It can be enabled only when `enableNativeTypeHint` is enabled too.
 * `enableIntersectionTypeHint`: enforces to transform `@var Foo&Bar` into native `Foo&Bar` typehint. It's on by default if you're on PHP 8.1+. It can be enabled only when `enableNativeTypeHint` is enabled too.

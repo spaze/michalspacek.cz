@@ -9,7 +9,6 @@ use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\NodeTraverser;
 use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineArgument;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
-use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\TypelessParamTagValueNode;
@@ -68,20 +67,21 @@ class AnnotationHelper
 							$annotations[] = new Annotation(
 								$node,
 								$annotationStartPointer,
-								$parsedDocComment->getNodeEndPointer($phpcsFile, $node, $annotationStartPointer)
+								$parsedDocComment->getNodeEndPointer($phpcsFile, $node, $annotationStartPointer),
 							);
 						}
 					}
 				}
 
 				return $annotations;
-			}
+			},
 		);
 	}
 
 	/**
-	 * @param class-string $type
-	 * @return list<Node>
+	 * @template T
+	 * @param class-string<T> $type
+	 * @return list<T>
 	 */
 	public static function getAnnotationNodesByType(Node $node, string $type): array
 	{
@@ -92,13 +92,13 @@ class AnnotationHelper
 			$visitor = new class extends AbstractNodeVisitor {
 
 				/** @var class-string */
-				private $type;
+				private string $type;
 
 				/** @var list<Node> */
-				private $nodes = [];
+				private array $nodes = [];
 
 				/** @var list<Node> */
-				private $nodesToIgnore = [];
+				private array $nodesToIgnore = [];
 
 				/**
 				 * @return Node|list<Node>|NodeTraverser::*|null
@@ -166,7 +166,6 @@ class AnnotationHelper
 	{
 		$originalNode = $annotation->getNode();
 
-		/** @var PhpDocNode $newPhpDocNode */
 		$newPhpDocNode = PhpDocParserHelper::cloneNode($parsedDocComment->getNode());
 
 		foreach ($newPhpDocNode->getTags() as $node) {
@@ -179,12 +178,12 @@ class AnnotationHelper
 		return PhpDocParserHelper::getPrinter()->printFormatPreserving(
 			$newPhpDocNode,
 			$parsedDocComment->getNode(),
-			$parsedDocComment->getTokens()
+			$parsedDocComment->getTokens(),
 		);
 	}
 
 	/**
-	 * @param array<int, string> $traversableTypeHints
+	 * @param list<string> $traversableTypeHints
 	 */
 	public static function isAnnotationUseless(
 		File $phpcsFile,
@@ -221,7 +220,7 @@ class AnnotationHelper
 		if (
 			TypeHintHelper::isTraversableType(
 				TypeHintHelper::getFullyQualifiedTypeHint($phpcsFile, $functionPointer, $typeHint->getTypeHintWithoutNullabilitySymbol()),
-				$traversableTypeHints
+				$traversableTypeHints,
 			)
 			&& !(
 				$annotationType instanceof IdentifierTypeNode
@@ -257,7 +256,7 @@ class AnnotationHelper
 				$phpcsFile,
 				$functionPointer,
 				$typeHint->getTypeHint(),
-				$annotationTypeHint
+				$annotationTypeHint,
 			);
 		}
 
@@ -289,7 +288,7 @@ class AnnotationHelper
 			if (in_array(
 				strtolower($annotationType->name),
 				['true', 'false', 'null'],
-				true
+				true,
 			)) {
 				return $enableStandaloneNullTrueFalseTypeHints;
 			}
@@ -297,7 +296,7 @@ class AnnotationHelper
 			if (in_array(
 				strtolower($annotationType->name),
 				['class-string', 'trait-string', 'callable-string', 'numeric-string', 'non-empty-string', 'non-falsy-string', 'literal-string', 'positive-int', 'negative-int'],
-				true
+				true,
 			)) {
 				return false;
 			}
@@ -308,7 +307,7 @@ class AnnotationHelper
 			$phpcsFile,
 			$functionPointer,
 			$typeHint->getTypeHintWithoutNullabilitySymbol(),
-			$annotationTypeHint
+			$annotationTypeHint,
 		);
 	}
 
@@ -320,16 +319,11 @@ class AnnotationHelper
 		if ($visitor === null) {
 			$visitor = new class extends AbstractNodeVisitor {
 
-				/** @var Node */
-				private $nodeToChange;
+				private Node $nodeToChange;
 
-				/** @var Node */
-				private $changedNode;
+				private Node $changedNode;
 
-				/**
-				 * @return Node|list<Node>|NodeTraverser::*|null
-				 */
-				public function enterNode(Node $node)
+				public function enterNode(Node $node): ?Node
 				{
 					if ($node->getAttribute(Attribute::ORIGINAL_NODE) === $this->nodeToChange) {
 						return $this->changedNode;

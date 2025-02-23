@@ -14,6 +14,7 @@ use SlevomatCodingStandard\Helpers\TokenHelper;
 use function array_key_exists;
 use function sprintf;
 use function str_repeat;
+use const T_ATTRIBUTE;
 use const T_FUNCTION;
 use const T_SEMICOLON;
 
@@ -22,11 +23,9 @@ class MethodSpacingSniff implements Sniff
 
 	public const CODE_INCORRECT_LINES_COUNT_BETWEEN_METHODS = 'IncorrectLinesCountBetweenMethods';
 
-	/** @var int */
-	public $minLinesCount = 1;
+	public int $minLinesCount = 1;
 
-	/** @var int */
-	public $maxLinesCount = 1;
+	public int $maxLinesCount = 1;
 
 	/**
 	 * @return array<int, (int|string)>
@@ -62,17 +61,29 @@ class MethodSpacingSniff implements Sniff
 			return;
 		}
 
+		$nextMethodAttributeStartPointer = null;
 		$nextMethodDocCommentStartPointer = DocCommentHelper::findDocCommentOpenPointer($phpcsFile, $nextMethodPointer);
+
 		if (
 			$nextMethodDocCommentStartPointer !== null
 			&& $tokens[$tokens[$nextMethodDocCommentStartPointer]['comment_closer']]['line'] + 1 !== $tokens[$nextMethodPointer]['line']
 		) {
 			$nextMethodDocCommentStartPointer = null;
+		} else {
+			$nextMethodAttributeStartPointer = TokenHelper::findPrevious(
+				$phpcsFile,
+				T_ATTRIBUTE,
+				$nextMethodPointer - 1,
+				$methodEndPointer,
+			);
 		}
 
 		$nextMethodFirstLinePointer = $tokens[$nextMethodPointer]['line'] === $tokens[$methodEndPointer]['line']
 			? TokenHelper::findNextEffective($phpcsFile, $methodEndPointer + 1)
-			: TokenHelper::findFirstTokenOnLine($phpcsFile, $nextMethodDocCommentStartPointer ?? $nextMethodPointer);
+			: TokenHelper::findFirstTokenOnLine(
+				$phpcsFile,
+				$nextMethodDocCommentStartPointer ?? $nextMethodAttributeStartPointer ?? $nextMethodPointer,
+			);
 
 		if (TokenHelper::findNextNonWhitespace($phpcsFile, $methodEndPointer + 1, $nextMethodFirstLinePointer) !== null) {
 			return;
@@ -97,7 +108,7 @@ class MethodSpacingSniff implements Sniff
 		$fix = $phpcsFile->addFixableError(
 			sprintf($errorMessage, $this->minLinesCount, $this->maxLinesCount, $linesBetween ?? 0),
 			$methodPointer,
-			self::CODE_INCORRECT_LINES_COUNT_BETWEEN_METHODS
+			self::CODE_INCORRECT_LINES_COUNT_BETWEEN_METHODS,
 		);
 
 		if (!$fix) {
@@ -111,8 +122,8 @@ class MethodSpacingSniff implements Sniff
 				$methodEndPointer,
 				$phpcsFile->eolChar . str_repeat($phpcsFile->eolChar, $this->minLinesCount) . IndentationHelper::getIndentation(
 					$phpcsFile,
-					TokenHelper::findFirstNonWhitespaceOnLine($phpcsFile, $methodPointer)
-				)
+					TokenHelper::findFirstNonWhitespaceOnLine($phpcsFile, $methodPointer),
+				),
 			);
 
 			FixerHelper::removeBetween($phpcsFile, $methodEndPointer, $nextMethodFirstLinePointer);
