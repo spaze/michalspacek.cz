@@ -1,0 +1,2333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.8.6@34ba9e1e5ea2e7396d3e2e644ee3e3a1d4336603">
+  <file src="src/Admin/Presenters/BlogPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/EmailsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[EmailsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/HomepagePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HomepagePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/HoneypotPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HoneypotPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/InfoPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InfoPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/InterviewsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/InvoicesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InvoicesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/PresenterTemplates/Interviews/InterviewsDefault.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewsDefault]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/PresenterTemplates/Interviews/InterviewsInterview.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewsInterview]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/PulsePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PulsePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/ReviewsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ReviewsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/SignPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SignPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/TalksPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalksPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/TrainingsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/UserPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UserPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Admin/Presenters/WellKnownPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WellKnownPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Api/Presenters/CertificatesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificatesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Api/Presenters/CompanyPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Api/Presenters/ErrorGenericPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ErrorGenericPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Api/Presenters/ErrorPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ErrorPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/AppRequest.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AppRequest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Bootstrap.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Bootstrap]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Cli/CliArgs.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CliArgs]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Cli/NoCliArgs.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NoCliArgs]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Error.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Error]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Exceptions/NoOriginalRequestException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NoOriginalRequestException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Exceptions/ServerEnvNotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ServerEnvNotFoundException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Exceptions/ServerEnvNotStringException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ServerEnvNotStringException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/LinkGenerator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LinkGenerator]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Locale/LocaleLink.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LocaleLink]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Locale/Locales.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Locales]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Routing/BlogPostRoute.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostRoute]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Routing/LocaleRouter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LocaleRouter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Routing/RouterFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RouterFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Routing/RouterFactoryRoute.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RouterFactoryRoute]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/SanitizedPhpInfo.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SanitizedPhpInfo]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/ServerEnv.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ServerEnv]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/Theme/Theme.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Theme]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/WebApplication.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WebApplication]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Application/WindowsSubsystemForLinux.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WindowsSubsystemForLinux]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/ArticleEdit.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticleEdit]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/ArticleHeaderIcons.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticleHeaderIcons]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/ArticlePublishedElsewhere.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticlePublishedElsewhere]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/ArticleSummary.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticleSummary]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPost.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPost]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostEdits.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostEdits]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostLoader.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostLoader]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostLocaleUrl.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostLocaleUrl]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostLocaleUrls.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostLocaleUrls]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostPreview.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostPreview]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostRecommendedLink.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostRecommendedLink]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPostRecommendedLinks.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostRecommendedLinks]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/BlogPosts.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPosts]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/Exceptions/BlogPostDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Articles/Blog/Exceptions/BlogPostWithoutIdException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostWithoutIdException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/CompanyInfo.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyInfo]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/CompanyInfoDetails.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyInfoDetails]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/CompanyRegisterAres.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyRegisterAres]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/CompanyRegisterRegisterUz.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyRegisterRegisterUz]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/Exceptions/CompanyInfoException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyInfoException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/Exceptions/CompanyNotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyNotFoundException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/CompanyInfo/Exceptions/UnsupportedCountryException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UnsupportedCountryException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Css/CriticalCss.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CriticalCss]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Database/Exceptions/TypedDatabaseTypeException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TypedDatabaseTypeException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Database/TypedDatabase.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TypedDatabase]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/DateTimeFormat.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeFormat]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/DateTimeFormatter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeFormatter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/DateTimeParser.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeParser]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/DateTimeZoneFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeZoneFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/Exceptions/CannotCreateDateTimeObjectException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CannotCreateDateTimeObjectException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/Exceptions/CannotParseDateTimeException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CannotParseDateTimeException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DateTime/Exceptions/InvalidTimezoneException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InvalidTimezoneException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/DependencyInjection/Exceptions/DiServicesConfigInvalidException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DiServicesConfigInvalidException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/CrLfUrlInjections.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CrLfUrlInjections]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/FourOhFourButFound.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FourOhFourButFound]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/NetteCve202015227.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NetteCve202015227]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/NetteCve202015227Rce.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NetteCve202015227Rce]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/PhpInfoCookieSanitization.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PhpInfoCookieSanitization]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/Presenters/NettePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NettePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/EasterEgg/WinterIsComing.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WinterIsComing]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Feed/Exports.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Exports]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/ChangePasswordFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ChangePasswordFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/Controls/FormControlsFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FormControlsFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/Controls/TrainingControlsAttendee.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingControlsAttendee]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/Controls/TrainingControlsCompany.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingControlsCompany]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/Controls/TrainingControlsFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingControlsFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/DeletePersonalDataFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DeletePersonalDataFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/FormValidators.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FormValidators]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/InterviewFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/PostFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PostFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/Pulse/PasswordsStorageAlgorithmFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsStorageAlgorithmFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/Pulse/PasswordsStoragesSearchSortFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsStoragesSearchSortFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/RegenerateTokensFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RegenerateTokensFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/SignInFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SignInFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/SignInHoneypotFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SignInHoneypotFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TalkFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TalkSlidesFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlidesFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/ThemeFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ThemeFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingApplicationAdminFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationAdminFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingApplicationFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingApplicationMultipleFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationMultipleFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingApplicationPreliminaryFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationPreliminaryFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingApplicationStatusesFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatusesFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingDateFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingFileFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFileFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingInvoiceFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingInvoiceFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingMailsOutboxFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingMailsOutboxFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/TrainingReviewFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviewFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/UiForm.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UiForm]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Form/UpcKeysSsidFormFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeysSsidFormFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Formatter/Exceptions/UnexpectedHandlerInvocationReturnType.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UnexpectedHandlerInvocationReturnType]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Formatter/Placeholders/FetchMetadataTexyFormatterPlaceholder.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FetchMetadataTexyFormatterPlaceholder]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Formatter/Placeholders/TrainingDateTexyFormatterPlaceholder.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateTexyFormatterPlaceholder]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Formatter/TexyPhraseHandler.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TexyPhraseHandler]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Client/HttpClientResponse.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpClientResponse]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Cookies/CookieDescription.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CookieDescription]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Cookies/CookieDescriptions.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CookieDescriptions]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Cookies/Cookies.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Cookies]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Exceptions/HttpClientRequestException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpClientRequestException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Exceptions/HttpClientTlsCertificateNotAvailableException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpClientTlsCertificateNotAvailableException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Exceptions/HttpClientTlsCertificateNotCapturedException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpClientTlsCertificateNotCapturedException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Exceptions/HttpRedirectDestinationUrlMalformedException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpRedirectDestinationUrlMalformedException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Exceptions/HttpStreamException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpStreamException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/FetchMetadata/FetchMetadata.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FetchMetadata]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/FetchMetadata/ResourceIsolationPolicy.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ResourceIsolationPolicy]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/FetchMetadata/ResourceIsolationPolicyCrossSite.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ResourceIsolationPolicyCrossSite]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/HttpInput.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpInput]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Redirections.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Redirections]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/Robots/Robots.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Robots]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Http/SecurityHeaders.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SecurityHeaders]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Interviews/Exceptions/InterviewDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Interviews/Interview.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Interview]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Interviews/InterviewInputs.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewInputs]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Interviews/InterviewInputsFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewInputsFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Interviews/Interviews.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Interviews]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Makefile/Exceptions/MakefileContainsRealTargetsException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[MakefileContainsRealTargetsException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Makefile/Exceptions/MakefileNotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[MakefileNotFoundException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Makefile/Makefile.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Makefile]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Exceptions/CannotDeleteMediaException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CannotDeleteMediaException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Exceptions/ExtensionWithNoContentTypeException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ExtensionWithNoContentTypeException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Exceptions/MissingContentTypeException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[MissingContentTypeException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Exceptions/UnsupportedContentTypeException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UnsupportedContentTypeException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Photo.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Photo]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Resources/InterviewMediaResources.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewMediaResources]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Resources/TalkMediaResources.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkMediaResources]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/SupportedImageFileFormats.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SupportedImageFileFormats]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/Video.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Video]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/VideoFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[VideoFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/VideoThumbnailFileUploads.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[VideoThumbnailFileUploads]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Media/VideoThumbnails.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[VideoThumbnails]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Net/DnsRecord.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DnsRecord]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Net/DnsResolver.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DnsResolver]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Net/Exceptions/DnsGetRecordException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DnsGetRecordException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Companies.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Companies]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Company.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Company]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Algorithms/PasswordHashingAlgorithm.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordHashingAlgorithm]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Algorithms/PasswordHashingAlgorithms.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordHashingAlgorithms]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Disclosures/PasswordHashingDisclosureType.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordHashingDisclosureType]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Disclosures/PasswordHashingDisclosures.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordHashingDisclosures]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Passwords.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Passwords]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/PasswordsSorting.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsSorting]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Rating.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Rating]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/SearchMatcher.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SearchMatcher]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/SearchResult.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SearchResult]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/Storage.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Storage]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageAlgorithm.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageAlgorithm]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageAlgorithmAttributes.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageAlgorithmAttributes]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageAlgorithmAttributesFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageAlgorithmAttributesFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageDisclosure.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageDisclosure]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageRegistry.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageRegistry]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageRegistryFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageRegistryFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageSharedWith.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageSharedWith]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Passwords/Storage/StorageSpecificSite.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageSpecificSite]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Presenters/ErrorGenericPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ErrorGenericPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Presenters/ErrorPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ErrorPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Presenters/HomepagePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HomepagePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Presenters/PasswordsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Presenters/PasswordsStoragesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsStoragesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Presenters/PresenterTemplates/PasswordsStorages/PasswordsStoragesDefaultTemplate.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsStoragesDefaultTemplate]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Site.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Site]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Pulse/Sites.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Sites]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tags/Tags.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Tags]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Exceptions/DuplicatedSlideException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DuplicatedSlideException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Exceptions/SlideImageUploadFailedException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SlideImageUploadFailedException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Exceptions/TalkDateTimeException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkDateTimeException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Exceptions/TalkDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Exceptions/TalkSlideDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlideDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Slides/TalkSlide.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlide]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Slides/TalkSlideCollection.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlideCollection]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Slides/TalkSlides.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlides]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Talk.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Talk]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/TalkFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/TalkInputs.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkInputs]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/TalkInputsFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkInputsFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/TalkLocaleUrls.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkLocaleUrls]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/Talks.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Talks]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Talks/TalksList.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalksList]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Templating/Exceptions/WrongTemplateClassException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WrongTemplateClassException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Templating/Filters.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Filters]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Templating/TemplateFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TemplateFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Application/ApplicationPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ApplicationPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Application/LocaleLinkGeneratorMock.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LocaleLinkGeneratorMock]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Application/UiPresenterMock.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UiPresenterMock]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Articles/ArticlesMock.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticlesMock]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Database/Database.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Database]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Database/ResultSet.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ResultSet]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/DateTime/DateTimeMachineFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeMachineFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Form/FormComponents.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FormComponents]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Http/Client/HttpClientMock.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpClientMock]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Http/Cookie.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Cookie]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Http/NullSession.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NullSession]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Http/Request.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Request]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Http/Response.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Response]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/NoOpTranslator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NoOpTranslator]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/NullLogger.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NullLogger]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/NullMailer.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NullMailer]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/PrivateProperty.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PrivateProperty]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Security/NullUserStorage.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[NullUserStorage]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/TestCaseRunner.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TestCaseRunner]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Training/TrainingFilesNullStorage.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesNullStorage]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Test/Training/TrainingTestDataFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingTestDataFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Certificate.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Certificate]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/CertificateAttempt.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateAttempt]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/CertificateAttemptFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateAttemptFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/CertificateFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/CertificateGatherer.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateGatherer]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/CertificateMonitor.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateMonitor]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Certificates.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Certificates]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/CertificatesApiClient.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificatesApiClient]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Exceptions/CertificateException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Exceptions/CertificatesApiException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificatesApiException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Exceptions/OpenSslException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OpenSslException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Exceptions/OpenSslX509ParseException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OpenSslX509ParseException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/Exceptions/SomeCertificatesLoggedToFileException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SomeCertificatesLoggedToFileException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/OpenSsl.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OpenSsl]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Tls/OpenSslX509ParseResult.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OpenSslX509ParseResult]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/ApplicationForm/TrainingApplicationFormDataLogger.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormDataLogger]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/ApplicationForm/TrainingApplicationFormSpam.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormSpam]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/ApplicationForm/TrainingApplicationFormSuccess.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormSuccess]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/ApplicationStatuses/TrainingApplicationStatusHistory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatusHistory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/ApplicationStatuses/TrainingApplicationStatusHistoryItem.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatusHistoryItem]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/ApplicationStatuses/TrainingApplicationStatuses.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatuses]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Applications/TrainingApplication.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplication]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Applications/TrainingApplicationFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Applications/TrainingApplicationSessionSection.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationSessionSection]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Applications/TrainingApplicationSources.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationSources]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Applications/TrainingApplicationStorage.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStorage]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Applications/TrainingApplications.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplications]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Company/CompanyTraining.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyTraining]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Company/CompanyTrainings.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyTrainings]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/DateList/TrainingApplicationsList.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationsList]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/DateList/UpcomingTrainingDatesList.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcomingTrainingDatesList]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/DateList/UpcomingTrainingDatesListFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcomingTrainingDatesListFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDate.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDate]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDateFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDateInputs.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateInputs]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDateInputsFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateInputsFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDateStatuses.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateStatuses]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDates.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDates]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/TrainingDatesFormValidator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDatesFormValidator]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/UpcomingTraining.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcomingTraining]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Dates/UpcomingTrainingDates.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcomingTrainingDates]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Discontinued/DiscontinuedTraining.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DiscontinuedTraining]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Discontinued/DiscontinuedTrainings.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DiscontinuedTrainings]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/CannotUpdateTrainingApplicationStatusException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CannotUpdateTrainingApplicationStatusException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/CompanyTrainingDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyTrainingDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/SpammyApplicationException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SpammyApplicationException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingApplicationDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingDateDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingDateNotAvailableException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateNotAvailableException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingDateNotRemoteNoVenueException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateNotRemoteNoVenueException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingDateNotUpcomingException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateNotUpcomingException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingDoesNotExistException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDoesNotExistException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingReviewNotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviewNotFoundException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingReviewRankingInvalidException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviewRankingInvalidException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Exceptions/TrainingVenueNotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingVenueNotFoundException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Files/TrainingFile.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFile]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Files/TrainingFileFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFileFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Files/TrainingFiles.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFiles]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Files/TrainingFilesCollection.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesCollection]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Files/TrainingFilesDownload.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesDownload]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Files/TrainingFilesSessionSection.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesSessionSection]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/FreeSeats.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FreeSeats]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Mails/MailMessageAdmin.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[MailMessageAdmin]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Mails/TrainingMailMessageFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingMailMessageFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Mails/TrainingMails.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingMails]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Preliminary/PreliminaryTraining.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PreliminaryTraining]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Preliminary/PreliminaryTrainings.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PreliminaryTrainings]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Price.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Price]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Prices.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Prices]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Resolver/Vrana.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Vrana]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Reviews/TrainingReview.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReview]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Reviews/TrainingReviewInputs.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviewInputs]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Reviews/TrainingReviews.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviews]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/TrainingLocales.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingLocales]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Trainings/Training.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Training]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Trainings/TrainingFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Trainings/Trainings.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Trainings]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Venues/TrainingVenue.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingVenue]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Training/Venues/TrainingVenues.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingVenues]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Twitter/Exceptions/TwitterCardNotFoundException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwitterCardNotFoundException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Twitter/TwitterCard.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwitterCard]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Twitter/TwitterCards.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwitterCards]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/Exceptions/UpcKeysApiIncorrectTokensException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeysApiIncorrectTokensException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/Exceptions/UpcKeysApiResponseInvalidException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeysApiResponseInvalidException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/Exceptions/UpcKeysApiUnknownPrefixException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeysApiUnknownPrefixException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/Presenters/HomepagePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HomepagePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/Technicolor.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Technicolor]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/Ubee.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Ubee]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/UpcKeys.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeys]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/UpcKeys/WiFiKey.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WiFiKey]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/User/Exceptions/IdentityIdNotIntException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[IdentityIdNotIntException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/User/Exceptions/IdentityNotSimpleIdentityException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[IdentityNotSimpleIdentityException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/User/Exceptions/IdentityUsernameNotStringException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[IdentityUsernameNotStringException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/User/Exceptions/IdentityWithoutUsernameException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[IdentityWithoutUsernameException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/User/Manager.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Manager]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/User/UserAuthToken.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UserAuthToken]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/Base64.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Base64]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/Exceptions/JsonItemNotStringException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[JsonItemNotStringException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/Exceptions/JsonItemNotStructureException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[JsonItemNotStructureException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/Exceptions/JsonItemsNotArrayException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[JsonItemsNotArrayException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/Hash.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Hash]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/JsonUtils.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[JsonUtils]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Utils/Strings.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Strings]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Webleed/Presenters/HomepagePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HomepagePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ArticlesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticlesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/CompanyTrainingsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyTrainingsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ContactPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ContactPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/CookiesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CookiesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ErrorGenericPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ErrorGenericPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ErrorPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ErrorPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ExportsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ExportsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/FilesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FilesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ForbiddenPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ForbiddenPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/HomepagePresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HomepagePresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/InterviewsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/PgpPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PgpPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/PhotoPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PhotoPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/PostPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PostPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/ProjectsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProjectsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/RedirectPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RedirectPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/TagsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TagsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/TalksPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalksPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/TrainingsPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingsPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/VenuesPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[VenuesPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Www/Presenters/WhoPresenter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[WhoPresenter]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/AppRequestTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[AppRequestTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/BootstrapTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BootstrapTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/LinkGeneratorTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[LinkGeneratorTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/Locale/LocaleLinkGeneratorTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[LocaleLinkGeneratorTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/SanitizedPhpInfoTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[SanitizedPhpInfoTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/ServerEnvTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ServerEnvTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Application/Theme/ThemeTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ThemeTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/ArticlesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ArticlesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/Blog/BlogPostEditsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostEditsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/Blog/BlogPostLocaleUrlsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostLocaleUrlsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/Blog/BlogPostPreviewTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostPreviewTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/Blog/BlogPostRecommendedLinkTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostRecommendedLinkTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/Blog/BlogPostRecommendedLinksTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostRecommendedLinksTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Articles/Blog/BlogPostTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[BlogPostTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/CompanyInfo/CompanyRegisterAresTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyRegisterAresTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/CompanyInfo/CompanyRegisterRegisterUzTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompanyRegisterRegisterUzTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Database/TypedDatabaseTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TypedDatabaseTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/DateTime/DateTimeFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/DateTime/DateTimeFormatterTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeFormatterTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/DateTime/DateTimeParserTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeParserTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/DateTime/DateTimeZoneFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DateTimeZoneFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/DependencyInjection/DiServicesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DiServicesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/EasterEgg/CrLfUrlInjectionsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CrLfUrlInjectionsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/EasterEgg/FourOhFourButFoundTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[FourOhFourButFoundTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/EasterEgg/NetteCve202015227Test.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[NetteCve202015227Test]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/EasterEgg/WinterIsComingTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[WinterIsComingTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Feed/ExportsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ExportsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/ChangePasswordFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ChangePasswordFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/FormValidatorsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[FormValidatorsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/InterviewFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/PostFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PostFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/Pulse/PasswordsStorageAlgorithmFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsStorageAlgorithmFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/SignInFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[SignInFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/SignInHoneypotFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[SignInHoneypotFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TalkFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TalkSlidesFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlidesFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingApplicationAdminFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationAdminFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingApplicationMultipleFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationMultipleFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingApplicationPreliminaryFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationPreliminaryFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingApplicationStatusesFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatusesFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingDateFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingFileFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFileFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingInvoiceFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingInvoiceFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingMailsOutboxFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingMailsOutboxFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/TrainingReviewFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviewFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Form/UpcKeysSsidFormFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeysSsidFormFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Formatter/TexyFormatterTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TexyFormatterTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Formatter/TexyPhraseHandlerTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TexyPhraseHandlerTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/Cookies/CookieDescriptionsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CookieDescriptionsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/Cookies/CookiesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CookiesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/FetchMetadata/FetchMetadataTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[FetchMetadataTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/FetchMetadata/ResourceIsolationPolicyTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ResourceIsolationPolicyTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/HttpClientTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpClientTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/HttpInputTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[HttpInputTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/RedirectionsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[RedirectionsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/Robots/RobotsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[RobotsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Http/SecurityHeadersTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[SecurityHeadersTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Interviews/InterviewsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[InterviewsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Makefile/MakefileTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[MakefileTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Media/VideoFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[VideoFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Media/VideoThumbnailsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[VideoThumbnailsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Net/DnsResolverTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DnsResolverTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/CompaniesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CompaniesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/Disclosures/PasswordHashingDisclosuresTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordHashingDisclosuresTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/PasswordHashingAlgorithmsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordHashingAlgorithmsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/PasswordsSortingTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsSortingTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/PasswordsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PasswordsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/RatingTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[RatingTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/Storage/StorageAlgorithmAttributesFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageAlgorithmAttributesFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/Passwords/Storage/StorageAlgorithmTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[StorageAlgorithmTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Pulse/SitesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[SitesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Tags/TagsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TagsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Talks/Slides/TalkSlidesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkSlidesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Talks/TalkLocaleUrlsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalkLocaleUrlsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Talks/TalksTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TalksTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Templating/FiltersTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[FiltersTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Templating/TemplateFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TemplateFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Tls/CertificateAttemptFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateAttemptFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Tls/CertificateFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificateFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Tls/CertificatesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[CertificatesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Tls/OpenSslTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[OpenSslTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/ApplicationForm/TrainingApplicationFormDataLoggerTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormDataLoggerTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/ApplicationForm/TrainingApplicationFormSpamTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormSpamTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/ApplicationForm/TrainingApplicationFormSuccessTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFormSuccessTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/ApplicationStatuses/TrainingApplicationStatusHistoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatusHistoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/ApplicationStatuses/TrainingApplicationStatusesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStatusesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Applications/TrainingApplicationFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Applications/TrainingApplicationSessionSectionTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationSessionSectionTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Applications/TrainingApplicationSourcesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationSourcesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Applications/TrainingApplicationStorageTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationStorageTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Applications/TrainingApplicationsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingApplicationsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Dates/TrainingDateFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Dates/TrainingDateStatusesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDateStatusesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Dates/TrainingDatesFormValidatorTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDatesFormValidatorTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Dates/TrainingDatesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingDatesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Dates/UpcomingTrainingDatesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcomingTrainingDatesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Discontinued/DiscontinuedTrainingsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[DiscontinuedTrainingsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Files/TrainingFilesCollectionTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesCollectionTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Files/TrainingFilesDownloadTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesDownloadTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Files/TrainingFilesSessionSectionTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesSessionSectionTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Files/TrainingFilesStorageTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFilesStorageTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/FreeSeatsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[FreeSeatsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Mails/TrainingMailMessageFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingMailMessageFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Preliminary/PreliminaryTrainingsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PreliminaryTrainingsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/PriceTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PriceTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/PricesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[PricesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Reviews/TrainingReviewsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingReviewsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/TrainingLocalesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingLocalesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Trainings/TrainingFactoryTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingFactoryTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Trainings/TrainingsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Training/Venues/TrainingVenuesTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TrainingVenuesTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Twitter/TwitterCardsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwitterCardsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/UpcKeys/TechnicolorTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[TechnicolorTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/UpcKeys/UbeeTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[UbeeTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/UpcKeys/UpcKeysTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpcKeysTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/UpcKeys/WiFiKeyTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[WiFiKeyTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/User/ManagerTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[ManagerTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Utils/Base64Test.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[Base64Test]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="tests/Utils/JsonUtilsTest.phpt">
+    <ClassMustBeFinal>
+      <code><![CDATA[JsonUtilsTest]]></code>
+    </ClassMustBeFinal>
+  </file>
+</files>
