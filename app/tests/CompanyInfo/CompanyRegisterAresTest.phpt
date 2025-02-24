@@ -38,9 +38,9 @@ class CompanyRegisterAresTest extends TestCase
 			'26688093',
 			'CZ26688093',
 			'Landis+Gyr s.r.o.',
-			'Plzeňská 3185/5a',
+			'Generála Píky 430/26',
 			'Praha',
-			'15000',
+			'16000',
 			'cz',
 		);
 		Assert::equal($expected, $this->ares->getDetails('26688093'), 'All house number & street number & extra letter');
