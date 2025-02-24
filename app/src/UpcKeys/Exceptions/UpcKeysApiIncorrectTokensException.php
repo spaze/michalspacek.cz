@@ -5,7 +5,7 @@ namespace MichalSpacekCz\UpcKeys\Exceptions;
 
 use Throwable;
 
-class UpcKeysApiIncorrectTokensException extends UpcKeysApiException
+final class UpcKeysApiIncorrectTokensException extends UpcKeysApiException
 {
 
 	public function __construct(string $json, string $line, ?Throwable $previous = null)

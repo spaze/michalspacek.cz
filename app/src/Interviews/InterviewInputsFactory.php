@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Interviews;
 use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
 
-readonly class InterviewInputsFactory
+final readonly class InterviewInputsFactory
 {
 
 	public function __construct(

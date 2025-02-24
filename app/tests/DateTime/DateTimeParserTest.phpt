@@ -10,7 +10,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class DateTimeParserTest extends TestCase
+final class DateTimeParserTest extends TestCase
 {
 
 	public function __construct(

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks;
 
 use MichalSpacekCz\Database\TypedDatabase;
 
-readonly class TalkLocaleUrls
+final readonly class TalkLocaleUrls
 {
 
 	public function __construct(

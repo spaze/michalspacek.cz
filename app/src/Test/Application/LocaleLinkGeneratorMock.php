@@ -7,7 +7,7 @@ use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use Override;
 
-class LocaleLinkGeneratorMock extends LocaleLinkGenerator
+final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 {
 
 	/** @var array<string, string> */

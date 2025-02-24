@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\Training\Files\TrainingFilesDownload;
 use Nette\Application\BadRequestException;
 
-class FilesPresenter extends BasePresenter
+final class FilesPresenter extends BasePresenter
 {
 
 	public function __construct(

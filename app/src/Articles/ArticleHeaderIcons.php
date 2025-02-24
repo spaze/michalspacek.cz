@@ -9,7 +9,7 @@ use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Articles\Components\ArticleWithEdits;
 
-class ArticleHeaderIcons extends UiControl
+final class ArticleHeaderIcons extends UiControl
 {
 
 	public function __construct(

@@ -5,6 +5,6 @@ namespace MichalSpacekCz\Twitter\Exceptions;
 
 use Exception;
 
-class TwitterCardNotFoundException extends Exception
+final class TwitterCardNotFoundException extends Exception
 {
 }

@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class BlogPostLocaleUrlsTest extends TestCase
+final class BlogPostLocaleUrlsTest extends TestCase
 {
 
 	public function __construct(

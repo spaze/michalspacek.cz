@@ -5,7 +5,7 @@ namespace MichalSpacekCz\User\Exceptions;
 
 use Throwable;
 
-class IdentityUsernameNotStringException extends IdentityException
+final class IdentityUsernameNotStringException extends IdentityException
 {
 
 	public function __construct(string $type, ?Throwable $previous = null)

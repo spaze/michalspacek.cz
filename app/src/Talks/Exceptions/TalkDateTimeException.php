@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Talks\Exceptions;
 use Exception;
 use Throwable;
 
-class TalkDateTimeException extends Exception
+final class TalkDateTimeException extends Exception
 {
 
 	public function __construct(string $date, ?Throwable $previous = null)

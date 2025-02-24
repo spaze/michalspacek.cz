@@ -15,7 +15,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class CrLfUrlInjectionsTest extends TestCase
+final class CrLfUrlInjectionsTest extends TestCase
 {
 
 	public function __construct(

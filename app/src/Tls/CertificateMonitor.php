@@ -9,7 +9,7 @@ use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Override;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
-class CertificateMonitor implements CliArgsProvider
+final class CertificateMonitor implements CliArgsProvider
 {
 
 	private const string NO_IPV6 = '--no-ipv6';

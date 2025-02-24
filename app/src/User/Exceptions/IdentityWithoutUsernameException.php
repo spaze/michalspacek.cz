@@ -5,7 +5,7 @@ namespace MichalSpacekCz\User\Exceptions;
 
 use Throwable;
 
-class IdentityWithoutUsernameException extends IdentityException
+final class IdentityWithoutUsernameException extends IdentityException
 {
 
 	public function __construct(?Throwable $previous = null)

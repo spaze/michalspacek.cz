@@ -5,7 +5,7 @@ namespace MichalSpacekCz\User\Exceptions;
 
 use Throwable;
 
-class IdentityIdNotIntException extends IdentityException
+final class IdentityIdNotIntException extends IdentityException
 {
 
 	public function __construct(string $type, ?Throwable $previous = null)

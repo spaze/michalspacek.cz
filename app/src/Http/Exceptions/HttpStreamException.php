@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Http\Exceptions;
 use Exception;
 use Throwable;
 
-class HttpStreamException extends Exception
+final class HttpStreamException extends Exception
 {
 
 	public function __construct(int $notificationCode, ?string $message, int $messageCode, ?Throwable $previous = null)

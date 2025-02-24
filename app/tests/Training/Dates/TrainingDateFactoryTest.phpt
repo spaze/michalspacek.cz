@@ -13,7 +13,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingDateFactoryTest extends TestCase
+final class TrainingDateFactoryTest extends TestCase
 {
 
 	public function __construct(

@@ -7,7 +7,7 @@ use DateTimeInterface;
 use IntlDateFormatter;
 use RuntimeException;
 
-readonly class DateTimeFormatter
+final readonly class DateTimeFormatter
 {
 
 	private const string DATE_DAY = 'day';

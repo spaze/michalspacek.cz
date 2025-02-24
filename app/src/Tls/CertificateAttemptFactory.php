@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
-class CertificateAttemptFactory
+final class CertificateAttemptFactory
 {
 
 	/**

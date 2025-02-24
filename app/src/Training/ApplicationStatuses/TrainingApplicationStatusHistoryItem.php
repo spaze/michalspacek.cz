@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTimeImmutable;
 
-readonly class TrainingApplicationStatusHistoryItem
+final readonly class TrainingApplicationStatusHistoryItem
 {
 
 	public function __construct(

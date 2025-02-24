@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 
-class FiltersTest extends TestCase
+final class FiltersTest extends TestCase
 {
 
 	public function __construct(

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 
-readonly class BlogPostLocaleUrl
+final readonly class BlogPostLocaleUrl
 {
 
 	/**

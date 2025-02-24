@@ -16,7 +16,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TalkFormFactoryTest extends TestCase
+final class TalkFormFactoryTest extends TestCase
 {
 
 	private ?Html $message = null;

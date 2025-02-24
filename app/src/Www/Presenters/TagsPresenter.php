@@ -17,7 +17,7 @@ use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Override;
 
-class TagsPresenter extends BasePresenter
+final class TagsPresenter extends BasePresenter
 {
 
 	/** @var array<string, array<string, string>> */

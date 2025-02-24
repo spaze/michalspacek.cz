@@ -13,7 +13,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class ServerEnvTest extends TestCase
+final class ServerEnvTest extends TestCase
 {
 
 	public function testGetString(): void

@@ -23,7 +23,7 @@ use stdClass;
  *
  * See https://www.registeruz.sk/cruz-public/home/api for the docs.
  */
-readonly class CompanyRegisterRegisterUz implements CompanyRegister
+final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 {
 
 	private const string DAY_ONE = '1993-01-01';

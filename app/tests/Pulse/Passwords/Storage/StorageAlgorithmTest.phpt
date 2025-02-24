@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../../bootstrap.php';
 
 /** @testCase */
-class StorageAlgorithmTest extends TestCase
+final class StorageAlgorithmTest extends TestCase
 {
 
 	private const string ALGO = 'bcrypt';

@@ -11,7 +11,7 @@ use MichalSpacekCz\User\Manager;
 use Nette\Http\Helpers;
 use Nette\Http\Session;
 
-readonly class CookieDescriptions
+final readonly class CookieDescriptions
 {
 
 	public function __construct(

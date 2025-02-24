@@ -11,7 +11,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 
-readonly class InterviewFormFactory
+final readonly class InterviewFormFactory
 {
 
 	public function __construct(

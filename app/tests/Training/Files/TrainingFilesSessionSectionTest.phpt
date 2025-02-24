@@ -15,7 +15,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingFilesSessionSectionTest extends TestCase
+final class TrainingFilesSessionSectionTest extends TestCase
 {
 
 	private const int APPLICATION_ID = 303;

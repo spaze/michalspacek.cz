@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Application;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotFoundException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotStringException;
 
-class ServerEnv
+final class ServerEnv
 {
 
 	/**

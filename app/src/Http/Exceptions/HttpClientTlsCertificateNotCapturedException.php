@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Http\Exceptions;
 use Exception;
 use Throwable;
 
-class HttpClientTlsCertificateNotCapturedException extends Exception
+final class HttpClientTlsCertificateNotCapturedException extends Exception
 {
 
 	public function __construct(?Throwable $previous = null)

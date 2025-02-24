@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Tls\Exceptions;
 use Exception;
 use Throwable;
 
-class SomeCertificatesLoggedToFileException extends Exception
+final class SomeCertificatesLoggedToFileException extends Exception
 {
 
 	public function __construct(?Throwable $previous = null)

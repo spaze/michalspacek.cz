@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Test;
 use Override;
 use Tracy\ILogger;
 
-class NullLogger implements ILogger
+final class NullLogger implements ILogger
 {
 
 	/** @var array<int, mixed> */

@@ -15,7 +15,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class CompanyRegisterAresTest extends TestCase
+final class CompanyRegisterAresTest extends TestCase
 {
 
 	private readonly CompanyRegisterAres $ares;

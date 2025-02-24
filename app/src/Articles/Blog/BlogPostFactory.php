@@ -19,7 +19,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Row;
 use Nette\Utils\JsonException;
 
-readonly class BlogPostFactory
+final readonly class BlogPostFactory
 {
 
 	/**

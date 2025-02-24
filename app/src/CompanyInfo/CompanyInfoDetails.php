@@ -6,7 +6,7 @@ namespace MichalSpacekCz\CompanyInfo;
 use JsonSerializable;
 use Override;
 
-readonly class CompanyInfoDetails implements JsonSerializable
+final readonly class CompanyInfoDetails implements JsonSerializable
 {
 
 	public function __construct(

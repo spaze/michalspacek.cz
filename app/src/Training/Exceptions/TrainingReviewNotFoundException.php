@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class TrainingReviewNotFoundException extends TrainingException
+final class TrainingReviewNotFoundException extends TrainingException
 {
 
 	public function __construct(int $id, ?Throwable $previous = null)

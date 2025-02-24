@@ -15,7 +15,7 @@ use Nette\Http\IResponse;
 use Nette\Http\Url;
 use Override;
 
-class ErrorPresenter extends BaseErrorPresenter
+final class ErrorPresenter extends BaseErrorPresenter
 {
 
 	/** @var int[] */

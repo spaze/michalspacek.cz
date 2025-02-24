@@ -7,7 +7,7 @@ use DateTime;
 use Nette\Database\Row;
 use SplFileInfo;
 
-readonly class TrainingFileFactory
+final readonly class TrainingFileFactory
 {
 
 	public function __construct(

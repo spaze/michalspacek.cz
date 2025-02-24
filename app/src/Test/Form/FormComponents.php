@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Test\Form;
 use MichalSpacekCz\Form\UiForm;
 use Nette\Forms\Controls\TextInput;
 
-class FormComponents
+final class FormComponents
 {
 
 	public function setValue(UiForm $form, string $component, string $value): void

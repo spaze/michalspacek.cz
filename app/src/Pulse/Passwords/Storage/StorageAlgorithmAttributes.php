@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
-readonly class StorageAlgorithmAttributes
+final readonly class StorageAlgorithmAttributes
 {
 
 	/**

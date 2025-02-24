@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Test\Http;
 
 use DateTimeInterface;
 
-readonly class Cookie
+final readonly class Cookie
 {
 
 	public function __construct(

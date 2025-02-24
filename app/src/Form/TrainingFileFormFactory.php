@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 
-readonly class TrainingFileFormFactory
+final readonly class TrainingFileFormFactory
 {
 
 	public function __construct(

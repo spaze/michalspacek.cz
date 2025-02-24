@@ -8,7 +8,7 @@ use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Override;
 
-class NullMailer implements Mailer
+final class NullMailer implements Mailer
 {
 
 	private ?Message $mail = null;

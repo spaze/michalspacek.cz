@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class TrainingVenueNotFoundException extends TrainingException
+final class TrainingVenueNotFoundException extends TrainingException
 {
 
 	public function __construct(string $name, ?Throwable $previous = null)

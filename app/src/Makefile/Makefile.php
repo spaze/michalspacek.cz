@@ -8,7 +8,7 @@ use MichalSpacekCz\Makefile\Exceptions\MakefileNotFoundException;
 use Nette\IOException;
 use Nette\Utils\FileSystem;
 
-class Makefile
+final class Makefile
 {
 
 	private const string PHONY_TARGET = '.PHONY';

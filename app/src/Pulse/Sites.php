@@ -7,7 +7,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use Nette\Database\Explorer;
 
-readonly class Sites
+final readonly class Sites
 {
 
 	public const string ALL = 'all';

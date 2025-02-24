@@ -18,7 +18,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class SecurityHeadersTest extends TestCase
+final class SecurityHeadersTest extends TestCase
 {
 
 	private SecurityHeaders $securityHeaders;

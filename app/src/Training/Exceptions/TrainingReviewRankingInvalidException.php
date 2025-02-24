@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class TrainingReviewRankingInvalidException extends TrainingException
+final class TrainingReviewRankingInvalidException extends TrainingException
 {
 
 	public function __construct(int $id, int $rating, ?Throwable $previous = null)

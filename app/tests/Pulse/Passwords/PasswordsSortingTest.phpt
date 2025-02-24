@@ -20,7 +20,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class PasswordsSortingTest extends TestCase
+final class PasswordsSortingTest extends TestCase
 {
 
 	private const string RANDOM_STRING_ID = '123';

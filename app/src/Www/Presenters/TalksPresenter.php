@@ -20,7 +20,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Override;
 
-class TalksPresenter extends BasePresenter
+final class TalksPresenter extends BasePresenter
 {
 
 	/** @var array<string, array{name: string}> */

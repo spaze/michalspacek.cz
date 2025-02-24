@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Utils;
 
-class Base64
+final class Base64
 {
 
 	private const array LAST_TWO_STANDARD = ['+', '/'];

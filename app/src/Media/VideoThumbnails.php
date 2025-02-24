@@ -14,7 +14,7 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Callback;
 use Nette\Utils\ImageException;
 
-readonly class VideoThumbnails
+final readonly class VideoThumbnails
 {
 
 	private const int VIDEO_THUMBNAIL_WIDTH = 320;

@@ -9,7 +9,7 @@ use MichalSpacekCz\Http\Robots\RobotsRule;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 
-readonly class FourOhFourButFound
+final readonly class FourOhFourButFound
 {
 
 	private const array TEMPLATES = [

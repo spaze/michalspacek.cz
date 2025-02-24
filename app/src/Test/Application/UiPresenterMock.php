@@ -9,7 +9,7 @@ use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\UI\Presenter;
 use Override;
 
-class UiPresenterMock extends Presenter
+final class UiPresenterMock extends Presenter
 {
 
 	private ?Response $response = null;

@@ -7,7 +7,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class BlogPostRecommendedLinks
+final class BlogPostRecommendedLinks
 {
 
 	/**

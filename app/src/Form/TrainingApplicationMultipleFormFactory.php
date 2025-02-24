@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use Nette\Utils\ArrayHash;
 
-readonly class TrainingApplicationMultipleFormFactory
+final readonly class TrainingApplicationMultipleFormFactory
 {
 
 	public function __construct(

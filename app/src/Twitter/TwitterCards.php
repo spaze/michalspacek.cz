@@ -8,7 +8,7 @@ use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-readonly class TwitterCards
+final readonly class TwitterCards
 {
 
 	public function __construct(

@@ -7,7 +7,7 @@ use DateTime;
 use MichalSpacekCz\Media\Video;
 use Nette\Utils\Html;
 
-readonly class Talk
+final readonly class Talk
 {
 
 	public function __construct(

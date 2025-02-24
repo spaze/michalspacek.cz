@@ -22,7 +22,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class ExportsTest extends TestCase
+final class ExportsTest extends TestCase
 {
 
 	private Exports $exports;

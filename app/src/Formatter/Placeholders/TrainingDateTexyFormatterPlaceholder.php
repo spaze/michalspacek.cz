@@ -9,7 +9,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Utils\Html;
 use Override;
 
-readonly class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlaceholder
+final readonly class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlaceholder
 {
 
 	public function __construct(

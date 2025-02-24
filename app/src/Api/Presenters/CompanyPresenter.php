@@ -8,7 +8,7 @@ use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Http\SecurityHeaders;
 use Nette\Application\BadRequestException;
 
-class CompanyPresenter extends BasePresenter
+final class CompanyPresenter extends BasePresenter
 {
 
 	public function __construct(

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Tls\Exceptions;
 use Exception;
 use Throwable;
 
-class OpenSslException extends Exception
+final class OpenSslException extends Exception
 {
 
 	public function __construct(?Throwable $previous = null)

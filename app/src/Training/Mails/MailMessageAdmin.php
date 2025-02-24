@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Mails;
 
-readonly class MailMessageAdmin
+final readonly class MailMessageAdmin
 {
 
 	public function __construct(

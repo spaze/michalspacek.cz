@@ -14,7 +14,7 @@ use MichalSpacekCz\Pulse\Sites;
 use Nette\Database\Explorer;
 use Nette\Utils\ArrayHash;
 
-readonly class Passwords
+final readonly class Passwords
 {
 
 	public function __construct(

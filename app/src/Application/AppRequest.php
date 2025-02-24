@@ -8,7 +8,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 use Throwable;
 
-class AppRequest
+final class AppRequest
 {
 
 	/**

@@ -10,7 +10,7 @@ use MichalSpacekCz\Articles\Components\ArticleWithSummary;
 use Nette\Utils\Html;
 use Override;
 
-readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
+final readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
 {
 
 	public function __construct(

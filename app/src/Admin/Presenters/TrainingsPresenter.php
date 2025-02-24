@@ -37,7 +37,7 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
-class TrainingsPresenter extends BasePresenter
+final class TrainingsPresenter extends BasePresenter
 {
 
 	/** @var list<TrainingApplication> */

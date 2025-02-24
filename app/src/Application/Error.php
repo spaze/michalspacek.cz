@@ -11,7 +11,7 @@ use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\Responses\ForwardResponse;
 use Tracy\ILogger;
 
-readonly class Error
+final readonly class Error
 {
 
 	public function __construct(

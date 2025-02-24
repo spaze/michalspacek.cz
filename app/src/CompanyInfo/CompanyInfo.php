@@ -12,7 +12,7 @@ use Nette\Http\IResponse;
 use Throwable;
 use Tracy\Debugger;
 
-readonly class CompanyInfo
+final readonly class CompanyInfo
 {
 
 	private Cache $cache;

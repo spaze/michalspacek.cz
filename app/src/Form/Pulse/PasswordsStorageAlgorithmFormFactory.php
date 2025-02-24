@@ -15,7 +15,7 @@ use MichalSpacekCz\Pulse\Sites;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-readonly class PasswordsStorageAlgorithmFormFactory
+final readonly class PasswordsStorageAlgorithmFormFactory
 {
 
 	public function __construct(

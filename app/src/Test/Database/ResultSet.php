@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Test\Database;
 use Nette\Database\ResultSet as NetteResultSet;
 use Override;
 
-class ResultSet extends NetteResultSet
+final class ResultSet extends NetteResultSet
 {
 
 	/** @noinspection PhpMissingParentConstructorInspection intentionally */

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Trainings\Trainings;
 
-class ReviewsPresenter extends BasePresenter
+final class ReviewsPresenter extends BasePresenter
 {
 
 	public function __construct(

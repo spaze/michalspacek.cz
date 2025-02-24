@@ -7,7 +7,7 @@ use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\UiForm;
 
-class TrainingDateInputs extends UiControl
+final class TrainingDateInputs extends UiControl
 {
 
 	public function __construct(

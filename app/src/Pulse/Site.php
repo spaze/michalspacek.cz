@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-readonly class Site
+final readonly class Site
 {
 
 	public function __construct(

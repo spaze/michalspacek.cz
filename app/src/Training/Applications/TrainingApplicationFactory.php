@@ -15,7 +15,7 @@ use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 
-readonly class TrainingApplicationFactory
+final readonly class TrainingApplicationFactory
 {
 
 	public function __construct(

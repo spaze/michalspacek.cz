@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
 
-class PgpPresenter extends BasePresenter
+final class PgpPresenter extends BasePresenter
 {
 
 	public function __construct(

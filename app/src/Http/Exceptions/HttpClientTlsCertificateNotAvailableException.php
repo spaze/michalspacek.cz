@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Http\Exceptions;
 use Exception;
 use Throwable;
 
-class HttpClientTlsCertificateNotAvailableException extends Exception
+final class HttpClientTlsCertificateNotAvailableException extends Exception
 {
 
 	public function __construct(string $url, ?Throwable $previous = null)

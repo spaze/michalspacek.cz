@@ -16,7 +16,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-readonly class TrainingApplicationFormFactory
+final readonly class TrainingApplicationFormFactory
 {
 
 	public function __construct(

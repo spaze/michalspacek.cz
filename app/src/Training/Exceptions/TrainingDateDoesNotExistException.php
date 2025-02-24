@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class TrainingDateDoesNotExistException extends TrainingDateException
+final class TrainingDateDoesNotExistException extends TrainingDateException
 {
 
 	public function __construct(int $dateId, ?Throwable $previous = null)

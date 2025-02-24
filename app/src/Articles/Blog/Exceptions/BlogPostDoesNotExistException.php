@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Articles\Blog\Exceptions;
 
 use Throwable;
 
-class BlogPostDoesNotExistException extends BlogPostException
+final class BlogPostDoesNotExistException extends BlogPostException
 {
 
 	public function __construct(?int $id = null, ?string $name = null, ?string $previewKey = null, ?Throwable $previous = null)

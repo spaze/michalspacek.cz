@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
-readonly class CertificateAttempt
+final readonly class CertificateAttempt
 {
 
 	public function __construct(

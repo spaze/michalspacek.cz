@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class InterviewFormFactoryTest extends TestCase
+final class InterviewFormFactoryTest extends TestCase
 {
 
 	private ?bool $result = null;

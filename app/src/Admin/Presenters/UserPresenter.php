@@ -8,7 +8,7 @@ use MichalSpacekCz\Form\RegenerateTokensFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use Nette\Utils\Html;
 
-class UserPresenter extends BasePresenter
+final class UserPresenter extends BasePresenter
 {
 
 	public function __construct(

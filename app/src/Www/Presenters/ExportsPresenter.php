@@ -8,7 +8,7 @@ use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Utils\Hash;
 use Spaze\Exports\Bridges\Nette\Atom\Response;
 
-class ExportsPresenter extends BasePresenter
+final class ExportsPresenter extends BasePresenter
 {
 
 	public function __construct(

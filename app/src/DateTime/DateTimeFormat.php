@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\DateTime;
 
-class DateTimeFormat
+final class DateTimeFormat
 {
 
 	/**

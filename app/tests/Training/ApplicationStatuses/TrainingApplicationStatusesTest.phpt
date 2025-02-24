@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingApplicationStatusesTest extends TestCase
+final class TrainingApplicationStatusesTest extends TestCase
 {
 
 	public function __construct(

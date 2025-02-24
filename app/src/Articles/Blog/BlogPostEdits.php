@@ -10,7 +10,7 @@ use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 
-readonly class BlogPostEdits
+final readonly class BlogPostEdits
 {
 
 	public function __construct(

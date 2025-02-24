@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\UpcKeys\UpcKeys;
 use Nette\Forms\Form;
 
-readonly class UpcKeysSsidFormFactory
+final readonly class UpcKeysSsidFormFactory
 {
 
 	public function __construct(

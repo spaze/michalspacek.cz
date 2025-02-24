@@ -5,7 +5,7 @@ namespace MichalSpacekCz\UpcKeys\Exceptions;
 
 use Throwable;
 
-class UpcKeysApiUnknownPrefixException extends UpcKeysApiException
+final class UpcKeysApiUnknownPrefixException extends UpcKeysApiException
 {
 
 	public function __construct(string $serial, ?Throwable $previous = null)

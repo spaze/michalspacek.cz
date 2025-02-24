@@ -12,7 +12,7 @@ use Override;
 /**
  * @implements IteratorAggregate<int, TalkSlide>
  */
-class TalkSlideCollection implements IteratorAggregate, Countable
+final class TalkSlideCollection implements IteratorAggregate, Countable
 {
 
 	/** @var array<int, TalkSlide> slide number => slide */

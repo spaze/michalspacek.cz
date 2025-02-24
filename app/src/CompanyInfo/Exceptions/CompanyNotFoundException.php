@@ -6,7 +6,7 @@ namespace MichalSpacekCz\CompanyInfo\Exceptions;
 use Exception;
 use Throwable;
 
-class CompanyNotFoundException extends Exception
+final class CompanyNotFoundException extends Exception
 {
 
 	public function __construct(?int $status = null, ?Throwable $previous = null)

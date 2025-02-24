@@ -33,7 +33,7 @@ use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
 
-readonly class Manager implements Authenticator
+final readonly class Manager implements Authenticator
 {
 
 	private const string AUTH_SELECTOR_TOKEN_SEPARATOR = ':';

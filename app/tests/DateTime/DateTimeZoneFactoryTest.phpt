@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class DateTimeZoneFactoryTest extends TestCase
+final class DateTimeZoneFactoryTest extends TestCase
 {
 
 	public function __construct(

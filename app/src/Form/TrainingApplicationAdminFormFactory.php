@@ -17,7 +17,7 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-readonly class TrainingApplicationAdminFormFactory
+final readonly class TrainingApplicationAdminFormFactory
 {
 
 	public function __construct(

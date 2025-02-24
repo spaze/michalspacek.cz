@@ -19,7 +19,7 @@ use MichalSpacekCz\Talks\Talks;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
-class TalksPresenter extends BasePresenter
+final class TalksPresenter extends BasePresenter
 {
 
 	private ?Talk $talk = null;

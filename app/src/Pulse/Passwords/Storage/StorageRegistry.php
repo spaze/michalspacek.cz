@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Pulse\Company;
 
-class StorageRegistry
+final class StorageRegistry
 {
 
 	/** @var array<int, Company> */

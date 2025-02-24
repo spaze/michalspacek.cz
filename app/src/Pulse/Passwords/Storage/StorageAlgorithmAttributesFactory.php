@@ -9,7 +9,7 @@ use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-readonly class StorageAlgorithmAttributesFactory
+final readonly class StorageAlgorithmAttributesFactory
 {
 
 	public function __construct(

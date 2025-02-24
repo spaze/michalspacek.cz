@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Disclosures;
 
-readonly class PasswordHashingDisclosureType
+final readonly class PasswordHashingDisclosureType
 {
 
 	public function __construct(

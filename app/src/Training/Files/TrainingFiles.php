@@ -12,7 +12,7 @@ use Nette\Database\Explorer;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 
-readonly class TrainingFiles
+final readonly class TrainingFiles
 {
 
 	public function __construct(

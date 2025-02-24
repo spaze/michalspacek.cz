@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Database\Exceptions;
 
 use Throwable;
 
-class TypedDatabaseTypeException extends TypedDatabaseException
+final class TypedDatabaseTypeException extends TypedDatabaseException
 {
 
 	public function __construct(string $expectedType, mixed $value, ?Throwable $previous = null)

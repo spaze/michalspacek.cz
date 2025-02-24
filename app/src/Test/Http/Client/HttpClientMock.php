@@ -8,7 +8,7 @@ use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Client\HttpClientResponse;
 use Override;
 
-class HttpClientMock extends HttpClient
+final class HttpClientMock extends HttpClient
 {
 
 	private string $response = '';

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 use MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory;
 use MichalSpacekCz\Form\UiForm;
 
-class PulsePresenter extends BasePresenter
+final class PulsePresenter extends BasePresenter
 {
 
 	private const int NEW_DISCLOSURES = 3;

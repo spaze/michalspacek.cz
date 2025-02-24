@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Pulse\Presenters\PresenterTemplates\PasswordsStorages;
 
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 
-class PasswordsStoragesDefaultTemplate
+final class PasswordsStoragesDefaultTemplate
 {
 
 	/**

@@ -15,7 +15,7 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Override;
 
-class CompanyTrainingsPresenter extends BasePresenter
+final class CompanyTrainingsPresenter extends BasePresenter
 {
 
 	private ?string $trainingAction = null;

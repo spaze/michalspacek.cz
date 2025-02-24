@@ -5,6 +5,6 @@ namespace MichalSpacekCz\Tls\Exceptions;
 
 use Exception;
 
-class CertificatesApiException extends Exception
+final class CertificatesApiException extends Exception
 {
 }

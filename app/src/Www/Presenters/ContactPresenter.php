@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
 
-class ContactPresenter extends BasePresenter
+final class ContactPresenter extends BasePresenter
 {
 
 	public function __construct(

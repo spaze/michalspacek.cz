@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\DateList;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\FreeSeats;
 
-readonly class UpcomingTrainingDatesListFactory
+final readonly class UpcomingTrainingDatesListFactory
 {
 
 	public function __construct(

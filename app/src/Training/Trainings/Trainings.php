@@ -8,7 +8,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
 
-class Trainings
+final class Trainings
 {
 
 	/** @var array<int, Training> */

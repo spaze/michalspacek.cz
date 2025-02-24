@@ -13,7 +13,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class PasswordHashingAlgorithmsTest extends TestCase
+final class PasswordHashingAlgorithmsTest extends TestCase
 {
 
 	public function __construct(

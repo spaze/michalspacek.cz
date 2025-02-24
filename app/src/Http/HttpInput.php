@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Http;
 
 use Nette\Http\IRequest;
 
-readonly class HttpInput
+final readonly class HttpInput
 {
 
 	public function __construct(

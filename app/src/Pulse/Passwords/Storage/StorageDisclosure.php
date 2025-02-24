@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use DateTimeInterface;
 
-readonly class StorageDisclosure
+final readonly class StorageDisclosure
 {
 
 	public function __construct(

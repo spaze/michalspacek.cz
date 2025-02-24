@@ -8,7 +8,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use Nette\Http\SessionSection;
 
-class TrainingFilesSessionSection extends SessionSection
+final class TrainingFilesSessionSection extends SessionSection
 {
 
 	use SessionSectionDeprecatedGetSet;

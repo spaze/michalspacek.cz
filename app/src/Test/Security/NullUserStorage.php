@@ -8,7 +8,7 @@ use Nette\Security\User;
 use Nette\Security\UserStorage;
 use Override;
 
-class NullUserStorage implements UserStorage
+final class NullUserStorage implements UserStorage
 {
 
 	private bool $authenticated = false;

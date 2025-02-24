@@ -10,7 +10,7 @@ use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\ShouldNotHappenException;
 
-class PasswordsSorting
+final class PasswordsSorting
 {
 
 	private const string COMPANY_A_Z = 'a-z';

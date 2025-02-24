@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
-readonly class OpenSslX509ParseResult
+final readonly class OpenSslX509ParseResult
 {
 
 	public function __construct(

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Templating\Exceptions;
 
 use Throwable;
 
-class WrongTemplateClassException extends \Exception
+final class WrongTemplateClassException extends \Exception
 {
 
 	/**

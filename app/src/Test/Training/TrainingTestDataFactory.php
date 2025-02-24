@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Utils\Html;
 
-readonly class TrainingTestDataFactory
+final readonly class TrainingTestDataFactory
 {
 
 	public function __construct(

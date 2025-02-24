@@ -21,7 +21,7 @@ use Override;
 use PDOException;
 use Tracy\Debugger;
 
-readonly class Technicolor implements UpcWiFiRouter
+final readonly class Technicolor implements UpcWiFiRouter
 {
 
 	private const array PREFIXES = ['SAAP', 'SAPP', 'SBAP'];

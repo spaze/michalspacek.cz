@@ -9,7 +9,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Utils\Html;
 
-class TalkInputs extends UiControl
+final class TalkInputs extends UiControl
 {
 
 	public function __construct(

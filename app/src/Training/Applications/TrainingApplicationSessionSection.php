@@ -9,7 +9,7 @@ use MichalSpacekCz\Training\Dates\TrainingDate;
 use Nette\Http\SessionSection;
 use stdClass;
 
-class TrainingApplicationSessionSection extends SessionSection
+final class TrainingApplicationSessionSection extends SessionSection
 {
 
 	use SessionSectionDeprecatedGetSet;

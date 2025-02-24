@@ -22,7 +22,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TexyFormatterTest extends TestCase
+final class TexyFormatterTest extends TestCase
 {
 
 	private const string TRAINING_ACTION = 'bezpecnost-php-aplikaci';

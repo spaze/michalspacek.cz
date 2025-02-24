@@ -20,7 +20,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TrainingMailsOutboxFormFactoryTest extends TestCase
+final class TrainingMailsOutboxFormFactoryTest extends TestCase
 {
 
 	private const string FEEDBACK_URL = 'https://feedback.example/';

@@ -10,7 +10,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 
-class WinterIsComing
+final class WinterIsComing
 {
 
 	private const array EMAILS = [

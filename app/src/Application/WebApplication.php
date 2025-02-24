@@ -11,7 +11,7 @@ use Nette\Application\Application;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 
-readonly class WebApplication
+final readonly class WebApplication
 {
 
 	public function __construct(

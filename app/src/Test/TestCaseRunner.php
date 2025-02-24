@@ -11,7 +11,7 @@ use ReflectionMethod;
 use Tester\Environment;
 use Tester\TestCase;
 
-class TestCaseRunner
+final class TestCaseRunner
 {
 
 	private const string INCLUDE_SKIPPED_ENV_VAR_NAME = 'TEST_CASE_RUNNER_INCLUDE_SKIPPED';

@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class DateTimeFormatterTest extends TestCase
+final class DateTimeFormatterTest extends TestCase
 {
 
 	private readonly DateTimeImmutable $start;

@@ -7,7 +7,7 @@ use DateTimeInterface;
 use Nette\Http\IResponse;
 use Override;
 
-class Response implements IResponse
+final class Response implements IResponse
 {
 
 	private int $code = IResponse::S200_OK;

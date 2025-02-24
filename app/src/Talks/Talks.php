@@ -13,7 +13,7 @@ use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Utils\Html;
 
-readonly class Talks
+final readonly class Talks
 {
 
 	public function __construct(

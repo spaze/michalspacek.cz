@@ -14,7 +14,7 @@ use Nette\Database\Row;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
-readonly class PreliminaryTrainings
+final readonly class PreliminaryTrainings
 {
 
 	public function __construct(

@@ -7,7 +7,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Database\Explorer;
 
-readonly class PasswordHashingAlgorithms
+final readonly class PasswordHashingAlgorithms
 {
 
 	public function __construct(

@@ -11,7 +11,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../../bootstrap.php';
 
 /** @testCase */
-class PasswordHashingDisclosuresTest extends TestCase
+final class PasswordHashingDisclosuresTest extends TestCase
 {
 
 	public function __construct(

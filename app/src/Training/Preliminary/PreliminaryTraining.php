@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Preliminary;
 
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 
-class PreliminaryTraining
+final class PreliminaryTraining
 {
 
 	/** @var list<TrainingApplication> */

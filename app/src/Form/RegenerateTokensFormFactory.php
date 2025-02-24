@@ -9,7 +9,7 @@ use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;
 
-readonly class RegenerateTokensFormFactory
+final readonly class RegenerateTokensFormFactory
 {
 
 	public function __construct(

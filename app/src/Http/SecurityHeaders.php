@@ -12,7 +12,7 @@ use Nette\Http\IResponse;
 use Nette\Http\UrlImmutable;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
-readonly class SecurityHeaders
+final readonly class SecurityHeaders
 {
 
 	/** @var array<string|string[]> */

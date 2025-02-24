@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TwitterCardsTest extends TestCase
+final class TwitterCardsTest extends TestCase
 {
 
 	public function __construct(

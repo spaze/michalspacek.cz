@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Webleed\Presenters;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Utils\Html;
 
-class HomepagePresenter extends BasePresenter
+final class HomepagePresenter extends BasePresenter
 {
 
 	public function actionDefault(): void

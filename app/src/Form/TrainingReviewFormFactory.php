@@ -10,7 +10,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-readonly class TrainingReviewFormFactory
+final readonly class TrainingReviewFormFactory
 {
 
 	public function __construct(

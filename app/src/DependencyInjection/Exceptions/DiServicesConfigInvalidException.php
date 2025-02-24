@@ -6,7 +6,7 @@ namespace MichalSpacekCz\DependencyInjection\Exceptions;
 use Exception;
 use Throwable;
 
-class DiServicesConfigInvalidException extends Exception
+final class DiServicesConfigInvalidException extends Exception
 {
 
 	public function __construct(?string $file, ?string $section, string $message, ?Throwable $previous = null)

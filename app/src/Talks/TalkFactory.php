@@ -12,7 +12,7 @@ use MichalSpacekCz\Media\VideoFactory;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Row;
 
-readonly class TalkFactory
+final readonly class TalkFactory
 {
 
 	public function __construct(

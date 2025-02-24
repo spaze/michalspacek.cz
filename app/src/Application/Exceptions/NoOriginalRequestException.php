@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Application\Exceptions;
 use Exception;
 use Throwable;
 
-class NoOriginalRequestException extends Exception
+final class NoOriginalRequestException extends Exception
 {
 
 	public function __construct(?Throwable $previous = null)

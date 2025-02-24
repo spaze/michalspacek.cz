@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Dates;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Database\TypedDatabase;
 
-class UpcomingTrainingDates
+final class UpcomingTrainingDates
 {
 
 	/** @var array<int, array<string, UpcomingTraining>> */

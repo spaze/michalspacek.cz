@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Talks\Talks;
 
-class WhoPresenter extends BasePresenter
+final class WhoPresenter extends BasePresenter
 {
 
 	public function __construct(

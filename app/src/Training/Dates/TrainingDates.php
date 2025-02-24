@@ -13,7 +13,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use Nette\Database\Explorer;
 
-class TrainingDates
+final class TrainingDates
 {
 
 	private const int DATA_RETENTION = 30;

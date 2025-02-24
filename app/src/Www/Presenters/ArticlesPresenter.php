@@ -8,7 +8,7 @@ use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 
-class ArticlesPresenter extends BasePresenter
+final class ArticlesPresenter extends BasePresenter
 {
 
 	public function __construct(

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
-readonly class StorageSharedWith
+final readonly class StorageSharedWith
 {
 
 	public function __construct(

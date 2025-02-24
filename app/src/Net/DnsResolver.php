@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Net;
 use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
 use Nette\Utils\Helpers;
 
-class DnsResolver
+final class DnsResolver
 {
 
 	/**

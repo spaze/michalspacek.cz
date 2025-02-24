@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Css;
 
 use MichalSpacekCz\Application\UiControl;
 
-class CriticalCss extends UiControl
+final class CriticalCss extends UiControl
 {
 
 	public function render(): void

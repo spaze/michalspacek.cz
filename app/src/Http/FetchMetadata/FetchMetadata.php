@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Http\FetchMetadata;
 
 use Nette\Http\IRequest;
 
-readonly class FetchMetadata
+final readonly class FetchMetadata
 {
 
 	public function __construct(

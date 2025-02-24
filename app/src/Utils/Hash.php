@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Utils;
 
-class Hash
+final class Hash
 {
 
 	public static function nonCryptographic(string $data, bool $binary = false): string

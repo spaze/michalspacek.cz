@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-class WellKnownPresenter extends BasePresenter
+final class WellKnownPresenter extends BasePresenter
 {
 
 	public function actionChangePassword(): never

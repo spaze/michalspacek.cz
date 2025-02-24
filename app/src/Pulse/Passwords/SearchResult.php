@@ -8,7 +8,7 @@ use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithm;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageDisclosure;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 
-class SearchResult
+final class SearchResult
 {
 
 	/** @var array<int, Company> */

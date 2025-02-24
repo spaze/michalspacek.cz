@@ -20,7 +20,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class WinterIsComingTest extends TestCase
+final class WinterIsComingTest extends TestCase
 {
 
 	private TextInput $textInput;

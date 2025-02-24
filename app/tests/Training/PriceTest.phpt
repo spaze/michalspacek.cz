@@ -10,7 +10,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class PriceTest extends TestCase
+final class PriceTest extends TestCase
 {
 
 	public function testGetPriceVat(): void

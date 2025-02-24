@@ -9,7 +9,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-readonly class TrainingVenues
+final readonly class TrainingVenues
 {
 
 	public function __construct(

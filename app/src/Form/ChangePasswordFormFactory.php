@@ -8,7 +8,7 @@ use MichalSpacekCz\User\Manager;
 use Nette\Forms\Form;
 use Nette\Security\User;
 
-readonly class ChangePasswordFormFactory
+final readonly class ChangePasswordFormFactory
 {
 
 	public function __construct(

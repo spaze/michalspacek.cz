@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Media\Resources;
 
 use Override;
 
-class TalkMediaResources extends MediaResources
+final class TalkMediaResources extends MediaResources
 {
 
 	#[Override]

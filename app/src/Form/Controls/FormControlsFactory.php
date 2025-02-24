@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form\Controls;
 
 use Nette\Forms\Container;
 
-class FormControlsFactory
+final class FormControlsFactory
 {
 
 	public function addSignIn(Container $container): void

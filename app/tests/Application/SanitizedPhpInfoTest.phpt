@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class SanitizedPhpInfoTest extends TestCase
+final class SanitizedPhpInfoTest extends TestCase
 {
 
 	public function __construct(

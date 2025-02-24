@@ -13,7 +13,7 @@ use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
-class TrainingApplications
+final class TrainingApplications
 {
 
 	/** @var array<int, list<TrainingApplication>> */

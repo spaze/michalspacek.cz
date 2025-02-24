@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Price;
 use Nette\Utils\Html;
 
-class TrainingDate
+final class TrainingDate
 {
 
 	/** @var list<TrainingApplication> */

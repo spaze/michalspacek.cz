@@ -7,7 +7,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\LinkGenerator as NetteLinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 
-readonly class LinkGenerator
+final readonly class LinkGenerator
 {
 
 	public function __construct(

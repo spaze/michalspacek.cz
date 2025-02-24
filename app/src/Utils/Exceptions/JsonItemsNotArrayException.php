@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Utils\Exceptions;
 use Exception;
 use Throwable;
 
-class JsonItemsNotArrayException extends Exception
+final class JsonItemsNotArrayException extends Exception
 {
 
 	public function __construct(mixed $items, string $json, ?Throwable $previous = null)

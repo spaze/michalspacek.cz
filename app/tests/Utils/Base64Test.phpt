@@ -10,7 +10,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class Base64Test extends TestCase
+final class Base64Test extends TestCase
 {
 
 	private const string THIS_STRING_WILL_HAVE_A_PLUS_AND_A_SLASH_WHEN_BASE64_ENCODED = "\xFA\xFA\xFF\xF0";

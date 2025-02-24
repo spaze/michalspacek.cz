@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithm;
 use RuntimeException;
 
-class Rating
+final class Rating
 {
 
 	private const array SLOW_HASHES = [

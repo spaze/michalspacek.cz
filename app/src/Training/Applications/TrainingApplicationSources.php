@@ -8,7 +8,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Utils\Strings;
 
-readonly class TrainingApplicationSources
+final readonly class TrainingApplicationSources
 {
 
 	public function __construct(

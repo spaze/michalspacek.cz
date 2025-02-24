@@ -17,7 +17,7 @@ use Nette\Application\UI\Component;
  * - https://www.michalspacek.cz/nette.micro?callback=shell_exec&cmd=certutil
  * - https://www.michalspacek.cz/nette.micro?callback=pcntl_exec&path=wget
  */
-class NetteCve202015227
+final class NetteCve202015227
 {
 
 	public function rce(string $callback, Component $component): NetteCve202015227Rce

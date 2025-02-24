@@ -24,7 +24,7 @@ use RuntimeException;
 use SodiumException;
 use Tracy\Debugger;
 
-readonly class TrainingMails
+final readonly class TrainingMails
 {
 
 	private const int REMINDER_DAYS = 5;

@@ -13,7 +13,7 @@ use Nette\Security\AuthenticationException;
 use Override;
 use Tracy\Debugger;
 
-class CertificatesPresenter extends BasePresenter
+final class CertificatesPresenter extends BasePresenter
 {
 
 	public function __construct(

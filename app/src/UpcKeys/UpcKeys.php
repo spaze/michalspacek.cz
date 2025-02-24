@@ -6,7 +6,7 @@ namespace MichalSpacekCz\UpcKeys;
 use Composer\Pcre\Regex;
 use Nette\Application\Responses\TextResponse;
 
-class UpcKeys
+final class UpcKeys
 {
 
 	private const string SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';

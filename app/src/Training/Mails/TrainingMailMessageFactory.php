@@ -9,7 +9,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
 
-readonly class TrainingMailMessageFactory
+final readonly class TrainingMailMessageFactory
 {
 
 	public function __construct(

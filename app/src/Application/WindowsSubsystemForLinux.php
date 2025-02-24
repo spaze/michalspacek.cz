@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-class WindowsSubsystemForLinux
+final class WindowsSubsystemForLinux
 {
 
 	public function isWsl(): bool

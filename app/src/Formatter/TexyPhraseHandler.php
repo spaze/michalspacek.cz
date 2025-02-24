@@ -23,7 +23,7 @@ use Texy\Link;
 use Texy\Modifier;
 use Texy\Texy;
 
-readonly class TexyPhraseHandler
+final readonly class TexyPhraseHandler
 {
 
 	private const string TRAINING_ACTION = 'Www:Trainings:training';

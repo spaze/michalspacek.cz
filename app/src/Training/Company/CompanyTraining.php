@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Company;
 
 use Nette\Utils\Html;
 
-readonly class CompanyTraining
+final readonly class CompanyTraining
 {
 
 	public function __construct(

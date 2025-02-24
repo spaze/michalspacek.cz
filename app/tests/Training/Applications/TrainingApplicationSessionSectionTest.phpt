@@ -20,7 +20,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingApplicationSessionSectionTest extends TestCase
+final class TrainingApplicationSessionSectionTest extends TestCase
 {
 
 	private const int APPLICATION_ID = 303;

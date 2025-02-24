@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application\Locale;
 
 use MichalSpacekCz\Database\TypedDatabase;
 
-class Locales
+final class Locales
 {
 
 	/** @var array<int, string>|null */

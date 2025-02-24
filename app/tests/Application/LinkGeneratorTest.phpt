@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class LinkGeneratorTest extends TestCase
+final class LinkGeneratorTest extends TestCase
 {
 
 	public function __construct(

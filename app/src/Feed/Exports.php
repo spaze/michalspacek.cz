@@ -22,7 +22,7 @@ use Spaze\Exports\Atom\Elements\Entry;
 use Spaze\Exports\Atom\Elements\Link;
 use Spaze\Exports\Atom\Feed;
 
-readonly class Exports
+final readonly class Exports
 {
 
 	private const int ITEMS = 5;

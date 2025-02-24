@@ -11,7 +11,7 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Strings;
 
-readonly class Tags
+final readonly class Tags
 {
 
 	public function __construct(

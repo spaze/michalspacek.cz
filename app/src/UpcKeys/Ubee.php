@@ -6,7 +6,7 @@ namespace MichalSpacekCz\UpcKeys;
 use MichalSpacekCz\Database\TypedDatabase;
 use Override;
 
-readonly class Ubee implements UpcWiFiRouter
+final readonly class Ubee implements UpcWiFiRouter
 {
 
 	private const string OUI_UBEE = '647c34';

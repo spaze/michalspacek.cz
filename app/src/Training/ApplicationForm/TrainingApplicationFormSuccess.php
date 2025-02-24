@@ -23,7 +23,7 @@ use PDOException;
 use SodiumException;
 use Tracy\Debugger;
 
-readonly class TrainingApplicationFormSuccess
+final readonly class TrainingApplicationFormSuccess
 {
 
 	public function __construct(

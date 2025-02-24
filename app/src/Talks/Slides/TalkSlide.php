@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks\Slides;
 
 use Nette\Utils\Html;
 
-readonly class TalkSlide
+final readonly class TalkSlide
 {
 
 	public function __construct(

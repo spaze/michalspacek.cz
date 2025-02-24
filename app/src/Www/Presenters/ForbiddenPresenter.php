@@ -13,7 +13,7 @@ use Override;
 /**
  * @property-read DefaultTemplate $template
  */
-class ForbiddenPresenter extends BasePresenter
+final class ForbiddenPresenter extends BasePresenter
 {
 
 	public function __construct(

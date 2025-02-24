@@ -9,7 +9,7 @@ use MichalSpacekCz\Http\Cookies\Cookies;
 use Nette\Http\Session;
 use Spaze\PhpInfo\PhpInfo;
 
-readonly class SanitizedPhpInfo
+final readonly class SanitizedPhpInfo
 {
 
 	public function __construct(

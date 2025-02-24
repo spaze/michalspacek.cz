@@ -15,7 +15,7 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
 use Tracy\Debugger;
 
-readonly class Certificates
+final readonly class Certificates
 {
 
 	/**

@@ -8,7 +8,7 @@ use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Database\Explorer;
 
-readonly class PasswordHashingDisclosures
+final readonly class PasswordHashingDisclosures
 {
 
 	public function __construct(

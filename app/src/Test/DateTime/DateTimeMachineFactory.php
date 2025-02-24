@@ -12,7 +12,7 @@ use Override;
  * This (date) time machine allows you you to time-travel.
  * Supposed to be used in tests to create DateTimeImmutable objects with known dates.
  */
-class DateTimeMachineFactory extends DateTimeFactory
+final class DateTimeMachineFactory extends DateTimeFactory
 {
 
 	private ?DateTimeImmutable $dateTime = null;

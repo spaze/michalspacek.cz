@@ -20,7 +20,7 @@ use Texy\Texy;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TexyPhraseHandlerTest extends TestCase
+final class TexyPhraseHandlerTest extends TestCase
 {
 
 	private const string EN_LOCALE = 'en_US';

@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class VideoThumbnailsTest extends TestCase
+final class VideoThumbnailsTest extends TestCase
 {
 
 	private readonly VideoThumbnails $videoThumbnails;

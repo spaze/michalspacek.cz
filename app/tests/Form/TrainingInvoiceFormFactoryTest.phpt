@@ -15,7 +15,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TrainingInvoiceFormFactoryTest extends TestCase
+final class TrainingInvoiceFormFactoryTest extends TestCase
 {
 
 	private ?int $count = null;
