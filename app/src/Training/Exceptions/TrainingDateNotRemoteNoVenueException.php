@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class TrainingDateNotRemoteNoVenueException extends TrainingDateException
+final class TrainingDateNotRemoteNoVenueException extends TrainingDateException
 {
 
 	public function __construct(int $dateId, ?Throwable $previous = null)

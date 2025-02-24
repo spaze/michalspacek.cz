@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Company;
 
 use Nette\Utils\Html;
 
-readonly class CompanyTraining
+final readonly class CompanyTraining
 {
 
 	public function __construct(
@@ -50,7 +50,7 @@ readonly class CompanyTraining
 	}
 
 
-	public function getDescription(): ?Html
+	public function getDescription(): Html
 	{
 		return $this->description;
 	}
@@ -62,7 +62,7 @@ readonly class CompanyTraining
 	}
 
 
-	public function getUpsell(): ?Html
+	public function getUpsell(): Html
 	{
 		return $this->upsell;
 	}
@@ -86,13 +86,13 @@ readonly class CompanyTraining
 	}
 
 
-	public function getPrice(): ?int
+	public function getPrice(): int
 	{
 		return $this->price;
 	}
 
 
-	public function getAlternativeDurationPrice(): ?int
+	public function getAlternativeDurationPrice(): int
 	{
 		return $this->alternativeDurationPrice;
 	}
@@ -128,7 +128,7 @@ readonly class CompanyTraining
 	}
 
 
-	public function getAlternativeDurationPriceText(): ?Html
+	public function getAlternativeDurationPriceText(): Html
 	{
 		return $this->alternativeDurationPriceText;
 	}

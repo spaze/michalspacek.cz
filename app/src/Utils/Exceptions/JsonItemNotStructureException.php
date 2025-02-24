@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Utils\Exceptions;
 use Exception;
 use Throwable;
 
-class JsonItemNotStructureException extends Exception
+final class JsonItemNotStructureException extends Exception
 {
 
 	/**

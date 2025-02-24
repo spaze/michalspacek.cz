@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class OpenSslTest extends TestCase
+final class OpenSslTest extends TestCase
 {
 
 	public function testX509Parse(): void

@@ -12,7 +12,7 @@ use Override;
  * The bidirectional route is responsible for mapping
  * HTTP request to a Request object for dispatch and vice-versa.
  */
-class BlogPostRoute extends Route
+final class BlogPostRoute extends Route
 {
 
 	/**

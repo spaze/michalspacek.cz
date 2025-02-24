@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Pulse\Presenters;
 
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 
-class PasswordsPresenter extends BasePresenter
+final class PasswordsPresenter extends BasePresenter
 {
 
 	public function actionDefault(): void

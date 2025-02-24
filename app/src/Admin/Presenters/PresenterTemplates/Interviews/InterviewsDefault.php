@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters\PresenterTemplates\Interviews;
 
 use MichalSpacekCz\Interviews\Interview;
 
-class InterviewsDefault
+final class InterviewsDefault
 {
 
 	/**

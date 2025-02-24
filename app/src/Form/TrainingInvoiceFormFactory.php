@@ -7,7 +7,7 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Nette\Forms\Form;
 
-readonly class TrainingInvoiceFormFactory
+final readonly class TrainingInvoiceFormFactory
 {
 
 	public function __construct(

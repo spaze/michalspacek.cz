@@ -8,7 +8,7 @@ use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\VideoThumbnails;
 
-class InterviewInputs extends UiControl
+final class InterviewInputs extends UiControl
 {
 
 	public function __construct(

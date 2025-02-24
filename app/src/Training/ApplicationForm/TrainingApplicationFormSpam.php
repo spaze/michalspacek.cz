@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 use Composer\Pcre\Regex;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 
-class TrainingApplicationFormSpam
+final class TrainingApplicationFormSpam
 {
 
 	/**

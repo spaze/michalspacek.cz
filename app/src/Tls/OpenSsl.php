@@ -7,7 +7,7 @@ use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use OpenSSLCertificate;
 
-class OpenSsl
+final class OpenSsl
 {
 
 	/**

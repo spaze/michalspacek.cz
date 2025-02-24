@@ -16,7 +16,7 @@ use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 
-readonly class TrainingMailsOutboxFormFactory
+final readonly class TrainingMailsOutboxFormFactory
 {
 
 	public function __construct(

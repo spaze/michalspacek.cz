@@ -8,7 +8,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Files\TrainingFilesStorage;
 use Override;
 
-class TrainingFilesNullStorage extends TrainingFilesStorage
+final class TrainingFilesNullStorage extends TrainingFilesStorage
 {
 
 	private string $filesDir = '';

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Http\Cookies\CookieDescriptions;
 
-class CookiesPresenter extends BasePresenter
+final class CookiesPresenter extends BasePresenter
 {
 
 	public function __construct(

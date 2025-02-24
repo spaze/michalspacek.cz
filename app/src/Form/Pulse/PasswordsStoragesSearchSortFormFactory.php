@@ -8,7 +8,7 @@ use MichalSpacekCz\Form\UnprotectedFormFactory;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 
-readonly class PasswordsStoragesSearchSortFormFactory
+final readonly class PasswordsStoragesSearchSortFormFactory
 {
 
 	public function __construct(

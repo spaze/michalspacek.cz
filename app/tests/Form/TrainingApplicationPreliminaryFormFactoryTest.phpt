@@ -16,7 +16,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TrainingApplicationPreliminaryFormFactoryTest extends TestCase
+final class TrainingApplicationPreliminaryFormFactoryTest extends TestCase
 {
 
 	private const int TRAINING_ID = 1337;

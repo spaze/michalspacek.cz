@@ -8,7 +8,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Utils\JsonException;
 
-readonly class BlogPostLocaleUrls
+final readonly class BlogPostLocaleUrls
 {
 
 	public function __construct(

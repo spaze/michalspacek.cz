@@ -9,7 +9,7 @@ use Override;
 /**
  * Session handler that does nothing but it's there
  */
-class NullSession extends Session
+final class NullSession extends Session
 {
 
 	private string $id = '';

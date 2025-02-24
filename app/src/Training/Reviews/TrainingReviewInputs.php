@@ -7,7 +7,7 @@ use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\UiForm;
 
-class TrainingReviewInputs extends UiControl
+final class TrainingReviewInputs extends UiControl
 {
 
 	public function __construct(

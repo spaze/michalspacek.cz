@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingReviewRankingInvalidException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-readonly class TrainingReviews
+final readonly class TrainingReviews
 {
 
 	public function __construct(

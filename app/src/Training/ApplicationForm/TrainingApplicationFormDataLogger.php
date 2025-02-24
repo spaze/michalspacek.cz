@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use Tracy\Debugger;
 
-class TrainingApplicationFormDataLogger
+final class TrainingApplicationFormDataLogger
 {
 
 	/**

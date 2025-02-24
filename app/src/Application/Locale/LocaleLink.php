@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Locale;
 
-readonly class LocaleLink
+final readonly class LocaleLink
 {
 
 	public function __construct(

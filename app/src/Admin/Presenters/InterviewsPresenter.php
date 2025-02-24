@@ -13,7 +13,7 @@ use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 
-class InterviewsPresenter extends BasePresenter
+final class InterviewsPresenter extends BasePresenter
 {
 
 	private ?Interview $interview = null;

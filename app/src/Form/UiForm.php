@@ -7,7 +7,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
-class UiForm extends Form
+final class UiForm extends Form
 {
 
 	public function getFormValues(): ArrayHash

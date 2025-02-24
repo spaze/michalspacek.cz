@@ -7,7 +7,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
 
-readonly class DiscontinuedTrainings
+final readonly class DiscontinuedTrainings
 {
 
 	public function __construct(

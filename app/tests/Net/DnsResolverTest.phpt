@@ -11,7 +11,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class DnsResolverTest extends TestCase
+final class DnsResolverTest extends TestCase
 {
 
 	public function __construct(

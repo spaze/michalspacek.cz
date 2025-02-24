@@ -7,7 +7,7 @@ use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use OpenSSLCertificate;
 
-readonly class HttpClientResponse
+final readonly class HttpClientResponse
 {
 
 	public function __construct(

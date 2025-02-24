@@ -23,7 +23,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingFilesDownloadTest extends TestCase
+final class TrainingFilesDownloadTest extends TestCase
 {
 
 	private const int APPLICATION_ID = 303;

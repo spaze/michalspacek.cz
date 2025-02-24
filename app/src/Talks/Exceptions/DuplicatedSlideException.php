@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks\Exceptions;
 
 use Throwable;
 
-class DuplicatedSlideException extends TalkException
+final class DuplicatedSlideException extends TalkException
 {
 
 	public function __construct(

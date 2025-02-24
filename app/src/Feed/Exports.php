@@ -6,9 +6,8 @@ namespace MichalSpacekCz\Feed;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Articles\Components\ArticleWithEdits;
 use MichalSpacekCz\Articles\Components\ArticleWithTags;
-use MichalSpacekCz\Articles\Components\ArticleWithText;
+use MichalSpacekCz\Articles\Components\ArticleWithTextAndEdits;
 use MichalSpacekCz\Articles\Components\ArticleWithUpdateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -22,7 +21,7 @@ use Spaze\Exports\Atom\Elements\Entry;
 use Spaze\Exports\Atom\Elements\Link;
 use Spaze\Exports\Atom\Feed;
 
-readonly class Exports
+final readonly class Exports
 {
 
 	private const int ITEMS = 5;
@@ -83,9 +82,9 @@ readonly class Exports
 				if ($article->hasSummary()) {
 					$entry->setSummary(new Text(trim((string)$article->getSummary()), Text::TYPE_HTML));
 				}
-				if ($article instanceof ArticleWithText) {
+				if ($article instanceof ArticleWithTextAndEdits) {
 					$content = Html::el();
-					if ($article instanceof ArticleWithEdits && $article->getEdits()) {
+					if ($article->getEdits()) {
 						$content->addHtml(Html::el('h3')->setText($this->texyFormatter->translate('messages.blog.post.edits')));
 						$edits = Html::el('ul');
 						foreach ($article->getEdits() as $edit) {

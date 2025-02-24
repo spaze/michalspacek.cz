@@ -7,7 +7,7 @@ use DateTimeZone;
 use Exception;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 
-class DateTimeZoneFactory
+final class DateTimeZoneFactory
 {
 
 	/**

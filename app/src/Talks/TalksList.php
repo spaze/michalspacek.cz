@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Talks;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\UiControl;
 
-class TalksList extends UiControl
+final class TalksList extends UiControl
 {
 
 	public function __construct(

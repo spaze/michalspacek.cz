@@ -19,7 +19,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TemplateFactoryTest extends TestCase
+final class TemplateFactoryTest extends TestCase
 {
 
 	public function __construct(

@@ -9,7 +9,7 @@ use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use Override;
 
-readonly class Certificate implements JsonSerializable
+final readonly class Certificate implements JsonSerializable
 {
 
 	private int $validDays;

@@ -7,7 +7,7 @@ use Nette\Security\IIdentity;
 use Nette\Security\SimpleIdentity;
 use Throwable;
 
-class IdentityNotSimpleIdentityException extends IdentityException
+final class IdentityNotSimpleIdentityException extends IdentityException
 {
 
 	public function __construct(?IIdentity $identity, ?Throwable $previous = null)

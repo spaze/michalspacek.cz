@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class UpcKeysSsidFormFactoryTest extends TestCase
+final class UpcKeysSsidFormFactoryTest extends TestCase
 {
 
 	private readonly UiForm $form;

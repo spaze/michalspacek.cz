@@ -13,7 +13,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class VideoFactoryTest extends TestCase
+final class VideoFactoryTest extends TestCase
 {
 
 	private readonly VideoFactory $videoFactory;

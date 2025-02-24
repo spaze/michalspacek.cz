@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class SpammyApplicationException extends TrainingApplicationException
+final class SpammyApplicationException extends TrainingApplicationException
 {
 
 	public function __construct(?Throwable $previous = null)

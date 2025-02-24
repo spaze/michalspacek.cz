@@ -11,7 +11,7 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-readonly class TrainingControlsFactory
+final readonly class TrainingControlsFactory
 {
 
 	public function __construct(

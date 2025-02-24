@@ -9,7 +9,7 @@ use Nette\Http\IResponse;
 use Nette\Http\Response;
 use Nette\Utils\DateTime;
 
-readonly class Cookies
+final readonly class Cookies
 {
 
 	public function __construct(

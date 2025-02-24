@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\ShouldNotHappenException;
 
-readonly class TrainingDateStatuses
+final readonly class TrainingDateStatuses
 {
 
 	public function __construct(

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
 
-readonly class TrainingLocales
+final readonly class TrainingLocales
 {
 
 	public function __construct(

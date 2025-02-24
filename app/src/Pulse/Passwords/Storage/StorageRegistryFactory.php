@@ -15,7 +15,7 @@ use Nette\Database\Row;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-readonly class StorageRegistryFactory
+final readonly class StorageRegistryFactory
 {
 
 	public function __construct(

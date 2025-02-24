@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
-readonly class BlogPostPreview
+final readonly class BlogPostPreview
 {
 
 	public function __construct(

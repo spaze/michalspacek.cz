@@ -17,7 +17,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TalkSlidesFormFactoryTest extends TestCase
+final class TalkSlidesFormFactoryTest extends TestCase
 {
 
 	public function __construct(

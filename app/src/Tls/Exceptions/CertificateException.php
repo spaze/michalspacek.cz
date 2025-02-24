@@ -5,6 +5,6 @@ namespace MichalSpacekCz\Tls\Exceptions;
 
 use Exception;
 
-class CertificateException extends Exception
+final class CertificateException extends Exception
 {
 }

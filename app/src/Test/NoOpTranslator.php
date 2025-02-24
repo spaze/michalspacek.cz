@@ -10,7 +10,7 @@ use Contributte\Translation\Wrappers\Message;
 use Contributte\Translation\Wrappers\NotTranslate;
 use Override;
 
-class NoOpTranslator extends Translator
+final class NoOpTranslator extends Translator
 {
 
 	/**

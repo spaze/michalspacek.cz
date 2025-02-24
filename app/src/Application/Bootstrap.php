@@ -11,7 +11,7 @@ use Nette\CommandLine\Parser;
 use Nette\DI\Container;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
-class Bootstrap
+final class Bootstrap
 {
 
 	private const string MODE_DEVELOPMENT = 'development';

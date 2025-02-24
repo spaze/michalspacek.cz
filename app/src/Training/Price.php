@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\ShouldNotHappenException;
 use NumberFormatter;
 
-readonly class Price
+final readonly class Price
 {
 
 	public function __construct(

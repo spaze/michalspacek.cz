@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Database\Row;
 
-readonly class TrainingFactory
+final readonly class TrainingFactory
 {
 
 	public function __construct(

@@ -7,7 +7,7 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\ExtensionWithNoContentTypeException;
 use MichalSpacekCz\Media\Exceptions\UnsupportedContentTypeException;
 
-class SupportedImageFileFormats
+final class SupportedImageFileFormats
 {
 
 	private const array SUPPORTED_MAIN_IMAGES = [

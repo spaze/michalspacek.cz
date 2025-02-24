@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Reviews;
 
 use Nette\Utils\Html;
 
-readonly class TrainingReview
+final readonly class TrainingReview
 {
 
 	/**

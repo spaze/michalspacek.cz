@@ -13,7 +13,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class CookiesTest extends TestCase
+final class CookiesTest extends TestCase
 {
 
 	public function __construct(

@@ -18,7 +18,7 @@ use Nette\Utils\Helpers;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-readonly class CertificatesApiClient
+final readonly class CertificatesApiClient
 {
 
 	public function __construct(

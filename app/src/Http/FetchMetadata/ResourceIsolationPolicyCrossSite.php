@@ -6,6 +6,6 @@ namespace MichalSpacekCz\Http\FetchMetadata;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class ResourceIsolationPolicyCrossSite
+final class ResourceIsolationPolicyCrossSite
 {
 }

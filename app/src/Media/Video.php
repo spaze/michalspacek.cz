@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
-class Video
+final class Video
 {
 
 	private bool $lazyLoad = false;

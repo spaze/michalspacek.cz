@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Articles;
 use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 
-class ArticleSummary extends UiControl
+final class ArticleSummary extends UiControl
 {
 
 	public function __construct(

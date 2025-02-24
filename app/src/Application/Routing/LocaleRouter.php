@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application\Routing;
 
 use Nette\Application\Routers\RouteList;
 
-readonly class LocaleRouter
+final readonly class LocaleRouter
 {
 
 	/**

@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Http\IResponse;
 
-class RedirectPresenter extends BasePresenter
+final class RedirectPresenter extends BasePresenter
 {
 
 	private const int GOOD_NIGHT = 5;

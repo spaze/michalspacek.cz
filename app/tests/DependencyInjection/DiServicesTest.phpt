@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class DiServicesTest extends TestCase
+final class DiServicesTest extends TestCase
 {
 
 	public function testGetAllServices(): void

@@ -7,7 +7,7 @@ use MichalSpacekCz\Www\Presenters\BaseErrorPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-class ErrorPresenter extends BaseErrorPresenter
+final class ErrorPresenter extends BaseErrorPresenter
 {
 
 	/** @var array<int, string> */

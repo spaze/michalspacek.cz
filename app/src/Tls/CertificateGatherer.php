@@ -15,7 +15,7 @@ use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 
-readonly class CertificateGatherer
+final readonly class CertificateGatherer
 {
 
 	public function __construct(

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Tls\Exceptions;
 use Exception;
 use Throwable;
 
-class OpenSslX509ParseException extends Exception
+final class OpenSslX509ParseException extends Exception
 {
 
 	public function __construct(string $serializedInfo, ?Throwable $previous = null)

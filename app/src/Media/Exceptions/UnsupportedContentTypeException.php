@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Media\Exceptions;
 use Nette\Utils\Json;
 use Throwable;
 
-class UnsupportedContentTypeException extends ContentTypeException
+final class UnsupportedContentTypeException extends ContentTypeException
 {
 
 	/**

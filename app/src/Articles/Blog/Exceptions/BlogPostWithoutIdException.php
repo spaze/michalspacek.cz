@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Articles\Blog\Exceptions;
 
 use Throwable;
 
-class BlogPostWithoutIdException extends BlogPostException
+final class BlogPostWithoutIdException extends BlogPostException
 {
 
 	public function __construct(string $slug, ?Throwable $previous = null)

@@ -19,7 +19,7 @@ use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
 
-readonly class TrainingApplicationStorage
+final readonly class TrainingApplicationStorage
 {
 
 	public function __construct(

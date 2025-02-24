@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Articles\Blog;
 use JsonSerializable;
 use Override;
 
-readonly class BlogPostRecommendedLink implements JsonSerializable
+final readonly class BlogPostRecommendedLink implements JsonSerializable
 {
 
 	public function __construct(

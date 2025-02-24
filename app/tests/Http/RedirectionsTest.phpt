@@ -13,7 +13,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class RedirectionsTest extends TestCase
+final class RedirectionsTest extends TestCase
 {
 
 	public function __construct(

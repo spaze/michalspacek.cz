@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Media\Exceptions;
 use Exception;
 use Throwable;
 
-class CannotDeleteMediaException extends Exception
+final class CannotDeleteMediaException extends Exception
 {
 
 	public function __construct(string $message, string $filename, ?Throwable $previous = null)

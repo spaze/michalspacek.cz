@@ -4,9 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Components;
 
 use MichalSpacekCz\Articles\ArticleEdit;
+use Nette\Utils\Html;
 
-interface ArticleWithEdits
+interface ArticleWithTextAndEdits
 {
+
+	public function getText(): Html;
+
 
 	/**
 	 * @return list<ArticleEdit>

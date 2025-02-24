@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 
-readonly class Prices
+final readonly class Prices
 {
 
 	public function __construct(

@@ -14,7 +14,7 @@ use Tracy\ILogger;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class BootstrapTest extends TestCase
+final class BootstrapTest extends TestCase
 {
 
 	private string $exceptionLog;

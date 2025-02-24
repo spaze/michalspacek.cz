@@ -14,7 +14,7 @@ use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
-readonly class TalkSlidesFormFactory
+final readonly class TalkSlidesFormFactory
 {
 
 	public function __construct(

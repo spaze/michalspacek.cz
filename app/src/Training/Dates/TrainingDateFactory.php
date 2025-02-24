@@ -10,7 +10,7 @@ use MichalSpacekCz\Training\Prices;
 use Nette\Database\Row;
 use Nette\Utils\Json;
 
-readonly class TrainingDateFactory
+final readonly class TrainingDateFactory
 {
 
 	private const int LAST_FREE_SEATS_THRESHOLD_DAYS = 7;

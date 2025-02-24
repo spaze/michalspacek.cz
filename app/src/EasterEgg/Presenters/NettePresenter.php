@@ -10,7 +10,7 @@ use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 /**
  * @property-read DefaultTemplate $template
  */
-class NettePresenter extends Presenter
+final class NettePresenter extends Presenter
 {
 
 	public function __construct(

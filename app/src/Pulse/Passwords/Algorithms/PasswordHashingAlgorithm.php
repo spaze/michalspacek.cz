@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Algorithms;
 
-readonly class PasswordHashingAlgorithm
+final readonly class PasswordHashingAlgorithm
 {
 
 	public function __construct(

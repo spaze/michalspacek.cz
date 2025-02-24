@@ -13,7 +13,7 @@ use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-readonly class TrainingDateFormFactory
+final readonly class TrainingDateFormFactory
 {
 
 	private const string STANDARD = 'Standardní';

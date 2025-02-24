@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks\Exceptions;
 
 use Throwable;
 
-class TalkSlideDoesNotExistException extends TalkException
+final class TalkSlideDoesNotExistException extends TalkException
 {
 
 	public function __construct(int $talkId, int|string $slide, ?Throwable $previous = null)

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
-readonly class UserAuthToken
+final readonly class UserAuthToken
 {
 
 	public function __construct(

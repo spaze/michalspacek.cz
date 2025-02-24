@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../../bootstrap.php';
 
 /** @testCase */
-class StorageAlgorithmAttributesFactoryTest extends TestCase
+final class StorageAlgorithmAttributesFactoryTest extends TestCase
 {
 
 	public function __construct(

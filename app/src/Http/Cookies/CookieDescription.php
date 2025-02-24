@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Http\Cookies;
 
 use Nette\Utils\Html;
 
-readonly class CookieDescription
+final readonly class CookieDescription
 {
 
 	public function __construct(

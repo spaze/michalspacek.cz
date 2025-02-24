@@ -8,7 +8,7 @@ use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use Nette\Utils\Strings;
 
-readonly class SearchMatcher
+final readonly class SearchMatcher
 {
 
 	private ?string $search;

@@ -17,7 +17,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class LocaleLinkGeneratorTest extends TestCase
+final class LocaleLinkGeneratorTest extends TestCase
 {
 
 	private LocaleLinkGenerator $localeLinkGenerator;

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 use MichalSpacekCz\Application\SanitizedPhpInfo;
 use Nette\Utils\Html;
 
-class InfoPresenter extends BasePresenter
+final class InfoPresenter extends BasePresenter
 {
 
 	public function __construct(

@@ -12,7 +12,7 @@ use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
 use Override;
 
-readonly class TemplateFactory implements UiTemplateFactory
+final readonly class TemplateFactory implements UiTemplateFactory
 {
 
 	public function __construct(

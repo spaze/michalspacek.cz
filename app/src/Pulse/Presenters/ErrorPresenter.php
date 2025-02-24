@@ -8,7 +8,7 @@ use MichalSpacekCz\Http\Robots\RobotsRule;
 use MichalSpacekCz\Www\Presenters\BaseErrorPresenter;
 use Nette\Application\Responses\TextResponse;
 
-class ErrorPresenter extends BaseErrorPresenter
+final class ErrorPresenter extends BaseErrorPresenter
 {
 
 	protected bool $logAccess = false;

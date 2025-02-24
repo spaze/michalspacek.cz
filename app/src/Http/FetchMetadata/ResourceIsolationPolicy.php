@@ -13,7 +13,7 @@ use ReflectionException;
 use ReflectionMethod;
 use Tracy\Debugger;
 
-readonly class ResourceIsolationPolicy
+final readonly class ResourceIsolationPolicy
 {
 
 	public function __construct(

@@ -7,7 +7,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use SplFileInfo;
 
-readonly class TrainingFile
+final readonly class TrainingFile
 {
 
 	private DateTimeImmutable $added;

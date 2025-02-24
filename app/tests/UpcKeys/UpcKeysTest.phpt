@@ -10,7 +10,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class UpcKeysTest extends TestCase
+final class UpcKeysTest extends TestCase
 {
 
 	public function __construct(

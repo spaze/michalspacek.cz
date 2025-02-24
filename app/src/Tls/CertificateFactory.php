@@ -17,7 +17,7 @@ use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use Nette\Database\Row;
 use OpenSSLCertificate;
 
-readonly class CertificateFactory
+final readonly class CertificateFactory
 {
 
 	public function __construct(

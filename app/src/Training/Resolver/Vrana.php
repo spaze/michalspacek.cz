@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Resolver;
 use Nette\Utils\Strings;
 use Override;
 
-class Vrana implements ApplicationSourceResolver
+final class Vrana implements ApplicationSourceResolver
 {
 
 	#[Override]

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks\Exceptions;
 
 use Throwable;
 
-class SlideImageUploadFailedException extends TalkException
+final class SlideImageUploadFailedException extends TalkException
 {
 
 	public function __construct(int $error, ?Throwable $previous = null)

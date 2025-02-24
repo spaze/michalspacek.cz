@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\Application\Theme\ThemeMode;
 
-readonly class ThemeFormFactory
+final readonly class ThemeFormFactory
 {
 
 	public function __construct(

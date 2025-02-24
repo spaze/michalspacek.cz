@@ -10,7 +10,7 @@ use MichalSpacekCz\Articles\Components\ArticleWithSummary;
 use Nette\Utils\Html;
 use Override;
 
-readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
+final readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
 {
 
 	public function __construct(
@@ -35,7 +35,7 @@ readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSu
 
 
 	#[Override]
-	public function getId(): ?int
+	public function getId(): int
 	{
 		return $this->articleId;
 	}
@@ -67,7 +67,7 @@ readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSu
 
 
 	#[Override]
-	public function getSummary(): ?Html
+	public function getSummary(): Html
 	{
 		return $this->excerpt;
 	}
@@ -80,7 +80,7 @@ readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSu
 
 
 	#[Override]
-	public function getPublishTime(): ?DateTime
+	public function getPublishTime(): DateTime
 	{
 		return $this->published;
 	}

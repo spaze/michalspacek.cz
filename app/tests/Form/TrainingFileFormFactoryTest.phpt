@@ -15,7 +15,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TrainingFileFormFactoryTest extends TestCase
+final class TrainingFileFormFactoryTest extends TestCase
 {
 
 	private readonly UiForm $form;

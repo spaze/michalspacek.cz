@@ -5,6 +5,6 @@ namespace MichalSpacekCz\CompanyInfo\Exceptions;
 
 use Exception;
 
-class UnsupportedCountryException extends Exception
+final class UnsupportedCountryException extends Exception
 {
 }

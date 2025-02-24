@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
 
-class TrainingApplicationDoesNotExistException extends TrainingApplicationException
+final class TrainingApplicationDoesNotExistException extends TrainingApplicationException
 {
 
 	public function __construct(int $id, ?Throwable $previous = null)

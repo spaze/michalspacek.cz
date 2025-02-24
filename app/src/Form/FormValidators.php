@@ -8,7 +8,7 @@ use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-readonly class FormValidators
+final readonly class FormValidators
 {
 
 	public function __construct(

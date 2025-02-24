@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class JsonUtilsTest extends TestCase
+final class JsonUtilsTest extends TestCase
 {
 
 	public function __construct(

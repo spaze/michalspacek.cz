@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Utils;
 
 use Contributte\Translation\Translator;
 
-readonly class Strings
+final readonly class Strings
 {
 
 	public function __construct(

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Http\Robots;
 
 use Nette\Http\IResponse;
 
-class Robots
+final class Robots
 {
 
 	public function __construct(

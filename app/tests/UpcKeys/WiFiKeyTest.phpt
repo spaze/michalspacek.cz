@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class WiFiKeyTest extends TestCase
+final class WiFiKeyTest extends TestCase
 {
 
 	public function testJsonSerializable(): void

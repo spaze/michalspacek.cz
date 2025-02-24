@@ -8,7 +8,7 @@ use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 
-class TrainingApplicationsList extends UiControl
+final class TrainingApplicationsList extends UiControl
 {
 
 	/**

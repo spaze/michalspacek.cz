@@ -23,7 +23,7 @@ use Override;
  * Inline values:
  * ''**FETCH_METADATA:Sec-Fetch-Dest**''
  */
-readonly class FetchMetadataTexyFormatterPlaceholder implements TexyFormatterPlaceholder
+final readonly class FetchMetadataTexyFormatterPlaceholder implements TexyFormatterPlaceholder
 {
 
 	public function __construct(

@@ -10,7 +10,7 @@ use MichalSpacekCz\Articles\Blog\BlogPost;
 use Nette\Utils\Html;
 use Override;
 
-class ArticlesMock extends Articles
+final class ArticlesMock extends Articles
 {
 
 	/** @var list<BlogPost> */

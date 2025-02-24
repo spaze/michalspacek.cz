@@ -7,7 +7,7 @@ use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 use ValueError;
 
-readonly class Theme
+final readonly class Theme
 {
 
 	public function __construct(

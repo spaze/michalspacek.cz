@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form\Controls;
 
 use Nette\Forms\Controls\TextInput;
 
-readonly class TrainingControlsAttendee
+final readonly class TrainingControlsAttendee
 {
 
 	public function __construct(

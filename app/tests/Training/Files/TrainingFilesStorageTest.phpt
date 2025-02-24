@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingFilesStorageTest extends TestCase
+final class TrainingFilesStorageTest extends TestCase
 {
 
 	private readonly TrainingFilesStorage $trainingFilesStorage;

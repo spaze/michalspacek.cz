@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Pulse\Passwords\SearchResult;
 
-class Storage
+final class Storage
 {
 
 	/** @var array<string, StorageSite> */

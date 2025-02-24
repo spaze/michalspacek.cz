@@ -7,7 +7,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use Nette\Database\Explorer;
 
-readonly class Companies
+final readonly class Companies
 {
 
 	public function __construct(

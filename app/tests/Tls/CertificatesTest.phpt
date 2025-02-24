@@ -19,7 +19,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class CertificatesTest extends TestCase
+final class CertificatesTest extends TestCase
 {
 
 	private readonly DateTimeImmutable $notBefore;

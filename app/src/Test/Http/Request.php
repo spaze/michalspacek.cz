@@ -9,7 +9,7 @@ use Nette\Http\UrlImmutable;
 use Nette\Http\UrlScript;
 use Override;
 
-class Request implements IRequest
+final class Request implements IRequest
 {
 
 	/** @var array<string, mixed> */

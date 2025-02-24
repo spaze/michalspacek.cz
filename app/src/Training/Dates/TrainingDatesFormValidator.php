@@ -7,7 +7,7 @@ use DateTimeImmutable;
 use Exception;
 use Nette\Forms\Controls\TextInput;
 
-class TrainingDatesFormValidator
+final class TrainingDatesFormValidator
 {
 
 	/**

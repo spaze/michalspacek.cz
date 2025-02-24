@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Twitter;
 
-readonly class TwitterCard
+final readonly class TwitterCard
 {
 
 	public function __construct(

@@ -15,7 +15,7 @@ use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
-readonly class TalkFormFactory
+final readonly class TalkFormFactory
 {
 
 	public function __construct(

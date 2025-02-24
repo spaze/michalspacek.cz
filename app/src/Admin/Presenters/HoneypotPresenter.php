@@ -7,7 +7,7 @@ use MichalSpacekCz\Form\SignInHoneypotFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 
-class HoneypotPresenter extends BasePresenter
+final class HoneypotPresenter extends BasePresenter
 {
 
 	public function __construct(

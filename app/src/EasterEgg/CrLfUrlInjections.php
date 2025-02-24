@@ -7,7 +7,7 @@ use Composer\Pcre\Regex;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 
-readonly class CrLfUrlInjections
+final readonly class CrLfUrlInjections
 {
 
 	private const string COOKIE_NAME = 'crlfinjection';

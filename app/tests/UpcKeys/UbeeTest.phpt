@@ -11,7 +11,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class UbeeTest extends TestCase
+final class UbeeTest extends TestCase
 {
 
 	public function __construct(

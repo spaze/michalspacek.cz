@@ -10,7 +10,7 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-readonly class DeletePersonalDataFormFactory
+final readonly class DeletePersonalDataFormFactory
 {
 
 	public function __construct(

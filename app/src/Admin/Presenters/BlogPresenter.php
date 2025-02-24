@@ -15,7 +15,7 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
-class BlogPresenter extends BasePresenter
+final class BlogPresenter extends BasePresenter
 {
 
 	private ?BlogPost $post = null;

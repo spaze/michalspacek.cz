@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class MakefileTest extends TestCase
+final class MakefileTest extends TestCase
 {
 
 	public function __construct(

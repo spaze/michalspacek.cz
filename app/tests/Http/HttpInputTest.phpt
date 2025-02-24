@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class HttpInputTest extends TestCase
+final class HttpInputTest extends TestCase
 {
 
 	public function __construct(

@@ -21,7 +21,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TrainingApplicationStatusesFormFactoryTest extends TestCase
+final class TrainingApplicationStatusesFormFactoryTest extends TestCase
 {
 
 	private const int APPLICATION_ID = 1337;

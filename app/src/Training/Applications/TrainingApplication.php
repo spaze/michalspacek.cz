@@ -12,7 +12,7 @@ use MichalSpacekCz\Training\Mails\MailMessageAdmin;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Utils\Html;
 
-class TrainingApplication
+final class TrainingApplication
 {
 
 	private ?TrainingApplicationStatus $nextStatus = null;

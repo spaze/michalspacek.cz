@@ -16,7 +16,7 @@ use Nette\Http\Session;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
-readonly class TrainingFilesDownload
+final readonly class TrainingFilesDownload
 {
 
 	public function __construct(

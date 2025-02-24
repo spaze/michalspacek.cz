@@ -7,7 +7,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Exceptions\HttpRedirectDestinationUrlMalformedException;
 use Nette\Http\UrlScript;
 
-readonly class Redirections
+final readonly class Redirections
 {
 
 	public function __construct(

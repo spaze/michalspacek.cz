@@ -13,7 +13,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-class TrainingApplicationStatuses
+final class TrainingApplicationStatuses
 {
 
 	/** @var array<string, int> */

@@ -23,7 +23,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class SignInFormFactoryTest extends TestCase
+final class SignInFormFactoryTest extends TestCase
 {
 
 	private readonly UiForm $form;

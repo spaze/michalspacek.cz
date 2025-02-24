@@ -8,7 +8,7 @@ use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class JsonUtils
+final class JsonUtils
 {
 
 	/**

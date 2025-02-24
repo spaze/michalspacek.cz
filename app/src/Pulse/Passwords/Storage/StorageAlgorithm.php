@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Pulse\Passwords\Storage;
 use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithm;
 
-class StorageAlgorithm
+final class StorageAlgorithm
 {
 
 	private ?string $fullAlgo;

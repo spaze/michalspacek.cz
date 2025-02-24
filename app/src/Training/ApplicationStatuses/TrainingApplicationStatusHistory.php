@@ -12,7 +12,7 @@ use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-class TrainingApplicationStatusHistory
+final class TrainingApplicationStatusHistory
 {
 
 	/** @var array<int, list<TrainingApplicationStatusHistoryItem>> */

@@ -12,7 +12,7 @@ use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 
-class InvoicesPresenter extends BasePresenter
+final class InvoicesPresenter extends BasePresenter
 {
 
 	/** @var list<int> */

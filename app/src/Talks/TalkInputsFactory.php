@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Talks;
 use MichalSpacekCz\Form\TalkFormFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
 
-readonly class TalkInputsFactory
+final readonly class TalkInputsFactory
 {
 
 	public function __construct(

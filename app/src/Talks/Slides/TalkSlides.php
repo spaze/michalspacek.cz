@@ -24,7 +24,7 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class TalkSlides
+final class TalkSlides
 {
 
 	private const int SLIDE_MAX_WIDTH = 800;

@@ -27,7 +27,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class ResourceIsolationPolicyTest extends TestCase
+final class ResourceIsolationPolicyTest extends TestCase
 {
 
 	private const string PRESENTER_NAME = 'Www:Homepage';

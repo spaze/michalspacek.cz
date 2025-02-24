@@ -13,7 +13,7 @@ use Nette\Utils\DateTime;
  *
  * Fast loader, no extra work, no formatting, no circular references.
  */
-class BlogPostLoader
+final class BlogPostLoader
 {
 
 	private ?Row $post = null;

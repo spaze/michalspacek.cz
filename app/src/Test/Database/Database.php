@@ -11,7 +11,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Override;
 
-class Database extends Explorer
+final class Database extends Explorer
 {
 
 	use WillThrow;

@@ -20,7 +20,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class ChangePasswordFormFactoryTest extends TestCase
+final class ChangePasswordFormFactoryTest extends TestCase
 {
 
 	private const int USER_ID = 1337;

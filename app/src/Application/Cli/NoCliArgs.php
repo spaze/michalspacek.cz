@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application\Cli;
 
 use Override;
 
-class NoCliArgs implements CliArgsProvider
+final class NoCliArgs implements CliArgsProvider
 {
 
 	#[Override]

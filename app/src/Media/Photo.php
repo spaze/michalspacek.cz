@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Media;
 
 use Nette\Utils\Html;
 
-readonly class Photo
+final readonly class Photo
 {
 
 	/**

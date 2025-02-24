@@ -10,14 +10,12 @@ use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
-use MichalSpacekCz\Articles\Components\ArticleWithSlug;
-use MichalSpacekCz\Articles\Components\ArticleWithTags;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Override;
 
-class TagsPresenter extends BasePresenter
+final class TagsPresenter extends BasePresenter
 {
 
 	/** @var array<string, array<string, string>> */
@@ -76,7 +74,7 @@ class TagsPresenter extends BasePresenter
 	private function findLocaleLinkParams(array $articles, string $tag): void
 	{
 		foreach ($articles as $article) {
-			if (!$article instanceof ArticleWithSlug || !$article instanceof ArticleWithTags) {
+			if (!$article instanceof BlogPost) {
 				continue;
 			}
 			$posts = $this->blogPostLocaleUrls->get($article->getSlug());

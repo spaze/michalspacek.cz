@@ -9,7 +9,7 @@ use Nette\Http\IRequest;
 use Nette\Utils\Html;
 use Tracy\Debugger;
 
-readonly class SignInHoneypotFormFactory
+final readonly class SignInHoneypotFormFactory
 {
 
 	public function __construct(

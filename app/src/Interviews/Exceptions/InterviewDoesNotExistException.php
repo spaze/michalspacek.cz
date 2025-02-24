@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Interviews\Exceptions;
 
 use Throwable;
 
-class InterviewDoesNotExistException extends InterviewException
+final class InterviewDoesNotExistException extends InterviewException
 {
 
 	public function __construct(?int $id = null, ?string $name = null, ?Throwable $previous = null)

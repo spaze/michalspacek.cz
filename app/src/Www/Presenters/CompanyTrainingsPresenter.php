@@ -15,7 +15,7 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Override;
 
-class CompanyTrainingsPresenter extends BasePresenter
+final class CompanyTrainingsPresenter extends BasePresenter
 {
 
 	private ?string $trainingAction = null;
@@ -60,7 +60,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$price = $training->getPrice();
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->getName()->render()]);
 		$this->template->training = $training;
-		$this->template->price = $price !== null ? $this->prices->resolvePriceVat($price) : null;
+		$this->template->price = $this->prices->resolvePriceVat($price);
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId(), 3);
 		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->getDiscontinuedId());
 	}

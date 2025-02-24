@@ -20,7 +20,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingApplicationStorageTest extends TestCase
+final class TrainingApplicationStorageTest extends TestCase
 {
 
 	private const int STATUS_CREATED = 1;

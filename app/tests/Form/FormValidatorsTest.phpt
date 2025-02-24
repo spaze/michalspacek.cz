@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class FormValidatorsTest extends TestCase
+final class FormValidatorsTest extends TestCase
 {
 
 	public function __construct(

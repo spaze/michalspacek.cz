@@ -16,7 +16,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class SignInHoneypotFormFactoryTest extends TestCase
+final class SignInHoneypotFormFactoryTest extends TestCase
 {
 
 	private UiForm $form;

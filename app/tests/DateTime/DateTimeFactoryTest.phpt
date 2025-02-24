@@ -15,7 +15,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class DateTimeFactoryTest extends TestCase
+final class DateTimeFactoryTest extends TestCase
 {
 
 	public function __construct(

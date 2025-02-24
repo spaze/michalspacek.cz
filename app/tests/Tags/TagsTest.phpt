@@ -11,7 +11,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class TagsTest extends TestCase
+final class TagsTest extends TestCase
 {
 
 	public function __construct(

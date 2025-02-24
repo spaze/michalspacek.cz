@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
-readonly class TrainingApplicationStatusesFormFactory
+final readonly class TrainingApplicationStatusesFormFactory
 {
 
 	public function __construct(

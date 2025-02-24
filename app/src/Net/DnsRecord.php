@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Net;
 
-readonly class DnsRecord
+final readonly class DnsRecord
 {
 
 	public function __construct(

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTraining;
 
-class FreeSeats
+final class FreeSeats
 {
 
 	/**

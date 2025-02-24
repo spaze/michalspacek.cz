@@ -10,7 +10,7 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Tracy\Debugger;
 
-readonly class SignInFormFactory
+final readonly class SignInFormFactory
 {
 
 	public function __construct(

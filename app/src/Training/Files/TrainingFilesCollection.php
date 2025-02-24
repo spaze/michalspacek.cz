@@ -11,7 +11,7 @@ use Override;
 /**
  * @implements IteratorAggregate<int, TrainingFile>
  */
-class TrainingFilesCollection implements IteratorAggregate, Countable
+final class TrainingFilesCollection implements IteratorAggregate, Countable
 {
 
 	/** @var array<int, TrainingFile> */

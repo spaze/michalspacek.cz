@@ -10,7 +10,7 @@ use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Http\Session;
 use Nette\Security\User;
 
-class SignPresenter extends BasePresenter
+final class SignPresenter extends BasePresenter
 {
 
 	/** @persistent */

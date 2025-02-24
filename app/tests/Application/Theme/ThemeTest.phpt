@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class ThemeTest extends TestCase
+final class ThemeTest extends TestCase
 {
 
 	private const string COOKIE = 'future';

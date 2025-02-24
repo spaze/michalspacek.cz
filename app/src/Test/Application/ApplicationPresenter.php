@@ -14,7 +14,7 @@ use Nette\Application\UI\Presenter;
 use Override;
 use ReflectionException;
 
-readonly class ApplicationPresenter
+final readonly class ApplicationPresenter
 {
 
 	public function __construct(

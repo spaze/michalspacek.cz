@@ -14,7 +14,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 
-class HomepagePresenter extends BasePresenter
+final class HomepagePresenter extends BasePresenter
 {
 
 	protected bool $haveBacklink = false;

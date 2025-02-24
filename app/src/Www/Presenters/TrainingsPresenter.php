@@ -35,7 +35,7 @@ use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
-class TrainingsPresenter extends BasePresenter
+final class TrainingsPresenter extends BasePresenter
 {
 
 	private ?Training $training = null;

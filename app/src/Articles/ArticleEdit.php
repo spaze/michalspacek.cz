@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Articles;
 use DateTime;
 use Nette\Utils\Html;
 
-readonly class ArticleEdit
+final readonly class ArticleEdit
 {
 
 	public function __construct(

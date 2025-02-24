@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Makefile\Exceptions;
 
 use Throwable;
 
-class MakefileNotFoundException extends MakefileException
+final class MakefileNotFoundException extends MakefileException
 {
 
 	public function __construct(string $file, ?Throwable $previous = null)

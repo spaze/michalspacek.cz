@@ -10,7 +10,7 @@ use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use Nette\Application\BadRequestException;
 
-class InterviewsPresenter extends BasePresenter
+final class InterviewsPresenter extends BasePresenter
 {
 
 	public function __construct(

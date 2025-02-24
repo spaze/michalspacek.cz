@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Test;
 use ReflectionException;
 use ReflectionProperty;
 
-class PrivateProperty
+final class PrivateProperty
 {
 
 	/**

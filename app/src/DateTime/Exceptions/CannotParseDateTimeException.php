@@ -5,7 +5,7 @@ namespace MichalSpacekCz\DateTime\Exceptions;
 
 use Throwable;
 
-class CannotParseDateTimeException extends DateTimeException
+final class CannotParseDateTimeException extends DateTimeException
 {
 
 	public function __construct(string $format, string $datetime, ?Throwable $previous = null)

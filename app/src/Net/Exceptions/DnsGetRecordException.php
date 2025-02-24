@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Net\Exceptions;
 use Exception;
 use Throwable;
 
-class DnsGetRecordException extends Exception
+final class DnsGetRecordException extends Exception
 {
 
 	public function __construct(string $message, ?Throwable $previous = null)

@@ -12,7 +12,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class BlogPostRecommendedLinkTest extends TestCase
+final class BlogPostRecommendedLinkTest extends TestCase
 {
 
 	public function testGetFromJson(): void

@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class FreeSeatsTest extends TestCase
+final class FreeSeatsTest extends TestCase
 {
 
 	private int $id = 1;

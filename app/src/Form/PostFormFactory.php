@@ -31,7 +31,7 @@ use Nette\Utils\Strings;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
-readonly class PostFormFactory
+final readonly class PostFormFactory
 {
 
 	public function __construct(

@@ -29,7 +29,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class ManagerTest extends TestCase
+final class ManagerTest extends TestCase
 {
 
 	private readonly SymmetricKeyEncryption $passwordEncryption;

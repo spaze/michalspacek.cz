@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Http\Exceptions;
 use Exception;
 use Throwable;
 
-class HttpRedirectDestinationUrlMalformedException extends Exception
+final class HttpRedirectDestinationUrlMalformedException extends Exception
 {
 
 	public function __construct(string $destination, ?Throwable $previous = null)

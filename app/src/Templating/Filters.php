@@ -8,7 +8,7 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Utils\Html;
 use Stringable;
 
-readonly class Filters
+final readonly class Filters
 {
 
 	public function __construct(

@@ -17,7 +17,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class PasswordsStorageAlgorithmFormFactoryTest extends TestCase
+final class PasswordsStorageAlgorithmFormFactoryTest extends TestCase
 {
 
 	private UiForm $form;

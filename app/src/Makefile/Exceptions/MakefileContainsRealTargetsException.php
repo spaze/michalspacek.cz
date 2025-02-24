@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Makefile\Exceptions;
 
 use Throwable;
 
-class MakefileContainsRealTargetsException extends MakefileException
+final class MakefileContainsRealTargetsException extends MakefileException
 {
 
 	/**

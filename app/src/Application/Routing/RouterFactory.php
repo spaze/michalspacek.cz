@@ -11,7 +11,7 @@ use Nette\Application\Routers\RouteList;
 use Nette\Routing\Route;
 use Nette\Routing\Router;
 
-class RouterFactory
+final class RouterFactory
 {
 
 	private const string MODULE_ADMIN = 'Admin';

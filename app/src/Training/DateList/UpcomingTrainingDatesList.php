@@ -10,7 +10,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\FreeSeats;
 use Override;
 
-class UpcomingTrainingDatesList extends UiControl implements Countable
+final class UpcomingTrainingDatesList extends UiControl implements Countable
 {
 
 	/** @var array<string, UpcomingTraining>|null */

@@ -5,6 +5,6 @@ namespace MichalSpacekCz\CompanyInfo\Exceptions;
 
 use Exception;
 
-class CompanyInfoException extends Exception
+final class CompanyInfoException extends Exception
 {
 }

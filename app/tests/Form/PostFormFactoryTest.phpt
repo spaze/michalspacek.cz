@@ -24,7 +24,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class PostFormFactoryTest extends TestCase
+final class PostFormFactoryTest extends TestCase
 {
 
 	private const int LOCALE_ID = 47;

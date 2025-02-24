@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Application\BadRequestException;
 
-class VenuesPresenter extends BasePresenter
+final class VenuesPresenter extends BasePresenter
 {
 
 	private ?UpcomingTrainingDatesList $upcomingTrainingDatesList = null;

@@ -12,7 +12,7 @@ use MichalSpacekCz\Media\VideoFactory;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-readonly class Interviews
+final readonly class Interviews
 {
 
 	public function __construct(

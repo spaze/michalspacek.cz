@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Exceptions;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use Throwable;
 
-class TrainingDateNotUpcomingException extends TrainingDateException
+final class TrainingDateNotUpcomingException extends TrainingDateException
 {
 
 	/**

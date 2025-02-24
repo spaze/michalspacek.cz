@@ -5,7 +5,7 @@ namespace MichalSpacekCz\DateTime\Exceptions;
 
 use Throwable;
 
-class CannotCreateDateTimeObjectException extends DateTimeException
+final class CannotCreateDateTimeObjectException extends DateTimeException
 {
 
 	public function __construct(?Throwable $previous = null)

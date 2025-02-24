@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Photo;
 
-class PhotoPresenter extends BasePresenter
+final class PhotoPresenter extends BasePresenter
 {
 
 	public function __construct(

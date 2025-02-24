@@ -8,7 +8,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 
-class EmailsPresenter extends BasePresenter
+final class EmailsPresenter extends BasePresenter
 {
 
 	/** @var array<int, TrainingApplication> */

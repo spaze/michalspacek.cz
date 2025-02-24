@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks\Exceptions;
 
 use Throwable;
 
-class TalkDoesNotExistException extends TalkException
+final class TalkDoesNotExistException extends TalkException
 {
 
 	public function __construct(?int $id = null, ?string $name = null, ?Throwable $previous = null)

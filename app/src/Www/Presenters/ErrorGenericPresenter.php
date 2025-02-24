@@ -9,7 +9,7 @@ use Nette\Application\Request;
 use Nette\Application\Response;
 use Override;
 
-readonly class ErrorGenericPresenter implements IPresenter
+final readonly class ErrorGenericPresenter implements IPresenter
 {
 
 	public function __construct(

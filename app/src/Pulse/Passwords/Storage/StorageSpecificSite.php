@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Pulse\Passwords\Storage;
 use MichalSpacekCz\Pulse\Company;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 
-class StorageSpecificSite extends StorageWildcardSite
+final class StorageSpecificSite extends StorageWildcardSite
 {
 
 	/**

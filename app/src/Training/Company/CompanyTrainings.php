@@ -13,7 +13,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\Html;
 
-readonly class CompanyTrainings
+final readonly class CompanyTrainings
 {
 
 	public function __construct(

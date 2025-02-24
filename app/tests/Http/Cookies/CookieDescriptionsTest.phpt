@@ -11,7 +11,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class CookieDescriptionsTest extends TestCase
+final class CookieDescriptionsTest extends TestCase
 {
 
 	public function __construct(

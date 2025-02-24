@@ -14,7 +14,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class NetteCve202015227Test extends TestCase
+final class NetteCve202015227Test extends TestCase
 {
 
 	public function __construct(

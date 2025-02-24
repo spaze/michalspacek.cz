@@ -15,7 +15,7 @@ use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 
-class PasswordsStoragesPresenter extends BasePresenter
+final class PasswordsStoragesPresenter extends BasePresenter
 {
 
 	private ?string $rating = null;

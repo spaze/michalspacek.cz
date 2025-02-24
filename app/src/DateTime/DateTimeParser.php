@@ -7,7 +7,7 @@ use Exception;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Utils\DateTime;
 
-class DateTimeParser
+final class DateTimeParser
 {
 
 	public function getDaysFromString(string $interval): int

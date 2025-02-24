@@ -20,7 +20,7 @@ use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-readonly class BlogPosts
+final readonly class BlogPosts
 {
 
 	public function __construct(

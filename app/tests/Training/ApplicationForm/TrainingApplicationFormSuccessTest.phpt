@@ -30,7 +30,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingApplicationFormSuccessTest extends TestCase
+final class TrainingApplicationFormSuccessTest extends TestCase
 {
 
 	private const int DATE_ID = 1337;

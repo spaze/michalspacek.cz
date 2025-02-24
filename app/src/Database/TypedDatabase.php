@@ -9,7 +9,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\DateTime;
 
-readonly class TypedDatabase
+final readonly class TypedDatabase
 {
 
 	public function __construct(

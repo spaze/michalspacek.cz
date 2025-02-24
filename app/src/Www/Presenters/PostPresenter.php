@@ -12,7 +12,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Override;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
-class PostPresenter extends BasePresenter
+final class PostPresenter extends BasePresenter
 {
 
 	/** @var array<string, array{slug: string, preview: string|null}> */

@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 
-readonly class TrainingApplicationPreliminaryFormFactory
+final readonly class TrainingApplicationPreliminaryFormFactory
 {
 
 	public function __construct(

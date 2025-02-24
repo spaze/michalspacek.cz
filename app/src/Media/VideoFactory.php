@@ -7,7 +7,7 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
 use Nette\Database\Row;
 
-readonly class VideoFactory
+final readonly class VideoFactory
 {
 
 	public function __construct(
