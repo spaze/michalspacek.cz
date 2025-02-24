@@ -28,7 +28,7 @@ readonly class Prices
 		}
 
 		if (stripos($note, 'student') !== false && $studentDiscount !== null && $studentDiscount > 0 && $studentDiscount <= 100) {
-			return new Price((int)($price->getPrice() * (100 - $studentDiscount) / 100), $studentDiscount, $price->getVatRate());
+			return new Price((int)($price->getPrice() * (100.0 - (float)$studentDiscount) / 100.0), $studentDiscount, $price->getVatRate());
 		}
 
 		return $price;

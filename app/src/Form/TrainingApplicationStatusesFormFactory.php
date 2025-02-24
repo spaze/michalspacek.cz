@@ -40,8 +40,8 @@ readonly class TrainingApplicationStatusesFormFactory
 				->setPrompt('- změnit na -')
 				->setItems($statuses);
 			if (empty($application->getChildrenStatuses())) {
-				$select->setDisabled()
-					->setPrompt('nelze dále měnit');
+				$select->setPrompt('nelze dále měnit')
+					->setDisabled();
 			}
 		}
 		$this->trainingControlsFactory->addStatusDate($form->addText('date', 'Datum:'), true);

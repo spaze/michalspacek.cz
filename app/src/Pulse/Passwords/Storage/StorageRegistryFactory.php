@@ -69,7 +69,7 @@ readonly class StorageRegistryFactory
 			$siteId = $this->sites->generateId($row->siteId, $row->companyId);
 			$storageKey = $this->sorting->isAnyCompanyAlphabetically($sort) ? (string)$row->companyId : $siteId;
 			$hashingAlgorithm = new PasswordHashingAlgorithm($row->algoId, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched);
-			$algoKey = $hashingAlgorithm->getId() . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
+			$algoKey = $hashingAlgorithm->getId() . '-' . ($row->from !== null ? (string)$row->from->getTimestamp() : 'null');
 
 			if (!$registry->hasCompany($row->companyId)) {
 				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
