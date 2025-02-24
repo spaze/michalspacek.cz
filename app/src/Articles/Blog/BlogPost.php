@@ -5,20 +5,19 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 use MichalSpacekCz\Articles\ArticleEdit;
-use MichalSpacekCz\Articles\Components\ArticleWithEdits;
 use MichalSpacekCz\Articles\Components\ArticleWithId;
 use MichalSpacekCz\Articles\Components\ArticleWithPublishTime;
 use MichalSpacekCz\Articles\Components\ArticleWithSlug;
 use MichalSpacekCz\Articles\Components\ArticleWithSummary;
 use MichalSpacekCz\Articles\Components\ArticleWithTags;
-use MichalSpacekCz\Articles\Components\ArticleWithText;
+use MichalSpacekCz\Articles\Components\ArticleWithTextAndEdits;
 use MichalSpacekCz\Articles\Components\ArticleWithUpdateTime;
 use MichalSpacekCz\Feed\ExportsOmittable;
 use MichalSpacekCz\Twitter\TwitterCard;
 use Nette\Utils\Html;
 use Override;
 
-final readonly class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, ArticleWithSummary, ArticleWithText, ArticleWithTags, ArticleWithUpdateTime, ArticleWithPublishTime, ArticleWithEdits
+final readonly class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, ArticleWithSummary, ArticleWithTextAndEdits, ArticleWithTags, ArticleWithUpdateTime, ArticleWithPublishTime
 {
 
 	/**
