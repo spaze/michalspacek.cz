@@ -25,11 +25,15 @@ use const T_CONST;
 use const T_DOUBLE_COLON;
 use const T_FUNCTION;
 use const T_NULLABLE;
+use const T_OPEN_CURLY_BRACKET;
+use const T_OPEN_PARENTHESIS;
 use const T_PRIVATE;
 use const T_PROTECTED;
 use const T_PUBLIC;
 use const T_READONLY;
+use const T_SEMICOLON;
 use const T_STATIC;
+use const T_TYPE_UNION;
 use const T_VAR;
 use const T_VARIABLE;
 use const T_WHITESPACE;
@@ -54,16 +58,14 @@ class PropertyDeclarationSniff implements Sniff
 	public const CODE_MULTIPLE_SPACES_BETWEEN_MODIFIERS = 'MultipleSpacesBetweenModifiers';
 
 	/** @var list<string>|null */
-	public $modifiersOrder = [];
+	public ?array $modifiersOrder = [];
 
-	/** @var bool */
-	public $checkPromoted = false;
+	public bool $checkPromoted = false;
 
-	/** @var bool */
-	public $enableMultipleSpacesBetweenModifiersCheck = false;
+	public bool $enableMultipleSpacesBetweenModifiersCheck = false;
 
 	/** @var array<int, array<int, (int|string)>>|null */
-	private $normalizedModifiersOrder = null;
+	private ?array $normalizedModifiersOrder = null;
 
 	/**
 	 * @return array<int, (int|string)>
@@ -94,6 +96,16 @@ class PropertyDeclarationSniff implements Sniff
 
 		if ($tokens[$nextPointer]['code'] === T_DOUBLE_COLON) {
 			// Ignore static::
+			return;
+		}
+
+		if ($tokens[$nextPointer]['code'] === T_OPEN_PARENTHESIS) {
+			// Ignore static()
+			return;
+		}
+
+		if (in_array($tokens[$nextPointer]['code'], [T_OPEN_CURLY_BRACKET, T_SEMICOLON, T_TYPE_UNION], true)) {
+			// Ignore "static" as return type hint of method
 			return;
 		}
 
@@ -128,7 +140,7 @@ class PropertyDeclarationSniff implements Sniff
 			$phpcsFile,
 			TokenHelper::$propertyModifiersTokenCodes,
 			$firstModifierPointer,
-			$lastModifierPointer + 1
+			$lastModifierPointer + 1,
 		);
 
 		if (count($modifiersPointers) < 2) {
@@ -166,15 +178,14 @@ class PropertyDeclarationSniff implements Sniff
 			return;
 		}
 
-		$actualModifiers = array_map(static function (int $modifierPointer) use ($tokens): string {
-			return $tokens[$modifierPointer]['content'];
-		}, $modifiersPointers);
+		$actualModifiers = array_map(static fn (int $modifierPointer): string => $tokens[$modifierPointer]['content'], $modifiersPointers);
 		$actualModifiersFormatted = implode(' ', $actualModifiers);
 
 		asort($expectedModifiersPositions);
-		$expectedModifiers = array_map(static function (int $modifierPointer) use ($tokens): string {
-			return $tokens[$modifierPointer]['content'];
-		}, array_keys($expectedModifiersPositions));
+		$expectedModifiers = array_map(
+			static fn (int $modifierPointer): string => $tokens[$modifierPointer]['content'],
+			array_keys($expectedModifiersPositions),
+		);
 		$expectedModifiersFormatted = implode(' ', $expectedModifiers);
 
 		$fix = $phpcsFile->addFixableError(
@@ -182,10 +193,10 @@ class PropertyDeclarationSniff implements Sniff
 				'Incorrect order of modifiers "%s" of property %s, expected "%s".',
 				$actualModifiersFormatted,
 				$tokens[$propertyPointer]['content'],
-				$expectedModifiersFormatted
+				$expectedModifiersFormatted,
 			),
 			$firstModifierPointer,
-			self::CODE_INCORRECT_ORDER_OF_MODIFIERS
+			self::CODE_INCORRECT_ORDER_OF_MODIFIERS,
 		);
 		if (!$fix) {
 			return;
@@ -213,7 +224,7 @@ class PropertyDeclarationSniff implements Sniff
 			$phpcsFile,
 			TokenHelper::$propertyModifiersTokenCodes,
 			$firstModifierPointer,
-			$lastModifierPointer + 1
+			$lastModifierPointer + 1,
 		);
 
 		if (count($modifiersPointers) < 2) {
@@ -238,15 +249,16 @@ class PropertyDeclarationSniff implements Sniff
 		$fix = $phpcsFile->addFixableError(
 			sprintf('There must be exactly one space between modifiers of property %s.', $tokens[$propertyPointer]['content']),
 			$firstModifierPointer,
-			self::CODE_MULTIPLE_SPACES_BETWEEN_MODIFIERS
+			self::CODE_MULTIPLE_SPACES_BETWEEN_MODIFIERS,
 		);
 		if (!$fix) {
 			return;
 		}
 
-		$expectedModifiers = array_map(static function (int $modifierPointer) use ($tokens): string {
-			return $tokens[$modifierPointer]['content'];
-		}, $modifiersPointers);
+		$expectedModifiers = array_map(
+			static fn (int $modifierPointer): string => $tokens[$modifierPointer]['content'],
+			$modifiersPointers,
+		);
 		$expectedModifiersFormatted = implode(' ', $expectedModifiers);
 
 		$phpcsFile->fixer->beginChangeset();
@@ -262,7 +274,7 @@ class PropertyDeclarationSniff implements Sniff
 			$phpcsFile,
 			TokenHelper::getTypeHintTokenCodes(),
 			$propertyPointer - 1,
-			$lastModifierPointer
+			$lastModifierPointer,
 		);
 		if ($typeHintEndPointer === null) {
 			return;
@@ -291,7 +303,7 @@ class PropertyDeclarationSniff implements Sniff
 			if ($nullabilitySymbolPointer !== null) {
 				$errorMessage = sprintf(
 					'There must be exactly one space before type hint nullability symbol of property %s.',
-					$propertyName
+					$propertyName,
 				);
 				$errorCode = self::CODE_MULTIPLE_SPACES_BEFORE_NULLABILITY_SYMBOL;
 			} else {
@@ -311,7 +323,7 @@ class PropertyDeclarationSniff implements Sniff
 			$fix = $phpcsFile->addFixableError(
 				sprintf('There must be exactly one space between type hint and property %s.', $propertyName),
 				$typeHintEndPointer,
-				self::CODE_NO_SPACE_BETWEEN_TYPE_HINT_AND_PROPERTY
+				self::CODE_NO_SPACE_BETWEEN_TYPE_HINT_AND_PROPERTY,
 			);
 			if ($fix) {
 				$phpcsFile->fixer->beginChangeset();
@@ -322,7 +334,7 @@ class PropertyDeclarationSniff implements Sniff
 			$fix = $phpcsFile->addFixableError(
 				sprintf('There must be exactly one space between type hint and property %s.', $propertyName),
 				$typeHintEndPointer,
-				self::CODE_MULTIPLE_SPACES_BETWEEN_TYPE_HINT_AND_PROPERTY
+				self::CODE_MULTIPLE_SPACES_BETWEEN_TYPE_HINT_AND_PROPERTY,
 			);
 			if ($fix) {
 				$phpcsFile->fixer->beginChangeset();
@@ -342,7 +354,7 @@ class PropertyDeclarationSniff implements Sniff
 		$fix = $phpcsFile->addFixableError(
 			sprintf('There must be no whitespace between type hint nullability symbol and type hint of property %s.', $propertyName),
 			$typeHintStartPointer,
-			self::CODE_WHITESPACE_AFTER_NULLABILITY_SYMBOL
+			self::CODE_WHITESPACE_AFTER_NULLABILITY_SYMBOL,
 		);
 		if (!$fix) {
 			return;

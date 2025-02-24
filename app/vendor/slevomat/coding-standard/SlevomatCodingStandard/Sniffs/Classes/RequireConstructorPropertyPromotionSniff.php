@@ -16,6 +16,7 @@ use SlevomatCodingStandard\Helpers\TokenHelper;
 use SlevomatCodingStandard\Helpers\TypeHint;
 use function array_filter;
 use function array_reverse;
+use function array_values;
 use function count;
 use function in_array;
 use function sprintf;
@@ -48,8 +49,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 
 	public const CODE_REQUIRED_CONSTRUCTOR_PROPERTY_PROMOTION = 'RequiredConstructorPropertyPromotion';
 
-	/** @var bool|null */
-	public $enable = null;
+	public ?bool $enable = null;
 
 	/**
 	 * @return array<int, (int|string)>
@@ -165,7 +165,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 				$fix = $phpcsFile->addFixableError(
 					sprintf('Required promotion of property %s.', $propertyName),
 					$propertyPointer,
-					self::CODE_REQUIRED_CONSTRUCTOR_PROPERTY_PROMOTION
+					self::CODE_REQUIRED_CONSTRUCTOR_PROPERTY_PROMOTION,
 				);
 
 				if (!$fix) {
@@ -175,7 +175,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 				$propertyDocCommentOpenerPointer = DocCommentHelper::findDocCommentOpenPointer($phpcsFile, $propertyPointer);
 				$pointerBeforeProperty = TokenHelper::findFirstTokenOnLine(
 					$phpcsFile,
-					$propertyDocCommentOpenerPointer ?? $propertyPointer
+					$propertyDocCommentOpenerPointer ?? $propertyPointer,
 				);
 				$propertyEndPointer = TokenHelper::findNext($phpcsFile, T_SEMICOLON, $propertyPointer + 1);
 
@@ -183,7 +183,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 					$phpcsFile,
 					Tokens::$scopeModifiers,
 					$propertyPointer - 1,
-					$pointerBeforeProperty
+					$pointerBeforeProperty,
 				);
 				$visibility = $tokens[$visibilityPointer]['content'];
 
@@ -198,7 +198,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 				$propertyEndPointer = TokenHelper::findNext($phpcsFile, T_SEMICOLON, $propertyPointer + 1);
 				$pointerAfterProperty = TokenHelper::findFirstTokenOnLine(
 					$phpcsFile,
-					TokenHelper::findNextNonWhitespace($phpcsFile, $propertyEndPointer + 1)
+					TokenHelper::findNextNonWhitespace($phpcsFile, $propertyEndPointer + 1),
 				);
 
 				$pointerBeforeParameterStart = TokenHelper::findPrevious($phpcsFile, [T_COMMA, T_OPEN_PARENTHESIS], $parameterPointer - 1);
@@ -289,7 +289,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 			$phpcsFile,
 			T_VARIABLE,
 			$tokens[$functionPointer]['parenthesis_opener'] + 1,
-			$tokens[$functionPointer]['parenthesis_closer']
+			$tokens[$functionPointer]['parenthesis_closer'],
 		);
 	}
 
@@ -300,17 +300,15 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 	{
 		$tokens = $phpcsFile->getTokens();
 
-		return array_filter(
+		return array_values(array_filter(
 			TokenHelper::findNextAll(
 				$phpcsFile,
 				T_VARIABLE,
 				$tokens[$classPointer]['scope_opener'] + 1,
-				$tokens[$classPointer]['scope_closer']
+				$tokens[$classPointer]['scope_closer'],
 			),
-			static function (int $variablePointer) use ($phpcsFile): bool {
-				return PropertyHelper::isProperty($phpcsFile, $variablePointer);
-			}
-		);
+			static fn (int $variablePointer): bool => PropertyHelper::isProperty($phpcsFile, $variablePointer),
+		));
 	}
 
 	private function isPropertyDocCommentUseful(File $phpcsFile, int $propertyPointer): bool
@@ -340,7 +338,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 		$previousPointer = TokenHelper::findPrevious(
 			$phpcsFile,
 			[T_ATTRIBUTE_END, T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_CLOSE_CURLY_BRACKET],
-			$propertyPointer - 1
+			$propertyPointer - 1,
 		);
 
 		return $tokens[$previousPointer]['code'] === T_ATTRIBUTE_END;

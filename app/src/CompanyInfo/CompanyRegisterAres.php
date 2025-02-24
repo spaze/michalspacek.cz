@@ -58,14 +58,14 @@ readonly class CompanyRegisterAres implements CompanyRegister
 				'sidlo' => Expect::structure([
 					'nazevObce' => Expect::string(),
 					'nazevUlice' => Expect::string(),
-					'cisloDomovni' => Expect::int(),
-					'cisloOrientacni' => Expect::int(),
+					'cisloDomovni' => Expect::int()->castTo('string'),
+					'cisloOrientacni' => Expect::int()->castTo('string'),
 					'cisloOrientacniPismeno' => Expect::string(),
 					'psc' => Expect::int(),
 					'kodStatu' => Expect::string(),
 				])->otherItems(),
 			])->otherItems();
-			/** @var object{ico:string, dic:string|null, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:int, cisloOrientacni:int, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
+			/** @var object{ico:string, dic:string|null, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:string, cisloOrientacni:string, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
 			$data = $this->schemaProcessor->process($schema, Json::decode($content));
 		} catch (JsonException | ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
@@ -106,14 +106,14 @@ readonly class CompanyRegisterAres implements CompanyRegister
 	}
 
 
-	private function formatStreet(?string $city, ?string $street, ?int $houseNumber, ?int $streetNumber, ?string $streetLetter): ?string
+	private function formatStreet(?string $city, ?string $street, ?string $houseNumber, ?string $streetNumber, ?string $streetLetter): ?string
 	{
 		$result = $street !== null && $street !== '' ? $street : $city;
 		if ($streetLetter !== null && $streetLetter !== '') {
 			$streetNumber = ($streetNumber ?? '') . $streetLetter;
 		}
-		$hasHouseNumber = $houseNumber !== null && $houseNumber !== 0;
-		$hasStreetNumber = $streetNumber !== null && $streetNumber !== 0;
+		$hasHouseNumber = $houseNumber !== null && $houseNumber !== '';
+		$hasStreetNumber = $streetNumber !== null && $streetNumber !== '';
 		if ($hasHouseNumber && $hasStreetNumber) {
 			$result = "{$result} {$houseNumber}/{$streetNumber}";
 		} elseif ($hasHouseNumber) {

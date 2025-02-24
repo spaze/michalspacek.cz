@@ -56,10 +56,10 @@ class DisallowOneLinePropertyDocCommentSniff implements Sniff
 		$fix = $phpcsFile->addFixableError(
 			sprintf(
 				'Found one-line comment for property %s, use multi-line comment instead.',
-				PropertyHelper::getFullyQualifiedName($phpcsFile, $propertyPointer)
+				PropertyHelper::getFullyQualifiedName($phpcsFile, $propertyPointer),
 			),
 			$docCommentStartPointer,
-			self::CODE_ONE_LINE_PROPERTY_COMMENT
+			self::CODE_ONE_LINE_PROPERTY_COMMENT,
 		);
 
 		if (!$fix) {
@@ -68,23 +68,6 @@ class DisallowOneLinePropertyDocCommentSniff implements Sniff
 
 		$commentWhitespacePointer = TokenHelper::findPrevious($phpcsFile, [T_WHITESPACE], $docCommentStartPointer);
 		$indent = ($commentWhitespacePointer !== null ? $tokens[$commentWhitespacePointer]['content'] : '') . ' ';
-
-		/** empty comment is not split into start & end tokens properly */
-		if ($tokens[$docCommentStartPointer]['content'] === '/***/') {
-			$phpcsFile->fixer->beginChangeset();
-
-			$phpcsFile->fixer->replaceToken($docCommentStartPointer, '/**');
-			$phpcsFile->fixer->addNewline($docCommentStartPointer);
-			$phpcsFile->fixer->addContent($docCommentStartPointer, $indent);
-			$phpcsFile->fixer->addContent($docCommentStartPointer, '*');
-			$phpcsFile->fixer->addNewline($docCommentStartPointer);
-			$phpcsFile->fixer->addContent($docCommentStartPointer, $indent);
-			$phpcsFile->fixer->addContent($docCommentStartPointer, '*/');
-
-			$phpcsFile->fixer->endChangeset();
-
-			return;
-		}
 
 		$phpcsFile->fixer->beginChangeset();
 
@@ -95,7 +78,7 @@ class DisallowOneLinePropertyDocCommentSniff implements Sniff
 		if ($docCommentEndPointer - 1 !== $docCommentStartPointer) {
 			$phpcsFile->fixer->replaceToken(
 				$docCommentEndPointer - 1,
-				rtrim($phpcsFile->fixer->getTokenContent($docCommentEndPointer - 1), ' ')
+				rtrim($phpcsFile->fixer->getTokenContent($docCommentEndPointer - 1), ' '),
 			);
 		}
 

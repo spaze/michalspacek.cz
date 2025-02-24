@@ -27,7 +27,7 @@ class ReviewsPresenter extends BasePresenter
 	public function actionTraining(int $param): void
 	{
 		$training = $this->trainings->getById($param);
-		$this->template->pageTitle = 'Ohlasy na ' . $training->getName();
+		$this->template->pageTitle = 'Ohlasy na ' . $training->getName()->render();
 		$this->template->reviews = $this->trainingReviews->getAllReviews($param);
 	}
 

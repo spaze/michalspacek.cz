@@ -23,7 +23,6 @@ use const T_BOOL_CAST;
 use const T_BOOLEAN_AND;
 use const T_BOOLEAN_OR;
 use const T_CASE;
-use const T_CLOSE_CURLY_BRACKET;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSE_SHORT_ARRAY;
 use const T_COALESCE;
@@ -184,13 +183,11 @@ class YodaHelper
 	 */
 	public static function getDynamismForTokens(array $tokens, array $sideTokens): ?int
 	{
-		$sideTokens = array_values(array_filter($sideTokens, static function (array $token): bool {
-			return !in_array(
-				$token['code'],
-				[T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_NS_SEPARATOR, T_PLUS, T_MINUS, T_INT_CAST, T_DOUBLE_CAST, T_STRING_CAST, T_ARRAY_CAST, T_OBJECT_CAST, T_BOOL_CAST, T_UNSET_CAST],
-				true
-			);
-		}));
+		$sideTokens = array_values(array_filter($sideTokens, static fn (array $token): bool => !in_array(
+			$token['code'],
+			[T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_NS_SEPARATOR, T_PLUS, T_MINUS, T_INT_CAST, T_DOUBLE_CAST, T_STRING_CAST, T_ARRAY_CAST, T_OBJECT_CAST, T_BOOL_CAST, T_UNSET_CAST],
+			true,
+		)));
 
 		$sideTokensCount = count($sideTokens);
 
@@ -235,8 +232,8 @@ class YodaHelper
 		}
 
 		if (array_key_exists(0, $sideTokens)) {
-			/** @var int $sideTokenCode */
 			$sideTokenCode = $sideTokens[0]['code'];
+			/** @phpstan-ignore argument.type */
 			if (array_key_exists($sideTokenCode, $dynamism)) {
 				return $dynamism[$sideTokenCode];
 			}
@@ -343,7 +340,6 @@ class YodaHelper
 				T_COLON => true,
 				T_RETURN => true,
 				T_COMMA => true,
-				T_CLOSE_CURLY_BRACKET => true,
 				T_MATCH_ARROW => true,
 				T_FN_ARROW => true,
 			];

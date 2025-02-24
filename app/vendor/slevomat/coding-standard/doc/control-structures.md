@@ -184,16 +184,12 @@ Ternary operator has to be reformatted to more lines when the line length exceed
 
 Sniff provides the following settings:
 
-* `lineLengthLimit` (defaults to `0`)
-* `minExpressionsLength` (defaults to `null`): when the expressions after `?` are shorter than this length, the ternary operator does not have to be reformatted.
+* `lineLengthLimit` (default: `0`)
+* `minExpressionsLength` (default: `null`): when the expressions after `?` are shorter than this length, the ternary operator does not have to be reformatted.
 
 #### SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator 🔧
 
 Requires use of null coalesce equal operator when possible.
-
-This sniff provides the following setting:
-
-* `enable`: either to enable or not this sniff. By default, it is enabled for PHP versions 7.4 or higher.
 
 #### SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator 🔧
 
@@ -226,7 +222,7 @@ Requires ternary operator when possible.
 
 Sniff provides the following settings:
 
-* `ignoreMultiLine` (defaults to `false`): ignores multi-line statements.
+* `ignoreMultiLine` (default: `false`): ignores multi-line statements.
 
 #### SlevomatCodingStandard.ControlStructures.DisallowYodaComparison 🔧
 #### SlevomatCodingStandard.ControlStructures.RequireYodaComparison 🔧
@@ -235,7 +231,7 @@ Sniff provides the following settings:
 
 Sniff provides the following settings:
 
-* `alwaysVariableOnRight` (defaults to `false`): moves variables always to right.
+* `alwaysVariableOnRight` (default: `false`): moves variables always to right.
 
 `DisallowYodaComparison` looks for and fixes such comparisons not only in `if` statements but in the whole code.
 
@@ -247,7 +243,7 @@ Reports useless conditions where both branches return `true` or `false`.
 
 Sniff provides the following settings:
 
-* `assumeAllConditionExpressionsAreAlreadyBoolean` (defaults to `false`).
+* `assumeAllConditionExpressionsAreAlreadyBoolean` (default: `false`).
 
 #### SlevomatCodingStandard.ControlStructures.UselessTernaryOperator 🔧
 
@@ -255,4 +251,4 @@ Reports useless ternary operator where both branches return `true` or `false`.
 
 Sniff provides the following settings:
 
-* `assumeAllConditionExpressionsAreAlreadyBoolean` (defaults to `false`).
+* `assumeAllConditionExpressionsAreAlreadyBoolean` (default: `false`).

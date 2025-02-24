@@ -36,7 +36,6 @@ class LongTypeHintsSniff implements Sniff
 		$annotations = AnnotationHelper::getAnnotations($phpcsFile, $docCommentOpenPointer);
 
 		foreach ($annotations as $annotation) {
-			/** @var list<IdentifierTypeNode> $identifierTypeNodes */
 			$identifierTypeNodes = AnnotationHelper::getAnnotationNodesByType($annotation->getNode(), IdentifierTypeNode::class);
 
 			foreach ($identifierTypeNodes as $typeHintNode) {
@@ -59,7 +58,7 @@ class LongTypeHintsSniff implements Sniff
 					'Expected "%s" but found "%s" in %s annotation.',
 					$shortTypeHint,
 					$typeHint,
-					$annotation->getName()
+					$annotation->getName(),
 				), $annotation->getStartPointer(), self::CODE_USED_LONG_TYPE_HINT);
 
 				if (!$fix) {
@@ -72,7 +71,7 @@ class LongTypeHintsSniff implements Sniff
 					$parsedDocComment,
 					$annotation,
 					$typeHintNode,
-					new IdentifierTypeNode($shortTypeHint)
+					new IdentifierTypeNode($shortTypeHint),
 				);
 
 				$phpcsFile->fixer->beginChangeset();
@@ -81,7 +80,7 @@ class LongTypeHintsSniff implements Sniff
 					$phpcsFile,
 					$parsedDocComment->getOpenPointer(),
 					$parsedDocComment->getClosePointer(),
-					$fixedDocComment
+					$fixedDocComment,
 				);
 
 				$phpcsFile->fixer->endChangeset();

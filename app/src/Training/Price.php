@@ -52,7 +52,7 @@ readonly class Price
 			return $this->priceVat;
 		}
 
-		return $this->price !== null ? $this->price * (1 + $this->vatRate) : null;
+		return $this->price !== null ? $this->price * (1.0 + $this->vatRate) : null;
 	}
 
 

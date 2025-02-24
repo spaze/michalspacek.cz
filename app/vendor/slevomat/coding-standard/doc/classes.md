@@ -9,14 +9,6 @@ Sniff provides the following settings:
 * `spacesCountBeforeColon`: the number of spaces before `:`.
 * `spacesCountBeforeType`: the number of spaces before type.
 
-#### SlevomatCodingStandard.Classes.ClassLength
-
-Disallows long classes. This sniff provides the following settings:
-
-* `includeComments`: should comments be included in the count (default value is false).
-* `includeWhitespace`: should empty lines be included in the count (default value is false).
-* `maxLinesLength`: specifies max allowed function lines length (default value is 250).
-
 #### SlevomatCodingStandard.Classes.ClassConstantVisibility 🔧
 
 In PHP 7.1+ it's possible to declare [visibility of class constants](https://wiki.php.net/rfc/class_const_visibility). In a similar vein to optional declaration of visibility for properties and methods which is actually required in sane coding standards, this sniff also requires declaring visibility for all class constants.
@@ -29,6 +21,14 @@ Sniff provides the following settings:
 const FOO = 1; // visibility missing!
 public const BAR = 2; // correct
 ```
+
+#### SlevomatCodingStandard.Classes.ClassLength
+
+Disallows long classes. This sniff provides the following settings:
+
+* `includeComments` (default: `false`): should comments be included in the count.
+* `includeWhitespace` (default: `false`): should empty lines be included in the count.
+* `maxLinesLength` (default: `250`): specifies max allowed function lines length.
 
 #### SlevomatCodingStandard.Classes.ClassMemberSpacing 🔧
 
@@ -45,18 +45,18 @@ Checks that class/trait/interface members are in the correct order.
 Sniff provides the following settings:
 
 * `groups`: order of groups. Use multiple groups in one `<element value="">` to not differentiate among them. You can use specific groups or shortcuts.
+* `methodGroups`: custom method groups. Define a custom group for special methods based on their name, annotation, or attribute.
 
 **List of supported groups**:
 uses,
 enum cases,
 public constants, protected constants, private constants,
 public properties, public static properties, protected properties, protected static properties, private properties, private static properties,
-constructor, static constructors, destructor, magic methods,
+constructor, static constructors, destructor, magic methods, invoke method,
 public methods, protected methods, private methods,
 public final methods, public static final methods, protected final methods, protected static final methods,
 public abstract methods, public static abstract methods, protected abstract methods, protected static abstract methods,
-public static methods, protected static methods, private static methods,
-private methods
+public static methods, protected static methods, private static methods
 
 **List of supported shortcuts**:
 constants, properties, static properties, methods, all public methods, all protected methods, all private methods, static methods, final methods, abstract methods
@@ -64,6 +64,10 @@ constants, properties, static properties, methods, all public methods, all prote
 ```xml
 <rule ref="SlevomatCodingStandard.Classes.ClassStructure">
 	<properties>
+		<property name="methodGroups" type="array">
+			<element key="phpunit before" value="setUp, @before, #PHPUnit\Framework\Attributes\Before"/>
+		</property>
+
 		<property name="groups" type="array">
 			<element value="uses"/>
 
@@ -78,6 +82,9 @@ constants, properties, static properties, methods, all public methods, all prote
 
 			<!-- Constructor is first, then all public methods, then protected/private methods and magic methods are last -->
 			<element value="constructor"/>
+
+			<!-- PHPUnit's before hooks are placed before all other public methods using a custom method group regardless their visibility -->
+			<element value="phpunit before"/>
 			<element value="all public methods"/>
 			<element value="methods"/>
 			<element value="magic methods"/>
@@ -113,10 +120,6 @@ Disallows multi constant definition.
 
 Disallows multi property definition.
 
-#### SlevomatCodingStandard.Classes.DisallowMultiPropertyDefinition 🔧
-
-Disallows multi property definition.
-
 #### SlevomatCodingStandard.Classes.DisallowStringExpressionPropertyFetch 🔧
 
 Disallows string expression property fetch `$object->{'foo'}` when the property name is compatible with identifier access.
@@ -147,7 +150,8 @@ Disallows using public properties.
 
 This sniff provides the following setting:
 
-* `checkPromoted`: will check promoted properties too.
+* `checkPromoted` (default: `false`): will check promoted properties too.
+* `allowReadonly` (default: `false`): will allow readonly properties.
 
 #### SlevomatCodingStandard.Classes.MethodSpacing 🔧
 

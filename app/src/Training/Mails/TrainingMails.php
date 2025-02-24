@@ -73,7 +73,7 @@ readonly class TrainingMails
 		$template->venueAddress = $venueAddress;
 		$template->venueCity = $venueCity;
 
-		$subject = 'Potvrzení registrace na školení ' . $trainingName;
+		$subject = 'Potvrzení registrace na školení ' . $trainingName->render();
 		$this->sendMail($recipientAddress, $recipientName, $subject, $template);
 	}
 
