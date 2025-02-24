@@ -35,7 +35,7 @@ final readonly class ArticlePublishedElsewhere implements ArticleWithId, Article
 
 
 	#[Override]
-	public function getId(): ?int
+	public function getId(): int
 	{
 		return $this->articleId;
 	}
@@ -67,7 +67,7 @@ final readonly class ArticlePublishedElsewhere implements ArticleWithId, Article
 
 
 	#[Override]
-	public function getSummary(): ?Html
+	public function getSummary(): Html
 	{
 		return $this->excerpt;
 	}
@@ -80,7 +80,7 @@ final readonly class ArticlePublishedElsewhere implements ArticleWithId, Article
 
 
 	#[Override]
-	public function getPublishTime(): ?DateTime
+	public function getPublishTime(): DateTime
 	{
 		return $this->published;
 	}
