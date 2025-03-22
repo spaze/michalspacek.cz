@@ -1,4 +1,4 @@
-# PHP_CodeSniffer phar releases
+# PHP_CodeSniffer phar releases, automated and always up-to-date
 
 [![Create a phar release](https://github.com/spaze/phpcs-phar/actions/workflows/create-release.yml/badge.svg)](https://github.com/spaze/phpcs-phar/actions/workflows/create-release.yml)
 [![PHP Tests](https://github.com/spaze/phpcs-phar/actions/workflows/php.yml/badge.svg)](https://github.com/spaze/phpcs-phar/actions/workflows/php.yml)
@@ -33,7 +33,8 @@ However, there are multiple different ways to install a standard. Let's say you 
 ### Auto-install the available standards
 If the `CodeSniffer.conf` file doesn't exist, this package will find and auto-install all available coding standards on each execution.
 The altered configuration is not persisted, no config file will be created, because it would be removed on each package update anyway.
-This is the recommended option emulating the Standards Composer Installer Plugin to a certain point.
+This is the recommended option emulating the Standards Composer Installer Plugin to a certain point. The performance is comparable to
+using the installer plugin as only Composer metadata are used to find the installed coding standards.
 
 ### Modify the config file
 1. In your project, run
