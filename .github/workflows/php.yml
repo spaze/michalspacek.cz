@@ -123,7 +123,7 @@ jobs:
     - name: Get PHP_CodeSniffer cache file pattern
       id: phpcs-cache
       run: echo "file=$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       with:
         path: ${{ steps.phpcs-cache.outputs.file }}
         key: phpcs-cache-php${{ matrix.php-version }}
@@ -144,7 +144,7 @@ jobs:
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-cache-php${{ matrix.php-version }}
@@ -165,7 +165,7 @@ jobs:
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-vendor-cache-php${{ matrix.php-version }}
@@ -196,7 +196,7 @@ jobs:
       if: failure()
       run: for i in $(find ./app/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
     - name: Upload test code coverage
-      uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       if: success()
       with:
         name: Test code coverage (PHP ${{ matrix.php-version }})
