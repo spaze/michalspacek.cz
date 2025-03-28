@@ -199,7 +199,7 @@ final class TrainingApplicationStatuses
 				id_application = ?',
 			$applicationId,
 		);
-		if (!$prevStatus) {
+		if ($prevStatus === null) {
 			throw new TrainingApplicationDoesNotExistException($applicationId);
 		}
 		assert(is_int($prevStatus->statusId));

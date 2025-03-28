@@ -108,7 +108,7 @@ final readonly class TrainingMailsOutboxFormFactory
 				->setDefaultValue($checked)
 				->setDisabled($disabled)
 				->setHtmlAttribute('class', 'send');
-			if ($sendCheckboxTitle) {
+			if ($sendCheckboxTitle !== []) {
 				$send->setHtmlAttribute('title', implode("\n", $sendCheckboxTitle));
 			}
 			$additionalInputs[] = $applicationIdsContainer->addTextArea('additional')
@@ -201,7 +201,7 @@ final readonly class TrainingMailsOutboxFormFactory
 		};
 		$form->onAnchor[] = function () use ($additionalInputs): void {
 			foreach ($additionalInputs as $additionalInput) {
-				if ($additionalInput->getValue()) {
+				if ($additionalInput->getValue() !== '') {
 					$additionalInput->setHtmlAttribute('class', 'expanded');
 				}
 			}

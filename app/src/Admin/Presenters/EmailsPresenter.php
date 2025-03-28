@@ -35,7 +35,7 @@ final class EmailsPresenter extends BasePresenter
 	{
 		return $this->trainingMailsOutboxFactory->create(
 			function (int $sent): never {
-				if ($sent) {
+				if ($sent > 0) {
 					$this->flashMessage('Počet odeslaných e-mailů: ' . $sent);
 				} else {
 					$this->flashMessage('Nebyl odeslán žádný e-mail', 'notice');

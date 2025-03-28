@@ -23,7 +23,7 @@ final class ExportsPresenter extends BasePresenter
 	{
 		$feed = $this->exports->getArticles($this->link('//this'), $param);
 		$updated = $feed->getUpdated();
-		if ($updated) {
+		if ($updated !== null) {
 			$this->lastModified($updated, Hash::nonCryptographic((string)$feed), '1 hour');
 		}
 		$this->sendResponse(new Response($feed));

@@ -52,7 +52,7 @@ final readonly class Tags
 	 */
 	public function toSlugArray(string $tags): array
 	{
-		return ($tags ? array_map([Strings::class, 'webalize'], $this->toArray($tags)) : []);
+		return $tags !== '' ? array_map([Strings::class, 'webalize'], $this->toArray($tags)) : [];
 	}
 
 

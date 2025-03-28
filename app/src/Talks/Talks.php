@@ -180,7 +180,7 @@ final readonly class Talks
 			$name,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TalkDoesNotExistException(name: $name);
 		}
 		return $this->talkFactory->createFromDatabaseRow($result);
@@ -231,7 +231,7 @@ final readonly class Talks
 			$id,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TalkDoesNotExistException(id: $id);
 		}
 		return $this->talkFactory->createFromDatabaseRow($result);

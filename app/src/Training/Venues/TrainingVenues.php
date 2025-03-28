@@ -46,7 +46,7 @@ final readonly class TrainingVenues
 			$venueName,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TrainingVenueNotFoundException($venueName);
 		}
 		return $this->createFromDatabaseRow($result);

@@ -122,7 +122,7 @@ final readonly class TrainingReviews
 			$reviewId,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TrainingReviewNotFoundException($reviewId);
 		}
 		return $this->createFromDatabaseRow($result);

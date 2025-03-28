@@ -82,7 +82,7 @@ final readonly class SecurityHeaders
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
 		$header = $this->contentSecurityPolicy->getHeaderReportOnly($actionName);
-		if ($header) {
+		if ($header !== '') {
 			$this->httpResponse->setHeader('Content-Security-Policy-Report-Only', $header);
 		}
 

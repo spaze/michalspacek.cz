@@ -28,7 +28,7 @@ final readonly class TrainingReviewFormFactory
 	{
 		$form = $this->factory->create();
 
-		if (!$review) {
+		if ($review === null) {
 			$form->addSelect('application', 'Šablona:', $this->getApplications($dateId))
 				->setRequired(false)
 				->setPrompt('- vyberte účastníka -');
@@ -58,7 +58,7 @@ final readonly class TrainingReviewFormFactory
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka poznámky je %d znaků', 2000);
 		$submit = $form->addSubmit('submit', 'Přidat');
-		if ($review) {
+		if ($review !== null) {
 			$this->setReview($form, $review, $submit);
 		}
 
@@ -72,7 +72,7 @@ final readonly class TrainingReviewFormFactory
 			assert(is_bool($values->hidden));
 			assert(is_int($values->ranking) || $values->ranking === null);
 			assert(is_string($values->note));
-			if ($review) {
+			if ($review !== null) {
 				$this->trainingReviews->updateReview(
 					$review->getId(),
 					$dateId,

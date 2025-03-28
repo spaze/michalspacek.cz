@@ -186,9 +186,9 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 			$dates = [self::DATE_ID => $this->buildTrainingDate(self::DATE_ID)];
 		}
 		$multipleDates = count($dates) > 1;
-		if ($multipleDates && !$this->trainingIdSelect) {
+		if ($multipleDates && $this->trainingIdSelect === null) {
 			$this->trainingIdSelect = $this->form->addSelect('trainingId', 'Date', [self::DATE_ID => 'Training'])->setDefaultValue(self::DATE_ID);
-		} elseif (!$multipleDates && $this->trainingIdSelect) {
+		} elseif (!$multipleDates && $this->trainingIdSelect !== null) {
 			$this->form->removeComponent($this->trainingIdSelect);
 			$this->trainingIdSelect = null;
 		}

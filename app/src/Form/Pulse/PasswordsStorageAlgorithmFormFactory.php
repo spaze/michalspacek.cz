@@ -211,13 +211,13 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite((string)$values->site->id)) {
 				$form->addError('Invalid combination, the site is already assigned to different company');
 			}
-		} elseif ($this->companies->getByName($values->company->new->name)) {
+		} elseif ($this->companies->getByName($values->company->new->name) !== null) {
 			$form->addError('Can\'t add new company, duplicated name');
 		}
-		if (!empty($values->site->new->url) && $this->sites->getByUrl($values->site->new->url)) {
+		if (!empty($values->site->new->url) && $this->sites->getByUrl($values->site->new->url) !== null) {
 			$form->addError('Can\'t add new site, duplicated URL');
 		}
-		if (!empty($values->algo->new->algoName) && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName)) {
+		if (!empty($values->algo->new->algoName) && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName) !== null) {
 			$form->addError('Can\'t add new algorithm, duplicated name');
 		}
 	}

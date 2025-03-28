@@ -83,7 +83,7 @@ final readonly class Interviews
 			$name,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new InterviewDoesNotExistException(name: $name);
 		}
 		return $this->createFromDatabaseRow($result);
@@ -116,7 +116,7 @@ final readonly class Interviews
 			$id,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new InterviewDoesNotExistException(id: $id);
 		}
 		return $this->createFromDatabaseRow($result);

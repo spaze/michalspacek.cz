@@ -52,7 +52,7 @@ class LocaleLinkGenerator
 				if (!$router instanceof RouteList) {
 					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", RouteList::class, get_debug_type($router)));
 				}
-				if (count($router->getRouters())) {
+				if (count($router->getRouters()) > 0) {
 					$linkGenerator = new NetteLinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
 					$links[$locale] = new LocaleLink(
 						$locale,

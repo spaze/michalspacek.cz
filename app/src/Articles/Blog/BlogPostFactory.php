@@ -73,7 +73,7 @@ final readonly class BlogPostFactory
 		$texy = $this->texyFormatter->getTexy();
 		$texyFormatter = $this->texyFormatter->withTexy($texy);
 
-		if ($allowedTagsGroups) {
+		if ($allowedTagsGroups !== []) {
 			$allowedTags = [];
 			foreach ($allowedTagsGroups as $allowedTagsGroup) {
 				$allowedTags = array_merge($allowedTags, $this->allowedTags[$allowedTagsGroup]);

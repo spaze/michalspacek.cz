@@ -136,11 +136,11 @@ final readonly class TrainingMails
 
 		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Reminded) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($application->getStatus() === TrainingApplicationStatus::ProFormaInvoiceSent && $application->getPaid()) {
+				if ($application->getStatus() === TrainingApplicationStatus::ProFormaInvoiceSent && $application->getPaid() !== null) {
 					continue;
 				}
 				$trainingStart = $application->getTrainingStart();
-				if (!$trainingStart) {
+				if ($trainingStart === null) {
 					throw new ShouldNotHappenException(sprintf("Training application id '%s' with status '%s' should have a training start set", $application->getId(), $application->getStatus()->value));
 				}
 				if ($trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {

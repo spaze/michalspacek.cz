@@ -50,7 +50,7 @@ final class InterviewsPresenter extends BasePresenter
 
 	protected function createComponentEditInterviewInputs(): InterviewInputs
 	{
-		if (!$this->interview) {
+		if ($this->interview === null) {
 			throw new ShouldNotHappenException('actionInterview() will be called first');
 		}
 		return $this->interviewInputsFactory->createFor($this->interview);

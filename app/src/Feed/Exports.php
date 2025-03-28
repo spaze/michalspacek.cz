@@ -52,7 +52,7 @@ final readonly class Exports
 			$feed->setAuthor(new Person('Michal Špaček'));
 
 			$articles = $filter !== null ? $this->articles->getAllByTags([$filter], self::ITEMS) : $this->articles->getAll(self::ITEMS);
-			if (!$articles) {
+			if ($articles === []) {
 				throw new BadRequestException('No articles');
 			}
 
@@ -84,7 +84,7 @@ final readonly class Exports
 				}
 				if ($article instanceof ArticleWithTextAndEdits) {
 					$content = Html::el();
-					if ($article->getEdits()) {
+					if ($article->getEdits() !== []) {
 						$content->addHtml(Html::el('h3')->setText($this->texyFormatter->translate('messages.blog.post.edits')));
 						$edits = Html::el('ul');
 						foreach ($article->getEdits() as $edit) {
@@ -116,7 +116,7 @@ final readonly class Exports
 				}
 			}
 			$dependencies[Cache::Tags] = array_values($cacheTags);
-			if ($feedUpdated) {
+			if ($feedUpdated !== null) {
 				$feed->setUpdated($feedUpdated);
 			}
 			return $feed;

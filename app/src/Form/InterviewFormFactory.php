@@ -66,7 +66,7 @@ final readonly class InterviewFormFactory
 			->setRequired('Zadejte prosím odkaz na zdroj')
 			->addRule(Form::MaxLength, 'Maximální délka odkazu na zdroj je %d znaků', 200);
 		$submit = $form->addSubmit('submit', 'Přidat');
-		if ($interview) {
+		if ($interview !== null) {
 			$this->setInterview($form, $interview, $submit);
 		}
 
@@ -87,7 +87,7 @@ final readonly class InterviewFormFactory
 			assert(is_string($values->sourceHref));
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
-			if ($interview) {
+			if ($interview !== null) {
 				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
 				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $interview->getVideo()->getThumbnailFilename();

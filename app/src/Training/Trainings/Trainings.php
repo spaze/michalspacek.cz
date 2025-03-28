@@ -78,7 +78,7 @@ final class Trainings
 			$includeCustom,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TrainingDoesNotExistException(name: $name);
 		}
 		return $this->trainingFactory->createFromDatabaseRow($result);
@@ -119,7 +119,7 @@ final class Trainings
 				$this->translator->getDefaultLocale(),
 			);
 
-			if (!$result) {
+			if ($result === null) {
 				throw new TrainingDoesNotExistException(id: $id);
 			}
 			$this->trainingsById[$id] = $this->trainingFactory->createFromDatabaseRow($result);

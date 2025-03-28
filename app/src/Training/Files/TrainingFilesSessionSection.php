@@ -23,7 +23,7 @@ final class TrainingFilesSessionSection extends SessionSection
 
 	public function isComplete(): bool
 	{
-		return parent::get('applicationId') && parent::get('token');
+		return parent::get('applicationId') !== null && parent::get('token') !== null;
 	}
 
 

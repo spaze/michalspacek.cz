@@ -41,7 +41,7 @@ final readonly class Sites
 	public function getByUrl(string $url): ?Site
 	{
 		$row = $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
-		if (!$row) {
+		if ($row === null) {
 			return null;
 		}
 		assert(is_int($row->id));

@@ -54,7 +54,7 @@ final readonly class TrainingApplicationStatusesFormFactory
 			assert(is_string($values->date));
 			foreach ($values->applications as $id => $status) {
 				assert(is_string($status));
-				if ($status) {
+				if ($status !== '') {
 					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::from($status), $values->date);
 				}
 			}

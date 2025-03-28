@@ -356,7 +356,7 @@ final readonly class Passwords
 			assert(is_string($disclosure->archive));
 			assert(is_string($disclosure->note));
 			assert(is_string($disclosure->published));
-			if ($disclosure->url) {
+			if ($disclosure->url !== '') {
 				$disclosureId = $this->passwordHashingDisclosures->getDisclosureId($disclosure->url, $disclosure->archive);
 				if ($disclosureId === null) {
 					$disclosureId = $this->passwordHashingDisclosures->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);

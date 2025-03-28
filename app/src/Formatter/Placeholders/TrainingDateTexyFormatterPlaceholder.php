@@ -32,7 +32,7 @@ final readonly class TrainingDateTexyFormatterPlaceholder implements TexyFormatt
 	{
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
-		if (!isset($upcoming[$value]) || !$upcoming[$value]->getDates()) {
+		if (!isset($upcoming[$value]) || $upcoming[$value]->getDates() === []) {
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
 			foreach ($upcoming[$value]->getDates() as $date) {

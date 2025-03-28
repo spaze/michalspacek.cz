@@ -206,7 +206,7 @@ final class TrainingApplications
 	public function getValidUnpaidByDate(int $dateId): array
 	{
 		return array_values(array_filter($this->getValidByDate($dateId), function (TrainingApplication $value): bool {
-			return $value->getInvoiceId() !== null && !$value->getPaid();
+			return $value->getInvoiceId() !== null && $value->getPaid() === null;
 		}));
 	}
 
@@ -238,7 +238,7 @@ final class TrainingApplications
 	{
 		$canceledStatus = $this->trainingApplicationStatuses->getCanceledStatus();
 		return array_values(array_filter($this->getByDate($dateId), function (TrainingApplication $value) use ($canceledStatus): bool {
-			return ($value->getPaid() && in_array($value->getStatus(), $canceledStatus));
+			return $value->getPaid() !== null && in_array($value->getStatus(), $canceledStatus);
 		}));
 	}
 
@@ -309,7 +309,7 @@ final class TrainingApplications
 			$this->translator->getDefaultLocale(),
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TrainingApplicationDoesNotExistException($id);
 		}
 		return $this->trainingApplicationFactory->createFromDatabaseRow($result);
@@ -382,13 +382,13 @@ final class TrainingApplications
 			$token,
 			$this->translator->getDefaultLocale(),
 		);
-		return $result ? $this->trainingApplicationFactory->createFromDatabaseRow($result) : null;
+		return $result !== null ? $this->trainingApplicationFactory->createFromDatabaseRow($result) : null;
 	}
 
 
 	public function setPaidDate(string $invoiceId, string $paid): ?int
 	{
-		$paidDate = ($paid ? new DateTime($paid) : null);
+		$paidDate = $paid !== '' ? new DateTime($paid) : null;
 		$timeZone = $paidDate?->getTimezone()->getName();
 		$result = $this->database->query(
 			'UPDATE training_applications SET ? WHERE invoice_id = ?',

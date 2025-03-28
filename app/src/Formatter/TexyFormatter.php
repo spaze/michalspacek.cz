@@ -90,7 +90,7 @@ class TexyFormatter
 	public function setTopHeading(int $level): self
 	{
 		$this->topHeading = $level;
-		if ($this->texy) {
+		if ($this->texy !== null) {
 			$this->texy->headingModule->top = $this->topHeading;
 		}
 		return $this;

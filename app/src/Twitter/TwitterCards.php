@@ -38,7 +38,7 @@ final readonly class TwitterCards
 	public function getCard(string $card): TwitterCard
 	{
 		$row = $this->database->fetch('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types WHERE card = ?', $card);
-		if (!$row) {
+		if ($row === null) {
 			throw new TwitterCardNotFoundException();
 		}
 		return $this->createFromDatabaseRow($row);

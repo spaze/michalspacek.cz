@@ -84,7 +84,7 @@ final class TrainingDates
 			$this->translator->getDefaultLocale(),
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TrainingDateDoesNotExistException($dateId);
 		}
 		return $this->trainingDateFactory->get($result);

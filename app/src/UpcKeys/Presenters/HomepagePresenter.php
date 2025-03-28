@@ -45,7 +45,7 @@ final class HomepagePresenter extends BasePresenter
 					$this->redirect('this', strtoupper($this->ssid));
 				}
 				$keys = $this->upcKeys->getKeys($this->ssid);
-				if (!$keys) {
+				if ($keys === []) {
 					$error = 'Oops, something went wrong, please try again in a moment';
 				}
 			} else {

@@ -102,7 +102,7 @@ final class TalksPresenter extends BasePresenter
 		$this->template->slides = $slides;
 		$this->template->ogImage = $ogImage;
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
-		$this->template->video = $talk->getVideo()->setLazyLoad($slides && count($slides) > 3);
+		$this->template->video = $talk->getVideo()->setLazyLoad($slides !== null && count($slides) > 3);
 		$this->template->slidesPlatform = $slidesHref !== null ? SlidesPlatform::tryFromUrl($slidesHref)?->getName() : null;
 	}
 

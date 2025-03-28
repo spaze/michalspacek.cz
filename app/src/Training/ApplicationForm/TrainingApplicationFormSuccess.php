@@ -75,7 +75,7 @@ final readonly class TrainingApplicationFormSuccess
 			} else {
 				$date = reset($dates);
 			}
-			if (!$date) {
+			if ($date === false) {
 				throw new TrainingDateNotAvailableException();
 			}
 

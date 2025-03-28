@@ -196,7 +196,7 @@ final class TalkSlides
 		}
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
-		if ($imageSize !== null && !($width && $height)) {
+		if ($imageSize !== null && ($width === 0 || $height === 0)) {
 			[$width, $height] = $imageSize;
 		}
 		return "{$name}.{$extension}";

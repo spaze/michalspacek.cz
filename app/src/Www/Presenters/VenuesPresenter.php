@@ -43,7 +43,7 @@ final class VenuesPresenter extends BasePresenter
 
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
-		if (!$this->upcomingTrainingDatesList) {
+		if ($this->upcomingTrainingDatesList === null) {
 			throw new ShouldNotHappenException('actionVenue() will be called first');
 		}
 		return $this->upcomingTrainingDatesList;

@@ -58,7 +58,7 @@ final class InvoicesPresenter extends BasePresenter
 	{
 		return $this->trainingInvoiceFormFactory->create(
 			function (int $count): never {
-				if ($count) {
+				if ($count > 0) {
 					$this->flashMessage('Počet zaplacených přihlášek: ' . $count);
 				} else {
 					$this->flashMessage('Nebyla zaplacena žádná přihláška', 'notice');

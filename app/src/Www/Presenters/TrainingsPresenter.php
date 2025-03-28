@@ -129,7 +129,7 @@ final class TrainingsPresenter extends BasePresenter
 		$session = $this->getTrainingSessionSection();
 
 		$application = $param !== null ? $this->trainingApplications->getApplicationByToken($param) : null;
-		if (!$application) {
+		if ($application === null) {
 			$session->removeApplicationValues();
 			$this->redirect('training', $name);
 		}
@@ -140,7 +140,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication(): UiForm
 	{
-		if (!$this->training) {
+		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionTraining() or actionSuccess() will be called first');
 		}
 		$name = $this->training->getName();
@@ -162,7 +162,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplicationPreliminary(): UiForm
 	{
-		if (!$this->training) {
+		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionTraining() will be called first');
 		}
 		if ($this->training->getDiscontinuedId() !== null) {
@@ -219,7 +219,7 @@ final class TrainingsPresenter extends BasePresenter
 		$application = $this->trainingFilesDownload->start($name, $param);
 		$trainingStart = $application->getTrainingStart();
 		$trainingEnd = $application->getTrainingEnd();
-		if (!$trainingStart || !$trainingEnd) {
+		if ($trainingStart === null || $trainingEnd === null) {
 			throw new ShouldNotHappenException(sprintf("Training application id '%s' should have both training start and end set", $application->getId()));
 		}
 

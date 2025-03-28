@@ -23,7 +23,7 @@ final class NullMailer implements Mailer
 
 	public function getMail(): Message
 	{
-		if (!$this->mail) {
+		if ($this->mail === null) {
 			throw new LogicException('Send mail first with send()');
 		}
 		return $this->mail;

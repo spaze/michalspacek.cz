@@ -57,7 +57,7 @@ final readonly class Technicolor implements UpcWiFiRouter
 	{
 		try {
 			$keys = $this->fetchKeys($ssid);
-			if (!$keys) {
+			if ($keys === []) {
 				$keys = $this->generateKeys($ssid);
 				$this->storeKeys($ssid, $keys);
 			}
@@ -150,7 +150,7 @@ final readonly class Technicolor implements UpcWiFiRouter
 	 */
 	private function storeKeys(string $ssid, array $keys): void
 	{
-		if (!$keys) {
+		if ($keys === []) {
 			return;
 		}
 

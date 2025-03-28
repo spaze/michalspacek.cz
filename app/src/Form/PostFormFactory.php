@@ -153,7 +153,7 @@ final readonly class PostFormFactory
 			$values = $form->getFormValues();
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
-				if ($post) {
+				if ($post !== null) {
 					$editSummary = $values->editSummary ?? null;
 					assert($editSummary === null || is_string($editSummary));
 					$this->blogPosts->update($newPost, $editSummary, $post->getSlugTags());
@@ -167,7 +167,7 @@ final readonly class PostFormFactory
 				$slug->addError($this->texyFormatter->translate('messages.blog.admin.duplicateslug'));
 			}
 		};
-		if ($post) {
+		if ($post !== null) {
 			$this->setDefaults($post, $form, $editSummaryInput, $submitButton);
 		}
 		return $form;
@@ -217,7 +217,7 @@ final readonly class PostFormFactory
 			$values->ogImage === '' ? null : $values->ogImage,
 			$values->tags === '' ? [] : $this->tags->toArray($values->tags),
 			$values->tags === '' ? [] : $this->tags->toSlugArray($values->tags),
-			$values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [],
+			$values->recommended === '' ? [] : $this->recommendedLinks->getFromJson($values->recommended),
 			$values->twitterCard === '' ? null : $this->twitterCards->getCard($values->twitterCard),
 			$cspSnippets,
 			$allowedTagsGroups,
@@ -250,7 +250,7 @@ final readonly class PostFormFactory
 			'originally' => $post->getOriginallyTexy(),
 			'ogImage' => $post->getOgImage(),
 			'twitterCard' => $post->getTwitterCard()?->getCard(),
-			'tags' => $post->getTags() ? $this->tags->toString($post->getTags()) : null,
+			'tags' => $post->getTags() !== [] ? $this->tags->toString($post->getTags()) : null,
 			'recommended' => empty($post->getRecommended()) ? null : Json::encode($post->getRecommended()),
 			'cspSnippets' => $post->getCspSnippets(),
 			'allowedTags' => $post->getAllowedTagsGroups(),

@@ -25,7 +25,7 @@ final class RedirectPresenter extends BasePresenter
 	public function actionFiles(string $token): void
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
-		if ($application) {
+		if ($application !== null) {
 			$this->redirect(':Www:Trainings:files', $application->getTrainingAction(), $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
@@ -36,7 +36,7 @@ final class RedirectPresenter extends BasePresenter
 	public function actionApplication(string $token): void
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
-		if ($application) {
+		if ($application !== null) {
 			$this->redirect(':Www:Trainings:application', $application->getTrainingAction(), $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
@@ -47,7 +47,7 @@ final class RedirectPresenter extends BasePresenter
 	public function actionNewestArticleByTag(string $token): void
 	{
 		$article = current($this->articles->getAllByTags([$token], 1));
-		if ($article) {
+		if ($article !== false) {
 			$this->sendResponse(new RedirectResponse($article->getHref(), IResponse::S302_Found));
 		} else {
 			sleep(self::GOOD_NIGHT);

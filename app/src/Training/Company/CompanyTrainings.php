@@ -64,7 +64,7 @@ final readonly class CompanyTrainings
 			$name,
 			$this->translator->getDefaultLocale(),
 		);
-		if (!$result) {
+		if ($result === null) {
 			throw new CompanyTrainingDoesNotExistException($name);
 		}
 		return $this->createFromDatabaseRow($result);

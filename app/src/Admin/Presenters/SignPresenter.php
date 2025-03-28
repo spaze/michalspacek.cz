@@ -35,7 +35,7 @@ final class SignPresenter extends BasePresenter
 
 	public function actionKnockKnock(string $param): never
 	{
-		if ($this->authenticator->verifyReturningUser($param)) {
+		if ($this->authenticator->verifyReturningUser($param) !== null) {
 			$this->authenticator->setReturningUser($param);
 		}
 

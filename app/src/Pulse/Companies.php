@@ -59,7 +59,7 @@ final readonly class Companies
 				WHERE name = ?',
 			$name,
 		);
-		if (!$row) {
+		if ($row === null) {
 			return null;
 		}
 		assert(is_int($row->id));

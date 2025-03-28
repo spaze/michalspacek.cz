@@ -53,7 +53,7 @@ final readonly class BlogPosts
 	public function get(string $post, ?string $previewKey = null): BlogPost
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		if (!$result) {
+		if ($result === null) {
 			throw new BlogPostDoesNotExistException(name: $post, previewKey: $previewKey);
 		} else {
 			return $this->factory->createFromDatabaseRow($result);
@@ -102,7 +102,7 @@ final readonly class BlogPosts
 			WHERE bp.id_blog_post = ?',
 			$id,
 		);
-		if (!$result) {
+		if ($result === null) {
 			throw new BlogPostDoesNotExistException(id: $id);
 		} else {
 			return $this->factory->createFromDatabaseRow($result);
@@ -174,11 +174,11 @@ final readonly class BlogPosts
 					'originally' => $post->getOriginallyTexy(),
 					'key_twitter_card_type' => $post->getTwitterCard()?->getId(),
 					'og_image' => $post->getOgImage(),
-					'tags' => $post->getTags() ? $this->tags->serialize($post->getTags()) : null,
+					'tags' => $post->getTags() !== [] ? $this->tags->serialize($post->getTags()) : null,
 					'slug_tags' => $this->tags->serialize($post->getSlugTags()),
-					'recommended' => $post->getRecommended() ? Json::encode($post->getRecommended()) : null,
-					'csp_snippets' => ($post->getCspSnippets() ? Json::encode($post->getCspSnippets()) : null),
-					'allowed_tags' => ($post->getAllowedTagsGroups() ? Json::encode($post->getAllowedTagsGroups()) : null),
+					'recommended' => $post->getRecommended() !== [] ? Json::encode($post->getRecommended()) : null,
+					'csp_snippets' => $post->getCspSnippets() !== [] ? Json::encode($post->getCspSnippets()) : null,
+					'allowed_tags' => $post->getAllowedTagsGroups() !== [] ? Json::encode($post->getAllowedTagsGroups()) : null,
 					'omit_exports' => $post->omitExports(),
 				],
 			);
@@ -205,7 +205,6 @@ final readonly class BlogPosts
 		}
 		$this->database->beginTransaction();
 		try {
-			$timeZone = $post->getPublishTime()?->getTimezone() ?: null;
 			$this->database->query(
 				'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 				[
@@ -217,15 +216,15 @@ final readonly class BlogPosts
 					'lead' => $post->getSummaryTexy(),
 					'text' => $post->getTextTexy(),
 					'published' => $post->getPublishTime(),
-					'published_timezone' => $post->getPublishTime() ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
+					'published_timezone' => $post->getPublishTime()?->getTimezone()->getName(),
 					'originally' => $post->getOriginallyTexy(),
 					'key_twitter_card_type' => $post->getTwitterCard()?->getId(),
 					'og_image' => $post->getOgImage(),
-					'tags' => ($post->getTags() ? $this->tags->serialize($post->getTags()) : null),
-					'slug_tags' => ($post->getSlugTags() ? $this->tags->serialize($post->getSlugTags()) : null),
-					'recommended' => ($post->getRecommended() ? Json::encode($post->getRecommended()) : null),
-					'csp_snippets' => ($post->getCspSnippets() ? Json::encode($post->getCspSnippets()) : null),
-					'allowed_tags' => ($post->getAllowedTagsGroups() ? Json::encode($post->getAllowedTagsGroups()) : null),
+					'tags' => $post->getTags() !== [] ? $this->tags->serialize($post->getTags()) : null,
+					'slug_tags' => $post->getSlugTags() !== [] ? $this->tags->serialize($post->getSlugTags()) : null,
+					'recommended' => $post->getRecommended() !== [] ? Json::encode($post->getRecommended()) : null,
+					'csp_snippets' => $post->getCspSnippets() !== [] ? Json::encode($post->getCspSnippets()) : null,
+					'allowed_tags' => $post->getAllowedTagsGroups() !== [] ? Json::encode($post->getAllowedTagsGroups()) : null,
 					'omit_exports' => $post->omitExports(),
 				],
 				$postId,

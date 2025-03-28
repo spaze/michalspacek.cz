@@ -40,7 +40,7 @@ final readonly class PasswordHashingAlgorithms
 	public function getAlgorithmByName(string $name): ?PasswordHashingAlgorithm
 	{
 		$row = $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name);
-		if (!$row) {
+		if ($row === null) {
 			return null;
 		}
 		assert(is_int($row->id));

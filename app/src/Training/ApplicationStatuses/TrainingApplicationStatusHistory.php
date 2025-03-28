@@ -94,7 +94,7 @@ final class TrainingApplicationStatusHistory
 			$applicationId,
 			$recordId,
 		);
-		if (!$result) {
+		if ($result === null) {
 			return;
 		}
 		assert(is_int($result->statusId));

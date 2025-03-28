@@ -312,7 +312,7 @@ final readonly class TrainingApplicationStorage
 		bool $familiar,
 		?int $dateId,
 	): void {
-		$paidDate = ($paid ? new DateTime($paid) : null);
+		$paidDate = $paid !== '' ? new DateTime($paid) : null;
 		$timeZone = $paidDate?->getTimezone()->getName();
 		if ($discount === 0) {
 			$discount = null;

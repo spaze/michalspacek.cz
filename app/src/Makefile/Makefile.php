@@ -75,7 +75,7 @@ final class Makefile
 				$notPhonyTargets[$target] = $this->targetDefinitions[$target];
 			}
 		}
-		if ($notPhonyTargets) {
+		if ($notPhonyTargets !== []) {
 			throw new MakefileContainsRealTargetsException($notPhonyTargets);
 		}
 	}
