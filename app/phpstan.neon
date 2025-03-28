@@ -18,3 +18,4 @@ includes:
 	- disallowed-calls.neon
 	- vendor/phpstan/phpstan-deprecation-rules/rules.neon
 	- vendor/composer/pcre/extension.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
