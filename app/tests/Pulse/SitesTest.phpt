@@ -54,13 +54,10 @@ final class SitesTest extends TestCase
 			'alias' => 'one',
 		]);
 		$site = $this->sites->getByUrl('foo');
-		if (!$site) {
-			Assert::fail('Site should not be null');
-		} else {
-			Assert::same(123, $site->getId());
-			Assert::same('https://example.com/', $site->getUrl());
-			Assert::same('one', $site->getAlias());
-		}
+		assert($site instanceof Site);
+		Assert::same(123, $site->getId());
+		Assert::same('https://example.com/', $site->getUrl());
+		Assert::same('one', $site->getAlias());
 	}
 
 }

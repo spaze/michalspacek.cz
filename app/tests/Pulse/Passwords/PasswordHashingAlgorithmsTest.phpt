@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithm;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -65,15 +66,12 @@ final class PasswordHashingAlgorithmsTest extends TestCase
 			'stretched' => 0,
 		]);
 		$algorithm = $this->hashingAlgorithms->getAlgorithmByName('foo');
-		if (!$algorithm) {
-			Assert::fail('Algorithms should not be null');
-		} else {
-			Assert::same(303, $algorithm->getId());
-			Assert::same('Arr-gone', $algorithm->getName());
-			Assert::same('arr-gone', $algorithm->getAlias());
-			Assert::true($algorithm->isSalted());
-			Assert::false($algorithm->isStretched());
-		}
+		assert($algorithm instanceof PasswordHashingAlgorithm);
+		Assert::same(303, $algorithm->getId());
+		Assert::same('Arr-gone', $algorithm->getName());
+		Assert::same('arr-gone', $algorithm->getAlias());
+		Assert::true($algorithm->isSalted());
+		Assert::false($algorithm->isStretched());
 	}
 
 }

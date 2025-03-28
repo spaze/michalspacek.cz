@@ -64,15 +64,12 @@ final class CompaniesTest extends TestCase
 			'sortName' => 'sort-one',
 		]);
 		$company = $this->companies->getByName('foo');
-		if (!$company) {
-			Assert::fail('Company should not be null');
-		} else {
-			Assert::same(123, $company->getId());
-			Assert::same('One', $company->getCompanyName());
-			Assert::same('dba', $company->getTradeName());
-			Assert::same('one', $company->getCompanyAlias());
-			Assert::same('sort-one', $company->getSortName());
-		}
+		assert($company instanceof Company);
+		Assert::same(123, $company->getId());
+		Assert::same('One', $company->getCompanyName());
+		Assert::same('dba', $company->getTradeName());
+		Assert::same('one', $company->getCompanyAlias());
+		Assert::same('sort-one', $company->getSortName());
 	}
 
 }
