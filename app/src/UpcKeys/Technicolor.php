@@ -194,7 +194,7 @@ final readonly class Technicolor implements UpcWiFiRouter
 	private function buildKey(string $serial, string $key, int $type): WiFiKey
 	{
 		$prefix = Regex::match('/^[a-z]+/i', $serial)->matches[0] ?? false;
-		if ($prefix === false || !in_array($prefix, self::PREFIXES)) {
+		if ($prefix === false || !in_array($prefix, self::PREFIXES, true)) {
 			throw new UpcKeysApiUnknownPrefixException($serial);
 		}
 		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));

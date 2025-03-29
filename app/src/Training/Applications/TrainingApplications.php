@@ -238,7 +238,7 @@ final class TrainingApplications
 	{
 		$canceledStatus = $this->trainingApplicationStatuses->getCanceledStatus();
 		return array_values(array_filter($this->getByDate($dateId), function (TrainingApplication $value) use ($canceledStatus): bool {
-			return $value->getPaid() !== null && in_array($value->getStatus(), $canceledStatus);
+			return $value->getPaid() !== null && in_array($value->getStatus(), $canceledStatus, true);
 		}));
 	}
 

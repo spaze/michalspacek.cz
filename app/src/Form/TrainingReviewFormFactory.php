@@ -136,7 +136,7 @@ final readonly class TrainingReviewFormFactory
 		foreach ($this->trainingApplications->getByDate($dateId) as $application) {
 			if (!$application->isDiscarded()) {
 				$option = Html::el('option');
-				if (in_array($application->getName(), $reviewApplicationNames)) {
+				if (in_array($application->getName(), $reviewApplicationNames, true)) {
 					$option->disabled = true;
 				}
 				$option->setText(($application->getName() ?? 'smazáno') . ($application->getCompany() !== null ? ", {$application->getCompany()}" : ''));

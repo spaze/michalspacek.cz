@@ -178,7 +178,7 @@ final readonly class TrainingMailsOutboxFormFactory
 					$sent++;
 				}
 
-				if (in_array($nextStatus, [TrainingApplicationStatus::InvoiceSent, TrainingApplicationStatus::InvoiceSentAfter])) {
+				if (in_array($nextStatus, [TrainingApplicationStatus::InvoiceSent, TrainingApplicationStatus::InvoiceSentAfter], true)) {
 					assert($data->invoice instanceof FileUpload);
 					assert(is_string($data->invoiceId));
 					assert(is_string($data->cc));

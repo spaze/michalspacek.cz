@@ -111,7 +111,7 @@ final class Rating
 	 */
 	public function isSecureStorage(RatingGrade $rating): bool
 	{
-		return in_array($rating, [RatingGrade::A, RatingGrade::B]);
+		return in_array($rating, [RatingGrade::A, RatingGrade::B], true);
 	}
 
 

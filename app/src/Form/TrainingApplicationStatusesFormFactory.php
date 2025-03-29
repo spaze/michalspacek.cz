@@ -65,7 +65,7 @@ final readonly class TrainingApplicationStatusesFormFactory
 			$total = 0;
 			foreach (array_keys((array)$form->getUntrustedFormValues()->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);
-				if (in_array($application->getStatus(), $attendedStatuses) && !$application->isFamiliar()) {
+				if (in_array($application->getStatus(), $attendedStatuses, true) && !$application->isFamiliar()) {
 					$this->trainingApplications->setFamiliar($id);
 					$total++;
 				}

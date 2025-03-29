@@ -192,8 +192,8 @@ final class TrainingsPresenter extends BasePresenter
 		$this->template->trainingCity = $city;
 		$this->template->sourceName = $this->application->getSourceName();
 		$this->template->companyId = $this->application->getCompanyId();
-		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses());
-		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited));
+		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses(), true);
+		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited), true);
 		$this->template->accessToken = $this->application->getAccessToken();
 		$this->template->history = $this->trainingApplicationStatusHistory->getStatusHistory($param);
 	}

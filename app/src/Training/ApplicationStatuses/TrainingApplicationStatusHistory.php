@@ -74,7 +74,7 @@ final class TrainingApplicationStatusHistory
 	{
 		$result = false;
 		foreach ($this->getStatusHistory($applicationId) as $history) {
-			if (in_array($history->getStatus(), $statuses)) {
+			if (in_array($history->getStatus(), $statuses, true)) {
 				$result = true;
 				break;
 			}

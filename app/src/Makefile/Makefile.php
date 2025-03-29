@@ -71,7 +71,7 @@ final class Makefile
 			if ($target === self::PHONY_TARGET) {
 				continue;
 			}
-			if (!in_array($target, $prerequisites[self::PHONY_TARGET])) {
+			if (!in_array($target, $prerequisites[self::PHONY_TARGET], true)) {
 				$notPhonyTargets[$target] = $this->targetDefinitions[$target];
 			}
 		}

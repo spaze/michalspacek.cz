@@ -165,7 +165,7 @@ final readonly class TrainingApplicationStorage
 		string $source,
 		?string $date = null,
 	): int {
-		if (!in_array($status, $this->trainingApplicationStatuses->getInitialStatuses())) {
+		if (!in_array($status, $this->trainingApplicationStatuses->getInitialStatuses(), true)) {
 			throw new RuntimeException("Invalid initial status {$status->value}");
 		}
 

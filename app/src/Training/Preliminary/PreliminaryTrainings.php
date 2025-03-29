@@ -139,7 +139,7 @@ final readonly class PreliminaryTrainings
 
 		$total = $dateSet = 0;
 		foreach ($this->getPreliminary() as $training) {
-			if (in_array($training->getAction(), $upcoming)) {
+			if (in_array($training->getAction(), $upcoming, true)) {
 				$dateSet += count($training->getApplications());
 			}
 			$total += count($training->getApplications());
@@ -160,7 +160,7 @@ final readonly class PreliminaryTrainings
 
 		$applications = [];
 		foreach ($this->getPreliminary() as $training) {
-			if (in_array($training->getAction(), $upcoming)) {
+			if (in_array($training->getAction(), $upcoming, true)) {
 				foreach ($training->getApplications() as $application) {
 					$applications[] = $application;
 				}
