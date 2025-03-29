@@ -9,7 +9,10 @@ use Override;
 final class ResultSet extends NetteResultSet
 {
 
-	/** @noinspection PhpMissingParentConstructorInspection intentionally */
+	/**
+	 * @noinspection PhpMissingParentConstructorInspection intentionally
+	 * @phpstan-ignore constructor.missingParentCall
+	 */
 	public function __construct(
 		private readonly ?int $rowCount = null,
 	) {

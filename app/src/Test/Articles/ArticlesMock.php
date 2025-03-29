@@ -17,7 +17,10 @@ final class ArticlesMock extends Articles
 	private array $articles = [];
 
 
-	/** @noinspection PhpMissingParentConstructorInspection Intentionally */
+	/**
+	 * @noinspection PhpMissingParentConstructorInspection Intentionally
+	 * @phpstan-ignore constructor.missingParentCall
+	 */
 	public function __construct()
 	{
 	}

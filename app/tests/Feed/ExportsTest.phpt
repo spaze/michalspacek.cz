@@ -35,7 +35,10 @@ final class ExportsTest extends TestCase
 	) {
 		$texyFormatter = new class () extends TexyFormatter {
 
-			/** @noinspection PhpMissingParentConstructorInspection Intentionally */
+			/**
+			 * @noinspection PhpMissingParentConstructorInspection Intentionally
+			 * @phpstan-ignore constructor.missingParentCall
+			 */
 			public function __construct()
 			{
 			}

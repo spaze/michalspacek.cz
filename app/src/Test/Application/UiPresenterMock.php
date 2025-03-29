@@ -18,6 +18,7 @@ final class UiPresenterMock extends Presenter
 
 	/**
 	 * @noinspection PhpMissingParentConstructorInspection Intentionally
+	 * @phpstan-ignore constructor.missingParentCall
 	 */
 	public function __construct()
 	{

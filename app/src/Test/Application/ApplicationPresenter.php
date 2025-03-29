@@ -33,6 +33,7 @@ final readonly class ApplicationPresenter
 			/**
 			 * @param Closure(string, list<mixed>): string $buildLink
 			 * @noinspection PhpMissingParentConstructorInspection
+			 * @phpstan-ignore constructor.missingParentCall
 			 */
 			public function __construct(
 				private readonly Closure $buildLink,

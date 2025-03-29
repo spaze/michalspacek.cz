@@ -23,6 +23,7 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	/**
 	 * @param array<string, array{code:string, name:string}> $languages
 	 * @noinspection PhpMissingParentConstructorInspection Intentionally
+	 * @phpstan-ignore constructor.missingParentCall
 	 */
 	public function __construct(
 		private readonly array $languages,
