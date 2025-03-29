@@ -251,7 +251,7 @@ final readonly class PostFormFactory
 			'ogImage' => $post->getOgImage(),
 			'twitterCard' => $post->getTwitterCard()?->getCard(),
 			'tags' => $post->getTags() !== [] ? $this->tags->toString($post->getTags()) : null,
-			'recommended' => empty($post->getRecommended()) ? null : Json::encode($post->getRecommended()),
+			'recommended' => $post->getRecommended() === [] ? null : Json::encode($post->getRecommended()),
 			'cspSnippets' => $post->getCspSnippets(),
 			'allowedTags' => $post->getAllowedTagsGroups(),
 			'omitExports' => $post->omitExports(),

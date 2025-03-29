@@ -81,7 +81,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			->addRule(Form::Blank, $message = "Site already selected, can't add a new one")
 			->endCondition()
 			->addCondition(function () use ($inputName, $selectSite): bool {
-				return (!empty($inputName->getValue()) && $selectSite->getValue() !== Sites::ALL);
+				return ($inputName->getValue() !== '' && $selectSite->getValue() !== Sites::ALL);
 			})
 			->setRequired('New site required when adding a new company');
 		$inputAlias->addConditionOn($selectSite, Form::Filled)
@@ -199,13 +199,13 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		assert($values->algo instanceof ArrayHash);
 		assert($values->algo->new instanceof ArrayHash);
 		assert(is_string($values->algo->new->algoName));
-		if (empty($values->company->new->name)) {
+		if ($values->company->new->name === '') {
 			assert(is_int($values->company->id));
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
 			$specificSites = array_filter($storages->getSites(), function ($site) {
 				return $site instanceof StorageSpecificSite;
 			});
-			if ($values->site->id === Sites::ALL && !empty($specificSites)) {
+			if ($values->site->id === Sites::ALL && $specificSites !== []) {
 				$form->addError('Invalid combination, can\'t add disclosure for all sites when sites already exist');
 			}
 			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite((string)$values->site->id)) {
@@ -214,10 +214,10 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		} elseif ($this->companies->getByName($values->company->new->name) !== null) {
 			$form->addError('Can\'t add new company, duplicated name');
 		}
-		if (!empty($values->site->new->url) && $this->sites->getByUrl($values->site->new->url) !== null) {
+		if ($values->site->new->url !== '' && $this->sites->getByUrl($values->site->new->url) !== null) {
 			$form->addError('Can\'t add new site, duplicated URL');
 		}
-		if (!empty($values->algo->new->algoName) && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName) !== null) {
+		if ($values->algo->new->algoName !== '' && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName) !== null) {
 			$form->addError('Can\'t add new algorithm, duplicated name');
 		}
 	}

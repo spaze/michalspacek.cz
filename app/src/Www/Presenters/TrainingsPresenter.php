@@ -260,7 +260,7 @@ final class TrainingsPresenter extends BasePresenter
 
 		$this->training = $training;
 		$this->dates = $this->trainingDates->getDates($this->training->getId());
-		if (empty($this->dates)) {
+		if ($this->dates === []) {
 			throw new BadRequestException("No dates for {$name} training", IResponse::S503_ServiceUnavailable);
 		}
 

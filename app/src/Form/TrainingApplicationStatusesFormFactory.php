@@ -39,7 +39,7 @@ final readonly class TrainingApplicationStatusesFormFactory
 			$select = $container->addSelect((string)$application->getId(), 'Status')
 				->setPrompt('- změnit na -')
 				->setItems($statuses);
-			if (empty($application->getChildrenStatuses())) {
+			if ($application->getChildrenStatuses() === []) {
 				$select->setPrompt('nelze dále měnit')
 					->setDisabled();
 			}

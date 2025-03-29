@@ -46,7 +46,7 @@ final readonly class CompanyRegisterAres implements CompanyRegister
 	#[Override]
 	public function getDetails(string $companyId): CompanyInfoDetails
 	{
-		if (empty($companyId)) {
+		if ($companyId === '') {
 			throw new CompanyInfoException('Company Id is empty');
 		}
 		$content = $this->fetch($companyId);

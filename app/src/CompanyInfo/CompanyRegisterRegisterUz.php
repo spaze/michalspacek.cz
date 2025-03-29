@@ -52,11 +52,11 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 	#[Override]
 	public function getDetails(string $companyId): CompanyInfoDetails
 	{
-		if (empty($companyId)) {
+		if ($companyId === '') {
 			throw new CompanyInfoException('Company Id is empty');
 		}
 		$units = $this->call('uctovne-jednotky', ['zmenene-od' => self::DAY_ONE, 'ico' => $companyId]);
-		if (empty($units->id)) {
+		if ($units->id === []) {
 			throw new CompanyNotFoundException();
 		}
 		try {

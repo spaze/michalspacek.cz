@@ -151,7 +151,7 @@ final readonly class TrainingMailsOutboxFormFactory
 			foreach ($values->applications as $id => $data) {
 				assert($data instanceof ArrayHash);
 				assert(is_string($data->additional));
-				if (empty($data->send) || !isset($applications[$id])) {
+				if (!$data->send || !isset($applications[$id])) {
 					continue;
 				}
 				$nextStatus = $applications[$id]->getNextStatus();

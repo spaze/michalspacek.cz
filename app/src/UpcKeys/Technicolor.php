@@ -94,7 +94,7 @@ final readonly class Technicolor implements UpcWiFiRouter
 		}
 		$keys = [];
 		foreach (explode("\n", $data) as $line) {
-			if (empty($line)) {
+			if ($line === '') {
 				continue;
 			}
 

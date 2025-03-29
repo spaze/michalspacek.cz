@@ -78,7 +78,7 @@ final readonly class SecurityHeaders
 			$actionName = $this->contentSecurityPolicy->getDefaultKey();
 		}
 		$header = $this->contentSecurityPolicy->getHeader($actionName);
-		if (!empty($header)) {
+		if ($header !== '') {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
 		$header = $this->contentSecurityPolicy->getHeaderReportOnly($actionName);
