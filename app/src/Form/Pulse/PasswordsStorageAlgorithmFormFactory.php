@@ -145,7 +145,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 				'(\d{4}-\d{1,2}-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)',
 			);
 
-			if ($i == 0) {
+			if ($i === 0) {
 				$selectDisclosure->setRequired('Enter at least one disclosure type');
 			} else {
 				$selectDisclosure->addConditionOn($inputUrl, Form::Filled)
