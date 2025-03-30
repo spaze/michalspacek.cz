@@ -104,8 +104,11 @@ final readonly class TrainingDateFactory
 	private function getLabelFromJson(?string $json): ?string
 	{
 		if ($json !== null) {
-			$labels = Json::decode($json);
-			$label = $labels->{$this->translator->getDefaultLocale()} ?? null;
+			$labels = Json::decode($json, true);
+			if (!is_array($labels)) {
+				return null;
+			}
+			$label = $labels[$this->translator->getDefaultLocale()] ?? null;
 			if (!is_string($label)) {
 				return null;
 			}
