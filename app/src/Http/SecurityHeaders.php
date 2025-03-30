@@ -57,7 +57,7 @@ final readonly class SecurityHeaders
 	}
 
 
-	public function getPermissionsPolicyHeader(): string
+	private function getPermissionsPolicyHeader(): string
 	{
 		$directives = [];
 		foreach ($this->permissionsPolicy as $directive => $values) {
