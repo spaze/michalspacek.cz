@@ -7,6 +7,7 @@ use Composer\Pcre\Preg;
 use MichalSpacekCz\Articles\ArticlePublishedElsewhere;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Utils\Arrays;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use MichalSpacekCz\Utils\JsonUtils;
@@ -33,7 +34,7 @@ final readonly class Tags
 	public function toArray(string $tags): array
 	{
 		$values = Preg::split('/\s*,\s*/', $tags);
-		return array_values(array_filter($values));
+		return array_values(Arrays::filterEmpty($values));
 	}
 
 

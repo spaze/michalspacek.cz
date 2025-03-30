@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use JsonSerializable;
+use MichalSpacekCz\Utils\Arrays;
 use Override;
 
 final readonly class CompanyInfoDetails implements JsonSerializable
@@ -35,7 +36,7 @@ final readonly class CompanyInfoDetails implements JsonSerializable
 	#[Override]
 	public function jsonSerialize(): array
 	{
-		return array_filter([
+		return Arrays::filterEmpty([
 			'status' => $this->status,
 			'statusMessage' => $this->statusMessage,
 			'companyId' => $this->companyId,

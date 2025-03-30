@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\UpcKeysSsidFormFactory;
 use MichalSpacekCz\UpcKeys\UpcKeys;
 use MichalSpacekCz\UpcKeys\WiFiBand;
+use MichalSpacekCz\Utils\Arrays;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -69,7 +70,7 @@ final class HomepagePresenter extends BasePresenter
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 				break;
 			case 'json':
-				$this->sendJson(array_filter([
+				$this->sendJson(Arrays::filterEmpty([
 					'ssid' => $this->ssid,
 					'error' => $error,
 					'keys' => $keys,

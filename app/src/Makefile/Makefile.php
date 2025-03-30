@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Makefile;
 
 use MichalSpacekCz\Makefile\Exceptions\MakefileContainsRealTargetsException;
 use MichalSpacekCz\Makefile\Exceptions\MakefileNotFoundException;
+use MichalSpacekCz\Utils\Arrays;
 use Nette\IOException;
 use Nette\Utils\FileSystem;
 
@@ -39,8 +40,8 @@ final class Makefile
 			$parts = explode('#', $line, 2);
 			$line = trim($parts[0]);
 			$parts = explode(':', $line, 2);
-			$targets = array_filter(explode(' ', $parts[0]));
-			$targetPrerequisites = array_filter(explode(' ', $parts[1] ?? ''));
+			$targets = Arrays::filterEmpty(explode(' ', $parts[0]));
+			$targetPrerequisites = Arrays::filterEmpty(explode(' ', $parts[1] ?? ''));
 			foreach ($targets as $target) {
 				if (!isset($this->targetDefinitions[$target])) {
 					$this->targetDefinitions[$target] = [$index + 1];
