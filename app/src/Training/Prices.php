@@ -23,7 +23,7 @@ final readonly class Prices
 	public function resolvePriceDiscountVat(?Price $price, ?int $studentDiscount, TrainingApplicationStatus $status, string $note): Price
 	{
 		$priceNotRequiredStatuses = [TrainingApplicationStatus::NonPublicTraining, TrainingApplicationStatus::Tentative];
-		if ($price === null || in_array($status, $priceNotRequiredStatuses, true)) {
+		if ($price === null || $price->getPrice() === null || in_array($status, $priceNotRequiredStatuses, true)) {
 			return new Price(null, null, null);
 		}
 
