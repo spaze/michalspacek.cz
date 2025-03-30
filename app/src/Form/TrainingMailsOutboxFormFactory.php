@@ -185,7 +185,7 @@ final readonly class TrainingMailsOutboxFormFactory
 					if ($data->invoice->isOk()) {
 						$this->trainingApplicationStorage->updateApplicationInvoiceData($id, $data->invoiceId);
 						$applications[$id]->setInvoiceId((int)$data->invoiceId);
-						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc ?: null, $additional);
+						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc !== '' ? $data->cc : null, $additional);
 						$this->trainingApplicationStatuses->updateStatus($id, $nextStatus);
 						$sent++;
 					}

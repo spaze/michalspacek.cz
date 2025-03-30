@@ -62,7 +62,7 @@ final readonly class Sites
 		$this->database->query('INSERT INTO sites', [
 			'url' => $url,
 			'alias' => $alias,
-			'shared_with' => $sharedWith ?: null,
+			'shared_with' => $sharedWith !== '' ? $sharedWith : null,
 			'key_companies' => $companyId,
 			'added' => $this->dateTimeFactory->create(),
 		]);

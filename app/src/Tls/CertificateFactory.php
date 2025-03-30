@@ -133,7 +133,7 @@ final readonly class CertificateFactory
 			) {
 				$certs[] = new Certificate(
 					$cert['cn'],
-					$cert['ext'] ?: null,
+					$cert['ext'] !== '' ? $cert['ext'] : null,
 					new DateTimeImmutable("@{$cert['start']}"),
 					new DateTimeImmutable("@{$cert['expiry']}"),
 					$this->expiringThreshold,

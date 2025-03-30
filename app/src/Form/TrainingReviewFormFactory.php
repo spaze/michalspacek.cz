@@ -83,7 +83,7 @@ final readonly class TrainingReviewFormFactory
 					$values->href !== '' ? $values->href : null,
 					$values->hidden,
 					$values->ranking !== 0 ? $values->ranking : null,
-					$values->note ?: null,
+					$values->note !== '' ? $values->note : null,
 				);
 			} else {
 				$this->trainingReviews->addReview(
@@ -95,7 +95,7 @@ final readonly class TrainingReviewFormFactory
 					$values->href !== '' ? $values->href : null,
 					$values->hidden,
 					$values->ranking !== 0 ? $values->ranking : null,
-					$values->note ?: null,
+					$values->note !== '' ? $values->note : null,
 				);
 			}
 			$onSuccess($dateId);

@@ -334,7 +334,7 @@ final readonly class TrainingApplicationStorage
 			'vat_rate' => $vatRate !== null && $vatRate !== 0.0 ? $vatRate : null,
 			'price_vat' => $priceVat !== null && $priceVat !== 0.0 ? $priceVat : null,
 			'discount' => $discount,
-			'invoice_id' => ((int)$invoiceId ?: null),
+			'invoice_id' => $invoiceId !== '' ? (int)$invoiceId : null,
 			'paid' => $paidDate,
 			'paid_timezone' => $timeZone,
 		];
@@ -350,7 +350,7 @@ final readonly class TrainingApplicationStorage
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			[
-				'invoice_id' => ((int)$invoiceId ?: null),
+				'invoice_id' => $invoiceId !== '' ? (int)$invoiceId : null,
 			],
 			$applicationId,
 		);

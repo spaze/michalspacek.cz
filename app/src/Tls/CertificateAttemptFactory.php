@@ -22,7 +22,7 @@ final class CertificateAttemptFactory
 			) {
 				$certs[] = new CertificateAttempt(
 					$cert['cn'],
-					$cert['ext'] ?: null,
+					$cert['ext'] !== '' ? $cert['ext'] : null,
 				);
 			}
 		}
