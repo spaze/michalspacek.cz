@@ -28,7 +28,7 @@ final readonly class TrainingReviewFormFactory
 	{
 		$form = $this->factory->create();
 
-		if (!$review) {
+		if ($review === null) {
 			$form->addSelect('application', 'Šablona:', $this->getApplications($dateId))
 				->setRequired(false)
 				->setPrompt('- vyberte účastníka -');
@@ -58,7 +58,7 @@ final readonly class TrainingReviewFormFactory
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka poznámky je %d znaků', 2000);
 		$submit = $form->addSubmit('submit', 'Přidat');
-		if ($review) {
+		if ($review !== null) {
 			$this->setReview($form, $review, $submit);
 		}
 
@@ -72,7 +72,7 @@ final readonly class TrainingReviewFormFactory
 			assert(is_bool($values->hidden));
 			assert(is_int($values->ranking) || $values->ranking === null);
 			assert(is_string($values->note));
-			if ($review) {
+			if ($review !== null) {
 				$this->trainingReviews->updateReview(
 					$review->getId(),
 					$dateId,
@@ -83,7 +83,7 @@ final readonly class TrainingReviewFormFactory
 					$values->href !== '' ? $values->href : null,
 					$values->hidden,
 					$values->ranking !== 0 ? $values->ranking : null,
-					$values->note ?: null,
+					$values->note !== '' ? $values->note : null,
 				);
 			} else {
 				$this->trainingReviews->addReview(
@@ -95,7 +95,7 @@ final readonly class TrainingReviewFormFactory
 					$values->href !== '' ? $values->href : null,
 					$values->hidden,
 					$values->ranking !== 0 ? $values->ranking : null,
-					$values->note ?: null,
+					$values->note !== '' ? $values->note : null,
 				);
 			}
 			$onSuccess($dateId);
@@ -136,7 +136,7 @@ final readonly class TrainingReviewFormFactory
 		foreach ($this->trainingApplications->getByDate($dateId) as $application) {
 			if (!$application->isDiscarded()) {
 				$option = Html::el('option');
-				if (in_array($application->getName(), $reviewApplicationNames)) {
+				if (in_array($application->getName(), $reviewApplicationNames, true)) {
 					$option->disabled = true;
 				}
 				$option->setText(($application->getName() ?? 'smazáno') . ($application->getCompany() !== null ? ", {$application->getCompany()}" : ''));

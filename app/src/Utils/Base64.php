@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Utils;
 
+use MichalSpacekCz\Utils\Exceptions\Base64InvalidInputToDecodeException;
+
 final class Base64
 {
 
@@ -18,10 +20,17 @@ final class Base64
 	}
 
 
+	/**
+	 * @throws Base64InvalidInputToDecodeException
+	 */
 	public static function urlDecode(string $encoded): string
 	{
 		$encoded = str_replace(self::LAST_TWO_URL_VARIANT, self::LAST_TWO_STANDARD, $encoded);
-		return base64_decode($encoded);
+		$decoded = base64_decode($encoded, true);
+		if ($decoded === false) {
+			throw new Base64InvalidInputToDecodeException($encoded);
+		}
+		return $decoded;
 	}
 
 }

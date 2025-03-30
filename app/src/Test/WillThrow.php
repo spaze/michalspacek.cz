@@ -25,7 +25,7 @@ trait WillThrow
 
 	private function maybeThrow(): void
 	{
-		if ($this->willThrow) {
+		if ($this->willThrow !== null) {
 			throw $this->willThrow;
 		}
 	}

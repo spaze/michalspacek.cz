@@ -59,7 +59,7 @@ final readonly class Companies
 				WHERE name = ?',
 			$name,
 		);
-		if (!$row) {
+		if ($row === null) {
 			return null;
 		}
 		assert(is_int($row->id));
@@ -81,7 +81,7 @@ final readonly class Companies
 	{
 		$this->database->query('INSERT INTO companies', [
 			'name' => $name,
-			'trade_name' => (empty($tradeName) ? null : $tradeName),
+			'trade_name' => $tradeName === '' ? null : $tradeName,
 			'alias' => $alias,
 			'added' => $this->dateTimeFactory->create(),
 		]);

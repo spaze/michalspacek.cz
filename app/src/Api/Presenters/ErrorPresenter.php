@@ -22,7 +22,7 @@ final class ErrorPresenter extends BaseErrorPresenter
 
 	public function actionDefault(BadRequestException $exception): never
 	{
-		$code = (in_array($exception->getCode(), array_keys($this->statuses)) ? $exception->getCode() : IResponse::S400_BadRequest);
+		$code = in_array($exception->getCode(), array_keys($this->statuses), true) ? $exception->getCode() : IResponse::S400_BadRequest;
 		$this->sendJson([
 			'status' => $code,
 			'statusMessage' => $this->statuses[$code],

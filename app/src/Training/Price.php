@@ -51,8 +51,10 @@ final readonly class Price
 		if ($this->priceVat !== null) {
 			return $this->priceVat;
 		}
-
-		return $this->price !== null ? $this->price * (1.0 + $this->vatRate) : null;
+		if ($this->price === null || $this->vatRate === null) {
+			return null;
+		}
+		return $this->price * (1.0 + $this->vatRate);
 	}
 
 

@@ -273,10 +273,10 @@ final readonly class Passwords
 			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 			'key_password_algos' => $algoId,
 			'key_sites' => ($siteId === Sites::ALL ? null : (int)$siteId),
-			'from' => (empty($from) ? null : new DateTime($from)),
+			'from' => $from === '' ? null : new DateTime($from),
 			'from_confirmed' => $fromConfirmed,
-			'attributes' => (empty($attributes) ? null : $attributes),
-			'note' => (empty($note) ? null : $note),
+			'attributes' => $attributes === '' ? null : $attributes,
+			'note' => $note === '' ? null : $note,
 		]);
 		return (int)$this->database->getInsertId();
 	}
@@ -356,7 +356,7 @@ final readonly class Passwords
 			assert(is_string($disclosure->archive));
 			assert(is_string($disclosure->note));
 			assert(is_string($disclosure->published));
-			if ($disclosure->url) {
+			if ($disclosure->url !== '') {
 				$disclosureId = $this->passwordHashingDisclosures->getDisclosureId($disclosure->url, $disclosure->archive);
 				if ($disclosureId === null) {
 					$disclosureId = $this->passwordHashingDisclosures->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);

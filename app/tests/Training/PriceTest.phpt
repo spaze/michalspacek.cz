@@ -15,6 +15,12 @@ final class PriceTest extends TestCase
 
 	public function testGetPriceVat(): void
 	{
+		$price = new Price(null, 50, 1.23);
+		Assert::null($price->getPriceVat());
+
+		$price = new Price(9990, 50, null);
+		Assert::null($price->getPriceVat());
+
 		$price = new Price(9990, null, 1.23);
 		Assert::same(22277.7, $price->getPriceVat());
 

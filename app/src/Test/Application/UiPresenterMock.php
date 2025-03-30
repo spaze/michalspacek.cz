@@ -18,6 +18,7 @@ final class UiPresenterMock extends Presenter
 
 	/**
 	 * @noinspection PhpMissingParentConstructorInspection Intentionally
+	 * @phpstan-ignore constructor.missingParentCall
 	 */
 	public function __construct()
 	{
@@ -35,7 +36,7 @@ final class UiPresenterMock extends Presenter
 
 	public function getResponse(): Response
 	{
-		if (!$this->response) {
+		if ($this->response === null) {
 			throw new LogicException('Send response first with sendResponse()');
 		}
 		return $this->response;

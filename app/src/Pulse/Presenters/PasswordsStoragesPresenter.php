@@ -66,7 +66,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	 */
 	public function actionSite(string $param): void
 	{
-		if (empty($param)) {
+		if ($param === '') {
 			$this->redirectPermanent('default');
 		}
 
@@ -87,7 +87,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	 */
 	public function actionCompany(string $param): void
 	{
-		if (empty($param)) {
+		if ($param === '') {
 			$this->redirectPermanent('default');
 		}
 

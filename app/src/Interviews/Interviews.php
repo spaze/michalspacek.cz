@@ -83,7 +83,7 @@ final readonly class Interviews
 			$name,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new InterviewDoesNotExistException(name: $name);
 		}
 		return $this->createFromDatabaseRow($result);
@@ -116,7 +116,7 @@ final readonly class Interviews
 			$id,
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new InterviewDoesNotExistException(id: $id);
 		}
 		return $this->createFromDatabaseRow($result);
@@ -179,15 +179,15 @@ final readonly class Interviews
 			[
 				'action' => $action,
 				'title' => $title,
-				'description' => (empty($description) ? null : $description),
+				'description' => $description === '' ? null : $description,
 				'date' => new DateTime($date),
 				'href' => $href,
-				'audio_href' => (empty($audioHref) ? null : $audioHref),
-				'audio_embed' => (empty($audioEmbed) ? null : $audioEmbed),
-				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'audio_href' => $audioHref === '' ? null : $audioHref,
+				'audio_embed' => $audioEmbed === '' ? null : $audioEmbed,
+				'video_href' => $videoHref === '' ? null : $videoHref,
 				'video_thumbnail' => $videoThumbnail,
 				'video_thumbnail_alternative' => $videoThumbnailAlternative,
-				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
+				'video_embed' => $videoEmbed === '' ? null : $videoEmbed,
 				'source_name' => $sourceName,
 				'source_href' => $sourceHref,
 			],
@@ -216,15 +216,15 @@ final readonly class Interviews
 			[
 				'action' => $action,
 				'title' => $title,
-				'description' => (empty($description) ? null : $description),
+				'description' => $description === '' ? null : $description,
 				'date' => new DateTime($date),
 				'href' => $href,
-				'audio_href' => (empty($audioHref) ? null : $audioHref),
-				'audio_embed' => (empty($audioEmbed) ? null : $audioEmbed),
-				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'audio_href' => $audioHref === '' ? null : $audioHref,
+				'audio_embed' => $audioEmbed === '' ? null : $audioEmbed,
+				'video_href' => $videoHref === '' ? null : $videoHref,
 				'video_thumbnail' => $videoThumbnail,
 				'video_thumbnail_alternative' => $videoThumbnailAlternative,
-				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
+				'video_embed' => $videoEmbed === '' ? null : $videoEmbed,
 				'source_name' => $sourceName,
 				'source_href' => $sourceHref,
 			],

@@ -63,6 +63,10 @@ parameters:
 			function: 'preg_*()'
 			allowIn:
 				- vendor/*.php
+		-
+			function: 'array_filter()'
+			allowIn:
+				- vendor/*.php
 		# bundled disallowed-dangerous-calls.neon
 		-
 			function: 'eval()'

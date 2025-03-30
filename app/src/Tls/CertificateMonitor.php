@@ -144,7 +144,7 @@ final class CertificateMonitor implements CliArgsProvider
 		printf(
 			$format . "\n",
 			date(DATE_RFC3339),
-			$certificate ? $certificate->getCommonName() : __CLASS__,
+			$certificate !== null ? $certificate->getCommonName() : __CLASS__,
 			$message,
 		);
 	}

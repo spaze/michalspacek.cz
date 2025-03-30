@@ -41,7 +41,7 @@ final readonly class Sites
 	public function getByUrl(string $url): ?Site
 	{
 		$row = $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
-		if (!$row) {
+		if ($row === null) {
 			return null;
 		}
 		assert(is_int($row->id));
@@ -62,7 +62,7 @@ final readonly class Sites
 		$this->database->query('INSERT INTO sites', [
 			'url' => $url,
 			'alias' => $alias,
-			'shared_with' => $sharedWith ?: null,
+			'shared_with' => $sharedWith !== '' ? $sharedWith : null,
 			'key_companies' => $companyId,
 			'added' => $this->dateTimeFactory->create(),
 		]);

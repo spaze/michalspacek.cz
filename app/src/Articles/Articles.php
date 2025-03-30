@@ -212,7 +212,7 @@ class Articles
 					AND l.locale = ?
 			LIMIT 1';
 		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new DateTime(), $this->translator->getDefaultLocale());
-		if (!$result) {
+		if ($result === null) {
 			return null;
 		}
 		assert($result->tags === null || is_string($result->tags));
@@ -245,7 +245,7 @@ class Articles
 			LIMIT 1';
 		$now = new DateTime();
 		$result = $this->typedDatabase->fetchFieldDateTimeNullable($query, $now, $now, $this->translator->getDefaultLocale());
-		if (!$result) {
+		if ($result === null) {
 			return null;
 		}
 		return $result;
@@ -268,7 +268,7 @@ class Articles
 			ORDER BY bp.published
 			LIMIT 1';
 		$result = $this->typedDatabase->fetchFieldDateTimeNullable($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale());
-		if (!$result) {
+		if ($result === null) {
 			return null;
 		}
 		return $result;

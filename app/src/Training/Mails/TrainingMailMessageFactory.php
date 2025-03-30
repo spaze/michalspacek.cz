@@ -36,7 +36,7 @@ final readonly class TrainingMailMessageFactory
 			case TrainingApplicationStatus::Reminded:
 				$trainingStart = $application->getTrainingStart();
 				$trainingEnd = $application->getTrainingEnd();
-				if (!$trainingStart || !$trainingEnd) {
+				if ($trainingStart === null || $trainingEnd === null) {
 					throw new ShouldNotHappenException(sprintf("Training application id '%s' with next status '%s' should have both training start and end set", $application->getId(), TrainingApplicationStatus::Reminded->value));
 				}
 				$start = $this->dateTimeFormatter->localeIntervalDay($trainingStart, $trainingEnd, 'cs_CZ');

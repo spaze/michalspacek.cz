@@ -22,13 +22,15 @@ final class PricesTest extends TestCase
 
 	public function testResolvePriceDiscountVatNoPriceTentativeTraining(): void
 	{
-		$this->assertNoPrice(TrainingApplicationStatus::Tentative);
+		$price = $this->prices->resolvePriceDiscountVat($this->prices->resolvePriceVat(9990), 42, TrainingApplicationStatus::Tentative, 'FooStudentBar');
+		$this->assertNoPrice($price);
 	}
 
 
 	public function testResolvePriceDiscountVatNoPriceNonPublicTraining(): void
 	{
-		$this->assertNoPrice(TrainingApplicationStatus::NonPublicTraining);
+		$price = $this->prices->resolvePriceDiscountVat($this->prices->resolvePriceVat(9990), 42, TrainingApplicationStatus::NonPublicTraining, 'FooStudentBar');
+		$this->assertNoPrice($price);
 	}
 
 
@@ -39,6 +41,16 @@ final class PricesTest extends TestCase
 		Assert::same(12087.9, $price->getPriceVat());
 		Assert::same('9 990 Kč', $price->getPriceWithCurrency());
 		Assert::same('12 087,90 Kč', $price->getPriceVatWithCurrency());
+	}
+
+
+	public function testResolveNoPriceDiscountVat(): void
+	{
+		$price = $this->prices->resolvePriceDiscountVat(null, 50, TrainingApplicationStatus::SignedUp, 'yo students');
+		$this->assertNoPrice($price);
+
+		$price = $this->prices->resolvePriceDiscountVat(new Price(null, null, null), 50, TrainingApplicationStatus::SignedUp, 'yo students');
+		$this->assertNoPrice($price);
 	}
 
 
@@ -76,9 +88,8 @@ final class PricesTest extends TestCase
 	}
 
 
-	private function assertNoPrice(TrainingApplicationStatus $status): void
+	private function assertNoPrice(Price $price): void
 	{
-		$price = $this->prices->resolvePriceDiscountVat($this->prices->resolvePriceVat(9990), 42, $status, 'FooStudentBar');
 		Assert::null($price->getPrice());
 		Assert::null($price->getPriceVat());
 		Assert::same('', $price->getPriceWithCurrency());

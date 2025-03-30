@@ -108,7 +108,7 @@ final readonly class TrainingMailsOutboxFormFactory
 				->setDefaultValue($checked)
 				->setDisabled($disabled)
 				->setHtmlAttribute('class', 'send');
-			if ($sendCheckboxTitle) {
+			if ($sendCheckboxTitle !== []) {
 				$send->setHtmlAttribute('title', implode("\n", $sendCheckboxTitle));
 			}
 			$additionalInputs[] = $applicationIdsContainer->addTextArea('additional')
@@ -151,7 +151,7 @@ final readonly class TrainingMailsOutboxFormFactory
 			foreach ($values->applications as $id => $data) {
 				assert($data instanceof ArrayHash);
 				assert(is_string($data->additional));
-				if (empty($data->send) || !isset($applications[$id])) {
+				if (!$data->send || !isset($applications[$id])) {
 					continue;
 				}
 				$nextStatus = $applications[$id]->getNextStatus();
@@ -178,14 +178,14 @@ final readonly class TrainingMailsOutboxFormFactory
 					$sent++;
 				}
 
-				if (in_array($nextStatus, [TrainingApplicationStatus::InvoiceSent, TrainingApplicationStatus::InvoiceSentAfter])) {
+				if (in_array($nextStatus, [TrainingApplicationStatus::InvoiceSent, TrainingApplicationStatus::InvoiceSentAfter], true)) {
 					assert($data->invoice instanceof FileUpload);
 					assert(is_string($data->invoiceId));
 					assert(is_string($data->cc));
 					if ($data->invoice->isOk()) {
 						$this->trainingApplicationStorage->updateApplicationInvoiceData($id, $data->invoiceId);
 						$applications[$id]->setInvoiceId((int)$data->invoiceId);
-						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc ?: null, $additional);
+						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc !== '' ? $data->cc : null, $additional);
 						$this->trainingApplicationStatuses->updateStatus($id, $nextStatus);
 						$sent++;
 					}
@@ -201,7 +201,7 @@ final readonly class TrainingMailsOutboxFormFactory
 		};
 		$form->onAnchor[] = function () use ($additionalInputs): void {
 			foreach ($additionalInputs as $additionalInput) {
-				if ($additionalInput->getValue()) {
+				if ($additionalInput->getValue() !== '') {
 					$additionalInput->setHtmlAttribute('class', 'expanded');
 				}
 			}

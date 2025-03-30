@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7f9d62e55c199ee6588fe5baa9e6b2998d2d75f4',
+        'reference' => 'f8a29f24ab9b0cbc499289320bed7aa3e1bda677',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -352,6 +352,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'phpstan/phpstan-strict-rules' => array(
+            'pretty_version' => '2.0.4',
+            'version' => '2.0.4.0',
+            'reference' => '3e139cbe67fafa3588e1dbe27ca50f31fdb6236a',
+            'type' => 'phpstan-extension',
+            'install_path' => __DIR__ . '/../phpstan/phpstan-strict-rules',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'psalm/phar' => array(
             'pretty_version' => '6.9.4',
             'version' => '6.9.4.0',
@@ -468,7 +477,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7f9d62e55c199ee6588fe5baa9e6b2998d2d75f4',
+            'reference' => 'f8a29f24ab9b0cbc499289320bed7aa3e1bda677',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

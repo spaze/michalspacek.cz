@@ -52,11 +52,11 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 	#[Override]
 	public function getDetails(string $companyId): CompanyInfoDetails
 	{
-		if (empty($companyId)) {
+		if ($companyId === '') {
 			throw new CompanyInfoException('Company Id is empty');
 		}
 		$units = $this->call('uctovne-jednotky', ['zmenene-od' => self::DAY_ONE, 'ico' => $companyId]);
-		if (empty($units->id)) {
+		if ($units->id === []) {
 			throw new CompanyNotFoundException();
 		}
 		try {
@@ -85,7 +85,7 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 				'mesto' => Expect::string()->required(),
 				'psc' => Expect::string()->required(),
 			])->otherItems();
-			/** @var object{ico:string, dic?:string, nazovUJ:string, ulica:string, mesto:string, psc:string} $data */
+			/** @var object{ico:string, dic:string|null, nazovUJ:string, ulica:string, mesto:string, psc:string} $data */
 			$data = $this->schemaProcessor->process($schema, $unit);
 		} catch (ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);

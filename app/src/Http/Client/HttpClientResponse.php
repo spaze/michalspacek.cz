@@ -34,7 +34,7 @@ final readonly class HttpClientResponse
 		if (!is_string($scheme) || strtolower($scheme) !== 'https') {
 			throw new HttpClientTlsCertificateNotAvailableException($this->request->getUrl());
 		}
-		if (!$this->request->getTlsCaptureCertificate() || !$this->tlsCertificate) {
+		if ($this->request->getTlsCaptureCertificate() !== true || $this->tlsCertificate === null) {
 			throw new HttpClientTlsCertificateNotCapturedException();
 		}
 		return $this->tlsCertificate;

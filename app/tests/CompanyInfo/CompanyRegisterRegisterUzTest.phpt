@@ -43,6 +43,21 @@ final class CompanyRegisterRegisterUzTest extends TestCase
 			'sk',
 		);
 		Assert::equal($expected, $this->registerUz->getDetails('31333532'));
+		sleep(3);
+
+		$expected = new CompanyInfoDetails(
+			200,
+			'OK',
+			'31337309',
+			'',
+			'EPSOL s r.o.',
+			'Technická 7',
+			'Bratislava - mestská časť Ružinov',
+			'82104',
+			'sk',
+		);
+		Assert::equal($expected, $this->registerUz->getDetails('31337309'));
+		sleep(3);
 
 		Assert::exception(function (): void {
 			$this->registerUz->getDetails('1337');

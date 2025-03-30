@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
+use MichalSpacekCz\Utils\Arrays;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -58,7 +59,7 @@ final readonly class TrainingDateFormFactory
 			}
 			$trainings[$key][$training->getId()] = $training->getName();
 		}
-		$form->addSelect('training', 'Školení:', array_filter($trainings))
+		$form->addSelect('training', 'Školení:', Arrays::filterEmpty($trainings))
 			->setRequired('Vyberte prosím školení');
 
 		$venues = [];
@@ -136,7 +137,7 @@ final readonly class TrainingDateFormFactory
 			->addRule(Form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 
 		$submit = $form->addSubmit('submit', 'Přidat');
-		if ($date) {
+		if ($date !== null) {
 			$this->setTrainingDate($form, $date, $submit);
 		}
 
@@ -158,7 +159,7 @@ final readonly class TrainingDateFormFactory
 			assert(is_string($values->remoteNotes));
 			assert(is_string($values->videoHref));
 			assert(is_string($values->feedbackHref));
-			if ($date) {
+			if ($date !== null) {
 				$this->trainingDates->update(
 					$date->getId(),
 					$values->training,
@@ -198,7 +199,7 @@ final readonly class TrainingDateFormFactory
 					$values->feedbackHref,
 				);
 			}
-			$date ? $onSuccessEdit($date->getId()) : $onSuccessAdd();
+			$date !== null ? $onSuccessEdit($date->getId()) : $onSuccessAdd();
 		};
 
 		return $form;

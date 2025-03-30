@@ -76,8 +76,8 @@ final readonly class PasswordHashingDisclosures
 			'key_password_disclosure_types' => $type,
 			'url' => $url,
 			'archive' => $archive,
-			'note' => (empty($note) ? null : $note),
-			'published' => (empty($published) ? null : $this->dateTimeFactory->create($published)),
+			'note' => $note === '' ? null : $note,
+			'published' => $published === '' ? null : $this->dateTimeFactory->create($published),
 			'added' => $this->dateTimeFactory->create(),
 		]);
 		return (int)$this->database->getInsertId();

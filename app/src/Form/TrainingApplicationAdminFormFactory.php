@@ -62,7 +62,7 @@ final readonly class TrainingApplicationAdminFormFactory
 		}
 		$required = (bool)$dates;
 		$form->addSelect('date', 'Datum:', $dates)
-			->setPrompt($dates ? false : 'Žádný vypsaný termín')
+			->setPrompt($dates !== [] ? false : 'Žádný vypsaný termín')
 			->setHtmlAttribute('data-original-date-id', $dateId)
 			->setRequired($required)
 			->setDisabled(!$required);

@@ -46,7 +46,7 @@ final readonly class TexyPhraseHandler
 	 */
 	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
-		if (!$link) {
+		if ($link === null) {
 			return $this->proceed($invocation, $phrase, $content, $modifier, $link);
 		}
 
@@ -131,7 +131,7 @@ final readonly class TexyPhraseHandler
 		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
 			$params[$post->getLocale()] = ['slug' => $post->getSlug(), 'preview' => $post->getPreviewKey()];
 		}
-		if (!$params) {
+		if ($params === []) {
 			throw new ShouldNotHappenException("The blog links array should not be empty, maybe the linked blog post '{$url}' is missing?");
 		}
 		return $this->getLinkWithParams("Www:Post:default{$fragment}", $params, $locale);

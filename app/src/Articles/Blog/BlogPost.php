@@ -218,7 +218,7 @@ final readonly class BlogPost implements ExportsOmittable, ArticleWithId, Articl
 	#[Override]
 	public function getUpdateTime(): ?DateTime
 	{
-		return $this->edits ? current($this->edits)->getEditedAt() : null;
+		return $this->edits !== [] ? current($this->edits)->getEditedAt() : null;
 	}
 
 

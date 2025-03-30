@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
+use MichalSpacekCz\Utils\Arrays;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
@@ -61,7 +62,7 @@ final readonly class SecurityHeaders
 		$directives = [];
 		foreach ($this->permissionsPolicy as $directive => $values) {
 			if (is_array($values)) {
-				$values = implode(' ', array_filter($values));
+				$values = implode(' ', Arrays::filterEmpty($values));
 			}
 			$directives[] = "$directive=({$values})";
 		}
@@ -78,11 +79,11 @@ final readonly class SecurityHeaders
 			$actionName = $this->contentSecurityPolicy->getDefaultKey();
 		}
 		$header = $this->contentSecurityPolicy->getHeader($actionName);
-		if (!empty($header)) {
+		if ($header !== '') {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
 		$header = $this->contentSecurityPolicy->getHeaderReportOnly($actionName);
-		if ($header) {
+		if ($header !== '') {
 			$this->httpResponse->setHeader('Content-Security-Policy-Report-Only', $header);
 		}
 

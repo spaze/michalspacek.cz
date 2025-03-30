@@ -67,7 +67,7 @@ final class ErrorPresenter extends BaseErrorPresenter
 
 	public function actionDefault(BadRequestException $exception): void
 	{
-		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BadRequest);
+		$code = in_array($exception->getCode(), $this->statuses, true) ? $exception->getCode() : IResponse::S400_BadRequest;
 		$this->template->errorCode = $code;
 		$this->template->pageTitle = $this->translator->translate("messages.title.error{$code}");
 		$this->template->note = $this->translator->translate("messages.error.{$code}");

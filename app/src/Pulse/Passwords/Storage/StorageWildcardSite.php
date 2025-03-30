@@ -90,7 +90,7 @@ class StorageWildcardSite implements StorageSite
 	#[Override]
 	public function getRating(): RatingGrade
 	{
-		if (!$this->ratingGrade) {
+		if ($this->ratingGrade === null) {
 			$this->ratingGrade = $this->rating->get($this->getLatestAlgorithm());
 		}
 		return $this->ratingGrade;

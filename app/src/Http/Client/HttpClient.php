@@ -96,7 +96,7 @@ class HttpClient
 	{
 		try {
 			$fp = fopen($request->getUrl(), 'r', context: $context);
-			if (!$fp) {
+			if ($fp === false) {
 				throw new HttpClientRequestException($request->getUrl());
 			}
 			$result = stream_get_contents($fp);

@@ -15,6 +15,7 @@ final class NoOpTranslator extends Translator
 
 	/**
 	 * @param list<string> $availableLocales
+	 * @phpstan-ignore constructor.missingParentCall
 	 */
 	public function __construct(
 		private readonly array $availableLocales,

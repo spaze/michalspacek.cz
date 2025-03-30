@@ -16,7 +16,7 @@ final class AppRequest
 	 */
 	public function getOriginalRequest(?Request $request): Request
 	{
-		if (!$request) {
+		if ($request === null) {
 			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
 		}
 		$requestParam = $request->getParameter('request');

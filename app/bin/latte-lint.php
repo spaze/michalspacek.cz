@@ -24,7 +24,7 @@ Latte linter
 ------------
 ';
 $customFilters = $factory->getCustomFilters();
-echo 'Custom filters: ' . ($customFilters ? implode(', ', $customFilters) : 'none installed') . "\n";
+echo 'Custom filters: ' . ($customFilters !== [] ? implode(', ', $customFilters) : 'none installed') . "\n";
 
 if ($argc < 2) {
 	echo "Usage: latte-lint <path> [--debug] [--disable-strict-parsing]\n";

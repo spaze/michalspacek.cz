@@ -127,7 +127,7 @@ final readonly class Certificates
 			}
 		}
 
-		if ($dbException) {
+		if ($dbException !== null) {
 			throw new SomeCertificatesLoggedToFileException(previous: $dbException);
 		}
 

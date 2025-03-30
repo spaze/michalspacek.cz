@@ -148,7 +148,7 @@ final class TrainingsPresenter extends BasePresenter
 		$this->review = $this->trainingReviews->getReview($param);
 		$date = $this->trainingDates->get($this->review->getDateId());
 
-		$this->template->pageTitle = "Ohlas od {$this->review->getName()}" . ($this->review->getCompany() ? ", {$this->review->getCompany()}" : '');
+		$this->template->pageTitle = "Ohlas od {$this->review->getName()}" . ($this->review->getCompany() !== '' ? ", {$this->review->getCompany()}" : '');
 		$this->template->trainingStart = $date->getStart();
 		$this->template->trainingEnd = $date->getEnd();
 		$this->template->trainingName = $date->getName();
@@ -192,8 +192,8 @@ final class TrainingsPresenter extends BasePresenter
 		$this->template->trainingCity = $city;
 		$this->template->sourceName = $this->application->getSourceName();
 		$this->template->companyId = $this->application->getCompanyId();
-		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses());
-		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited));
+		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses(), true);
+		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited), true);
 		$this->template->accessToken = $this->application->getAccessToken();
 		$this->template->history = $this->trainingApplicationStatusHistory->getStatusHistory($param);
 	}
@@ -237,7 +237,7 @@ final class TrainingsPresenter extends BasePresenter
 	{
 		return $this->trainingApplicationStatusesFormFactory->create(
 			function (?Html $message): never {
-				if ($message) {
+				if ($message !== null) {
 					$this->flashMessage($message);
 				}
 				$this->redirect($this->getAction(), $this->getParameters());
@@ -249,7 +249,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplications(): UiForm
 	{
-		if (!$this->training) {
+		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() will be called first');
 		}
 		return $this->trainingApplicationMultipleFormFactory->create(
@@ -268,7 +268,7 @@ final class TrainingsPresenter extends BasePresenter
 	 */
 	protected function createComponentApplicationForm(): UiForm
 	{
-		if (!$this->application) {
+		if ($this->application === null) {
 			throw new ShouldNotHappenException('actionApplication() will be called first');
 		}
 		return $this->trainingApplicationAdminFactory->create(
@@ -289,7 +289,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentFile(): UiForm
 	{
-		if (!$this->training) {
+		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() or actionFiles() will be called first');
 		}
 		$trainingStart = $this->training->getStart();
@@ -306,7 +306,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditTrainingDateInputs(): TrainingDateInputs
 	{
-		if (!$this->training) {
+		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() will be called first');
 		}
 		return $this->trainingDateInputsFactory->createFor($this->training);
@@ -345,7 +345,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditReviewInputs(): TrainingReviewInputs
 	{
-		if (!$this->review) {
+		if ($this->review === null) {
 			throw new ShouldNotHappenException('actionReview() will be called first');
 		}
 		return $this->trainingReviewInputsFactory->create(false, $this->review->getDateId(), $this->review);
@@ -354,7 +354,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentAddReviewInputs(): TrainingReviewInputs
 	{
-		if (!$this->training) {
+		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() will be called first');
 		}
 		return $this->trainingReviewInputsFactory->create(true, $this->training->getId());

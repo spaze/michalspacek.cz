@@ -78,7 +78,7 @@ final readonly class TrainingFiles
 			$filename,
 			$this->trainingApplicationStatuses->getAllowFilesStatuses(),
 		);
-		return $row ? $this->trainingFileFactory->fromDatabaseRow($row) : null;
+		return $row !== null ? $this->trainingFileFactory->fromDatabaseRow($row) : null;
 	}
 
 

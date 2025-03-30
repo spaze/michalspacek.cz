@@ -24,10 +24,10 @@ final class Database extends Explorer
 
 	private int $insertIdsPosition = 0;
 
-	/** @var array<string, array<string|int, string|int|float|bool|null>> */
+	/** @var array<string, array<int, mixed>> */
 	private array $queriesScalarParams = [];
 
-	/** @var array<string, array<int, array<string, string|int|float|bool|null>>> */
+	/** @var array<string, array<int, array<array-key, mixed>>> */
 	private array $queriesArrayParams = [];
 
 	/** @var array<string, int|string|DateTime|null> */
@@ -127,8 +127,7 @@ final class Database extends Explorer
 
 	/**
 	 * @param literal-string $sql
-	 * @param string|int|bool|DateTimeInterface|null|array<string, string|int|bool|DateTimeInterface|null> ...$params
-	 * @return ResultSet
+	 * @param mixed ...$params
 	 */
 	#[Override]
 	public function query(string $sql, ...$params): ResultSet
@@ -155,14 +154,14 @@ final class Database extends Explorer
 	 * For example datetime is stored without timezone info.
 	 * The DateTime format here is the same as in \Nette\Database\Drivers\MySqlDriver::formatDateTime() but without the quotes.
 	 */
-	private function formatValue(string|int|float|bool|DateTimeInterface|null $value): string|int|float|bool|null
+	private function formatValue(mixed $value): mixed
 	{
 		return $value instanceof DateTimeInterface ? $value->format(DateTimeFormat::MYSQL) : $value;
 	}
 
 
 	/**
-	 * @return array<string|int, string|int|float|bool|DateTimeInterface|null>
+	 * @return array<int, mixed>
 	 */
 	public function getParamsForQuery(string $query): array
 	{
@@ -171,7 +170,7 @@ final class Database extends Explorer
 
 
 	/**
-	 * @return array<int, array<string, string|int|float|bool|DateTimeInterface|null>>
+	 * @return array<int, array<array-key, mixed>>
 	 */
 	public function getParamsArrayForQuery(string $query): array
 	{
@@ -199,7 +198,7 @@ final class Database extends Explorer
 
 	/**
 	 * @param literal-string $sql
-	 * @param string ...$params
+	 * @param mixed ...$params
 	 */
 	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
@@ -223,7 +222,7 @@ final class Database extends Explorer
 
 	/**
 	 * @param literal-string $sql
-	 * @param string ...$params
+	 * @param mixed ...$params
 	 */
 	#[Override]
 	public function fetchField(string $sql, ...$params): mixed
@@ -252,7 +251,7 @@ final class Database extends Explorer
 
 	/**
 	 * @param literal-string $sql
-	 * @param string ...$params
+	 * @param mixed ...$params
 	 * @return array<int|string, string|int|DateTimeInterface>
 	 */
 	#[Override]
@@ -304,7 +303,7 @@ final class Database extends Explorer
 
 	/**
 	 * @param literal-string $sql
-	 * @param string ...$params
+	 * @param mixed ...$params
 	 * @return list<Row>
 	 */
 	#[Override]

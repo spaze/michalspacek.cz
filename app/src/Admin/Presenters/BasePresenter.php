@@ -60,7 +60,7 @@ abstract class BasePresenter extends WwwBasePresenter
 		}
 		$this->sessionHandler->onBeforeDataWrite[] = function (): void {
 			$identity = $this->user->getIdentity();
-			if ($identity) {
+			if ($identity !== null) {
 				$this->sessionHandler->setAdditionalData('key_user', $identity->getId());
 			}
 		};

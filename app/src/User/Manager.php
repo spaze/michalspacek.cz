@@ -121,7 +121,7 @@ final readonly class Manager implements Authenticator
 				username = ?',
 			$username,
 		);
-		if (!$user) {
+		if ($user === null) {
 			throw new AuthenticationException('The username is incorrect.', self::IdentityNotFound);
 		}
 		assert(is_string($user->password));
@@ -200,7 +200,7 @@ final readonly class Manager implements Authenticator
 	public function isReturningUser(): bool
 	{
 		$cookie = $this->cookies->getString(CookieName::ReturningUser);
-		return ($cookie !== null && $this->verifyReturningUser($cookie));
+		return ($cookie !== null && $this->verifyReturningUser($cookie) !== null);
 	}
 
 
@@ -344,7 +344,7 @@ final readonly class Manager implements Authenticator
 			$validity,
 			$type,
 		);
-		if (!$row) {
+		if ($row === null) {
 			return null;
 		}
 		assert(is_int($row->id));

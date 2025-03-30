@@ -85,7 +85,7 @@ final class TalksPresenter extends BasePresenter
 
 	protected function createComponentEditTalkInputs(): TalkInputs
 	{
-		if (!$this->talk) {
+		if ($this->talk === null) {
 			throw new ShouldNotHappenException('actionTalk() will be called first');
 		}
 		return $this->talkInputsFactory->createFor($this->talk);
@@ -101,7 +101,7 @@ final class TalksPresenter extends BasePresenter
 	protected function createComponentSlides(): UiForm
 	{
 		$request = $this->getRequest();
-		if (!$this->talk || !$this->slides || !$request) {
+		if ($this->talk === null || $this->slides === null || $request === null) {
 			throw new ShouldNotHappenException('actionSlides() will be called first');
 		}
 		$talkId = $this->talk->getId();

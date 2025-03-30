@@ -20,6 +20,14 @@ parameters:
 			exclude:
 				- 'preg_quote()'
 			message: 'use the Preg class from composer/pcre'
+		-
+			function: 'array_filter()'
+			message: 'use MichalSpacekCz\Utils\Arrays::filterEmpty() to avoid loose comparison issues'
+			allowParamsAnywhere:
+				-
+					position: 2
+					name: callback
+					typeString: 'callable'
 	disallowedStaticCalls:
 		-
 			method: 'Tester\Environment::skip()'

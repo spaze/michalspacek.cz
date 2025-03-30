@@ -67,7 +67,7 @@ final readonly class TrainingFilesDownload
 
 		$applicationId = $session->getApplicationId();
 		$file = $this->trainingFiles->getFile($applicationId, $session->getToken(), $filename);
-		if (!$file) {
+		if ($file === null) {
 			throw new BadRequestException(sprintf('No file %s for application id %s', $filename, $applicationId));
 		}
 		$pathname = $file->getFileInfo()->getPathname();

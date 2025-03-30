@@ -36,7 +36,7 @@ final readonly class TalkFormFactory
 	public function create(callable $onSuccess, ?Talk $talk = null): UiForm
 	{
 		$form = $this->factory->create();
-		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->getAction() : null);
+		$allTalks = $this->getAllTalksExcept($talk !== null ? (string)$talk->getAction() : null);
 
 		$form->addInteger('translationGroup', 'Skupina překladů:')
 			->setRequired(false);
@@ -104,7 +104,7 @@ final readonly class TalkFormFactory
 		$form->addCheckbox('publishSlides', 'Publikovat slajdy:');
 		$submit = $form->addSubmit('submit', 'Přidat');
 
-		if ($talk) {
+		if ($talk !== null) {
 			$this->setTalk($form, $talk, $submit);
 		}
 
@@ -136,7 +136,7 @@ final readonly class TalkFormFactory
 			assert(is_bool($values->publishSlides));
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
-			if ($talk) {
+			if ($talk !== null) {
 				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
 				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $talk->getVideo()->getThumbnailFilename();

@@ -39,7 +39,7 @@ final readonly class TrainingApplicationStatusesFormFactory
 			$select = $container->addSelect((string)$application->getId(), 'Status')
 				->setPrompt('- změnit na -')
 				->setItems($statuses);
-			if (empty($application->getChildrenStatuses())) {
+			if ($application->getChildrenStatuses() === []) {
 				$select->setPrompt('nelze dále měnit')
 					->setDisabled();
 			}
@@ -54,7 +54,7 @@ final readonly class TrainingApplicationStatusesFormFactory
 			assert(is_string($values->date));
 			foreach ($values->applications as $id => $status) {
 				assert(is_string($status));
-				if ($status) {
+				if ($status !== '') {
 					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::from($status), $values->date);
 				}
 			}
@@ -65,7 +65,7 @@ final readonly class TrainingApplicationStatusesFormFactory
 			$total = 0;
 			foreach (array_keys((array)$form->getUntrustedFormValues()->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);
-				if (in_array($application->getStatus(), $attendedStatuses) && !$application->isFamiliar()) {
+				if (in_array($application->getStatus(), $attendedStatuses, true) && !$application->isFamiliar()) {
 					$this->trainingApplications->setFamiliar($id);
 					$total++;
 				}

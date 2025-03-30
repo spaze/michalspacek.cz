@@ -84,7 +84,7 @@ final class TrainingDates
 			$this->translator->getDefaultLocale(),
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			throw new TrainingDateDoesNotExistException($dateId);
 		}
 		return $this->trainingDateFactory->get($result);
@@ -189,17 +189,17 @@ final class TrainingDates
 				'remote' => $remote,
 				'start' => new DateTime($start),
 				'end' => new DateTime($end),
-				'label' => (empty($label) ? null : $label),
+				'label' => $label === '' ? null : $label,
 				'key_status' => $statusId,
 				'public' => $public,
-				'key_cooperation' => (empty($cooperationId) ? null : $cooperationId),
-				'note' => (empty($note) ? null : $note),
+				'key_cooperation' => $cooperationId === 0 ? null : $cooperationId,
+				'note' => $note === '' ? null : $note,
 				'price' => $price,
 				'student_discount' => $studentDiscount,
-				'remote_url' => (empty($remoteUrl) ? null : $remoteUrl),
-				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
-				'video_href' => (empty($videoHref) ? null : $videoHref),
-				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
+				'remote_url' => $remoteUrl === '' ? null : $remoteUrl,
+				'remote_notes' => $remoteNotes === '' ? null : trim($remoteNotes),
+				'video_href' => $videoHref === '' ? null : $videoHref,
+				'feedback_href' => $feedbackHref === '' ? null : $feedbackHref,
 			],
 			$dateId,
 		);
@@ -232,17 +232,17 @@ final class TrainingDates
 				'remote' => $remote,
 				'start' => new DateTime($start),
 				'end' => new DateTime($end),
-				'label' => (empty($label) ? null : $label),
+				'label' => $label === '' ? null : $label,
 				'key_status' => $statusId,
 				'public' => $public,
-				'key_cooperation' => (empty($cooperationId) ? null : $cooperationId),
-				'note' => (empty($note) ? null : $note),
+				'key_cooperation' => $cooperationId === 0 ? null : $cooperationId,
+				'note' => $note === '' ? null : $note,
 				'price' => $price,
 				'student_discount' => $studentDiscount,
-				'remote_url' => (empty($remoteUrl) ? null : $remoteUrl),
-				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
-				'video_href' => (empty($videoHref) ? null : $videoHref),
-				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
+				'remote_url' => $remoteUrl === '' ? null : $remoteUrl,
+				'remote_notes' => $remoteNotes === '' ? null : trim($remoteNotes),
+				'video_href' => $videoHref === '' ? null : $videoHref,
+				'feedback_href' => $feedbackHref === '' ? null : $feedbackHref,
 			],
 		);
 		return (int)$this->database->getInsertId();

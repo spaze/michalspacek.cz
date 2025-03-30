@@ -28,14 +28,14 @@ final readonly class TrainingDateTexyFormatterPlaceholder implements TexyFormatt
 
 
 	#[Override]
-	public function replace(string $value): string
+	public function replace(string $placeholderValue): string
 	{
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
-		if (!isset($upcoming[$value]) || !$upcoming[$value]->getDates()) {
+		if (!isset($upcoming[$placeholderValue]) || $upcoming[$placeholderValue]->getDates() === []) {
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
-			foreach ($upcoming[$value]->getDates() as $date) {
+			foreach ($upcoming[$placeholderValue]->getDates() as $date) {
 				$trainingDate = $date->isTentative()
 					? $this->dateTimeFormatter->localeIntervalMonth($date->getStart(), $date->getEnd())
 					: $this->dateTimeFormatter->localeIntervalDay($date->getStart(), $date->getEnd());

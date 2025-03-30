@@ -66,6 +66,10 @@ final class TrainingDateFactoryTest extends TestCase
 		$row->labelJson = '{"cs_CZ": 303}';
 		$trainingDate = $this->trainingDateFactory->get($row);
 		Assert::null($trainingDate->getLabel());
+
+		$row->labelJson = '"foo"';
+		$trainingDate = $this->trainingDateFactory->get($row);
+		Assert::null($trainingDate->getLabel());
 	}
 
 }

@@ -30,8 +30,8 @@ final class ArticleHeaderIcons extends UiControl
 	{
 		$edits = $article instanceof ArticleWithTextAndEdits ? $article->getEdits() : [];
 		$publishTime = $article->getPublishTime();
-		$interval = $edits && $publishTime ? current($edits)->getEditedAt()->diff($publishTime) : false;
-		if ($edits && $interval && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
+		$interval = $edits !== [] && $publishTime !== null ? current($edits)->getEditedAt()->diff($publishTime) : false;
+		if ($edits !== [] && $interval !== false && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
 			return current($edits)->getEditedAt();
 		}
 		return null;
