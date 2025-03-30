@@ -41,12 +41,12 @@ final readonly class FetchMetadataTexyFormatterPlaceholder implements TexyFormat
 
 
 	#[Override]
-	public function replace(string $value): string
+	public function replace(string $placeholderValue): string
 	{
-		if ($value === 'all') {
+		if ($placeholderValue === 'all') {
 			$headers = $this->fetchMetadata->getAllHeaders();
 		} else {
-			$header = FetchMetadataHeader::from($value);
+			$header = FetchMetadataHeader::from($placeholderValue);
 			$headers = [$header->value => $this->fetchMetadata->getHeader($header)];
 		}
 		$result = [];
