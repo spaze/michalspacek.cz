@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
+use MichalSpacekCz\Utils\Arrays;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -58,7 +59,7 @@ final readonly class TrainingDateFormFactory
 			}
 			$trainings[$key][$training->getId()] = $training->getName();
 		}
-		$form->addSelect('training', 'Školení:', array_filter($trainings))
+		$form->addSelect('training', 'Školení:', Arrays::filterEmpty($trainings))
 			->setRequired('Vyberte prosím školení');
 
 		$venues = [];
