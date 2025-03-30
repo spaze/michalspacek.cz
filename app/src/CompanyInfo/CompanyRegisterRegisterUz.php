@@ -85,7 +85,7 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 				'mesto' => Expect::string()->required(),
 				'psc' => Expect::string()->required(),
 			])->otherItems();
-			/** @var object{ico:string, dic?:string, nazovUJ:string, ulica:string, mesto:string, psc:string} $data */
+			/** @var object{ico:string, dic:string|null, nazovUJ:string, ulica:string, mesto:string, psc:string} $data */
 			$data = $this->schemaProcessor->process($schema, $unit);
 		} catch (ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
