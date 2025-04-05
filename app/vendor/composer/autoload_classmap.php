@@ -618,6 +618,7 @@ return array(
     'Nette\\Security\\SimpleIdentity' => $vendorDir . '/nette/security/src/Security/SimpleIdentity.php',
     'Nette\\Security\\User' => $vendorDir . '/nette/security/src/Security/User.php',
     'Nette\\Security\\UserStorage' => $vendorDir . '/nette/security/src/Security/UserStorage.php',
+    'Nette\\ShouldNotHappenException' => $vendorDir . '/nette/utils/src/exceptions.php',
     'Nette\\SmartObject' => $vendorDir . '/nette/utils/src/SmartObject.php',
     'Nette\\StaticClass' => $vendorDir . '/nette/utils/src/StaticClass.php',
     'Nette\\UnexpectedValueException' => $vendorDir . '/nette/utils/src/exceptions.php',
