@@ -819,6 +819,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Security\\SimpleIdentity' => __DIR__ . '/..' . '/nette/security/src/Security/SimpleIdentity.php',
         'Nette\\Security\\User' => __DIR__ . '/..' . '/nette/security/src/Security/User.php',
         'Nette\\Security\\UserStorage' => __DIR__ . '/..' . '/nette/security/src/Security/UserStorage.php',
+        'Nette\\ShouldNotHappenException' => __DIR__ . '/..' . '/nette/utils/src/exceptions.php',
         'Nette\\SmartObject' => __DIR__ . '/..' . '/nette/utils/src/SmartObject.php',
         'Nette\\StaticClass' => __DIR__ . '/..' . '/nette/utils/src/StaticClass.php',
         'Nette\\UnexpectedValueException' => __DIR__ . '/..' . '/nette/utils/src/exceptions.php',
