@@ -1,8 +1,10 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Test\ComponentProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -44,8 +46,7 @@ final class FormValidatorsTest extends TestCase
 		$input = new TextInput();
 		$input->value = $slug;
 		$this->validators->addValidateSlugRules($input);
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$input->setParent(new Form());
+		ComponentProperty::setParentAndName($input, new Form(), null);
 		$input->validate();
 		Assert::same($result ? [] : ['messages.forms.validateSlugParamsError'], $input->getErrors());
 	}
