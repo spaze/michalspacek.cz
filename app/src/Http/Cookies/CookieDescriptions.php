@@ -8,7 +8,6 @@ use MichalSpacekCz\DateTime\DateTimeParser;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\User\Manager;
-use Nette\Http\Helpers;
 use Nette\Http\Session;
 
 final readonly class CookieDescriptions
@@ -61,7 +60,7 @@ final readonly class CookieDescriptions
 				$this->dateTimeParser->getDaysFromString($cookieLifetime . ' seconds'),
 			),
 			new CookieDescription(
-				Helpers::StrictCookieName,
+				'_nss', // Same as in Nette\Http\Helpers::StrictCookieName, the name is tested in CookieDescriptionsTest
 				false,
 				$this->texyFormatter->translate('messages.cookies.cookie.netteSameSiteCheck'),
 				null,
