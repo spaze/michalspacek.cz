@@ -6,6 +6,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http\FetchMetadata;
 
 use DateTime;
+use MichalSpacekCz\Application\UiPresenter;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Articles\ArticlesMock;
 use MichalSpacekCz\Test\Http\Request;
@@ -166,7 +167,7 @@ final class ResourceIsolationPolicyTest extends TestCase
 		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, 'cross-site');
 		$this->articles->addBlogPost(1, new DateTime(), 'blog post');
 
-		$content = $this->callPresenterAction('Www:Exports', [Presenter::ActionKey => 'articles']);
+		$content = $this->callPresenterAction('Www:Exports', [UiPresenter::ACTION_KEY => 'articles']);
 		Assert::contains('Title blog post', $content);
 		Assert::notContains('messages.forbidden.crossSite', $content);
 		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
