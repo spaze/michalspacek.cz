@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '55f08521e7b3730f35a259c8757ebdac74efa1f9',
+        'reference' => '676c58b15bcd47c728c595f804ae49f265d9c1d9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -313,7 +313,7 @@
         'phpcsstandards/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.12.1',
+                0 => '3.12.2',
             ),
         ),
         'phpstan/phpdoc-parser' => array(
@@ -326,18 +326,18 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.1.11',
-            'version' => '2.1.11.0',
-            'reference' => '8ca5f79a8f63c49b2359065832a654e1ec70ac30',
+            'pretty_version' => '2.1.13',
+            'version' => '2.1.13.0',
+            'reference' => 'e55e03e6d4ac49cd1240907e5b08e5cd378572a9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
-            'pretty_version' => '2.0.1',
-            'version' => '2.0.1.0',
-            'reference' => '1cc1259cb91ee4cfbb5c39bca9f635f067c910b4',
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'reference' => '9d8e7d4e32711715ad78a1fb6ec368df9af01fdf',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-deprecation-rules',
             'aliases' => array(),
@@ -362,9 +362,9 @@
             'dev_requirement' => true,
         ),
         'psalm/phar' => array(
-            'pretty_version' => '6.10.0',
-            'version' => '6.10.0.0',
-            'reference' => '17ae70dd523f392966b60210e67708a3a5df129b',
+            'pretty_version' => '6.10.1',
+            'version' => '6.10.1.0',
+            'reference' => 'abb4e050e24d6cc3ac9264e32b0f23acba2d00fb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psalm/phar',
             'aliases' => array(),
@@ -412,7 +412,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '27515dc524094e01d3cc1ce47c9218e6eb52d723',
+            'reference' => 'c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -430,9 +430,9 @@
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
-            'pretty_version' => '8.17.0',
-            'version' => '8.17.0.0',
-            'reference' => 'ace04a4e2e20c9bc26ad14d6c4c737cde6056ec0',
+            'pretty_version' => '8.17.1',
+            'version' => '8.17.1.0',
+            'reference' => '9bad414288a59cd5bc55f9a4042784431fb18b8c',
             'type' => 'phpcodesniffer-standard',
             'install_path' => __DIR__ . '/../slevomat/coding-standard',
             'aliases' => array(),
@@ -477,7 +477,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '55f08521e7b3730f35a259c8757ebdac74efa1f9',
+            'reference' => '676c58b15bcd47c728c595f804ae49f265d9c1d9',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -502,9 +502,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpcs-phar' => array(
-            'pretty_version' => '3.12.1',
-            'version' => '3.12.1.0',
-            'reference' => '3f516ffd6f0a762cc1d47675d4b0f16b4b640745',
+            'pretty_version' => '3.12.2',
+            'version' => '3.12.2.0',
+            'reference' => '57a6b457b60a073e3794224907bb43744f656a4d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/phpcs-phar',
             'aliases' => array(),
@@ -558,7 +558,7 @@
         'squizlabs/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.12.1',
+                0 => '3.12.2',
             ),
         ),
         'symfony/cache' => array(
