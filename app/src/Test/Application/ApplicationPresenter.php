@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Test\Application;
 use Closure;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Test\ComponentProperty;
 use MichalSpacekCz\Test\PrivateProperty;
 use Nette\Application\AbortException;
 use Nette\Application\Application;
@@ -74,8 +75,7 @@ final readonly class ApplicationPresenter
 		if (!$presenter instanceof Presenter) {
 			throw new ShouldNotHappenException('Presenter is of a wrong class ' . get_debug_type($presenter));
 		}
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$presenter->setParent(null, $name); // Set the name and also rename it
+		ComponentProperty::setParentAndName($presenter, null, $name); // Set the name and also rename it
 		$presenter->changeAction($action);
 		return $presenter;
 	}
@@ -84,8 +84,7 @@ final readonly class ApplicationPresenter
 	public function anchorForm(UiForm $form): void
 	{
 		$presenter = $this->createUiPresenter('Www:Homepage', 'foo', 'default');
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$form->setParent($presenter);
+		ComponentProperty::setParentAndName($form, $presenter, null);
 	}
 
 }

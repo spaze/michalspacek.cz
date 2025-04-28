@@ -182,6 +182,15 @@ final class Response implements IResponse
 
 
 	/**
+	 * @return list<string>
+	 */
+	public function getCookieNames(): array
+	{
+		return array_keys($this->cookies);
+	}
+
+
+	/**
 	 * @return array<string, array<int, string>>
 	 */
 	public function getAllHeaders(): array

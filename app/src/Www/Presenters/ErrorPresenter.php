@@ -8,6 +8,7 @@ use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
+use MichalSpacekCz\Application\UiPresenter;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -100,7 +101,7 @@ final class ErrorPresenter extends BaseErrorPresenter
 	protected function getLocaleLinkAction(): string
 	{
 		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
-		$action = $requestParam->getParameter(self::ActionKey);
+		$action = $requestParam->getParameter(UiPresenter::ACTION_KEY);
 		if (!is_string($action)) {
 			throw new ShouldNotHappenException(sprintf('Action should be a string, %s provided', get_debug_type($action)));
 		}

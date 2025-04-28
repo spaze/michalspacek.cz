@@ -23,6 +23,7 @@ return (new Configuration())
 		'ext-pcntl', // Used by latte/latte Latte\Tools\Linter and nette/tester's Tester\Runner\CliTester
 	], [ErrorType::UNUSED_DEPENDENCY])
 
-	// TestCaseRunner is used only in tests
+	// These are used only in tests
 	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/src/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
+	->ignoreErrorsOnPackageAndPath('nette/component-model', __DIR__ . '/src/Test/ComponentProperty.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 ;

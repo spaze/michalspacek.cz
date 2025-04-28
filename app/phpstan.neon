@@ -10,6 +10,15 @@ parameters:
 		- phpt
 	level: max
 	checkMissingOverrideMethodAttribute: true
+	ignoreErrors:
+		- # The getId() and getData() methods are called on a SimpleIdentity object, but are defined in a deprecated Identity class
+			identifier: method.deprecatedClass
+			path: tests/User/ManagerTest.phpt
+			count: 2
+		- # The id property is accessed on a SimpleIdentity object, but is defined in a deprecated Identity class
+			identifier: property.deprecatedClass
+			path: tests/User/ManagerTest.phpt
+			count: 1
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
