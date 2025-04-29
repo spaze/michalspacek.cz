@@ -2519,12 +2519,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838"
+                "reference": "5f84427e0395c7b9cc724d4961fb45c5f84c9fd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838",
-                "reference": "c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5f84427e0395c7b9cc724d4961fb45c5f84c9fd8",
+                "reference": "5f84427e0395c7b9cc724d4961fb45c5f84c9fd8",
                 "shasum": ""
             },
             "conflict": {
@@ -3350,7 +3350,7 @@
                 "xataface/xataface": "<3",
                 "xpressengine/xpressengine": "<3.0.15",
                 "yab/quarx": "<2.4.5",
-                "yeswiki/yeswiki": "<4.5.2",
+                "yeswiki/yeswiki": "<4.5.4",
                 "yetiforce/yetiforce-crm": "<6.5",
                 "yidashi/yii2cmf": "<=2",
                 "yii2mod/yii2-cms": "<1.9.2",
@@ -3405,7 +3405,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2025-04-25T17:04:56+00:00",
+            "time": "2025-04-29T15:05:44+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -5000,17 +5000,17 @@
         },
         {
             "name": "texy/texy",
-            "version": "v3.2.4",
-            "version_normalized": "3.2.4.0",
+            "version": "v3.2.5",
+            "version_normalized": "3.2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "33593d96e507c1b03584443f3eaadc80e3920838"
+                "reference": "7304cb98b72958f0847375bc4d5a15086dbda3c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/33593d96e507c1b03584443f3eaadc80e3920838",
-                "reference": "33593d96e507c1b03584443f3eaadc80e3920838",
+                "url": "https://api.github.com/repos/dg/texy/zipball/7304cb98b72958f0847375bc4d5a15086dbda3c7",
+                "reference": "7304cb98b72958f0847375bc4d5a15086dbda3c7",
                 "shasum": ""
             },
             "require": {
@@ -5028,7 +5028,7 @@
                 "phpstan/phpstan": "^1",
                 "tracy/tracy": "^2.9"
             },
-            "time": "2025-02-03T02:50:30+00:00",
+            "time": "2025-04-28T14:37:04+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5066,23 +5066,23 @@
                 "wiki"
             ],
             "support": {
-                "source": "https://github.com/dg/texy/tree/v3.2.4"
+                "source": "https://github.com/dg/texy/tree/v3.2.5"
             },
             "install-path": "../texy/texy"
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.10.9",
-            "version_normalized": "2.10.9.0",
+            "version": "v2.10.10",
+            "version_normalized": "2.10.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "e7af75205b184ca8895bc57fafd331f8d5022d26"
+                "reference": "32303e02c222eea8571402a8310fc3fe70422c37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/e7af75205b184ca8895bc57fafd331f8d5022d26",
-                "reference": "e7af75205b184ca8895bc57fafd331f8d5022d26",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/32303e02c222eea8571402a8310fc3fe70422c37",
+                "reference": "32303e02c222eea8571402a8310fc3fe70422c37",
                 "shasum": ""
             },
             "require": {
@@ -5103,7 +5103,7 @@
                 "phpstan/phpstan": "^1.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
-            "time": "2024-11-07T14:48:00+00:00",
+            "time": "2025-04-28T14:35:15+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5144,7 +5144,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.10.9"
+                "source": "https://github.com/nette/tracy/tree/v2.10.10"
             },
             "install-path": "../tracy/tracy"
         }
