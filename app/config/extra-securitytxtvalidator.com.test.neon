@@ -1,0 +1,11 @@
+includes:
+	- common-securitytxtvalidator.com.neon
+
+parameters:
+	domain:
+		root: securitytxtvalidator.com.test
+		sharedStaticRoot: https://www.michalspacek.cz.test
+
+tracy:
+	bar:
+		- MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorFetchTracyPanel

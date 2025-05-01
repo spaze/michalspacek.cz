@@ -9,7 +9,7 @@ use Throwable;
 final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 {
 
-	/** @var array<string, array{0:value-of<SecurityTxtIpAddressType>, 1:int}> IP address => DNS type, HTTP code */
+	/** @var array<string, array{0:SecurityTxtIpAddressType, 1:int}> IP address => IP address type, HTTP code */
 	private array $ipAddresses = [];
 
 	/** @var array<string, list<string>> original URL => redirects */
@@ -93,7 +93,7 @@ final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 			if (!$components['html'] && !$components['truncated']) {
 				$messageValues[] = (string)$components['code'];
 			}
-			$this->ipAddresses[$components['ip']] = [$type->value, $components['code']];
+			$this->ipAddresses[$components['ip']] = [$type, $components['code']];
 			if ($redirects !== []) {
 				$this->allRedirects[$url] = $redirects;
 				$message .= $components['html'] || $components['truncated'] ? ' (final page after redirects)' : ' (final code after redirects)';
@@ -104,7 +104,7 @@ final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 
 
 	/**
-	 * @return array<string, array{0:value-of<SecurityTxtIpAddressType>, 1:int}> IP address => DNS type, HTTP code
+	 * @return array<string, array{0:SecurityTxtIpAddressType, 1:int}> IP address => IP address type, HTTP code
 	 */
 	public function getIpAddresses(): array
 	{

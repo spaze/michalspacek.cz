@@ -523,3 +523,6 @@ garbageCollector:
 	title: "garbage collector"
 	noStatus: "Zatím žádný status"
 	tooOld: "Status je příliš starý (naposledy spuštěno %s), garbage collector možná neběží"
+timeIntervalAgo:
+	seconds: "před %count% vteřinou|před %count% vteřinami|před %count% vteřinami"
+	minutes: "před %count% minutou|před %count% minutami|před %count% minutami"

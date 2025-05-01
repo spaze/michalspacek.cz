@@ -14,6 +14,10 @@ use Override;
 final class NoOpTranslator extends Translator
 {
 
+	/** @var array<string, array<array-key, mixed>> */
+	private array $parameters = [];
+
+
 	/**
 	 * @param list<string> $availableLocales
 	 * @throws void
@@ -55,18 +59,31 @@ final class NoOpTranslator extends Translator
 		if ($message === null || $message === '') {
 			return '';
 		}
-		if ($message instanceof NotTranslate) {
-			return $message->message;
-		}
-		if ($message instanceof Message) {
-			return $message->message;
+		if ($message instanceof NotTranslate || $message instanceof Message) {
+			return $this->storeParameters($message->message, $parameters);
 		} elseif (is_int($message)) {
-			return (string)$message;
+			return $this->storeParameters((string)$message, $parameters);
 		}
 		if (!is_string($message)) {
 			throw new InvalidArgument('Message must be string, ' . gettype($message) . ' given.');
 		}
+		return $this->storeParameters($message, $parameters);
+	}
+
+
+	private function storeParameters(string $message, mixed ...$parameters): string
+	{
+		$this->parameters[$message] = $parameters;
 		return $message;
+	}
+
+
+	/**
+	 * @return array<array-key, mixed>
+	 */
+	public function getParameters(string $message): array
+	{
+		return $this->parameters[$message] ?? [];
 	}
 
 

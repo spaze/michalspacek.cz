@@ -1,0 +1,27 @@
+{templateType MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters}
+{block pageTitle}
+<title>security.txt validator — Check your security.txt for errors</title>
+{/block}
+{block content}
+<div class="container larger">
+	<h2 class="center">Check your <code>security.txt</code> for any errors</h2>
+	<form n:name="validate" n:class="$form->hasErrors() ? has-errors, submit-once">
+		{input input class => 'input', placeholder => 'Enter the contents of your security.txt file'}
+		<div n:ifcontent class="field-error">{inputError input}</div>
+		{input validate class => 'input check'}
+	</form>
+</div>
+{if $fileExists}
+	<div class="container" id="result">
+		<h2>Validation result</h2>
+	</div>
+	<div class="container warning">
+		<p>{icon info-circle} To also check the content type, the location etc. use the <a n:href="Homepage:">host validation</a> instead</p>
+	</div>
+	{control validationResult}
+	<div class="container">
+		<h3>The validator input</h3>
+		<pre>{$contents}</pre>
+	</div>
+{/if}
+{/block}

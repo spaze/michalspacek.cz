@@ -20,10 +20,6 @@ return (new Configuration())
 	// Add classes from services.neon and extensions.neon
 	->addForceUsedSymbols(DiServices::getAllClasses())
 
-	// It's used, believe me
-	->ignoreErrorsOnPackage('async-aws/lambda', [ErrorType::UNUSED_DEPENDENCY])
-	->ignoreErrorsOnPackage('mlocati/ip-lib', [ErrorType::UNUSED_DEPENDENCY])
-
 	// These are in dev-tools/composer.json or come with a dependency, not in the main composer.json
 	// Remove the dev-tools ones once https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/258 is implemented
 	->ignoreErrorsOnPackages([
@@ -34,6 +30,13 @@ return (new Configuration())
 		'paragonie/hidden-string',
 		'spomky-labs/cbor-php',
 	], [ErrorType::SHADOW_DEPENDENCY])
+
+	// Indirect dependencies used only in tests by test doubles, so src/ stays checked
+	->ignoreErrorsOnPackagesAndPaths([
+		'async-aws/core',
+		'psr/log',
+		'symfony/http-client',
+	], [__DIR__ . '/tests'], [ErrorType::SHADOW_DEPENDENCY])
 	->ignoreErrorsOnExtensions([
 		'ext-simplexml',
 	], [ErrorType::SHADOW_DEPENDENCY])

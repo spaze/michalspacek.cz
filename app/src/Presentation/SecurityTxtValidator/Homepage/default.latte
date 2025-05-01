@@ -1,0 +1,26 @@
+{templateType MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters}
+{block pageTitle}
+<title n:if="$host === null">security.txt validator — Check your security.txt for errors</title>
+<title n:if="$host !== null">security.txt for {$host} — Check your security.txt for errors</title>
+{/block}
+{block content}
+<div class="larger center container" n:if="$host === null">
+	<h2>Check your <code>security.txt</code> for any errors</h2>
+	<form n:name="validateHost" class="submit-once">
+		<p>Enter a hostname: {input host class => 'input'} {input check class => 'input check'}</p>
+	</form>
+</div>
+<div class="container" n:if="$host !== null" id="result">
+	<h2>Validation result of <code>{$displayUrl}</code><small n:ifset="$url"><a href="{$url}" target="_blank">{icon external-link}</a></small></h2>
+	<span n:ifset="$downloadedAt" class="lighter">
+		Created at {$downloadedAt|date:DateTime::RFC3339}
+		<small n:ifset="$downloadedAgo, $cacheTtl">({$downloadedAgo}, the result is cached for {$cacheTtl}, <form n:name="clearCache" class="inline-form submit-once">{input clear class => link-button}</form>)</small>
+	</span>
+	<p><small><a n:href="default">check another &raquo;</a></small></p>
+</div>
+{control validationResult}
+<div class="container" n:if="$fileExists">
+	<h3>The contents of <code>{$displayUrl}</code></h3>
+	<pre>{$contents}</pre>
+</div>
+{/block}

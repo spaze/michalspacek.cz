@@ -19,6 +19,7 @@ final class RouterFactory
 	private const string MODULE_API = 'Api';
 	private const string MODULE_HEARTBLEED = 'Heartbleed';
 	private const string MODULE_PULSE = 'Pulse';
+	private const string MODULE_SECURITYTXTVALIDATOR = 'SecurityTxtValidator';
 	private const string MODULE_UPC = 'UpcKeys';
 	private const string MODULE_WWW = 'Www';
 
@@ -30,6 +31,7 @@ final class RouterFactory
 		self::MODULE_API => 'api',
 		self::MODULE_HEARTBLEED => 'heartbleed',
 		self::MODULE_PULSE => 'pulse',
+		self::MODULE_SECURITYTXTVALIDATOR => 'securitytxtvalidator',
 		self::MODULE_UPC => 'upc',
 		self::MODULE_WWW => 'www',
 	];
@@ -129,6 +131,10 @@ final class RouterFactory
 		$this->initRouterLists($router, self::MODULE_PULSE, [
 			new RouterFactoryRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+']]),
 			new RouterFactoryRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default'),
+		]);
+
+		$this->initRouterLists($router, self::MODULE_SECURITYTXTVALIDATOR, [
+			new RouterFactoryRoute('<presenter>[/<action>]', 'Homepage', 'default'),
 		]);
 
 		$this->initRouterLists($router, self::MODULE_UPC, [

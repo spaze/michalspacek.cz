@@ -1,0 +1,60 @@
+{templateType MichalSpacekCz\SecurityTxtValidator\LayoutTemplateParameters}
+{block|strip}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{include pageTitle}
+	{control criticalCss}
+	{styleSheet screen-securitytxtvalidator}
+	{script app + netteForms + securitytxtvalidator async, defer}
+	<link rel="icon" type="image/png" href="{='/i/icons/securitytxtvalidator.png'|staticUrl}">
+</head>
+<body>
+<div>
+	<div id="logo" n:class="$logoExtraCssClass !== null ? $logoExtraCssClass->value">
+		<h1>
+			{if $logoExtraIcon === MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraIcon::ExclamationTriangle}
+				{icon exclamation-triangle}
+			{elseif $logoExtraIcon === MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraIcon::CertificateCheck}
+				{icon certificate-check}
+			{elseif $logoExtraIcon === MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraIcon::CertificateOff}
+				{icon certificate-off}
+			{else}
+				{icon certificate}
+			{/if}
+			<code>security<wbr>.txt</code> validator
+		</h1>
+	</div>
+	{include content}
+	<div class="container" n:if="$showIntro === true" id="intro">
+		<p>
+			The <code>security.txt</code> document represents a text file that's both human-readable and machine-parsable to help organizations describe their vulnerability disclosure
+			practices to make it easier for researchers to report vulnerabilities.
+		</p>
+		<p>
+			The format was created by <a href="https://www.linkedin.com/in/edoverflow/">EdOverflow</a> and <a href="https://x.com/nightwatchcyber">Yakov Shafranovich</a>
+			and is specified in <a href="https://www.rfc-editor.org/rfc/rfc9116">RFC 9116</a>.
+			You can find more about <code>security.txt</code> at <a href="https://securitytxt.org/">securitytxt.org</a>.
+		</p>
+	</div>
+	<div class="container center">
+		<hr>
+		<em>
+			Created by <a href="https://www.michalspacek.com/">Michal Špaček</a>,
+			<code>@spazef0rze</code> (<a href="https://twitter.com/spazef0rze">X</a>,
+			<a href="https://bsky.app/profile/spazef0rze.bsky.social">Bsky</a>,
+			<a href="https://infosec.exchange/@spazef0rze">M</a>)
+			uses <a href="https://github.com/spaze/security-txt">spaze/security-txt</a>
+		</em>
+	</div>
+</div>
+<div id="menu">
+	<a n:class="isLinkCurrent() ? current" n:href="Homepage:">Validate by Hostname</a>
+	<a n:class="isLinkCurrent() ? current" n:href="DirectInput:">Validate by Direct Input</a>
+	<a n:if="$accountFeatureEnabled" n:class="isLinkCurrent() ? current, split" n:href="Account:login">Login</a>
+</div>
+</body>
+</html>
+{/block}

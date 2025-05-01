@@ -1,0 +1,34 @@
+{varType MichalSpacekCz\Application\DependencyVersion $installedVersion}
+{varType MichalSpacekCz\Application\DependencyVersion|null $lambdaVersion}
+{varType bool $versionMatch}
+{varType ?\DateTime $lastCheck}
+{varType ?string $lastCheckAgo}
+{define #menu}
+	&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+	&raquo; <a n:href="Homepage:">Administrace</a>
+	&raquo; <a n:href="SecurityTxtValidator:">security.txt Validator</a>
+{/define}
+
+{define #content}
+	<p n:if="$versionMatch">{icon check-circle} Versions match</p>
+	<p n:if="!$versionMatch" class="error">
+		<strong>{icon times-circle} Versions don't match, deploy the new version to Lambda or update the app package</strong>
+	</p>
+	<table>
+		<tr>
+			<td>Installed app version:</td>
+			<td>{$installedVersion->getFullVersionHtml()}</td>
+		</tr>
+		<tr>
+			<td><abbr title="Amazon Web Services">AWS</abbr> Lambda version:</td>
+			<td>{$lambdaVersion?->getFullVersionHtml() ?? '&mdash;'}</td>
+		</tr>
+		<tr n:if="$lastCheck !== null && $lastCheckAgo !== null">
+			<td>Last Lambda check:</td>
+			<td>{$lastCheck|localeDay} {$lastCheck|date:'H:i:s e'}, {$lastCheckAgo}</td>
+		</tr>
+	</table>
+	{form checkLambdaVersion}
+		{input check}
+	{/form}
+{/define}

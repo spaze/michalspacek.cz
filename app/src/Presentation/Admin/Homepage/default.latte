@@ -1,6 +1,7 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {control garbageCollectorStatusMessages}
+{control securityTxtValidatorLambdaVersionMessage}
 <h2>Školení</h2>
 {control trainingApplicationsList}
 {if $certificatesWithWarningCount > 0}
@@ -24,6 +25,7 @@
 	<li><a n:href="Account:">{_messages.account.title}</a></li>
 	<li><a n:href="User:regenerateTokens">Přegenerovat tokeny</a></li>
 	<li><a n:href="Certificates:">HTTPS certifikáty</a></li>
+	<li><a n:href="SecurityTxtValidator:lambdaVersion">Zkontrolovat verzi <em>{=MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionCheck::PACKAGE_NAME}</em></a></li>
 	<li><a n:href="Info:php"><code>phpinfo()</code></a></li>
 	<li><a n:href="Sign:out">Odhlásit</a></li>
 </ul>

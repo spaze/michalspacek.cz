@@ -153,6 +153,28 @@ CREATE TABLE `interviews` (
   UNIQUE KEY `action_UNIQUE` (`action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
+CREATE TABLE `ip_ranges` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `key_source` int NOT NULL,
+  `range` varchar(200) NOT NULL,
+  `range_start` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `range_end` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `range_type` tinyint NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `range` (`range`),
+  KEY `key_source` (`key_source`),
+  KEY `range_type_range_end_range_start` (`range_type`,`range_end`,`range_start`),
+  CONSTRAINT `ip_ranges_ibfk_1` FOREIGN KEY (`key_source`) REFERENCES `ip_ranges_sources` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `ip_ranges_sources` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `url` varchar(2000) NOT NULL,
+  `source` varchar(2000) NOT NULL,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `languages` (
   `id_language` int unsigned NOT NULL AUTO_INCREMENT,
   `language` varchar(5) NOT NULL,
@@ -528,6 +550,32 @@ CREATE TABLE `users` (
 INSERT INTO `auth_token_types` VALUES (1,'Permanent login token');
 INSERT INTO `auth_token_types` VALUES (3,'Passkey bootstrap token');
 INSERT INTO `auth_token_types` VALUES (4,'Passkey add token');
+
+INSERT INTO `ip_ranges` VALUES (1,1,'173.245.48.0/20','173.245.048.000','173.245.063.255',4);
+INSERT INTO `ip_ranges` VALUES (2,1,'103.21.244.0/22','103.021.244.000','103.021.247.255',4);
+INSERT INTO `ip_ranges` VALUES (3,1,'103.22.200.0/22','103.022.200.000','103.022.203.255',4);
+INSERT INTO `ip_ranges` VALUES (4,1,'103.31.4.0/22','103.031.004.000','103.031.007.255',4);
+INSERT INTO `ip_ranges` VALUES (5,1,'141.101.64.0/18','141.101.064.000','141.101.127.255',4);
+INSERT INTO `ip_ranges` VALUES (6,1,'108.162.192.0/18','108.162.192.000','108.162.255.255',4);
+INSERT INTO `ip_ranges` VALUES (7,1,'190.93.240.0/20','190.093.240.000','190.093.255.255',4);
+INSERT INTO `ip_ranges` VALUES (8,1,'188.114.96.0/20','188.114.096.000','188.114.111.255',4);
+INSERT INTO `ip_ranges` VALUES (9,1,'197.234.240.0/22','197.234.240.000','197.234.243.255',4);
+INSERT INTO `ip_ranges` VALUES (10,1,'198.41.128.0/17','198.041.128.000','198.041.255.255',4);
+INSERT INTO `ip_ranges` VALUES (11,1,'162.158.0.0/15','162.158.000.000','162.159.255.255',4);
+INSERT INTO `ip_ranges` VALUES (12,1,'104.16.0.0/13','104.016.000.000','104.023.255.255',4);
+INSERT INTO `ip_ranges` VALUES (13,1,'104.24.0.0/14','104.024.000.000','104.027.255.255',4);
+INSERT INTO `ip_ranges` VALUES (14,1,'172.64.0.0/13','172.064.000.000','172.071.255.255',4);
+INSERT INTO `ip_ranges` VALUES (15,1,'131.0.72.0/22','131.000.072.000','131.000.075.255',4);
+INSERT INTO `ip_ranges` VALUES (16,2,'2400:cb00::/32','2400:cb00:0000:0000:0000:0000:0000:0000','2400:cb00:ffff:ffff:ffff:ffff:ffff:ffff',6);
+INSERT INTO `ip_ranges` VALUES (17,2,'2606:4700::/32','2606:4700:0000:0000:0000:0000:0000:0000','2606:4700:ffff:ffff:ffff:ffff:ffff:ffff',6);
+INSERT INTO `ip_ranges` VALUES (18,2,'2803:f800::/32','2803:f800:0000:0000:0000:0000:0000:0000','2803:f800:ffff:ffff:ffff:ffff:ffff:ffff',6);
+INSERT INTO `ip_ranges` VALUES (19,2,'2405:b500::/32','2405:b500:0000:0000:0000:0000:0000:0000','2405:b500:ffff:ffff:ffff:ffff:ffff:ffff',6);
+INSERT INTO `ip_ranges` VALUES (20,2,'2405:8100::/32','2405:8100:0000:0000:0000:0000:0000:0000','2405:8100:ffff:ffff:ffff:ffff:ffff:ffff',6);
+INSERT INTO `ip_ranges` VALUES (21,2,'2a06:98c0::/29','2a06:98c0:0000:0000:0000:0000:0000:0000','2a06:98c7:ffff:ffff:ffff:ffff:ffff:ffff',6);
+INSERT INTO `ip_ranges` VALUES (22,2,'2c0f:f248::/32','2c0f:f248:0000:0000:0000:0000:0000:0000','2c0f:f248:ffff:ffff:ffff:ffff:ffff:ffff',6);
+
+INSERT INTO `ip_ranges_sources` VALUES (1,'https://www.cloudflare.com/ips-v4/','Cloudflare','2025-05-22 01:12:04');
+INSERT INTO `ip_ranges_sources` VALUES (2,'https://www.cloudflare.com/ips-v6/','Cloudflare','2025-05-22 01:12:23');
 
 INSERT INTO `languages` VALUES (1,'cs_CZ');
 INSERT INTO `languages` VALUES (2,'en_US');

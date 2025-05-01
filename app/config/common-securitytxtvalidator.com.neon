@@ -1,0 +1,8 @@
+translation:
+	locales:
+		default: en_US
+
+parameters:
+	domain:
+		fqdn: %domain.root%
+		contentSecurityPolicySelf: %domain.sharedStaticRoot%

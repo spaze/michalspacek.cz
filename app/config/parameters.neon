@@ -18,6 +18,8 @@ parameters:
 				en_US: cz
 			pulse:
 				en_US: cz
+			securitytxtvalidator:
+				en_US: securitytxtvalidator.com.
 			upc:
 				en_US: upcwifikeys.com.
 			www:
@@ -67,6 +69,12 @@ parameters:
 				form: [action, method, target]
 				button: []
 				input: [type, name, value]
+	securityTxtValidator:
+		userAgent: spaze/security-txt
+		policyCacheTtl: "5 minutes"
+		lambdaStage: "prod"
+		gnupgHome: /home/keymaker/.gnupg
+		accountFeatureEnabled: false
 
 	# Added/changed in local.neon
 	contact:
@@ -83,6 +91,7 @@ parameters:
 			securityEvent: []
 		awsLambdaApiKeys:
 			upcKeys:
+			securityTxtValidator:
 		certificatesApiUsers: []
 		mail:
 			password:
@@ -92,6 +101,8 @@ parameters:
 			upcKeys:
 				password:
 			pulse:
+				password:
+			securityTxtValidator:
 				password:
 	encryption:
 		activeKeyIds:
@@ -105,3 +116,6 @@ parameters:
 	awsLambda:
 		upcKeys:
 			url:
+		securityTxtValidator:
+			accessKeyId:
+			region:

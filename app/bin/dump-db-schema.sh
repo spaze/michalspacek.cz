@@ -25,6 +25,7 @@ mkdir --parents "$OUT_DIR"
 DBS=(
     michalspacek_cz
     michalspacek_cz_pulse
+    michalspacek_cz_securitytxtvalidator
     michalspacek_cz_upckeys
 )
 
@@ -33,6 +34,8 @@ DBS=(
 declare -A LOOKUP_DATA=(
     [michalspacek_cz]="\
         auth_token_types \
+        ip_ranges \
+        ip_ranges_sources \
         languages \
         locales \
         training_application_status \
@@ -40,6 +43,7 @@ declare -A LOOKUP_DATA=(
         training_date_status \
         twitter_card_types"
     [michalspacek_cz_pulse]=""
+    [michalspacek_cz_securitytxtvalidator]=""
     [michalspacek_cz_upckeys]=""
 )
 
