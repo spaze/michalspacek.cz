@@ -58,6 +58,13 @@ database:
 		options:
 			lazy: true
 			PDO::ATTR_EMULATE_PREPARES: false
+	securityTxtValidator:
+		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_securitytxtvalidator'
+		user: ... # set in local.neon
+		password: %secrets.database.securityTxtValidator.password%
+		options:
+			lazy: true
+			PDO::ATTR_EMULATE_PREPARES: false
 
 translation:
 	locales:
@@ -81,6 +88,7 @@ subresourceIntegrity:
 		scripts: /i/js/scripts.js
 		encryption: /i/js/encryption.js
 		admin: /i/js/admin.js
+		securitytxtvalidator: /i/js/securitytxtvalidator.js
 		upckeys: /i/js/upckeys.js
 		openpgp: ../../node_modules/openpgp/dist/openpgp.min.js
 		pulse: /i/js/pulse.js
@@ -93,6 +101,7 @@ subresourceIntegrity:
 		screen-main-dark: /i/css/screen-dark.css
 		screen-upc: /i/css/upc/screen.css
 		screen-pulse: /i/css/pulse/screen.css
+		screen-securitytxtvalidator: /i/css/securitytxtvalidator/screen.css
 		screen-heartbleed: /i/css/pulse/heartbleed.css
 		info-admin: ../../vendor/spaze/phpinfo/src/assets/info.css
 

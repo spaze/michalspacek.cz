@@ -75,6 +75,33 @@ final class DateTimeFactoryTest extends TestCase
 		);
 	}
 
+
+	public function testDefaultTimezone(): void
+	{
+		$amsterdam = 'Europe/Amsterdam';
+		$utc = 'UTC';
+		$randomDate = '2024-11-12';
+		$factory = new DateTimeFactory($this->dateTimeZoneFactory, $amsterdam);
+
+		$date = $factory->createFromFormat('Y-m-d', $randomDate);
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+		$date = $factory->createFromFormat('Y-m-d', $randomDate, $this->dateTimeZoneFactory->get($utc));
+		Assert::same($utc, $date->getTimezone()->getName());
+
+		$date = $factory->createFrom(new DateTimeImmutable($randomDate));
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+		$date = $factory->createFrom(new DateTimeImmutable($randomDate), $utc);
+		Assert::same($utc, $date->getTimezone()->getName());
+
+		$date = $factory->create('tomorrow');
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+		$date = $factory->create('tomorrow', $this->dateTimeZoneFactory->get($utc));
+		Assert::same($utc, $date->getTimezone()->getName());
+
+		$date = $factory->getNow();
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+	}
+
 }
 
 TestCaseRunner::run(DateTimeFactoryTest::class);

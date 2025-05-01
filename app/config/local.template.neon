@@ -38,6 +38,9 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 		pulse.*.*:
 			script-src:
 				-"'self'"
+		securitytxtvalidator.*.*:
+			script-src:
+				-"'self'"
 		upckeys.*.*:
 			script-src:
 				-"'self'"
@@ -49,10 +52,14 @@ database:
 		user: dev_user
 	pulse:
 		user: dev_user
+	securityTxtValidator:
+		user: dev_user
 
 parameters:
 	locales:
 		supported:
+			securitytxtvalidator:
+				en_US: securitytxtvalidator.com.test.
 			upc:
 				en_US: upcwifikeys.com.test.
 		rootDomainMapping:
@@ -80,8 +87,12 @@ parameters:
 	awsLambda:
 		upcKeys:
 			url: "https://example.amazonaws.com/stage/upc_keys/%s/%s"
+		securityTxtValidator:
+			accessKeyId: "iamthekeymaker"
+			region: "eu-west-1"
 
 services:
 	sleep: MichalSpacekCz\Test\Utils\Insomnia
 	integrityPolicy: MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyNone
 	cache.journal: \Nette\Caching\Storages\SQLiteJournal('/tmp/michalspacek.cz/journal.cz.s3db') # file-based SQLiteJournal (default in nette/caching 2.4+) throws "SQLSTATE[HY000]: General error: 10 disk I/O error" when the journal is on shared Windows drive
+	securityTxtValidatorFetch: MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorDirectFetch(noIpv6: true)

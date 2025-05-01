@@ -66,6 +66,85 @@ final class StringsTest extends TestCase
 		Assert::same(9, $this->strings->length('ěščřžýáíé'));
 	}
 
+
+	public function testAddLineNumbersAndEolChars(): void
+	{
+		Assert::same('<span><span>1 </span>foo<span>&lt;LF&gt;</span></span>' . "\n", $this->strings->addLineNumbersAndEolChars("foo\n")->render());
+		$html = '<span class="ln"><span class="nr">1 </span>foo<span class="eol">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">2 </span>bar<span class="eol">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">3 </span>baz<span class="eol">&lt;CRLF&gt;</span></span>' . "\r\n" .
+			'<span class="ln"><span class="nr">4 </span>waldo<span class="eol">&lt;CRLF&gt;</span></span>' . "\r\n" .
+			'<span class="ln"><span class="nr">5 </span>quux</span>';
+		Assert::same($html, $this->strings->addLineNumbersAndEolChars("foo\nbar\nbaz\r\nwaldo\r\nquux", 'ln', 'nr', 'eol')->render());
+	}
+
+
+	/**
+	 * The page shows the file as the host serves it, whitespace included, the same way the end-of-line marker shows
+	 * the line ending: a reader comparing the page with their file has to see what they wrote.
+	 */
+	public function testAddLineNumbersAndEolCharsKeepsTheWhitespace(): void
+	{
+		$html = '<span class="ln"><span class="nr">1 </span>  Contact: mailto:security@example.com <span class="eol">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">2 </span>' . "\t" . 'Expires: 2030-01-01T00:00:00.000Z</span>';
+		Assert::same($html, $this->strings->addLineNumbersAndEolChars("  Contact: mailto:security@example.com \n\tExpires: 2030-01-01T00:00:00.000Z", 'ln', 'nr', 'eol')->render());
+	}
+
+
+	/**
+	 * Only the line ending the marker names comes off, so a carriage return in front of a line feed, or one ending the
+	 * file on its own, stays where the host put it instead of being swallowed as more line ending.
+	 */
+	public function testAddLineNumbersAndEolCharsKeepsAStrayCarriageReturn(): void
+	{
+		$html = '<span class="ln"><span class="nr">1 </span>foo' . "\r" . '<span class="eol">&lt;CRLF&gt;</span></span>' . "\r\n" .
+			'<span class="ln"><span class="nr">2 </span>bar' . "\r" . '</span>';
+		Assert::same($html, $this->strings->addLineNumbersAndEolChars("foo\r\r\nbar\r", 'ln', 'nr', 'eol')->render());
+	}
+
+
+	/**
+	 * A file the host wrote in something other than UTF-8 still has to appear on the page. `Html` escapes text with
+	 * `htmlspecialchars()` and no `ENT_SUBSTITUTE`, which answers an empty string for anything holding such a byte, so
+	 * the line would otherwise arrive with its number and its end-of-line marker and nothing between them.
+	 */
+	public function testAddLineNumbersAndEolCharsKeepsALineThatIsNotUtf8(): void
+	{
+		$latin2 = "Contact: mailto:security@example.com\n# Kontakt: Michal \xA9pa\xE8ek\n";
+		$replacement = "\u{FFFD}";
+		$html = '<span class="ln"><span class="nr">1 </span>Contact: mailto:security@example.com<span class="eol">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">2 </span># Kontakt: Michal ' . $replacement . 'pa' . $replacement . 'ek<span class="eol">&lt;LF&gt;</span></span>' . "\n";
+		Assert::same($html, $this->strings->addLineNumbersAndEolChars($latin2, 'ln', 'nr', 'eol')->render());
+	}
+
+
+	/**
+	 * @return array<array{0:string, 1:string}>
+	 */
+	public function getWordBreaks(): array
+	{
+		return [
+			['', ''],
+			['foo', 'foo'],
+			['.foo', '.foo'],
+			['foo.', 'foo.'],
+			['.foo.', '.foo.'],
+			['...foo...', '...foo<wbr>...'],
+			['foo...bar', 'foo<wbr>...bar'],
+			['https://foo.bar.example/.well-unknown/hax.txt', 'https://foo<wbr>.bar<wbr>.example/<wbr>.well-unknown/hax<wbr>.txt'],
+			['https://foo.bar.example/.well..unknown/hax.txt', 'https://foo<wbr>.bar<wbr>.example/<wbr>.well<wbr>..unknown/hax<wbr>.txt'],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getWordBreaks
+	 */
+	public function testAddWordBreaks(string $string, string $expected): void
+	{
+		Assert::same($expected, $this->strings->addWordBreaks($string)->render());
+	}
+
 }
 
 TestCaseRunner::run(StringsTest::class);
