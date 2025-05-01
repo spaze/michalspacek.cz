@@ -1,0 +1,208 @@
+html { background-color: hsl(295 19% 78% / 1); }
+body {
+	font: 1rem/1.5 Arial, sans-serif;
+	color: #111;
+	background: linear-gradient(to bottom, hsl(295 19% 78% / 1), hsl(295 19% 78% / 0)) no-repeat hsl(295 19% 81% / 1);
+	border: solid hsl(294 19% 77% / 1);
+	border-width: 0 1px;
+	max-width: 1064px;
+	min-height: 100vh;
+	margin: auto;
+	padding: 0;
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: flex-end;
+}
+a { color: hsl(256 33% 23% / 1); }
+.inline-form { display: inline; }
+.link-button {
+	all: unset;
+	color: hsl(256 33% 23% / 1);
+	text-decoration: underline;
+	cursor: pointer;
+}
+h1 { text-align: center; }
+h1, h2, h3 { margin: 1rem auto; }
+hr {
+	border: 0;
+	height: 1px;
+	background: linear-gradient(to right, hsl(295 42% 80% / 0.2), hsl(295 42% 80% / 1), hsl(295 42% 80% / 0.2));
+}
+em {
+	opacity: 0.5;
+	transition: opacity .5s ease-out;
+}
+em:hover { opacity: 0.7; }
+pre { background-color: hsl(294 19% 77% / 1); }
+code {
+	background-color: hsl(294 22% 78% / 1);
+	padding: 0 0.2rem;
+	border-radius: 2px;
+}
+#logo code, #enter code, .valid code, .error code {
+	background-color: unset;
+	padding: unset;
+	border-radius: unset;
+}
+#logo {
+	padding: 2rem 2rem 1rem 2rem;
+	background: linear-gradient(to bottom, hsl(295 19% 87% / 1), hsl(295 19% 87% / 0));
+	text-shadow: 3px 2px 10px hsl(0 0% 0% / 0.2);
+	font-size: larger;
+}
+#logo.valid { background: linear-gradient(to bottom, hsl(128 56% 63% / 1), hsl(128 56% 63% / 0)); }
+#logo.warning { background: linear-gradient(to bottom, hsl(30 80% 70% / 1), hsl(30 80% 70% / 0)); }
+#logo.invalid { background: linear-gradient(to bottom, hsl(0 80% 70% / 1), hsl(0 80% 70% / 0)); }
+#logo.error { background: linear-gradient(to bottom, hsl(0 0% 63% / 1), hsl(0 0% 63% / 0)); }
+#result h2 {
+	margin-bottom: 0;
+	overflow-wrap: break-word;
+}
+#result p { padding: 0; }
+#intro p {
+	max-width: 670px;
+	margin: 1rem auto;
+	padding: 0;
+}
+#issues p {
+	padding: 0.2rem 0 0.2rem 2rem;
+	text-indent: -1rem;
+}
+#issues div p:first-of-type { padding-top: 0.4rem; }
+#issues h4 {
+	font-weight: normal;
+	display: flex;
+	justify-content: space-between;
+}
+#issues h4 code {
+	background-color: unset;
+	padding: unset;
+}
+#form-direct-input {
+	max-width: 670px;
+	margin: auto;
+}
+#direct-input {
+	width: 100%;
+	height: 10rem;
+	box-sizing: border-box;
+	display: block;
+	margin: 2rem auto 1rem auto;
+}
+form.has-errors #direct-input { margin-bottom: 0; }
+form.has-errors .field-error {
+	margin-bottom: 1rem;
+	padding: 0.2rem 0.5rem;
+	border-radius: 3px;
+	font-size: initial;
+}
+#menu {
+	display: flex;
+	background-color: hsl(295 19% 81% / 1);
+}
+#menu a {
+	display: inline-block;
+	padding: 0.3rem 0.8rem;
+	text-decoration: none;
+	font-size: smaller;
+	color: #111111AF;
+	transition: color .5s ease-out;
+}
+#menu a.split { margin-left: auto; }
+#menu a:hover {
+	color: #111;
+	border-bottom: 2px solid #11111140;
+}
+#menu a.current { border-bottom: 2px solid #11111180; }
+.input {
+	padding: 0.5rem;
+	border-radius: 3px;
+	border: 1px solid #8AD;
+	font-size: large;
+	outline: 0;
+}
+.larger { font-size: larger; }
+.center { text-align: center; }
+.lighter { opacity: 0.5; }
+pre .line:hover .number, pre .line:hover .eol { opacity: 0.75; }
+pre .number {
+	width: 1.5rem;
+	display: inline-block;
+	opacity: 0.25;
+	font-size: smaller;
+	text-align: right;
+	vertical-align: text-top;
+	user-select: none;
+	transition: opacity .25s ease-out;
+}
+pre .eol {
+	opacity: 0.25;
+	font-size: x-small;
+	vertical-align: text-bottom;
+	user-select: none;
+	padding-left: 0.15rem;
+	transition: opacity .25s ease-out;
+}
+.check {
+	color: #FFF;
+	background: #79E;
+	transition: background-color .5s ease-out;
+}
+.check:hover { background: #8AD; }
+.container {
+	max-width: 900px;
+	padding: 1rem;
+	margin: 0 auto;
+}
+.container p, .container pre {
+	margin: auto;
+	padding: 1rem;
+	border-radius: 3px;
+}
+.container.valid p { background-color: hsl(140 40% 58% / 1); }
+.container.warning p, .issues-warning { background-color: hsl(30 20% 70% / 1); }
+.container.error p, .issues-error, form.has-errors .field-error { background-color: hsl(0 100% 77% / 1); }
+.container.valid p:not(:last-child), .container.warning p:not(:last-child), .container.error p:not(:last-child) { margin-bottom: -1.25rem; }
+.container .humbleicons { transition: opacity .5s ease-out; }
+.container:hover .humbleicons { opacity: 1; }
+.container h4 {
+	max-width: 900px;
+	margin: auto;
+	padding: 0.2rem 1rem;
+	border-radius: 3px;
+}
+input[disabled] {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+@media (prefers-color-scheme: dark) {
+	html { background: hsl(287 15% 15% / 1); }
+	body {
+		color: #EEE;
+		background: linear-gradient(to bottom, hsl(287 15% 15% / 1), hsl(287 15% 15% / 0)) no-repeat hsl(287 15% 18% / 1);
+		border-color: hsl(286 16% 22% / 1);
+	}
+	a { color: hsl(138 33% 84% / 1); }
+	.link-button { color: hsl(138 33% 84% / 1); }
+	hr { background: linear-gradient(to right, hsl(287 15% 12% / 0.2), hsl(287 15% 12% / 1), hsl(287 15% 12% / 0.2)); }
+	pre { background-color: hsl(286 16% 22% / 1); }
+	code { background-color: hsl(285 20% 21% / 1); }
+	#logo { background: linear-gradient(to bottom, hsl(239 36% 33% / 1), hsl(239 36% 33% / 0)); }
+	#logo.valid { background: linear-gradient(to bottom, hsl(128 56% 33% / 1), hsl(128 56% 33% / 0)); }
+	#logo.warning { background: linear-gradient(to bottom, hsl(30 80% 40% / 1), hsl(30 80% 40% / 0)); }
+	#logo.invalid { background: linear-gradient(to bottom, hsl(0 80% 40% / 1), hsl(0 80% 40% / 0)); }
+	#logo.error { background: linear-gradient(to bottom, hsl(0 0% 33% / 1), hsl(0 0% 33% / 0)); }
+	.container.valid p { background-color: hsl(140 29% 40% / 1); }
+	.container.warning p, .issues-warning { background-color: hsl(40 100% 30% / 1); }
+	.container.error p, .issues-error, form.has-errors .field-error { background-color: hsl(0 59% 40% / 1); }
+	#menu { background-color: hsl(287 15% 18% / 1); }
+	#menu a { color: #EEEEEEAF; }
+	#menu a:hover {
+		color: #EEE;
+		border-bottom: 2px solid #EEEEEE40;
+	}
+	#menu a.current { border-bottom: 2px solid #EEEEEE80; }
+}
+@media (max-width: 600px) {
+	#issues h4 code { display: block; }
+}

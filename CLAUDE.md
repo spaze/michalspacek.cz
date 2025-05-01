@@ -176,6 +176,8 @@ Some admin actions ask the signed-in user to confirm their identity with a passk
 
 Schema dumps (and a small allow-list of lookup-table data) live in `app/db/*.sql`, refreshed by `make dump-db-schema` (which runs `app/bin/dump-db-schema.sh`). Read these instead of guessing — they're the source of truth for column names, types, constraints, and FKs. The dump scrubs `AUTO_INCREMENT=N` and `DEFINER=` clauses so commits don't leak row counts or operator accounts; data is included only for fixed enumerations (`auth_token_types`, `*_status`, `*_status_flow`, `twitter_card_types`, `languages`, `locales`) — tables with admin CRUD stay schema-only even when they look lookup-shaped (e.g. `url_actions`, `article_sources`).
 
+`ip_ranges` and `ip_ranges_sources` are dumped with data too, though they're seeded copies of third parties' published IP range lists (e.g. Cloudflare's) rather than a fixed enumeration. Shipping an initial set beats an importer that would have to be run before anything worked. The data is public either way, and it's only used to label a host in an error message, so it going stale costs a label, not correctness.
+
 ### Database transactions
 
 `beginTransaction()` goes before the try block — if it throws, there is nothing to roll back. The try block covers only the work done inside the transaction:
