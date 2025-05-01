@@ -9,7 +9,7 @@ use MichalSpacekCz\DateTime\DateTimeFactory;
 use Override;
 
 /**
- * This (date) time machine allows you you to time-travel.
+ * This (date) time machine allows you to time-travel.
  * Supposed to be used in tests to create DateTimeImmutable objects with known dates.
  */
 final class DateTimeMachineFactory extends DateTimeFactory

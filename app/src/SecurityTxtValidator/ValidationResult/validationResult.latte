@@ -1,0 +1,74 @@
+{templateType MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters}
+<div class="container warning" n:if="$isTruncated">
+	<p>{icon scissors} The file contents has been truncated, the validation result may be incorrect</p>
+</div>
+<div class="container error" n:if="$errorMessage !== null">
+	<p>{icon exclamation-triangle} {$errorMessage}</p>
+</div>
+<div class="container valid" n:if="$isValid === true">
+	<p>{icon check-circle} The file is valid, expires in {$expiresInDays} days</p>
+</div>
+<div class="container warning" n:if="$isValidWithWarnings === true">
+	<p>{icon check-circle} The file is valid, but there are some warnings you should still fix. The file expires in {$expiresInDays} days</p>
+</div>
+<div class="container error" n:if="$isInvalid === true">
+	<p>{icon exclamation-triangle} The file is not valid, please fix the issues listed below</p>
+</div>
+<div class="container valid" n:if="$signed !== null">
+	<p>
+		{icon key} The signature is valid, signed on {$signed->getDate()|date:DateTime::RFC3339} with a key
+		<a href="https://keyserver.ubuntu.com/pks/lookup?search={$signed->getKeyFingerprint()}&op=index" target="_blank"><code>{$signed->getShortKeyId()}</code><small>{icon external-link}</small></a>
+	</p>
+</div>
+{define #issue MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssue $issue}
+	<p><strong class="lighter">Issue:</strong> {$issue->getMessage()}</p>
+	<p><strong class="lighter">How to fix:</strong> {$issue->getHowToFix()}</p>
+	{if $issue->getCorrectValue() !== null}
+		<p><strong class="lighter">Correct value:</strong> <code>{$issue->getCorrectValue()}</code></p>
+	{/if}
+	{if $issue->getSpecSection() !== null}
+		<p><strong class="lighter">Specification:</strong> <a href="https://www.rfc-editor.org/rfc/rfc9116#section-{$issue->getSpecSection()}" class="lighter" target="_blank">Section {$issue->getSpecSection()}<small>{icon external-link}</small></a></p>
+	{/if}
+{/define}
+{if $fileExists}
+	<div id="issues" n:if="!$isValid">
+		<hr>
+		<div class="container" n:foreach="$fetchErrors as $fetchError">
+			<h4 class="issues-error"><span>Error</span> {icon exclamation}</h4>
+			{include #issue $fetchError}
+		</div>
+		<div class="container" n:foreach="$fetchWarnings as $fetchWarning">
+			<h4 class="issues-warning"><span>Warning</span> {icon exclamation}</h4>
+			{include #issue $fetchWarning}
+		</div>
+		<div class="container" n:foreach="$fileErrors as $fileError">
+			<h4 class="issues-error"><span>Error</span> {icon exclamation}</h4>
+			{include #issue $fileError}
+		</div>
+		<div class="container" n:foreach="$fileWarnings as $fileWarning">
+			<h4 class="issues-warning"><span>Warning</span> {icon exclamation}</h4>
+			{include #issue $fileWarning}
+		</div>
+		{foreach $lineIssues as $line => $issues}
+			<div class="container" n:foreach="$issues as $issue">
+				<h4 n:if="$issue->getLevel() === MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueLevel::Error" class="issues-error">
+					<span>Error <small class="lighter">on line {$line}:</small> <small><code>{$issue->getLineContents()}</code></small></span> {icon exclamation}
+				</h4>
+				<h4 n:if="$issue->getLevel() === MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueLevel::Warning" class="issues-warning">
+					<span>Warning <small class="lighter">on line {$line}:</small> <small><code>{$issue->getLineContents()}</code></small></span> {icon exclamation}
+				</h4>
+				{include #issue $issue->getIssue()}
+			</div>
+		{/foreach}
+	</div>
+{/if}
+<div class="container" n:if="$allRedirects !== []">
+	<h3>Observed redirects</h3>
+	<div n:inner-foreach="$allRedirects as $originalUrl => $redirects">
+		<code>{$originalUrl}</code><br>
+		<span class="lighter" n:inner-foreach="$redirects as $redirect">
+			{icon corner-down-right} <code>{$redirect}</code><br>
+		</span>
+		{if !$iterator->last}<br>{/if}
+	</div>
+</div>

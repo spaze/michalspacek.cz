@@ -1,0 +1,7 @@
+{templateType MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessageTemplateParameters}
+<div class="flash error"><strong>
+	The Lambda version {$lambdaVersion->getFullVersionHtml()}
+	and the app version {$installedVersion->getFullVersionHtml()}
+	of <em>{$package}</em> don't match, deploy the new version to Lambda or update the app package
+	<a href="{plink SecurityTxtValidator:lambdaVersion}">Re-check</a>
+</strong></div>
