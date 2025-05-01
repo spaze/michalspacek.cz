@@ -6,6 +6,8 @@ namespace MichalSpacekCz\Presentation\Admin\Homepage;
 use MichalSpacekCz\GarbageCollector\Status\GarbageCollectorStatusMessages;
 use MichalSpacekCz\GarbageCollector\Status\GarbageCollectorStatusMessagesFactory;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
+use MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessage;
+use MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessageFactory;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesList;
 use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesListFactory;
@@ -36,6 +38,7 @@ final class HomepagePresenter extends BasePresenter
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 		private readonly TlsCertificatesListFactory $tlsCertificatesListFactory,
 		private readonly GarbageCollectorStatusMessagesFactory $garbageCollectorStatusMessagesFactory,
+		private readonly SecurityTxtValidatorLambdaVersionMessageFactory $securityTxtValidatorLambdaVersionMessageFactory,
 	) {
 		parent::__construct();
 	}
@@ -80,6 +83,12 @@ final class HomepagePresenter extends BasePresenter
 	protected function createComponentGarbageCollectorStatusMessages(): GarbageCollectorStatusMessages
 	{
 		return $this->garbageCollectorStatusMessagesFactory->create();
+	}
+
+
+	protected function createComponentSecurityTxtValidatorLambdaVersionMessage(): SecurityTxtValidatorLambdaVersionMessage
+	{
+		return $this->securityTxtValidatorLambdaVersionMessageFactory->create();
 	}
 
 }

@@ -1,4 +1,5 @@
 services:
+	securityTxtValidatorLambdaClient: AsyncAws\Lambda\LambdaClient([accessKeyId: %awsLambda.securityTxtValidator.accessKeyId%, accessKeySecret: %secrets.awsLambdaApiKeys.securityTxtValidator%, region: %awsLambda.securityTxtValidator.region%])
 	- MichalSpacekCz\Application\AppRequest
 	cliArgs:
 		type: MichalSpacekCz\Application\Cli\CliArgs
@@ -34,7 +35,11 @@ services:
 		autowired: MichalSpacekCz\Database\TypedDatabase
 	typedDatabase.pulse: MichalSpacekCz\Database\TypedDatabase(@database.pulse.explorer)
 	typedDatabase.upcKeys: MichalSpacekCz\Database\TypedDatabase(@database.upcKeys.explorer)
+	- MichalSpacekCz\DateTime\DateIntervalFormatter
 	dateTimeFactory: MichalSpacekCz\DateTime\DateTimeFactory
+	dateTimeFactoryUtc:
+		create: MichalSpacekCz\DateTime\DateTimeFactoryUtc
+		autowired: self
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeParser
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory
@@ -131,6 +136,7 @@ services:
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
+	- MichalSpacekCz\Net\IpRanges
 	- MichalSpacekCz\Presentation\Www\Talks\TalksDefaultTemplateParametersFactory
 	- MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParametersFactory
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer)
@@ -144,6 +150,22 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer)
 	- MichalSpacekCz\SecurityTxt\SecurityTxtResponse(dirs: %securityTxtDirs%)
+	securityTxtValidatorFetch: MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorLambdaFetch(lambdaClient: @securityTxtValidatorLambdaClient, noIpv6: true, userAgent: %securityTxtValidator.userAgent%)
+	- MichalSpacekCz\SecurityTxtValidator\Account\SecurityTxtValidatorAccount(accountFeatureEnabled: %securityTxtValidator.accountFeatureEnabled%)
+	- MichalSpacekCz\SecurityTxtValidator\Forms\CheckLambdaVersionFormFactory
+	- MichalSpacekCz\SecurityTxtValidator\Forms\ClearCacheFormFactory
+	- MichalSpacekCz\SecurityTxtValidator\Forms\DirectInputFormFactory
+	- MichalSpacekCz\SecurityTxtValidator\Forms\ValidateHostFormFactory
+	- MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter
+	- MichalSpacekCz\SecurityTxtValidator\LambdaFunctions(stage: %securityTxtValidator.lambdaStage%)
+	- MichalSpacekCz\SecurityTxtValidator\LambdaResponse
+	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionCheck(@database.securityTxtValidator.explorer)
+	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessageFactory
+	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, policyCacheTtl: %securityTxtValidator.policyCacheTtl%)
+	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger
+	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorHost
+	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher
+	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultFactory
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Slides\TalkSlides
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
@@ -237,6 +259,20 @@ services:
 	emailEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.email%, %encryption.activeKeyIds.email%, %encryption.keyPrefixes.email%)
 	sessionEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.session%, %encryption.activeKeyIds.session%, %encryption.keyPrefixes.session%)
 	securityEventEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.securityEvent%, %encryption.activeKeyIds.securityEvent%, %encryption.keyPrefixes.securityEvent%)
+	- Spaze\SecurityTxt\Check\SecurityTxtCheckHostResultFactory
+	- Spaze\SecurityTxt\Fetcher\DnsLookup\SecurityTxtPhpDnsProvider
+	- Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherCurlClient(%securityTxtValidator.userAgent%)
+	- Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher
+	- Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressValidator
+	- Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory
+	- Spaze\SecurityTxt\Json\SecurityTxtJson
+	- Spaze\SecurityTxt\Parser\SecurityTxtParser
+	- Spaze\SecurityTxt\Parser\SecurityTxtSplitLines
+	- Spaze\SecurityTxt\Parser\SecurityTxtUrlParser
+	- Spaze\SecurityTxt\Parser\SplitProviders\SecurityTxtPregSplitProvider
+	- Spaze\SecurityTxt\Signature\Providers\SecurityTxtSignatureGnuPgProvider(%securityTxtValidator.gnupgHome%)
+	- Spaze\SecurityTxt\Signature\SecurityTxtSignature
+	- Spaze\SecurityTxt\Validator\SecurityTxtValidator
 	- Spaze\PhpInfo\PhpInfo
 	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\PhpFilesAdapter(namespace: 'TexyFormatter', directory: '%tempDir%/cache', appendOnly: true)
 	- Webauthn\AttestationStatement\AttestationStatementSupportManager

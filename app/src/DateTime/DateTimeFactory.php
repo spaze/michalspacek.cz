@@ -13,9 +13,16 @@ use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 class DateTimeFactory
 {
 
+	private ?DateTimeZone $defaultTimeZone = null;
+
+
 	public function __construct(
 		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
+		?string $defaultTimezoneId = null,
 	) {
+		if ($defaultTimezoneId !== null) {
+			$this->defaultTimeZone = $this->dateTimeZoneFactory->get($defaultTimezoneId);
+		}
 	}
 
 
@@ -26,7 +33,7 @@ class DateTimeFactory
 	 */
 	public function createFromFormat(string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable
 	{
-		$date = DateTimeImmutable::createFromFormat($format, $datetime, $timezone);
+		$date = DateTimeImmutable::createFromFormat($format, $datetime, $timezone ?? $this->defaultTimeZone);
 		if ($date === false) {
 			throw new CannotParseDateTimeException($format, $datetime);
 		}
@@ -37,10 +44,11 @@ class DateTimeFactory
 	/**
 	 * @throws CannotCreateDateTimeObjectException
 	 */
-	public function createFrom(DateTimeInterface $dateTime, string $timezoneId): DateTimeImmutable
+	public function createFrom(DateTimeInterface $dateTime, ?string $timezoneId = null): DateTimeImmutable
 	{
 		try {
-			return new DateTimeImmutable($dateTime->format('Y-m-d H:i:s.u'), $this->dateTimeZoneFactory->get($timezoneId));
+			$timezone = $timezoneId === null ? $this->defaultTimeZone : $this->dateTimeZoneFactory->get($timezoneId);
+			return new DateTimeImmutable($dateTime->format('Y-m-d H:i:s.u'), $timezone);
 		} catch (Exception $e) {
 			throw new CannotCreateDateTimeObjectException($e);
 		}
@@ -49,7 +57,13 @@ class DateTimeFactory
 
 	public function create(string $datetime = 'now', ?DateTimeZone $timezone = null): DateTimeImmutable
 	{
-		return new DateTimeImmutable($datetime, $timezone);
+		return new DateTimeImmutable($datetime, $timezone ?? $this->defaultTimeZone);
+	}
+
+
+	public function getNow(): DateTimeImmutable
+	{
+		return $this->create('now', $this->defaultTimeZone);
 	}
 
 }

@@ -46,6 +46,7 @@ final class DateTimeFactoryTest extends TestCase
 		Assert::same($niceDate, $newDateTime->format(DateTimeFormat::MYSQL));
 		Assert::same('Europe/Prague', $newDateTime->getTimezone()->getName());
 		Assert::notSame($niceDateTime->getTimestamp(), $newDateTime->getTimestamp());
+		Assert::same('Europe/Prague', $newDateTime->getTimezone()->getName());
 	}
 
 
@@ -73,6 +74,33 @@ final class DateTimeFactoryTest extends TestCase
 			'2024-11-12T02:03:04.000000+01:00',
 			$this->dateTimeFactory->create('2024-11-12 02:03:04', $this->dateTimeZoneFactory->get('Europe/Amsterdam'))->format(DateTimeFormat::RFC3339_MICROSECONDS),
 		);
+	}
+
+
+	public function testDefaultTimezone(): void
+	{
+		$amsterdam = 'Europe/Amsterdam';
+		$utc = 'UTC';
+		$randomDate = '2024-11-12';
+		$factory = new DateTimeFactory($this->dateTimeZoneFactory, $amsterdam);
+
+		$date = $factory->createFromFormat('Y-m-d', $randomDate);
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+		$date = $factory->createFromFormat('Y-m-d', $randomDate, $this->dateTimeZoneFactory->get($utc));
+		Assert::same($utc, $date->getTimezone()->getName());
+
+		$date = $factory->createFrom(new DateTimeImmutable($randomDate));
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+		$date = $factory->createFrom(new DateTimeImmutable($randomDate), $utc);
+		Assert::same($utc, $date->getTimezone()->getName());
+
+		$date = $factory->create('tomorrow');
+		Assert::same($amsterdam, $date->getTimezone()->getName());
+		$date = $factory->create('tomorrow', $this->dateTimeZoneFactory->get($utc));
+		Assert::same($utc, $date->getTimezone()->getName());
+
+		$date = $factory->getNow();
+		Assert::same($amsterdam, $date->getTimezone()->getName());
 	}
 
 }
