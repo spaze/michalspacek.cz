@@ -1,0 +1,52 @@
+{
+	"name": "spaze/security-txt",
+	"description": "security.txt generator, parser, validator",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.com/"
+		}
+	],
+	"require-dev": {
+		"php": "^8.4",
+		"nette/tester": "^2.5",
+		"php-parallel-lint/php-console-highlighter": "^1.0",
+		"php-parallel-lint/php-parallel-lint": "^1.3",
+		"phpstan/phpstan": "^2.1",
+		"phpstan/phpstan-strict-rules": "^2.0",
+		"psalm/phar": "^6.10",
+		"spaze/coding-standard": "^1.6",
+		"spaze/phpcs-phar": "^3.12",
+		"spaze/phpstan-disallowed-calls": "^4.5"
+	},
+	"suggest": {
+		"ext-gnupg": "Needed to verify and create signatures"
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"autoload": {
+		"psr-4": {
+			"Spaze\\SecurityTxt\\": "src/"
+		}
+	},
+	"bin": [
+		"bin/checksecuritytxt.php"
+	],
+	"scripts": {
+		"cs-fix": "vendor/bin/phpcbf bin/ src/ tests/",
+		"lint": "vendor/bin/parallel-lint --colors bin/ src/ tests/",
+		"phpcs": "vendor/bin/phpcs bin/ src/ tests/",
+		"phpstan": "vendor/bin/phpstan -vvv --ansi analyse --configuration phpstan.neon",
+		"psalm": "vendor/bin/psalm.phar",
+		"test": [
+			"@lint",
+			"@phpcs",
+			"@phpstan",
+			"@psalm",
+			"@tester"
+		],
+		"tester": "vendor/bin/tester -c tests/php-unix.ini -d zend.assertions=1 --colors 1 tests/"
+	}
+}

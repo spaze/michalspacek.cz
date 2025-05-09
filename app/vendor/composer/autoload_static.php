@@ -18,14 +18,17 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Contracts\\Service\\' => 26,
+            'Symfony\\Contracts\\HttpClient\\' => 29,
             'Symfony\\Contracts\\Cache\\' => 24,
             'Symfony\\Component\\VarExporter\\' => 30,
             'Symfony\\Component\\Translation\\' => 30,
+            'Symfony\\Component\\HttpClient\\' => 29,
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Config\\' => 25,
             'Symfony\\Component\\Cache\\' => 24,
             'Spaze\\SvgIcons\\' => 15,
             'Spaze\\SubresourceIntegrity\\' => 27,
+            'Spaze\\SecurityTxt\\' => 18,
             'Spaze\\PhpInfo\\' => 14,
             'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
             'Spaze\\PHPCSPhar\\' => 16,
@@ -63,6 +66,11 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Contributte\\Translation\\' => 24,
             'Composer\\Pcre\\' => 14,
         ),
+        'A' => 
+        array (
+            'AsyncAws\\Lambda\\' => 16,
+            'AsyncAws\\Core\\' => 14,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -73,6 +81,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Symfony\\Contracts\\Service\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
+        ),
+        'Symfony\\Contracts\\HttpClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
         ),
         'Symfony\\Contracts\\Cache\\' => 
         array (
@@ -85,6 +97,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
+        'Symfony\\Component\\HttpClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-client',
         ),
         'Symfony\\Component\\Filesystem\\' => 
         array (
@@ -105,6 +121,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\SubresourceIntegrity\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/sri-macros/src',
+        ),
+        'Spaze\\SecurityTxt\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/security-txt/src',
         ),
         'Spaze\\PhpInfo\\' => 
         array (
@@ -203,6 +223,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Composer\\Pcre\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
+        ),
+        'AsyncAws\\Lambda\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/async-aws/lambda/src',
+        ),
+        'AsyncAws\\Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/async-aws/core/src',
         ),
     );
 

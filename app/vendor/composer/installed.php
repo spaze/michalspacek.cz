@@ -3,13 +3,31 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '93d4eda586783dadae0efbb93bbc587041f54268',
+        'reference' => '326561a883a4f99c5823f4c6354c05b076d3d138',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'async-aws/core' => array(
+            'pretty_version' => '1.25.0',
+            'version' => '1.25.0.0',
+            'reference' => '19e1ac6978730a59bf71ad3fa584bc588df11ae2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../async-aws/core',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'async-aws/lambda' => array(
+            'pretty_version' => '2.10.0',
+            'version' => '2.10.0.0',
+            'reference' => 'e430d035827bbc34ba32b50676d06e5fbc43fb85',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../async-aws/lambda',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'composer/pcre' => array(
             'pretty_version' => '3.3.2',
             'version' => '3.3.2.0',
@@ -283,6 +301,18 @@
                 0 => '*',
             ),
         ),
+        'php-http/async-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '*',
+            ),
+        ),
+        'php-http/client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '*',
+            ),
+        ),
         'php-parallel-lint/php-console-color' => array(
             'pretty_version' => 'v1.0.1',
             'version' => '1.0.1.0',
@@ -394,6 +424,12 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'psr/http-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
         'psr/log' => array(
             'pretty_version' => '3.0.2',
             'version' => '3.0.2.0',
@@ -477,7 +513,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '93d4eda586783dadae0efbb93bbc587041f54268',
+            'reference' => '326561a883a4f99c5823f4c6354c05b076d3d138',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -536,6 +572,17 @@
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls-nette',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'spaze/security-txt' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'bbf42fdbc1f07a09e11bd4c7b6b742e21d63069d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spaze/security-txt',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
         ),
         'spaze/sri-macros' => array(
             'pretty_version' => 'v2.2.2',
@@ -611,6 +658,30 @@
             'install_path' => __DIR__ . '/../symfony/filesystem',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'symfony/http-client' => array(
+            'pretty_version' => 'v7.2.4',
+            'version' => '7.2.4.0',
+            'reference' => '78981a2ffef6437ed92d4d7e2a86a82f256c6dc6',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/http-client',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/http-client-contracts' => array(
+            'pretty_version' => 'v3.5.2',
+            'version' => '3.5.2.0',
+            'reference' => 'ee8d807ab20fcb51267fdace50fbe3494c31e645',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/http-client-contracts',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/http-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '3.0',
+            ),
         ),
         'symfony/polyfill-ctype' => array(
             'dev_requirement' => false,
