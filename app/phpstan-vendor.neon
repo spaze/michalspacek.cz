@@ -32,6 +32,7 @@ parameters:
 			- vendor/slevomat/coding-standard/*
 			- vendor/squizlabs/php_codesniffer/*
 			# Throws "No error to ignore is reported on line", which can't be ignored, probably because only custom ruleset is used
+			- vendor/async-aws/core/src/Signer/SignerV4.php
 			- vendor/composer/pcre/src/PHPStan/PregMatchTypeSpecifyingExtension.php
 			- vendor/composer/pcre/src/Regex.php
 			- vendor/contributte/translation/src/DI/TranslationExtension.php
@@ -43,6 +44,7 @@ parameters:
 				- vendor/symfony/cache/Adapter/DoctrineDbalAdapter.php
 				- vendor/symfony/cache/DependencyInjection/CachePoolPass.php
 				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
+				- vendor/symfony/http-client/*.php
 				# Contains Latte 2 symbols
 				- vendor/nette/application/src/Bridges/ApplicationLatte/UIMacros.php
 				- vendor/nette/forms/src/Bridges/FormsLatte/FormMacros.php
@@ -86,6 +88,7 @@ parameters:
 			function: 'putenv()'
 			message: 'might overwrite existing variables'
 			allowIn:
+				- vendor/symfony/http-client-contracts/Test/HttpClientTestCase.php
 				- vendor/nette/tester/src/Runner/Job.php
 		-
 			function: 'var_dump()'
@@ -135,6 +138,7 @@ parameters:
 			function: 'sha1()'
 			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
 			allowIn:
+				- vendor/async-aws/core/src/Credentials/*.php
 				- vendor/nette/forms/src/Forms/Controls/CsrfProtection.php
 		-
 			function: 'hash()'
@@ -166,6 +170,7 @@ parameters:
 			function: 'uniqid()'
 			message: 'it is not a cryptographically secure generator, use random_bytes() instead'
 			allowIn:
+				- vendor/async-aws/core/src/Credentials/*.php
 				- vendor/efabrica/phpstan-latte/src/Compiler/*.php
 				- vendor/efabrica/phpstan-latte/tests/*.php  # https://github.com/efabrica-team/phpstan-latte/pull/232
 				- vendor/nette/tester/src/Framework/Dumper.php
@@ -242,8 +247,10 @@ parameters:
 		-
 			superglobal: '$_SERVER'
 			allowIn:
+				- vendor/async-aws/core/src/EnvVar.php
 				- vendor/nette/*.php
 				- vendor/php-parallel-lint/*.php
+				- vendor/spaze/security-txt/bin/checksecuritytxt.php
 				- vendor/symfony/*.php
 				- vendor/tracy/*.php
 	disallowedClasses:
