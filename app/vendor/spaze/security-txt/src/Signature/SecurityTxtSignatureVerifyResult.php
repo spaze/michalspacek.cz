@@ -10,16 +10,34 @@ use Override;
 final readonly class SecurityTxtSignatureVerifyResult implements JsonSerializable
 {
 
+	private string $keyId;
+	private string $shortKeyId;
+
+
 	public function __construct(
 		private string $keyFingerprint,
 		private DateTimeImmutable $date,
 	) {
+		$this->keyId = substr($keyFingerprint, -16);
+		$this->shortKeyId = substr($keyFingerprint, -8);
 	}
 
 
 	public function getKeyFingerprint(): string
 	{
 		return $this->keyFingerprint;
+	}
+
+
+	public function getKeyId(): string
+	{
+		return $this->keyId;
+	}
+
+
+	public function getShortKeyId(): string
+	{
+		return $this->shortKeyId;
 	}
 
 
