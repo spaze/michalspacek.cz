@@ -10,11 +10,11 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcherResponse;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcherUrl;
 
-final class SecurityTxtFetcherFopenClient implements SecurityTxtFetcherHttpClient
+final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcherHttpClient
 {
 
 	public function __construct(
-		private readonly ?string $userAgent = null,
+		private string $userAgent,
 	) {
 	}
 
@@ -32,7 +32,7 @@ final class SecurityTxtFetcherFopenClient implements SecurityTxtFetcherHttpClien
 			'http' => [
 				'follow_location' => false,
 				'ignore_errors' => true,
-				'user_agent' => $this->userAgent ?? 'spaze/security-txt',
+				'user_agent' => $this->userAgent,
 			],
 		];
 		if ($contextHost !== null) {

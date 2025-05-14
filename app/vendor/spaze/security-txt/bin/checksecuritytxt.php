@@ -35,7 +35,7 @@ if (!$autoloadLoaded) {
 
 $validator = new SecurityTxtValidator();
 $signature = new SecurityTxtSignature();
-$fopenClient = new SecurityTxtFetcherFopenClient();
+$fopenClient = new SecurityTxtFetcherFopenClient('Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)');
 $fetcher = new SecurityTxtFetcher($fopenClient);
 $expiresFactory = new SecurityTxtExpiresFactory();
 $parser = new SecurityTxtParser($validator, $signature, $fetcher, $expiresFactory);
