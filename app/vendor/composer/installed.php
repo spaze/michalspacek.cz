@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0cc897992e8eb0a9c72f2b190a85e62eb3699e7e',
+        'reference' => '477a5ecacd6eee9c802664ad2a21e409817145d5',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,18 +11,18 @@
     ),
     'versions' => array(
         'async-aws/core' => array(
-            'pretty_version' => '1.25.0',
-            'version' => '1.25.0.0',
-            'reference' => '19e1ac6978730a59bf71ad3fa584bc588df11ae2',
+            'pretty_version' => '1.26.0',
+            'version' => '1.26.0.0',
+            'reference' => '58ab79116d990e7053b2e31162f47df4223148c5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../async-aws/core',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'async-aws/lambda' => array(
-            'pretty_version' => '2.10.0',
-            'version' => '2.10.0.0',
-            'reference' => 'e430d035827bbc34ba32b50676d06e5fbc43fb85',
+            'pretty_version' => '2.11.0',
+            'version' => '2.11.0.0',
+            'reference' => 'a97e24a1f06b57f4e5122bdb78af162a852db49d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../async-aws/lambda',
             'aliases' => array(),
@@ -343,7 +343,7 @@
         'phpcsstandards/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.12.2',
+                0 => '3.13.0',
             ),
         ),
         'phpstan/phpdoc-parser' => array(
@@ -448,7 +448,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '59be420c5cdc0c3c9cdae31804d32fefb515a918',
+            'reference' => '5326c903c04c522c27d45dacfb6a521a448a399a',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -457,9 +457,9 @@
             'dev_requirement' => true,
         ),
         'shipmonk/composer-dependency-analyser' => array(
-            'pretty_version' => '1.8.2',
-            'version' => '1.8.2.0',
-            'reference' => 'f374f5366028fd7ece8aeaffa76895d73dc0a05a',
+            'pretty_version' => '1.8.3',
+            'version' => '1.8.3.0',
+            'reference' => 'ca6b2725cd4854d97c1ce08e6954a74fbdd25372',
             'type' => 'library',
             'install_path' => __DIR__ . '/../shipmonk/composer-dependency-analyser',
             'aliases' => array(),
@@ -513,7 +513,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0cc897992e8eb0a9c72f2b190a85e62eb3699e7e',
+            'reference' => '477a5ecacd6eee9c802664ad2a21e409817145d5',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -538,9 +538,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpcs-phar' => array(
-            'pretty_version' => '3.12.2',
-            'version' => '3.12.2.0',
-            'reference' => '57a6b457b60a073e3794224907bb43744f656a4d',
+            'pretty_version' => '3.13.0',
+            'version' => '3.13.0.0',
+            'reference' => 'da087512bd8e2f4be2a4ffa7f5257721a52439bf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/phpcs-phar',
             'aliases' => array(),
@@ -576,7 +576,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd6fd00680de82299c1ea62e13e18bacb0763fa59',
+            'reference' => 'd4bc0819518aaa0c175a0e9dff5b49347a9f7868',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(
@@ -605,7 +605,7 @@
         'squizlabs/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.12.2',
+                0 => '3.13.0',
             ),
         ),
         'symfony/cache' => array(

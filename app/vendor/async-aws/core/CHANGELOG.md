@@ -2,6 +2,17 @@
 
 ## NOT RELEASED
 
+## 1.26.0
+
+### Added
+
+- AWS api-change: Added `eu-isoe-west-1` region
+
+### Changed
+
+- Normalize the composer requirements
+- Sort exception alphabetically.
+
 ## 1.25.0
 
 ### Added
