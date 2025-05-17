@@ -36,10 +36,10 @@ if (!$autoloadLoaded) {
 $validator = new SecurityTxtValidator();
 $signature = new SecurityTxtSignature();
 $fopenClient = new SecurityTxtFetcherFopenClient('Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)');
-$fetcher = new SecurityTxtFetcher($fopenClient);
+$urlParser = new SecurityTxtUrlParser();
+$fetcher = new SecurityTxtFetcher($fopenClient, $urlParser);
 $expiresFactory = new SecurityTxtExpiresFactory();
 $parser = new SecurityTxtParser($validator, $signature, $fetcher, $expiresFactory);
-$urlParser = new SecurityTxtUrlParser();
 $consolePrinter = new ConsolePrinter();
 $json = new SecurityTxtJson();
 $fetchResultFactory = new SecurityTxtFetchResultFactory($json);

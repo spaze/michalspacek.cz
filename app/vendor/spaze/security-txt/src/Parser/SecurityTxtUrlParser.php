@@ -36,4 +36,68 @@ final class SecurityTxtUrlParser
 		throw new SecurityTxtCannotParseHostnameException($url);
 	}
 
+
+	public function getRedirectUrl(string $redirect, string $current): string
+	{
+		$redirectParts = parse_url($redirect);
+		if ($redirectParts === false) {
+			return $redirect;
+		}
+		if (!isset($redirectParts['host'])) {
+			$currentParts = parse_url($current);
+			if ($currentParts === false) {
+				return $redirect;
+			}
+			if (!isset($redirectParts['path'])) {
+				$redirectParts['path'] = '/';
+			}
+			if (!isset($currentParts['path'])) {
+				$currentParts['path'] = '/';
+			}
+			if ($redirectParts['path'][0] === '/') {
+				$currentParts['path'] = $redirectParts['path'];
+			} else {
+				$currentParts['path'] = sprintf('%s/%s', rtrim(dirname($currentParts['path']), '/'), $redirectParts['path']);
+			}
+			if (isset($redirectParts['query'])) {
+				$currentParts['query'] = $redirectParts['query'];
+			} else {
+				unset($currentParts['query']);
+			}
+			if (isset($redirectParts['fragment'])) {
+				$currentParts['fragment'] = $redirectParts['fragment'];
+			} else {
+				unset($currentParts['fragment']);
+			}
+			$redirect = $this->getUrl($currentParts);
+		}
+		return $redirect;
+	}
+
+
+	/**
+	 * @param array{scheme?:string, user?:string, pass?:string, host?:string, port?:int, path:string, query?:string, fragment?:string} $parts
+	 */
+	private function getUrl(array $parts): string
+	{
+		$url = '';
+		if (isset($parts['scheme'])) {
+			$url .= "{$parts['scheme']}://";
+		}
+		if (isset($parts['host'])) {
+			$url .= $parts['host'];
+		}
+		if (isset($parts['port'])) {
+			$url .= ":{$parts['port']}";
+		}
+		$url .= $parts['path'];
+		if (isset($parts['query'])) {
+			$url .= "?{$parts['query']}";
+		}
+		if (isset($parts['fragment'])) {
+			$url .= "#{$parts['fragment']}";
+		}
+		return $url;
+	}
+
 }

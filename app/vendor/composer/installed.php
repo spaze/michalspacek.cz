@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '477a5ecacd6eee9c802664ad2a21e409817145d5',
+        'reference' => 'f877e613694402171c2411391ab91b2882ad1183',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -356,18 +356,18 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.1.14',
-            'version' => '2.1.14.0',
-            'reference' => '8f2e03099cac24ff3b379864d171c5acbfc6b9a2',
+            'pretty_version' => '2.1.16',
+            'version' => '2.1.16.0',
+            'reference' => 'b8c1cf533cba0c305d91c6ccd23f3dd0566ba5f9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
-            'pretty_version' => '2.0.2',
-            'version' => '2.0.2.0',
-            'reference' => '9d8e7d4e32711715ad78a1fb6ec368df9af01fdf',
+            'pretty_version' => '2.0.3',
+            'version' => '2.0.3.0',
+            'reference' => '468e02c9176891cc901143da118f09dc9505fc2f',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-deprecation-rules',
             'aliases' => array(),
@@ -448,7 +448,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '5326c903c04c522c27d45dacfb6a521a448a399a',
+            'reference' => '0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -513,7 +513,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '477a5ecacd6eee9c802664ad2a21e409817145d5',
+            'reference' => 'f877e613694402171c2411391ab91b2882ad1183',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -576,7 +576,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd4bc0819518aaa0c175a0e9dff5b49347a9f7868',
+            'reference' => '15f1d106e633116489622fe38fd114dab87353a6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(
