@@ -2221,17 +2221,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.14",
-            "version_normalized": "2.1.14.0",
+            "version": "2.1.16",
+            "version_normalized": "2.1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "8f2e03099cac24ff3b379864d171c5acbfc6b9a2"
+                "reference": "b8c1cf533cba0c305d91c6ccd23f3dd0566ba5f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8f2e03099cac24ff3b379864d171c5acbfc6b9a2",
-                "reference": "8f2e03099cac24ff3b379864d171c5acbfc6b9a2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b8c1cf533cba0c305d91c6ccd23f3dd0566ba5f9",
+                "reference": "b8c1cf533cba0c305d91c6ccd23f3dd0566ba5f9",
                 "shasum": ""
             },
             "require": {
@@ -2240,7 +2240,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2025-05-02T15:32:28+00:00",
+            "time": "2025-05-16T09:40:10+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2282,29 +2282,29 @@
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
-            "version": "2.0.2",
-            "version_normalized": "2.0.2.0",
+            "version": "2.0.3",
+            "version_normalized": "2.0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-deprecation-rules.git",
-                "reference": "9d8e7d4e32711715ad78a1fb6ec368df9af01fdf"
+                "reference": "468e02c9176891cc901143da118f09dc9505fc2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-deprecation-rules/zipball/9d8e7d4e32711715ad78a1fb6ec368df9af01fdf",
-                "reference": "9d8e7d4e32711715ad78a1fb6ec368df9af01fdf",
+                "url": "https://api.github.com/repos/phpstan/phpstan-deprecation-rules/zipball/468e02c9176891cc901143da118f09dc9505fc2f",
+                "reference": "468e02c9176891cc901143da118f09dc9505fc2f",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^2.1.13"
+                "phpstan/phpstan": "^2.1.15"
             },
             "require-dev": {
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/phpstan-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.6"
             },
-            "time": "2025-04-26T19:59:57+00:00",
+            "time": "2025-05-14T10:56:57+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -2326,7 +2326,7 @@
             "description": "PHPStan rules for detecting usage of deprecated classes, methods, properties, constants and traits.",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-deprecation-rules/issues",
-                "source": "https://github.com/phpstan/phpstan-deprecation-rules/tree/2.0.2"
+                "source": "https://github.com/phpstan/phpstan-deprecation-rules/tree/2.0.3"
             },
             "install-path": "../phpstan/phpstan-deprecation-rules"
         },
@@ -2651,12 +2651,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "5326c903c04c522c27d45dacfb6a521a448a399a"
+                "reference": "0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5326c903c04c522c27d45dacfb6a521a448a399a",
-                "reference": "5326c903c04c522c27d45dacfb6a521a448a399a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe",
+                "reference": "0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe",
                 "shasum": ""
             },
             "conflict": {
@@ -2698,7 +2698,10 @@
                 "athlon1600/php-proxy-app": "<=3",
                 "athlon1600/youtube-downloader": "<=4",
                 "austintoddj/canvas": "<=3.4.2",
-                "auth0/wordpress": "<=4.6",
+                "auth0/auth0-php": ">=8.0.0.0-beta1,<8.14",
+                "auth0/login": "<7.17",
+                "auth0/symfony": "<5.4",
+                "auth0/wordpress": "<5.3",
                 "automad/automad": "<2.0.0.0-alpha5",
                 "automattic/jetpack": "<9.8",
                 "awesome-support/awesome-support": "<=6.0.7",
@@ -3151,7 +3154,7 @@
                 "oro/customer-portal": ">=4.1,<=4.1.13|>=4.2,<=4.2.10|>=5,<=5.0.11|>=5.1,<=5.1.3",
                 "oro/platform": ">=1.7,<1.7.4|>=3.1,<3.1.29|>=4.1,<4.1.17|>=4.2,<=4.2.10|>=5,<=5.0.12|>=5.1,<=5.1.3",
                 "oveleon/contao-cookiebar": "<1.16.3|>=2,<2.1.3",
-                "oxid-esales/oxideshop-ce": "<4.5",
+                "oxid-esales/oxideshop-ce": "<=7.0.5",
                 "oxid-esales/paymorrow-module": ">=1,<1.0.2|>=2,<2.0.1",
                 "packbackbooks/lti-1-3-php-library": "<5",
                 "padraic/humbug_get_contents": "<1.1.2",
@@ -3324,7 +3327,7 @@
                 "subhh/libconnect": "<7.0.8|>=8,<8.1",
                 "sukohi/surpass": "<1",
                 "sulu/form-bundle": ">=2,<2.5.3",
-                "sulu/sulu": "<1.6.44|>=2,<2.5.21|>=2.6,<2.6.5",
+                "sulu/sulu": "<1.6.44|>=2,<2.5.25|>=2.6,<2.6.9|>=3.0.0.0-alpha1,<3.0.0.0-alpha3",
                 "sumocoders/framework-user-bundle": "<1.4",
                 "superbig/craft-audit": "<3.0.2",
                 "svewap/a21glossary": "<=0.4.10",
@@ -3538,7 +3541,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2025-05-13T20:06:05+00:00",
+            "time": "2025-05-17T16:05:20+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -4284,12 +4287,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "d4bc0819518aaa0c175a0e9dff5b49347a9f7868"
+                "reference": "15f1d106e633116489622fe38fd114dab87353a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/d4bc0819518aaa0c175a0e9dff5b49347a9f7868",
-                "reference": "d4bc0819518aaa0c175a0e9dff5b49347a9f7868",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/15f1d106e633116489622fe38fd114dab87353a6",
+                "reference": "15f1d106e633116489622fe38fd114dab87353a6",
                 "shasum": ""
             },
             "require-dev": {
@@ -4307,7 +4310,7 @@
             "suggest": {
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2025-05-13T00:08:43+00:00",
+            "time": "2025-05-17T14:39:55+00:00",
             "default-branch": true,
             "bin": [
                 "bin/checksecuritytxt.php"

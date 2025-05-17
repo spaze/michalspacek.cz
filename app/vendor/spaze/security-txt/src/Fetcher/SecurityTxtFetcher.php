@@ -16,6 +16,7 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledE
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherHttpClient;
+use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
 use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeInvalid;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeWrongCharset;
@@ -47,6 +48,7 @@ final class SecurityTxtFetcher
 
 	public function __construct(
 		private readonly SecurityTxtFetcherHttpClient $httpClient,
+		private readonly SecurityTxtUrlParser $urlParser,
 	) {
 	}
 
@@ -285,7 +287,7 @@ final class SecurityTxtFetcher
 			$previousUrl = $this->redirects[$originalUrl] !== [] ? $this->redirects[$originalUrl][array_key_last($this->redirects[$originalUrl])] : $originalUrl;
 			$this->callOnCallback($this->onRedirect, $previousUrl, $location);
 			$this->redirects[$originalUrl][] = $location;
-			$finalUrl = $location;
+			$finalUrl = $location = $this->urlParser->getRedirectUrl($location, $url);
 			if (count($this->redirects[$originalUrl]) > self::MAX_ALLOWED_REDIRECTS) {
 				throw new SecurityTxtTooManyRedirectsException($url, $this->redirects[$originalUrl], self::MAX_ALLOWED_REDIRECTS);
 			}
