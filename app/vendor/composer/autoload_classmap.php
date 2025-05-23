@@ -48,6 +48,7 @@ return array(
     'Latte\\Bridges\\Tracy\\BlueScreenPanel' => $vendorDir . '/latte/latte/src/Bridges/Tracy/BlueScreenPanel.php',
     'Latte\\Bridges\\Tracy\\LattePanel' => $vendorDir . '/latte/latte/src/Bridges/Tracy/LattePanel.php',
     'Latte\\Bridges\\Tracy\\TracyExtension' => $vendorDir . '/latte/latte/src/Bridges/Tracy/TracyExtension.php',
+    'Latte\\Cache' => $vendorDir . '/latte/latte/src/Latte/Cache.php',
     'Latte\\CompileException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
     'Latte\\Compiler\\Block' => $vendorDir . '/latte/latte/src/Latte/Compiler/Block.php',
     'Latte\\Compiler\\Escaper' => $vendorDir . '/latte/latte/src/Latte/Compiler/Escaper.php',

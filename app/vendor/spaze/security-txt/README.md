@@ -68,7 +68,9 @@ Returns `list<SecurityTxtSpecViolation>`, the list contains file-level warnings 
 
 ## JSON
 The `Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult` object can be encoded to JSON with `json_encode()`,
-and decoded back with `Spaze\SecurityTxt\Check\SecurityTxtCheckHostResultFactory::createFromJson()`.
+and decoded back with `Spaze\SecurityTxt\Check\SecurityTxtJson::createCheckHostResultFromJsonValues()`.
+
+Exceptions can be recreated with `Spaze\SecurityTxt\Check\SecurityTxtJson::createFetcherExceptionFromJsonValues()`.
 
 ## The other methods
 Both `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseString()` and `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseHost()` return a `Spaze\SecurityTxt\Parser\SecurityTxtParseResult` object with similar methods as what's described above for `SecurityTxtCheckHostResult`.

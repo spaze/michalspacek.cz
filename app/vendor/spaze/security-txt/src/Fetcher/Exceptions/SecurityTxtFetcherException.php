@@ -12,7 +12,7 @@ abstract class SecurityTxtFetcherException extends Exception implements JsonSeri
 {
 
 	/**
-	 * @param list<scalar|array<array-key, scalar>> $constructorParams
+	 * @param list<scalar|array<array-key, scalar|array<array-key, scalar>>> $constructorParams
 	 * @param list<string|int> $messageValues
 	 * @param list<string> $redirects
 	 */

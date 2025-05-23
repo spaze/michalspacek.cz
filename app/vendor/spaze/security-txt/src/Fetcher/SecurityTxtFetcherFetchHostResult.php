@@ -3,19 +3,22 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher;
 
-use JsonSerializable;
-use Override;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 
 /**
  * @internal
  */
-final readonly class SecurityTxtFetcherFetchHostResult implements JsonSerializable
+final readonly class SecurityTxtFetcherFetchHostResult
 {
 
+	/**
+	 * @phpstan-param 1|134217728 $ipAddressType DNS_A or DNS_AAAA
+	 */
 	public function __construct(
 		private string $url,
 		private string $finalUrl,
+		private string $ipAddress,
+		private int $ipAddressType,
 		private ?SecurityTxtFetcherResponse $response,
 		private ?SecurityTxtFetcherException $exception,
 	) {
@@ -34,6 +37,21 @@ final readonly class SecurityTxtFetcherFetchHostResult implements JsonSerializab
 	}
 
 
+	public function getIpAddress(): string
+	{
+		return $this->ipAddress;
+	}
+
+
+	/**
+	 * @phpstan-return 1|134217728 DNS_A or DNS_AAAA
+	 */
+	public function getIpAddressType(): int
+	{
+		return $this->ipAddressType;
+	}
+
+
 	public function getContents(): ?string
 	{
 		return $this->response?->getContents();
@@ -49,21 +67,6 @@ final readonly class SecurityTxtFetcherFetchHostResult implements JsonSerializab
 	public function getHttpCode(): int
 	{
 		return $this->exception?->getCode() ?? 200;
-	}
-
-
-	/**
-	 * @return array<string, mixed>
-	 */
-	#[Override]
-	public function jsonSerialize(): array
-	{
-		return [
-			'url' => $this->getUrl(),
-			'finalUrl' => $this->getFinalUrl(),
-			'contents' => $this->getContents(),
-			'httpCode' => $this->getHttpCode(),
-		];
 	}
 
 }
