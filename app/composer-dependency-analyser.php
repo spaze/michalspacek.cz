@@ -19,6 +19,7 @@ return (new Configuration())
 	->ignoreErrorsOnPackage('latte/latte', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('async-aws/lambda', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('spaze/security-txt', [ErrorType::UNUSED_DEPENDENCY])
+	->ignoreErrorsOnPackage('mlocati/ip-lib', [ErrorType::UNUSED_DEPENDENCY])
 
 	->ignoreErrorsOnExtensions([
 		'ext-gd', // Used by e.g. Nette\Http\FileUpload::toImage which is used by MichalSpacekCz\Media\VideoThumbnails::validateUpload()

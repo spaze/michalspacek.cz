@@ -61,6 +61,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'JetBrains\\PhpStorm\\' => 19,
         ),
+        'I' => 
+        array (
+            'IPLib\\' => 6,
+        ),
         'C' => 
         array (
             'Contributte\\Translation\\' => 24,
@@ -215,6 +219,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'JetBrains\\PhpStorm\\' => 
         array (
             0 => __DIR__ . '/..' . '/jetbrains/phpstorm-attributes/src',
+        ),
+        'IPLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mlocati/ip-lib/src',
         ),
         'Contributte\\Translation\\' => 
         array (
