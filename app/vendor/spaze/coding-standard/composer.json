@@ -14,7 +14,7 @@
 	],
 	"require": {
 		"php": "^7.2 || ^8.0",
-		"slevomat/coding-standard": "^8.16"
+		"slevomat/coding-standard": "^8.18.1"
 	},
 	"require-dev": {
 		"ext-simplexml": "*"

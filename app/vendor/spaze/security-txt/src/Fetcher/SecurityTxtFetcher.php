@@ -16,6 +16,7 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledE
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherHttpClient;
+use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
 use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeInvalid;
@@ -49,6 +50,7 @@ final class SecurityTxtFetcher
 	public function __construct(
 		private readonly SecurityTxtFetcherHttpClient $httpClient,
 		private readonly SecurityTxtUrlParser $urlParser,
+		private readonly SecurityTxtSplitLines $splitLines,
 	) {
 	}
 
@@ -90,33 +92,36 @@ final class SecurityTxtFetcher
 		$url = $this->buildUrl($urlTemplate, $host);
 		$finalUrl = $url;
 		$this->callOnCallback($this->onUrl, $url);
+		$this->redirects[$url] = [];
+		$records = @dns_get_record($host, DNS_A | DNS_AAAA); // intentionally @, converted to exception
+		if ($records === false) {
+			throw new SecurityTxtHostNotFoundException($url, $host);
+		}
+		$records = array_merge(...$records);
+		$ipRecord = $records['ip'] ?? null;
+		$ipv6Record = $records['ipv6'] ?? null;
+		if ($ipRecord !== null && !is_string($ipRecord)) {
+			throw new SecurityTxtHostIpAddressInvalidTypeException($host, get_debug_type($ipRecord), $url);
+		}
+		if ($ipv6Record !== null && !is_string($ipv6Record)) {
+			throw new SecurityTxtHostIpAddressInvalidTypeException($host, get_debug_type($ipv6Record), $url);
+		}
+		if ($noIpv6 && $ipv6Record !== null && $ipRecord === null) {
+			throw new SecurityTxtOnlyIpv6HostButIpv6DisabledException($host, $ipv6Record, $url);
+		}
+		if (!$noIpv6 && $ipv6Record !== null) {
+			$ipAddressUrl = "[{$ipv6Record}]";
+			$ipAddress = $ipv6Record;
+			$type = DNS_AAAA;
+		} elseif ($ipRecord !== null) {
+			$ipAddressUrl = $ipAddress = $ipRecord;
+			$type = DNS_A;
+		}
+		if (!isset($ipAddressUrl) || !isset($ipAddress) || !isset($type)) {
+			throw new SecurityTxtHostIpAddressNotFoundException($url, $host);
+		}
 		try {
-			$this->redirects[$url] = [];
-			$records = @dns_get_record($host, DNS_A | DNS_AAAA); // intentionally @, converted to exception
-			if ($records === false) {
-				throw new SecurityTxtHostNotFoundException($url, $host);
-			}
-			$records = array_merge(...$records);
-			$ipRecord = $records['ip'] ?? null;
-			$ipv6Record = $records['ipv6'] ?? null;
-			if ($ipRecord !== null && !is_string($ipRecord)) {
-				throw new SecurityTxtHostIpAddressInvalidTypeException($host, get_debug_type($ipRecord), $url);
-			}
-			if ($ipv6Record !== null && !is_string($ipv6Record)) {
-				throw new SecurityTxtHostIpAddressInvalidTypeException($host, get_debug_type($ipv6Record), $url);
-			}
-			if ($noIpv6 && $ipv6Record !== null && $ipRecord === null) {
-				throw new SecurityTxtOnlyIpv6HostButIpv6DisabledException($host, $ipv6Record, $url);
-			}
-			if (!$noIpv6 && $ipv6Record !== null) {
-				$ipAddress = "[{$ipv6Record}]";
-			} elseif ($ipRecord !== null) {
-				$ipAddress = $ipRecord;
-			}
-			if (!isset($ipAddress)) {
-				throw new SecurityTxtHostIpAddressNotFoundException($url, $host);
-			}
-			$response = $this->getResponse($this->buildUrl($urlTemplate, $ipAddress), $urlTemplate, $host, true, $finalUrl);
+			$response = $this->getResponse($this->buildUrl($urlTemplate, $ipAddressUrl), $urlTemplate, $host, true, $finalUrl);
 		} catch (SecurityTxtUrlNotFoundException $e) {
 			$this->callOnCallback($this->onUrlNotFound, $e->getUrl());
 			$response = null;
@@ -124,6 +129,8 @@ final class SecurityTxtFetcher
 		return new SecurityTxtFetcherFetchHostResult(
 			$url,
 			$finalUrl,
+			$ipAddress,
+			$type,
 			$response,
 			$e ?? null,
 		);
@@ -166,10 +173,12 @@ final class SecurityTxtFetcher
 		$wellKnownContents = $wellKnown->getContents();
 		$topLevelContents = $topLevel->getContents();
 		if ($wellKnownContents === null && $topLevelContents === null) {
-			throw new SecurityTxtNotFoundException([
-				$wellKnown->getUrl() => $wellKnown->getHttpCode(),
-				$topLevel->getUrl() => $topLevel->getHttpCode(),
-			]);
+			throw new SecurityTxtNotFoundException(
+				[
+					$wellKnown->getUrl() => [$wellKnown->getIpAddress(), $wellKnown->getIpAddressType(), $wellKnown->getHttpCode()],
+					$topLevel->getUrl() => [$topLevel->getIpAddress(), $topLevel->getIpAddressType(), $topLevel->getHttpCode()],
+				],
+			);
 		} elseif ($wellKnownContents !== null && $topLevelContents === null) {
 			$warnings[] = new SecurityTxtWellKnownPathOnly();
 			$result = $wellKnown;
@@ -209,6 +218,7 @@ final class SecurityTxtFetcher
 			$result->getFinalUrl(),
 			$this->redirects,
 			$contents,
+			$this->splitLines->splitLines($contents),
 			$errors,
 			$warnings,
 		);

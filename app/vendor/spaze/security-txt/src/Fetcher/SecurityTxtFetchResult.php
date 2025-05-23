@@ -12,6 +12,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 
 	/**
 	 * @param array<string, list<string>> $redirects
+	 * @param array<int, string> $lines
 	 * @param list<SecurityTxtSpecViolation> $errors
 	 * @param list<SecurityTxtSpecViolation> $warnings
 	 */
@@ -20,6 +21,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 		private string $finalUrl,
 		private array $redirects,
 		private string $contents,
+		private array $lines,
 		private array $errors,
 		private array $warnings,
 	) {
@@ -29,6 +31,16 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	public function getContents(): string
 	{
 		return $this->contents;
+	}
+
+
+	/**
+	 * @param int<1, max> $line
+	 * @return string|null
+	 */
+	public function getLine(int $line): ?string
+	{
+		return $this->lines[$line - 1] ?? null;
 	}
 
 

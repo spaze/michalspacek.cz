@@ -125,6 +125,7 @@ parameters:
 				- vendor/efabrica/phpstan-latte/src/Compiler/*.php
 				- vendor/efabrica/phpstan-latte/src/Error/ErrorBuilder.php
 				- vendor/efabrica/phpstan-latte/src/Template/Template.php
+				- vendor/latte/latte/src/Latte/Cache.php
 				- vendor/latte/latte/src/Latte/Engine.php
 				- vendor/nette/caching/src/Caching/Cache.php
 				- vendor/nette/database/src/Database/*.php

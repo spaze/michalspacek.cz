@@ -15,14 +15,14 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 	/**
 	 * @param list<SecurityTxtSpecViolation> $fetchErrors
 	 * @param list<SecurityTxtSpecViolation> $fetchWarnings
-	 * @param array<int, list<SecurityTxtSpecViolation>> $lineErrors
-	 * @param array<int, list<SecurityTxtSpecViolation>> $lineWarnings
+	 * @param array<int<1, max>, list<SecurityTxtSpecViolation>> $lineErrors
+	 * @param array<int<1, max>, list<SecurityTxtSpecViolation>> $lineWarnings
 	 * @param list<SecurityTxtSpecViolation> $fileErrors
 	 * @param list<SecurityTxtSpecViolation> $fileWarnings
 	 */
 	public function __construct(
 		private string $host,
-		private ?SecurityTxtFetchResult $fetchResult,
+		private SecurityTxtFetchResult $fetchResult,
 		private array $fetchErrors,
 		private array $fetchWarnings,
 		private array $lineErrors,
@@ -51,29 +51,29 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 	 */
 	public function getRedirects(): array
 	{
-		return $this->getFetchResult()?->getRedirects() ?? [];
+		return $this->getFetchResult()->getRedirects();
 	}
 
 
-	public function getConstructedUrl(): ?string
+	public function getConstructedUrl(): string
 	{
-		return $this->getFetchResult()?->getConstructedUrl();
+		return $this->getFetchResult()->getConstructedUrl();
 	}
 
 
-	public function getFinalUrl(): ?string
+	public function getFinalUrl(): string
 	{
-		return $this->getFetchResult()?->getFinalUrl();
+		return $this->getFetchResult()->getFinalUrl();
 	}
 
 
-	public function getContents(): ?string
+	public function getContents(): string
 	{
-		return $this->getFetchResult()?->getContents();
+		return $this->getFetchResult()->getContents();
 	}
 
 
-	public function getFetchResult(): ?SecurityTxtFetchResult
+	public function getFetchResult(): SecurityTxtFetchResult
 	{
 		return $this->fetchResult;
 	}
@@ -98,7 +98,7 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 
 
 	/**
-	 * @return array<int, list<SecurityTxtSpecViolation>>
+	 * @return array<int<1, max>, list<SecurityTxtSpecViolation>>
 	 */
 	public function getLineErrors(): array
 	{
@@ -107,7 +107,7 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 
 
 	/**
-	 * @return array<int, list<SecurityTxtSpecViolation>>
+	 * @return array<int<1, max>, list<SecurityTxtSpecViolation>>
 	 */
 	public function getLineWarnings(): array
 	{
