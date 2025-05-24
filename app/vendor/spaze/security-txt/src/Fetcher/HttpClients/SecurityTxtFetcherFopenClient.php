@@ -13,6 +13,9 @@ use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcherUrl;
 final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcherHttpClient
 {
 
+	private const int MAX_RESPONSE_LENGTH = 10_000;
+
+
 	public function __construct(
 		private string $userAgent,
 	) {
@@ -45,9 +48,14 @@ final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcher
 		if ($fp === false) {
 			throw new SecurityTxtCannotOpenUrlException($url->getUrl(), $url->getRedirects());
 		}
-		$contents = stream_get_contents($fp);
+		$contents = stream_get_contents($fp, self::MAX_RESPONSE_LENGTH);
 		if ($contents === false) {
 			throw new SecurityTxtCannotReadUrlException($url->getUrl(), $url->getRedirects());
+		}
+		if (strlen($contents) === self::MAX_RESPONSE_LENGTH) {
+			if (stream_get_contents($fp, 1) !== '') {
+				$truncated = true;
+			}
 		}
 		$metadata = stream_get_meta_data($fp);
 		fclose($fp);
@@ -64,7 +72,7 @@ final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcher
 			$parts = explode(':', $wrapperData[$i], 2);
 			$headers[strtolower(trim($parts[0]))] = trim($parts[1]);
 		}
-		return new SecurityTxtFetcherResponse($code, $headers, $contents);
+		return new SecurityTxtFetcherResponse($code, $headers, $contents, $truncated ?? false);
 	}
 
 }

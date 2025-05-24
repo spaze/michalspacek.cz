@@ -16,7 +16,7 @@ final class SecurityTxtCannotReadUrlException extends SecurityTxtFetcherExceptio
 		parent::__construct(
 			[$url, $redirects],
 			$redirects !== [] ? "Can't get contents of `%s` (redirects: `%s`)" : "Can't get contents of `%s`",
-			$redirects !== [] ? [$url, implode('` => `', $redirects)] : [$url],
+			$redirects !== [] ? [$url, implode('` → `', $redirects)] : [$url],
 			$url,
 			$redirects,
 			previous: $previous,

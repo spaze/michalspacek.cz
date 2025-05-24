@@ -325,6 +325,9 @@ final readonly class SecurityTxtJson
 		if (!is_string($values['contents'])) {
 			throw new SecurityTxtCannotParseJsonException('contents is not a string');
 		}
+		if (!is_bool($values['isTruncated'])) {
+			throw new SecurityTxtCannotParseJsonException('isTruncated is not a bool');
+		}
 		if (!is_array($values['errors'])) {
 			throw new SecurityTxtCannotParseJsonException('errors is not an array');
 		}
@@ -336,6 +339,7 @@ final readonly class SecurityTxtJson
 			$values['finalUrl'],
 			$redirects,
 			$values['contents'],
+			$values['isTruncated'],
 			$this->splitLines->splitLines($values['contents']),
 			$this->createViolationsFromJsonValues(array_values($values['errors'])),
 			$this->createViolationsFromJsonValues(array_values($values['warnings'])),

@@ -58,6 +58,15 @@ final readonly class SecurityTxtFetcherFetchHostResult
 	}
 
 
+	public function isTruncated(): bool
+	{
+		if ($this->response === null) {
+			return false;
+		}
+		return $this->response->isTruncated();
+	}
+
+
 	public function getContentTypeHeader(): ?string
 	{
 		return $this->response?->getHeader('Content-Type');

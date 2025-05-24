@@ -21,6 +21,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 		private string $finalUrl,
 		private array $redirects,
 		private string $contents,
+		private bool $isTruncated,
 		private array $lines,
 		private array $errors,
 		private array $warnings,
@@ -31,6 +32,12 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	public function getContents(): string
 	{
 		return $this->contents;
+	}
+
+
+	public function isTruncated(): bool
+	{
+		return $this->isTruncated;
 	}
 
 
@@ -95,6 +102,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 			'finalUrl' => $this->getFinalUrl(),
 			'redirects' => $this->getRedirects(),
 			'contents' => $this->getContents(),
+			'isTruncated' => $this->isTruncated(),
 			'errors' => $this->getErrors(),
 			'warnings' => $this->getWarnings(),
 		];

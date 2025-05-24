@@ -13,6 +13,7 @@ final readonly class SecurityTxtFetcherResponse
 		private int $httpCode,
 		private array $headers,
 		private string $contents,
+		private bool $isTruncated,
 	) {
 	}
 
@@ -32,6 +33,12 @@ final readonly class SecurityTxtFetcherResponse
 	public function getContents(): string
 	{
 		return $this->contents;
+	}
+
+
+	public function isTruncated(): bool
+	{
+		return $this->isTruncated;
 	}
 
 }

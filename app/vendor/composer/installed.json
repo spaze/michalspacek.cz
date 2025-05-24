@@ -4368,12 +4368,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "f922831c7f326eb999a271b04277de4feccfe918"
+                "reference": "221151af85562f7287e6b3dfba45580bdb55ac39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/f922831c7f326eb999a271b04277de4feccfe918",
-                "reference": "f922831c7f326eb999a271b04277de4feccfe918",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/221151af85562f7287e6b3dfba45580bdb55ac39",
+                "reference": "221151af85562f7287e6b3dfba45580bdb55ac39",
                 "shasum": ""
             },
             "require-dev": {
@@ -4391,7 +4391,7 @@
             "suggest": {
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2025-05-23T00:13:08+00:00",
+            "time": "2025-05-26T00:36:10+00:00",
             "default-branch": true,
             "bin": [
                 "bin/checksecuritytxt.php"

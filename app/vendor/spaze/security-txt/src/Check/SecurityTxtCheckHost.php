@@ -14,6 +14,7 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtSeemsLikeAnHtmlPageException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
@@ -92,6 +93,7 @@ final class SecurityTxtCheckHost
 	 * @throws SecurityTxtHostIpAddressInvalidTypeException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
 	 * @throws SecurityTxtCannotVerifySignatureException
+	 * @throws SecurityTxtSeemsLikeAnHtmlPageException
 	 */
 	public function check(string $url, ?int $expiresWarningThreshold = null, bool $strictMode = false, bool $noIpv6 = false): SecurityTxtCheckHostResult
 	{
