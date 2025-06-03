@@ -14,12 +14,12 @@ final class SecurityTxtExpiresTooLong extends SecurityTxtSpecViolation
 		$correctValue = new DateTimeImmutable('+1 year midnight -1 sec')->format(SecurityTxtExpires::FORMAT);
 		parent::__construct(
 			func_get_args(),
-			'The value of the `Expires` field should be less than a year into the future to avoid staleness',
-			[],
+			'The value of the %s field should be less than a year into the future to avoid staleness',
+			['Expires'],
 			'draft-foudil-securitytxt-10',
 			$correctValue,
-			'Change the value of the `Expires` field to less than a year into the future',
-			[],
+			'Change the value of the %s field to less than a year into the future',
+			['Expires'],
 			'2.5.5',
 		);
 	}

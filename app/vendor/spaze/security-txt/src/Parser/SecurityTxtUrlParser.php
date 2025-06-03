@@ -49,7 +49,7 @@ final class SecurityTxtUrlParser
 				return $redirect;
 			}
 			if (!isset($redirectParts['path'])) {
-				$redirectParts['path'] = '/';
+				$redirectParts['path'] = $currentParts['path'] ?? '/';
 			}
 			if (!isset($currentParts['path'])) {
 				$currentParts['path'] = '/';

@@ -10,7 +10,7 @@ final class SecurityTxtCannotParseHostnameException extends SecurityTxtFetcherEx
 
 	public function __construct(string $url, ?Throwable $previous = null)
 	{
-		parent::__construct([$url], "Can't parse hostname from `%s`", [$url], $url, previous: $previous);
+		parent::__construct([$url], "Can't parse hostname from %s", [$url], $url, previous: $previous);
 	}
 
 }

@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Json;
 
+use DateMalformedStringException;
 use DateTimeImmutable;
-use Exception;
 use Spaze\SecurityTxt\Check\Exceptions\SecurityTxtCannotParseJsonException;
 use Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
@@ -47,6 +47,9 @@ final readonly class SecurityTxtJson
 				throw new SecurityTxtCannotParseJsonException('class is missing or not a string');
 			} elseif (!class_exists($violation['class'])) {
 				throw new SecurityTxtCannotParseJsonException("class {$violation['class']} doesn't exist");
+			}
+			if (!isset($violation['params']) || !is_array($violation['params'])) {
+				throw new SecurityTxtCannotParseJsonException('params is missing or not an array');
 			}
 			$object = new $violation['class'](...$violation['params']);
 			if (!$object instanceof SecurityTxtSpecViolation) {
@@ -101,7 +104,7 @@ final readonly class SecurityTxtJson
 				}
 				try {
 					$dateTime = new DateTimeImmutable($values['expires']['dateTime']);
-				} catch (Exception $e) {
+				} catch (DateMalformedStringException $e) {
 					throw new SecurityTxtCannotParseJsonException('expires > dateTime is wrong format', $e);
 				}
 				if (!is_bool($values['expires']['isExpired'])) {
@@ -128,7 +131,7 @@ final readonly class SecurityTxtJson
 				}
 				try {
 					$dateTime = new DateTimeImmutable($values['signatureVerifyResult']['dateTime']);
-				} catch (Exception $e) {
+				} catch (DateMalformedStringException $e) {
 					throw new SecurityTxtCannotParseJsonException('signatureVerifyResult > dateTime is wrong format', $e);
 				}
 				$securityTxt = $securityTxt->withSignatureVerifyResult(new SecurityTxtSignatureVerifyResult($values['signatureVerifyResult']['keyFingerprint'], $dateTime));
@@ -306,32 +309,32 @@ final readonly class SecurityTxtJson
 	 */
 	public function createFetchResultFromJsonValues(array $values): SecurityTxtFetchResult
 	{
-		if (!is_string($values['class'])) {
+		if (!isset($values['class']) || !is_string($values['class'])) {
 			throw new SecurityTxtCannotParseJsonException('class is not a string');
 		}
 		if ($values['class'] !== SecurityTxtFetchResult::class) {
 			throw new SecurityTxtCannotParseJsonException('class is not ' . SecurityTxtFetchResult::class);
 		}
-		if (!is_string($values['constructedUrl'])) {
+		if (!isset($values['constructedUrl']) || !is_string($values['constructedUrl'])) {
 			throw new SecurityTxtCannotParseJsonException('constructedUrl is not a string');
 		}
-		if (!is_string($values['finalUrl'])) {
+		if (!isset($values['finalUrl']) || !is_string($values['finalUrl'])) {
 			throw new SecurityTxtCannotParseJsonException('finalUrl is not a string');
 		}
-		if (!is_array($values['redirects'])) {
+		if (!isset($values['redirects']) || !is_array($values['redirects'])) {
 			throw new SecurityTxtCannotParseJsonException('redirects is not an array');
 		}
 		$redirects = $this->createRedirectsFromJsonValues($values['redirects']);
-		if (!is_string($values['contents'])) {
+		if (!isset($values['contents']) || !is_string($values['contents'])) {
 			throw new SecurityTxtCannotParseJsonException('contents is not a string');
 		}
-		if (!is_bool($values['isTruncated'])) {
+		if (!isset($values['isTruncated']) || !is_bool($values['isTruncated'])) {
 			throw new SecurityTxtCannotParseJsonException('isTruncated is not a bool');
 		}
-		if (!is_array($values['errors'])) {
+		if (!isset($values['errors']) || !is_array($values['errors'])) {
 			throw new SecurityTxtCannotParseJsonException('errors is not an array');
 		}
-		if (!is_array($values['warnings'])) {
+		if (!isset($values['warnings']) || !is_array($values['warnings'])) {
 			throw new SecurityTxtCannotParseJsonException('warnings is not an array');
 		}
 		return new SecurityTxtFetchResult(
@@ -354,12 +357,16 @@ final readonly class SecurityTxtJson
 	public function createFetcherExceptionFromJsonValues(array $values): SecurityTxtFetcherException
 	{
 		if (
-			!is_array($values['error'])
+			!isset($values['error'])
+			|| !is_array($values['error'])
 			|| !isset($values['error']['class'])
 			|| !is_string($values['error']['class'])
 			|| !class_exists($values['error']['class'])
 		) {
 			throw new SecurityTxtCannotParseJsonException('error > class is missing, not a string or not an existing class');
+		}
+		if (!isset($values['error']['params']) || !is_array($values['error']['params'])) {
+			throw new SecurityTxtCannotParseJsonException('error > params is missing or not an array');
 		}
 		$exception = new $values['error']['class'](...$values['error']['params']);
 		if (!$exception instanceof SecurityTxtFetcherException) {

@@ -3,13 +3,18 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher;
 
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
-
 /**
  * @internal
  */
 final readonly class SecurityTxtFetcherFetchHostResult
 {
+
+	private ?SecurityTxtContentType $contentType;
+
+	private ?string $contents;
+
+	private bool $isTruncated;
+
 
 	/**
 	 * @phpstan-param 1|134217728 $ipAddressType DNS_A or DNS_AAAA
@@ -19,9 +24,18 @@ final readonly class SecurityTxtFetcherFetchHostResult
 		private string $finalUrl,
 		private string $ipAddress,
 		private int $ipAddressType,
-		private ?SecurityTxtFetcherResponse $response,
-		private ?SecurityTxtFetcherException $exception,
+		private int $httpCode,
+		?SecurityTxtFetcherResponse $response,
 	) {
+		$header = $response?->getHeader('Content-Type');
+		if ($header === null) {
+			$this->contentType = null;
+		} else {
+			$parts = explode(';', $header, 2);
+			$this->contentType = new SecurityTxtContentType($parts[0], $parts[1] ?? null);
+		}
+		$this->contents = $response?->getContents();
+		$this->isTruncated = $response !== null && $response->isTruncated();
 	}
 
 
@@ -54,28 +68,25 @@ final readonly class SecurityTxtFetcherFetchHostResult
 
 	public function getContents(): ?string
 	{
-		return $this->response?->getContents();
+		return $this->contents;
 	}
 
 
 	public function isTruncated(): bool
 	{
-		if ($this->response === null) {
-			return false;
-		}
-		return $this->response->isTruncated();
+		return $this->isTruncated;
 	}
 
 
-	public function getContentTypeHeader(): ?string
+	public function getContentType(): ?SecurityTxtContentType
 	{
-		return $this->response?->getHeader('Content-Type');
+		return $this->contentType;
 	}
 
 
 	public function getHttpCode(): int
 	{
-		return $this->exception?->getCode() ?? 200;
+		return $this->httpCode;
 	}
 
 }

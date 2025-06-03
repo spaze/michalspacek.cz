@@ -10,12 +10,12 @@ final class SecurityTxtWellKnownPathOnly extends SecurityTxtSpecViolation
 	{
 		parent::__construct(
 			func_get_args(),
-			"`security.txt` not found at the top-level path",
-			[],
+			"%s not found at the top-level path",
+			['security.txt'],
 			'draft-foudil-securitytxt-02',
 			null,
-			'Redirect the top-level file to the one under the `/.well-known/` path',
-			[],
+			'Redirect the top-level file to the one under the %s path',
+			['/.well-known/'],
 			'3',
 		);
 	}

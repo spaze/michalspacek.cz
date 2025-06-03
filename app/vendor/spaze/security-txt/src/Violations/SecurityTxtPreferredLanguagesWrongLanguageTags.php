@@ -11,21 +11,22 @@ final class SecurityTxtPreferredLanguagesWrongLanguageTags extends SecurityTxtSp
 	 */
 	public function __construct(array $wrongLanguages)
 	{
-		$tags = [];
+		$tags = $tagsValues = [];
 		foreach ($wrongLanguages as $key => $value) {
-			$tags[] = "#{$key} `{$value}`";
+			$tags[] = "#{$key} %s";
+			$tagsValues[] = $value;
 		}
 		$format = count($wrongLanguages) > 1
-			? 'The language tags %s seem invalid, the `Preferred-Languages` field must contain one or more language tags as defined in RFC 5646'
-			: 'The language tag %s seems invalid, the `Preferred-Languages` field must contain one or more language tags as defined in RFC 5646';
+			? 'The language tags ' . implode(', ', $tags) . ' seem invalid, the %s field must contain one or more language tags as defined in RFC 5646'
+			: 'The language tag ' . implode(', ', $tags) . ' seems invalid, the %s field must contain one or more language tags as defined in RFC 5646';
 		parent::__construct(
 			func_get_args(),
 			$format,
-			[implode(', ', $tags)],
+			[...$tagsValues, 'Preferred-Languages'],
 			'draft-foudil-securitytxt-05',
 			null,
-			'Use language tags as defined in RFC 5646, which usually means the shortest ISO 639 code like for example `en`',
-			[],
+			'Use language tags as defined in RFC 5646, which usually means the shortest ISO 639 code like for example %s',
+			['en'],
 			'2.5.8',
 		);
 	}

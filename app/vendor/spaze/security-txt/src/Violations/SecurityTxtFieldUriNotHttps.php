@@ -12,11 +12,11 @@ abstract class SecurityTxtFieldUriNotHttps extends SecurityTxtSpecViolation
 	{
 		parent::__construct(
 			func_get_args(),
-			'If the `%s` field indicates a web URI, then it must begin with "https://"',
+			'If the %s field indicates a web URI, then it must begin with "https://"',
 			[$field->value],
 			'draft-foudil-securitytxt-06',
 			preg_replace('~^http://~', 'https://', $uri),
-			'Make sure the `%s` field points to an https:// URI',
+			'Make sure the %s field points to an https:// URI',
 			[$field->value],
 			$specSection,
 		);

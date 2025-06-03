@@ -10,12 +10,12 @@ final class SecurityTxtSchemeNotHttps extends SecurityTxtSpecViolation
 	{
 		parent::__construct(
 			func_get_args(),
-			"The file at `%s` must use HTTPS",
+			"The file at %s must use HTTPS",
 			[$url],
 			'draft-foudil-securitytxt-06',
 			preg_replace('~^http://~', 'https://', $url),
-			'Use HTTPS to serve the `security.txt` file',
-			[],
+			'Use HTTPS to serve the %s file',
+			['security.txt'],
 			'3',
 		);
 	}

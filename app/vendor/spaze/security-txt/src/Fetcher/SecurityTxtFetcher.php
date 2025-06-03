@@ -13,7 +13,6 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtSeemsLikeAnHtmlPageException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherHttpClient;
@@ -67,7 +66,6 @@ final class SecurityTxtFetcher
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
 	 * @throws SecurityTxtHostIpAddressInvalidTypeException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
-	 * @throws SecurityTxtSeemsLikeAnHtmlPageException
 	 */
 	public function fetchHost(string $host, bool $noIpv6 = false): SecurityTxtFetchResult
 	{
@@ -133,8 +131,8 @@ final class SecurityTxtFetcher
 			$finalUrl,
 			$ipAddress,
 			$type,
+			isset($e) ? $e->getCode() : 200,
 			$response,
-			$e ?? null,
 		);
 	}
 
@@ -168,13 +166,14 @@ final class SecurityTxtFetcher
 
 	/**
 	 * @throws SecurityTxtNotFoundException
-	 * @throws SecurityTxtSeemsLikeAnHtmlPageException
 	 */
 	private function getResult(SecurityTxtFetcherFetchHostResult $wellKnown, SecurityTxtFetcherFetchHostResult $topLevel): SecurityTxtFetchResult
 	{
 		$errors = $warnings = [];
-		$wellKnownContents = $wellKnown->getContents();
-		$topLevelContents = $topLevel->getContents();
+		$isRegularHtmlPageWellKnown = $this->isRegularHtmlPage($wellKnown);
+		$isRegularHtmlPageTopLevel = $this->isRegularHtmlPage($topLevel);
+		$wellKnownContents = $isRegularHtmlPageWellKnown ? null : $wellKnown->getContents();
+		$topLevelContents = $isRegularHtmlPageTopLevel ? null : $topLevel->getContents();
 		if ($wellKnownContents === null && $topLevelContents === null) {
 			throw new SecurityTxtNotFoundException(
 				[
@@ -183,12 +182,14 @@ final class SecurityTxtFetcher
 						$wellKnown->getIpAddressType(),
 						$wellKnown->getHttpCode(),
 						$this->redirects[$wellKnown->getUrl()] ?? [],
+						$isRegularHtmlPageWellKnown,
 					],
 					$topLevel->getUrl() => [
 						$topLevel->getIpAddress(),
 						$topLevel->getIpAddressType(),
 						$topLevel->getHttpCode(),
 						$this->redirects[$topLevel->getUrl()] ?? [],
+						$isRegularHtmlPageTopLevel,
 					],
 				],
 			);
@@ -213,21 +214,11 @@ final class SecurityTxtFetcher
 		}
 		$this->callOnCallback($this->onFinalUrl, $result->getFinalUrl());
 
-		$contentTypeHeader = $result->getContentTypeHeader();
-		$headerParts = $contentTypeHeader !== null ? explode(';', $contentTypeHeader, 2) : [];
-		$contentType = isset($headerParts[0]) ? trim($headerParts[0]) : null;
-		$charset = isset($headerParts[1]) ? trim($headerParts[1]) : null;
-		$lowercaseContentType = $contentType !== null ? strtolower($contentType) : null;
-		if (
-			$result->getHttpCode() === 200
-			&& $lowercaseContentType === 'text/html'
-			&& str_contains(strtolower($contents), '<body')
-		) {
-			throw new SecurityTxtSeemsLikeAnHtmlPageException($result->getUrl(), $this->redirects[$result->getUrl()]);
-		} elseif ($contentType === null || $lowercaseContentType !== SecurityTxt::CONTENT_TYPE) {
-			$errors[] = new SecurityTxtContentTypeInvalid($result->getUrl(), $contentType);
-		} elseif ($charset === null || strtolower($charset) !== SecurityTxt::CHARSET) {
-			$errors[] = new SecurityTxtContentTypeWrongCharset($result->getUrl(), $contentType, $charset);
+		$contentTypeHeader = $result->getContentType();
+		if ($contentTypeHeader === null || $contentTypeHeader->getLowercaseContentType() !== SecurityTxt::CONTENT_TYPE) {
+			$errors[] = new SecurityTxtContentTypeInvalid($result->getUrl(), $contentTypeHeader?->getContentType());
+		} elseif ($contentTypeHeader->getLowercaseCharset() !== SecurityTxt::CHARSET) {
+			$errors[] = new SecurityTxtContentTypeWrongCharset($result->getUrl(), $contentTypeHeader->getContentType(), $contentTypeHeader->getCharset());
 		}
 		$scheme = parse_url($result->getUrl(), PHP_URL_SCHEME);
 		if ($scheme !== 'https') {
@@ -324,6 +315,15 @@ final class SecurityTxtFetcher
 			}
 			return $this->getResponse($location, $urlTemplate, $host, false, $finalUrl);
 		}
+	}
+
+
+	private function isRegularHtmlPage(SecurityTxtFetcherFetchHostResult $result): bool
+	{
+		return $result->getHttpCode() === 200
+			&& $result->getContentType()?->getLowercaseContentType() === 'text/html'
+			&& $result->getContents() !== null
+			&& str_contains(strtolower($result->getContents()), '<body');
 	}
 
 }

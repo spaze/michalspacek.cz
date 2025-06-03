@@ -210,7 +210,8 @@ final class SecurityTxt implements JsonSerializable
 							$key + 1,
 							$value,
 							preg_replace('/^cz$|cz(-)/i', 'cs$1', $value),
-							'the code for Czech language is `cs`, not `cz`',
+							'the code for Czech language is %s, not %s',
+							['cs', 'cz'],
 						));
 					}
 				}
