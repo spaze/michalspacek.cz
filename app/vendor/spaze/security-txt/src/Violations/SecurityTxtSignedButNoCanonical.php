@@ -10,12 +10,12 @@ final class SecurityTxtSignedButNoCanonical extends SecurityTxtSpecViolation
 	{
 		parent::__construct(
 			func_get_args(),
-			'When digital signatures are used, it is also recommended that organizations use the `Canonical` field',
-			[],
+			'When digital signatures are used, it is also recommended that organizations use the %s field',
+			['Canonical'],
 			'draft-foudil-securitytxt-05',
 			null,
-			'Add `Canonical` field pointing where the `security.txt` file is located',
-			[],
+			'Add %s field pointing where the %s file is located',
+			['Canonical', 'security.txt'],
 			'2.3',
 			['2.5.2'],
 		);

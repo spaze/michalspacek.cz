@@ -10,12 +10,12 @@ final class SecurityTxtSignatureExtensionNotLoaded extends SecurityTxtSpecViolat
 	{
 		parent::__construct(
 			func_get_args(),
-			'The `gnupg` extension is not available, cannot verify or create signatures',
-			[],
+			'The %s extension is not available, cannot verify or create signatures',
+			['gnupg'],
 			'draft-foudil-securitytxt-01',
 			null,
-			'Load the `gnupg` extension',
-			[],
+			'Load the %s extension',
+			['gnupg'],
 			'2.3',
 		);
 	}

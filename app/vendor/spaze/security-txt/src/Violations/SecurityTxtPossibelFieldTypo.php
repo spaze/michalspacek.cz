@@ -13,11 +13,11 @@ final class SecurityTxtPossibelFieldTypo extends SecurityTxtSpecViolation
 		$suggestedField = SecurityTxtField::from($suggestion);
 		parent::__construct(
 			func_get_args(),
-			'Field `%s` may be a typo, did you mean `%s`?',
+			'Field %s may be a typo, did you mean %s?',
 			[$fieldName, $suggestedField->value],
 			null,
 			str_replace($fieldName, $suggestedField->value, $line),
-			"Change `%s` to `%s`",
+			"Change %s to %s",
 			[$fieldName, $suggestedField->value],
 			null,
 		);

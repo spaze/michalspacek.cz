@@ -1,4 +1,4 @@
-# `security.txt` validator and writer
+# `security.txt` (RFC 9116) generator, parser, validator
 
 # As a validator
 
@@ -110,5 +110,13 @@ echo new SecurityTxtWriter()->write($securityTxt);
 ```
 
 # Exceptions
-The messages in the exceptions as thrown by this library are safe to display to the user using the `getMessage()` method.
-The messages contain formatting characters like the backtick (`` ` ``) and can be formatted with a Markdown formatter or similar, if required.
+The messages in the exceptions as thrown by this library do not contain any sensitive information and are safe to display to the user using the `getMessage()` method.
+But please be aware that the messages contain server-supplied information, so please do not display the messages as HTML or do not feed them into a Markdown parser or similar.
+If you'd do that, a malicious server could inject content that would result in Cross-Site Scripting attack for example.
+
+## Formatting messages
+If you'd like to format some of the values contained in the messages, you can use the exception's `getMessageFormat()` and `getMessageValues()` methods.
+The `getMessageFormat()` method will return an error message with `%s` placeholders, while `getMessageValues()` will return the values, including the server-supplied ones,
+which you can, **after a proper sanitization and/or escaping**, wrap in `<code>` tags for example, and use them to replace the placeholders.
+
+The same goes for formatting `SecurityTxtSpecViolation` object messages: you can use `getMessageFormat()` and `getMessageValues()`, and also `getHowToFixFormat()` and `getHowToFixValues()`.

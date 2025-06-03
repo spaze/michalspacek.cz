@@ -42,8 +42,7 @@ parameters:
 			message: '#^Cannot access constant#'
 			paths:
 				- vendor/symfony/cache/Adapter/DoctrineDbalAdapter.php
-				- vendor/symfony/cache/DependencyInjection/CachePoolPass.php
-				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
+				- vendor/symfony/cache/DependencyInjection/*.php
 				- vendor/symfony/http-client/*.php
 				# Contains Latte 2 symbols
 				- vendor/nette/application/src/Bridges/ApplicationLatte/UIMacros.php
