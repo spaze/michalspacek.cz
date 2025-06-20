@@ -4,8 +4,8 @@ namespace SlevomatCodingStandard\Helpers;
 
 use PHP_CodeSniffer\Files\File;
 use function array_key_exists;
-use function array_merge;
 use function count;
+use const T_ABSTRACT;
 use const T_ANON_CLASS;
 use const T_ARRAY;
 use const T_BREAK;
@@ -24,6 +24,7 @@ use const T_DOC_COMMENT_WHITESPACE;
 use const T_ENUM;
 use const T_EXIT;
 use const T_FALSE;
+use const T_FINAL;
 use const T_FN;
 use const T_FUNCTION;
 use const T_INTERFACE;
@@ -40,8 +41,11 @@ use const T_PHPCS_IGNORE;
 use const T_PHPCS_IGNORE_FILE;
 use const T_PHPCS_SET;
 use const T_PRIVATE;
+use const T_PRIVATE_SET;
 use const T_PROTECTED;
+use const T_PROTECTED_SET;
 use const T_PUBLIC;
+use const T_PUBLIC_SET;
 use const T_READONLY;
 use const T_RETURN;
 use const T_SELF;
@@ -63,33 +67,89 @@ use const T_WHITESPACE;
 class TokenHelper
 {
 
-	/** @var array<int, (int|string)> */
-	public static array $arrayTokenCodes = [
+	public const ONLY_NAME_TOKEN_CODES = [
+		T_STRING,
+		T_NAME_FULLY_QUALIFIED,
+		T_NAME_QUALIFIED,
+		T_NAME_RELATIVE,
+	];
+
+	public const NAME_TOKEN_CODES = [
+		...self::ONLY_NAME_TOKEN_CODES,
+		T_NS_SEPARATOR,
+	];
+
+	public const ONLY_TYPE_HINT_TOKEN_CODES = [
+		...self::NAME_TOKEN_CODES,
+		T_SELF,
+		T_PARENT,
+		T_CALLABLE,
+		T_FALSE,
+		T_TRUE,
+		T_NULL,
+	];
+
+	public const TYPE_HINT_TOKEN_CODES = [
+		...self::ONLY_TYPE_HINT_TOKEN_CODES,
+		T_TYPE_UNION,
+		T_TYPE_INTERSECTION,
+		T_TYPE_OPEN_PARENTHESIS,
+		T_TYPE_CLOSE_PARENTHESIS,
+	];
+
+	public const MODIFIERS_TOKEN_CODES = [
+		T_FINAL,
+		T_ABSTRACT,
+		T_VAR,
+		T_PUBLIC,
+		T_PUBLIC_SET,
+		T_PROTECTED,
+		T_PROTECTED_SET,
+		T_PRIVATE,
+		T_PRIVATE_SET,
+		T_READONLY,
+		T_STATIC,
+	];
+
+	public const PROPERTY_MODIFIERS_TOKEN_CODES = self::MODIFIERS_TOKEN_CODES;
+
+	public const ARRAY_TOKEN_CODES = [
 		T_ARRAY,
 		T_OPEN_SHORT_ARRAY,
 	];
 
-	/** @var array<int, (int|string)> */
-	public static array $typeKeywordTokenCodes = [
+	public const CLASS_TYPE_TOKEN_CODES = [
 		T_CLASS,
 		T_TRAIT,
 		T_INTERFACE,
 		T_ENUM,
 	];
 
-	/** @var array<int, (int|string)> */
-	public static array $typeWithAnonymousClassKeywordTokenCodes = [
-		T_CLASS,
+	public const CLASS_TYPE_WITH_ANONYMOUS_CLASS_TOKEN_CODES = [
+		...self::CLASS_TYPE_TOKEN_CODES,
 		T_ANON_CLASS,
-		T_TRAIT,
-		T_INTERFACE,
-		T_ENUM,
 	];
 
-	/** @var array<int, (int|string)> */
-	public static array $ineffectiveTokenCodes = [
-		T_WHITESPACE,
+	public const ANNOTATION_TOKEN_CODES = [
+		T_DOC_COMMENT_TAG,
+		T_PHPCS_DISABLE,
+		T_PHPCS_ENABLE,
+		T_PHPCS_IGNORE,
+		T_PHPCS_IGNORE_FILE,
+		T_PHPCS_SET,
+	];
+
+	public const INLINE_COMMENT_TOKEN_CODES = [
 		T_COMMENT,
+		T_PHPCS_DISABLE,
+		T_PHPCS_ENABLE,
+		T_PHPCS_IGNORE,
+		T_PHPCS_IGNORE_FILE,
+		T_PHPCS_SET,
+	];
+
+	public const INEFFECTIVE_TOKEN_CODES = [
+		T_WHITESPACE,
 		T_DOC_COMMENT,
 		T_DOC_COMMENT_OPEN_TAG,
 		T_DOC_COMMENT_CLOSE_TAG,
@@ -97,35 +157,10 @@ class TokenHelper
 		T_DOC_COMMENT_STRING,
 		T_DOC_COMMENT_TAG,
 		T_DOC_COMMENT_WHITESPACE,
-		T_PHPCS_DISABLE,
-		T_PHPCS_ENABLE,
-		T_PHPCS_IGNORE,
-		T_PHPCS_IGNORE_FILE,
-		T_PHPCS_SET,
+		...self::INLINE_COMMENT_TOKEN_CODES,
 	];
 
-	/** @var array<int, (int|string)> */
-	public static array $annotationTokenCodes = [
-		T_DOC_COMMENT_TAG,
-		T_PHPCS_DISABLE,
-		T_PHPCS_ENABLE,
-		T_PHPCS_IGNORE,
-		T_PHPCS_IGNORE_FILE,
-		T_PHPCS_SET,
-	];
-
-	/** @var array<int, (int|string)> */
-	public static array $inlineCommentTokenCodes = [
-		T_COMMENT,
-		T_PHPCS_DISABLE,
-		T_PHPCS_ENABLE,
-		T_PHPCS_IGNORE,
-		T_PHPCS_IGNORE_FILE,
-		T_PHPCS_SET,
-	];
-
-	/** @var array<int, (int|string)> */
-	public static array $earlyExitTokenCodes = [
+	public const EARLY_EXIT_TOKEN_CODES = [
 		T_RETURN,
 		T_CONTINUE,
 		T_BREAK,
@@ -133,21 +168,10 @@ class TokenHelper
 		T_EXIT,
 	];
 
-	/** @var array<int, (int|string)> */
-	public static array $functionTokenCodes = [
+	public const FUNCTION_TOKEN_CODES = [
 		T_FUNCTION,
 		T_CLOSURE,
 		T_FN,
-	];
-
-	/** @var array<int, (int|string)> */
-	public static array $propertyModifiersTokenCodes = [
-		T_VAR,
-		T_PUBLIC,
-		T_PROTECTED,
-		T_PRIVATE,
-		T_READONLY,
-		T_STATIC,
 	];
 
 	/**
@@ -198,7 +222,7 @@ class TokenHelper
 	 */
 	public static function findNextEffective(File $phpcsFile, int $startPointer, ?int $endPointer = null): ?int
 	{
-		return self::findNextExcluding($phpcsFile, self::$ineffectiveTokenCodes, $startPointer, $endPointer);
+		return self::findNextExcluding($phpcsFile, self::INEFFECTIVE_TOKEN_CODES, $startPointer, $endPointer);
 	}
 
 	/**
@@ -269,7 +293,7 @@ class TokenHelper
 	 */
 	public static function findPreviousEffective(File $phpcsFile, int $startPointer, ?int $endPointer = null): ?int
 	{
-		return self::findPreviousExcluding($phpcsFile, self::$ineffectiveTokenCodes, $startPointer, $endPointer);
+		return self::findPreviousExcluding($phpcsFile, self::INEFFECTIVE_TOKEN_CODES, $startPointer, $endPointer);
 	}
 
 	/**
@@ -472,63 +496,6 @@ class TokenHelper
 			throw new EmptyFileException($phpcsFile->getFilename());
 		}
 		return $tokenCount - 1;
-	}
-
-	/**
-	 * @return array<int, (int|string)>
-	 */
-	public static function getNameTokenCodes(): array
-	{
-		return [T_STRING, T_NS_SEPARATOR, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_NAME_RELATIVE];
-	}
-
-	/**
-	 * @return array<int, (int|string)>
-	 */
-	public static function getOnlyNameTokenCodes(): array
-	{
-		return [T_STRING, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_NAME_RELATIVE];
-	}
-
-	/**
-	 * @return array<int, (int|string)>
-	 */
-	public static function getOnlyTypeHintTokenCodes(): array
-	{
-		static $typeHintTokenCodes = null;
-
-		if ($typeHintTokenCodes === null) {
-			$typeHintTokenCodes = array_merge(
-				self::getNameTokenCodes(),
-				[
-					T_SELF,
-					T_PARENT,
-					T_CALLABLE,
-					T_FALSE,
-					T_TRUE,
-					T_NULL,
-				],
-			);
-		}
-
-		return $typeHintTokenCodes;
-	}
-
-	/**
-	 * @return array<int, (int|string)>
-	 */
-	public static function getTypeHintTokenCodes(): array
-	{
-		static $typeHintTokenCodes = null;
-
-		if ($typeHintTokenCodes === null) {
-			$typeHintTokenCodes = array_merge(
-				self::getOnlyTypeHintTokenCodes(),
-				[T_TYPE_UNION, T_TYPE_INTERSECTION, T_TYPE_OPEN_PARENTHESIS, T_TYPE_CLOSE_PARENTHESIS],
-			);
-		}
-
-		return $typeHintTokenCodes;
 	}
 
 }

@@ -10,7 +10,6 @@ use SlevomatCodingStandard\Helpers\FixerHelper;
 use SlevomatCodingStandard\Helpers\IndentationHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
 use function array_key_exists;
-use function array_merge;
 use function in_array;
 use function strlen;
 use function substr;
@@ -32,8 +31,7 @@ class DisallowCommentAfterCodeSniff implements Sniff
 	 */
 	public function register(): array
 	{
-		/** @phpstan-var array<int, (int|string)> */
-		return array_merge(TokenHelper::$inlineCommentTokenCodes, [T_DOC_COMMENT_OPEN_TAG]);
+		return [...TokenHelper::INLINE_COMMENT_TOKEN_CODES, T_DOC_COMMENT_OPEN_TAG];
 	}
 
 	/**
@@ -105,12 +103,13 @@ class DisallowCommentAfterCodeSniff implements Sniff
 				true,
 			)
 		) {
-			$phpcsFile->fixer->addContent(
+			FixerHelper::add(
+				$phpcsFile,
 				$firstNonWhiteSpacePointerBeforeComment,
-				$phpcsFile->eolChar . IndentationHelper::addIndentation($indentation) . $commentContent,
+				$phpcsFile->eolChar . IndentationHelper::addIndentation($phpcsFile, $indentation) . $commentContent,
 			);
 		} elseif ($tokens[$firstNonWhitespacePointerOnLine]['code'] === T_CLOSE_CURLY_BRACKET) {
-			$phpcsFile->fixer->addContent($firstNonWhiteSpacePointerBeforeComment, $phpcsFile->eolChar . $indentation . $commentContent);
+			FixerHelper::add($phpcsFile, $firstNonWhiteSpacePointerBeforeComment, $phpcsFile->eolChar . $indentation . $commentContent);
 		} elseif (isset(Tokens::$stringTokens[$tokens[$firstPointerOnLine]['code']])) {
 			$prevNonStringToken = TokenHelper::findPreviousExcluding(
 				$phpcsFile,
@@ -120,10 +119,10 @@ class DisallowCommentAfterCodeSniff implements Sniff
 			$firstTokenOnNonStringTokenLine = TokenHelper::findFirstTokenOnLine($phpcsFile, $prevNonStringToken);
 			$firstNonWhitespacePointerOnNonStringTokenLine = TokenHelper::findFirstNonWhitespaceOnLine($phpcsFile, $prevNonStringToken);
 			$prevLineIndentation = IndentationHelper::getIndentation($phpcsFile, $firstNonWhitespacePointerOnNonStringTokenLine);
-			$phpcsFile->fixer->addContentBefore($firstTokenOnNonStringTokenLine, $prevLineIndentation . $commentContent);
+			FixerHelper::addBefore($phpcsFile, $firstTokenOnNonStringTokenLine, $prevLineIndentation . $commentContent);
 			$phpcsFile->fixer->addNewline($firstNonWhiteSpacePointerBeforeComment);
 		} else {
-			$phpcsFile->fixer->addContentBefore($firstPointerOnLine, $indentation . $commentContent);
+			FixerHelper::addBefore($phpcsFile, $firstPointerOnLine, $indentation . $commentContent);
 			$phpcsFile->fixer->addNewline($firstNonWhiteSpacePointerBeforeComment);
 		}
 

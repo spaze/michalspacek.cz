@@ -77,7 +77,7 @@ class ReferenceSpacingSniff implements Sniff
 
 		$phpcsFile->fixer->beginChangeset();
 
-		$phpcsFile->fixer->addContent($referencePointer, str_repeat(' ', $this->spacesCountAfterReference));
+		FixerHelper::add($phpcsFile, $referencePointer, str_repeat(' ', $this->spacesCountAfterReference));
 
 		FixerHelper::removeBetween($phpcsFile, $referencePointer, $pointerAfterWhitespace);
 
@@ -89,7 +89,7 @@ class ReferenceSpacingSniff implements Sniff
 		$tokens = $phpcsFile->getTokens();
 
 		$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $referencePointer - 1);
-		if (in_array($tokens[$previousPointer]['code'], TokenHelper::$functionTokenCodes, true)) {
+		if (in_array($tokens[$previousPointer]['code'], TokenHelper::FUNCTION_TOKEN_CODES, true)) {
 			return true;
 		}
 
@@ -100,7 +100,7 @@ class ReferenceSpacingSniff implements Sniff
 		) {
 			if (array_key_exists('parenthesis_owner', $tokens[$previousParenthesisOpenerPointer])) {
 				$parenthesisOwnerPointer = $tokens[$previousParenthesisOpenerPointer]['parenthesis_owner'];
-				if (in_array($tokens[$parenthesisOwnerPointer]['code'], TokenHelper::$functionTokenCodes, true)) {
+				if (in_array($tokens[$parenthesisOwnerPointer]['code'], TokenHelper::FUNCTION_TOKEN_CODES, true)) {
 					return true;
 				}
 			}

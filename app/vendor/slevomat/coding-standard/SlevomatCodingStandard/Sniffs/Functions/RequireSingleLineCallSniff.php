@@ -63,7 +63,7 @@ class RequireSingleLineCallSniff extends AbstractLineCall
 
 		if (TokenHelper::findNext(
 			$phpcsFile,
-			array_merge(TokenHelper::$inlineCommentTokenCodes, Tokens::$heredocTokens),
+			array_merge(TokenHelper::INLINE_COMMENT_TOKEN_CODES, Tokens::$heredocTokens),
 			$parenthesisOpenerPointer + 1,
 			$parenthesisCloserPointer,
 		) !== null) {
@@ -94,11 +94,10 @@ class RequireSingleLineCallSniff extends AbstractLineCall
 
 			// Contains inner call
 			$callSearchStartPointer = $parenthesisOpenerPointer + 1;
-			$nameTokenCodes = TokenHelper::getOnlyNameTokenCodes();
 			while (true) {
 				$innerStringPointer = TokenHelper::findNext(
 					$phpcsFile,
-					$nameTokenCodes,
+					TokenHelper::ONLY_NAME_TOKEN_CODES,
 					$callSearchStartPointer,
 					$parenthesisCloserPointer,
 				);
@@ -148,7 +147,7 @@ class RequireSingleLineCallSniff extends AbstractLineCall
 
 		$phpcsFile->fixer->beginChangeset();
 
-		$phpcsFile->fixer->addContent($parenthesisOpenerPointer, $call);
+		FixerHelper::add($phpcsFile, $parenthesisOpenerPointer, $call);
 
 		FixerHelper::removeBetween($phpcsFile, $parenthesisOpenerPointer, $parenthesisCloserPointer);
 

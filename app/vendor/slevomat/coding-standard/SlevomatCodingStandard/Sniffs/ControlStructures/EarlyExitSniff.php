@@ -147,7 +147,7 @@ class EarlyExitSniff implements Sniff
 				$tokens[$ifPointer]['parenthesis_opener'],
 				$tokens[$ifPointer]['parenthesis_closer'],
 			);
-			$afterIfCode = IndentationHelper::fixIndentation(
+			$afterIfCode = IndentationHelper::removeIndentation(
 				$phpcsFile,
 				$ifCodePointers,
 				IndentationHelper::getIndentation($phpcsFile, $ifPointer),
@@ -171,7 +171,7 @@ class EarlyExitSniff implements Sniff
 		}
 
 		$elseCodePointers = $this->getScopeCodePointers($phpcsFile, $elsePointer);
-		$afterIfCode = IndentationHelper::fixIndentation(
+		$afterIfCode = IndentationHelper::removeIndentation(
 			$phpcsFile,
 			$elseCodePointers,
 			IndentationHelper::getIndentation($phpcsFile, $ifPointer),
@@ -243,7 +243,8 @@ class EarlyExitSniff implements Sniff
 		$phpcsFile->fixer->addNewline($pointerBeforeElseIfPointer);
 		$phpcsFile->fixer->addNewline($pointerBeforeElseIfPointer);
 
-		$phpcsFile->fixer->replaceToken(
+		FixerHelper::replace(
+			$phpcsFile,
 			$elseIfPointer,
 			sprintf('%sif', IndentationHelper::getIndentation($phpcsFile, $allConditionsPointers[0])),
 		);
@@ -330,14 +331,14 @@ class EarlyExitSniff implements Sniff
 		$ifCodePointers = $this->getScopeCodePointers($phpcsFile, $ifPointer);
 		$ifIndentation = IndentationHelper::getIndentation($phpcsFile, $ifPointer);
 		$earlyExitCode = $this->getEarlyExitCode($tokens[$scopePointer]['code']);
-		$earlyExitCodeIndentation = IndentationHelper::addIndentation($ifIndentation);
+		$earlyExitCodeIndentation = IndentationHelper::addIndentation($phpcsFile, $ifIndentation);
 
 		$negativeIfCondition = ConditionHelper::getNegativeCondition(
 			$phpcsFile,
 			$tokens[$ifPointer]['parenthesis_opener'],
 			$tokens[$ifPointer]['parenthesis_closer'],
 		);
-		$afterIfCode = IndentationHelper::fixIndentation($phpcsFile, $ifCodePointers, $ifIndentation);
+		$afterIfCode = IndentationHelper::removeIndentation($phpcsFile, $ifCodePointers, $ifIndentation);
 
 		$ifContent = sprintf(
 			'if %s {%s%s%s;%s%s}%s%s',
@@ -409,7 +410,12 @@ class EarlyExitSniff implements Sniff
 
 		$lastSemicolonInScopePointer = TokenHelper::findPreviousEffective($phpcsFile, $endPointer - 1, $startPointer);
 		return $tokens[$lastSemicolonInScopePointer]['code'] === T_SEMICOLON
-			? TokenHelper::findPreviousLocal($phpcsFile, TokenHelper::$earlyExitTokenCodes, $lastSemicolonInScopePointer - 1, $startPointer)
+			? TokenHelper::findPreviousLocal(
+				$phpcsFile,
+				TokenHelper::EARLY_EXIT_TOKEN_CODES,
+				$lastSemicolonInScopePointer - 1,
+				$startPointer,
+			)
 			: null;
 	}
 

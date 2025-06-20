@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Tester;
 
+use function addcslashes, array_reverse, array_slice, array_splice, dechex, dirname, explode, file, file_put_contents, get_resource_type, implode, is_array, is_bool, is_float, is_int, is_object, is_resource, is_string, ltrim, max, md5, method_exists, min, mkdir, ord, pathinfo, preg_match, preg_replace, preg_replace_callback, spl_object_hash, str_contains, str_pad, str_repeat, str_replace, strlen, strpos, strrpos, strtoupper, strtr, substr, substr_count, substr_replace, trim, uniqid, var_export;
+use const DIRECTORY_SEPARATOR, PATHINFO_FILENAME, STR_PAD_LEFT;
+
 
 /**
  * Dumps PHP variables.
@@ -177,6 +180,9 @@ class Dumper
 			$rc = new \ReflectionFunction($var);
 			return "/* Closure defined in file {$rc->getFileName()} on line {$rc->getStartLine()} */";
 
+		} elseif ($var instanceof \UnitEnum) {
+			return $var::class . '::' . $var->name;
+
 		} elseif (is_object($var)) {
 			if (($rc = new \ReflectionObject($var))->isAnonymous()) {
 				return "/* Anonymous class defined in file {$rc->getFileName()} on line {$rc->getStartLine()} */";
@@ -237,14 +243,14 @@ class Dumper
 		];
 		$utf8 = preg_match('##u', $s);
 		$escaped = preg_replace_callback(
-			$utf8 ? '#[\p{C}\\\\]#u' : '#[\x00-\x1F\x7F-\xFF\\\\]#',
+			$utf8 ? '#[\p{C}\\\]#u' : '#[\x00-\x1F\x7F-\xFF\\\]#',
 			fn($m) => $special[$m[0]] ?? (strlen($m[0]) === 1
 				? '\x' . str_pad(strtoupper(dechex(ord($m[0]))), 2, '0', STR_PAD_LEFT) . ''
 				: '\u{' . strtoupper(ltrim(dechex(self::utf8Ord($m[0])), '0')) . '}'),
 			$s,
 		);
 		return $s === str_replace('\\\\', '\\', $escaped)
-			? "'" . preg_replace('#\'|\\\\(?=[\'\\\\]|$)#D', '\\\\$0', $s) . "'"
+			? "'" . preg_replace('#\'|\\\(?=[\'\\\]|$)#D', '\\\$0', $s) . "'"
 			: '"' . addcslashes($escaped, '"$') . '"';
 	}
 
@@ -255,7 +261,7 @@ class Dumper
 			"\r" => "\\r\r",
 			"\n" => "\\n\n",
 			"\t" => "\\t\t",
-			"\e" => '\\e',
+			"\e" => '\e',
 			"'" => "'",
 		];
 		$utf8 = preg_match('##u', $s);

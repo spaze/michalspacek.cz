@@ -5,7 +5,6 @@ namespace SlevomatCodingStandard\Helpers;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 use function array_key_exists;
-use function array_merge;
 use function array_reverse;
 use function array_values;
 use function count;
@@ -103,9 +102,7 @@ class ReferencedNameHelper
 	{
 		$tokens = $phpcsFile->getTokens();
 
-		$nameTokenCodes = TokenHelper::getNameTokenCodes();
-
-		$nameTokenCodesWithWhitespace = array_merge($nameTokenCodes, Tokens::$emptyTokens);
+		$nameTokenCodesWithWhitespace = [...TokenHelper::NAME_TOKEN_CODES, ...TokenHelper::INEFFECTIVE_TOKEN_CODES];
 
 		$lastNamePointer = $startPointer;
 		for ($i = $startPointer + 1; $i < count($tokens); $i++) {
@@ -113,7 +110,7 @@ class ReferencedNameHelper
 				break;
 			}
 
-			if (!in_array($tokens[$i]['code'], $nameTokenCodes, true)) {
+			if (!in_array($tokens[$i]['code'], TokenHelper::NAME_TOKEN_CODES, true)) {
 				continue;
 			}
 
@@ -131,7 +128,7 @@ class ReferencedNameHelper
 		$referencedNames = [];
 
 		$beginSearchAtPointer = $openTagPointer + 1;
-		$nameTokenCodes = TokenHelper::getNameTokenCodes();
+		$nameTokenCodes = TokenHelper::NAME_TOKEN_CODES;
 		$nameTokenCodes[] = T_DOUBLE_QUOTED_STRING;
 		$nameTokenCodes[] = T_HEREDOC;
 
@@ -173,7 +170,7 @@ class ReferencedNameHelper
 				/** @var int $beginSearchAtPointer */
 				$beginSearchAtPointer = TokenHelper::findNextExcluding(
 					$phpcsFile,
-					array_merge(TokenHelper::$ineffectiveTokenCodes, $nameTokenCodes),
+					[...TokenHelper::INEFFECTIVE_TOKEN_CODES, ...$nameTokenCodes],
 					$nameStartPointer + 1,
 				);
 				continue;
@@ -198,8 +195,6 @@ class ReferencedNameHelper
 
 		$nextTokenAfterEndPointer = TokenHelper::findNextEffective($phpcsFile, $nameEndPointer + 1);
 		$previousTokenBeforeStartPointer = TokenHelper::findPreviousEffective($phpcsFile, $nameStartPointer - 1);
-
-		$nameTokenCodes = TokenHelper::getNameTokenCodes();
 
 		if ($tokens[$nextTokenAfterEndPointer]['code'] === T_OPEN_PARENTHESIS) {
 			return $tokens[$previousTokenBeforeStartPointer]['code'] === T_NEW
@@ -272,7 +267,7 @@ class ReferencedNameHelper
 		if ($tokens[$previousTokenBeforeStartPointer]['code'] === T_COMMA) {
 			$previousTokenPointer = TokenHelper::findPreviousExcluding(
 				$phpcsFile,
-				array_merge([T_COMMA], $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
+				[T_COMMA, ...TokenHelper::NAME_TOKEN_CODES, ...TokenHelper::INEFFECTIVE_TOKEN_CODES],
 				$previousTokenBeforeStartPointer - 1,
 			);
 
@@ -288,7 +283,7 @@ class ReferencedNameHelper
 		if (in_array($tokens[$previousTokenBeforeStartPointer]['code'], [T_BITWISE_OR, T_OPEN_PARENTHESIS], true)) {
 			$catchPointer = TokenHelper::findPreviousExcluding(
 				$phpcsFile,
-				array_merge([T_BITWISE_OR, T_OPEN_PARENTHESIS], $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
+				[T_BITWISE_OR, T_OPEN_PARENTHESIS, ...TokenHelper::NAME_TOKEN_CODES, ...TokenHelper::INEFFECTIVE_TOKEN_CODES],
 				$previousTokenBeforeStartPointer - 1,
 			);
 
@@ -377,7 +372,7 @@ class ReferencedNameHelper
 
 		$isProbablyReferencedName = !in_array(
 			$previousToken['code'],
-			array_merge($skipTokenCodes, TokenHelper::$typeKeywordTokenCodes),
+			[...$skipTokenCodes, ...TokenHelper::CLASS_TYPE_TOKEN_CODES],
 			true,
 		);
 
@@ -416,7 +411,7 @@ class ReferencedNameHelper
 			$searchEndPointer = $tokens[$attributeStartPointer]['attribute_closer'];
 
 			$searchPointer = $searchStartPointer;
-			$searchTokens = array_merge(TokenHelper::getNameTokenCodes(), [T_OPEN_PARENTHESIS, T_CLOSE_PARENTHESIS]);
+			$searchTokens = [...TokenHelper::NAME_TOKEN_CODES, T_OPEN_PARENTHESIS, T_CLOSE_PARENTHESIS];
 			$level = 0;
 			do {
 				$pointer = TokenHelper::findNext($phpcsFile, $searchTokens, $searchPointer, $searchEndPointer);

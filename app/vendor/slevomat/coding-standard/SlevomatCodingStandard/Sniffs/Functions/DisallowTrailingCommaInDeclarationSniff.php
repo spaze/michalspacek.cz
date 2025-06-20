@@ -21,7 +21,7 @@ class DisallowTrailingCommaInDeclarationSniff implements Sniff
 	 */
 	public function register(): array
 	{
-		return TokenHelper::$functionTokenCodes;
+		return TokenHelper::FUNCTION_TOKEN_CODES;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class DisallowTrailingCommaInDeclarationSniff implements Sniff
 		}
 
 		$phpcsFile->fixer->beginChangeset();
-		$phpcsFile->fixer->replaceToken($pointerBeforeParenthesisCloser, '');
+		FixerHelper::replace($phpcsFile, $pointerBeforeParenthesisCloser, '');
 
 		if ($tokens[$pointerBeforeParenthesisCloser]['line'] === $tokens[$parenthesisCloserPointer]['line']) {
 			FixerHelper::removeBetween($phpcsFile, $pointerBeforeParenthesisCloser, $parenthesisCloserPointer);

@@ -4,9 +4,7 @@ namespace SlevomatCodingStandard\Sniffs\Functions;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use SlevomatCodingStandard\Helpers\IndentationHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
-use function array_merge;
 use function rtrim;
 use function trim;
 use const T_CLOSE_PARENTHESIS;
@@ -26,7 +24,7 @@ abstract class AbstractLineCall implements Sniff
 	 */
 	public function register(): array
 	{
-		return array_merge(TokenHelper::getOnlyNameTokenCodes(), [T_SELF, T_STATIC, T_PARENT]);
+		return [...TokenHelper::ONLY_NAME_TOKEN_CODES, T_SELF, T_STATIC, T_PARENT];
 	}
 
 	protected function isCall(File $phpcsFile, int $stringPointer): bool
@@ -48,7 +46,7 @@ abstract class AbstractLineCall implements Sniff
 	{
 		$firstPointerOnLine = TokenHelper::findFirstTokenOnLine($phpcsFile, $pointer);
 
-		return IndentationHelper::convertTabsToSpaces($phpcsFile, TokenHelper::getContent($phpcsFile, $firstPointerOnLine, $pointer));
+		return TokenHelper::getContent($phpcsFile, $firstPointerOnLine, $pointer);
 	}
 
 	protected function getCall(File $phpcsFile, int $parenthesisOpenerPointer, int $parenthesisCloserPointer): string

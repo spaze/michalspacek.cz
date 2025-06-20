@@ -10,7 +10,6 @@ use SlevomatCodingStandard\Helpers\PropertyHelper;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
 use SlevomatCodingStandard\Helpers\TypeHint;
-use function array_merge;
 use function in_array;
 use function preg_replace;
 use function sprintf;
@@ -58,10 +57,10 @@ class DNFTypeHintFormatSniff implements Sniff
 	 */
 	public function register(): array
 	{
-		return array_merge(
-			[T_VARIABLE],
-			TokenHelper::$functionTokenCodes,
-		);
+		return [
+			T_VARIABLE,
+			...TokenHelper::FUNCTION_TOKEN_CODES,
+		];
 	}
 
 	/**
@@ -304,7 +303,7 @@ class DNFTypeHintFormatSniff implements Sniff
 		if (strtolower($tokens[$typeHint->getEndPointer()]['content']) === 'null') {
 			$previousTypeHintPointer = TokenHelper::findPrevious(
 				$phpcsFile,
-				TokenHelper::getOnlyTypeHintTokenCodes(),
+				TokenHelper::ONLY_TYPE_HINT_TOKEN_CODES,
 				$typeHint->getEndPointer() - 1,
 			);
 			return TokenHelper::getContent($phpcsFile, $typeHint->getStartPointer(), $previousTypeHintPointer);
@@ -314,7 +313,7 @@ class DNFTypeHintFormatSniff implements Sniff
 
 		for ($i = $typeHint->getStartPointer(); $i <= $typeHint->getEndPointer(); $i++) {
 			if (strtolower($tokens[$i]['content']) === 'null') {
-				$i = TokenHelper::findNext($phpcsFile, TokenHelper::getOnlyTypeHintTokenCodes(), $i + 1);
+				$i = TokenHelper::findNext($phpcsFile, TokenHelper::ONLY_TYPE_HINT_TOKEN_CODES, $i + 1);
 			}
 
 			$content .= $tokens[$i]['content'];

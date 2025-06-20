@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '03251974dcf70e30e7279a6f7fe76c36e79c829a',
+        'reference' => '8399c2e7ea0773e960ec074a15bd3bcb6255427d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -155,9 +155,9 @@
             'dev_requirement' => false,
         ),
         'nette/database' => array(
-            'pretty_version' => 'v3.2.6',
-            'version' => '3.2.6.0',
-            'reference' => 'cb825ac1cffe1ede98388a9c4e6c4445c26b961d',
+            'pretty_version' => 'v3.2.7',
+            'version' => '3.2.7.0',
+            'reference' => '10a7c76e314a06bb5f92d447d82170b5dde7392f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/database',
             'aliases' => array(),
@@ -260,18 +260,18 @@
             'dev_requirement' => false,
         ),
         'nette/tester' => array(
-            'pretty_version' => 'v2.5.4',
-            'version' => '2.5.4.0',
-            'reference' => 'c11863785779e87b40adebf150364f2e5938c111',
+            'pretty_version' => 'v2.5.5',
+            'version' => '2.5.5.0',
+            'reference' => '4b8a8519307598b56142ea0567b2cedb474af3fc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/tester',
             'aliases' => array(),
             'dev_requirement' => true,
         ),
         'nette/utils' => array(
-            'pretty_version' => 'v4.0.6',
-            'version' => '4.0.6.0',
-            'reference' => 'ce708655043c7050eb050df361c5e313cf708309',
+            'pretty_version' => 'v4.0.7',
+            'version' => '4.0.7.0',
+            'reference' => 'e67c4061eb40b9c113b218214e42cb5a0dda28f2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/utils',
             'aliases' => array(),
@@ -352,7 +352,7 @@
         'phpcsstandards/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.13.0',
+                0 => '3.13.2',
             ),
         ),
         'phpstan/phpdoc-parser' => array(
@@ -383,9 +383,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-nette' => array(
-            'pretty_version' => '2.0.3',
-            'version' => '2.0.3.0',
-            'reference' => '4b291c9f4c41fed86f5a7e308f0ac6a6664839bf',
+            'pretty_version' => '2.0.4',
+            'version' => '2.0.4.0',
+            'reference' => '9b629867b8e13e0afad8c8537b6541230d7b6a38',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-nette',
             'aliases' => array(),
@@ -457,7 +457,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'e4637c0239d5cc7d5a7c51e7c1cfd5b7d274ce95',
+            'reference' => 'e3520a4c9a252831ae009f8bf79a8d2a32ba4936',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -475,9 +475,9 @@
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
-            'pretty_version' => '8.18.1',
-            'version' => '8.18.1.0',
-            'reference' => '06b18b3f64979ab31d27c37021838439f3ed5919',
+            'pretty_version' => '8.19.1',
+            'version' => '8.19.1.0',
+            'reference' => '458d665acd49009efebd7e0cb385d71ae9ac3220',
             'type' => 'phpcodesniffer-standard',
             'install_path' => __DIR__ . '/../slevomat/coding-standard',
             'aliases' => array(),
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '03251974dcf70e30e7279a6f7fe76c36e79c829a',
+            'reference' => '8399c2e7ea0773e960ec074a15bd3bcb6255427d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -547,9 +547,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpcs-phar' => array(
-            'pretty_version' => '3.13.0',
-            'version' => '3.13.0.0',
-            'reference' => 'da087512bd8e2f4be2a4ffa7f5257721a52439bf',
+            'pretty_version' => '3.13.2',
+            'version' => '3.13.2.0',
+            'reference' => '0349f7aa3342362c58979d024954cdab77445501',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/phpcs-phar',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7aa2e9a76548d49a054ece6a61d40e2aa946e499',
+            'reference' => '595f8aaaa823d21d97d3d1e586a0728a1f8f9605',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(
@@ -614,7 +614,7 @@
         'squizlabs/php_codesniffer' => array(
             'dev_requirement' => true,
             'replaced' => array(
-                0 => '3.13.0',
+                0 => '3.13.2',
             ),
         ),
         'symfony/cache' => array(

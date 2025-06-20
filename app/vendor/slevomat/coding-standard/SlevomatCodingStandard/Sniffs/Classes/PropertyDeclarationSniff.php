@@ -13,6 +13,7 @@ use UnexpectedValueException;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
+use function array_search;
 use function asort;
 use function count;
 use function implode;
@@ -20,16 +21,22 @@ use function in_array;
 use function preg_split;
 use function sprintf;
 use function strtolower;
+use const T_ABSTRACT;
 use const T_AS;
+use const T_CLASS;
 use const T_CONST;
 use const T_DOUBLE_COLON;
+use const T_FINAL;
 use const T_FUNCTION;
 use const T_NULLABLE;
 use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
 use const T_PRIVATE;
+use const T_PRIVATE_SET;
 use const T_PROTECTED;
+use const T_PROTECTED_SET;
 use const T_PUBLIC;
+use const T_PUBLIC_SET;
 use const T_READONLY;
 use const T_SEMICOLON;
 use const T_STATIC;
@@ -72,7 +79,7 @@ class PropertyDeclarationSniff implements Sniff
 	 */
 	public function register(): array
 	{
-		return TokenHelper::$propertyModifiersTokenCodes;
+		return TokenHelper::PROPERTY_MODIFIERS_TOKEN_CODES;
 	}
 
 	/**
@@ -89,27 +96,30 @@ class PropertyDeclarationSniff implements Sniff
 		}
 
 		$nextPointer = TokenHelper::findNextEffective($phpcsFile, $modifierPointer + 1);
-		if (in_array($tokens[$nextPointer]['code'], TokenHelper::$propertyModifiersTokenCodes, true)) {
-			// We don't want to report the same property twice
+		if (in_array($tokens[$nextPointer]['code'], TokenHelper::PROPERTY_MODIFIERS_TOKEN_CODES, true)) {
+			// We don't want to report the same property multiple times
 			return;
 		}
 
-		if ($tokens[$nextPointer]['code'] === T_DOUBLE_COLON) {
-			// Ignore static::
-			return;
+		if ($tokens[$modifierPointer]['code'] === T_STATIC) {
+			if ($tokens[$nextPointer]['code'] === T_DOUBLE_COLON) {
+				// Ignore static::
+				return;
+			}
+
+			if ($tokens[$nextPointer]['code'] === T_OPEN_PARENTHESIS) {
+				// Ignore static()
+				return;
+			}
+
+			if (in_array($tokens[$nextPointer]['code'], [T_OPEN_CURLY_BRACKET, T_SEMICOLON, T_TYPE_UNION], true)) {
+				// Ignore "static" as return type hint of method
+				return;
+			}
 		}
 
-		if ($tokens[$nextPointer]['code'] === T_OPEN_PARENTHESIS) {
-			// Ignore static()
-			return;
-		}
-
-		if (in_array($tokens[$nextPointer]['code'], [T_OPEN_CURLY_BRACKET, T_SEMICOLON, T_TYPE_UNION], true)) {
-			// Ignore "static" as return type hint of method
-			return;
-		}
-
-		$propertyPointer = TokenHelper::findNext($phpcsFile, [T_FUNCTION, T_CONST, T_VARIABLE], $modifierPointer + 1);
+		// Ignore other class members with same mofidiers
+		$propertyPointer = TokenHelper::findNext($phpcsFile, [T_CLASS, T_FUNCTION, T_CONST, T_VARIABLE], $modifierPointer + 1);
 
 		if ($propertyPointer === null || $tokens[$propertyPointer]['code'] !== T_VARIABLE) {
 			return;
@@ -119,15 +129,7 @@ class PropertyDeclarationSniff implements Sniff
 			return;
 		}
 
-		$firstModifierPointer = $modifierPointer;
-		do {
-			$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $firstModifierPointer - 1);
-			if (!in_array($tokens[$previousPointer]['code'], TokenHelper::$propertyModifiersTokenCodes, true)) {
-				break;
-			}
-
-			$firstModifierPointer = $previousPointer;
-		} while (true);
+		$firstModifierPointer = PropertyHelper::getStartPointer($phpcsFile, $propertyPointer);
 
 		$this->checkModifiersOrder($phpcsFile, $propertyPointer, $firstModifierPointer, $modifierPointer);
 		$this->checkSpacesBetweenModifiers($phpcsFile, $propertyPointer, $firstModifierPointer, $modifierPointer);
@@ -138,7 +140,7 @@ class PropertyDeclarationSniff implements Sniff
 	{
 		$modifiersPointers = TokenHelper::findNextAll(
 			$phpcsFile,
-			TokenHelper::$propertyModifiersTokenCodes,
+			TokenHelper::PROPERTY_MODIFIERS_TOKEN_CODES,
 			$firstModifierPointer,
 			$lastModifierPointer + 1,
 		);
@@ -148,19 +150,25 @@ class PropertyDeclarationSniff implements Sniff
 		}
 
 		$tokens = $phpcsFile->getTokens();
+
 		$modifiersGroups = $this->getNormalizedModifiersOrder();
 
 		$expectedModifiersPositions = [];
 		foreach ($modifiersPointers as $modifierPointer) {
+			$position = 0;
+
 			for ($i = 0; $i < count($modifiersGroups); $i++) {
-				if (in_array($tokens[$modifierPointer]['code'], $modifiersGroups[$i], true)) {
-					$expectedModifiersPositions[$modifierPointer] = $i;
+				$modifierPositionInGroup = array_search($tokens[$modifierPointer]['code'], $modifiersGroups[$i], true);
+				if ($modifierPositionInGroup !== false) {
+					$expectedModifiersPositions[$modifierPointer] = $position + $modifierPositionInGroup;
 					continue 2;
 				}
+
+				$position += count($modifiersGroups[$i]);
 			}
 
 			// Modifier position is not defined so add it to the end
-			$expectedModifiersPositions[$modifierPointer] = count($modifiersGroups);
+			$expectedModifiersPositions[$modifierPointer] = $position;
 		}
 
 		$error = false;
@@ -222,7 +230,7 @@ class PropertyDeclarationSniff implements Sniff
 
 		$modifiersPointers = TokenHelper::findNextAll(
 			$phpcsFile,
-			TokenHelper::$propertyModifiersTokenCodes,
+			TokenHelper::PROPERTY_MODIFIERS_TOKEN_CODES,
 			$firstModifierPointer,
 			$lastModifierPointer + 1,
 		);
@@ -272,7 +280,7 @@ class PropertyDeclarationSniff implements Sniff
 	{
 		$typeHintEndPointer = TokenHelper::findPrevious(
 			$phpcsFile,
-			TokenHelper::getTypeHintTokenCodes(),
+			TokenHelper::TYPE_HINT_TOKEN_CODES,
 			$propertyPointer - 1,
 			$lastModifierPointer,
 		);
@@ -296,7 +304,7 @@ class PropertyDeclarationSniff implements Sniff
 			$fix = $phpcsFile->addFixableError($errorMessage, $typeHintEndPointer, $errorCode);
 			if ($fix) {
 				$phpcsFile->fixer->beginChangeset();
-				$phpcsFile->fixer->addContent($lastModifierPointer, ' ');
+				FixerHelper::add($phpcsFile, $lastModifierPointer, ' ');
 				$phpcsFile->fixer->endChangeset();
 			}
 		} elseif ($tokens[$lastModifierPointer + 1]['content'] !== ' ') {
@@ -314,7 +322,7 @@ class PropertyDeclarationSniff implements Sniff
 			$fix = $phpcsFile->addFixableError($errorMessage, $lastModifierPointer, $errorCode);
 			if ($fix) {
 				$phpcsFile->fixer->beginChangeset();
-				$phpcsFile->fixer->replaceToken($lastModifierPointer + 1, ' ');
+				FixerHelper::replace($phpcsFile, $lastModifierPointer + 1, ' ');
 				$phpcsFile->fixer->endChangeset();
 			}
 		}
@@ -327,7 +335,7 @@ class PropertyDeclarationSniff implements Sniff
 			);
 			if ($fix) {
 				$phpcsFile->fixer->beginChangeset();
-				$phpcsFile->fixer->addContent($typeHintEndPointer, ' ');
+				FixerHelper::add($phpcsFile, $typeHintEndPointer, ' ');
 				$phpcsFile->fixer->endChangeset();
 			}
 		} elseif ($tokens[$typeHintEndPointer + 1]['content'] !== ' ') {
@@ -338,7 +346,7 @@ class PropertyDeclarationSniff implements Sniff
 			);
 			if ($fix) {
 				$phpcsFile->fixer->beginChangeset();
-				$phpcsFile->fixer->replaceToken($typeHintEndPointer + 1, ' ');
+				FixerHelper::replace($phpcsFile, $typeHintEndPointer + 1, ' ');
 				$phpcsFile->fixer->endChangeset();
 			}
 		}
@@ -361,7 +369,7 @@ class PropertyDeclarationSniff implements Sniff
 		}
 
 		$phpcsFile->fixer->beginChangeset();
-		$phpcsFile->fixer->replaceToken($nullabilitySymbolPointer + 1, '');
+		FixerHelper::replace($phpcsFile, $nullabilitySymbolPointer + 1, '');
 		$phpcsFile->fixer->endChangeset();
 	}
 
@@ -375,7 +383,8 @@ class PropertyDeclarationSniff implements Sniff
 
 			if ($modifiersGroups === []) {
 				$modifiersGroups = [
-					'var, public, protected, private',
+					'final, abstract',
+					'var, public, public(set), protected, protected(set), private, private(set)',
 					'static, readonly',
 				];
 			}
@@ -383,10 +392,15 @@ class PropertyDeclarationSniff implements Sniff
 			$this->normalizedModifiersOrder = [];
 
 			$mapping = [
+				'final' => T_FINAL,
+				'abstract' => T_ABSTRACT,
 				'var' => T_VAR,
 				'public' => T_PUBLIC,
+				'public(set)' => T_PUBLIC_SET,
 				'protected' => T_PROTECTED,
+				'protected(set)' => T_PROTECTED_SET,
 				'private' => T_PRIVATE,
+				'private(set)' => T_PRIVATE_SET,
 				'static' => T_STATIC,
 				'readonly' => T_READONLY,
 			];
