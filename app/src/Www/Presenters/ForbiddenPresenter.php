@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
 use Override;
 

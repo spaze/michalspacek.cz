@@ -8,7 +8,6 @@ use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\TemplateFactory as UiTemplateFactory;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
 use Override;
 
@@ -27,7 +26,7 @@ final readonly class TemplateFactory implements UiTemplateFactory
 	#[Override]
 	public function createTemplate(?Control $control = null, ?string $class = null): DefaultTemplate
 	{
-		$template = $this->templateFactory->createTemplate($control, $class);
+		$template = $this->templateFactory->createTemplate($control, $class ?? DefaultTemplate::class);
 		if (!$template instanceof DefaultTemplate) {
 			throw new WrongTemplateClassException($template::class, DefaultTemplate::class);
 		}

@@ -7,7 +7,6 @@ namespace MichalSpacekCz\Templating;
 use DateTimeImmutable;
 use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\InvalidArgumentException;
