@@ -4,10 +4,10 @@ namespace SlevomatCodingStandard\Sniffs\Operators;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SlevomatCodingStandard\Helpers\FixerHelper;
 use SlevomatCodingStandard\Helpers\IdentificatorHelper;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
-use function array_merge;
 use function in_array;
 use function sprintf;
 use function strlen;
@@ -58,28 +58,26 @@ class NegationOperatorSpacingSniff implements Sniff
 
 		$previousEffective = TokenHelper::findPreviousEffective($phpcsFile, $pointer - 1);
 
-		$possibleOperandTypes = array_merge(
-			TokenHelper::getOnlyNameTokenCodes(),
-			[
-				T_CONSTANT_ENCAPSED_STRING,
-				T_CLASS_C,
-				T_CLOSE_PARENTHESIS,
-				T_CLOSE_SHORT_ARRAY,
-				T_CLOSE_SQUARE_BRACKET,
-				T_DIR,
-				T_DNUMBER,
-				T_ENCAPSED_AND_WHITESPACE,
-				T_FILE,
-				T_FUNC_C,
-				T_LINE,
-				T_LNUMBER,
-				T_METHOD_C,
-				T_NS_C,
-				T_NUM_STRING,
-				T_TRAIT_C,
-				T_VARIABLE,
-			],
-		);
+		$possibleOperandTypes = [
+			...TokenHelper::ONLY_NAME_TOKEN_CODES,
+			T_CONSTANT_ENCAPSED_STRING,
+			T_CLASS_C,
+			T_CLOSE_PARENTHESIS,
+			T_CLOSE_SHORT_ARRAY,
+			T_CLOSE_SQUARE_BRACKET,
+			T_DIR,
+			T_DNUMBER,
+			T_ENCAPSED_AND_WHITESPACE,
+			T_FILE,
+			T_FUNC_C,
+			T_LINE,
+			T_LNUMBER,
+			T_METHOD_C,
+			T_NS_C,
+			T_NUM_STRING,
+			T_TRAIT_C,
+			T_VARIABLE,
+		];
 
 		if (in_array($tokens[$previousEffective]['code'], $possibleOperandTypes, true)) {
 			return;
@@ -113,12 +111,12 @@ class NegationOperatorSpacingSniff implements Sniff
 		}
 
 		if ($this->spacesCount > $numberOfSpaces) {
-			$phpcsFile->fixer->addContent($pointer, ' ');
+			FixerHelper::add($phpcsFile, $pointer, ' ');
 
 			return;
 		}
 
-		$phpcsFile->fixer->replaceToken($whitespacePointer, '');
+		FixerHelper::replace($phpcsFile, $whitespacePointer, '');
 	}
 
 }

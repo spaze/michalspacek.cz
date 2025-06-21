@@ -14,6 +14,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Tester\\' => 7,
+        ),
         'S' => 
         array (
             'Symfony\\Contracts\\Translation\\' => 30,
@@ -78,6 +82,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
+        'Tester\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nette/tester/src',
+        ),
         'Symfony\\Contracts\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',

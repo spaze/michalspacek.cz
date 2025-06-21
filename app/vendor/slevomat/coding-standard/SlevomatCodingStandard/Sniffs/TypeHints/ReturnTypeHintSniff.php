@@ -30,7 +30,7 @@ use SlevomatCodingStandard\Helpers\TypeHint;
 use SlevomatCodingStandard\Helpers\TypeHintHelper;
 use function array_key_exists;
 use function array_map;
-use function array_merge;
+use function array_push;
 use function array_unique;
 use function array_values;
 use function count;
@@ -178,7 +178,7 @@ class ReturnTypeHintSniff implements Sniff
 
 				if ($fix) {
 					$phpcsFile->fixer->beginChangeset();
-					$phpcsFile->fixer->replaceToken($returnTypeHint->getStartPointer(), 'never');
+					FixerHelper::replace($phpcsFile, $returnTypeHint->getStartPointer(), 'never');
 					$phpcsFile->fixer->endChangeset();
 				}
 			}
@@ -255,7 +255,8 @@ class ReturnTypeHintSniff implements Sniff
 						: 'void';
 
 					$phpcsFile->fixer->beginChangeset();
-					$phpcsFile->fixer->addContent(
+					FixerHelper::add(
+						$phpcsFile,
 						$phpcsFile->getTokens()[$functionPointer]['parenthesis_closer'],
 						sprintf(': %s', $fixedReturnType),
 					);
@@ -366,10 +367,7 @@ class ReturnTypeHintSniff implements Sniff
 		foreach ($typeHints as $typeHint) {
 			if ($this->enableUnionTypeHint && TypeHintHelper::isUnofficialUnionTypeHint($typeHint)) {
 				$canTryUnionTypeHint = true;
-				$typeHintsWithConvertedUnion = array_merge(
-					$typeHintsWithConvertedUnion,
-					TypeHintHelper::convertUnofficialUnionTypeHintToOfficialTypeHints($typeHint),
-				);
+				array_push($typeHintsWithConvertedUnion, ...TypeHintHelper::convertUnofficialUnionTypeHintToOfficialTypeHints($typeHint));
 			} else {
 				$typeHintsWithConvertedUnion[] = $typeHint;
 			}
@@ -451,7 +449,8 @@ class ReturnTypeHintSniff implements Sniff
 		}
 
 		$phpcsFile->fixer->beginChangeset();
-		$phpcsFile->fixer->addContent(
+		FixerHelper::add(
+			$phpcsFile,
 			$phpcsFile->getTokens()[$functionPointer]['parenthesis_closer'],
 			sprintf(': %s', $returnTypeHint),
 		);
@@ -633,7 +632,7 @@ class ReturnTypeHintSniff implements Sniff
 		$position = TokenHelper::findPreviousEffective($phpcsFile, $tokens[$closurePointer]['scope_opener'] - 1, $closurePointer);
 
 		$phpcsFile->fixer->beginChangeset();
-		$phpcsFile->fixer->addContent($position, ': void');
+		FixerHelper::add($phpcsFile, $position, ': void');
 		$phpcsFile->fixer->endChangeset();
 	}
 

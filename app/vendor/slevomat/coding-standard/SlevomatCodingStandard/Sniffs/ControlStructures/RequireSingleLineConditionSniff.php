@@ -42,7 +42,7 @@ class RequireSingleLineConditionSniff extends AbstractLineCondition
 
 		if (TokenHelper::findNext(
 			$phpcsFile,
-			TokenHelper::$inlineCommentTokenCodes,
+			TokenHelper::INLINE_COMMENT_TOKEN_CODES,
 			$parenthesisOpenerPointer + 1,
 			$parenthesisCloserPointer,
 		) !== null) {
@@ -80,7 +80,7 @@ class RequireSingleLineConditionSniff extends AbstractLineCondition
 
 		$phpcsFile->fixer->beginChangeset();
 
-		$phpcsFile->fixer->addContent($parenthesisOpenerPointer, $condition);
+		FixerHelper::add($phpcsFile, $parenthesisOpenerPointer, $condition);
 
 		FixerHelper::removeBetween($phpcsFile, $parenthesisOpenerPointer, $parenthesisCloserPointer);
 

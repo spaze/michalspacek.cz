@@ -3,11 +3,14 @@
 namespace SlevomatCodingStandard\Helpers;
 
 use PHP_CodeSniffer\Files\File;
+use function array_reverse;
+use function current;
 use function in_array;
 use function ltrim;
 use function rtrim;
 use function strpos;
 use function trim;
+use const T_CLOSURE;
 use const T_COMMA;
 use const T_DOUBLE_ARROW;
 use const T_ELLIPSIS;
@@ -113,12 +116,16 @@ class ArrayKeyValue
 		for ($i = $this->pointerStart; $i <= $this->pointerEnd; $i++) {
 			$token = $tokens[$i];
 
-			if (in_array($token['code'], TokenHelper::$arrayTokenCodes, true)) {
+			if (in_array($token['code'], TokenHelper::ARRAY_TOKEN_CODES, true)) {
 				$i = ArrayHelper::openClosePointers($token)[1];
 				continue;
 			}
 
 			if ($token['code'] === T_DOUBLE_ARROW) {
+				if (current(array_reverse($token['conditions'])) === T_CLOSURE) {
+					continue;
+				}
+
 				$this->pointerArrow = $i;
 				continue;
 			}
@@ -142,7 +149,7 @@ class ArrayKeyValue
 				$firstNonWhitespace = $i;
 			}
 
-			if (in_array($token['code'], TokenHelper::$inlineCommentTokenCodes, true) === false) {
+			if (in_array($token['code'], TokenHelper::INLINE_COMMENT_TOKEN_CODES, true) === false) {
 				$key .= $token['content'];
 			}
 		}

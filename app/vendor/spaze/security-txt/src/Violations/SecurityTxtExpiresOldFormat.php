@@ -14,8 +14,8 @@ final class SecurityTxtExpiresOldFormat extends SecurityTxtSpecViolation
 			['Expires'],
 			'draft-foudil-securitytxt-12',
 			$correctValue,
-			'Change the value of the %s field to %s',
-			['Expires', $correctValue],
+			'Change the value of the %s field to use the correct format',
+			['Expires'],
 			'2.5.5',
 		);
 	}

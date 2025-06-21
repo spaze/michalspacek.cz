@@ -81,7 +81,7 @@ final readonly class SecurityTxtCheckHostCli
 				$line !== null ? $this->consolePrinter->colorBold((string)$line) . ': ' : '',
 				$message,
 				$howToFix,
-				$correctValue !== null ? ", e.g. `{$correctValue}`" : '',
+				$correctValue !== null ? ", e.g. {$correctValue}" : '',
 			));
 		};
 		$onWarning = function (?int $line, string $message, string $howToFix, ?string $correctValue): void {
@@ -91,7 +91,7 @@ final readonly class SecurityTxtCheckHostCli
 				$line !== null ? $this->consolePrinter->colorBold((string)$line) . ': ' : '',
 				$message,
 				$howToFix,
-				$correctValue !== null ? ", e.g. `{$correctValue}`" : '',
+				$correctValue !== null ? ", e.g. {$correctValue}" : '',
 			));
 		};
 		$this->checkHost->addOnFetchError($onError);
