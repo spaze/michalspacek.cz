@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training\Mails;
 
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
@@ -14,7 +15,6 @@ use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\FileUpload;
 use Nette\Mail\Mailer;
 use Nette\Mail\Message;

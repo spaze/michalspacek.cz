@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Discontinued;
 
+use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Http\IResponse;
 use Override;

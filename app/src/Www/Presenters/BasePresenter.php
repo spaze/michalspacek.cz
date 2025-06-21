@@ -11,11 +11,11 @@ use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use MichalSpacekCz\Form\ThemeFormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\Request;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
 use Override;
 

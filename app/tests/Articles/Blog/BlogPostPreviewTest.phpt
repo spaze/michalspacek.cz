@@ -6,10 +6,10 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;

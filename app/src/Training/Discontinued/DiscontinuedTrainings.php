@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Discontinued;
 
 use MichalSpacekCz\Database\TypedDatabase;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use Nette\Http\IResponse;
 
 final readonly class DiscontinuedTrainings

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
 final readonly class BlogPostPreview

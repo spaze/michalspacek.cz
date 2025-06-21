@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\EasterEgg\Presenters;
 
 use MichalSpacekCz\EasterEgg\NetteCve202015227;
+use MichalSpacekCz\Templating\DefaultTemplate;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 
 /**
  * @property-read DefaultTemplate $template
