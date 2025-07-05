@@ -17,6 +17,7 @@ use Latte\Compiler\TemplateParser;
 use Latte\Runtime;
 use Latte\RuntimeException;
 use Nette;
+use function array_keys, class_exists, extension_loaded, preg_match;
 
 
 /**
@@ -136,6 +137,9 @@ final class CoreExtension extends Latte\Extension
 			'explode' => [$this->filters, 'explode'],
 			'filter' => [$this->filters, 'filter'],
 			'first' => [$this->filters, 'first'],
+			'firstLower' => extension_loaded('mbstring')
+				? [$this->filters, 'firstLower']
+				: fn() => throw new RuntimeException('Filter |firstLower requires mbstring extension.'),
 			'firstUpper' => extension_loaded('mbstring')
 				? [$this->filters, 'firstUpper']
 				: fn() => throw new RuntimeException('Filter |firstUpper requires mbstring extension.'),
@@ -195,6 +199,7 @@ final class CoreExtension extends Latte\Extension
 			'odd' => [$this->filters, 'odd'],
 			'slice' => [$this->filters, 'slice'],
 			'hasBlock' => fn(Runtime\Template $template, string $name): bool => $template->hasBlock($name),
+			'hasTemplate' => fn(Runtime\Template $template, string $name): bool => $this->hasTemplate($name, $template->getName()),
 		];
 	}
 
@@ -259,5 +264,20 @@ final class CoreExtension extends Latte\Extension
 			$lexer->popSyntax();
 		}
 		return $inner;
+	}
+
+
+	/**
+	 * Checks if template exists.
+	 */
+	private function hasTemplate(string $name, string $referringName): bool
+	{
+		try {
+			$name = $this->engine->getLoader()->getReferredName($name, $referringName);
+			$this->engine->createTemplate($name, [], clearCache: false);
+			return true;
+		} catch (Latte\TemplateNotFoundException) {
+			return false;
+		}
 	}
 }

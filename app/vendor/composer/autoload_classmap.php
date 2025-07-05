@@ -224,6 +224,7 @@ return array(
     'Latte\\Sandbox\\SandboxExtension' => $vendorDir . '/latte/latte/src/Latte/Sandbox/SandboxExtension.php',
     'Latte\\Sandbox\\SecurityPolicy' => $vendorDir . '/latte/latte/src/Latte/Sandbox/SecurityPolicy.php',
     'Latte\\SecurityViolationException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
+    'Latte\\TemplateNotFoundException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
     'Latte\\Tools\\Linter' => $vendorDir . '/latte/latte/src/Tools/Linter.php',
     'NetteModule\\ErrorPresenter' => $vendorDir . '/nette/application/src/Application/ErrorPresenter.php',
     'NetteModule\\MicroPresenter' => $vendorDir . '/nette/application/src/Application/MicroPresenter.php',

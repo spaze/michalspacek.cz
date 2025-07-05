@@ -13,6 +13,7 @@ use Latte\Compiler\Nodes\Php as Nodes;
 use Latte\Compiler\Nodes\Php\Expression;
 use Latte\Compiler\Nodes\Php\Scalar;
 use Latte\ContentType;
+use function addcslashes, array_map, array_pop, end, implode, preg_replace, preg_replace_callback, strtolower, substr, trim, ucfirst;
 
 
 /**
@@ -337,5 +338,17 @@ final class PrintContext
 	{
 		$items = array_map(fn(Nodes\ArgumentNode $arg) => $arg->toArrayItem(), $args);
 		return '[' . $this->implode($items) . ']';
+	}
+
+
+	/**
+	 * Ensures that expression evaluates to string or throws exception.
+	 */
+	public function ensureString(Nodes\ExpressionNode $name, string $entity): string
+	{
+		$code = $name->print($this);
+		return $name instanceof Scalar\StringNode
+			? $code
+			: '(is_string($ʟ_tmp = ' . $code . ') ? $ʟ_tmp : throw new InvalidArgumentException(sprintf(' . $this->encodeString($entity . ' must be a string, %s given.') . ', get_debug_type($ʟ_tmp))))';
 	}
 }
