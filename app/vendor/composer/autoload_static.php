@@ -61,6 +61,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'MichalSpacekCz\\' => 15,
         ),
+        'L' => 
+        array (
+            'Latte\\' => 6,
+        ),
         'J' => 
         array (
             'JetBrains\\PhpStorm\\' => 19,
@@ -223,6 +227,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Latte\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/latte/latte/src',
         ),
         'JetBrains\\PhpStorm\\' => 
         array (
@@ -469,6 +477,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Latte\\Sandbox\\SandboxExtension' => __DIR__ . '/..' . '/latte/latte/src/Latte/Sandbox/SandboxExtension.php',
         'Latte\\Sandbox\\SecurityPolicy' => __DIR__ . '/..' . '/latte/latte/src/Latte/Sandbox/SecurityPolicy.php',
         'Latte\\SecurityViolationException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
+        'Latte\\TemplateNotFoundException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Tools\\Linter' => __DIR__ . '/..' . '/latte/latte/src/Tools/Linter.php',
         'NetteModule\\ErrorPresenter' => __DIR__ . '/..' . '/nette/application/src/Application/ErrorPresenter.php',
         'NetteModule\\MicroPresenter' => __DIR__ . '/..' . '/nette/application/src/Application/MicroPresenter.php',

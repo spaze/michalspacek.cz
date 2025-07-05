@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Latte;
 
 use Latte\Compiler\Nodes\TemplateNode;
+use function array_map, array_merge, class_exists, extension_loaded, filemtime, get_debug_type, get_object_vars, is_array, md5, preg_match, serialize, strpos, substr;
+use const PHP_VERSION_ID;
 
 
 /**
@@ -17,8 +19,8 @@ use Latte\Compiler\Nodes\TemplateNode;
  */
 class Engine
 {
-	public const Version = '3.0.21';
-	public const VersionId = 30021;
+	public const Version = '3.0.22';
+	public const VersionId = 30022;
 
 	/** @deprecated use Engine::Version */
 	public const
@@ -91,7 +93,7 @@ class Engine
 	 * Creates template object.
 	 * @param  mixed[]  $params
 	 */
-	public function createTemplate(string $name, array $params = [], $clearCache = true): Runtime\Template
+	public function createTemplate(string $name, array $params = [], bool $clearCache = true): Runtime\Template
 	{
 		$this->environmentHash = $clearCache ? null : $this->environmentHash;
 		$class = $this->loadTemplate($name);
@@ -531,12 +533,12 @@ class Engine
 			}
 
 			if (strpos((string) $method->getDocComment(), '@filter')) {
-				trigger_error('Annotation @filter is deprecated, use attribute #[Latte\Attributes\TemplateFilter]', E_USER_DEPRECATED);
+				trigger_error('Annotation @filter is deprecated, use attribute #[Latte\Attributes\TemplateFilter]');
 				$this->addFilter($method->name, [$params, $method->name]);
 			}
 
 			if (strpos((string) $method->getDocComment(), '@function')) {
-				trigger_error('Annotation @function is deprecated, use attribute #[Latte\Attributes\TemplateFunction]', E_USER_DEPRECATED);
+				trigger_error('Annotation @function is deprecated, use attribute #[Latte\Attributes\TemplateFunction]');
 				$this->addFunction($method->name, [$params, $method->name]);
 			}
 		}

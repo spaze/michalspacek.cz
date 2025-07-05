@@ -41,6 +41,7 @@ return array(
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-strict-rules/src', $vendorDir . '/phpstan/phpstan-nette/src', $vendorDir . '/phpstan/phpstan-deprecation-rules/src'),
     'MichalSpacekCz\\' => array($baseDir . '/src'),
+    'Latte\\' => array($vendorDir . '/latte/latte/src'),
     'JetBrains\\PhpStorm\\' => array($vendorDir . '/jetbrains/phpstorm-attributes/src'),
     'IPLib\\' => array($vendorDir . '/mlocati/ip-lib/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),

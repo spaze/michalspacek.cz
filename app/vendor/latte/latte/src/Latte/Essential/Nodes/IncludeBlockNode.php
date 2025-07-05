@@ -21,6 +21,7 @@ use Latte\Compiler\PrintContext;
 use Latte\Compiler\Tag;
 use Latte\Compiler\TemplateParser;
 use Latte\Runtime\Template;
+use function count;
 
 
 /**
@@ -45,14 +46,14 @@ class IncludeBlockNode extends StatementNode
 
 		$tag->expectArguments();
 		$node = new static;
-		$tag->parser->tryConsumeTokenBeforeUnquotedString('block') ?? $tag->parser->stream->tryConsume('#');
-		$node->name = $tag->parser->parseUnquotedStringOrExpression();
-		$tokenName = $tag->parser->stream->peek(-1);
-
 		$stream = $tag->parser->stream;
+		$tag->parser->tryConsumeTokenBeforeUnquotedString('block') ?? $stream->tryConsume('#');
+		$node->name = $tag->parser->parseUnquotedStringOrExpression();
+		$tokenName = $stream->peek(-1);
+
 		if ($stream->tryConsume('from')) {
 			$node->from = $tag->parser->parseUnquotedStringOrExpression();
-			$tag->parser->stream->tryConsume(',');
+			$stream->tryConsume(',');
 		}
 
 		$stream->tryConsume(',');
@@ -85,7 +86,7 @@ class IncludeBlockNode extends StatementNode
 	public function print(PrintContext $context): string
 	{
 		$noEscape = $this->modifier->hasFilter('noescape');
-		$modArg = count($this->modifier->filters) > (int) $noEscape
+		$contentFilter = count($this->modifier->filters) > (int) $noEscape
 			? $context->format(
 				'function ($s, $type) { $ʟ_fi = new LR\FilterInfo($type); return %modifyContent($s); }',
 				$this->modifier,
@@ -93,12 +94,12 @@ class IncludeBlockNode extends StatementNode
 			: ($noEscape || $this->parent ? '' : PhpHelpers::dump($context->getEscaper()->export()));
 
 		return $this->from
-			? $this->printBlockFrom($context, $modArg)
-			: $this->printBlock($context, $modArg);
+			? $this->printBlockFrom($context, $contentFilter)
+			: $this->printBlock($context, $contentFilter);
 	}
 
 
-	private function printBlock(PrintContext $context, string $modArg): string
+	private function printBlock(PrintContext $context, string $contentFilter): string
 	{
 		if ($this->name instanceof Scalar\StringNode || $this->name instanceof Scalar\IntegerNode) {
 			$staticName = (string) $this->name->value;
@@ -106,26 +107,26 @@ class IncludeBlockNode extends StatementNode
 		}
 
 		return $context->format(
-			'$this->renderBlock' . ($this->parent ? 'Parent' : '')
-			. '(%node, %node? + '
+			'$this->render' . ($this->parent ? 'ParentBlock' : 'Block')
+			. '(%raw, %node? + '
 			. (isset($block) && !$block->parameters ? 'get_defined_vars()' : '[]')
 			. '%raw) %line;',
-			$this->name,
+			$context->ensureString($this->name, 'Block name'),
 			$this->args,
-			$modArg ? ", $modArg" : '',
+			$contentFilter ? ", $contentFilter" : '',
 			$this->position,
 		);
 	}
 
 
-	private function printBlockFrom(PrintContext $context, string $modArg): string
+	private function printBlockFrom(PrintContext $context, string $contentFilter): string
 	{
 		return $context->format(
-			'$this->createTemplate(%node, %node? + $this->params, "include")->renderToContentType(%raw, %node) %line;',
-			$this->from,
+			'$this->createTemplate(%raw, %node? + $this->params, "include")->renderToContentType(%raw, %raw) %line;',
+			$context->ensureString($this->from, 'Template name'),
 			$this->args,
-			$modArg,
-			$this->name,
+			$contentFilter,
+			$context->ensureString($this->name, 'Block name'),
 			$this->position,
 		);
 	}

@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Latte\Loaders;
 
 use Latte;
+use function array_pop, end, explode, file_get_contents, implode, is_file, preg_match, str_starts_with, strtr, time, touch;
+use const DIRECTORY_SEPARATOR;
 
 
 /**
@@ -36,7 +38,7 @@ class FileLoader implements Latte\Loader
 			throw new Latte\RuntimeException("Template '$file' is not within the allowed path '{$this->baseDir}'.");
 
 		} elseif (!is_file($file)) {
-			throw new Latte\RuntimeException("Missing template file '$file'.");
+			throw new Latte\TemplateNotFoundException("Missing template file '$file'.");
 
 		} elseif ($this->isExpired($fileName, time())) {
 			if (@touch($file) === false) {
