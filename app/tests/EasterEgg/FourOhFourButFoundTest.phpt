@@ -7,6 +7,7 @@ namespace MichalSpacekCz\EasterEgg;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
+use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
@@ -21,6 +22,7 @@ final class FourOhFourButFoundTest extends TestCase
 	public function __construct(
 		private readonly FourOhFourButFound $fourOhFourButFound,
 		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly Response $httpResponse,
 	) {
 	}
 
@@ -60,6 +62,10 @@ final class FourOhFourButFoundTest extends TestCase
 			}));
 			$response = $presenter->getResponse();
 			assert($response instanceof TextResponse && is_string($response->getSource()));
+			Assert::same(404, $this->httpResponse->getCode());
+			$reason = $this->httpResponse->getReason();
+			assert(is_string($reason));
+			Assert::contains('not found page', $reason);
 			Assert::contains($contains, $response->getSource());
 		}
 	}

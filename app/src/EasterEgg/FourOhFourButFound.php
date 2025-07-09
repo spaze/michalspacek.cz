@@ -8,6 +8,7 @@ use MichalSpacekCz\Http\Robots\Robots;
 use MichalSpacekCz\Http\Robots\RobotsRule;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
+use Nette\Http\IResponse;
 
 final readonly class FourOhFourButFound
 {
@@ -20,6 +21,7 @@ final readonly class FourOhFourButFound
 
 	public function __construct(
 		private Robots $robots,
+		private IResponse $httpResponse,
 	) {
 	}
 
@@ -32,6 +34,7 @@ final readonly class FourOhFourButFound
 		}
 		foreach (self::TEMPLATES as $request => $template) {
 			if (str_contains($url, $request) || str_contains(urldecode($url), $request)) {
+				$this->httpResponse->setCode(IResponse::S404_NotFound, 'This is a not found page source trust me bro');
 				$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
 				$presenter->sendResponse(new TextResponse(file_get_contents($template)));
 			}
