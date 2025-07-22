@@ -182,7 +182,7 @@ final class SecurityTxtParser
 	 */
 	private function checkSignature(int $lineNumber, string $line, string $contents, SecurityTxt $securityTxt): SecurityTxt
 	{
-		if ($this->signature->isCleartextHeader($line)) {
+		if ($this->signature->isClearsignHeader($line)) {
 			try {
 				$result = $this->signature->verify($contents);
 				return $securityTxt->withSignatureVerifyResult($result);

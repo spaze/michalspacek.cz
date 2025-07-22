@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Application;
 
 use Nette;
+use function func_num_args, strcasecmp;
 
 
 /**
@@ -158,7 +159,7 @@ final class Request
 	 */
 	public function isMethod(string $method): bool
 	{
-		return strcasecmp($this->method, $method) === 0;
+		return strcasecmp($this->method ?? '', $method) === 0;
 	}
 
 

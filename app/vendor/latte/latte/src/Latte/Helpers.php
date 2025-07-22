@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Latte;
 
-use function array_keys, array_search, array_slice, array_unique, count, is_array, is_object, is_string, levenshtein, max, min, strlen, strpos;
+use function array_filter, array_keys, array_search, array_slice, array_unique, count, is_array, is_object, is_string, levenshtein, max, min, strlen, strpos;
 use const PHP_VERSION_ID;
 
 
@@ -19,13 +19,6 @@ use const PHP_VERSION_ID;
  */
 class Helpers
 {
-	/** @var array<string, int>  empty (void) HTML elements */
-	public static array $emptyElements = [
-		'img' => 1, 'hr' => 1, 'br' => 1, 'input' => 1, 'meta' => 1, 'area' => 1, 'embed' => 1, 'keygen' => 1, 'source' => 1, 'base' => 1,
-		'col' => 1, 'link' => 1, 'param' => 1, 'basefont' => 1, 'frame' => 1, 'isindex' => 1, 'wbr' => 1, 'command' => 1, 'track' => 1,
-	];
-
-
 	/**
 	 * Finds the best suggestion.
 	 * @param  string[]  $items
@@ -97,5 +90,11 @@ class Helpers
 		}
 
 		return $list;
+	}
+
+
+	public static function removeNulls(array &$items): void
+	{
+		$items = array_filter($items, fn($item) => $item !== null);
 	}
 }

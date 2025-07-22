@@ -1,5 +1,13 @@
 # `security.txt` (RFC 9116) generator, parser, validator
 
+The `security.txt` document represents a text file that's both human-readable and machine-parsable to help organizations describe their vulnerability disclosure  practices to make it easier for researchers to report vulnerabilities.
+The format was created by EdOverflow and Yakov Shafranovich and is specified in [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116).
+You can find more about <code>security.txt</code> at <a href="https://securitytxt.org/">securitytxt.org</a>.
+
+I have also written a blogpost about `security.txt` and how it may be helpful when reporting vulnerabilities:
+- [What's `security.txt` and why you should have one](https://www.michalspacek.com/what-is-security.txt-and-why-you-should-have-one) in English
+- [K čemu je soubor `security.txt`](https://www.michalspacek.cz/k-cemu-je-soubor-security.txt) in Czech
+
 # As a validator
 
 ## How does the validation work
@@ -102,11 +110,70 @@ $securityTxt->addContact(new SecurityTxtContact('https://contact.example'));
 $securityTxt->addContact(SecurityTxtContact::phone('123456'));
 $securityTxt->addContact(SecurityTxtContact::email('email@com.example'));
 $securityTxt->addAcknowledgments(new SecurityTxtAcknowledgments('https://ack1.example'));
-$securityTxt->setExpires(new SecurityTxtExpires(new DateTimeImmutable('+3 months midnight')));
+$securityTxt->setExpires(new SecurityTxtExpiresFactory()->create(new DateTimeImmutable('+3 months midnight')));
 $securityTxt->addAcknowledgments(new SecurityTxtAcknowledgments('ftp://ack2.example'));
 $securityTxt->setPreferredLanguages(new SecurityTxtPreferredLanguages(['en', 'cs-CZ']));
 header('Content-Type: ' . SecurityTxt::CONTENT_TYPE_HEADER);
 echo new SecurityTxtWriter()->write($securityTxt);
+```
+
+## Signing the file
+One option to sign the file using an OpenPGP cleartext signature as per the `security.txt` [specification](https://www.rfc-editor.org/rfc/rfc9116#name-digital-signature) is to pre-sign the `security.txt` file using the `gpg` command line utility and store the result as a static file in your repository.
+I'd recommend creating the signatures that way as it doesn't expose your private keys to the web server and the web app. Allowing the app and the server to access your private keys brings a handful of new security problems to solve, which some of them are mentioned below.
+
+Creating a new signing key is beyond the scope of this document, but you can refer to sources like [the GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
+Related challenges like key distribution, secure storage, and expiration, while interesting to address properly, are also not covered here.
+
+Having said that, this library also allows you to create the signature programmatically by calling `Spaze\SecurityTxt\Signature\SecurityTxtSignature::sign()`:
+```php
+$gnuPgProvider = new SecurityTxtSignatureGnuPgProvider();
+$signature = new SecurityTxtSignature($gnuPgProvider);
+$securityTxt = new SecurityTxt();
+// $securityTxt->addContact(...) etc.
+$writer = new SecurityTxtWriter();
+$contents = $writer->write($securityTxt);
+$signingKeyFingerprint = '...'; // Or anything that refers to a unique key (user id, key id, ...)
+$keyPassphrase = '...'; // Don't commit the passphrase to Git, please don't
+echo $signature->sign($contents, $signingKeyFingerprint, $keyPassphrase);
+```
+
+The `SecurityTxtSignature::sign()` method makes use of the keyring of the current user (which may be a web server user).
+This keyring is normally located in the `.gnupg` directory in the user's home dir. To specify a custom location,
+pass the path to the keyring in the `Spaze\SecurityTxt\Signature\Providers\SecurityTxtSignatureGnuPgProvider` constructor, for example:
+```php
+$gnuPgProvider = new SecurityTxtSignatureGnuPgProvider('/home/www');
+```
+If you wish, you can instead store the path to the keyring in the environment variable `GNUPGHOME`.
+Make sure the keyring is not publicly accessible, do not store keyring in `public_html` or similar directories. Also don't add the keyring to your Git repository.
+
+If you're going to use a key for this library, I'd strongly recommend you create a key only to sign the file and do not use the key for anything else. You can then sign the key with your main key, if you want.
+
+### Caching the signed file
+If you're going to create the signature using this library, I don't recommend doing it on each request. Instead, you can cache the signed contents using for example the [Symfony Cache](https://symfony.com/doc/current/components/cache.html) component:
+```php
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\ItemInterface;
+
+$cache = new FilesystemAdapter();
+$cachedContents = $cache->get('securitytxt_file', function (ItemInterface $item) use ($securityTxt, $signature, $contents, $signingKeyFingerprint, $keyPassphrase): string {
+    $item->expiresAt($securityTxt->getExpires()->getDateTime());
+    return $signature->sign($contents, $signingKeyFingerprint, $keyPassphrase);
+});
+
+echo $cachedContents;
+```
+The following example uses the [Nette Cache](https://doc.nette.org/en/caching) library, the code is very similar to the example above:
+```php
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+
+$storage = new FileStorage('/tmp/cache');
+$cache = new Cache($storage);
+$cachedContents = $cache->load('securitytxt_file', function () use ($signature, $contents, $signingKeyFingerprint, $keyPassphrase): string {
+    return $signature->sign($contents, $signingKeyFingerprint, $keyPassphrase);
+}, [Cache::Expire => $securityTxt->getExpires()->getDateTime()]);
+
+echo $cachedContents;
 ```
 
 # Exceptions

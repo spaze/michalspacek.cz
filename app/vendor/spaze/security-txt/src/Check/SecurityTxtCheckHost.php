@@ -6,7 +6,6 @@ namespace Spaze\SecurityTxt\Check;
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotReadUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidTypeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
@@ -85,7 +84,6 @@ final class SecurityTxtCheckHost
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtCannotOpenUrlException
-	 * @throws SecurityTxtCannotReadUrlException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException

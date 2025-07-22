@@ -26,16 +26,19 @@
 		"nette/tester": "^2.5.2",
 		"latte/latte": "^2.10.2 || ^3.0.12",
 		"tracy/tracy": "^2.9",
-		"phpstan/phpstan-nette": "^1"
+		"phpstan/phpstan-nette": "^2.0@stable"
 	},
 	"conflict": {
-		"latte/latte": ">=3.0.0 <3.0.12 || >=3.1"
+		"latte/latte": ">=3.0.0 <3.0.12 || >=3.2"
 	},
 	"suggest": {
 		"ext-intl": "to use date/time controls"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"classmap": ["src/"],
+		"psr-4": {
+			"Nette\\": "src"
+		}
 	},
 	"minimum-stability": "dev",
 	"scripts": {

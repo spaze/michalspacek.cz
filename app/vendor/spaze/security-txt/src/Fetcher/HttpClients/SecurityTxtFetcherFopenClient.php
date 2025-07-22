@@ -5,7 +5,6 @@ namespace Spaze\SecurityTxt\Fetcher\HttpClients;
 
 use Override;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotReadUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcherResponse;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcherUrl;
@@ -23,7 +22,6 @@ final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcher
 
 
 	/**
-	 * @throws SecurityTxtCannotReadUrlException
 	 * @throws SecurityTxtCannotOpenUrlException
 	 * @throws SecurityTxtNoHttpCodeException
 	 */
@@ -49,9 +47,6 @@ final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcher
 			throw new SecurityTxtCannotOpenUrlException($url->getUrl(), $url->getRedirects());
 		}
 		$contents = stream_get_contents($fp, self::MAX_RESPONSE_LENGTH);
-		if ($contents === false) {
-			throw new SecurityTxtCannotReadUrlException($url->getUrl(), $url->getRedirects());
-		}
 		if (strlen($contents) === self::MAX_RESPONSE_LENGTH) {
 			if (stream_get_contents($fp, 1) !== '') {
 				$truncated = true;

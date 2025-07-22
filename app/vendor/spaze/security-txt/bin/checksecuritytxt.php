@@ -10,6 +10,7 @@ use Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
+use Spaze\SecurityTxt\Signature\Providers\SecurityTxtSignatureGnuPgProvider;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignature;
 use Spaze\SecurityTxt\Validator\SecurityTxtValidator;
 
@@ -33,7 +34,8 @@ if (!$autoloadLoaded) {
 }
 
 $validator = new SecurityTxtValidator();
-$signature = new SecurityTxtSignature();
+$gnuPgProvider = new SecurityTxtSignatureGnuPgProvider();
+$signature = new SecurityTxtSignature($gnuPgProvider);
 $fopenClient = new SecurityTxtFetcherFopenClient('Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)');
 $urlParser = new SecurityTxtUrlParser();
 $expiresFactory = new SecurityTxtExpiresFactory();
