@@ -19,6 +19,10 @@ parameters:
 			identifier: property.deprecatedClass
 			path: tests/User/ManagerTest.phpt
 			count: 1
+		- # https://github.com/phpstan/phpstan-src/pull/4146
+			identifier: identical.alwaysFalse
+			path: src/Http/Client/HttpClient.php
+			count: 1
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
