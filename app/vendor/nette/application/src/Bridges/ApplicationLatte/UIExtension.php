@@ -16,6 +16,7 @@ use Latte\Compiler\Tag;
 use Latte\Essential\Nodes\ExtendsNode;
 use Nette;
 use Nette\Application\UI;
+use function array_unshift, preg_match;
 
 
 /**
@@ -31,11 +32,16 @@ final class UIExtension extends Latte\Extension
 
 	public function getFilters(): array
 	{
+		$presenter = $this->control?->getPresenterIfExists();
 		return [
 			'modifyDate' => fn($time, $delta, $unit = null) => $time
 				? Nette\Utils\DateTime::from($time)->modify($delta . $unit)
 				: null,
-		];
+		] + ($presenter ? [
+			'absoluteUrl' => fn(\Stringable|string|null $link): ?string => $link === null
+					? null
+					: $presenter->getHttpRequest()->getUrl()->resolve((string) $link)->getAbsoluteUrl(),
+		] : []);
 	}
 
 
@@ -73,6 +79,7 @@ final class UIExtension extends Latte\Extension
 			'control' => Nodes\ControlNode::create(...),
 			'plink' => Nodes\LinkNode::create(...),
 			'link' => Nodes\LinkNode::create(...),
+			'linkBase' => Nodes\LinkBaseNode::create(...),
 			'ifCurrent' => Nodes\IfCurrentNode::create(...),
 			'templatePrint' => Nodes\TemplatePrintNode::create(...),
 			'snippet' => Nodes\SnippetNode::create(...),
@@ -87,6 +94,7 @@ final class UIExtension extends Latte\Extension
 	{
 		return [
 			'snippetRendering' => $this->snippetRenderingPass(...),
+			'applyLinkBase' => [Nodes\LinkBaseNode::class, 'applyLinkBasePass'],
 		];
 	}
 

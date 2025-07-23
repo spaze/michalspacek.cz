@@ -37,20 +37,6 @@ parameters:
 			- vendor/composer/pcre/src/Regex.php
 			- vendor/contributte/translation/src/DI/TranslationExtension.php
 			- vendor/contributte/translation/src/Latte/Macros.php
-	ignoreErrors:
-		-
-			message: '#^Cannot access constant#'
-			paths:
-				- vendor/symfony/cache/Adapter/DoctrineDbalAdapter.php
-				- vendor/symfony/cache/DependencyInjection/*.php
-				- vendor/symfony/http-client/*.php
-				# Contains Latte 2 symbols
-				- vendor/nette/application/src/Bridges/ApplicationLatte/UIMacros.php
-				- vendor/nette/forms/src/Bridges/FormsLatte/FormMacros.php
-		-
-			message: '#^Cannot access constant [A-Z_]+ on Nette\\Http\\UserStorage#'
-			paths:
-				- vendor/nette/http/src/Http/UserStorage.php # Nette\Security\IUserStorage removed in nette/security v3.2.0
 
 	disallowedFunctionCalls:
 		# local disallowed-calls.neon

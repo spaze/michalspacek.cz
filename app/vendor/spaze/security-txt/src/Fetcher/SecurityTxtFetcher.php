@@ -5,7 +5,6 @@ namespace Spaze\SecurityTxt\Fetcher;
 
 use LogicException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotReadUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidTypeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
@@ -57,7 +56,6 @@ final class SecurityTxtFetcher
 
 	/**
 	 * @throws SecurityTxtCannotOpenUrlException
-	 * @throws SecurityTxtCannotReadUrlException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtHostNotFoundException
@@ -78,7 +76,6 @@ final class SecurityTxtFetcher
 	/**
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtHostNotFoundException
-	 * @throws SecurityTxtCannotReadUrlException
 	 * @throws SecurityTxtCannotOpenUrlException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtNoHttpCodeException
@@ -139,7 +136,6 @@ final class SecurityTxtFetcher
 
 	/**
 	 * @throws SecurityTxtTooManyRedirectsException
-	 * @throws SecurityTxtCannotReadUrlException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtCannotOpenUrlException
 	 * @throws SecurityTxtUrlNotFoundException
@@ -292,7 +288,6 @@ final class SecurityTxtFetcher
 
 	/**
 	 * @throws SecurityTxtCannotOpenUrlException
-	 * @throws SecurityTxtCannotReadUrlException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtNotFoundException

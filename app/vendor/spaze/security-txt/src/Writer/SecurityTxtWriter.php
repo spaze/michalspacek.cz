@@ -5,7 +5,7 @@ namespace Spaze\SecurityTxt\Writer;
 
 use Spaze\SecurityTxt\SecurityTxt;
 
-final class SecurityTxtWriter
+final readonly class SecurityTxtWriter
 {
 
 	public function write(SecurityTxt $securityTxt): string

@@ -12,6 +12,7 @@ namespace Latte\Compiler\Nodes\Php;
 use Latte\Compiler\Node;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
+use Latte\Helpers;
 
 
 class ModifierNode extends Node
@@ -78,23 +79,19 @@ class ModifierNode extends Node
 
 	public function printContentAware(PrintContext $context, string $expr): string
 	{
+		$escape = $this->escape;
 		foreach ($this->filters as $filter) {
 			$name = $filter->name->name;
 			if ($name === 'noescape') {
-				$noescape = true;
+				$escape = false;
 			} else {
 				$expr = $filter->printContentAware($context, $expr);
 			}
 		}
 
-		if ($this->escape && empty($noescape)) {
-			$expr = 'LR\Filters::convertTo($ʟ_fi, '
-				. var_export($context->getEscaper()->export(), true) . ', '
-				. $expr
-				. ')';
-		}
-
-		return $expr;
+		return $escape
+			? $context->getEscaper()->escapeContent($expr)
+			: $expr;
 	}
 
 
@@ -103,5 +100,6 @@ class ModifierNode extends Node
 		foreach ($this->filters as &$filter) {
 			yield $filter;
 		}
+		Helpers::removeNulls($this->filters);
 	}
 }

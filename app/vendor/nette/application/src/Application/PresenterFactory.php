@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Application;
 
 use Nette;
+use function array_shift, class_exists, count, explode, is_array, is_string, preg_match, strtr;
 
 
 /**
@@ -82,7 +83,7 @@ class PresenterFactory implements IPresenterFactory
 	{
 		foreach ($mapping as $module => $mask) {
 			if (is_string($mask)) {
-				if (!preg_match('#^\\\\?([\w\\\\]*\\\\)?(\w*\*\w*?\\\\)?([\w\\\\]*\*\*?\w*)$#D', $mask, $m)) {
+				if (!preg_match('#^\\\?([\w\\\]*\\\)?(\w*\*\w*?\\\)?([\w\\\]*\*\*?\w*)$#D', $mask, $m)) {
 					throw new Nette\InvalidStateException("Invalid mapping mask '$mask'.");
 				}
 

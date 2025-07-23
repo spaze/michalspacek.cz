@@ -17,7 +17,7 @@ use Latte\Compiler\Nodes\Html;
 use Latte\ContentType;
 use Latte\Helpers;
 use Latte\SecurityViolationException;
-use function array_keys, array_pop, end, implode, in_array, key, preg_replace, str_starts_with, strlen, strtolower, substr;
+use function array_keys, array_pop, end, implode, in_array, key, preg_replace, str_starts_with, strlen, substr;
 
 
 /**
@@ -243,7 +243,7 @@ final class TemplateParserHtml
 			if ($stream->is(Token::Latte_TagOpen)) {
 				$save = $stream->getIndex();
 				$statement = $this->parser->parseLatteStatement([$this, 'inTagResolve']);
-				if (!$statement instanceof Latte\Essential\Nodes\PrintNode) {
+				if (!$statement instanceof Nodes\PrintNode) {
 					if (!$parts || $strict) {
 						throw new CompileException('Only expression can be used as a HTML tag name.', $statement->position);
 					}
@@ -315,7 +315,7 @@ final class TemplateParserHtml
 	{
 		if ($elem->contentType !== ContentType::Html) {
 			return $elem->selfClosing;
-		} elseif (isset(Helpers::$emptyElements[strtolower($elem->name)])) {
+		} elseif (Latte\Runtime\HtmlHelpers::isVoidElement($elem->name)) {
 			return true;
 		} elseif ($elem->selfClosing) { // auto-correct
 			$elem->content = new Nodes\NopNode;
@@ -346,7 +346,7 @@ final class TemplateParserHtml
 		$stream = $this->parser->getStream();
 		if ($stream->is(Token::Latte_TagOpen)) {
 			$name = $this->parser->parseLatteStatement();
-			if (!$name instanceof Latte\Essential\Nodes\PrintNode) {
+			if (!$name instanceof Nodes\PrintNode) {
 				return $name; // value like '<span {if true}attr1=val{/if}>'
 			}
 		} else {
@@ -376,7 +376,7 @@ final class TemplateParserHtml
 		$this->consumeIgnored();
 		if ($quoteToken = $stream->tryConsume(Token::Quote)) {
 			$this->parser->getLexer()->setState(TemplateLexer::StateHtmlQuotedValue, $quoteToken->text);
-			$value = $this->parser->parseFragment([$this->parser, 'inTextResolve']);
+			$value = $this->parser->parseFragment([$this->parser, 'inTextResolve'])->simplify(allowsNull: false);
 			$stream->tryConsume(Token::Quote) || $stream->throwUnexpectedException([$quoteToken->text], addendum: ", end of HTML attribute started $quoteToken->position");
 			$this->parser->getLexer()->setState(TemplateLexer::StateHtmlTag);
 			return [$value, $quoteToken->text];
