@@ -9,7 +9,7 @@ use Throwable;
 class InvalidResourceAliasException extends RuntimeException
 {
 
-	public function __construct(Throwable $previous = null)
+	public function __construct(?Throwable $previous = null)
 	{
 		parent::__construct('Invalid character in resource alias, using + with remote files or in direct mode?', previous: $previous);
 	}

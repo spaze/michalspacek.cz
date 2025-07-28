@@ -12,7 +12,7 @@ class ResourceHashNode extends SriNode
 	{
 		return $context->format(
 			'echo %escape(%dump) %line;',
-			$this->hash,
+			$this->sriConfig->getHash($this->resources),
 			$this->position,
 		);
 	}

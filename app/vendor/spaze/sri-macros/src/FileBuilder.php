@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Spaze\SubresourceIntegrity;
 
 use Spaze\SubresourceIntegrity\Resource\ResourceInterface;
-use stdClass;
 
 class FileBuilder
 {
@@ -16,9 +15,9 @@ class FileBuilder
 	 * @param string $pathPrefix Should be an absolute path
 	 * @param string $buildPrefix
 	 * @param HtmlElement|null $targetHtmlElement
-	 * @return stdClass
+	 * @return LocalFile
 	 */
-	public function build(array $resources, string $pathPrefix, string $buildPrefix, ?HtmlElement $targetHtmlElement = null): stdClass
+	public function build(array $resources, string $pathPrefix, string $buildPrefix, ?HtmlElement $targetHtmlElement = null): LocalFile
 	{
 		$content = '';
 		foreach ($resources as $resource) {
@@ -39,13 +38,8 @@ class FileBuilder
 		if (!is_writable(dirname($buildFilename))) {
 			throw new Exceptions\DirectoryNotWritableException('Directory ' . dirname($buildFilename) . " doesn't exist or isn't writable");
 		}
-
 		file_put_contents($buildFilename, $content);
-
-		$data = new stdClass();
-		$data->url = $build;
-		$data->filename = $buildFilename;
-		return $data;
+		return new LocalFile($build, $buildFilename);
 	}
 
 }

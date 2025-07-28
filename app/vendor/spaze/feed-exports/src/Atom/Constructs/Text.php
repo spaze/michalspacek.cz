@@ -11,8 +11,8 @@ namespace Spaze\Exports\Atom\Constructs;
 class Text
 {
 
-	public const TYPE_TEXT = 'text';
-	public const TYPE_HTML = 'html';
+	public const string TYPE_TEXT = 'text';
+	public const string TYPE_HTML = 'html';
 
 
 	public function __construct(

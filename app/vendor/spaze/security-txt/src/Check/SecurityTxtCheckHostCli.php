@@ -105,7 +105,10 @@ final readonly class SecurityTxtCheckHostCli
 			$this->consolePrinter->enableColors();
 		}
 		if ($url === null) {
-			$this->consolePrinter->info("Usage: {$scriptName} <url or hostname> [days] [--colors] [--strict] [--no-ipv6] \nThe check will return 1 instead of 0 if any of the following is true: the file has expired, expires in less than <days>, has errors, has warnings when using --strict");
+			$usage = "Usage: {$scriptName} <URL or hostname> [days] [--colors] [--strict] [--no-ipv6]\n"
+				. "If the file expires in less than <days>, the script will print a warning.\n"
+				. "The check will return 1 instead of 0 if any of the following conditions are true: the file has expired, has errors, or has warnings when using --strict.";
+			$this->consolePrinter->info($usage);
 			$this->exit(CheckExitStatus::NoFile);
 		}
 

@@ -4,6 +4,8 @@ namespace SlevomatCodingStandard\Helpers;
 
 use InvalidArgumentException;
 use PHP_CodeSniffer\Files\File;
+use function array_map;
+use function in_array;
 use function sprintf;
 use const T_ANON_CLASS;
 use const T_ATTRIBUTE;
@@ -39,6 +41,28 @@ class AttributeHelper
 		T_TRAIT,
 		T_VARIABLE,
 	];
+
+	public static function hasAttribute(File $phpcsFile, int $pointer, string $attributeName): bool
+	{
+		$docCommentOpenPointer = DocCommentHelper::findDocCommentOpenPointer($phpcsFile, $pointer);
+		if ($docCommentOpenPointer === null) {
+			return false;
+		}
+
+		$tokens = $phpcsFile->getTokens();
+		$nextPointer = TokenHelper::findNextEffective($phpcsFile, $docCommentOpenPointer + 1);
+
+		if ($nextPointer === null || $tokens[$nextPointer]['code'] !== T_ATTRIBUTE) {
+			return false;
+		}
+
+		$attributeNames = array_map(
+			static fn (Attribute $name): string => $name->getFullyQualifiedName(),
+			self::getAttributes($phpcsFile, $nextPointer),
+		);
+
+		return in_array($attributeName, $attributeNames, true);
+	}
 
 	/**
 	 * @return list<Attribute>
@@ -78,6 +102,7 @@ class AttributeHelper
 				$attributes[] = new Attribute(
 					$attributeOpenerPointer,
 					$attributeName,
+					NamespaceHelper::resolveClassName($phpcsFile, $attributeName, $attributeOpenerPointer),
 					$attributeNameStartPointer,
 					$attributeNameEndPointer,
 				);
@@ -88,6 +113,7 @@ class AttributeHelper
 				$attributes[] = new Attribute(
 					$attributeOpenerPointer,
 					$attributeName,
+					NamespaceHelper::resolveClassName($phpcsFile, $attributeName, $attributeOpenerPointer),
 					$attributeNameStartPointer,
 					$attributeNameEndPointer,
 				);
@@ -99,6 +125,7 @@ class AttributeHelper
 				$attributes[] = new Attribute(
 					$attributeOpenerPointer,
 					$attributeName,
+					NamespaceHelper::resolveClassName($phpcsFile, $attributeName, $attributeOpenerPointer),
 					$attributeNameStartPointer,
 					$tokens[$pointerAfterAttributeName]['parenthesis_closer'],
 					TokenHelper::getContent(

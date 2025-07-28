@@ -16,7 +16,7 @@ use Spaze\Exports\Atom\Feed;
 class Response implements NetteResponse
 {
 
-	public const CONTENT_TYPE = 'application/atom+xml';
+	public const string CONTENT_TYPE = 'application/atom+xml';
 
 
 	public function __construct(
