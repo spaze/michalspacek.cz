@@ -12,7 +12,7 @@ class ResourceUrlNode extends SriNode
 	{
 		return $context->format(
 			'echo %escape(%dump) %line;',
-			$this->url,
+			$this->sriConfig->getUrl($this->resources),
 			$this->position,
 		);
 	}

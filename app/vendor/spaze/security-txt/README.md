@@ -1,5 +1,7 @@
 # `security.txt` (RFC 9116) generator, parser, validator
 
+This package is a PHP library that can generate, parse, and validate `security.txt` files. It comes with an executable script that you can use from the command line, in a CI test, or in a pipeline (for example, in GitHub Actions).
+
 The `security.txt` document represents a text file that's both human-readable and machine-parsable to help organizations describe their vulnerability disclosure  practices to make it easier for researchers to report vulnerabilities.
 The format was created by EdOverflow and Yakov Shafranovich and is specified in [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116).
 You can find more about <code>security.txt</code> at <a href="https://securitytxt.org/">securitytxt.org</a>.
@@ -7,6 +9,13 @@ You can find more about <code>security.txt</code> at <a href="https://securitytx
 I have also written a blogpost about `security.txt` and how it may be helpful when reporting vulnerabilities:
 - [What's `security.txt` and why you should have one](https://www.michalspacek.com/what-is-security.txt-and-why-you-should-have-one) in English
 - [K čemu je soubor `security.txt`](https://www.michalspacek.cz/k-cemu-je-soubor-security.txt) in Czech
+
+# Installation
+
+Install the package with Composer:
+```
+composer require spaze/security-txt
+```
 
 # As a validator
 
@@ -90,7 +99,7 @@ You can create a `security.txt` file programmatically:
 2. Add what's needed
 3. Pass it to `SecurityTxtWriter::write()` it will return the `security.txt` contents as a string
 
-Signing the file is not (yet) supported.
+See below if you want to add an OpenPGP signature.
 
 ## Value validation
 By default, values are validated when set, and an exception is thrown when they're invalid. You can set validation level in the `SecurityTxt` constructor using the `SecurityTxtValidationLevel` enum:
@@ -175,6 +184,40 @@ $cachedContents = $cache->load('securitytxt_file', function () use ($signature, 
 
 echo $cachedContents;
 ```
+
+# Command line usage
+The `checksecuritytxt.php` script, located in the `bin` directory, prints progress and validation errors and warnings. It can be used from the command line or in automated tests.
+
+Usage:
+```sh
+checksecuritytxt.php <URL or hostname> [days] [--colors] [--strict] [--no-ipv6]
+```
+
+Parameters:
+- `URL or hostname`: A hostname or a domain you want to check (e.g. `example.com`). If you provide a URL (e.g., `https://example.com/foo`), the script will extract and use only the hostname part anyway.
+- `days`: If the file expires in less than *`days`* days, the script will print a warning.
+- `--colors`: Enables colored output using red, green, and other colors for better readability.
+- `--strict`: Upgrades all warnings to errors, enforcing stricter validation.
+- `--no-ipv6`: Disables IPv6 usage. When this option is set, the script effectively ignores AAAA DNS records and uses only A records.
+
+The script returns the following status codes:
+- `0`: The file is valid.
+- `1`: Returned if any of the following conditions are true:
+  - The file has expired.
+  - The file has errors.
+  - The file has warnings when using `--strict`.
+- `2`: No hostname or URL was passed.
+- `3`: The file cannot be loaded.
+
+# CI Pipelines
+If you'd like to check your `security.txt` file automatically using a CI (continuous integration) platform, such as GitHub Actions, you can use the command-line script described above.
+In general, you’ll need to follow these steps:
+
+1. Install PHP if it is not already installed.
+2. Install this package using Composer.
+3. Run the `checksecuritytxt.php` script.
+
+You can use my own checks as a template or for inspiration; see [the `securitytxt.yml` file](https://github.com/spaze/michalspacek.cz/blob/main/.github/workflows/securitytxt.yml) in my repository.
 
 # Exceptions
 The messages in the exceptions as thrown by this library do not contain any sensitive information and are safe to display to the user using the `getMessage()` method.

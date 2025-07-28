@@ -10,8 +10,8 @@
 		}
 	],
 	"require": {
-		"php": "^8.1",
-		"latte/latte": "^3.0",
+		"php": "^8.4",
+		"latte/latte": "^3.0.9",
 		"nette/di": "^3.0"
 	},
 	"autoload": {
@@ -20,10 +20,10 @@
 	"require-dev": {
 		"nette/application": "^3.1.13",
 		"nette/tester": "^2.5.1",
-		"phpstan/phpstan": "^1.10.33",
-		"php-parallel-lint/php-parallel-lint": "^1.3.2",
+		"phpstan/phpstan": "^2.1",
+		"php-parallel-lint/php-parallel-lint": "^1.4",
 		"php-parallel-lint/php-console-highlighter": "^1.0",
-		"spaze/coding-standard": "^1.7"
+		"spaze/coding-standard": "^1.8.1"
 	},
 	"suggest": {
 		"spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",

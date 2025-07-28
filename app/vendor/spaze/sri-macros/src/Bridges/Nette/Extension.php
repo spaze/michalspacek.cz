@@ -9,16 +9,16 @@ use Nette\DI\Definitions\FactoryDefinition;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use Spaze\SubresourceIntegrity\Bridges\Latte\LatteExtension;
+use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\SriNodeFactory;
 use Spaze\SubresourceIntegrity\Config;
 use Spaze\SubresourceIntegrity\FileBuilder;
 use Spaze\SubresourceIntegrity\HashingAlgo;
 use Spaze\SubresourceIntegrity\LocalMode;
-use stdClass;
 
 class Extension extends CompilerExtension
 {
 
-	/** @var stdClass */
+	/** @var object{resources: array<string, string|array{url: string, hash: string|array<int, string>}>, localPrefix: object{url: string, path: string, build: string}, localMode: string, hashingAlgos: list<string>} */
 	protected $config;
 
 
@@ -52,11 +52,13 @@ class Extension extends CompilerExtension
 		$builder->addDefinition($this->prefix('config'))
 			->setType(Config::class)
 			->addSetup('setResources', [$this->config->resources])
-			->addSetup('setLocalPrefix', [$this->config->localPrefix])
+			->addSetup('setLocalPrefix', [$this->config->localPrefix->url, $this->config->localPrefix->path, $this->config->localPrefix->build])
 			->addSetup('setLocalMode', [$this->config->localMode])
 			->addSetup('setHashingAlgos', [$this->config->hashingAlgos]);
 		$builder->addDefinition($this->prefix('fileBuilder'))
 			->setType(FileBuilder::class);
+		$builder->addDefinition($this->prefix('nodeFactory'))
+			->setType(SriNodeFactory::class);
 	}
 
 

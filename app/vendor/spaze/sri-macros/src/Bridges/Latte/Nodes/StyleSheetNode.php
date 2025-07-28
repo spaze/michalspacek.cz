@@ -9,16 +9,14 @@ use Spaze\SubresourceIntegrity\HtmlElement;
 class StyleSheetNode extends SriNode
 {
 
-	protected static ?HtmlElement $targetHtmlElement = HtmlElement::Link;
-
-
 	public function print(PrintContext $context): string
 	{
-		return $this->printTag($context, $this->position, [
+		$attributes = [
 			'rel' => 'stylesheet',
-			'href' => $this->url,
-			'integrity' => $this->hash,
-		]);
+			'href' => $this->sriConfig->getUrl($this->resources, HtmlElement::Link),
+			'integrity' => $this->sriConfig->getHash($this->resources, HtmlElement::Link),
+		];
+		return $this->printTag($context, $this->position, $attributes, HtmlElement::Link);
 	}
 
 }

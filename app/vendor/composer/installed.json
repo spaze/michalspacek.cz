@@ -2307,17 +2307,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.19",
-            "version_normalized": "2.1.19.0",
+            "version": "2.1.20",
+            "version_normalized": "2.1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf"
+                "reference": "a9ccfef95210f92ba6feea6e8d1eef42b5605499"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/473a8c30e450d87099f76313edcbb90852f9afdf",
-                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a9ccfef95210f92ba6feea6e8d1eef42b5605499",
+                "reference": "a9ccfef95210f92ba6feea6e8d1eef42b5605499",
                 "shasum": ""
             },
             "require": {
@@ -2326,7 +2326,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2025-07-21T19:58:24+00:00",
+            "time": "2025-07-26T20:45:26+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2738,12 +2738,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017"
+                "reference": "81355a1946c1cb0d4dd1966161015b8522f30173"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
-                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/81355a1946c1cb0d4dd1966161015b8522f30173",
+                "reference": "81355a1946c1cb0d4dd1966161015b8522f30173",
                 "shasum": ""
             },
             "conflict": {
@@ -2940,7 +2940,7 @@
                 "elefant/cms": "<2.0.7",
                 "elgg/elgg": "<3.3.24|>=4,<4.0.5",
                 "elijaa/phpmemcacheadmin": "<=1.3",
-                "elmsln/haxcms": "<11.0.8",
+                "elmsln/haxcms": "<11.0.14",
                 "encore/laravel-admin": "<=1.8.19",
                 "endroid/qr-code-bundle": "<3.4.2",
                 "enhavo/enhavo-app": "<=0.13.1",
@@ -3654,7 +3654,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2025-07-22T16:07:09+00:00",
+            "time": "2025-07-25T21:05:39+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -3764,35 +3764,35 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "8.19.1",
-            "version_normalized": "8.19.1.0",
+            "version": "8.20.0",
+            "version_normalized": "8.20.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "458d665acd49009efebd7e0cb385d71ae9ac3220"
+                "reference": "b4f9f02edd4e6a586777f0cabe8d05574323f3eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/458d665acd49009efebd7e0cb385d71ae9ac3220",
-                "reference": "458d665acd49009efebd7e0cb385d71ae9ac3220",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/b4f9f02edd4e6a586777f0cabe8d05574323f3eb",
+                "reference": "b4f9f02edd4e6a586777f0cabe8d05574323f3eb",
                 "shasum": ""
             },
             "require": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.0",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.1.2",
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpdoc-parser": "^2.1.0",
-                "squizlabs/php_codesniffer": "^3.13.0"
+                "phpstan/phpdoc-parser": "^2.2.0",
+                "squizlabs/php_codesniffer": "^3.13.2"
             },
             "require-dev": {
-                "phing/phing": "3.0.1",
+                "phing/phing": "3.0.1|3.1.0",
                 "php-parallel-lint/php-parallel-lint": "1.4.0",
-                "phpstan/phpstan": "2.1.17",
+                "phpstan/phpstan": "2.1.19",
                 "phpstan/phpstan-deprecation-rules": "2.0.3",
-                "phpstan/phpstan-phpunit": "2.0.6",
-                "phpstan/phpstan-strict-rules": "2.0.4",
-                "phpunit/phpunit": "9.6.8|10.5.45|11.4.4|11.5.21|12.1.3"
+                "phpstan/phpstan-phpunit": "2.0.7",
+                "phpstan/phpstan-strict-rules": "2.0.6",
+                "phpunit/phpunit": "9.6.8|10.5.48|11.4.4|11.5.27|12.2.7"
             },
-            "time": "2025-06-09T17:53:57+00:00",
+            "time": "2025-07-26T15:35:10+00:00",
             "type": "phpcodesniffer-standard",
             "extra": {
                 "branch-alias": {
@@ -3816,7 +3816,7 @@
             ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/8.19.1"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.20.0"
             },
             "funding": [
                 {
@@ -3883,37 +3883,38 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v4.0.1",
-            "version_normalized": "4.0.1.0",
+            "version": "v4.1.0",
+            "version_normalized": "4.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "a1b5cc51b6b10d9d18a5275bc01170d388420c78"
+                "reference": "31021738a099921dc582f96ddcd76fd9c7aa58d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/a1b5cc51b6b10d9d18a5275bc01170d388420c78",
-                "reference": "a1b5cc51b6b10d9d18a5275bc01170d388420c78",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/31021738a099921dc582f96ddcd76fd9c7aa58d0",
+                "reference": "31021738a099921dc582f96ddcd76fd9c7aa58d0",
                 "shasum": ""
             },
             "require": {
-                "nette/di": "^3.1",
-                "nette/schema": "^1.2",
-                "php": "^8.2",
+                "nette/di": "^3.2",
+                "nette/schema": "^1.3",
+                "php": "^8.3",
                 "spaze/nonce-generator": "^4.0"
             },
             "require-dev": {
                 "nette/bootstrap": "^3.2",
+                "nette/neon": "^3.4.4",
                 "nette/tester": "^2.5",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/phpstan": "^1.10",
-                "spaze/coding-standard": "^1.6"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "spaze/coding-standard": "^1.8"
             },
             "suggest": {
                 "spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
             },
-            "time": "2023-10-28T14:01:59+00:00",
+            "time": "2025-07-27T19:40:07+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3935,7 +3936,7 @@
             "description": "Build Content Security Policy from a config file",
             "support": {
                 "issues": "https://github.com/spaze/csp-config/issues",
-                "source": "https://github.com/spaze/csp-config/tree/v4.0.1"
+                "source": "https://github.com/spaze/csp-config/tree/v4.1.0"
             },
             "install-path": "../spaze/csp-config"
         },
@@ -3994,32 +3995,32 @@
         },
         {
             "name": "spaze/feed-exports",
-            "version": "v1.0.1",
-            "version_normalized": "1.0.1.0",
+            "version": "v1.1.0",
+            "version_normalized": "1.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/feed-exports.git",
-                "reference": "2fb00867117812966afb82932dd043fe116c7c7e"
+                "reference": "6317ccd8f786811c992ea7673c172d4fb8a10a5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/2fb00867117812966afb82932dd043fe116c7c7e",
-                "reference": "2fb00867117812966afb82932dd043fe116c7c7e",
+                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/6317ccd8f786811c992ea7673c172d4fb8a10a5c",
+                "reference": "6317ccd8f786811c992ea7673c172d4fb8a10a5c",
                 "shasum": ""
             },
             "require": {
                 "ext-xmlwriter": "*",
-                "nette/application": "^3.1",
-                "php": "^8.0"
+                "nette/application": "^3.2",
+                "php": "^8.3"
             },
             "require-dev": {
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.5",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/phpstan": "^1.9",
-                "spaze/coding-standard": "^1.3"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "spaze/coding-standard": "^1.8"
             },
-            "time": "2023-09-20T01:49:23+00:00",
+            "time": "2025-07-26T15:11:21+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4041,44 +4042,44 @@
             "description": "Atom feed Response and related objects for Nette framework",
             "support": {
                 "issues": "https://github.com/spaze/feed-exports/issues",
-                "source": "https://github.com/spaze/feed-exports/tree/v1.0.1"
+                "source": "https://github.com/spaze/feed-exports/tree/v1.1.0"
             },
             "install-path": "../spaze/feed-exports"
         },
         {
             "name": "spaze/mysql-session-handler",
-            "version": "v3.0.0",
-            "version_normalized": "3.0.0.0",
+            "version": "v3.1.0",
+            "version_normalized": "3.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/mysql-session-handler.git",
-                "reference": "616f842d3f082d9be5833ca9b4cdfe72e1928dbc"
+                "reference": "d46528411f94193041095724d2c84c1ea7f67462"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/616f842d3f082d9be5833ca9b4cdfe72e1928dbc",
-                "reference": "616f842d3f082d9be5833ca9b4cdfe72e1928dbc",
+                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/d46528411f94193041095724d2c84c1ea7f67462",
+                "reference": "d46528411f94193041095724d2c84c1ea7f67462",
                 "shasum": ""
             },
             "require": {
-                "nette/database": "^3.1",
-                "nette/di": "^3.0",
-                "nette/utils": "^3.2|^4.0",
+                "nette/database": "^3.2",
+                "nette/di": "^3.2",
+                "nette/utils": "^4.0",
                 "php": "^8.2"
             },
             "require-dev": {
-                "nette/schema": "^1.2",
+                "nette/schema": "^1.3",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/phpstan": "^1.9",
-                "phpstan/phpstan-nette": "^1.0",
-                "spaze/coding-standard": "^1.3",
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-nette": "^2.0",
+                "spaze/coding-standard": "^1.8",
                 "spaze/encryption": "^2.0"
             },
             "suggest": {
                 "spaze/encryption": "Adds a support for encrypted session storage"
             },
-            "time": "2024-01-19T23:47:24+00:00",
+            "time": "2025-07-27T17:04:48+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4103,23 +4104,23 @@
             ],
             "description": "MySQL session handler for Nette Framework with optionally encrypted storage",
             "support": {
-                "source": "https://github.com/spaze/mysql-session-handler/tree/v3.0.0"
+                "source": "https://github.com/spaze/mysql-session-handler/tree/v3.1.0"
             },
             "install-path": "../spaze/mysql-session-handler"
         },
         {
             "name": "spaze/nonce-generator",
-            "version": "v4.0.1",
-            "version_normalized": "4.0.1.0",
+            "version": "v4.0.2",
+            "version_normalized": "4.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "74de6707c8858cd5c43104baef84f27d2a940b04"
+                "reference": "01ecb2b8a9439908c1d09e62a877e335f9710a58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/74de6707c8858cd5c43104baef84f27d2a940b04",
-                "reference": "74de6707c8858cd5c43104baef84f27d2a940b04",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/01ecb2b8a9439908c1d09e62a877e335f9710a58",
+                "reference": "01ecb2b8a9439908c1d09e62a877e335f9710a58",
                 "shasum": ""
             },
             "require": {
@@ -4129,17 +4130,17 @@
                 "php": "^8.2"
             },
             "require-dev": {
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.5",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan": "^1.9",
-                "spaze/coding-standard": "^1.3"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "spaze/coding-standard": "^1.8"
             },
             "suggest": {
                 "spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
                 "spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too"
             },
-            "time": "2023-09-20T01:39:26+00:00",
+            "time": "2025-07-26T15:56:19+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4161,7 +4162,7 @@
             "description": "Content Security Policy nonce generator",
             "support": {
                 "issues": "https://github.com/spaze/nonce-generator/issues",
-                "source": "https://github.com/spaze/nonce-generator/tree/v4.0.1"
+                "source": "https://github.com/spaze/nonce-generator/tree/v4.0.2"
             },
             "install-path": "../spaze/nonce-generator"
         },
@@ -4401,12 +4402,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "01e6d5d627f1c7c5484338c5005671e8b43a381d"
+                "reference": "025385e4fcb0487a95d24447e8b1fcd7e9e59670"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/01e6d5d627f1c7c5484338c5005671e8b43a381d",
-                "reference": "01e6d5d627f1c7c5484338c5005671e8b43a381d",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/025385e4fcb0487a95d24447e8b1fcd7e9e59670",
+                "reference": "025385e4fcb0487a95d24447e8b1fcd7e9e59670",
                 "shasum": ""
             },
             "require-dev": {
@@ -4424,7 +4425,7 @@
             "suggest": {
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2025-07-22T22:13:10+00:00",
+            "time": "2025-07-28T00:54:25+00:00",
             "default-branch": true,
             "bin": [
                 "bin/checksecuritytxt.php"
@@ -4455,37 +4456,37 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v2.2.2",
-            "version_normalized": "2.2.2.0",
+            "version": "v2.3.0",
+            "version_normalized": "2.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6"
+                "reference": "4248f36e8ab66b82c4d9b9e1ee3bb0b86138b1d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6",
-                "reference": "b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/4248f36e8ab66b82c4d9b9e1ee3bb0b86138b1d3",
+                "reference": "4248f36e8ab66b82c4d9b9e1ee3bb0b86138b1d3",
                 "shasum": ""
             },
             "require": {
-                "latte/latte": "^3.0",
+                "latte/latte": "^3.0.9",
                 "nette/di": "^3.0",
-                "php": "^8.1"
+                "php": "^8.4"
             },
             "require-dev": {
                 "nette/application": "^3.1.13",
                 "nette/tester": "^2.5.1",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3.2",
-                "phpstan/phpstan": "^1.10.33",
-                "spaze/coding-standard": "^1.7"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "spaze/coding-standard": "^1.8.1"
             },
             "suggest": {
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
                 "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
-            "time": "2024-01-13T19:39:38+00:00",
+            "time": "2025-07-28T02:48:08+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4507,23 +4508,23 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v2.2.2"
+                "source": "https://github.com/spaze/sri-macros/tree/v2.3.0"
             },
             "install-path": "../spaze/sri-macros"
         },
         {
             "name": "spaze/svg-icons-latte",
-            "version": "v1.0.3",
-            "version_normalized": "1.0.3.0",
+            "version": "v1.0.4",
+            "version_normalized": "1.0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/svg-icons-latte.git",
-                "reference": "5fd974a4344e4eded72757e2fcb199c309b9a1d5"
+                "reference": "82083f16f705902a04fc2b7bb0d4954cb99b01d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/svg-icons-latte/zipball/5fd974a4344e4eded72757e2fcb199c309b9a1d5",
-                "reference": "5fd974a4344e4eded72757e2fcb199c309b9a1d5",
+                "url": "https://api.github.com/repos/spaze/svg-icons-latte/zipball/82083f16f705902a04fc2b7bb0d4954cb99b01d9",
+                "reference": "82083f16f705902a04fc2b7bb0d4954cb99b01d9",
                 "shasum": ""
             },
             "require": {
@@ -4536,12 +4537,12 @@
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/phpstan": "^1.8",
-                "spaze/coding-standard": "^1.3",
-                "spaze/phpstan-disallowed-calls": "^2.8"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "spaze/coding-standard": "^1.8",
+                "spaze/phpstan-disallowed-calls": "^4.6"
             },
-            "time": "2023-09-20T00:55:39+00:00",
+            "time": "2025-07-26T15:27:11+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4562,7 +4563,7 @@
             "description": "SVG Icons Custom Tag for Latte Templating System",
             "support": {
                 "issues": "https://github.com/spaze/svg-icons-latte/issues",
-                "source": "https://github.com/spaze/svg-icons-latte/tree/v1.0.3"
+                "source": "https://github.com/spaze/svg-icons-latte/tree/v1.0.4"
             },
             "install-path": "../spaze/svg-icons-latte"
         },

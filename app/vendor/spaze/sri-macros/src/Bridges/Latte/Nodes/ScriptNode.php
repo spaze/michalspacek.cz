@@ -9,15 +9,13 @@ use Spaze\SubresourceIntegrity\HtmlElement;
 class ScriptNode extends SriNode
 {
 
-	protected static ?HtmlElement $targetHtmlElement = HtmlElement::Script;
-
-
 	public function print(PrintContext $context): string
 	{
-		return $this->printTag($context, $this->position, [
-			'src' => $this->url,
-			'integrity' => $this->hash,
-		]);
+		$attributes = [
+			'src' => $this->sriConfig->getUrl($this->resources, HtmlElement::Script),
+			'integrity' => $this->sriConfig->getHash($this->resources, HtmlElement::Script),
+		];
+		return $this->printTag($context, $this->position, $attributes, HtmlElement::Script);
 	}
 
 }

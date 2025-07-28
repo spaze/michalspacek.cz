@@ -34,7 +34,6 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	/** @var string[] */
 	private array $idHashes = [];
 
-	/** @var ActiveRow{data:string, timestamp:int}|null */
 	private ?ActiveRow $row;
 
 	/** @var string[] */

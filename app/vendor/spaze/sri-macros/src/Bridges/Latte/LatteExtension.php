@@ -8,14 +8,14 @@ use Latte\Extension;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\ResourceHashNode;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\ResourceUrlNode;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\ScriptNode;
+use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\SriNodeFactory;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\StyleSheetNode;
-use Spaze\SubresourceIntegrity\Config;
 
 class LatteExtension extends Extension
 {
 
 	public function __construct(
-		private readonly Config $sriConfig,
+		private readonly SriNodeFactory $sriNodeFactory,
 	) {
 	}
 
@@ -23,11 +23,11 @@ class LatteExtension extends Extension
 	public function getTags(): array
 	{
 		return [
-			'script' => fn(Tag $tag) => ScriptNode::create($tag, $this->sriConfig),
-			'stylesheet' => fn(Tag $tag) => StyleSheetNode::create($tag, $this->sriConfig),
-			'styleSheet' => fn(Tag $tag) => StyleSheetNode::create($tag, $this->sriConfig),
-			'resourceUrl' => fn(Tag $tag) => ResourceUrlNode::create($tag, $this->sriConfig),
-			'resourceHash' => fn(Tag $tag) => ResourceHashNode::create($tag, $this->sriConfig),
+			'script' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, ScriptNode::class),
+			'stylesheet' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, StyleSheetNode::class),
+			'styleSheet' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, StyleSheetNode::class),
+			'resourceUrl' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, ResourceUrlNode::class),
+			'resourceHash' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, ResourceHashNode::class),
 		];
 	}
 

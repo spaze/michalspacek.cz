@@ -23,9 +23,6 @@ final class SecurityTxtSignatureGnuPgProvider implements SecurityTxtSignaturePro
 	}
 
 
-	/**
-	 * @throws SecurityTxtCannotCreateSignatureExtensionNotLoadedException
-	 */
 	#[Override]
 	public function addSignKey(string $fingerprint, #[SensitiveParameter] string $passphrase = ''): bool
 	{
@@ -33,9 +30,6 @@ final class SecurityTxtSignatureGnuPgProvider implements SecurityTxtSignaturePro
 	}
 
 
-	/**
-	 * @throws SecurityTxtCannotCreateSignatureExtensionNotLoadedException
-	 */
 	#[Override]
 	public function getErrorInfo(): SecurityTxtSignatureErrorInfo
 	{
@@ -49,9 +43,6 @@ final class SecurityTxtSignatureGnuPgProvider implements SecurityTxtSignaturePro
 	}
 
 
-	/**
-	 * @throws SecurityTxtCannotCreateSignatureExtensionNotLoadedException
-	 */
 	#[Override]
 	public function sign(string $text): false|string
 	{
@@ -59,11 +50,6 @@ final class SecurityTxtSignatureGnuPgProvider implements SecurityTxtSignaturePro
 	}
 
 
-	/**
-	 * @throws SecurityTxtCannotCreateSignatureExtensionNotLoadedException
-	 * @throws SecurityTxtInvalidSignatureException
-	 * @throws SecurityTxtCannotVerifySignatureException
-	 */
 	#[Override]
 	public function verify(string $text): SecurityTxtSignatureVerifySignatureInfo
 	{

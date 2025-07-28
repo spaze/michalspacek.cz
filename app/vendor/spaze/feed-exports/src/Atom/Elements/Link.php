@@ -11,8 +11,8 @@ namespace Spaze\Exports\Atom\Elements;
 class Link
 {
 
-	public const REL_SELF = 'self';
-	public const REL_ALTERNATE = 'alternate';
+	public const string REL_SELF = 'self';
+	public const string REL_ALTERNATE = 'alternate';
 
 
 	/**

@@ -15,7 +15,6 @@ use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtSigningKeyBadPassphraseExc
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtSigningKeyNoPassphraseSetException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtUnknownSigningKeyException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtUnusableSigningKeyException;
-use Spaze\SecurityTxt\Signature\Providers\SecurityTxtSignatureGnuPgProvider;
 use Spaze\SecurityTxt\Signature\Providers\SecurityTxtSignatureProvider;
 use Spaze\SecurityTxt\Violations\SecurityTxtSignatureExtensionNotLoaded;
 use Spaze\SecurityTxt\Violations\SecurityTxtSignatureInvalid;
@@ -31,9 +30,8 @@ final class SecurityTxtSignature
 	private array $addedSignKeys = [];
 
 
-	public function __construct(
-		private SecurityTxtSignatureProvider|SecurityTxtSignatureGnuPgProvider $signatureProvider,
-	) {
+	public function __construct(private SecurityTxtSignatureProvider $signatureProvider)
+	{
 	}
 
 
