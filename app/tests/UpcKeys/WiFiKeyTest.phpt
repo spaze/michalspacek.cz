@@ -17,7 +17,7 @@ final class WiFiKeyTest extends TestCase
 
 	public function testJsonSerializable(): void
 	{
-		$key = new WiFiKey('LeSerial', 'Le', 'OUI', 'AB:CD', 'KEY', WiFiBand::Band5GHz);
+		$key = new WiFiKey('Le', 'Serial', 'OUI', 'AB:CD', 'KEY', WiFiBand::Band5GHz);
 		$expected = [
 			'serial' => 'LeSerial',
 			'oui' => 'OUI',

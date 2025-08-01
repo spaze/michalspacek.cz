@@ -79,7 +79,7 @@
 			{varType MichalSpacekCz\UpcKeys\WiFiKey[] $keys}
 			<tr n:foreach="$keys as $key" class="p{$key->getSerialPrefix()} t{$key->getType()->value}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
-				<td><code>{$key->getSerial()}</code></td>
+				<td><code>{$key->getSerialPrefix()}{$key->getSerial()}</code></td>
 				<td class="mac">{if $key->getMac()}<code><span>{$key->getOui()}</span>{$key->getMac()}</code>{else}<small>unknown</small>{/if}</td>
 				<td class="key"><code>{$key->getKey()}</code></td>
 				<td class="type"><small><span>{$key->getType()->getLabel()}</span></small></td>

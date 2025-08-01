@@ -10,8 +10,8 @@ final readonly class WiFiKey implements JsonSerializable
 {
 
 	public function __construct(
-		private string $serial,
 		private string $serialPrefix,
+		private string $serial,
 		private ?string $oui,
 		private ?string $mac,
 		private string $key,
@@ -63,7 +63,7 @@ final readonly class WiFiKey implements JsonSerializable
 	public function jsonSerialize(): array
 	{
 		return [
-			'serial' => $this->serial,
+			'serial' => $this->serialPrefix . $this->serial,
 			'oui' => $this->oui,
 			'mac' => $this->mac,
 			'key' => $this->key,
