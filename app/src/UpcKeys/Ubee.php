@@ -15,6 +15,7 @@ final readonly class Ubee implements UpcWiFiRouter
 
 	public function __construct(
 		private TypedDatabase $typedDatabase,
+		private UpcKeysStorageConversions $conversions,
 	) {
 	}
 
@@ -40,20 +41,17 @@ final readonly class Ubee implements UpcWiFiRouter
 		foreach ($rows as $row) {
 			assert(is_int($row->mac));
 			assert(is_int($row->key));
-			$result[$row->mac] = $this->buildKey($row->mac, $row->key);
+			$result[$row->mac] = new WiFiKey(
+				self::PREFIX,
+				'',
+				self::OUI_UBEE,
+				sprintf('%06x', $row->mac),
+				$this->conversions->getKeyFromBinary($row->key),
+				WiFiBand::Unknown,
+			);
 		}
 		ksort($result);
 		return array_values($result);
-	}
-
-
-	private function buildKey(int $mac, int $binaryKey): WiFiKey
-	{
-		$key = '';
-		for ($i = 7; $i >= 0; $i--) {
-			$key .= chr(($binaryKey >> $i * 5 & 0x1F) + 0x41);
-		}
-		return new WiFiKey(self::PREFIX, self::PREFIX, self::OUI_UBEE, sprintf('%06x', $mac), $key, WiFiBand::Unknown);
 	}
 
 }

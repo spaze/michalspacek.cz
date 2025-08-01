@@ -12,7 +12,6 @@ use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiIncorrectTokensException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
-use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiUnknownPrefixException;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Json;
@@ -24,13 +23,14 @@ use Tracy\Debugger;
 final readonly class Technicolor implements UpcWiFiRouter
 {
 
-	private const array PREFIXES = ['SAAP', 'SAPP', 'SBAP'];
+	private const array PREFIXES = [0 => 'SAAP', 1 => 'SAPP', 2 => 'SBAP'];
 
 
 	public function __construct(
 		private Explorer $database,
 		private TypedDatabase $typedDatabase,
 		private HttpClient $httpClient,
+		private UpcKeysStorageConversions $conversions,
 		private string $apiUrl,
 		private string $apiKey,
 	) {
@@ -76,7 +76,6 @@ final readonly class Technicolor implements UpcWiFiRouter
 	 * @return array<int, WiFiKey>
 	 * @throws UpcKeysApiIncorrectTokensException
 	 * @throws UpcKeysApiResponseInvalidException
-	 * @throws UpcKeysApiUnknownPrefixException
 	 * @throws HttpClientRequestException
 	 */
 	private function generateKeys(string $ssid): array
@@ -98,12 +97,13 @@ final readonly class Technicolor implements UpcWiFiRouter
 				continue;
 			}
 
-			$result = Regex::matchStrictGroups('/([^,]+),([^,]+),(\d+)/', $line);
+			$result = Regex::matchStrictGroups('/([A-Z]+)([^,]+),([^,]+),(\d+)/', $line);
 			if (!$result->matched) {
 				throw new UpcKeysApiIncorrectTokensException($json, $line);
 			}
-			[, $serial, $key, $type] = $result->matches;
-			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, (int)$type);
+			[, $prefix, $serial, $key, $type] = $result->matches;
+			$serial = $this->padSerial($serial);
+			$keys["{$type}-{$prefix}{$serial}"] = new WiFiKey($prefix, $serial, null, null, $key, WiFiBand::from((int)$type));
 		}
 		ksort($keys);
 		return array_values($keys);
@@ -115,12 +115,12 @@ final readonly class Technicolor implements UpcWiFiRouter
 	 *
 	 * @param string $ssid
 	 * @return array<int, WiFiKey>
-	 * @throws UpcKeysApiUnknownPrefixException
 	 */
 	private function fetchKeys(string $ssid): array
 	{
 		$rows = $this->typedDatabase->fetchAll(
 			'SELECT
+				k.prefix_id AS prefixId,
 				k.serial,
 				k.key,
 				k.type
@@ -132,10 +132,20 @@ final readonly class Technicolor implements UpcWiFiRouter
 		);
 		$result = [];
 		foreach ($rows as $row) {
-			assert(is_string($row->serial));
-			assert(is_string($row->key));
+			assert(is_int($row->prefixId));
+			assert(is_int($row->serial));
+			assert(is_int($row->key));
 			assert(is_int($row->type));
-			$result["{$row->type}-{$row->serial}"] = $this->buildKey($row->serial, $row->key, $row->type);
+			$serial = $this->padSerial((string)$row->serial);
+			$prefix = self::PREFIXES[$row->prefixId];
+			$result["{$row->type}-{$prefix}{$serial}"] = new WiFiKey(
+				$prefix,
+				$serial,
+				null,
+				null,
+				$this->conversions->getKeyFromBinary($row->key),
+				WiFiBand::from($row->type),
+			);
 		}
 		ksort($result);
 		return array_values($result);
@@ -154,6 +164,7 @@ final readonly class Technicolor implements UpcWiFiRouter
 			return;
 		}
 
+		$prefixIds = array_flip(self::PREFIXES);
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
 		try {
@@ -172,8 +183,9 @@ final readonly class Technicolor implements UpcWiFiRouter
 					'INSERT INTO `keys`',
 					[
 						'key_ssid' => $ssidId,
-						'serial' => $key->getSerial(),
-						'key' => $key->getKey(),
+						'prefix_id' => $prefixIds[$key->getSerialPrefix()],
+						'serial' => (int)$key->getSerial(),
+						'key' => $this->conversions->getBinaryFromKey($key->getKey()),
 						'type' => $key->getType()->value,
 					],
 				);
@@ -188,16 +200,9 @@ final readonly class Technicolor implements UpcWiFiRouter
 	}
 
 
-	/**
-	 * @throws UpcKeysApiUnknownPrefixException
-	 */
-	private function buildKey(string $serial, string $key, int $type): WiFiKey
+	private function padSerial(string $serial): string
 	{
-		$prefix = Regex::match('/^[a-z]+/i', $serial)->matches[0] ?? false;
-		if ($prefix === false || !in_array($prefix, self::PREFIXES, true)) {
-			throw new UpcKeysApiUnknownPrefixException($serial);
-		}
-		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));
+		return str_pad($serial, 8, '0', STR_PAD_LEFT);
 	}
 
 }

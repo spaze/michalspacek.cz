@@ -42,7 +42,7 @@ final class UbeeTest extends TestCase
 			],
 		]);
 		$getKey = function (string $mac, string $key): WiFiKey {
-			return new WiFiKey('UAAP', 'UAAP', '647c34', $mac, $key, WiFiBand::Unknown);
+			return new WiFiKey('UAAP', '', '647c34', $mac, $key, WiFiBand::Unknown);
 		};
 		$expected = [
 			$getKey('000000', 'VAOUCAHR'),

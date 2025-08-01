@@ -10,7 +10,6 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiIncorrectTokensException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
-use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiUnknownPrefixException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Override;
@@ -40,53 +39,32 @@ final class TechnicolorTest extends TestCase
 	}
 
 
-	public function testGetKeysUnknownPrefix(): void
-	{
-		$this->database->setFetchAllDefaultResult([
-			[
-				'serial' => 'UGHH303',
-				'key' => 'baz',
-				'type' => WiFiBand::Band24GHz->value,
-			],
-		]);
-		$this->technicolor->getKeys('UPCwhateva');
-		$this->database->setFetchAllDefaultResult([
-			[
-				'serial' => '303',
-				'key' => 'baz',
-				'type' => WiFiBand::Band24GHz->value,
-			],
-		]);
-		$this->technicolor->getKeys('UPCwhateva');
-		Assert::count(2, $this->logger->getLogged());
-		Assert::type(UpcKeysApiUnknownPrefixException::class, $this->logger->getLogged()[0]);
-		Assert::type(UpcKeysApiUnknownPrefixException::class, $this->logger->getLogged()[1]);
-	}
-
-
 	public function testGetKeys(): void
 	{
 		$this->database->setFetchAllDefaultResult([
 			[
-				'serial' => 'SAPP808',
-				'key' => 'B4R',
+				'prefixId' => 1,
+				'serial' => 808,
+				'key' => 0x822570411,
 				'type' => WiFiBand::Band5GHz->value,
 			],
 			[
-				'serial' => 'SAAP303',
-				'key' => 'F00',
+				'prefixId' => 0,
+				'serial' => 303,
+				'key' => 0x2B9CE2B9CE,
 				'type' => WiFiBand::Band24GHz->value,
 			],
 			[
-				'serial' => 'SAAP123',
-				'key' => '456',
+				'prefixId' => 0,
+				'serial' => 123,
+				'key' => 0x852F602C6E,
 				'type' => WiFiBand::Band24GHz->value,
 			],
 		]);
 		$expected = [
-			new WiFiKey('SAAP123', 'SAAP', null, null, '456', WiFiBand::Band24GHz),
-			new WiFiKey('SAAP303', 'SAAP', null, null, 'F00', WiFiBand::Band24GHz),
-			new WiFiKey('SAPP808', 'SAPP', null, null, 'B4R', WiFiBand::Band5GHz),
+			new WiFiKey('SAAP', '00000123', null, null, 'QUXWALDO', WiFiBand::Band24GHz),
+			new WiFiKey('SAAP', '00000303', null, null, 'FOOOFOOO', WiFiBand::Band24GHz),
+			new WiFiKey('SAPP', '00000808', null, null, 'BARFOBAR', WiFiBand::Band5GHz),
 		];
 		$keys = $this->technicolor->getKeys('UPC1234567');
 		Assert::same([], $this->logger->getLogged());
@@ -102,15 +80,15 @@ final class TechnicolorTest extends TestCase
 		Assert::same([], $this->logger->getLogged());
 		Assert::count(0, $this->database->getParamsArrayForQuery('INSERT INTO ssids'));
 
-		$this->httpClient->setResponse(Json::encode("SBAP303,foo,1\n\nSBAP808,bar,2"));
+		$this->httpClient->setResponse(Json::encode("SBAP303,FOOOFOOO,1\n\nSBAP808,BAARBAAR,2"));
 		$keys = $this->technicolor->getKeys($ssid);
 		$expected = [
-			new WiFiKey('SBAP303', 'SBAP', null, null, 'foo', WiFiBand::Band24GHz),
-			new WiFiKey('SBAP808', 'SBAP', null, null, 'bar', WiFiBand::Band5GHz),
+			new WiFiKey('SBAP', '00000303', null, null, 'FOOOFOOO', WiFiBand::Band24GHz),
+			new WiFiKey('SBAP', '00000808', null, null, 'BAARBAAR', WiFiBand::Band5GHz),
 		];
 		$expectedParams = [
-			['key_ssid' => '', 'serial' => 'SBAP303', 'key' => 'foo', 'type' => 1],
-			['key_ssid' => '', 'serial' => 'SBAP808', 'key' => 'bar', 'type' => 2],
+			['key_ssid' => '', 'prefix_id' => 2, 'serial' => 303, 'key' => 0X2B9CE2B9CE, 'type' => 1],
+			['key_ssid' => '', 'prefix_id' => 2, 'serial' => 808, 'key' => 0x801108011, 'type' => 2],
 		];
 		Assert::same([], $this->logger->getLogged());
 		Assert::equal($expected, $keys);
