@@ -86,43 +86,35 @@ final readonly class Certificates
 
 
 	/**
-	 * @param list<Certificate> $certs
-	 * @return array{certificates:int} with counts
 	 * @throws SomeCertificatesLoggedToFileException
 	 */
-	public function log(array $certs): array
+	public function log(Certificate $cert): void
 	{
 		$dbException = null;
-		foreach ($certs as $cert) {
-			try {
-				$this->database->beginTransaction();
-				$this->database->query('INSERT INTO certificates', [
-					'key_certificate_request' => $this->logRequest($cert),
-					'not_before' => $cert->getNotBefore(),
-					'not_before_timezone' => $cert->getNotBefore()->getTimezone()->getName(),
-					'not_after' => $cert->getNotAfter(),
-					'not_after_timezone' => $cert->getNotAfter()->getTimezone()->getName(),
-				]);
-				$this->database->commit();
-			} catch (DriverException $e) {
-				Debugger::log($e);
-				Debugger::log(sprintf(
-					'OK %s%s from %s to %s',
-					$cert->getCommonName(),
-					$cert->getCommonNameExt() ?? '',
-					$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
-					$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
-				), 'cert');
-				$dbException = $e;
-			}
+		try {
+			$this->database->beginTransaction();
+			$this->database->query('INSERT INTO certificates', [
+				'key_certificate_request' => $this->logRequest($cert),
+				'not_before' => $cert->getNotBefore(),
+				'not_before_timezone' => $cert->getNotBefore()->getTimezone()->getName(),
+				'not_after' => $cert->getNotAfter(),
+				'not_after_timezone' => $cert->getNotAfter()->getTimezone()->getName(),
+			]);
+			$this->database->commit();
+		} catch (DriverException $e) {
+			Debugger::log($e);
+			Debugger::log(sprintf(
+				'OK %s%s from %s to %s',
+				$cert->getCommonName(),
+				$cert->getCommonNameExt() ?? '',
+				$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
+				$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
+			), 'cert');
+			$dbException = $e;
 		}
 		if ($dbException !== null) {
 			throw new SomeCertificatesLoggedToFileException(previous: $dbException);
 		}
-
-		return [
-			'certificates' => count($certs),
-		];
 	}
 
 

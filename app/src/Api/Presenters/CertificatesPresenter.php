@@ -51,11 +51,10 @@ final class CertificatesPresenter extends BasePresenter
 
 		try {
 			$cert = $this->certificateFactory->fromString($string);
-			$count = $this->certificates->log([$cert]);
+			$this->certificates->log($cert);
 			$this->sendJson([
 				'status' => 'ok',
-				'statusMessage' => 'Certificates reported successfully',
-				'count' => $count,
+				'statusMessage' => 'Certificate reported successfully',
 			]);
 		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
