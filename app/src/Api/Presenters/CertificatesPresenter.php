@@ -51,7 +51,7 @@ final class CertificatesPresenter extends BasePresenter
 
 		try {
 			$cert = $this->certificateFactory->fromString($string);
-			$count = $this->certificates->log([$cert], []);
+			$count = $this->certificates->log([$cert]);
 			$this->sendJson([
 				'status' => 'ok',
 				'statusMessage' => 'Certificates reported successfully',

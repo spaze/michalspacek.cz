@@ -87,18 +87,17 @@ final readonly class Certificates
 
 	/**
 	 * @param list<Certificate> $certs
-	 * @param list<CertificateAttempt> $failures
-	 * @return array{certificates:int, failures:int} with counts
+	 * @return array{certificates:int} with counts
 	 * @throws SomeCertificatesLoggedToFileException
 	 */
-	public function log(array $certs, array $failures): array
+	public function log(array $certs): array
 	{
 		$dbException = null;
 		foreach ($certs as $cert) {
 			try {
 				$this->database->beginTransaction();
 				$this->database->query('INSERT INTO certificates', [
-					'key_certificate_request' => $this->logRequest($cert, true),
+					'key_certificate_request' => $this->logRequest($cert),
 					'not_before' => $cert->getNotBefore(),
 					'not_before_timezone' => $cert->getNotBefore()->getTimezone()->getName(),
 					'not_after' => $cert->getNotAfter(),
@@ -117,28 +116,17 @@ final readonly class Certificates
 				$dbException = $e;
 			}
 		}
-		foreach ($failures as $cert) {
-			try {
-				$this->logRequest($cert, false);
-			} catch (DriverException $e) {
-				Debugger::log($e);
-				Debugger::log("FAIL {$cert->getCommonName()}{$cert->getCommonNameExt()}", 'cert');
-				$dbException = $e;
-			}
-		}
-
 		if ($dbException !== null) {
 			throw new SomeCertificatesLoggedToFileException(previous: $dbException);
 		}
 
 		return [
 			'certificates' => count($certs),
-			'failures' => count($failures),
 		];
 	}
 
 
-	private function logRequest(Certificate|CertificateAttempt $certificate, bool $success): int
+	private function logRequest(Certificate $certificate): int
 	{
 		$now = new DateTimeImmutable();
 		$this->database->query('INSERT INTO certificate_requests', [
@@ -146,7 +134,7 @@ final readonly class Certificates
 			'ext' => $certificate->getCommonNameExt(),
 			'time' => $now,
 			'time_timezone' => $now->getTimezone()->getName(),
-			'success' => $success,
+			'success' => true,
 		]);
 		return (int)$this->database->getInsertId();
 	}
