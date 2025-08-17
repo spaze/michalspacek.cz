@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Api\Presenters;
 
 use MichalSpacekCz\Http\HttpInput;
-use MichalSpacekCz\Tls\CertificateAttemptFactory;
 use MichalSpacekCz\Tls\CertificateFactory;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
@@ -19,7 +18,6 @@ final class CertificatesPresenter extends BasePresenter
 	public function __construct(
 		private readonly Certificates $certificates,
 		private readonly CertificateFactory $certificateFactory,
-		private readonly CertificateAttemptFactory $certificateAttemptFactory,
 		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
@@ -46,14 +44,17 @@ final class CertificatesPresenter extends BasePresenter
 
 	public function actionLogIssued(): void
 	{
+		$string = $this->httpInput->getPostString('certificate');
+		if ($string === null) {
+			$this->sendJson(['status' => 'error', 'statusMessage' => 'No certificate sent']);
+		}
+
 		try {
-			$certs = $this->certificateFactory->listFromLogRequest($this->httpInput->getPostArray('certs') ?? []);
-			$failures = $this->certificateAttemptFactory->listFromLogRequest($this->httpInput->getPostArray('failure') ?? []);
-			$count = $this->certificates->log($certs, $failures);
+			$cert = $this->certificateFactory->fromString($string);
+			$this->certificates->log($cert);
 			$this->sendJson([
 				'status' => 'ok',
-				'statusMessage' => 'Certificates reported successfully',
-				'count' => $count,
+				'statusMessage' => 'Certificate reported successfully',
 			]);
 		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);

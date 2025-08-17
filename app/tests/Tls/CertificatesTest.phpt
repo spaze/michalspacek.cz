@@ -44,37 +44,15 @@ final class CertificatesTest extends TestCase
 	}
 
 
-	public function testLogNothing(): void
-	{
-		$count = $this->certificates->log([], []);
-		Assert::same(['certificates' => 0, 'failures' => 0], $count);
-		Assert::count(0, $this->logger->getLogged());
-	}
-
-
 	public function testLog(): void
 	{
 		$this->database->setDefaultInsertId('42');
-		$certificates = [
-			new Certificate('foo.example', null, $this->notBefore, $this->notAfter, 0, null),
-			new Certificate('bar.example', null, $this->notBefore, $this->notAfter, 0, null),
-		];
-		$failures = [
-			new CertificateAttempt('fail.test', null),
-			new CertificateAttempt('bier.test', null),
-		];
-		$count = $this->certificates->log($certificates, $failures);
-		Assert::same(['certificates' => 2, 'failures' => 2], $count);
+		$certificate = new Certificate('foo.example', null, $this->notBefore, $this->notAfter, 0, null);
+		$this->certificates->log($certificate);
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificate_requests');
-		Assert::count(4, $params);
+		Assert::count(1, $params);
 		Assert::same('foo.example', $params[0]['cn']);
 		Assert::true($params[0]['success']);
-		Assert::same('bar.example', $params[1]['cn']);
-		Assert::true($params[1]['success']);
-		Assert::same('fail.test', $params[2]['cn']);
-		Assert::false($params[2]['success']);
-		Assert::same('bier.test', $params[3]['cn']);
-		Assert::false($params[3]['success']);
 		foreach ($params as $values) {
 			Assert::null($values['ext']);
 			Assert::hasKey('time', $values);
@@ -95,11 +73,9 @@ final class CertificatesTest extends TestCase
 	{
 		$exception = new DriverException();
 		$this->database->willThrow($exception);
-		$certificates = [
-			new Certificate('foo.example', null, $this->notBefore, $this->notAfter, 0, null),
-		];
-		Assert::exception(function () use ($certificates): void {
-			$this->certificates->log($certificates, []);
+		$certificate = new Certificate('foo.example', null, $this->notBefore, $this->notAfter, 0, null);
+		Assert::exception(function () use ($certificate): void {
+			$this->certificates->log($certificate);
 		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');
 		Assert::same($exception, $this->logger->getLogged()[0]);
 		$message = 'OK foo.example from ' . $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS) . ' to ' . $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS);
