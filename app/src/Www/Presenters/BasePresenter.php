@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use DateTimeInterface;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Css\CriticalCss;
@@ -158,17 +157,6 @@ abstract class BasePresenter extends Presenter
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkGenerator->defaultParams($this->getParameters());
-	}
-
-
-	#[Override]
-	public function lastModified(string|int|DateTimeInterface|null $lastModified, ?string $etag = null, ?string $expire = null): void
-	{
-		$compression = ini_get('zlib.output_compression');
-		ini_set('zlib.output_compression', false);
-		parent::lastModified($lastModified, $etag, $expire);
-		// If the response was HTTP 304 then the following line won't be reached and 304s won't be compressed
-		ini_set('zlib.output_compression', $compression);
 	}
 
 
