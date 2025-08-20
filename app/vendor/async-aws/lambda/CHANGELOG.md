@@ -2,6 +2,17 @@
 
 ## NOT RELEASED
 
+## 2.12.0
+
+### Added
+
+- AWS api-change: Rework regions configuration
+- AWS api-change: remove trailling `/` in `ListFunctions` request
+
+### Changed
+
+- AWS enhancement: Documentation updates.
+
 ## 2.11.0
 
 ### Added

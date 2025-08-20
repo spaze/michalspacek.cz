@@ -12,6 +12,8 @@ namespace Nette\Loaders;
 use Nette;
 use Nette\Utils\FileSystem;
 use SplFileInfo;
+use function array_merge, defined, extension_loaded, file_get_contents, file_put_contents, filemtime, flock, fopen, function_exists, hash, is_array, is_dir, is_file, realpath, rename, serialize, spl_autoload_register, sprintf, strlen, unlink, var_export;
+use const LOCK_EX, LOCK_SH, LOCK_UN, T_CLASS, T_COMMENT, T_DOC_COMMENT, T_ENUM, T_INTERFACE, T_NAME_QUALIFIED, T_NAMESPACE, T_STRING, T_TRAIT, T_WHITESPACE, TOKEN_PARSE;
 
 
 /**
@@ -321,7 +323,6 @@ class RobotLoader
 		} catch (\ParseError $e) {
 			if ($this->reportParseErrors) {
 				$rp = new \ReflectionProperty($e, 'file');
-				$rp->setAccessible(true);
 				$rp->setValue($e, $file);
 				throw $e;
 			}
@@ -348,9 +349,7 @@ class RobotLoader
 				case T_CLASS:
 				case T_INTERFACE:
 				case T_TRAIT:
-				case PHP_VERSION_ID < 80100
-					? T_CLASS
-					: T_ENUM:
+				case T_ENUM:
 					$expected = $token->id;
 					$name = '';
 					continue 2;
@@ -503,7 +502,7 @@ class RobotLoader
 			throw new \LogicException('Set path to temporary directory using setTempDirectory().');
 		}
 
-		return $this->tempDirectory . '/' . hash(PHP_VERSION_ID < 80100 ? 'md5' : 'xxh128', serialize($this->generateCacheKey())) . '.php';
+		return $this->tempDirectory . '/' . hash('xxh128', serialize($this->generateCacheKey())) . '.php';
 	}
 
 

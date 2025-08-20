@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Texy\\' => array($vendorDir . '/texy/texy/src/Texy'),
     'Tester\\' => array($vendorDir . '/nette/tester/src'),
     'Symfony\\Contracts\\Translation\\' => array($vendorDir . '/symfony/translation-contracts'),
     'Symfony\\Contracts\\Service\\' => array($vendorDir . '/symfony/service-contracts'),
@@ -40,7 +41,7 @@ return array(
     'PHP_Parallel_Lint\\PhpConsoleColor\\' => array($vendorDir . '/php-parallel-lint/php-console-color/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-strict-rules/src', $vendorDir . '/phpstan/phpstan-nette/src', $vendorDir . '/phpstan/phpstan-deprecation-rules/src'),
-    'Nette\\' => array($vendorDir . '/nette/forms/src', $vendorDir . '/nette/application/src'),
+    'Nette\\' => array($vendorDir . '/nette/forms/src', $vendorDir . '/nette/caching/src', $vendorDir . '/nette/application/src', $vendorDir . '/nette/component-model/src', $vendorDir . '/nette/robot-loader/src', $vendorDir . '/nette/php-generator/src', $vendorDir . '/nette/utils/src'),
     'MichalSpacekCz\\' => array($baseDir . '/src'),
     'Latte\\' => array($vendorDir . '/latte/latte/src/Latte'),
     'JetBrains\\PhpStorm\\' => array($vendorDir . '/jetbrains/phpstorm-attributes/src'),

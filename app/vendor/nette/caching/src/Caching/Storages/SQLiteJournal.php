@@ -11,6 +11,7 @@ namespace Nette\Caching\Storages;
 
 use Nette;
 use Nette\Caching\Cache;
+use function count, extension_loaded, implode, is_file, str_repeat, touch;
 
 
 /**
@@ -40,7 +41,6 @@ class SQLiteJournal implements Journal
 		}
 
 		$this->pdo = new \PDO('sqlite:' . $this->path);
-		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		$this->pdo->exec('
 			PRAGMA foreign_keys = OFF;
 			PRAGMA journal_mode = WAL;

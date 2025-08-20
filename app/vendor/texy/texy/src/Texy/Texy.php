@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Texy;
 
+use function array_flip, base_convert, class_exists, count, explode, htmlspecialchars, implode, is_array, link, ltrim, preg_match, str_contains, str_repeat, str_replace, strip_tags, strlen, strtr;
+use const ENT_NOQUOTES;
+
 
 /**
  * Texy! - Convert plain text to HTML format using {@link process()}.
@@ -21,7 +24,7 @@ namespace Texy;
 class Texy
 {
 	// Texy version
-	public const VERSION = '3.2.5';
+	public const VERSION = '3.2.6';
 
 	// configuration directives
 	public const

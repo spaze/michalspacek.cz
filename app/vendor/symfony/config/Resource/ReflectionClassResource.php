@@ -122,7 +122,7 @@ class ReflectionClassResource implements SelfCheckingResourceInterface
         yield print_r($attributes, true);
         $attributes = [];
 
-        yield $class->getDocComment();
+        yield $class->getDocComment() ?: '';
         yield (int) $class->isFinal();
         yield (int) $class->isAbstract();
 
@@ -132,6 +132,14 @@ class ReflectionClassResource implements SelfCheckingResourceInterface
             yield print_r(class_parents($class->name), true);
             yield print_r(class_implements($class->name), true);
             yield print_r($class->getConstants(), true);
+        }
+
+        foreach ($class->getReflectionConstants() as $constant) {
+            foreach ($constant->getAttributes() as $a) {
+                $attributes[] = [$a->getName(), (string) $a];
+            }
+            yield $constant->name.print_r($attributes, true);
+            $attributes = [];
         }
 
         if (!$class->isInterface()) {
@@ -144,7 +152,7 @@ class ReflectionClassResource implements SelfCheckingResourceInterface
                 yield print_r($attributes, true);
                 $attributes = [];
 
-                yield $p->getDocComment();
+                yield $p->getDocComment() ?: '';
                 yield $p->isDefault() ? '<default>' : '';
                 yield $p->isPublic() ? 'public' : 'protected';
                 yield $p->isStatic() ? 'static' : '';
