@@ -16,6 +16,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
+            'Texy\\' => 5,
             'Tester\\' => 7,
         ),
         'S' => 
@@ -90,6 +91,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
+        'Texy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/texy/texy/src/Texy',
+        ),
         'Tester\\' => 
         array (
             0 => __DIR__ . '/..' . '/nette/tester/src',
@@ -231,7 +236,12 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\' => 
         array (
             0 => __DIR__ . '/..' . '/nette/forms/src',
-            1 => __DIR__ . '/..' . '/nette/application/src',
+            1 => __DIR__ . '/..' . '/nette/caching/src',
+            2 => __DIR__ . '/..' . '/nette/application/src',
+            3 => __DIR__ . '/..' . '/nette/component-model/src',
+            4 => __DIR__ . '/..' . '/nette/robot-loader/src',
+            5 => __DIR__ . '/..' . '/nette/php-generator/src',
+            6 => __DIR__ . '/..' . '/nette/utils/src',
         ),
         'MichalSpacekCz\\' => 
         array (
@@ -578,7 +588,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Bridges\\ApplicationTracy\\RoutingPanel' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationTracy/RoutingPanel.php',
         'Nette\\Bridges\\CacheDI\\CacheExtension' => __DIR__ . '/..' . '/nette/caching/src/Bridges/CacheDI/CacheExtension.php',
         'Nette\\Bridges\\CacheLatte\\CacheExtension' => __DIR__ . '/..' . '/nette/caching/src/Bridges/CacheLatte/CacheExtension.php',
-        'Nette\\Bridges\\CacheLatte\\CacheMacro' => __DIR__ . '/..' . '/nette/caching/src/Bridges/CacheLatte/CacheMacro.php',
         'Nette\\Bridges\\CacheLatte\\Nodes\\CacheNode' => __DIR__ . '/..' . '/nette/caching/src/Bridges/CacheLatte/Nodes/CacheNode.php',
         'Nette\\Bridges\\CacheLatte\\Runtime' => __DIR__ . '/..' . '/nette/caching/src/Bridges/CacheLatte/Runtime.php',
         'Nette\\Bridges\\DITracy\\ContainerPanel' => __DIR__ . '/..' . '/nette/di/src/Bridges/DITracy/ContainerPanel.php',
@@ -937,6 +946,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Tester\\FileMock' => __DIR__ . '/..' . '/nette/tester/src/Framework/FileMock.php',
         'Tester\\FileMutator' => __DIR__ . '/..' . '/nette/tester/src/Framework/FileMutator.php',
         'Tester\\Helpers' => __DIR__ . '/..' . '/nette/tester/src/Framework/Helpers.php',
+        'Tester\\HttpAssert' => __DIR__ . '/..' . '/nette/tester/src/Framework/HttpAssert.php',
         'Tester\\Runner\\CliTester' => __DIR__ . '/..' . '/nette/tester/src/Runner/CliTester.php',
         'Tester\\Runner\\CommandLine' => __DIR__ . '/..' . '/nette/tester/src/Runner/CommandLine.php',
         'Tester\\Runner\\InterruptException' => __DIR__ . '/..' . '/nette/tester/src/Runner/exceptions.php',
@@ -956,7 +966,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Texy' => __DIR__ . '/..' . '/texy/texy/src/Texy.php',
         'Texy\\BlockParser' => __DIR__ . '/..' . '/texy/texy/src/Texy/BlockParser.php',
         'Texy\\Bridges\\Latte\\TexyExtension' => __DIR__ . '/..' . '/texy/texy/src/Bridges/Latte/TexyExtension.php',
-        'Texy\\Bridges\\Latte\\TexyMacro' => __DIR__ . '/..' . '/texy/texy/src/Bridges/Latte/TexyMacro.php',
         'Texy\\Bridges\\Latte\\TexyNode' => __DIR__ . '/..' . '/texy/texy/src/Bridges/Latte/TexyNode.php',
         'Texy\\Configurator' => __DIR__ . '/..' . '/texy/texy/src/Texy/Configurator.php',
         'Texy\\HandlerInvocation' => __DIR__ . '/..' . '/texy/texy/src/Texy/HandlerInvocation.php',

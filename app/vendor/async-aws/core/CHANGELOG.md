@@ -2,6 +2,16 @@
 
 ## NOT RELEASED
 
+## 1.27.0
+
+### Added
+
+- Support for Symfony 8
+
+### Changed
+
+- `ResultMockFactory` does not call `ReflectionProperty::setAccessible()` on PHP 8.1+
+
 ## 1.26.0
 
 ### Added

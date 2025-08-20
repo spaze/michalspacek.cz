@@ -11,13 +11,13 @@
 		}
 	],
 	"require": {
-		"php": "8.1 - 8.4"
+		"php": "8.1 - 8.5"
 	},
 	"require-dev": {
 		"nette/tester": "^2.5",
 		"tracy/tracy": "^2.9",
-		"latte/latte": "^2.6 || ^3.0.14",
-		"phpstan/phpstan": "^1"
+		"latte/latte": "^3.0.14",
+		"phpstan/phpstan-nette": "^2.0@stable"
 	},
 	"conflict": {
 		"latte/latte": ">=3.0.0 <3.0.14"
@@ -26,7 +26,10 @@
 		"dg/texy": "*"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"classmap": ["src/"],
+		"psr-4": {
+			"Texy\\": "src/Texy"
+		}
 	},
 	"minimum-stability": "dev",
 	"scripts": {
