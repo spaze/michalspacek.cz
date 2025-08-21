@@ -10,7 +10,7 @@ final readonly class ThemeFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
+		private UnprotectedFormFactory $factory,
 		private Theme $theme,
 	) {
 	}
