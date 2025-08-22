@@ -160,12 +160,11 @@ class MysqlSessionHandler implements SessionHandlerInterface
 		$this->lock();
 		$hashedSessionId = $this->hash($id);
 		$time = \time();
-
-		if (!isset($this->data[$id]) || $this->data[$id] !== $data) {
+		$this->onBeforeDataWrite();
+		if (!isset($this->data[$id]) || $this->data[$id] !== $data || $this->additionalData !== []) {
 			if ($this->encryptionService) {
 				$data = $this->encryptionService->encrypt($data);
 			}
-			$this->onBeforeDataWrite();
 			$row = $this->explorer->table($this->tableName)->get($hashedSessionId);
 			if ($row) {
 				$row->update([

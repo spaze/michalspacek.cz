@@ -37,7 +37,7 @@
 		"spaze/csp-config": "^4.0",
 		"spaze/encryption": "^2.0",
 		"spaze/feed-exports": "^1.0",
-		"spaze/mysql-session-handler": "^3.0",
+		"spaze/mysql-session-handler": "^3.2",
 		"spaze/nonce-generator": "^4.0",
 		"spaze/phpinfo": "^1.2",
 		"spaze/security-txt": "dev-main",
