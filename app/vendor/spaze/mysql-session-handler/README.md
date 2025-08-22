@@ -73,7 +73,7 @@ Migration from unecrypted to encrypted session storage is not (yet?) supported.
 ## Events
 
 ### `onBeforeDataWrite`
-The event occurs before session data is written to the session table, both for a new session (when a new row is inserted) or an existing session (a row us updated). The event is not triggered when just the session timestamp is updated without any change in the session data.
+The event occurs before session data is written to the session table, both for a new session (when a new row is inserted) or an existing session (a row is updated), even if there's no change in the session data.
 
 You can add a new column by calling `setAdditionalData()` in the event handler:
 ```

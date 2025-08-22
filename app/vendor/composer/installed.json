@@ -4066,17 +4066,17 @@
         },
         {
             "name": "spaze/mysql-session-handler",
-            "version": "v3.1.0",
-            "version_normalized": "3.1.0.0",
+            "version": "v3.2.0",
+            "version_normalized": "3.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/mysql-session-handler.git",
-                "reference": "d46528411f94193041095724d2c84c1ea7f67462"
+                "reference": "8aca41a46db6e1a5c9d827443adc6fe1c3daf174"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/d46528411f94193041095724d2c84c1ea7f67462",
-                "reference": "d46528411f94193041095724d2c84c1ea7f67462",
+                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/8aca41a46db6e1a5c9d827443adc6fe1c3daf174",
+                "reference": "8aca41a46db6e1a5c9d827443adc6fe1c3daf174",
                 "shasum": ""
             },
             "require": {
@@ -4097,7 +4097,7 @@
             "suggest": {
                 "spaze/encryption": "Adds a support for encrypted session storage"
             },
-            "time": "2025-07-27T17:04:48+00:00",
+            "time": "2025-08-22T00:13:19+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4122,7 +4122,7 @@
             ],
             "description": "MySQL session handler for Nette Framework with optionally encrypted storage",
             "support": {
-                "source": "https://github.com/spaze/mysql-session-handler/tree/v3.1.0"
+                "source": "https://github.com/spaze/mysql-session-handler/tree/v3.2.0"
             },
             "install-path": "../spaze/mysql-session-handler"
         },
