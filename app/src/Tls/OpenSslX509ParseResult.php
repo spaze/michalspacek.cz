@@ -7,7 +7,7 @@ final readonly class OpenSslX509ParseResult
 {
 
 	public function __construct(
-		private string $commonName,
+		private ?string $commonName,
 		private int $validFromTimeT,
 		private int $validToTimeT,
 		private string $serialNumberHex,
@@ -15,7 +15,7 @@ final readonly class OpenSslX509ParseResult
 	}
 
 
-	public function getCommonName(): string
+	public function getCommonName(): ?string
 	{
 		return $this->commonName;
 	}

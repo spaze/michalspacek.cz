@@ -21,18 +21,17 @@ final class OpenSsl
 		if ($info === false) {
 			throw new OpenSslException();
 		}
+		$commonName = is_array($info['subject']) ? $info['subject']['commonName'] ?? null : null;
 		if (
-			!isset($info['subject'])
-			|| !is_array($info['subject'])
-			|| !isset($info['subject']['commonName'], $info['validFrom_time_t'], $info['validTo_time_t'], $info['serialNumberHex'])
-			|| !is_string($info['subject']['commonName'])
+			!isset($info['validFrom_time_t'], $info['validTo_time_t'], $info['serialNumberHex'])
+			|| ($commonName !== null && !is_string($commonName))
 			|| !is_int($info['validFrom_time_t'])
 			|| !is_int($info['validTo_time_t'])
 			|| !is_string($info['serialNumberHex'])
 		) {
 			throw new OpenSslX509ParseException(serialize($info));
 		}
-		return new OpenSslX509ParseResult($info['subject']['commonName'], $info['validFrom_time_t'], $info['validTo_time_t'], $info['serialNumberHex']);
+		return new OpenSslX509ParseResult($commonName, $info['validFrom_time_t'], $info['validTo_time_t'], $info['serialNumberHex']);
 	}
 
 }

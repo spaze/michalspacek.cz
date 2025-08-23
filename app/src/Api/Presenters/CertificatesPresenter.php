@@ -48,9 +48,13 @@ final class CertificatesPresenter extends BasePresenter
 		if ($string === null) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'No certificate sent']);
 		}
+		$name = $this->httpInput->getPostString('name');
+		if ($name === null) {
+			$this->sendJson(['status' => 'error', 'statusMessage' => 'No certificate name sent']);
+		}
 
 		try {
-			$cert = $this->certificateFactory->fromString($string);
+			$cert = $this->certificateFactory->fromString($name, $string);
 			$this->certificates->log($cert);
 			$this->sendJson([
 				'status' => 'ok',

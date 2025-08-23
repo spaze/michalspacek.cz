@@ -105,8 +105,8 @@ final readonly class Certificates
 			Debugger::log($e);
 			Debugger::log(sprintf(
 				'OK %s%s from %s to %s',
-				$cert->getCommonName(),
-				$cert->getCommonNameExt() ?? '',
+				$cert->getCertificateName(),
+				$cert->getCertificateNameExt() ?? '',
 				$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
 				$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			), 'cert');
@@ -122,8 +122,8 @@ final readonly class Certificates
 	{
 		$now = new DateTimeImmutable();
 		$this->database->query('INSERT INTO certificate_requests', [
-			'cn' => $certificate->getCommonName(),
-			'ext' => $certificate->getCommonNameExt(),
+			'cn' => $certificate->getCertificateName(),
+			'ext' => $certificate->getCertificateNameExt(),
 			'time' => $now,
 			'time_timezone' => $now->getTimezone()->getName(),
 			'success' => true,
