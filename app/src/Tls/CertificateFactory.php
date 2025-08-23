@@ -58,9 +58,9 @@ final readonly class CertificateFactory
 	 * @throws CertificateException
 	 * @throws OpenSslX509ParseException
 	 */
-	public function fromObject(OpenSSLCertificate $certificate): Certificate
+	public function fromObject(string $certificateName, OpenSSLCertificate $certificate): Certificate
 	{
-		return $this->fromStringOrObject($certificate);
+		return $this->fromStringOrObject($certificateName, $certificate);
 	}
 
 
@@ -70,9 +70,9 @@ final readonly class CertificateFactory
 	 * @throws CertificateException
 	 * @throws OpenSslX509ParseException
 	 */
-	public function fromString(string $certificate): Certificate
+	public function fromString(string $certificateName, string $certificate): Certificate
 	{
-		return $this->fromStringOrObject($certificate);
+		return $this->fromStringOrObject($certificateName, $certificate);
 	}
 
 
@@ -82,11 +82,11 @@ final readonly class CertificateFactory
 	 * @throws CertificateException
 	 * @throws OpenSslX509ParseException
 	 */
-	private function fromStringOrObject(OpenSSLCertificate|string $certificate): Certificate
+	private function fromStringOrObject(string $certificateName, OpenSSLCertificate|string $certificate): Certificate
 	{
 		$details = OpenSsl::x509parse($certificate);
 		return new Certificate(
-			$details->getCommonName(),
+			$certificateName,
 			null,
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidFromTimeT()),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidToTimeT()),
@@ -102,8 +102,8 @@ final readonly class CertificateFactory
 	 * @throws InvalidTimezoneException
 	 */
 	public function get(
-		string $commonName,
-		?string $commonNameExt,
+		string $certificateName,
+		?string $certificateNameExt,
 		string $notBefore,
 		string $notBeforeTz,
 		string $notAfter,
@@ -114,8 +114,8 @@ final readonly class CertificateFactory
 		string $nowTz,
 	): Certificate {
 		return new Certificate(
-			$commonName,
-			$commonNameExt,
+			$certificateName,
+			$certificateNameExt,
 			$this->createDateTimeImmutable($notBefore, $notBeforeTz),
 			$this->createDateTimeImmutable($notAfter, $notAfterTz),
 			$expiringThreshold,

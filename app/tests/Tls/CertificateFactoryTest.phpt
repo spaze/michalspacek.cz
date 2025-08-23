@@ -34,11 +34,11 @@ final class CertificateFactoryTest extends TestCase
 			3,
 			'CafeCe37',
 		);
-		/** @var array{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
+		/** @var array{certificateName:string, certificateNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
 		$array = Json::decode(Json::encode($expected), forceArrays: true);
 		$certificate = $this->certificateFactory->get(
-			$array['commonName'],
-			$array['commonNameExt'],
+			$array['certificateName'],
+			$array['certificateNameExt'],
 			$array['notBefore'],
 			$array['notBeforeTz'],
 			$array['notAfter'],
@@ -49,6 +49,19 @@ final class CertificateFactoryTest extends TestCase
 			$array['nowTz'],
 		);
 		Assert::equal($expected, $certificate);
+	}
+
+
+	public function testFromString(): void
+	{
+		$string = file_get_contents(__DIR__ . '/certificate-no-cn.pem');
+		assert(is_string($string));
+		$certificateName = 'no-common-name, 🍺';
+		$certificate = $this->certificateFactory->fromString($certificateName, $string);
+		Assert::same($certificateName, $certificate->getCertificateName());
+		Assert::same('03B0B015C1A4E2641611731A711B711DE0EF', $certificate->getSerialNumber());
+		Assert::equal(new DateTimeImmutable('2025-02-19 17:30:01 +00:00'), $certificate->getNotBefore());
+		Assert::equal(new DateTimeImmutable('2025-02-26 09:30:00 +00:00'), $certificate->getNotAfter());
 	}
 
 
@@ -63,8 +76,8 @@ final class CertificateFactoryTest extends TestCase
 		$row->notAfterTimezone = 'Europe/Prague';
 
 		$certificate = $this->certificateFactory->fromDatabaseRow($row);
-		Assert::same('foo.example', $certificate->getCommonName());
-		Assert::same('ec', $certificate->getCommonNameExt());
+		Assert::same('foo.example', $certificate->getCertificateName());
+		Assert::same('ec', $certificate->getCertificateNameExt());
 		Assert::same(1601870582, $certificate->getNotBefore()->getTimestamp());
 		Assert::same('UTC', $certificate->getNotBefore()->getTimezone()->getName());
 		Assert::same(1636204392, $certificate->getNotAfter()->getTimestamp());

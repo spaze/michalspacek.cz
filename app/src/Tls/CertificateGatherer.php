@@ -76,7 +76,7 @@ final readonly class CertificateGatherer
 		$request->addHeader('Host', $hostname);
 		$request->setTlsCaptureCertificate(true);
 		$request->setTlsServerName($hostname);
-		return $this->certificateFactory->fromObject($this->httpClient->head($request)->getTlsCertificate());
+		return $this->certificateFactory->fromObject($hostname, $this->httpClient->head($request)->getTlsCertificate());
 	}
 
 }

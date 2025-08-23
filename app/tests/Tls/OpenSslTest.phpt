@@ -28,6 +28,15 @@ final class OpenSslTest extends TestCase
 	}
 
 
+	public function testX509ParseNoCommonName(): void
+	{
+		$certificate = file_get_contents(__DIR__ . '/certificate-no-cn.pem');
+		assert(is_string($certificate));
+		$expected = new OpenSslX509ParseResult(null, 1739986201, 1740562200, '03B0B015C1A4E2641611731A711B711DE0EF');
+		Assert::equal($expected, OpenSsl::x509parse($certificate));
+	}
+
+
 	public function testX509ParseError(): void
 	{
 		Assert::exception(function (): void {
