@@ -32,7 +32,7 @@ final class OpenSslTest extends TestCase
 	{
 		$certificate = file_get_contents(__DIR__ . '/certificate-no-cn.pem');
 		assert(is_string($certificate));
-		$expected = new OpenSslX509ParseResult(null, 1739986201, 1740562200, '03B0B015C1A4E2641611731A711B711DE0EF');
+		$expected = new OpenSslX509ParseResult(null, 1755987576, 1763763575, '06A43647CC3124AC82F42FA8957F5D9972B6');
 		Assert::equal($expected, OpenSsl::x509parse($certificate));
 	}
 

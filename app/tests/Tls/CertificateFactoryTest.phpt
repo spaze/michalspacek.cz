@@ -59,9 +59,9 @@ final class CertificateFactoryTest extends TestCase
 		$certificateName = 'no-common-name, 🍺';
 		$certificate = $this->certificateFactory->fromString($certificateName, $string);
 		Assert::same($certificateName, $certificate->getCertificateName());
-		Assert::same('03B0B015C1A4E2641611731A711B711DE0EF', $certificate->getSerialNumber());
-		Assert::equal(new DateTimeImmutable('2025-02-19 17:30:01 +00:00'), $certificate->getNotBefore());
-		Assert::equal(new DateTimeImmutable('2025-02-26 09:30:00 +00:00'), $certificate->getNotAfter());
+		Assert::same('06A43647CC3124AC82F42FA8957F5D9972B6', $certificate->getSerialNumber());
+		Assert::equal(new DateTimeImmutable('2025-08-23 22:19:36 +00:00'), $certificate->getNotBefore());
+		Assert::equal(new DateTimeImmutable('2025-11-21 22:19:35 +00:00'), $certificate->getNotAfter());
 	}
 
 
