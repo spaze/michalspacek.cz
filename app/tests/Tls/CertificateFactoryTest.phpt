@@ -81,7 +81,7 @@ final class CertificateFactoryTest extends TestCase
 		$certificate = $this->certificateFactory->fromDatabaseRow($row);
 		Assert::same('foo.example', $certificate->getCertificateName());
 		Assert::same('cn.example', $certificate->getCommonName());
-		Assert::same('ec', $certificate->getCertificateNameExt());
+		Assert::same('ec', $certificate->getCertificateNameExtension());
 		Assert::same(1601870582, $certificate->getNotBefore()->getTimestamp());
 		Assert::same('UTC', $certificate->getNotBefore()->getTimezone()->getName());
 		Assert::same(1636204392, $certificate->getNotAfter()->getTimestamp());

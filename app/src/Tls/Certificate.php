@@ -23,7 +23,7 @@ final readonly class Certificate implements JsonSerializable
 	 */
 	public function __construct(
 		private string $certificateName,
-		private ?string $certificateNameExt,
+		private ?string $certificateNameExtension,
 		private ?string $commonName,
 		private DateTimeImmutable $notBefore,
 		private DateTimeImmutable $notAfter,
@@ -53,9 +53,9 @@ final readonly class Certificate implements JsonSerializable
 	}
 
 
-	public function getCertificateNameExt(): ?string
+	public function getCertificateNameExtension(): ?string
 	{
-		return $this->certificateNameExt;
+		return $this->certificateNameExtension;
 	}
 
 
@@ -115,7 +115,7 @@ final readonly class Certificate implements JsonSerializable
 	{
 		return [
 			'certificateName' => $this->certificateName,
-			'certificateNameExt' => $this->certificateNameExt,
+			'certificateNameExt' => $this->certificateNameExtension,
 			'cn' => $this->commonName,
 			'notBefore' => $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'notBeforeTz' => $this->notBefore->getTimezone()->getName(),

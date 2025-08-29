@@ -106,7 +106,7 @@ final readonly class CertificateFactory
 	 */
 	public function get(
 		string $certificateName,
-		?string $certificateNameExt,
+		?string $certificateNameExtension,
 		?string $commonName,
 		string $notBefore,
 		string $notBeforeTz,
@@ -119,7 +119,7 @@ final readonly class CertificateFactory
 	): Certificate {
 		return new Certificate(
 			$certificateName,
-			$certificateNameExt,
+			$certificateNameExtension,
 			$commonName,
 			$this->createDateTimeImmutable($notBefore, $notBeforeTz),
 			$this->createDateTimeImmutable($notAfter, $notAfterTz),
