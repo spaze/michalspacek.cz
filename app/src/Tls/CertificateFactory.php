@@ -34,16 +34,18 @@ final readonly class CertificateFactory
 	 */
 	public function fromDatabaseRow(Row $row): Certificate
 	{
-		assert(is_string($row->cn));
-		assert($row->ext === null || is_string($row->ext));
+		assert(is_string($row->certificateName));
+		assert($row->certificateNameExt === null || is_string($row->certificateNameExt));
+		assert($row->cn === null || is_string($row->cn));
 		assert($row->notBefore instanceof DateTime);
 		assert(is_string($row->notBeforeTimezone));
 		assert($row->notAfter instanceof DateTime);
 		assert(is_string($row->notAfterTimezone));
 
 		return new Certificate(
+			$row->certificateName,
+			$row->certificateNameExt,
 			$row->cn,
-			$row->ext,
 			$this->dateTimeFactory->createFrom($row->notBefore, $row->notBeforeTimezone),
 			$this->dateTimeFactory->createFrom($row->notAfter, $row->notAfterTimezone),
 			$this->expiringThreshold,
@@ -88,6 +90,7 @@ final readonly class CertificateFactory
 		return new Certificate(
 			$certificateName,
 			null,
+			$details->getCommonName(),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidFromTimeT()),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidToTimeT()),
 			$this->expiringThreshold,
@@ -104,6 +107,7 @@ final readonly class CertificateFactory
 	public function get(
 		string $certificateName,
 		?string $certificateNameExt,
+		?string $commonName,
 		string $notBefore,
 		string $notBeforeTz,
 		string $notAfter,
@@ -116,6 +120,7 @@ final readonly class CertificateFactory
 		return new Certificate(
 			$certificateName,
 			$certificateNameExt,
+			$commonName,
 			$this->createDateTimeImmutable($notBefore, $notBeforeTz),
 			$this->createDateTimeImmutable($notAfter, $notAfterTz),
 			$expiringThreshold,

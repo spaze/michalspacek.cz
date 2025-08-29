@@ -27,18 +27,20 @@ final class CertificateFactoryTest extends TestCase
 	public function testGet(): void
 	{
 		$expected = new Certificate(
-			'cn',
-			'cn-ext',
+			'certificate_name',
+			'certificate_name-ext',
+			null,
 			new DateTimeImmutable('-2 weeks'),
 			new DateTimeImmutable('+3 weeks'),
 			3,
 			'CafeCe37',
 		);
-		/** @var array{certificateName:string, certificateNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
+		/** @var array{certificateName:string, certificateNameExt:string|null, cn:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
 		$array = Json::decode(Json::encode($expected), forceArrays: true);
 		$certificate = $this->certificateFactory->get(
 			$array['certificateName'],
 			$array['certificateNameExt'],
+			$array['cn'],
 			$array['notBefore'],
 			$array['notBeforeTz'],
 			$array['notAfter'],
@@ -68,8 +70,9 @@ final class CertificateFactoryTest extends TestCase
 	public function testFromDatabaseRow(): void
 	{
 		$row = new Row();
-		$row->cn = 'foo.example';
-		$row->ext = 'ec';
+		$row->certificateName = 'foo.example';
+		$row->certificateNameExt = 'ec';
+		$row->cn = 'cn.example';
 		$row->notBefore = new DateTime('2020-10-05 04:03:02');
 		$row->notBeforeTimezone = 'UTC';
 		$row->notAfter = new DateTime('2021-11-06 14:13:12');
@@ -77,11 +80,16 @@ final class CertificateFactoryTest extends TestCase
 
 		$certificate = $this->certificateFactory->fromDatabaseRow($row);
 		Assert::same('foo.example', $certificate->getCertificateName());
+		Assert::same('cn.example', $certificate->getCommonName());
 		Assert::same('ec', $certificate->getCertificateNameExt());
 		Assert::same(1601870582, $certificate->getNotBefore()->getTimestamp());
 		Assert::same('UTC', $certificate->getNotBefore()->getTimezone()->getName());
 		Assert::same(1636204392, $certificate->getNotAfter()->getTimestamp());
 		Assert::same('Europe/Prague', $certificate->getNotAfter()->getTimezone()->getName());
+
+		$row->cn = null;
+		$certificate = $this->certificateFactory->fromDatabaseRow($row);
+		Assert::null($certificate->getCommonName());
 	}
 
 }
