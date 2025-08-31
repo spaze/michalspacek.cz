@@ -6,8 +6,12 @@ namespace MichalSpacekCz\Tls;
 final readonly class OpenSslX509ParseResult
 {
 
+	/**
+	 * @param list<string>|null $subjectAlternativeNames
+	 */
 	public function __construct(
 		private ?string $commonName,
+		private ?array $subjectAlternativeNames,
 		private int $validFromTimeT,
 		private int $validToTimeT,
 		private string $serialNumberHex,
@@ -18,6 +22,15 @@ final readonly class OpenSslX509ParseResult
 	public function getCommonName(): ?string
 	{
 		return $this->commonName;
+	}
+
+
+	/**
+	 * @return list<string>|null
+	 */
+	public function getSubjectAlternativeNames(): ?array
+	{
+		return $this->subjectAlternativeNames;
 	}
 
 

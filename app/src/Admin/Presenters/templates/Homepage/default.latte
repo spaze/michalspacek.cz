@@ -10,13 +10,13 @@
 </p>
 <table id="certificates" n:class="!$certificatesNeedAttention ? hidden">
 <thead>
-	<tr><td></td><td></td><th><small>Certifikát</small></th><th><small>Platnost</small></th><td></td><td></td><th><small>Expirace</small></th></tr>
+	<tr><td></td><td></td><th><small>Certifikát</small></th><th><small>Platnost</small></th><td></td><td></td><th><small>Expirace</small></th><td></td></tr>
 </thead>
-<tbody>
-<tr n:foreach="$certificates as $cert">
+<tbody class="row" n:foreach="$certificates as $cert">
+<tr>
 	<td><small>{$iterator->getCounter()}.</small></td>
 	<td title="{if $cert->isExpired()}Expiroval{else}Funkční{/if}" n:class="$cert->isExpired() ? error">{if $cert->isExpired()}{icon times-circle}{else}{icon check-circle}{/if}</td>
-	<td><strong n:tag-if="$cert->isExpiringSoon() || $cert->isExpired()" n:class="$cert->isExpired() ? error">{$cert->getCertificateName()}<small n:if="$cert->getCertificateNameExt()">-{$cert->getCertificateNameExt()}</small></strong></td>
+	<td><strong n:tag-if="$cert->isExpiringSoon() || $cert->isExpired()" n:class="$cert->isExpired() ? error">{$cert->getCertificateName()}<small n:if="$cert->getCertificateNameExtension()">-{$cert->getCertificateNameExtension()}</small></strong></td>
 	<td>{$cert->getNotBefore()|localeDay} <small>{$cert->getNotBefore()|date:'H:i'}</small></td>
 	<td>
 		<small>
@@ -42,6 +42,18 @@
 			</small>
 		</strong>
 	</td>
+</tr>
+<tr>
+	<td colspan="2"></td>
+	<td colspan="6"><small>
+			CN: {if $cert->getCommonName() !== null}{$cert->getCommonName()}{else}<em>missing</em>{/if};
+			SAN:
+			{if $cert->getSubjectAlternativeNames() !== null}
+				{foreach $cert->getSubjectAlternativeNames() as $san}{$san}{sep}, {/sep}{else}<em>empty</em>{/foreach}
+			{else}
+				<em>unknown yet</em>
+			{/if}
+	</small></td>
 </tr>
 </tbody>
 </table>

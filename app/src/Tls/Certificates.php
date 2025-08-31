@@ -13,6 +13,7 @@ use Nette\Database\DriverException;
 use Nette\Database\Explorer;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
+use Nette\Utils\Json;
 use Tracy\Debugger;
 
 final readonly class Certificates
@@ -58,8 +59,10 @@ final readonly class Certificates
 	public function getNewest(): array
 	{
 		$query = 'SELECT
+			cr.certificate_name AS certificateName,
+			cr.certificate_name_ext AS certificateNameExt,
 			cr.cn,
-			cr.ext,
+			cr.san,
 			c.not_before AS notBefore,
 			c.not_before_timezone AS notBeforeTimezone,
 			c.not_after AS notAfter,
@@ -70,9 +73,9 @@ final readonly class Certificates
 				SELECT MAX(c.id_certificate)
 				FROM certificates c JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
 				WHERE NOT c.hidden
-				GROUP BY cr.cn, cr.ext
+				GROUP BY cr.certificate_name, cr.certificate_name_ext
 			)
-			ORDER BY cr.cn, cr.ext';
+			ORDER BY cr.certificate_name, cr.certificate_name_ext';
 		$certificates = [];
 		foreach ($this->typedDatabase->fetchAll($query) as $data) {
 			$certificate = $this->certificateFactory->fromDatabaseRow($data);
@@ -106,7 +109,7 @@ final readonly class Certificates
 			Debugger::log(sprintf(
 				'OK %s%s from %s to %s',
 				$cert->getCertificateName(),
-				$cert->getCertificateNameExt() ?? '',
+				$cert->getCertificateNameExtension() ?? '',
 				$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
 				$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			), 'cert');
@@ -122,8 +125,10 @@ final readonly class Certificates
 	{
 		$now = new DateTimeImmutable();
 		$this->database->query('INSERT INTO certificate_requests', [
-			'cn' => $certificate->getCertificateName(),
-			'ext' => $certificate->getCertificateNameExt(),
+			'certificate_name' => $certificate->getCertificateName(),
+			'certificate_name_ext' => $certificate->getCertificateNameExtension(),
+			'cn' => $certificate->getCommonName(),
+			'san' => Json::encode($certificate->getSubjectAlternativeNames()),
 			'time' => $now,
 			'time_timezone' => $now->getTimezone()->getName(),
 			'success' => true,
