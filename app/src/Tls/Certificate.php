@@ -19,12 +19,14 @@ final readonly class Certificate implements JsonSerializable
 
 
 	/**
+	 * @param list<string>|null $subjectAlternativeNames
 	 * @throws CertificateException
 	 */
 	public function __construct(
 		private string $certificateName,
 		private ?string $certificateNameExtension,
 		private ?string $commonName,
+		private ?array $subjectAlternativeNames,
 		private DateTimeImmutable $notBefore,
 		private DateTimeImmutable $notAfter,
 		private int $expiringThreshold,
@@ -62,6 +64,15 @@ final readonly class Certificate implements JsonSerializable
 	public function getCommonName(): ?string
 	{
 		return $this->commonName;
+	}
+
+
+	/**
+	 * @return list<string>|null
+	 */
+	public function getSubjectAlternativeNames(): ?array
+	{
+		return $this->subjectAlternativeNames;
 	}
 
 
@@ -108,7 +119,7 @@ final readonly class Certificate implements JsonSerializable
 
 
 	/**
-	 * @return array{certificateName:string, certificateNameExt:string|null, cn:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}
+	 * @return array{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}
 	 */
 	#[Override]
 	public function jsonSerialize(): array
@@ -117,6 +128,7 @@ final readonly class Certificate implements JsonSerializable
 			'certificateName' => $this->certificateName,
 			'certificateNameExt' => $this->certificateNameExtension,
 			'cn' => $this->commonName,
+			'san' => $this->getSubjectAlternativeNames(),
 			'notBefore' => $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'notBeforeTz' => $this->notBefore->getTimezone()->getName(),
 			'notAfter' => $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS),

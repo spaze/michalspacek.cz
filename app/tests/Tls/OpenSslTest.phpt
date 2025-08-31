@@ -22,7 +22,13 @@ final class OpenSslTest extends TestCase
 		if ($certificate === false) {
 			Assert::fail('Cannot read ' . $file);
 		} else {
-			$expected = new OpenSslX509ParseResult('michalspacek.cz', 1682947521, 1690723520, '03F3ABC4EB1C13E0D4447CA61298423C0F02');
+			$expected = new OpenSslX509ParseResult(
+				'michalspacek.cz',
+				['admin.michalspacek.cz', 'api.michalspacek.cz', 'heartbleed.michalspacek.cz', 'michalspacek.com', 'michalspacek.cz', 'pulse.michalspacek.cz', 'upc.michalspacek.cz', 'www.michalspacek.com', 'www.michalspacek.cz'],
+				1682947521,
+				1690723520,
+				'03F3ABC4EB1C13E0D4447CA61298423C0F02',
+			);
 			Assert::equal($expected, OpenSsl::x509parse($certificate));
 		}
 	}
@@ -32,7 +38,7 @@ final class OpenSslTest extends TestCase
 	{
 		$certificate = file_get_contents(__DIR__ . '/certificate-no-cn.pem');
 		assert(is_string($certificate));
-		$expected = new OpenSslX509ParseResult(null, 1755987576, 1763763575, '06A43647CC3124AC82F42FA8957F5D9972B6');
+		$expected = new OpenSslX509ParseResult(null, ['snafu.cz', 'www.snafu.cz'], 1755987576, 1763763575, '06A43647CC3124AC82F42FA8957F5D9972B6');
 		Assert::equal($expected, OpenSsl::x509parse($certificate));
 	}
 

@@ -309,10 +309,16 @@ td.nameCell { width: 200px; }
 tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #statuses th, #statuses td, #applications th, #applications td, #certificates th, #certificates td { padding: 1px 5px; }
-#statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover, table .row:hover { background-color: #F0F0F0; }
+#statuses tr.summary:hover, #applications tbody tr:hover, #slides tbody:hover, table .row:hover { background-color: #F0F0F0; }
 .discarded, #statuses .discarded, .lighter { opacity: 0.3; }
 .discarded:hover, #statuses .discarded:hover { opacity: 0.7; }
 #certificates thead th { text-align: left; }
+#certificates tbody tr:last-child td {
+	line-height: 0.75;
+	padding-top: 0;
+	padding-bottom: 3px;
+	font-size: smaller;
+}
 #frm-application th, #frm-application td,
 #frm-applicationPreliminary th, #frm-applicationPreliminary td {
 	width: 150px;

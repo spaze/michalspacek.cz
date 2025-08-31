@@ -15,6 +15,9 @@ use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use Nette\Database\Row;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Utils\Json;
 use OpenSSLCertificate;
 
 final readonly class CertificateFactory
@@ -23,6 +26,7 @@ final readonly class CertificateFactory
 	public function __construct(
 		private DateTimeZoneFactory $dateTimeZoneFactory,
 		private DateTimeFactory $dateTimeFactory,
+		private Processor $schemaProcessor,
 		private int $expiringThreshold,
 	) {
 	}
@@ -37,15 +41,19 @@ final readonly class CertificateFactory
 		assert(is_string($row->certificateName));
 		assert($row->certificateNameExt === null || is_string($row->certificateNameExt));
 		assert($row->cn === null || is_string($row->cn));
+		assert($row->san === null || is_string($row->san));
 		assert($row->notBefore instanceof DateTime);
 		assert(is_string($row->notBeforeTimezone));
 		assert($row->notAfter instanceof DateTime);
 		assert(is_string($row->notAfterTimezone));
 
+		/** @var list<string>|null $san */
+		$san = $row->san !== null ? $this->schemaProcessor->process(Expect::listOf(Expect::string()), Json::decode($row->san)) : null;
 		return new Certificate(
 			$row->certificateName,
 			$row->certificateNameExt,
 			$row->cn,
+			$san,
 			$this->dateTimeFactory->createFrom($row->notBefore, $row->notBeforeTimezone),
 			$this->dateTimeFactory->createFrom($row->notAfter, $row->notAfterTimezone),
 			$this->expiringThreshold,
@@ -91,6 +99,7 @@ final readonly class CertificateFactory
 			$certificateName,
 			null,
 			$details->getCommonName(),
+			$details->getSubjectAlternativeNames(),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidFromTimeT()),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidToTimeT()),
 			$this->expiringThreshold,
@@ -100,6 +109,7 @@ final readonly class CertificateFactory
 
 
 	/**
+	 * @param list<string>|null $subjectAlternativeNames
 	 * @throws CannotParseDateTimeException
 	 * @throws CertificateException
 	 * @throws InvalidTimezoneException
@@ -108,6 +118,7 @@ final readonly class CertificateFactory
 		string $certificateName,
 		?string $certificateNameExtension,
 		?string $commonName,
+		?array $subjectAlternativeNames,
 		string $notBefore,
 		string $notBeforeTz,
 		string $notAfter,
@@ -121,6 +132,7 @@ final readonly class CertificateFactory
 			$certificateName,
 			$certificateNameExtension,
 			$commonName,
+			$subjectAlternativeNames,
 			$this->createDateTimeImmutable($notBefore, $notBeforeTz),
 			$this->createDateTimeImmutable($notAfter, $notAfterTz),
 			$expiringThreshold,

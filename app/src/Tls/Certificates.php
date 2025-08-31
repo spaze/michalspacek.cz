@@ -13,6 +13,7 @@ use Nette\Database\DriverException;
 use Nette\Database\Explorer;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
+use Nette\Utils\Json;
 use Tracy\Debugger;
 
 final readonly class Certificates
@@ -61,6 +62,7 @@ final readonly class Certificates
 			cr.certificate_name AS certificateName,
 			cr.certificate_name_ext AS certificateNameExt,
 			cr.cn,
+			cr.san,
 			c.not_before AS notBefore,
 			c.not_before_timezone AS notBeforeTimezone,
 			c.not_after AS notAfter,
@@ -126,6 +128,7 @@ final readonly class Certificates
 			'certificate_name' => $certificate->getCertificateName(),
 			'certificate_name_ext' => $certificate->getCertificateNameExtension(),
 			'cn' => $certificate->getCommonName(),
+			'san' => Json::encode($certificate->getSubjectAlternativeNames()),
 			'time' => $now,
 			'time_timezone' => $now->getTimezone()->getName(),
 			'success' => true,
