@@ -112,6 +112,12 @@ final readonly class Certificate implements JsonSerializable
 	}
 
 
+	public function hasWarning(): bool
+	{
+		return $this->isExpired() || $this->isExpiringSoon();
+	}
+
+
 	public function getSerialNumber(): ?string
 	{
 		return $this->serialNumber;

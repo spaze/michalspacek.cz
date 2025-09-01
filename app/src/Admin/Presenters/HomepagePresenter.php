@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
+use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesList;
+use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesListFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
@@ -19,6 +21,9 @@ final class HomepagePresenter extends BasePresenter
 
 	protected bool $haveBacklink = false;
 
+	/** @var list<Certificate> */
+	private array $certificatesWithWarning;
+
 
 	public function __construct(
 		private readonly TrainingApplications $trainingApplications,
@@ -28,8 +33,10 @@ final class HomepagePresenter extends BasePresenter
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Certificates $certificates,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
+		private readonly TlsCertificatesListFactory $tlsCertificatesListFactory,
 	) {
 		parent::__construct();
+		$this->certificatesWithWarning = array_values(array_filter($this->certificates->getNewest(), fn(Certificate $certificate): bool => $certificate->hasWarning()));
 	}
 
 
@@ -38,26 +45,9 @@ final class HomepagePresenter extends BasePresenter
 		$this->template->pageTitle = 'Administrace';
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
-		$this->template->certificates = $certificates = $this->certificates->getNewest();
-		$this->template->certificatesNeedAttention = $this->certsNeedAttention($certificates);
+		$this->template->certificatesWithWarningCount = count($this->certificatesWithWarning);
 		[$this->template->preliminaryTotal, $this->template->preliminaryDateSet] = $this->trainingPreliminaryApplications->getPreliminaryCounts();
 		$this->template->pastWithPersonalData = count($this->trainingDates->getPastWithPersonalData());
-	}
-
-
-	/**
-	 * Check if at least one certificate is expired or expires soon.
-	 *
-	 * @param array<int, Certificate> $certificates
-	 */
-	private function certsNeedAttention(array $certificates): bool
-	{
-		foreach ($certificates as $certificate) {
-			if ($certificate->isExpired() || $certificate->isExpiringSoon()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 
@@ -77,6 +67,12 @@ final class HomepagePresenter extends BasePresenter
 		}
 		ksort($dates);
 		return $this->trainingApplicationsListFactory->create(array_values($dates), DateListOrder::Asc);
+	}
+
+
+	protected function createComponentTlsCertificatesList(): TlsCertificatesList
+	{
+		return $this->tlsCertificatesListFactory->create($this->certificatesWithWarning);
 	}
 
 }

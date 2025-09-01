@@ -142,14 +142,6 @@ App.ready(document, function () {
 		}
 	});
 
-	App.onClick('#certificatesShow, #certificatesHide', function (event) {
-		event.preventDefault();
-		document.querySelector('#certificates').classList.toggle('hidden');
-		for (const item of document.querySelectorAll('#certificates-toggle span')) {
-			item.classList.toggle('hidden');
-		}
-	});
-
 	App.onChange('#frm-addReviewInputs-trainingReview-application', function () {
 		const dataset = this.options[this.selectedIndex].dataset;
 		document.querySelector('#frm-addReviewInputs-trainingReview-name').value = dataset.name ?? '';

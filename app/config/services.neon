@@ -122,6 +122,7 @@ services:
 	- MichalSpacekCz\Tls\CertificateMonitor
 	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
 	- MichalSpacekCz\Tls\CertificatesApiClient
+	- MichalSpacekCz\Tls\CertificatesList\TlsCertificatesListFactory
 	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormDataLogger
 	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam
 	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess
