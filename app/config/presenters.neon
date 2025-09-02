@@ -30,6 +30,7 @@ services:
 
 	# admin module
 	- MichalSpacekCz\Admin\Presenters\BlogPresenter
+	- MichalSpacekCz\Admin\Presenters\CertificatesPresenter
 	- MichalSpacekCz\Admin\Presenters\EmailsPresenter
 	- MichalSpacekCz\Admin\Presenters\HomepagePresenter
 	- MichalSpacekCz\Admin\Presenters\HoneypotPresenter

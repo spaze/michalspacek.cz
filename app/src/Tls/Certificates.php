@@ -50,9 +50,7 @@ final readonly class Certificates
 
 
 	/**
-	 * Get newest certificates.
-	 *
-	 * @return array<int, Certificate>
+	 * @return list<Certificate>
 	 * @throws CertificateException
 	 * @throws DateTimeException
 	 */
