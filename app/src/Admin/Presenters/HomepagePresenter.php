@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesList;
 use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesListFactory;
@@ -21,9 +20,6 @@ final class HomepagePresenter extends BasePresenter
 
 	protected bool $haveBacklink = false;
 
-	/** @var list<Certificate> */
-	private array $certificatesWithWarning;
-
 
 	public function __construct(
 		private readonly TrainingApplications $trainingApplications,
@@ -36,7 +32,6 @@ final class HomepagePresenter extends BasePresenter
 		private readonly TlsCertificatesListFactory $tlsCertificatesListFactory,
 	) {
 		parent::__construct();
-		$this->certificatesWithWarning = array_values(array_filter($this->certificates->getNewest(), fn(Certificate $certificate): bool => $certificate->hasWarning()));
 	}
 
 
@@ -45,7 +40,7 @@ final class HomepagePresenter extends BasePresenter
 		$this->template->pageTitle = 'Administrace';
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
-		$this->template->certificatesWithWarningCount = count($this->certificatesWithWarning);
+		$this->template->certificatesWithWarningCount = count($this->certificates->getNewestWithWarnings());
 		[$this->template->preliminaryTotal, $this->template->preliminaryDateSet] = $this->trainingPreliminaryApplications->getPreliminaryCounts();
 		$this->template->pastWithPersonalData = count($this->trainingDates->getPastWithPersonalData());
 	}
@@ -72,7 +67,7 @@ final class HomepagePresenter extends BasePresenter
 
 	protected function createComponentTlsCertificatesList(): TlsCertificatesList
 	{
-		return $this->tlsCertificatesListFactory->create($this->certificatesWithWarning);
+		return $this->tlsCertificatesListFactory->create($this->certificates->getNewestWithWarnings());
 	}
 
 }
