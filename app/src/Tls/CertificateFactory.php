@@ -11,7 +11,6 @@ use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
-use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use Nette\Database\Row;
@@ -33,7 +32,6 @@ final readonly class CertificateFactory
 
 
 	/**
-	 * @throws CertificateException
 	 * @throws DateTimeException
 	 */
 	public function fromDatabaseRow(Row $row): Certificate
@@ -66,7 +64,6 @@ final readonly class CertificateFactory
 	/**
 	 * @throws OpenSslException
 	 * @throws CannotParseDateTimeException
-	 * @throws CertificateException
 	 * @throws OpenSslX509ParseException
 	 */
 	public function fromObject(string $certificateName, OpenSSLCertificate $certificate): Certificate
@@ -78,7 +75,6 @@ final readonly class CertificateFactory
 	/**
 	 * @throws OpenSslException
 	 * @throws CannotParseDateTimeException
-	 * @throws CertificateException
 	 * @throws OpenSslX509ParseException
 	 */
 	public function fromString(string $certificateName, string $certificate): Certificate
@@ -90,7 +86,6 @@ final readonly class CertificateFactory
 	/**
 	 * @throws OpenSslException
 	 * @throws CannotParseDateTimeException
-	 * @throws CertificateException
 	 * @throws OpenSslX509ParseException
 	 */
 	private function fromStringOrObject(string $certificateName, OpenSSLCertificate|string $certificate): Certificate
@@ -113,7 +108,6 @@ final readonly class CertificateFactory
 	/**
 	 * @param list<string>|null $subjectAlternativeNames
 	 * @throws CannotParseDateTimeException
-	 * @throws CertificateException
 	 * @throws InvalidTimezoneException
 	 */
 	public function get(

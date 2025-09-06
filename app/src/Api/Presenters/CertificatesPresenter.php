@@ -6,11 +6,9 @@ namespace MichalSpacekCz\Api\Presenters;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Tls\CertificateFactory;
 use MichalSpacekCz\Tls\Certificates;
-use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Security\AuthenticationException;
 use Override;
-use Tracy\Debugger;
 
 final class CertificatesPresenter extends BasePresenter
 {
@@ -62,9 +60,6 @@ final class CertificatesPresenter extends BasePresenter
 			]);
 		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
-		} catch (CertificateException $e) {
-			Debugger::log($e);
-			$this->sendJson(['status' => 'error', 'statusMessage' => 'Request logged but certs not']);
 		}
 	}
 

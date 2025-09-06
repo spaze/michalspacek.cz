@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Tls;
 use DateTimeImmutable;
 use JsonSerializable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
-use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use Override;
 
 final readonly class Certificate implements JsonSerializable
@@ -20,7 +19,6 @@ final readonly class Certificate implements JsonSerializable
 
 	/**
 	 * @param list<string>|null $subjectAlternativeNames
-	 * @throws CertificateException
 	 */
 	public function __construct(
 		private string $certificateName,
@@ -34,14 +32,10 @@ final readonly class Certificate implements JsonSerializable
 		private DateTimeImmutable $now,
 	) {
 		$validDays = $this->notBefore->diff($this->now)->days;
-		if ($validDays === false) {
-			throw new CertificateException('Unknown number of valid days');
-		}
+		assert(is_int($validDays));
 		$this->validDays = $validDays;
 		$expiryDays = $this->notAfter->diff($this->now)->days;
-		if ($expiryDays === false) {
-			throw new CertificateException('Unknown number of expiry days');
-		}
+		assert(is_int($expiryDays));
 		$this->expiryDays = $expiryDays;
 
 		$this->expired = $this->notAfter < $this->now;
