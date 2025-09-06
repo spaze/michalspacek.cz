@@ -16,18 +16,25 @@ use Nette\Security\Authenticator;
 use Nette\Utils\Json;
 use Tracy\Debugger;
 
-final readonly class Certificates
+final class Certificates
 {
+
+	/** @var list<Certificate> */
+	private ?array $newestCertificates = null;
+
+	/** @var list<Certificate> */
+	private ?array $newestCertificatesWithWarnings = null;
+
 
 	/**
 	 * @param array<string, string> $users
 	 */
 	public function __construct(
-		private Explorer $database,
-		private TypedDatabase $typedDatabase,
-		private CertificateFactory $certificateFactory,
-		private array $users,
-		private int $hideExpiredAfter,
+		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
+		private readonly CertificateFactory $certificateFactory,
+		private readonly array $users,
+		private readonly int $hideExpiredAfter,
 	) {
 	}
 
@@ -56,6 +63,10 @@ final readonly class Certificates
 	 */
 	public function getNewest(): array
 	{
+		if ($this->newestCertificates !== null) {
+			return $this->newestCertificates;
+		}
+
 		$query = 'SELECT
 			cr.certificate_name AS certificateName,
 			cr.certificate_name_ext AS certificateNameExt,
@@ -74,15 +85,27 @@ final readonly class Certificates
 				GROUP BY cr.certificate_name, cr.certificate_name_ext
 			)
 			ORDER BY cr.certificate_name, cr.certificate_name_ext';
-		$certificates = [];
+		$this->newestCertificates = [];
 		foreach ($this->typedDatabase->fetchAll($query) as $data) {
 			$certificate = $this->certificateFactory->fromDatabaseRow($data);
 			if ($certificate->isExpired() && $certificate->getExpiryDays() > $this->hideExpiredAfter) {
 				continue;
 			}
-			$certificates[] = $certificate;
+			$this->newestCertificates[] = $certificate;
 		}
-		return $certificates;
+		return $this->newestCertificates;
+	}
+
+
+	/**
+	 * @return list<Certificate>
+	 */
+	public function getNewestWithWarnings(): array
+	{
+		if ($this->newestCertificatesWithWarnings !== null) {
+			return $this->newestCertificatesWithWarnings;
+		}
+		return $this->newestCertificatesWithWarnings = array_values(array_filter($this->getNewest(), fn(Certificate $certificate): bool => $certificate->hasWarning()));
 	}
 
 

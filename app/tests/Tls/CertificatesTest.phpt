@@ -4,14 +4,19 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
+use Nette\Security\AuthenticationException;
+use Nette\Security\Authenticator;
+use Nette\Utils\Json;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -30,6 +35,7 @@ final class CertificatesTest extends TestCase
 		private readonly Certificates $certificates,
 		private readonly Database $database,
 		private readonly NullLogger $logger,
+		private readonly DateTimeMachineFactory $dateTimeFactory,
 		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
 		$this->notBefore = new DateTimeImmutable('-42 days Indian/Reunion');
@@ -81,6 +87,88 @@ final class CertificatesTest extends TestCase
 		Assert::same($exception, $this->logger->getLogged()[0]);
 		$message = 'OK foo.example from ' . $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS) . ' to ' . $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS);
 		Assert::same($message, $this->logger->getLogged()[1]);
+	}
+
+
+	public function testAuthenticate(): void
+	{
+		Assert::throws(function (): void {
+			$this->certificates->authenticate('invalid', 'invalid');
+		}, AuthenticationException::class, 'Unknown user', Authenticator::IdentityNotFound);
+		Assert::throws(function (): void {
+			$this->certificates->authenticate('foo', 'invalid');
+		}, AuthenticationException::class, 'Invalid key', Authenticator::InvalidCredential);
+		Assert::noError(function (): void {
+			$this->certificates->authenticate('foo', 'foo');
+		});
+	}
+
+
+	public function testGetNewestAndGetNewestWithWarnings(): void
+	{
+		$now = new DateTimeImmutable('2025-12-01 00:00:00 UTC');
+		$this->dateTimeFactory->setDateTime($now);
+		$this->database->addFetchAllResult([
+			[
+				'certificateName' => 'cert1.name',
+				'certificateNameExt' => null,
+				'cn' => null,
+				'san' => Json::encode(['cert1.name.example']),
+				'notBefore' => new DateTime('2025-09-30 10:20:30 UTC'),
+				'notBeforeTimezone' => 'UTC',
+				'notAfter' => new DateTime('2025-12-30 10:20:29 UTC'),
+				'notAfterTimezone' => 'UTC',
+			],
+			[
+				'certificateName' => 'cert2 expired many days ago, hidden',
+				'certificateNameExt' => null,
+				'cn' => null,
+				'san' => Json::encode(['cert2.name.example']),
+				'notBefore' => new DateTime('2025-10-20 10:20:30 UTC'),
+				'notBeforeTimezone' => 'UTC',
+				'notAfter' => new DateTime('2025-11-20 10:20:29 UTC'),
+				'notAfterTimezone' => 'UTC',
+			],
+			[
+				'certificateName' => 'cert3 expires soon',
+				'certificateNameExt' => null,
+				'cn' => null,
+				'san' => Json::encode(['cert3.name.example']),
+				'notBefore' => new DateTime('2025-09-08 10:20:30 UTC'),
+				'notBeforeTimezone' => 'UTC',
+				'notAfter' => new DateTime('2025-12-08 10:20:29 UTC'),
+				'notAfterTimezone' => 'UTC',
+			],
+		]);
+		$expected1 = new Certificate(
+			'cert1.name',
+			null,
+			null,
+			['cert1.name.example'],
+			new DateTimeImmutable('2025-09-30 10:20:30 UTC'),
+			new DateTimeImmutable('2025-12-30 10:20:29 UTC'),
+			20,
+			null,
+			$now,
+		);
+		$expected2 = new Certificate(
+			'cert3 expires soon',
+			null,
+			null,
+			['cert3.name.example'],
+			new DateTimeImmutable('2025-09-08 10:20:30 UTC'),
+			new DateTimeImmutable('2025-12-08 10:20:29 UTC'),
+			20,
+			null,
+			$now,
+		);
+		Assert::equal([$expected1, $expected2], $this->certificates->getNewest());
+		Assert::equal([$expected2], $this->certificates->getNewestWithWarnings());
+
+		// Test memoization
+		$this->database->willThrow(new DriverException());
+		Assert::equal([$expected1, $expected2], $this->certificates->getNewest());
+		Assert::equal([$expected2], $this->certificates->getNewestWithWarnings());
 	}
 
 }

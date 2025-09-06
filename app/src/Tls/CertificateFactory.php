@@ -58,6 +58,7 @@ final readonly class CertificateFactory
 			$this->dateTimeFactory->createFrom($row->notAfter, $row->notAfterTimezone),
 			$this->expiringThreshold,
 			null,
+			$this->dateTimeFactory->create(),
 		);
 	}
 
@@ -104,6 +105,7 @@ final readonly class CertificateFactory
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidToTimeT()),
 			$this->expiringThreshold,
 			$details->getSerialNumberHex(),
+			$this->dateTimeFactory->create(),
 		);
 	}
 
