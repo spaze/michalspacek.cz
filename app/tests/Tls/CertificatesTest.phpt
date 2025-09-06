@@ -53,7 +53,7 @@ final class CertificatesTest extends TestCase
 	public function testLog(): void
 	{
 		$this->database->setDefaultInsertId('42');
-		$certificate = new Certificate('foo.example', null, 'cn.example', [], $this->notBefore, $this->notAfter, 0, null);
+		$certificate = new Certificate('foo.example', null, 'cn.example', [], $this->notBefore, $this->notAfter, 0, null, new DateTimeImmutable());
 		$this->certificates->log($certificate);
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificate_requests');
 		Assert::count(1, $params);
@@ -80,7 +80,7 @@ final class CertificatesTest extends TestCase
 	{
 		$exception = new DriverException();
 		$this->database->willThrow($exception);
-		$certificate = new Certificate('foo.example', null, null, null, $this->notBefore, $this->notAfter, 0, null);
+		$certificate = new Certificate('foo.example', null, null, null, $this->notBefore, $this->notAfter, 0, null, new DateTimeImmutable());
 		Assert::exception(function () use ($certificate): void {
 			$this->certificates->log($certificate);
 		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');

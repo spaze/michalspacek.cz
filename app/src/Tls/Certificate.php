@@ -31,7 +31,7 @@ final readonly class Certificate implements JsonSerializable
 		private DateTimeImmutable $notAfter,
 		private int $expiringThreshold,
 		private ?string $serialNumber,
-		private DateTimeImmutable $now = new DateTimeImmutable(),
+		private DateTimeImmutable $now,
 	) {
 		$validDays = $this->notBefore->diff($this->now)->days;
 		if ($validDays === false) {

@@ -35,6 +35,7 @@ final class CertificateFactoryTest extends TestCase
 			new DateTimeImmutable('+3 weeks'),
 			3,
 			'CafeCe37',
+			new DateTimeImmutable(),
 		);
 		/** @var array{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
 		$array = Json::decode(Json::encode($expected), forceArrays: true);
