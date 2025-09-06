@@ -11,7 +11,6 @@ use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use MichalSpacekCz\Net\DnsResolver;
 use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
-use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 
@@ -31,7 +30,6 @@ final readonly class CertificateGatherer
 	 * @param bool $includeIpv6
 	 * @return array<string, Certificate>
 	 * @throws CannotParseDateTimeException
-	 * @throws CertificateException
 	 * @throws OpenSslException
 	 * @throws DnsGetRecordException
 	 * @throws OpenSslX509ParseException
@@ -61,7 +59,6 @@ final readonly class CertificateGatherer
 
 	/**
 	 * @throws OpenSslException
-	 * @throws CertificateException
 	 * @throws CannotParseDateTimeException
 	 * @throws OpenSslX509ParseException
 	 * @throws HttpClientRequestException

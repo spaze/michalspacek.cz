@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Nette\Utils\Json;
+use OpenSSLCertificate;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -35,6 +36,7 @@ final class CertificateFactoryTest extends TestCase
 			new DateTimeImmutable('+3 weeks'),
 			3,
 			'CafeCe37',
+			new DateTimeImmutable(),
 		);
 		/** @var array{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
 		$array = Json::decode(Json::encode($expected), forceArrays: true);
@@ -62,6 +64,21 @@ final class CertificateFactoryTest extends TestCase
 		assert(is_string($string));
 		$certificateName = 'no-common-name, 🍺';
 		$certificate = $this->certificateFactory->fromString($certificateName, $string);
+		Assert::same($certificateName, $certificate->getCertificateName());
+		Assert::same('06A43647CC3124AC82F42FA8957F5D9972B6', $certificate->getSerialNumber());
+		Assert::equal(new DateTimeImmutable('2025-08-23 22:19:36 +00:00'), $certificate->getNotBefore());
+		Assert::equal(new DateTimeImmutable('2025-11-21 22:19:35 +00:00'), $certificate->getNotAfter());
+	}
+
+
+	public function testFromObject(): void
+	{
+		$string = file_get_contents(__DIR__ . '/certificate-no-cn.pem');
+		assert(is_string($string));
+		$object = openssl_x509_read($string);
+		assert($object instanceof OpenSSLCertificate);
+		$certificateName = 'no-common-name, 🍺';
+		$certificate = $this->certificateFactory->fromObject($certificateName, $object);
 		Assert::same($certificateName, $certificate->getCertificateName());
 		Assert::same('06A43647CC3124AC82F42FA8957F5D9972B6', $certificate->getSerialNumber());
 		Assert::equal(new DateTimeImmutable('2025-08-23 22:19:36 +00:00'), $certificate->getNotBefore());

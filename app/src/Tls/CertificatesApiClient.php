@@ -32,7 +32,6 @@ final readonly class CertificatesApiClient
 
 	/**
 	 * @return array<int, Certificate>
-	 * @throws Exceptions\CertificateException
 	 * @throws CannotParseDateTimeException
 	 * @throws InvalidLinkException
 	 * @throws JsonException

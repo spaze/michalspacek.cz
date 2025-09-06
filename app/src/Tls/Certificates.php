@@ -7,7 +7,6 @@ use DateTimeImmutable;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
-use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
 use Nette\Database\Explorer;
@@ -58,7 +57,6 @@ final class Certificates
 
 	/**
 	 * @return list<Certificate>
-	 * @throws CertificateException
 	 * @throws DateTimeException
 	 */
 	public function getNewest(): array
