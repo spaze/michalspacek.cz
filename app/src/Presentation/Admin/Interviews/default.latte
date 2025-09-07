@@ -1,0 +1,20 @@
+{templateType MichalSpacekCz\Presentation\Admin\Interviews\DefaultTemplateParameters}
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<div id="pridat-rozhovor">
+	<p><a href="#pridat-rozhovor" class="open-container block">Přidat rozhovor</a></p>
+	<div id="pridat-rozhovor-container" class="hidden">
+	{control addInterviewInputs}
+	</div>
+</div>
+<hr>
+<ol reversed>
+{foreach $interviews as $interview}
+	<li><a n:href="Interviews:interview $interview->getId()">{$interview->getTitle()}</a>
+		<small><strong class="date">{$interview->getDate()|localeDay}</strong>, {$interview->getSourceName()}</small>
+		<span n:if="$interview->getAudioHref()" title="{_messages.label.audiorecording}">{icon microphone}</span>
+		<span n:if="$interview->getVideo()->getVideoHref()" title="{_messages.label.videorecording}">{icon camera-video}</span>
+	</li>
+{/foreach}
+</ol>
+{/define}

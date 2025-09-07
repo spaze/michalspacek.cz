@@ -71,7 +71,7 @@ final class LocaleLinkGeneratorTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->localeLinkGenerator->links('Does:Not:exist');
-		}, InvalidLinkException::class, "Cannot load presenter 'Does:Not', class 'MichalSpacekCz\Does\Presenters\NotPresenter' was not found.");
+		}, InvalidLinkException::class, "Cannot load presenter 'Does:Not', class 'MichalSpacekCz\Presentation\Does\Not\NotPresenter' was not found.");
 	}
 
 
@@ -108,7 +108,7 @@ final class LocaleLinkGeneratorTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->localeLinkGenerator->allLinks('Exist:Does:not');
-		}, InvalidLinkException::class, "Cannot load presenter 'Exist:Does', class 'MichalSpacekCz\Exist\Presenters\DoesPresenter' was not found.");
+		}, InvalidLinkException::class, "Cannot load presenter 'Exist:Does', class 'MichalSpacekCz\Presentation\Exist\Does\DoesPresenter' was not found.");
 	}
 
 

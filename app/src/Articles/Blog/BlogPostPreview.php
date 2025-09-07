@@ -28,7 +28,7 @@ final readonly class BlogPostPreview
 	{
 		$this->texyFormatter->disableCache();
 		$post = $createPost();
-		$template->setFile(__DIR__ . '/../../Www/Presenters/templates/Post/default.latte');
+		$template->setFile(__DIR__ . '/../../Presentation/Www/Post/default.latte');
 		$template->post = $post;
 		$template->edits = $post->hasId() ? $post->getEdits() : [];
 		$template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
