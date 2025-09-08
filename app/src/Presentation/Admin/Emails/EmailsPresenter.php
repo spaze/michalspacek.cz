@@ -1,0 +1,50 @@
+<?php
+declare(strict_types = 1);
+
+namespace MichalSpacekCz\Presentation\Admin\Emails;
+
+use MichalSpacekCz\Form\TrainingMailsOutboxFormFactory;
+use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Presentation\Admin\BasePresenter;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Training\Mails\TrainingMails;
+
+final class EmailsPresenter extends BasePresenter
+{
+
+	/** @var array<int, TrainingApplication> */
+	private array $applications = [];
+
+
+	public function __construct(
+		private readonly TrainingMails $trainingMails,
+		private readonly TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory,
+	) {
+		parent::__construct();
+	}
+
+
+	public function actionDefault(): void
+	{
+		$this->applications = $this->trainingMails->getApplications();
+		$this->template->pageTitle = 'E-maily k odeslání';
+		$this->template->applications = $this->applications;
+	}
+
+
+	protected function createComponentMails(): UiForm
+	{
+		return $this->trainingMailsOutboxFactory->create(
+			function (int $sent): never {
+				if ($sent > 0) {
+					$this->flashMessage('Počet odeslaných e-mailů: ' . $sent);
+				} else {
+					$this->flashMessage('Nebyl odeslán žádný e-mail', 'notice');
+				}
+				$this->redirect('Homepage:');
+			},
+			$this->applications,
+		);
+	}
+
+}

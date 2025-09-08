@@ -4,7 +4,7 @@ php:
 application:
 	errorPresenter: Www:ErrorGeneric
 	mapping:
-		*: MichalSpacekCz\*\Presenters\*Presenter
+		*: MichalSpacekCz\Presentation\*\**Presenter
 
 http:
 	headers:
