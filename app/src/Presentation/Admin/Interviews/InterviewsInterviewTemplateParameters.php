@@ -4,16 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Interviews;
 
 use MichalSpacekCz\Interviews\Interview;
+use Nette\Utils\Html;
 
-final class DefaultTemplateParameters
+final class InterviewsInterviewTemplateParameters
 {
 
-	/**
-	 * @param list<Interview> $interviews
-	 */
 	public function __construct(
-		public string $pageTitle,
-		public array $interviews,
+		public Html $pageTitle,
+		public Interview $interview,
 	) {
 	}
 

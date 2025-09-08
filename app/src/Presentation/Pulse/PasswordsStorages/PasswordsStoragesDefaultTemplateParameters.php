@@ -8,17 +8,17 @@ use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 final class PasswordsStoragesDefaultTemplateParameters
 {
 
-	/**
-	 * @param array<string, string> $ratingGuide
-	 */
-	public function __construct(
-		public bool $isDetail,
-		public string $pageTitle,
-		public StorageRegistry $data,
-		public array $ratingGuide,
-		public bool $openSearchSort,
-		public ?string $canonicalLink,
-	) {
-	}
+	public bool $isDetail = false;
+
+	public ?string $pageTitle = null;
+
+	public ?StorageRegistry $data = null;
+
+	/** @var array<string, string> $ratingGuide */
+	public array $ratingGuide = [];
+
+	public bool $openSearchSort = false;
+
+	public ?string $canonicalLink = null;
 
 }

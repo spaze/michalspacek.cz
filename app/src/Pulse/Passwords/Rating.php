@@ -133,7 +133,7 @@ final class Rating
 	/**
 	 * Get rating guide.
 	 *
-	 * @return string[]
+	 * @return array<string, string>
 	 */
 	public function getRatingGuide(): array
 	{

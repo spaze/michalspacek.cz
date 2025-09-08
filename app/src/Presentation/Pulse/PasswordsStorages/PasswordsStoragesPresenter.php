@@ -20,6 +20,7 @@ final class PasswordsStoragesPresenter extends \MichalSpacekCz\Presentation\Www\
 	private ?string $rating = null;
 	private ?string $sort = null;
 	private ?string $search = null;
+	private PasswordsStoragesDefaultTemplateParameters $templateParameters;
 
 
 	public function __construct(
@@ -30,6 +31,7 @@ final class PasswordsStoragesPresenter extends \MichalSpacekCz\Presentation\Www\
 		private readonly PasswordHashingAlgorithms $passwordHashingAlgorithms,
 		private readonly PasswordHashingDisclosures $passwordHashingDisclosures,
 	) {
+		$this->templateParameters = new PasswordsStoragesDefaultTemplateParameters();
 		parent::__construct();
 	}
 
@@ -107,13 +109,14 @@ final class PasswordsStoragesPresenter extends \MichalSpacekCz\Presentation\Www\
 
 	private function setDefaultViewAndVars(string $pageTitle, bool $isDetail, bool $openSearchSort, ?string $canonicalLink, StorageRegistry $data): void
 	{
-		$this->template->pageTitle = $pageTitle;
-		$this->template->isDetail = $isDetail;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->openSearchSort = $openSearchSort;
-		$this->template->canonicalLink = $canonicalLink;
-		$this->template->data = $data;
+		$this->templateParameters->pageTitle = $pageTitle;
+		$this->templateParameters->isDetail = $isDetail;
+		$this->templateParameters->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->templateParameters->openSearchSort = $openSearchSort;
+		$this->templateParameters->canonicalLink = $canonicalLink;
+		$this->templateParameters->data = $data;
 		$this->setView('default');
+		$this->template->setParameters($this->templateParameters);
 	}
 
 

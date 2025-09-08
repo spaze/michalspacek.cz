@@ -32,8 +32,10 @@ final class InterviewsPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
-		$this->template->interviews = $this->interviews->getAll();
+		$this->template->setParameters(new InterviewsDefaultTemplateParameters(
+			$this->translator->translate('messages.title.interviews'),
+			$this->interviews->getAll(),
+		));
 	}
 
 
@@ -44,8 +46,10 @@ final class InterviewsPresenter extends BasePresenter
 		} catch (InterviewDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->getTitle())]);
+		$this->template->setParameters(new InterviewsInterviewTemplateParameters(
+			$this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->getTitle())]),
+			$this->interview,
+		));
 	}
 
 
