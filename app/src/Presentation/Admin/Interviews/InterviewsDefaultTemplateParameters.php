@@ -5,12 +5,15 @@ namespace MichalSpacekCz\Presentation\Admin\Interviews;
 
 use MichalSpacekCz\Interviews\Interview;
 
-final class InterviewTemplateParameters
+final class InterviewsDefaultTemplateParameters
 {
 
+	/**
+	 * @param list<Interview> $interviews
+	 */
 	public function __construct(
 		public string $pageTitle,
-		public Interview $interview,
+		public array $interviews,
 	) {
 	}
 

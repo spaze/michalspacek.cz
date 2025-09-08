@@ -108,13 +108,16 @@ final class PasswordsStoragesPresenter extends BasePresenter
 
 	private function setDefaultViewAndVars(string $pageTitle, bool $isDetail, bool $openSearchSort, ?string $canonicalLink, StorageRegistry $data): void
 	{
-		$this->template->pageTitle = $pageTitle;
-		$this->template->isDetail = $isDetail;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->openSearchSort = $openSearchSort;
-		$this->template->canonicalLink = $canonicalLink;
-		$this->template->data = $data;
+		$templateParameters = new PasswordsStoragesDefaultTemplateParameters(
+			$isDetail,
+			$pageTitle,
+			$data,
+			$this->passwordsRating->getRatingGuide(),
+			$openSearchSort,
+			$canonicalLink,
+		);
 		$this->setView('default');
+		$this->template->setParameters($templateParameters);
 	}
 
 
