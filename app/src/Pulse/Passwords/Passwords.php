@@ -298,9 +298,8 @@ final readonly class Passwords
 	 * Add password storage.
 	 *
 	 * @param ArrayHash<int|string> $values
-	 * @return bool True if storage added successfully
 	 */
-	public function addStorage(ArrayHash $values): bool
+	public function addStorage(ArrayHash $values): void
 	{
 		assert($values->company instanceof ArrayHash);
 		assert(is_int($values->company->id) || $values->company->id === null);
@@ -369,7 +368,6 @@ final readonly class Passwords
 			}
 		}
 		$this->database->commit();
-		return true;
 	}
 
 }

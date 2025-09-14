@@ -31,7 +31,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 
 
 	/**
-	 * @param callable(?string): void $onSuccess
+	 * @param callable(string): void $onSuccess
 	 */
 	public function create(callable $onSuccess, int $newDisclosures): UiForm
 	{
@@ -167,7 +167,8 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			$this->validatePasswordsStorages($form, $form->getFormValues());
 		};
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
-			$onSuccess($this->passwords->addStorage($form->getFormValues()) ? 'Password storage added successfully' : null);
+			$this->passwords->addStorage($form->getFormValues());
+			$onSuccess('Password storage added successfully');
 		};
 		return $form;
 	}
