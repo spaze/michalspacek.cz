@@ -24,7 +24,7 @@ final class ErrorPresenter extends BaseErrorPresenter
 	public function actionDefault(): never
 	{
 		$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
-		$this->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/templates/Error/notFound.html')));
+		$this->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/notFound.html')));
 	}
 
 }
