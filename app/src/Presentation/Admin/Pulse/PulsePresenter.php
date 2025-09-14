@@ -30,10 +30,8 @@ final class PulsePresenter extends BasePresenter
 	protected function createComponentAddPasswordsStorageAlgorithm(): UiForm
 	{
 		return $this->passwordsStoragesFormFactory->create(
-			function (?string $message): never {
-				if ($message !== null) {
-					$this->flashMessage($message);
-				}
+			function (string $message): never {
+				$this->flashMessage($message);
 				$this->redirect('this');
 			},
 			self::NEW_DISCLOSURES,

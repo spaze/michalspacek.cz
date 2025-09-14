@@ -205,7 +205,7 @@ class ReturnTypeHintSniff implements Sniff
 			? ($hasReturnAnnotation && !$isAnnotationReturnTypeVoidOrNever)
 			: FunctionHelper::returnsValue($phpcsFile, $functionPointer);
 
-		if ($returnsValue && !$hasReturnAnnotation) {
+		if (($returnsValue || $isAbstract) && !$hasReturnAnnotation) {
 			if (count($prefixedReturnAnnotations) !== 0) {
 				$this->reportUselessSuppress($phpcsFile, $functionPointer, $isSuppressedAnyTypeHint, $suppressNameAnyTypeHint);
 				return;
@@ -406,9 +406,12 @@ class ReturnTypeHintSniff implements Sniff
 				return;
 			}
 
-			$typeHintsWithConvertedUnion[$typeHintNo] = TypeHintHelper::isVoidTypeHint($typeHint)
-				? 'null'
-				: TypeHintHelper::convertLongSimpleTypeHintToShort($typeHint);
+			if (TypeHintHelper::isVoidTypeHint($typeHint) || TypeHintHelper::isNeverTypeHint($typeHint)) {
+				$this->reportUselessSuppress($phpcsFile, $functionPointer, $isSuppressedNativeTypeHint, $suppressNameNativeTypeHint);
+				return;
+			}
+
+			$typeHintsWithConvertedUnion[$typeHintNo] = TypeHintHelper::convertLongSimpleTypeHintToShort($typeHint);
 		}
 
 		if ($originalReturnTypeNode instanceof NullableTypeNode) {
@@ -711,14 +714,12 @@ class ReturnTypeHintSniff implements Sniff
 	 */
 	private function getTraversableTypeHints(): array
 	{
-		if ($this->normalizedTraversableTypeHints === null) {
-			$this->normalizedTraversableTypeHints = array_map(
-				static fn (string $typeHint): string => NamespaceHelper::isFullyQualifiedName($typeHint)
-						? $typeHint
-						: sprintf('%s%s', NamespaceHelper::NAMESPACE_SEPARATOR, $typeHint),
-				SniffSettingsHelper::normalizeArray($this->traversableTypeHints),
-			);
-		}
+		$this->normalizedTraversableTypeHints ??= array_map(
+			static fn (string $typeHint): string => NamespaceHelper::isFullyQualifiedName($typeHint)
+					? $typeHint
+					: sprintf('%s%s', NamespaceHelper::NAMESPACE_SEPARATOR, $typeHint),
+			SniffSettingsHelper::normalizeArray($this->traversableTypeHints),
+		);
 		return $this->normalizedTraversableTypeHints;
 	}
 

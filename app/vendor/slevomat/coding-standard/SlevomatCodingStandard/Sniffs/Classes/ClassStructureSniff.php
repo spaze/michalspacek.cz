@@ -11,7 +11,6 @@ use SlevomatCodingStandard\Helpers\ClassHelper;
 use SlevomatCodingStandard\Helpers\DocCommentHelper;
 use SlevomatCodingStandard\Helpers\FixerHelper;
 use SlevomatCodingStandard\Helpers\FunctionHelper;
-use SlevomatCodingStandard\Helpers\NamespaceHelper;
 use SlevomatCodingStandard\Helpers\PropertyHelper;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\StringHelper;
@@ -36,7 +35,6 @@ use function strtolower;
 use function substr;
 use const PREG_SPLIT_NO_EMPTY;
 use const T_ABSTRACT;
-use const T_ATTRIBUTE_END;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_CONST;
 use const T_ENUM_CASE;
@@ -241,7 +239,7 @@ class ClassStructureSniff implements Sniff
 				$group = self::GROUP_MAGIC_METHODS;
 			}
 
-			if ($groupsOrder[$group] >= ($groupsOrder[$expectedGroup] ?? 0)) {
+			if ($groupsOrder[$group] >= ($expectedGroup !== null ? $groupsOrder[$expectedGroup] : 0)) {
 				$groupsFirstMembers[$group] = $groupFirstMemberPointer;
 				$expectedGroup = $group;
 
@@ -499,35 +497,10 @@ class ClassStructureSniff implements Sniff
 	 */
 	private function getAttributeClassNamesForToken(File $phpcsFile, int $pointer): array
 	{
-		$tokens = $phpcsFile->getTokens();
-		$attributePointer = null;
 		$attributes = [];
 
-		while (true) {
-			$attributeEndPointerCandidate = TokenHelper::findPrevious(
-				$phpcsFile,
-				[T_ATTRIBUTE_END, T_SEMICOLON, T_CLOSE_CURLY_BRACKET, T_OPEN_CURLY_BRACKET],
-				$attributePointer ?? $pointer - 1,
-			);
-
-			if (
-				$attributeEndPointerCandidate === null
-				|| $tokens[$attributeEndPointerCandidate]['code'] !== T_ATTRIBUTE_END
-			) {
-				break;
-			}
-
-			$attributePointer = $tokens[$attributeEndPointerCandidate]['attribute_opener'];
-
-			foreach (AttributeHelper::getAttributes($phpcsFile, $attributePointer) as $attribute) {
-				$attributeClass = NamespaceHelper::resolveClassName(
-					$phpcsFile,
-					$attribute->getName(),
-					$attribute->getStartPointer(),
-				);
-				$attributeClass = ltrim($attributeClass, '\\');
-				$attributes[strtolower($attributeClass)] = $attributeClass;
-			}
+		foreach (AttributeHelper::getAttributes($phpcsFile, $pointer) as $attribute) {
+			$attributes[strtolower(ltrim($attribute->getFullyQualifiedName(), '\\'))] = $attribute->getFullyQualifiedName();
 		}
 
 		return $attributes;
@@ -658,9 +631,7 @@ class ClassStructureSniff implements Sniff
 	{
 		$startPointer = DocCommentHelper::findDocCommentOpenPointer($phpcsFile, $memberPointer - 1);
 		if ($startPointer === null) {
-			if ($previousMemberEndPointer === null) {
-				$previousMemberEndPointer = $this->findPreviousMemberEndPointer($phpcsFile, $memberPointer);
-			}
+			$previousMemberEndPointer ??= $this->findPreviousMemberEndPointer($phpcsFile, $memberPointer);
 
 			$startPointer = TokenHelper::findNextEffective($phpcsFile, $previousMemberEndPointer + 1);
 			assert($startPointer !== null);
