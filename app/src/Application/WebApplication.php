@@ -7,11 +7,10 @@ use MichalSpacekCz\EasterEgg\CrLfUrlInjections;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy;
 use MichalSpacekCz\Http\SecurityHeaders;
+use MichalSpacekCz\User\UserSessionAdditionalData;
 use Nette\Application\Application;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
-use Nette\Security\User;
-use Spaze\Session\MysqlSessionHandler;
 
 final readonly class WebApplication
 {
@@ -23,8 +22,7 @@ final readonly class WebApplication
 		private Application $application,
 		private CrLfUrlInjections $crLfUrlInjections,
 		private ResourceIsolationPolicy $resourceIsolationPolicy,
-		private User $user,
-		private MysqlSessionHandler $sessionHandler,
+		private UserSessionAdditionalData $userSessionAdditionalData,
 		private string $fqdn,
 	) {
 	}
@@ -38,18 +36,7 @@ final readonly class WebApplication
 		$this->application->onResponse[] = function (): void {
 			$this->securityHeaders->sendHeaders();
 		};
-
-		$this->user->onLoggedIn[] = function (User $user): void {
-			$identity = $user->getIdentity();
-			if ($identity !== null) {
-				$this->sessionHandler->setAdditionalData('key_user', $identity->getId());
-			}
-		};
-		$this->user->onLoggedOut[] = function (): void {
-			$this->sessionHandler->setAdditionalData('key_user', null);
-		};
-
-
+		$this->userSessionAdditionalData->init();
 		$this->application->run();
 	}
 
