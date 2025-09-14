@@ -4,26 +4,9 @@ Custom PHP session handler for [Nette Framework](http://nette.org/) that uses My
 
 ## Requirements
 
-- [nette/database](https://github.com/nette/database) 3.1+
-- [nette/di](https://github.com/nette/utils) 3.0+
-- [nette/utils](https://github.com/nette/utils) 3.2+
-- PHP 8.1+
-
-<details>
-<summary>Requirements for previous versions</summary>
-
-*Requirements for 2.2*
-- [nette/database](https://github.com/nette/database) 3.1+
-- [nette/di](https://github.com/nette/utils) 3.0+
-- [nette/utils](https://github.com/nette/utils) 3.2+
-- PHP 7.4+
-
-*Requirements for 2.1 (not supported anymore)*
-- [nette/database](https://github.com/nette/database) 2.4+
-- [nette/di](https://github.com/nette/utils) 2.4+
-- [nette/utils](https://github.com/nette/utils) 2.4+
-- PHP 7.2+
-</details>
+- [nette/database](https://github.com/nette/database) 3.2+
+- [nette/di](https://github.com/nette/di) 3.2+
+- PHP 8.2+
 
 ## Installation
 
@@ -75,11 +58,13 @@ Migration from unecrypted to encrypted session storage is not (yet?) supported.
 ### `onBeforeDataWrite`
 The event occurs before session data is written to the session table, both for a new session (when a new row is inserted) or an existing session (a row is updated), even if there's no change in the session data.
 
-You can add a new column by calling `setAdditionalData()` in the event handler:
+## Additional columns
+
+You can add a new column to the session table by calling `setAdditionalData()` in the event handler:
 ```
 setAdditionalData(string $key, $value): void
 ```
-Use it to store for example user id to which the session belongs to.
+Use it to store for example user id to which the session belongs to. See for example [this code](https://github.com/spaze/michalspacek.cz/blob/fbd438e8f4c1da658a88bc8c3bf5af59fcd063e6/app/src/Application/WebApplication.php#L42-L50) that uses the `Nette\Security\User::onLoggedIn` handler to do that.
 
 ## Credits
 

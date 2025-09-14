@@ -658,6 +658,7 @@ return array(
     'Nette\\Utils\\UnknownImageFileException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Utils\\Validators' => $vendorDir . '/nette/utils/src/Utils/Validators.php',
     'Spaze\\Session\\DI\\MysqlSessionHandlerExtension' => $vendorDir . '/spaze/mysql-session-handler/src/DI/MysqlSessionHandlerExtension.php',
+    'Spaze\\Session\\Exceptions\\SessionColumnUnexpectedTypeException' => $vendorDir . '/spaze/mysql-session-handler/src/Exceptions/SessionColumnUnexpectedTypeException.php',
     'Spaze\\Session\\MysqlSessionHandler' => $vendorDir . '/spaze/mysql-session-handler/src/MysqlSessionHandler.php',
     'Tester\\Assert' => $vendorDir . '/nette/tester/src/Framework/Assert.php',
     'Tester\\AssertException' => $vendorDir . '/nette/tester/src/Framework/AssertException.php',
