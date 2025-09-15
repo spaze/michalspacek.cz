@@ -98,6 +98,7 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer, @typedDatabase.pulse)
+	- MichalSpacekCz\Pulse\Error\PulseError
 	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.explorer, @typedDatabase.pulse)
