@@ -4,8 +4,9 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\EasterEgg;
+namespace EasterEgg\WinterIsComing;
 
+use MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
@@ -17,7 +18,7 @@ use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 final class WinterIsComingTest extends TestCase

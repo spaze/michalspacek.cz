@@ -3,7 +3,7 @@ services:
 	cliArgs:
 		type: MichalSpacekCz\Application\Cli\CliArgs
 		imported: true
-	- MichalSpacekCz\Application\Error
+	- MichalSpacekCz\Application\Error\AppError
 	- MichalSpacekCz\Application\LinkGenerator
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
@@ -38,9 +38,9 @@ services:
 	- MichalSpacekCz\DateTime\DateTimeParser
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory
 	- MichalSpacekCz\EasterEgg\CrLfUrlInjections
-	- MichalSpacekCz\EasterEgg\FourOhFourButFound
+	- MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
-	- MichalSpacekCz\EasterEgg\WinterIsComing
+	- MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing
 	- MichalSpacekCz\Feed\Exports
 	- MichalSpacekCz\Form\ChangePasswordFormFactory
 	- MichalSpacekCz\Form\Controls\FormControlsFactory
@@ -98,6 +98,7 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer, @typedDatabase.pulse)
+	- MichalSpacekCz\Pulse\Error\PulseError
 	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.explorer, @typedDatabase.pulse)

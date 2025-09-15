@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\EasterEgg\WinterIsComing;
+use MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSources;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;

@@ -3,8 +3,9 @@
 /** @noinspection PhpMissingParentConstructorInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\EasterEgg;
+namespace EasterEgg\FourOhFourButFound;
 
+use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\Http\Response;
@@ -13,7 +14,7 @@ use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 final class FourOhFourButFoundTest extends TestCase

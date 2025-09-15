@@ -3,10 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Pulse\Error;
 
-use MichalSpacekCz\Http\Robots\Robots;
-use MichalSpacekCz\Http\Robots\RobotsRule;
 use MichalSpacekCz\Presentation\Www\BaseErrorPresenter;
-use Nette\Application\Responses\TextResponse;
+use MichalSpacekCz\Pulse\Error\PulseError;
 
 final class ErrorPresenter extends BaseErrorPresenter
 {
@@ -15,16 +13,15 @@ final class ErrorPresenter extends BaseErrorPresenter
 
 
 	public function __construct(
-		private readonly Robots $robots,
+		private readonly PulseError $pulseError,
 	) {
 		parent::__construct();
 	}
 
 
-	public function actionDefault(): never
+	public function actionDefault(): void
 	{
-		$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
-		$this->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/notFound.html')));
+		$this->pulseError->action($this->sendResponse(...));
 	}
 
 }

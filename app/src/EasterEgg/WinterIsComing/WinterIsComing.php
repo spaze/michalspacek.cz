@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\EasterEgg;
+namespace MichalSpacekCz\EasterEgg\WinterIsComing;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -73,7 +73,7 @@ final class WinterIsComing
 		if (!$presenter instanceof Presenter) {
 			throw new ShouldNotHappenException(sprintf("This text input's form parent should be a %s but it's a %s", Presenter::class, get_debug_type($presenter)));
 		}
-		$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/templates/sqlSyntaxError.html')));
+		$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/sqlSyntaxError.html')));
 	}
 
 }
