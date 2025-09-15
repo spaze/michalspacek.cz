@@ -83,7 +83,7 @@ parameters:
 			allowIn:
 				- src/Application/ServerEnv.php
 				- tests/Application/ServerEnvTest.phpt
-				- tests/EasterEgg/FourOhFourButFoundTest.phpt
+				- tests/EasterEgg/FourOhFourButFound/FourOhFourButFoundTest.phpt
 	disallowedClasses:
 		-
 			class:

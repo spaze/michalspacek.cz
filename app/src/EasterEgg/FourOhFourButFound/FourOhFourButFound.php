@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\EasterEgg;
+namespace MichalSpacekCz\EasterEgg\FourOhFourButFound;
 
 use MichalSpacekCz\Application\ServerEnv;
 use MichalSpacekCz\Http\Robots\Robots;
@@ -14,8 +14,8 @@ final readonly class FourOhFourButFound
 {
 
 	private const array TEMPLATES = [
-		'?%ad' => __DIR__ . '/templates/phpCve20244577.html',
-		'/etc/passwd' => __DIR__ . '/templates/etcPasswd.html',
+		'?%ad' => __DIR__ . '/phpCve20244577.html',
+		'/etc/passwd' => __DIR__ . '/etcPasswd.html',
 	];
 
 

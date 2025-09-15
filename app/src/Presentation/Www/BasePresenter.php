@@ -8,7 +8,7 @@ use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
-use MichalSpacekCz\EasterEgg\FourOhFourButFound;
+use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use MichalSpacekCz\Form\ThemeFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Templating\DefaultTemplate;

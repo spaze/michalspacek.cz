@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\EasterEgg\FourOhFourButFound;
+use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 

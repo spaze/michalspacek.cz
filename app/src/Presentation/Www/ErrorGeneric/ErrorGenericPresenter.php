@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Www\ErrorGeneric;
 
-use MichalSpacekCz\Application\Error;
+use MichalSpacekCz\Application\Error\AppError;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Response;
@@ -13,7 +13,7 @@ final readonly class ErrorGenericPresenter implements IPresenter
 {
 
 	public function __construct(
-		private Error $error,
+		private AppError $error,
 	) {
 	}
 
