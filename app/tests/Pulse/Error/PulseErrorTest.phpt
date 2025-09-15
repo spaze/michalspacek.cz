@@ -32,7 +32,7 @@ final class PulseErrorTest extends TestCase
 		});
 		assert(is_string($sentResponse));
 		Assert::same('noindex, nofollow', $this->httpResponse->getHeader('X-Robots-Tag'));
-		Assert::contains('<title>Site not found!</title>', $sentResponse);
+		Assert::contains('<title>Page not found!</title>', $sentResponse);
 		Assert::contains('check your speling', $sentResponse);
 	}
 
