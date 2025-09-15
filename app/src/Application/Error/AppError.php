@@ -7,9 +7,8 @@ use MichalSpacekCz\Application\AppRequest;
 use Nette\Application\BadRequestException;
 use Nette\Application\Helpers;
 use Nette\Application\Request;
-use Nette\Application\Response;
-use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\Responses\ForwardResponse;
+use Nette\Application\Responses\TextResponse;
 use Tracy\ILogger;
 
 final readonly class AppError
@@ -22,7 +21,7 @@ final readonly class AppError
 	}
 
 
-	public function response(Request $request): Response
+	public function response(Request $request): ForwardResponse|TextResponse
 	{
 		$e = $this->appRequest->getException($request);
 
@@ -32,9 +31,7 @@ final readonly class AppError
 		}
 
 		$this->logger->log($e, ILogger::EXCEPTION);
-		return new CallbackResponse(function (): void {
-			require __DIR__ . '/appError.phtml';
-		});
+		return new TextResponse(file_get_contents(__DIR__ . '/appError.html'));
 	}
 
 }
