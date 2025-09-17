@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Application;
 use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Bootstrap\Configurator;
 use Nette\CommandLine\Parser;
 use Nette\DI\Container;
@@ -16,6 +17,7 @@ final class Bootstrap
 
 	private const string MODE_DEVELOPMENT = 'development';
 	private const string SITE_DIR = __DIR__ . '/../..';
+	private const string CACHE_DIR_CLI = '%tempDir%/cache-cli';
 	private const string DEBUG = '--debug';
 	private const string COLORS = '--colors';
 
@@ -40,6 +42,7 @@ final class Bootstrap
 		$container = self::createConfigurator(
 			$debugMode,
 			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
+			cacheDir: self::CACHE_DIR_CLI,
 		)->createContainer();
 		if ($cliArgs->getFlag(self::COLORS)) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
@@ -51,7 +54,7 @@ final class Bootstrap
 
 	public static function bootTest(): Container
 	{
-		$configurator = self::createConfigurator(true, finalConfig: self::SITE_DIR . '/config/tests.neon');
+		$configurator = self::createConfigurator(true, finalConfig: self::SITE_DIR . '/config/tests.neon', cacheDir: self::CACHE_DIR_CLI);
 		$configurator->addStaticParameters([
 			'wwwDir' => self::SITE_DIR . '/tests',
 		]);
@@ -79,7 +82,7 @@ final class Bootstrap
 	}
 
 
-	private static function createConfigurator(bool $debugMode, ?string $extraConfig = null, ?string $finalConfig = null): Configurator
+	private static function createConfigurator(bool $debugMode, ?string $extraConfig = null, ?string $finalConfig = null, ?string $cacheDir = null): Configurator
 	{
 		$configurator = new Configurator();
 		$configurator->addStaticParameters(['siteDir' => self::SITE_DIR]);
@@ -88,6 +91,9 @@ final class Bootstrap
 		$configurator->enableTracy(self::SITE_DIR . '/log');
 		$configurator->setTimeZone('Europe/Prague');
 		$configurator->setTempDirectory(self::SITE_DIR . '/temp');
+		if ($cacheDir !== null) {
+			self::setCacheDir($configurator, $cacheDir);
+		}
 
 		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig, $finalConfig), function (?string $path) {
 			return $path !== null && is_file($path);
@@ -116,6 +122,21 @@ final class Bootstrap
 			$cliArgsError = $e->getMessage();
 		}
 		return new CliArgs($cliArgsParsed ?? [], $cliArgsError);
+	}
+
+
+	private static function setCacheDir(Configurator $configurator, string $cacheDir): void
+	{
+		if (
+			isset($configurator->defaultExtensions['cache'])
+			&& is_array($configurator->defaultExtensions['cache'])
+			&& is_array($configurator->defaultExtensions['cache'][1])
+			&& is_string($configurator->defaultExtensions['cache'][1][0])
+		) {
+			$configurator->defaultExtensions['cache'][1][0] = $cacheDir;
+		} else {
+			throw new ShouldNotHappenException('$configurator->defaultExtensions[\'cache\'][1][0] is not a string');
+		}
 	}
 
 }

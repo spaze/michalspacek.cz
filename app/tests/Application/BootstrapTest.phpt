@@ -4,7 +4,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\Application\Cli\NoCliArgs;
+use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Caching\Storage;
+use Nette\Caching\Storages\DevNullStorage;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;
@@ -75,6 +79,33 @@ final class BootstrapTest extends TestCase
 			$container = Bootstrap::boot();
 		});
 		Assert::type(Container::class, $container);
+	}
+
+
+	public function testBootBootCliCacheDirs(): void
+	{
+		ServerEnv::setString('ENVIRONMENT', 'development');
+		$this->assertCacheDir(Bootstrap::boot(), '/temp/cache');
+		$this->assertCacheDir(Bootstrap::bootCli(NoCliArgs::class), '/temp/cache-cli');
+
+		$storage = Bootstrap::bootTest()->getByType(Storage::class);
+		Assert::type(DevNullStorage::class, $storage);
+	}
+
+
+	public function testBootTest(): void
+	{
+		ServerEnv::setString('ENVIRONMENT', 'development');
+		$storage = Bootstrap::bootTest()->getByType(Storage::class);
+		Assert::type(DevNullStorage::class, $storage);
+	}
+
+
+	private function assertCacheDir(Container $container, string $cacheDir): void
+	{
+		$dir = PrivateProperty::getValue($container->getByType(Storage::class), 'dir');
+		assert(is_string($dir));
+		Assert::true(str_ends_with($dir, $cacheDir), "'$dir' ends with '$cacheDir'");
 	}
 
 }
