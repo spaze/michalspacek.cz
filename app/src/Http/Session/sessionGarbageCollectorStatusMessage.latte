@@ -1,0 +1,8 @@
+{varType MichalSpacekCz\Http\Session\SessionGarbageCollectorStatus $status}
+<div class="flash error" n:if="$status->ok === false"><strong>
+	{icon trash} Session garbage collector:
+	{if $status->noStatus === true}Zatím žádný status{/if}
+	{if $status->multipleStatuses !== null}Vícero statusů ({$status->multipleStatuses}), měl by být jen jeden{/if}
+	{if $status->daysOld !== null}Status je příliš starý ({$status->daysOld} dní, {$status->gcTime}), garbage collector možná neběží{/if}
+	{if $status->message !== null}{$status->message}{/if}
+</strong></div>

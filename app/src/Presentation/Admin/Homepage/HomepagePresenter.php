@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\Homepage;
 
+use MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusMessage;
+use MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusMessageFactory;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesList;
@@ -31,6 +33,7 @@ final class HomepagePresenter extends BasePresenter
 		private readonly Certificates $certificates,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 		private readonly TlsCertificatesListFactory $tlsCertificatesListFactory,
+		private readonly SessionGarbageCollectorStatusMessageFactory $sessionGarbageCollectorStatusMessageFactory,
 	) {
 		parent::__construct();
 	}
@@ -69,6 +72,12 @@ final class HomepagePresenter extends BasePresenter
 	protected function createComponentTlsCertificatesList(): TlsCertificatesList
 	{
 		return $this->tlsCertificatesListFactory->create($this->certificates->getNewestWithWarnings());
+	}
+
+
+	protected function createComponentSessionGarbageCollectorStatusMessage(): SessionGarbageCollectorStatusMessage
+	{
+		return $this->sessionGarbageCollectorStatusMessageFactory->create();
 	}
 
 }
