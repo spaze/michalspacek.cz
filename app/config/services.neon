@@ -86,6 +86,9 @@ services:
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\Robots\Robots
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
+	- MichalSpacekCz\Http\Session\SessionGarbageCollector
+	- MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusFactory
+	- MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusMessageFactory
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
 	- MichalSpacekCz\Makefile\Makefile

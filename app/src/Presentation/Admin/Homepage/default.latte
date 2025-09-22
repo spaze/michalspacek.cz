@@ -1,5 +1,6 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{control sessionGarbageCollectorStatusMessage}
 <h2>Školení</h2>
 {control trainingApplicationsList}
 <h2>Certifikáty <small>vyžadující pozornost ({$certificatesWithWarningCount})</small></h2>
