@@ -1,0 +1,3 @@
+# Look for and purge old database sessions every 30 minutes
+# Symlink this file to /etc/cron.d
+12,42 * * * * www-user /srv/www/michalspacek.cz/app/bin/clean_sessions.php
