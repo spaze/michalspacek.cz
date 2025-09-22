@@ -3,8 +3,10 @@
 declare(strict_types = 1);
 
 /**
- * Deletes stale session database rows.
- * Run daily or so, depends on the session expiry times, using cron or systemd timers.
+ * Deletes stale session rows from the database.
+ *
+ * - Run daily or hourly via cron or a systemd timer (adjust the frequency to session expiry)
+ * - Execute as the web app user, e.g.: `sudo runuser --user www-data /path/to/clean_sessions.php`
  */
 
 namespace MichalSpacekCz\Bin;
