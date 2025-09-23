@@ -13,7 +13,7 @@ namespace MichalSpacekCz\Bin;
 
 use MichalSpacekCz\Application\Bootstrap;
 use MichalSpacekCz\Application\Cli\NoCliArgs;
-use MichalSpacekCz\Http\Session\SessionGarbageCollector;
+use MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollector;
 
 require __DIR__ . '/../vendor/autoload.php';
 
