@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\Homepage;
 
-use MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusMessage;
-use MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusMessageFactory;
+use MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusMessage;
+use MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusMessageFactory;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\CertificatesList\TlsCertificatesList;

@@ -2,11 +2,9 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace Http\Session;
+namespace MichalSpacekCz\Http\SessionGarbageCollector;
 
 use DateTimeImmutable;
-use MichalSpacekCz\Http\Session\SessionGarbageCollector;
-use MichalSpacekCz\Http\Session\SessionGarbageCollectorReturnCode;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;

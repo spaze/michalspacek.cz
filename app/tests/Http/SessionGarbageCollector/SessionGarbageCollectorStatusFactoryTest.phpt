@@ -2,11 +2,9 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace Http\Session;
+namespace MichalSpacekCz\Http\SessionGarbageCollector;
 
 use DateTime;
-use MichalSpacekCz\Http\Session\SessionGarbageCollectorReturnCode;
-use MichalSpacekCz\Http\Session\SessionGarbageCollectorStatusFactory;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;

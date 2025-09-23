@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Http\Session;
+namespace MichalSpacekCz\Http\SessionGarbageCollector;
 
 enum SessionGarbageCollectorReturnCode: int
 {
