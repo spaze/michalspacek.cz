@@ -69,8 +69,8 @@
 		"psalm/phar": "^6.0",
 		"roave/security-advisories": "dev-latest",
 		"shipmonk/composer-dependency-analyser": "^1.3",
-		"spaze/coding-standard": "^1.7.1",
-		"spaze/phpcs-phar": "^3.8",
+		"spaze/coding-standard": "^1.9",
+		"spaze/phpcs-phar": "^4.0",
 		"spaze/phpstan-disallowed-calls": "^4.0",
 		"spaze/phpstan-disallowed-calls-nette": "^3.0"
 	},

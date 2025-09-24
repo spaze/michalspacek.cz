@@ -19,7 +19,10 @@ class StandardsInstaller
 			foreach ($packages as $package) {
 				$paths[] = InstalledVersions::getInstallPath($package);
 			}
-			Config::setConfigData('installed_paths', implode(',', $paths), true);
+			// This seems to be the only way to programmatically set temporary config options in PHPCS 4.0+
+			$_SERVER['argv'][] = '--runtime-set';
+			$_SERVER['argv'][] = 'installed_paths';
+			$_SERVER['argv'][] = implode(',', $paths);
 		}
 	}
 

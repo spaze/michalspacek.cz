@@ -13,8 +13,8 @@
 		"dev"
 	],
 	"require": {
-		"php": "^7.2 || ^8.0",
-		"slevomat/coding-standard": "^8.18.1"
+		"php": "^7.4 || ^8.0",
+		"slevomat/coding-standard": "^8.23.0"
 	},
 	"require-dev": {
 		"ext-simplexml": "*"
