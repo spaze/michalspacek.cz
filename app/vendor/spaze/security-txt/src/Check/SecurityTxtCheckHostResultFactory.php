@@ -20,7 +20,6 @@ final readonly class SecurityTxtCheckHostResultFactory
 			$parseResult->getFileErrors(),
 			$parseResult->getFileWarnings(),
 			$parseResult->getSecurityTxt(),
-			$parseResult->isExpiresSoon(),
 			$parseResult->getSecurityTxt()->getExpires()?->isExpired(),
 			$parseResult->getSecurityTxt()->getExpires()?->inDays(),
 			$parseResult->isValid(),

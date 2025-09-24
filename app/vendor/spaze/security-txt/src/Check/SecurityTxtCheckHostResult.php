@@ -30,7 +30,6 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 		private array $fileErrors,
 		private array $fileWarnings,
 		private SecurityTxt $securityTxt,
-		private bool $expiresSoon,
 		private ?bool $isExpired,
 		private ?int $expiryDays,
 		private bool $isValid,
@@ -139,12 +138,6 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 	}
 
 
-	public function isExpiresSoon(): bool
-	{
-		return $this->expiresSoon;
-	}
-
-
 	public function getIsExpired(): ?bool
 	{
 		return $this->isExpired;
@@ -192,7 +185,6 @@ final readonly class SecurityTxtCheckHostResult implements JsonSerializable
 			'fileErrors' => $this->getFileErrors(),
 			'fileWarnings' => $this->getFileWarnings(),
 			'securityTxt' => $this->getSecurityTxt(),
-			'expiresSoon' => $this->isExpiresSoon(),
 			'expired' => $this->getIsExpired(),
 			'expiryDays' => $this->getExpiryDays(),
 			'valid' => $this->isValid(),

@@ -19,7 +19,6 @@ final readonly class SecurityTxtParseStringResult
 		private bool $isValid,
 		private bool $strictMode,
 		private ?int $expiresWarningThreshold,
-		private bool $expiresSoon,
 		private array $lineErrors,
 		private array $lineWarnings,
 		private SecurityTxtValidateResult $validateResult,
@@ -48,12 +47,6 @@ final readonly class SecurityTxtParseStringResult
 	public function getExpiresWarningThreshold(): ?int
 	{
 		return $this->expiresWarningThreshold;
-	}
-
-
-	public function isExpiresSoon(): bool
-	{
-		return $this->expiresSoon;
 	}
 
 

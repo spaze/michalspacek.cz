@@ -42,12 +42,6 @@ final readonly class SecurityTxtParseHostResult
 	}
 
 
-	public function isExpiresSoon(): bool
-	{
-		return $this->parseStringResult->isExpiresSoon();
-	}
-
-
 	/**
 	 * @return list<SecurityTxtSpecViolation>
 	 */

@@ -27,13 +27,13 @@ use function
  * This library makes heavy use of return-type declarations,
  * which are a PHP 7 only feature. Read more about them here:
  *
- * @ref http://php.net/manual/en/functions.returning-values.php#functions.returning-values.type-declaration
+ * @ref https://www.php.net/manual/en/functions.returning-values.php#functions.returning-values.type-declaration
  *
  * @package ParagonIE\Halite\Structure
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * file, You can obtain one at https://www.mozilla.org/en-US/MPL/2.0/.
  */
 class MerkleTree
 {
@@ -53,7 +53,7 @@ class MerkleTree
     /**
      * Instantiate a Merkle tree
      * 
-     * @param array<int, Node> $nodes
+     * @param Node ...$nodes
      */
     public function __construct(Node ...$nodes)
     {
@@ -84,7 +84,7 @@ class MerkleTree
     /**
      * Merkle Trees are immutable. Return a replacement with extra nodes.
      *
-     * @param array<int, Node> $nodes
+     * @param Node ...$nodes
      *
      * @return MerkleTree
      *
@@ -214,7 +214,6 @@ class MerkleTree
             $tmp = [];
             $j = 0;
             for ($i = 0; $i < $order; $i += 2) {
-                /** @var string $prev */
                 $curr = (string) ($hash[$i] ?? '');
                 if (empty($hash[$i + 1])) {
                     // @codeCoverageIgnoreStart

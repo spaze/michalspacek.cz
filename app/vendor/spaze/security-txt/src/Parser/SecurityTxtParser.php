@@ -13,6 +13,7 @@ use Spaze\SecurityTxt\Parser\FieldProcessors\CanonicalAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ContactAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\EncryptionAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckFieldFormat;
+use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckFieldValueExpiresSoon;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckMultipleFields;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresSetFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\FieldProcessor;
@@ -42,6 +43,8 @@ final class SecurityTxtParser
 
 	/** @var array<int<1, max>, list<SecurityTxtSpecViolation>> */
 	private array $lineWarnings = [];
+
+	private ?int $expiresWarningThreshold = null;
 
 
 	public function __construct(
@@ -74,6 +77,7 @@ final class SecurityTxtParser
 			new ExpiresCheckMultipleFields(),
 			new ExpiresCheckFieldFormat(),
 			new ExpiresSetFieldValue($this->expiresFactory),
+			new ExpiresCheckFieldValueExpiresSoon(fn(): ?int => $this->expiresWarningThreshold),
 		];
 		$this->fieldProcessors[SecurityTxtField::Hiring->value] = [
 			new HiringAddFieldValue(),
@@ -93,7 +97,6 @@ final class SecurityTxtParser
 	 */
 	private function processField(int $lineNumber, string $value, SecurityTxtField $field, SecurityTxt $securityTxt): void
 	{
-		$this->initFieldProcessors();
 		foreach ($this->fieldProcessors[$field->value] as $processor) {
 			try {
 				$processor->process($value, $securityTxt);
@@ -111,6 +114,8 @@ final class SecurityTxtParser
 	 */
 	public function parseString(string $contents, ?int $expiresWarningThreshold = null, bool $strictMode = false): SecurityTxtParseStringResult
 	{
+		$this->expiresWarningThreshold = $expiresWarningThreshold;
+		$this->initFieldProcessors();
 		$this->lineErrors = $this->lineWarnings = [];
 		$lines = $this->splitLines->splitLines($contents);
 		$securityTxtFields = array_combine(
@@ -146,15 +151,13 @@ final class SecurityTxtParser
 		}
 		$validateResult = $this->validator->validate($securityTxt);
 		$expires = $securityTxt->getExpires();
-		$expiresSoon = $expiresWarningThreshold !== null && $expires?->inDays() < $expiresWarningThreshold;
 		$hasErrors = $this->lineErrors !== [] || $validateResult->getErrors() !== [];
 		$hasWarnings = $this->lineWarnings !== [] || $validateResult->getWarnings() !== [];
 		return new SecurityTxtParseStringResult(
 			$securityTxt,
-			($expires === null || !$expires->isExpired()) && (!$strictMode || !$expiresSoon) && !$hasErrors && (!$strictMode || !$hasWarnings),
+			($expires === null || !$expires->isExpired()) && !$hasErrors && (!$strictMode || !$hasWarnings),
 			$strictMode,
-			$expiresWarningThreshold,
-			$expiresSoon,
+			$this->expiresWarningThreshold,
 			$this->lineErrors,
 			$this->lineWarnings,
 			$validateResult,
