@@ -20,9 +20,12 @@
 		<exclude name="PSR12.Classes.AnonClassDeclaration.CloseBraceAfterBody"/> <!-- 1 blank line checked by Squiz.WhiteSpace.FunctionSpacing.AfterLast -->
 		<exclude name="PSR12.Classes.OpeningBraceSpace.Found"/> <!-- 1 blank like required by Squiz.WhiteSpace.FunctionSpacing.BeforeFirst -->
 		<exclude name="PSR12.Files.DeclareStatement"/>
-		<exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
 		<exclude name="PSR12.Traits.UseDeclaration.BlankLineAfterLastUse"/> <!-- Checked by SlevomatCodingStandard.Classes.TraitUseSpacing -->
 		<exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace"/>
+	</rule>
+	<rule ref="PSR12.Files.FileHeader">
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterDocblockBlock"/>
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterTagBlock"/>
 	</rule>
 	<rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
 	<rule ref="SlevomatCodingStandard.Classes.BackedEnumTypeSpacing">

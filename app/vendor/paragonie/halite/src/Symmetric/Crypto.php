@@ -44,13 +44,13 @@ use function
  * This library makes heavy use of return-type declarations,
  * which are a PHP 7 only feature. Read more about them here:
  *
- * @ref http://php.net/manual/en/functions.returning-values.php#functions.returning-values.type-declaration
+ * @ref https://www.php.net/manual/en/functions.returning-values.php#functions.returning-values.type-declaration
  *
  * @package ParagonIE\Halite\Symmetric
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * file, You can obtain one at https://www.mozilla.org/en-US/MPL/2.0/.
  */
 final class Crypto
 {
@@ -60,7 +60,7 @@ final class Crypto
      * @throws Error
      * @codeCoverageIgnore
      */
-    final private function __construct()
+    private function __construct()
     {
         throw new Error('Do not instantiate');
     }
@@ -199,11 +199,7 @@ final class Crypto
 
            This uses salted HKDF to split the keys, which is why we need the
            salt in the first place. */
-        /**
-         * @var array<int, string> $split
-         * @var string $encKey
-         * @var string $authKey
-         */
+        /** @var array<int, string> $split */
         $split = Util::splitKeys($secretKey, $salt, $config);
         $encKey = $split[0];
         $authKey = $split[1];

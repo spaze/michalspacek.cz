@@ -236,6 +236,7 @@ parameters:
 				- vendor/async-aws/core/src/EnvVar.php
 				- vendor/nette/*.php
 				- vendor/php-parallel-lint/*.php
+				- vendor/spaze/phpcs-phar/src/StandardsInstaller.php
 				- vendor/spaze/security-txt/bin/checksecuritytxt.php
 				- vendor/symfony/*.php
 				- vendor/tracy/*.php

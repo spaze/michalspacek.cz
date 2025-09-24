@@ -39,9 +39,6 @@ final class SecurityTxtCheckHost
 	private array $onIsExpired = [];
 
 	/** @var list<callable(positive-int, DateTimeImmutable): void> */
-	private array $onExpiresSoon = [];
-
-	/** @var list<callable(positive-int, DateTimeImmutable): void> */
 	private array $onExpires = [];
 
 	/** @var list<callable(string): void> */
@@ -128,8 +125,6 @@ final class SecurityTxtCheckHost
 			$days = $expires->inDays();
 			if ($expires->isExpired()) {
 				$this->callOnCallback($this->onIsExpired, abs($days), $expires->getDateTime());
-			} elseif ($parseResult->isExpiresSoon()) {
-				$this->callOnCallback($this->onExpiresSoon, $days, $expires->getDateTime());
 			} else {
 				$this->callOnCallback($this->onExpires, $days, $expires->getDateTime());
 			}
@@ -239,15 +234,6 @@ final class SecurityTxtCheckHost
 	public function addOnIsExpired(callable $onIsExpired): void
 	{
 		$this->onIsExpired[] = $onIsExpired;
-	}
-
-
-	/**
-	 * @param callable(positive-int $inDays, DateTimeImmutable $expiryDate): void $onExpiresSoon
-	 */
-	public function addOnExpiresSoon(callable $onExpiresSoon): void
-	{
-		$this->onExpiresSoon[] = $onExpiresSoon;
 	}
 
 

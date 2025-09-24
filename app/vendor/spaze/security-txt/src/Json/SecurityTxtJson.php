@@ -265,9 +265,6 @@ final readonly class SecurityTxtJson
 			}
 			$securityTxtFields[$field] = $fieldValues;
 		}
-		if (!is_bool($values['expiresSoon'])) {
-			throw new SecurityTxtCannotParseJsonException('expiresSoon is not a bool');
-		}
 		if ($values['expired'] !== null && !is_bool($values['expired'])) {
 			throw new SecurityTxtCannotParseJsonException('expired is not an int');
 		}
@@ -293,7 +290,6 @@ final readonly class SecurityTxtJson
 			$this->createViolationsFromJsonValues(array_values($values['fileErrors'])),
 			$this->createViolationsFromJsonValues(array_values($values['fileWarnings'])),
 			$this->createSecurityTxtFromJsonValues($securityTxtFields),
-			$values['expiresSoon'],
 			$values['expired'],
 			$values['expiryDays'],
 			$values['valid'],

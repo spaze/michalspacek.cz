@@ -36,13 +36,13 @@ use function
  * This library makes heavy use of return-type declarations,
  * which are a PHP 7 only feature. Read more about them here:
  *
- * @ref http://php.net/manual/en/functions.returning-values.php#functions.returning-values.type-declaration
+ * @ref https://www.php.net/manual/en/functions.returning-values.php#functions.returning-values.type-declaration
  *
  * @package ParagonIE\Halite
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * file, You can obtain one at https://www.mozilla.org/en-US/MPL/2.0/.
  */
 final class Password
 {
@@ -120,7 +120,6 @@ final class Password
         if (Binary::safeStrlen($stored) < ((int) $config->SHORTEST_CIPHERTEXT_LENGTH * 4 / 3)) {
             throw new InvalidMessage('Encrypted password hash is too short.');
         }
-        /** @var string|bool $encoding */
         $encoding = $config->ENCODING;
 
         // First let's decrypt the hash
@@ -225,7 +224,6 @@ final class Password
                 'Encrypted password hash is too short.'
             );
         }
-        /** @var string|bool $encoding */
         $encoding = $config->ENCODING;
 
         // First let's decrypt the hash
