@@ -2432,12 +2432,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "e76f82161c7e9b68ed9ea8434e9ab19f22f16211"
+                "reference": "b926797a041e85a80ab51410c9eacb819edd5f55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/e76f82161c7e9b68ed9ea8434e9ab19f22f16211",
-                "reference": "e76f82161c7e9b68ed9ea8434e9ab19f22f16211",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/b926797a041e85a80ab51410c9eacb819edd5f55",
+                "reference": "b926797a041e85a80ab51410c9eacb819edd5f55",
                 "shasum": ""
             },
             "require-dev": {
@@ -2480,7 +2480,7 @@
                 "issues": "https://github.com/spaze/security-txt/issues",
                 "source": "https://github.com/spaze/security-txt/tree/main"
             },
-            "time": "2025-09-24T17:46:01+00:00"
+            "time": "2025-09-25T20:00:05+00:00"
         },
         {
             "name": "spaze/sri-macros",
@@ -3934,16 +3934,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.28",
+            "version": "2.1.29",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "578fa296a166605d97b94091f724f1257185d278"
+                "url": "https://github.com/phpstan/phpstan-phar-composer-source.git",
+                "reference": "git"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/578fa296a166605d97b94091f724f1257185d278",
-                "reference": "578fa296a166605d97b94091f724f1257185d278",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
+                "reference": "d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
                 "shasum": ""
             },
             "require": {
@@ -3988,7 +3988,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-19T08:58:49+00:00"
+            "time": "2025-09-25T06:58:18+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
