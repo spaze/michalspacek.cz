@@ -33,7 +33,7 @@ final readonly class ExpiresCheckFieldValueExpiresSoon implements FieldProcessor
 		}
 		$expiresWarningThreshold = ($this->expiresWarningThresholdCallback)();
 		if ($expiresWarningThreshold !== null && $expires->inDays() < $expiresWarningThreshold) {
-			throw new SecurityTxtWarning(new SecurityTxtExpiresSoon($expires->getValue(), $expires->inDays()));
+			throw new SecurityTxtWarning(new SecurityTxtExpiresSoon($expires->inDays()));
 		}
 	}
 

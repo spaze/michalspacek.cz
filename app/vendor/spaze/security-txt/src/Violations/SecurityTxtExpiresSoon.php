@@ -9,14 +9,14 @@ use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
 final class SecurityTxtExpiresSoon extends SecurityTxtSpecViolation
 {
 
-	public function __construct(string $expires, int $inDays)
+	public function __construct(int $inDays)
 	{
 		if ($inDays > 0) {
-			$format = 'The file will be considered stale in %s days (%s)';
-			$values = [(string)$inDays, $expires];
+			$format = 'The file will be considered stale in %s days';
+			$values = [(string)$inDays];
 		} else {
-			$format = 'The file will be considered stale later today (%s)';
-			$values = [$expires];
+			$format = 'The file will be considered stale later today';
+			$values = [];
 		}
 		parent::__construct(
 			func_get_args(),

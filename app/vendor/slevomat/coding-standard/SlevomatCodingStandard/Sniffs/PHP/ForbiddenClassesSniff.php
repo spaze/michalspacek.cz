@@ -211,13 +211,29 @@ class ForbiddenClassesSniff implements Sniff
 	 */
 	private function getAllReferences(File $phpcsFile, int $startPointer, int $endPointer): array
 	{
+		$tokens = $phpcsFile->getTokens();
+
 		// Always ignore first token
 		$startPointer++;
 		$references = [];
 
 		while ($startPointer < $endPointer) {
-			$referencePointer = TokenHelper::findNext($phpcsFile, TokenHelper::NAME_TOKEN_CODES, $startPointer);
-			$reference = $phpcsFile->getTokens()[$referencePointer]['content'];
+			$referencePointer = TokenHelper::findNext(
+				$phpcsFile,
+				[...TokenHelper::CLASS_KEYWORD_CODES, ...TokenHelper::NAME_TOKEN_CODES],
+				$startPointer,
+			);
+
+			if ($referencePointer === null) {
+				break;
+			}
+
+			if (in_array($tokens[$referencePointer]['code'], TokenHelper::CLASS_KEYWORD_CODES, true)) {
+				$startPointer = $referencePointer + 1;
+				continue;
+			}
+
+			$reference = $tokens[$referencePointer]['content'];
 
 			if (
 				strlen($reference) !== 0
