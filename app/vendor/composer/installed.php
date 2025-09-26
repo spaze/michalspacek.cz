@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd7b47776b0b3564194f5dd520787a4fe2997f51e',
+        'reference' => '47bf3f73dfe5accfe0c997a9969f0d741ea0ca8c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -475,9 +475,9 @@
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
-            'pretty_version' => '8.23.0',
-            'version' => '8.23.0.0',
-            'reference' => 'ba476e9c5dd52107acb17e33a70034d65f380847',
+            'pretty_version' => '8.24.0',
+            'version' => '8.24.0.0',
+            'reference' => '08e7989c0351f3f38b82172838195c35d9819efa',
             'type' => 'phpcodesniffer-standard',
             'install_path' => __DIR__ . '/../slevomat/coding-standard',
             'aliases' => array(),
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd7b47776b0b3564194f5dd520787a4fe2997f51e',
+            'reference' => '47bf3f73dfe5accfe0c997a9969f0d741ea0ca8c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b926797a041e85a80ab51410c9eacb819edd5f55',
+            'reference' => 'd6d3552c02969e7a0f3c3e7443da2ad046f005a0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(

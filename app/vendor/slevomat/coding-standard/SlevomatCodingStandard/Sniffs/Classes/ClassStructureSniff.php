@@ -208,7 +208,7 @@ class ClassStructureSniff implements Sniff
 	 */
 	public function register(): array
 	{
-		return array_values(Tokens::$ooScopeTokens);
+		return array_values(Tokens::OO_SCOPE_TOKENS);
 	}
 
 	public function process(File $phpcsFile, int $pointer): int
@@ -427,6 +427,12 @@ class ClassStructureSniff implements Sniff
 						if ($method === $methodNamePrefix || !StringHelper::startsWith($method, $methodNamePrefix)) {
 							continue;
 						}
+					} elseif (StringHelper::startsWith($requiredName, '*')) {
+						$methodNameSuffix = substr($requiredName, 1);
+
+						if ($method === $methodNameSuffix || !StringHelper::endsWith($method, $methodNameSuffix)) {
+							continue;
+						}
 					} elseif ($method !== $requiredName) {
 						continue;
 					}
@@ -512,7 +518,7 @@ class ClassStructureSniff implements Sniff
 		$previousPointer = $pointer - 1;
 
 		$endTokenCodes = [T_OPEN_CURLY_BRACKET, T_CLOSE_CURLY_BRACKET, T_SEMICOLON];
-		$tokenCodesToSearch = [...array_values(Tokens::$scopeModifiers), ...$endTokenCodes];
+		$tokenCodesToSearch = [...array_values(Tokens::SCOPE_MODIFIERS), ...$endTokenCodes];
 
 		do {
 			$previousPointer = TokenHelper::findPrevious($phpcsFile, $tokenCodesToSearch, $previousPointer - 1);
@@ -580,7 +586,7 @@ class ClassStructureSniff implements Sniff
 
 	private function getParentClassName(File $phpcsFile, int $pointer): string
 	{
-		$classPointer = TokenHelper::findPrevious($phpcsFile, Tokens::$ooScopeTokens, $pointer - 1);
+		$classPointer = TokenHelper::findPrevious($phpcsFile, Tokens::OO_SCOPE_TOKENS, $pointer - 1);
 		assert($classPointer !== null);
 
 		return ClassHelper::getName($phpcsFile, $classPointer);

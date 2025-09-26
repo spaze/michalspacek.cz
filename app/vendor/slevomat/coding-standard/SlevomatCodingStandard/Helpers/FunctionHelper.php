@@ -156,7 +156,7 @@ class FunctionHelper
 			return false;
 		}
 		$lastFunctionPointerCondition = array_pop($functionPointerConditions);
-		return in_array($lastFunctionPointerCondition, Tokens::$ooScopeTokens, true);
+		return in_array($lastFunctionPointerCondition, Tokens::OO_SCOPE_TOKENS, true);
 	}
 
 	public static function findClassPointer(File $phpcsFile, int $functionPointer): ?int
@@ -168,7 +168,7 @@ class FunctionHelper
 		}
 
 		foreach (array_reverse($tokens[$functionPointer]['conditions'], true) as $conditionPointer => $conditionTokenCode) {
-			if (!in_array($conditionTokenCode, Tokens::$ooScopeTokens, true)) {
+			if (!in_array($conditionTokenCode, Tokens::OO_SCOPE_TOKENS, true)) {
 				continue;
 			}
 
@@ -287,12 +287,9 @@ class FunctionHelper
 
 		$nextPointer = TokenHelper::findNextEffective($phpcsFile, $tokens[$functionPointer]['parenthesis_closer'] + 1);
 
-		if ($tokens[$nextPointer]['code'] === T_USE) {
-			$useParenthesisOpener = TokenHelper::findNextEffective($phpcsFile, $nextPointer + 1);
-			$colonPointer = TokenHelper::findNextEffective($phpcsFile, $tokens[$useParenthesisOpener]['parenthesis_closer'] + 1);
-		} else {
-			$colonPointer = $nextPointer;
-		}
+		$colonPointer = $tokens[$nextPointer]['code'] === T_USE
+			? TokenHelper::findNextEffective($phpcsFile, $tokens[$nextPointer]['parenthesis_closer'] + 1)
+			: $nextPointer;
 
 		if ($tokens[$colonPointer]['code'] !== T_COLON) {
 			return null;
@@ -494,7 +491,7 @@ class FunctionHelper
 		for ($position = $tokenOpenerPosition; $position <= $tokenCloserPosition - 1; $position++) {
 			$token = $tokens[$position];
 			if ($includeComments === false) {
-				if (in_array($token['code'], Tokens::$commentTokens, true)) {
+				if (in_array($token['code'], Tokens::COMMENT_TOKENS, true)) {
 					if (
 						$previousIncludedPosition !== null &&
 						substr_count($token['content'], $file->eolChar) > 0 &&
