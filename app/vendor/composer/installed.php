@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '47bf3f73dfe5accfe0c997a9969f0d741ea0ca8c',
+        'reference' => '4757ba299359c6cbe525816604d451e3be82b2c8',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -392,9 +392,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-strict-rules' => array(
-            'pretty_version' => '2.0.6',
-            'version' => '2.0.6.0',
-            'reference' => 'f9f77efa9de31992a832ff77ea52eb42d675b094',
+            'pretty_version' => '2.0.7',
+            'version' => '2.0.7.0',
+            'reference' => 'd6211c46213d4181054b3d77b10a5c5cb0d59538',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../phpstan/phpstan-strict-rules',
             'aliases' => array(),
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '47bf3f73dfe5accfe0c997a9969f0d741ea0ca8c',
+            'reference' => '4757ba299359c6cbe525816604d451e3be82b2c8',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd6d3552c02969e7a0f3c3e7443da2ad046f005a0',
+            'reference' => '01562512d74a05384b25f9b5c539d2e8eee5cd23',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(

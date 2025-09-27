@@ -2432,12 +2432,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "d6d3552c02969e7a0f3c3e7443da2ad046f005a0"
+                "reference": "01562512d74a05384b25f9b5c539d2e8eee5cd23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/d6d3552c02969e7a0f3c3e7443da2ad046f005a0",
-                "reference": "d6d3552c02969e7a0f3c3e7443da2ad046f005a0",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/01562512d74a05384b25f9b5c539d2e8eee5cd23",
+                "reference": "01562512d74a05384b25f9b5c539d2e8eee5cd23",
                 "shasum": ""
             },
             "require-dev": {
@@ -2480,7 +2480,7 @@
                 "issues": "https://github.com/spaze/security-txt/issues",
                 "source": "https://github.com/spaze/security-txt/tree/main"
             },
-            "time": "2025-09-25T23:33:20+00:00"
+            "time": "2025-09-27T01:00:35+00:00"
         },
         {
             "name": "spaze/sri-macros",
@@ -4101,21 +4101,21 @@
         },
         {
             "name": "phpstan/phpstan-strict-rules",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-strict-rules.git",
-                "reference": "f9f77efa9de31992a832ff77ea52eb42d675b094"
+                "reference": "d6211c46213d4181054b3d77b10a5c5cb0d59538"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/f9f77efa9de31992a832ff77ea52eb42d675b094",
-                "reference": "f9f77efa9de31992a832ff77ea52eb42d675b094",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/d6211c46213d4181054b3d77b10a5c5cb0d59538",
+                "reference": "d6211c46213d4181054b3d77b10a5c5cb0d59538",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^2.0.4"
+                "phpstan/phpstan": "^2.1.29"
             },
             "require-dev": {
                 "php-parallel-lint/php-parallel-lint": "^1.2",
@@ -4143,9 +4143,9 @@
             "description": "Extra strict and opinionated rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-strict-rules/issues",
-                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.6"
+                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.7"
             },
-            "time": "2025-07-21T12:19:29+00:00"
+            "time": "2025-09-26T11:19:08+00:00"
         },
         {
             "name": "psalm/phar",
