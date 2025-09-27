@@ -201,7 +201,9 @@ final class SecurityTxtFetcher
 			if ($topLevelContents === null) {
 				throw new LogicException('This should not happen');
 			}
-			$warnings[] = new SecurityTxtTopLevelDiffers($wellKnownContents, $topLevelContents);
+			if ($wellKnown->getFinalUrl() !== $topLevel->getFinalUrl()) {
+				$warnings[] = new SecurityTxtTopLevelDiffers($wellKnownContents, $topLevelContents);
+			}
 			$result = $wellKnown;
 			$contents = $wellKnownContents;
 		} else {
