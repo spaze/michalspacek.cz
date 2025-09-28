@@ -37,7 +37,7 @@
 	<tr>
 		<td colspan="2"></td>
 		<td colspan="6"><small>
-				CN: {if $cert->getCommonName() !== null}{$cert->getCommonName()}{else}<em>missing</em>{/if};
+				CN: {if $cert->getCommonName() !== null}{$cert->getCommonName()}{else}<em>missing</em>{/if}<br>
 				SAN:
 				{if $cert->getSubjectAlternativeNames() !== null}
 					{foreach $cert->getSubjectAlternativeNames() as $san}{$san}{sep}, {/sep}{else}<em>empty</em>{/foreach}
