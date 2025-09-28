@@ -66,8 +66,6 @@ contentSecurityPolicy:
 			trusted-types:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
-		webleed.*.*:
-			@extends: www.*.*
 		pulse.*.*:
 			@extends: www.*.*
 		upckeys.*.*:

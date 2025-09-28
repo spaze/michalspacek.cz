@@ -45,8 +45,8 @@ services:
 	- MichalSpacekCz\Presentation\Admin\User\UserPresenter
 	- MichalSpacekCz\Presentation\Admin\WellKnown\WellKnownPresenter
 
-	# webleed module
-	- MichalSpacekCz\Presentation\Webleed\Homepage\HomepagePresenter
+	# heartbleed module
+	- MichalSpacekCz\Presentation\Heartbleed\Homepage\HomepagePresenter
 
 	# upc module
 	- MichalSpacekCz\Presentation\UpcKeys\Homepage\HomepagePresenter

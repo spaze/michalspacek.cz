@@ -16,7 +16,7 @@ final class RouterFactory
 
 	private const string MODULE_ADMIN = 'Admin';
 	private const string MODULE_API = 'Api';
-	private const string MODULE_HEARTBLEED = 'Webleed';
+	private const string MODULE_HEARTBLEED = 'Heartbleed';
 	private const string MODULE_PULSE = 'Pulse';
 	private const string MODULE_UPC = 'UpcKeys';
 	private const string MODULE_WWW = 'Www';
