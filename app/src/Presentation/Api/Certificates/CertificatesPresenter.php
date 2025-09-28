@@ -46,7 +46,7 @@ final class CertificatesPresenter extends BasePresenter
 	public function actionLogIssued(): void
 	{
 		$string = $this->httpInput->getPostString('certificate');
-		if ($string === null) {
+		if ($string === null || $string === '') {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'No certificate sent']);
 		}
 		$name = $this->httpInput->getPostString('name');
