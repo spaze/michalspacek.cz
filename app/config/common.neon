@@ -92,7 +92,7 @@ subresourceIntegrity:
 		screen-main-dark: /i/css/screen-dark.css
 		screen-upc: /i/css/upc/screen.css
 		screen-pulse: /i/css/pulse/screen.css
-		screen-webleed: /i/css/webleed/screen.css
+		screen-heartbleed: /i/css/pulse/heartbleed.css
 		info-admin: ../../vendor/spaze/phpinfo/src/assets/info.css
 
 sessionHandler:

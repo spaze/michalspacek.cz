@@ -33,9 +33,6 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 			style-src:
 				- "'unsafe-inline'"
 			require-trusted-types-for:
-		webleed.*.*:
-			script-src:
-				-"'self'"
 		pulse.*.*:
 			script-src:
 				-"'self'"

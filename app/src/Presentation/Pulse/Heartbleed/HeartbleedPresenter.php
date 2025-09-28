@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Presentation\Webleed\Homepage;
+namespace MichalSpacekCz\Presentation\Pulse\Heartbleed;
 
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use Nette\Utils\Html;
 
-final class HomepagePresenter extends BasePresenter
+final class HeartbleedPresenter extends BasePresenter
 {
 
 	public function actionDefault(): void
