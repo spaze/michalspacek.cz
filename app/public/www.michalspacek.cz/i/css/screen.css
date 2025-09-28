@@ -313,7 +313,7 @@ tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 .discarded, #statuses .discarded, .lighter { opacity: 0.3; }
 .discarded:hover, #statuses .discarded:hover { opacity: 0.7; }
 #certificates thead th { text-align: left; }
-#certificates tbody tr:last-child td {
+#certificates tbody tr.certificateDetails td {
 	padding-top: 0;
 	padding-bottom: 3px;
 	font-size: smaller;
