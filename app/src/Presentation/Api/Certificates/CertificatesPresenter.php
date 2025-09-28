@@ -10,6 +10,8 @@ use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Security\AuthenticationException;
 use Override;
+use Throwable;
+use Tracy\Debugger;
 
 final class CertificatesPresenter extends BasePresenter
 {
@@ -55,13 +57,16 @@ final class CertificatesPresenter extends BasePresenter
 		try {
 			$cert = $this->certificateFactory->fromString($name, $string);
 			$this->certificates->log($cert);
-			$this->sendJson([
-				'status' => 'ok',
-				'statusMessage' => 'Certificate reported successfully',
-			]);
 		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
+		} catch (Throwable $e) {
+			Debugger::log($e, Debugger::EXCEPTION);
+			$this->sendJson(['status' => 'error', 'statusMessage' => 'Certificate processing failed']);
 		}
+		$this->sendJson([
+			'status' => 'ok',
+			'statusMessage' => 'Certificate reported successfully',
+		]);
 	}
 
 }
