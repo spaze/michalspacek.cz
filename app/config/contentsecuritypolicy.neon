@@ -31,6 +31,7 @@ contentSecurityPolicy:
 				- "'sha256-I7m+VqBh+S5t75VVGkOHq12SfWTlXYaAeJSSaMfaqkc='"
 				- %domain.contentSecurityPolicySelf%
 				- "'report-sample'"
+				- "'report-sha256'"
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			base-uri: "'none'"
