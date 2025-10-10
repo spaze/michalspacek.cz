@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /out/
+Disallow: /*?do=*
 Disallow: /admin
 Disallow: /info.php
 Disallow: /nette.micro
