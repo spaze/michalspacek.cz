@@ -75,6 +75,7 @@ final class ArticlesMock extends Articles
 
 	/**
 	 * @return list<BlogPost>
+	 * @throws void
 	 */
 	#[Override]
 	public function getAll(?int $limit = null): array

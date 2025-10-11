@@ -14,6 +14,9 @@ final class NullMailer implements Mailer
 	private ?Message $mail = null;
 
 
+	/**
+	 * @throws void
+	 */
 	#[Override]
 	public function send(Message $mail): void
 	{

@@ -15,6 +15,9 @@ final class NullSession extends Session
 	private string $id = '';
 
 
+	/**
+	 * @throws void
+	 */
 	#[Override]
 	public function start(): void
 	{
