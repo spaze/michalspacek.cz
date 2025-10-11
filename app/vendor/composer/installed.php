@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8baa5706a33e89f591025039660f3408f51b99b0',
+        'reference' => '4499a3480c1a484afd0fb1048d6cbebd5f609bbc',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -365,9 +365,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.1.30',
-            'version' => '2.1.30.0',
-            'reference' => 'a4a7f159927983dd4f7c8020ed227d80b7f39d7d',
+            'pretty_version' => '2.1.31',
+            'version' => '2.1.31.0',
+            'reference' => 'ead89849d879fe203ce9292c6ef5e7e76f867b96',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -457,7 +457,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '60ac6a710b7b0527786041ba96200bd49aa8de7e',
+            'reference' => '79c1c038b063d5cdbdc7fc954eb8d7d1e1886f6e',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8baa5706a33e89f591025039660f3408f51b99b0',
+            'reference' => '4499a3480c1a484afd0fb1048d6cbebd5f609bbc',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '01562512d74a05384b25f9b5c539d2e8eee5cd23',
+            'reference' => 'd618cf45f44360ada05a0c441356ddac19f4f20d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(

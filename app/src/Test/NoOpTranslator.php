@@ -15,6 +15,7 @@ final class NoOpTranslator extends Translator
 
 	/**
 	 * @param list<string> $availableLocales
+	 * @throws void
 	 * @phpstan-ignore constructor.missingParentCall
 	 */
 	public function __construct(
@@ -66,6 +67,9 @@ final class NoOpTranslator extends Translator
 	}
 
 
+	/**
+	 * @throws void
+	 */
 	#[Override]
 	public function setFallbackLocales(array $locales): void
 	{

@@ -84,6 +84,11 @@
 				<referencedProperty name="Nette\Forms\Form::$httpRequest" /> <!-- Marked as @internal -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
+		<ReservedWord>
+			<errorLevel type="suppress">
+				<directory name="src/Test" /> <!-- The void keyword is reported in @throws void -->
+			</errorLevel>
+		</ReservedWord>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
