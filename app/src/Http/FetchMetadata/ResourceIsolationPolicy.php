@@ -31,21 +31,8 @@ final readonly class ResourceIsolationPolicy
 			if ($presenter instanceof Presenter) {
 				$presenter->onStartup[] = function () use ($presenter): void {
 					if (!$this->isRequestAllowed($presenter)) {
-						if ($this->reportOnly) {
-							$headers = [];
-							foreach ($this->fetchMetadata->getAllHeaders() as $header => $value) {
-								$headers[] = sprintf('%s: %s', $header, $value ?? '[not sent]');
-							}
-							$message = sprintf(
-								'%s %s; action: %s; param names: %s; headers: %s',
-								$this->httpRequest->getMethod(),
-								$this->httpRequest->getUrl()->getAbsoluteUrl(),
-								$presenter->getAction(true),
-								implode(', ', array_keys($presenter->getParameters())),
-								implode(', ', $headers),
-							);
-							Debugger::log($message, 'cross-site');
-						} else {
+						$this->logRequest($presenter);
+						if (!$this->reportOnly) {
 							$presenter->forward(':Www:Forbidden:', ['message' => 'messages.forbidden.crossSite']);
 						}
 					}
@@ -103,6 +90,24 @@ final readonly class ResourceIsolationPolicy
 		}
 		$attributes = $method->getAttributes(ResourceIsolationPolicyCrossSite::class);
 		return $attributes !== [];
+	}
+
+
+	private function logRequest(Presenter $presenter): void
+	{
+		$headers = [];
+		foreach ($this->fetchMetadata->getAllHeaders() as $header => $value) {
+			$headers[] = sprintf('%s: %s', $header, $value ?? '[not sent]');
+		}
+		$message = sprintf(
+			'%s %s; action: %s; param names: %s; headers: %s',
+			$this->httpRequest->getMethod(),
+			$this->httpRequest->getUrl()->getAbsoluteUrl(),
+			$presenter->getAction(true),
+			implode(', ', array_keys($presenter->getParameters())),
+			implode(', ', $headers),
+		);
+		Debugger::log($message, 'cross-site');
 	}
 
 }
