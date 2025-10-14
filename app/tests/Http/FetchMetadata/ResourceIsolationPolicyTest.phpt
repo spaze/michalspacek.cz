@@ -63,6 +63,7 @@ final class ResourceIsolationPolicyTest extends TestCase
 	{
 		$this->logger->reset();
 		$this->application->onPresenter = [];
+		$this->httpRequest->resetHeaders();
 	}
 
 
@@ -79,8 +80,9 @@ final class ResourceIsolationPolicyTest extends TestCase
 	{
 		$this->installPolicy(true);
 		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, 'cross-site');
+		$this->httpRequest->setHeader('User-Agent', 'Chrome/123');
 		$this->callPresenterAction();
-		Assert::same(['GET /; action: :Www:Homepage:default; param names: foo, waldo; headers: Sec-Fetch-Dest: [not sent], Sec-Fetch-Mode: [not sent], Sec-Fetch-Site: cross-site, Sec-Fetch-User: [not sent]'], $this->logger->getLogged());
+		Assert::same(['GET /; action: :Www:Homepage:default; param names: foo, waldo; headers: Sec-Fetch-Dest: [not sent], Sec-Fetch-Mode: [not sent], Sec-Fetch-Site: cross-site, Sec-Fetch-User: [not sent]; user agent: Chrome/123'], $this->logger->getLogged());
 		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
 	}
 
@@ -113,7 +115,7 @@ final class ResourceIsolationPolicyTest extends TestCase
 		$content = $this->callPresenterAction();
 		Assert::notContains('messages.homepage.aboutme', $content);
 		Assert::contains('messages.forbidden.crossSite', $content);
-		Assert::same(['GET /; action: :Www:Homepage:default; param names: foo, waldo; headers: Sec-Fetch-Dest: [not sent], Sec-Fetch-Mode: [not sent], Sec-Fetch-Site: cross-site, Sec-Fetch-User: [not sent]',], $this->logger->getLogged());
+		Assert::same(['GET /; action: :Www:Homepage:default; param names: foo, waldo; headers: Sec-Fetch-Dest: [not sent], Sec-Fetch-Mode: [not sent], Sec-Fetch-Site: cross-site, Sec-Fetch-User: [not sent]; user agent: [not sent]'], $this->logger->getLogged());
 		Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode());
 	}
 

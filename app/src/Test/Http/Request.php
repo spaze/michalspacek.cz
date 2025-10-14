@@ -239,4 +239,10 @@ final class Request implements IRequest
 		$this->sameSite = $sameSite;
 	}
 
+
+	public function resetHeaders(): void
+	{
+		$this->headers = [];
+	}
+
 }

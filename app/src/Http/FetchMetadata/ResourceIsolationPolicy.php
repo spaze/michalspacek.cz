@@ -95,17 +95,19 @@ final readonly class ResourceIsolationPolicy
 
 	private function logRequest(Presenter $presenter): void
 	{
+		$placeholder = '[not sent]';
 		$headers = [];
 		foreach ($this->fetchMetadata->getAllHeaders() as $header => $value) {
-			$headers[] = sprintf('%s: %s', $header, $value ?? '[not sent]');
+			$headers[] = sprintf('%s: %s', $header, $value ?? $placeholder);
 		}
 		$message = sprintf(
-			'%s %s; action: %s; param names: %s; headers: %s',
+			'%s %s; action: %s; param names: %s; headers: %s; user agent: %s',
 			$this->httpRequest->getMethod(),
 			$this->httpRequest->getUrl()->getAbsoluteUrl(),
 			$presenter->getAction(true),
 			implode(', ', array_keys($presenter->getParameters())),
 			implode(', ', $headers),
+			$this->httpRequest->getHeader('User-Agent') ?? $placeholder,
 		);
 		Debugger::log($message, 'cross-site');
 	}
