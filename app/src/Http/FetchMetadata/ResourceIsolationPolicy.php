@@ -20,7 +20,7 @@ final readonly class ResourceIsolationPolicy
 		private FetchMetadata $fetchMetadata,
 		private IRequest $httpRequest,
 		private Application $application,
-		private bool $reportOnly,
+		private bool $reportOnly = false,
 	) {
 	}
 
