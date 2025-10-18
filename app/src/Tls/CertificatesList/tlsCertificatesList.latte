@@ -42,7 +42,7 @@
 				{if $cert->getSubjectAlternativeNames() !== null}
 					{foreach $cert->getSubjectAlternativeNames() as $san}{$san}{sep}, {/sep}{else}<em>empty</em>{/foreach}
 				{else}
-					<em>unknown yet</em>
+					<em>unknown</em>
 				{/if}
 			</small></td>
 	</tr>
