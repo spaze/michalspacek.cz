@@ -3,9 +3,11 @@
 {control sessionGarbageCollectorStatusMessage}
 <h2>Školení</h2>
 {control trainingApplicationsList}
-<h2>Certifikáty <small>vyžadující pozornost ({$certificatesWithWarningCount})</small></h2>
-{control tlsCertificatesList}
-<p class="small"><a n:href="Certificates:">Zobrazit všechny</a></p>
+{if $certificatesWithWarningCount > 0}
+	<h2>HTTPS certifikáty <small>vyžadující pozornost ({$certificatesWithWarningCount})</small></h2>
+	{control tlsCertificatesList}
+	<p class="small"><a n:href="Certificates:">Zobrazit všechny</a></p>
+{/if}
 <hr>
 <ul>
 	<li><a n:href="Emails:">E-maily k odeslání</a> ({$emailsToSend})</li>
@@ -20,6 +22,7 @@
 	<li><a n:href="Pulse:passwordsStorages">Pulse passwords storages</a></li>
 	<li><a n:href="User:changePassword">Změnit heslo</a></li>
 	<li><a n:href="User:regenerateTokens">Přegenerovat tokeny</a></li>
+	<li><a n:href="Certificates:">HTTPS certifikáty</a></li>
 	<li><a n:href="Info:php"><code>phpinfo()</code></a></li>
 	<li><a n:href="Sign:out">Odhlásit</a></li>
 </ul>
