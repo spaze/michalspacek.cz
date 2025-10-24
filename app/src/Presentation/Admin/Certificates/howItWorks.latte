@@ -1,0 +1,16 @@
+{define #menu}
+	&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+	&raquo; <a n:href="Homepage:">Administrace</a>
+	&raquo; <a n:href="Certificates:">HTTPS Certifikáty</a>
+{/define}
+{define #content}
+<ol>
+	<li>{_messages.certificates.admin.certbotHook|format:'https://github.com/spaze/certmonitor-certbot-deploy-hook'}</li>
+	<li>
+		{_messages.certificates.admin.certbotHookNewCert|format}
+		<pre>RENEWED_LINEAGE=/etc/letsencrypt/live/example.com ~/.local/share/certmonitor-certbot-deploy-hook/certbot_deploy_hook</pre>
+	</li>
+	<li>{_messages.certificates.admin.certmonitor|format}</li>
+	<li>{_messages.certificates.admin.certmonitorPeriodic|format:'https://github.com/spaze/michalspacek.cz/actions/workflows/tls.yml'}</li>
+</ol>
+{/define}

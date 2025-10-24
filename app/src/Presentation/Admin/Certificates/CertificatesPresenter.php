@@ -25,6 +25,12 @@ final class CertificatesPresenter extends BasePresenter
 	}
 
 
+	public function actionHowItWorks(): void
+	{
+		$this->template->pageTitle = 'Jak funguje kontrola HTTPS certifikátů';
+	}
+
+
 	protected function createComponentTlsCertificatesList(): TlsCertificatesList
 	{
 		return $this->tlsCertificatesListFactory->create($this->certificates->getNewest());
