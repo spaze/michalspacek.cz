@@ -60,7 +60,6 @@ parameters:
 		midi: none
 		payment: none
 		usb: none
-		interest-cohort: none
 
 	# Added/changed in local.neon
 	contact:
