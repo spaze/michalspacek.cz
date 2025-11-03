@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\DI;
 
 use Nette;
+use function array_flip, array_key_exists, array_keys, array_map, array_merge, array_values, class_exists, count, get_class_methods, implode, interface_exists, is_a, is_object, natsort, sprintf, str_replace, ucfirst;
 
 
 /**
@@ -320,6 +321,9 @@ class Container
 
 	/**
 	 * Creates an instance of the class and passes dependencies to the constructor using autowiring.
+	 * @template T of object
+	 * @param  class-string<T>  $class
+	 * @return T
 	 */
 	public function createInstance(string $class, array $args = []): object
 	{

@@ -11,6 +11,8 @@ namespace Nette\Mail;
 
 use Nette;
 use Nette\Utils\Strings;
+use function addcslashes, array_map, array_reverse, basename, date, explode, finfo_buffer, finfo_open, implode, is_numeric, ltrim, php_uname, preg_match, preg_replace, rtrim, str_replace, strcasecmp, stripslashes, strlen, substr, substr_replace, trim, urldecode;
+use const FILEINFO_MIME_TYPE;
 
 
 /**
@@ -27,13 +29,13 @@ class Message extends MimePart
 		Normal = 3,
 		Low = 5;
 
-	/** @deprecated use Message::High */
+	#[\Deprecated('use Message::High')]
 	public const HIGH = self::High;
 
-	/** @deprecated use Message::Normal */
+	#[\Deprecated('use Message::Normal')]
 	public const NORMAL = self::Normal;
 
-	/** @deprecated use Message::Low */
+	#[\Deprecated('use Message::Low')]
 	public const LOW = self::Low;
 
 	public static array $defaultHeaders = [

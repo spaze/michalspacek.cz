@@ -15,7 +15,7 @@
 		}
 	],
 	"require": {
-		"php": "8.0 - 8.4",
+		"php": "8.0 - 8.5",
 		"nette/di": "^3.1",
 		"nette/utils": "^3.2.1 || ^4.0"
 	},
@@ -36,13 +36,16 @@
 		"nette/tester": "^2.4",
 		"latte/latte": "^2.8 || ^3.0",
 		"tracy/tracy": "^2.9",
-		"phpstan/phpstan-nette": "^1.0"
+		"phpstan/phpstan-nette": "^2.0@stable"
 	},
 	"conflict": {
 		"tracy/tracy": "<2.6"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"classmap": ["src/"],
+		"psr-4": {
+			"Nette\\": "src"
+		}
 	},
 	"minimum-stability": "dev",
 	"scripts": {

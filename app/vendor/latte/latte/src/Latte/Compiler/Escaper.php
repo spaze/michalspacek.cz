@@ -12,6 +12,7 @@ namespace Latte\Compiler;
 use Latte\Compiler\Nodes\Html\ElementNode;
 use Latte\ContentType;
 use Latte\Runtime\Filters;
+use Latte\Runtime\HtmlHelpers;
 use function in_array, is_string, preg_match, str_starts_with, strtolower;
 
 
@@ -119,18 +120,11 @@ final class Escaper
 	{
 		if ($el->isRawText()) {
 			$this->state = self::HtmlRawText;
-			$this->subType = self::Text;
 			if ($el->is('script')) {
 				$type = $el->getAttribute('type');
-				if ($type === true || $type === null
-					|| is_string($type) && preg_match('#((application|text)/(((x-)?java|ecma|j|live)script|json)|application/.+\+json|text/plain|module|importmap|)$#Ai', $type)
-				) {
-					$this->subType = self::JavaScript;
-
-				} elseif (is_string($type) && preg_match('#text/((x-)?template|html)$#Ai', $type)) {
-					$this->subType = self::HtmlText;
-				}
-
+				$this->subType = $type === true || $type === null
+					? self::JavaScript
+					: HtmlHelpers::classifyScriptType($type);
 			} elseif ($el->is('style')) {
 				$this->subType = self::Css;
 			}
@@ -145,7 +139,7 @@ final class Escaper
 	public function enterHtmlTag(string $name): void
 	{
 		$this->state = self::HtmlTag;
-		$this->tag = strtolower($name);
+		$this->tag = $name;
 	}
 
 
@@ -168,7 +162,7 @@ final class Escaper
 			} elseif ($name === 'style') {
 				$this->subType = self::Css;
 			} elseif ((in_array($name, ['href', 'src', 'action', 'formaction'], true)
-				|| ($name === 'data' && $this->tag === 'object'))
+				|| ($name === 'data' && strcasecmp($this->tag, 'object') === 0))
 			) {
 				$this->subType = self::Url;
 			}

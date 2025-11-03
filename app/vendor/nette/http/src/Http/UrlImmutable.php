@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Nette\Http;
 
 use Nette;
+use function array_slice, explode, http_build_query, implode, ip2long, is_array, is_string, rawurlencode, str_starts_with, strrpos, substr;
+use const PHP_QUERY_RFC3986;
 
 
 /**
@@ -78,6 +80,7 @@ class UrlImmutable implements \JsonSerializable
 	}
 
 
+	/** @deprecated */
 	public function withUser(string $user): static
 	{
 		$dolly = clone $this;
@@ -87,12 +90,14 @@ class UrlImmutable implements \JsonSerializable
 	}
 
 
+	/** @deprecated */
 	public function getUser(): string
 	{
 		return $this->user;
 	}
 
 
+	/** @deprecated */
 	public function withPassword(string $password): static
 	{
 		$dolly = clone $this;
@@ -102,12 +107,14 @@ class UrlImmutable implements \JsonSerializable
 	}
 
 
+	/** @deprecated */
 	public function getPassword(): string
 	{
 		return $this->password;
 	}
 
 
+	/** @deprecated */
 	public function withoutUserInfo(): static
 	{
 		$dolly = clone $this;

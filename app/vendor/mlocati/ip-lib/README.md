@@ -1,6 +1,6 @@
-[![Tests](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/ip-lib/actions?query=workflow%3A%22tests%22)
-[![Coverage Status](https://coveralls.io/repos/github/mlocati/ip-lib/badge.svg?branch=main)](https://coveralls.io/github/mlocati/ip-lib?branch=main)
-![Packagist Downloads](https://img.shields.io/packagist/dm/mlocati/ip-lib)
+[![Tests](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml)
+[![Code Coverage](https://img.shields.io/coverallsCoverage/github/mlocati/ip-lib?branch=main&label=Coverage)](https://coveralls.io/github/mlocati/ip-lib?branch=main)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/mlocati/ip-lib?label=Downloads)](https://packagist.org/packages/mlocati/ip-lib)
 [![Open in Gitpod](https://img.shields.io/badge/Open%20in-Gitpod-%232cb64c?logo=gitpod)](https://gitpod.io/#https://github.com/mlocati/ip-lib)
 
 # IPLib - Handle IPv4, IPv6 and IP ranges
@@ -233,6 +233,21 @@ $ranges = \IPLib\Factory::getRangesFromBoundaries('192.168.0.0', '192.168.0.5');
 
 // This will print 192.168.0.0/30 192.168.0.4/31
 echo implode(' ', $ranges);
+```
+
+### Retrieve a range that contains a set of IP addresses
+
+You can use `IPLib\Factory::getRangeFromAddresses()` to retrieve the minimal IP range that contains all the provided IP addresses:
+
+```php
+$range = \IPLib\Factory::getRangeFromAddresses(array(
+  '1.2.2.225',
+  '1.2.1.124',
+  '1.2.3.237',
+));
+
+// This will print 1.2.0.0/22
+echo (string) $range;
 ```
 
 ### Retrieve the boundaries of a range

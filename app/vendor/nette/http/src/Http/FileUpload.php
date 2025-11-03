@@ -11,6 +11,8 @@ namespace Nette\Http;
 
 use Nette;
 use Nette\Utils\Image;
+use function array_intersect_key, array_map, basename, chmod, dirname, file_get_contents, filesize, finfo_file, finfo_open, getimagesize, image_type_to_extension, in_array, is_string, is_uploaded_file, preg_replace, str_replace, trim, unlink;
+use const FILEINFO_EXTENSION, FILEINFO_MIME_TYPE, UPLOAD_ERR_NO_FILE, UPLOAD_ERR_OK;
 
 
 /**
@@ -105,8 +107,6 @@ final class FileUpload
 	 * Returns the original full path as submitted by the browser during directory upload. Do not trust the value
 	 * returned by this method. A client could send a malicious directory structure with the intention to corrupt
 	 * or hack your application.
-	 *
-	 * The full path is only available in PHP 8.1 and above. In previous versions, this method returns the file name.
 	 */
 	public function getUntrustedFullPath(): string
 	{
@@ -138,7 +138,7 @@ final class FileUpload
 			if ($exts && $exts !== '???') {
 				return $this->extension = preg_replace('~[/,].*~', '', $exts);
 			}
-			[, , $type] = @getimagesize($this->tmpName); // @ - files smaller than 12 bytes causes read error
+			[, , $type] = Nette\Utils\Helpers::falseToNull(@getimagesize($this->tmpName)); // @ - files smaller than 12 bytes causes read error
 			if ($type) {
 				return $this->extension = image_type_to_extension($type, false);
 			}

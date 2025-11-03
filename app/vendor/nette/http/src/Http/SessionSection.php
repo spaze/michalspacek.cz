@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Http;
 
 use Nette;
+use function array_key_exists, func_num_args, ini_get, is_array, time;
 
 
 /**
@@ -199,7 +200,7 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess
 		}
 
 		foreach (is_array($variables) ? $variables : [$variables] as $variable) {
-			$meta[$variable]['T'] = $expire ?: null;
+			$meta[$variable ?? '']['T'] = $expire ?: null;
 		}
 
 		return $this;

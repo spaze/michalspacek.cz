@@ -13,6 +13,7 @@ use Nette;
 use Nette\DI\Definitions;
 use Nette\DI\Definitions\Statement;
 use Nette\DI\Helpers;
+use function array_replace, array_values, is_array, is_int, is_string, key, preg_match, substr;
 
 
 /**
@@ -238,7 +239,7 @@ final class ServicesExtension extends Nette\DI\CompilerExtension
 	{
 		if (is_int($key)) {
 			return null;
-		} elseif (preg_match('#^@[\w\\\\]+$#D', $key)) {
+		} elseif (preg_match('#^@[\w\\\]+$#D', $key)) {
 			return $this->getContainerBuilder()->getByType(substr($key, 1), throw: true);
 		}
 

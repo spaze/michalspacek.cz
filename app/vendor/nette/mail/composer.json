@@ -15,7 +15,7 @@
 		}
 	],
 	"require": {
-		"php": "8.0 - 8.4",
+		"php": "8.0 - 8.5",
 		"ext-iconv": "*",
 		"nette/utils": "^4.0"
 	},
@@ -23,14 +23,17 @@
 		"nette/di": "^3.1 || ^4.0",
 		"nette/tester": "^2.4",
 		"tracy/tracy": "^2.8",
-		"phpstan/phpstan-nette": "^1.0"
+		"phpstan/phpstan-nette": "^2.0@stable"
 	},
 	"suggest": {
 		"ext-fileinfo": "to detect type of attached files",
 		"ext-openssl": "to use Nette\\Mail\\DkimSigner"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"classmap": ["src/"],
+		"psr-4": {
+			"Nette\\": "src"
+		}
 	},
 	"minimum-stability": "dev",
 	"scripts": {

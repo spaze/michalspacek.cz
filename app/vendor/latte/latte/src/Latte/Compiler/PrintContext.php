@@ -49,6 +49,7 @@ final class PrintContext
 		'<<'         => [190, self::Left],
 		'>>'         => [190, self::Left],
 		'.'          => [185, self::Left],
+		'|>'         => [183, self::Left],
 		'<'          => [180, self::None],
 		'<='         => [180, self::None],
 		'>'          => [180, self::None],
@@ -258,7 +259,7 @@ final class PrintContext
 			$node instanceof Expression\NotNode => '!',
 			$node instanceof Expression\TernaryNode => '?:',
 			$node instanceof Expression\AssignNode, $node instanceof Expression\AssignOpNode => '=',
-			default => null,
+			default => '',
 		}] ?? null;
 	}
 
