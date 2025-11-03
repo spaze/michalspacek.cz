@@ -10,7 +10,6 @@ use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotCreateSignatureException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotCreateSignatureExtensionNotLoadedException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotVerifySignatureException;
-use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtInvalidSignatureException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtSigningKeyBadPassphraseException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtSigningKeyNoPassphraseSetException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtUnknownSigningKeyException;
@@ -46,8 +45,6 @@ final class SecurityTxtSignature
 			$signature = $this->signatureProvider->verify($contents);
 		} catch (SecurityTxtCannotCreateSignatureExtensionNotLoadedException $e) {
 			throw new SecurityTxtWarning(new SecurityTxtSignatureExtensionNotLoaded(), $e);
-		} catch (SecurityTxtInvalidSignatureException $e) {
-			throw new SecurityTxtError(new SecurityTxtSignatureInvalid(), $e);
 		}
 
 		if (!$this->isSignatureKindaOkay($signature->getSummary())) {

@@ -16,6 +16,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
+            'Tracy\\' => 6,
             'Texy\\' => 5,
             'Tester\\' => 7,
         ),
@@ -91,6 +92,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
+        'Tracy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tracy/tracy/src',
+        ),
         'Texy\\' => 
         array (
             0 => __DIR__ . '/..' . '/texy/texy/src/Texy',
@@ -235,13 +240,23 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'Nette\\' => 
         array (
-            0 => __DIR__ . '/..' . '/nette/forms/src',
-            1 => __DIR__ . '/..' . '/nette/caching/src',
-            2 => __DIR__ . '/..' . '/nette/application/src',
-            3 => __DIR__ . '/..' . '/nette/component-model/src',
-            4 => __DIR__ . '/..' . '/nette/robot-loader/src',
-            5 => __DIR__ . '/..' . '/nette/php-generator/src',
-            6 => __DIR__ . '/..' . '/nette/utils/src',
+            0 => __DIR__ . '/..' . '/nette/security/src',
+            1 => __DIR__ . '/..' . '/nette/mail/src',
+            2 => __DIR__ . '/..' . '/nette/forms/src',
+            3 => __DIR__ . '/..' . '/nette/command-line/src',
+            4 => __DIR__ . '/..' . '/nette/bootstrap/src',
+            5 => __DIR__ . '/..' . '/nette/database/src',
+            6 => __DIR__ . '/..' . '/nette/caching/src',
+            7 => __DIR__ . '/..' . '/nette/application/src',
+            8 => __DIR__ . '/..' . '/nette/routing/src',
+            9 => __DIR__ . '/..' . '/nette/component-model/src',
+            10 => __DIR__ . '/..' . '/nette/di/src',
+            11 => __DIR__ . '/..' . '/nette/robot-loader/src',
+            12 => __DIR__ . '/..' . '/nette/php-generator/src',
+            13 => __DIR__ . '/..' . '/nette/neon/src',
+            14 => __DIR__ . '/..' . '/nette/schema/src',
+            15 => __DIR__ . '/..' . '/nette/http/src',
+            16 => __DIR__ . '/..' . '/nette/utils/src',
         ),
         'MichalSpacekCz\\' => 
         array (

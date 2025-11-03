@@ -12,6 +12,7 @@ namespace Nette\Database\Table;
 use Nette;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
+use function array_filter, array_intersect_key, array_keys, array_map, array_merge, array_values, ceil, count, current, explode, func_num_args, hash, implode, is_array, is_int, iterator_to_array, key, next, reset, serialize, str_contains, substr_count;
 
 
 /**
@@ -643,6 +644,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 */
 	protected function getRefTable(&$refPath): self
 	{
+		$refPath = '';
 		return $this;
 	}
 
@@ -943,7 +945,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 			}
 		}
 
-		return $selection[$checkPrimaryKey] ?? null;
+		return $selection[$checkPrimaryKey ?? ''] ?? null;
 	}
 
 

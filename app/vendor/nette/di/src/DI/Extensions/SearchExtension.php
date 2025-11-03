@@ -13,6 +13,7 @@ use Nette;
 use Nette\Loaders\RobotLoader;
 use Nette\Schema\Expect;
 use Nette\Utils\Arrays;
+use function array_filter, array_keys, array_merge, array_unique, class_exists, count, implode, in_array, interface_exists, is_dir, is_string, method_exists, preg_match, preg_quote, sprintf, str_contains, str_replace, trait_exists;
 
 
 /**
@@ -148,8 +149,8 @@ final class SearchExtension extends Nette\DI\CompilerExtension
 		foreach ($masks as $mask) {
 			$mask = (str_contains($mask, '\\') ? '' : '**\\') . $mask;
 			$mask = preg_quote($mask, '#');
-			$mask = str_replace('\*\*\\\\', '(.*\\\\)?', $mask);
-			$mask = str_replace('\\\\\*\*', '(\\\\.*)?', $mask);
+			$mask = str_replace('\*\*\\\\', '(.*\\\)?', $mask);
+			$mask = str_replace('\\\\\*\*', '(\\\.*)?', $mask);
 			$mask = str_replace('\*', '\w*', $mask);
 			$res[] = $mask;
 		}

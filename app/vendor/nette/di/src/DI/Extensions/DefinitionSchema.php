@@ -16,6 +16,7 @@ use Nette\DI\Definitions\Statement;
 use Nette\Schema\Context;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
+use function array_keys, end, get_class, interface_exists, is_array, is_string, method_exists, preg_match, substr;
 
 
 /**
@@ -118,7 +119,7 @@ class DefinitionSchema implements Schema
 	private function sniffType($key, array $def): string
 	{
 		if (is_string($key)) {
-			$name = preg_match('#^@[\w\\\\]+$#D', $key)
+			$name = preg_match('#^@[\w\\\]+$#D', $key)
 				? $this->builder->getByType(substr($key, 1))
 				: $key;
 

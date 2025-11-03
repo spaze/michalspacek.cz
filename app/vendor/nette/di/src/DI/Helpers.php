@@ -14,6 +14,8 @@ use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\Statement;
 use Nette\Utils\Reflection;
 use Nette\Utils\Type;
+use function array_key_exists, array_keys, array_shift, class_exists, explode, get_debug_type, implode, interface_exists, is_array, is_scalar, is_string, preg_match, preg_quote, preg_replace, preg_split, settype, sprintf, str_replace, strlen, strncmp, substr, trim, ucfirst, var_export;
+use const PREG_SPLIT_DELIM_CAPTURE;
 
 
 /**
@@ -158,7 +160,7 @@ final class Helpers
 	public static function filterArguments(array $args): array
 	{
 		foreach ($args as $k => $v) {
-			if (is_string($v) && preg_match('#^@[\w\\\\]+$#D', $v)) {
+			if (is_string($v) && preg_match('#^@[\w\\\]+$#D', $v)) {
 				$args[$k] = new Reference(substr($v, 1));
 			} elseif (is_array($v)) {
 				$args[$k] = self::filterArguments($v);

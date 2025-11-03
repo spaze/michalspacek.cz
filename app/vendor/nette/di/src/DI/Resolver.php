@@ -18,6 +18,7 @@ use Nette\Utils\Arrays;
 use Nette\Utils\Callback;
 use Nette\Utils\Reflection;
 use Nette\Utils\Validators;
+use function array_filter, array_key_exists, array_map, array_merge, array_values, array_walk_recursive, assert, class_exists, count, ctype_digit, explode, function_exists, gettype, implode, in_array, interface_exists, is_a, is_array, is_int, is_scalar, is_string, iterator_to_array, ltrim, preg_match, preg_replace, sprintf, str_contains, str_ends_with, str_replace, str_starts_with, strlen, substr;
 
 
 /**
@@ -50,13 +51,13 @@ class Resolver
 
 	public function resolveDefinition(Definition $def): void
 	{
-		if ($this->recursive->contains($def)) {
+		if (isset($this->recursive[$def])) {
 			$names = array_map(fn($item) => $item->getName(), iterator_to_array($this->recursive));
 			throw new ServiceCreationException(sprintf('Circular reference detected for services: %s.', implode(', ', $names)));
 		}
 
 		try {
-			$this->recursive->attach($def);
+			$this->recursive[$def] = true;
 
 			$def->resolveType($this);
 
@@ -67,7 +68,7 @@ class Resolver
 			throw $this->completeException($e, $def);
 
 		} finally {
-			$this->recursive->detach($def);
+			unset($this->recursive[$def]);
 		}
 	}
 
@@ -249,7 +250,7 @@ class Resolver
 				break;
 
 			case is_array($entity):
-				if (!preg_match('#^\$?(\\\\?' . PhpHelpers::ReIdentifier . ')+(\[\])?$#D', $entity[1])) {
+				if (!preg_match('#^\$?(\\\?' . PhpHelpers::ReIdentifier . ')+(\[\])?$#D', $entity[1])) {
 					throw new ServiceCreationException(sprintf(
 						"Expected function, method or property name, '%s' given.",
 						$entity[1],
@@ -455,7 +456,7 @@ class Resolver
 		}
 
 		$message .= $type
-			? str_replace("$type::", preg_replace('~.*\\\\~', '', $type) . '::', $e->getMessage())
+			? str_replace("$type::", preg_replace('~.*\\\~', '', $type) . '::', $e->getMessage())
 			: $e->getMessage();
 
 		return $e instanceof ServiceCreationException
@@ -643,7 +644,7 @@ class Resolver
 		return $method instanceof \ReflectionMethod
 			&& $type?->getSingleName() === 'array'
 			&& preg_match(
-				'#@param[ \t]+(?|([\w\\\\]+)\[\]|list<([\w\\\\]+)>|array<int,\s*([\w\\\\]+)>)[ \t]+\$' . $parameter->name . '#',
+				'#@param[ \t]+(?|([\w\\\]+)\[\]|list<([\w\\\]+)>|array<int,\s*([\w\\\]+)>)[ \t]+\$' . $parameter->name . '#',
 				(string) $method->getDocComment(),
 				$m,
 			)

@@ -11,6 +11,8 @@ namespace Nette\Neon\Node;
 
 use Nette;
 use Nette\Neon\Node;
+use function json_decode, json_encode, preg_match, preg_replace, preg_replace_callback, str_contains, str_replace, strlen, substr;
+use const JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE;
 
 
 /** @internal */
@@ -51,7 +53,7 @@ final class StringNode extends Node
 		}
 
 		return preg_replace_callback(
-			'#\\\\(?:ud[89ab][0-9a-f]{2}\\\\ud[c-f][0-9a-f]{2}|u[0-9a-f]{4}|.)#i',
+			'#\\\(?:ud[89ab][0-9a-f]{2}\\\ud[c-f][0-9a-f]{2}|u[0-9a-f]{4}|.)#i',
 			function (array $m): string {
 				$sq = $m[0];
 				if (isset(self::EscapeSequences[$sq[1]])) {
@@ -77,7 +79,7 @@ final class StringNode extends Node
 		} elseif (preg_match('~[\x00-\x08\x0B-\x1F]|\n[\t ]+\'{3}~', $this->value)) {
 			$s = substr(json_encode($this->value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 1, -1);
 			$s = preg_replace_callback(
-				'#[^\\\\]|\\\\(.)#s',
+				'#[^\\\]|\\\(.)#s',
 				fn($m) => ['n' => "\n", 't' => "\t", '"' => '"'][$m[1] ?? ''] ?? $m[0],
 				$s,
 			);

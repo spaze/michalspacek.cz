@@ -8,7 +8,6 @@ use Override;
 use SensitiveParameter;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotCreateSignatureExtensionNotLoadedException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotVerifySignatureException;
-use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtInvalidSignatureException;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignatureErrorInfo;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignatureVerifySignatureInfo;
 
@@ -55,20 +54,20 @@ final class SecurityTxtSignatureGnuPgProvider implements SecurityTxtSignaturePro
 	{
 		$result = $this->getGnuPg()->verify($text, false);
 		if ($result === false || !isset($result[0])) {
-			throw new SecurityTxtInvalidSignatureException();
+			throw new SecurityTxtCannotVerifySignatureException(null, $this->getErrorInfo());
 		}
 		$signature = $result[0];
 		if (!is_array($signature)) {
-			throw new SecurityTxtCannotVerifySignatureException('signature is not an array');
+			throw new SecurityTxtCannotVerifySignatureException('signature is not an array', $this->getErrorInfo());
 		}
 		if (!isset($signature['summary']) || !is_int($signature['summary'])) {
-			throw new SecurityTxtCannotVerifySignatureException('summary is missing or not a string');
+			throw new SecurityTxtCannotVerifySignatureException('summary is missing or not a string', $this->getErrorInfo());
 		}
 		if (!isset($signature['fingerprint']) || !is_string($signature['fingerprint'])) {
-			throw new SecurityTxtCannotVerifySignatureException('fingerprint is missing or not a string');
+			throw new SecurityTxtCannotVerifySignatureException('fingerprint is missing or not a string', $this->getErrorInfo());
 		}
 		if (!isset($signature['timestamp']) || !is_int($signature['timestamp'])) {
-			throw new SecurityTxtCannotVerifySignatureException('timestamp is missing or not a string');
+			throw new SecurityTxtCannotVerifySignatureException('timestamp is missing or not a string', $this->getErrorInfo());
 		}
 		return new SecurityTxtSignatureVerifySignatureInfo($signature['summary'], $signature['fingerprint'], $signature['timestamp']);
 	}

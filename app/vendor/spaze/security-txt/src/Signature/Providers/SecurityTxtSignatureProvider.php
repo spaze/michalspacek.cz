@@ -6,7 +6,6 @@ namespace Spaze\SecurityTxt\Signature\Providers;
 use SensitiveParameter;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotCreateSignatureExtensionNotLoadedException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotVerifySignatureException;
-use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtInvalidSignatureException;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignatureErrorInfo;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignatureVerifySignatureInfo;
 
@@ -33,7 +32,6 @@ interface SecurityTxtSignatureProvider
 
 	/**
 	 * @throws SecurityTxtCannotCreateSignatureExtensionNotLoadedException
-	 * @throws SecurityTxtInvalidSignatureException
 	 * @throws SecurityTxtCannotVerifySignatureException
 	 */
 	public function verify(string $text): SecurityTxtSignatureVerifySignatureInfo;

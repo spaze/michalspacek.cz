@@ -11,7 +11,7 @@ namespace Nette\Routing;
 
 use Nette;
 use Nette\Utils\Strings;
-use function array_key_exists, is_array, count, strlen;
+use function array_flip, array_key_exists, array_pop, array_reverse, array_unshift, count, explode, http_build_query, ini_get, ip2long, is_array, is_scalar, is_string, ltrim, preg_match, preg_quote, preg_replace_callback, rawurldecode, rawurlencode, str_starts_with, strlen, strncmp, strpbrk, strtr, substr, trim;
 
 
 /**
@@ -235,8 +235,8 @@ class Route implements Router
 			}
 		}
 
-		if (isset($this->metadata[null][self::FilterIn])) {
-			$params = $this->metadata[null][self::FilterIn]($params);
+		if (isset($this->metadata[''][self::FilterIn])) {
+			$params = $this->metadata[''][self::FilterIn]($params);
 			if ($params === null) {
 				return null;
 			}
@@ -297,7 +297,7 @@ class Route implements Router
 
 	private function preprocessParams(array &$params): bool
 	{
-		$filter = $this->metadata[null][self::FilterOut] ?? null;
+		$filter = $this->metadata[''][self::FilterOut] ?? null;
 		if ($filter) {
 			$params = $filter($params);
 			if ($params === null) {

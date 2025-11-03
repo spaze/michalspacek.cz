@@ -19,8 +19,8 @@ use const PHP_VERSION_ID;
  */
 class Engine
 {
-	public const Version = '3.0.23';
-	public const VersionId = 30023;
+	public const Version = '3.0.24';
+	public const VersionId = 30024;
 
 	/** @deprecated use Engine::Version */
 	public const
@@ -50,8 +50,9 @@ class Engine
 	private ?Policy $policy = null;
 	private bool $sandboxed = false;
 	private ?string $phpBinary = null;
-	private ?string $environmentHash;
+	private ?string $configurationHash;
 	private ?string $locale = null;
+	private ?string $syntax = null;
 
 
 	public function __construct()
@@ -95,7 +96,7 @@ class Engine
 	 */
 	public function createTemplate(string $name, array $params = [], bool $clearCache = true): Runtime\Template
 	{
-		$this->environmentHash = $clearCache ? null : $this->environmentHash;
+		$this->configurationHash = $clearCache ? null : $this->configurationHash;
 		$class = $this->loadTemplate($name);
 		$this->providers->fn = $this->functions;
 		return new $class(
@@ -146,6 +147,7 @@ class Engine
 	public function parse(string $template): TemplateNode
 	{
 		$parser = new Compiler\TemplateParser;
+		$parser->getLexer()->setSyntax($this->syntax);
 		$parser->strict = $this->strictParsing;
 
 		foreach ($this->extensions as $extension) {
@@ -225,39 +227,50 @@ class Engine
 	}
 
 
+	/**
+	 * Returns the file path where compiled template will be cached.
+	 */
 	public function getCacheFile(string $name): string
 	{
-		return $this->cache->generateFileName($name, $this->generateTemplateHash($name));
+		return $this->cache->generateFilePath($this, $name);
 	}
 
 
+	/**
+	 * Returns the PHP class name for compiled template.
+	 */
 	public function getTemplateClass(string $name): string
 	{
 		return 'Template_' . $this->generateTemplateHash($name);
 	}
 
 
-	private function generateTemplateHash(string $name): string
+	/**
+	 * Generates unique hash for template based on current configuration.
+	 * Used to create isolated cache files for different engine configurations.
+	 * @internal
+	 */
+	public function generateTemplateHash(string $name): string
 	{
-		$this->environmentHash ??= md5(serialize($this->getCacheKey()));
-		$hash = $this->environmentHash . $this->getLoader()->getUniqueId($name);
+		$hash = $this->configurationHash ?? md5(serialize($this->getCacheKey()));
+		$hash .= $this->getLoader()->getUniqueId($name);
 		return substr(md5($hash), 0, 10);
 	}
 
 
 	/**
-	 * Values that affect the results of compilation and the name of the cache file.
+	 * Returns values that determine isolation for different configurations.
+	 * When any of these values change, a new compiled template is created to avoid conflicts.
 	 */
 	protected function getCacheKey(): array
 	{
 		return [
 			$this->contentType,
+			$this->strictTypes,
+			$this->strictParsing,
+			$this->syntax,
 			array_map(
-				fn($extension) => [
-					get_debug_type($extension),
-					$extension->getCacheKey($this),
-					filemtime((new \ReflectionObject($extension))->getFileName()),
-				],
+				fn($extension) => [get_debug_type($extension), $extension->getCacheKey($this)],
 				$this->extensions,
 			),
 		];
@@ -507,6 +520,16 @@ class Engine
 	public function enablePhpLinter(?string $phpBinary): static
 	{
 		$this->phpBinary = $phpBinary;
+		return $this;
+	}
+
+
+	/**
+	 * Sets default Latte syntax. Available options: 'single', 'double', 'off'
+	 */
+	public function setSyntax(string $syntax): static
+	{
+		$this->syntax = $syntax;
 		return $this;
 	}
 
