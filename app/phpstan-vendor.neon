@@ -9,6 +9,8 @@ parameters:
 			- vendor/paragonie/halite/test/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
 			- vendor/paragonie/constant_time_encoding/tests/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
 			- vendor/paragonie/hidden-string/test/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
+			- vendor/mlocati/ip-lib/src/Range/AbstractRange.php # throws No error with identifier varTag.nativeType is reported on line
+			- vendor/mlocati/ip-lib/src/Service/BinaryMath.php # throws No error with identifier varTag.nativeType is reported on line
 			- vendor/nette/forms/src/compatibility.php  # throws `Class 'Nette\Forms\SubmitterControl' not found` for some reason
 			- vendor/shipmonk/composer-dependency-analyser/src/Analyser.php  # throws No error to ignore is reported on line
 			- vendor/shipmonk/composer-dependency-analyser/src/Cli.php  # throws No error to ignore is reported on line
