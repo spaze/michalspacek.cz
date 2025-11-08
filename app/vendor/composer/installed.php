@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '47fbbf7fa4902afdba089f8bd7b605da85a9ccfb',
+        'reference' => 'd9baf95fd858e5252a9fa7b8d60d98d292c36adc',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '47fbbf7fa4902afdba089f8bd7b605da85a9ccfb',
+            'reference' => 'd9baf95fd858e5252a9fa7b8d60d98d292c36adc',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '55c3b667eacf9c15fcb3a9f458c42646cd627f2d',
+            'reference' => '1316dac895459bab648e29d26e69b491db69baf9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(
