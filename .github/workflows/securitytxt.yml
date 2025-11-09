@@ -14,18 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version:
-          - "8.4"
         host:
           - www.michalspacek.cz
           - www.michalspacek.com
           - upcwifikeys.com
     steps:
-    - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
-      with:
-        coverage: none
-        php-version: ${{ matrix.php-version }}
-        extensions: gnupg
     - name: Install the checker
       run: composer require spaze/security-txt:dev-main
     - name: Check security.txt at ${{ matrix.host }}
