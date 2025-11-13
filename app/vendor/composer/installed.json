@@ -2355,12 +2355,12 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.31",
-            "version_normalized": "2.1.31.0",
+            "version": "2.1.32",
+            "version_normalized": "2.1.32.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ead89849d879fe203ce9292c6ef5e7e76f867b96",
-                "reference": "ead89849d879fe203ce9292c6ef5e7e76f867b96",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227",
                 "shasum": ""
             },
             "require": {
@@ -2369,7 +2369,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2025-10-10T14:14:11+00:00",
+            "time": "2025-11-11T15:18:17+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2781,12 +2781,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "19966d2f97bbc444bb176432754e33256a7d45bf"
+                "reference": "ccc4996aff4ff810b514472932f677753ee5d8a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/19966d2f97bbc444bb176432754e33256a7d45bf",
-                "reference": "19966d2f97bbc444bb176432754e33256a7d45bf",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ccc4996aff4ff810b514472932f677753ee5d8a4",
+                "reference": "ccc4996aff4ff810b514472932f677753ee5d8a4",
                 "shasum": ""
             },
             "conflict": {
@@ -3528,7 +3528,7 @@
                 "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.50|>=2.8,<2.8.49|>=3,<3.4.20|>=4,<4.0.15|>=4.1,<4.1.9|>=4.2,<4.2.1",
                 "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7|>=5.3.14,<5.3.15|>=5.4.3,<5.4.4|>=6.0.3,<6.0.4",
                 "symfony/http-client": ">=4.3,<5.4.47|>=6,<6.4.15|>=7,<7.1.8",
-                "symfony/http-foundation": "<5.4.46|>=6,<6.4.14|>=7,<7.1.7",
+                "symfony/http-foundation": "<5.4.50|>=6,<6.4.29|>=7,<7.3.7",
                 "symfony/http-kernel": ">=2,<4.4.50|>=5,<5.4.20|>=6,<6.0.20|>=6.1,<6.1.12|>=6.2,<6.2.6",
                 "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
                 "symfony/maker-bundle": ">=1.27,<1.29.2|>=1.30,<1.31.1",
@@ -3547,7 +3547,7 @@
                 "symfony/security-guard": ">=2.8,<3.4.48|>=4,<4.4.23|>=5,<5.2.8",
                 "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.2.12|>=4.3,<4.3.8|>=4.4,<4.4.7|>=5,<5.0.7|>=5.1,<5.2.8|>=5.3,<5.4.47|>=6,<6.4.15|>=7,<7.1.8",
                 "symfony/serializer": ">=2,<2.0.11|>=4.1,<4.4.35|>=5,<5.3.12",
-                "symfony/symfony": "<5.4.47|>=6,<6.4.15|>=7,<7.1.8",
+                "symfony/symfony": "<5.4.50|>=6,<6.4.29|>=7,<7.3.7",
                 "symfony/translation": ">=2,<2.0.17",
                 "symfony/twig-bridge": ">=2,<4.4.51|>=5,<5.4.31|>=6,<6.3.8",
                 "symfony/ux-autocomplete": "<2.11.2",
@@ -3582,7 +3582,7 @@
                 "topthink/framework": "<6.0.17|>=6.1,<=8.0.4",
                 "topthink/think": "<=6.1.1",
                 "topthink/thinkphp": "<=3.2.3|>=6.1.3,<=8.0.4",
-                "torrentpier/torrentpier": "<=2.4.3",
+                "torrentpier/torrentpier": "<=2.8.8",
                 "tpwd/ke_search": "<4.0.3|>=4.1,<4.6.6|>=5,<5.0.2",
                 "tribalsystems/zenario": "<=9.7.61188",
                 "truckersmp/phpwhois": "<=4.3.1",
@@ -3728,7 +3728,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2025-11-03T21:05:38+00:00",
+            "time": "2025-11-12T14:06:11+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -4241,32 +4241,33 @@
         },
         {
             "name": "spaze/phpcs-phar",
-            "version": "4.0.0",
-            "version_normalized": "4.0.0.0",
+            "version": "4.0.1",
+            "version_normalized": "4.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpcs-phar.git",
-                "reference": "981b739c056d1b02f1d783a186e4e141ccf6e178"
+                "reference": "75df71ef8b88c0442eec487e959e5a95e988b8bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpcs-phar/zipball/981b739c056d1b02f1d783a186e4e141ccf6e178",
-                "reference": "981b739c056d1b02f1d783a186e4e141ccf6e178",
+                "url": "https://api.github.com/repos/spaze/phpcs-phar/zipball/75df71ef8b88c0442eec487e959e5a95e988b8bb",
+                "reference": "75df71ef8b88c0442eec487e959e5a95e988b8bb",
                 "shasum": ""
             },
             "require": {
-                "composer-runtime-api": "^2.1"
+                "composer-runtime-api": "^2.1",
+                "php": ">=7.2.0"
             },
             "replace": {
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
-                "phpcsstandards/php_codesniffer": "4.0.0",
-                "squizlabs/php_codesniffer": "4.0.0"
+                "phpcsstandards/php_codesniffer": "4.0.1",
+                "squizlabs/php_codesniffer": "4.0.1"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4"
             },
-            "time": "2025-09-17T00:11:27+00:00",
+            "time": "2025-11-10T18:25:02+00:00",
             "bin": [
                 "phpcbf",
                 "phpcs"
@@ -4295,7 +4296,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpcs-phar/issues",
-                "source": "https://github.com/spaze/phpcs-phar/tree/4.0.0"
+                "source": "https://github.com/spaze/phpcs-phar/tree/4.0.1"
             },
             "install-path": "../spaze/phpcs-phar"
         },
@@ -4474,30 +4475,30 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "1316dac895459bab648e29d26e69b491db69baf9"
+                "reference": "ced26746e8898cb8bb235ce5602ce41fbe01e6b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/1316dac895459bab648e29d26e69b491db69baf9",
-                "reference": "1316dac895459bab648e29d26e69b491db69baf9",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/ced26746e8898cb8bb235ce5602ce41fbe01e6b8",
+                "reference": "ced26746e8898cb8bb235ce5602ce41fbe01e6b8",
                 "shasum": ""
             },
             "require-dev": {
                 "nette/tester": "^2.5",
-                "php": "^8.4",
+                "php": "^8.3",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3",
                 "phpstan/phpstan": "^2.1.18",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "psalm/phar": "^6.10",
-                "spaze/coding-standard": "^1.6",
-                "spaze/phpcs-phar": "^3.12",
+                "spaze/coding-standard": "^1.9",
+                "spaze/phpcs-phar": "^4.0",
                 "spaze/phpstan-disallowed-calls": "^4.5"
             },
             "suggest": {
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2025-11-08T16:56:22+00:00",
+            "time": "2025-11-13T14:53:38+00:00",
             "default-branch": true,
             "bin": [
                 "bin/checksecuritytxt.php"

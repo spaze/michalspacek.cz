@@ -17,8 +17,15 @@ final readonly class SecurityTxtCheckHostCli
 	}
 
 
-	public function check(string $scriptName, ?string $url, ?int $expiresWarningThreshold, bool $colors, bool $strictMode, bool $noIpv6): never
-	{
+	public function check(
+		?string $url,
+		?int $expiresWarningThreshold,
+		bool $colors,
+		bool $strictMode,
+		bool $requireTopLevelLocation,
+		bool $noIpv6,
+		string $usageHelp,
+	): never {
 		$this->checkHost->addOnUrl(
 			function (string $url): void {
 				$this->consolePrinter->info('Loading security.txt from ' . $this->consolePrinter->colorBold($url));
@@ -95,10 +102,7 @@ final readonly class SecurityTxtCheckHostCli
 			$this->consolePrinter->enableColors();
 		}
 		if ($url === null) {
-			$usage = "Usage: {$scriptName} <URL or hostname> [days] [--colors] [--strict] [--no-ipv6]\n"
-				. "If the file expires in less than <days>, the script will print a warning.\n"
-				. "The check will return 1 instead of 0 if any of the following conditions are true: the file has expired, has errors, or has warnings when using --strict.";
-			$this->consolePrinter->info($usage);
+			$this->consolePrinter->info($usageHelp);
 			$this->exit(CheckExitStatus::NoFile);
 		}
 
@@ -107,6 +111,7 @@ final readonly class SecurityTxtCheckHostCli
 				$url,
 				$expiresWarningThreshold,
 				$strictMode,
+				$requireTopLevelLocation,
 				$noIpv6,
 			);
 			if (!$checkResult->isValid()) {

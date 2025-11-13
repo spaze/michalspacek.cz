@@ -46,6 +46,10 @@ The validator will start throwing warnings if the file expires soon, and you can
 
 If you enable strict mode, then the file will be considered invalid, meaning `SecurityTxtCheckHostResult::isValid()` will return `false` even when there are only warnings, with strict mode disabled, the file with only warnings would still be valid and `SecurityTxtCheckHostResult::isValid()` would return `true`
 
+`bool $requireTopLevelLocation = false`
+
+When specified, the top-level `/security.txt` location must also exist (or be redirected) in addition to `/.well-known/security.txt`, otherwise a warning will be issued
+
 `bool $noIpv6 = false`
 
 Because some environments do not support IPv6, looking at you GitHub Actions
@@ -133,7 +137,7 @@ I'd recommend creating the signatures that way as it doesn't expose your private
 Creating a new signing key is beyond the scope of this document, but you can refer to sources like [the GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 Related challenges like key distribution, secure storage, and expiration, while interesting to address properly, are also not covered here.
 
-Having said that, this library also allows you to create the signature programmatically by calling `Spaze\SecurityTxt\Signature\SecurityTxtSignature::sign()`:
+Having said that, this library also allows you to create the signature programmatically by calling `Spaze\SecurityTxt\Signature\SecurityTxtSignature::sign()` (requires the `gnupg` PHP extension):
 ```php
 $gnuPgProvider = new SecurityTxtSignatureGnuPgProvider();
 $signature = new SecurityTxtSignature($gnuPgProvider);
@@ -190,7 +194,7 @@ The `checksecuritytxt.php` script, located in the `bin` directory, prints progre
 
 Usage:
 ```sh
-checksecuritytxt.php <URL or hostname> [days] [--colors] [--strict] [--no-ipv6]
+checksecuritytxt.php <URL or hostname> [days] [--colors] [--strict] [--require-top-level-location] [--no-ipv6]
 ```
 
 Parameters:
@@ -198,6 +202,7 @@ Parameters:
 - `days`: If the file expires in less than *`days`* days, the script will print a warning.
 - `--colors`: Enables colored output using red, green, and other colors for better readability.
 - `--strict`: Upgrades all warnings to errors, enforcing stricter validation.
+- `--require-top-level-location`: When specified, the `/security.txt` location must also exist or be redirected, otherwise a warning will be issued.
 - `--no-ipv6`: Disables IPv6 usage. When this option is set, the script effectively ignores AAAA DNS records and uses only A records.
 
 The script returns the following status codes:
@@ -216,6 +221,10 @@ In general, you’ll need to follow these steps:
 1. Install PHP if it is not already installed.
 2. Install this package using Composer.
 3. Run the `checksecuritytxt.php` script.
+
+GitHub Actions' `ubuntu-24.04` runner (also as `ubuntu-latest` at the time of writing) has PHP 8.3 preinstalled, so you can use `checksecuritytxt.php` without installing anything else, this lib can be used with PHP 8.3.
+But unfortunately the `gnupg` PHP extension is not available on GitHub runners so you won't be able to verify the file signatures.
+If you want to verify signatures you'll need to use [the `setup-php` GitHub action](https://github.com/marketplace/actions/setup-php-action) which can also set up the extension.
 
 You can use my own checks as a template or for inspiration; see [the `securitytxt.yml` file](https://github.com/spaze/michalspacek.cz/blob/main/.github/workflows/securitytxt.yml) in my repository.
 

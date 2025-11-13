@@ -12,7 +12,7 @@ final class SecurityTxtExpiresWrongFormat extends SecurityTxtSpecViolation
 	public function __construct(?string $correctValue = null)
 	{
 		if ($correctValue === null) {
-			$correctValue = new DateTimeImmutable('+1 year midnight -1 sec')->format(SecurityTxtExpires::FORMAT);
+			$correctValue = (new DateTimeImmutable('+1 year midnight -1 sec'))->format(SecurityTxtExpires::FORMAT);
 		}
 		parent::__construct(
 			func_get_args(),
