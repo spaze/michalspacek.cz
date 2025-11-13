@@ -88,13 +88,13 @@ final class SecurityTxtCheckHost
 	 * @throws SecurityTxtHostIpAddressNotFoundException
 	 * @throws SecurityTxtCannotVerifySignatureException
 	 */
-	public function check(string $url, ?int $expiresWarningThreshold = null, bool $strictMode = false, bool $noIpv6 = false): SecurityTxtCheckHostResult
+	public function check(string $url, ?int $expiresWarningThreshold = null, bool $strictMode = false, bool $requireTopLevelLocation = false, bool $noIpv6 = false): SecurityTxtCheckHostResult
 	{
 		$this->initFetcherCallbacks();
 
 		$host = $this->urlParser->getHostFromUrl($url);
 		$this->callOnCallback($this->onHost, $host);
-		$fetchResult = $this->fetcher->fetchHost($host, $noIpv6);
+		$fetchResult = $this->fetcher->fetchHost($host, $requireTopLevelLocation, $noIpv6);
 		$parseResult = $this->parser->parseFetchResult($fetchResult, $expiresWarningThreshold, $strictMode);
 
 		foreach ($parseResult->getFetchErrors() as $error) {

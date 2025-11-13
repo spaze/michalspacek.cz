@@ -16,7 +16,7 @@ final class SecurityTxtExpired extends SecurityTxtSpecViolation
 			'The file is considered stale and should not be used',
 			[],
 			'draft-foudil-securitytxt-09',
-			new DateTimeImmutable('+1 year midnight -1 sec')->format(SecurityTxtExpires::FORMAT),
+			(new DateTimeImmutable('+1 year midnight -1 sec'))->format(SecurityTxtExpires::FORMAT),
 			'The %s field should contain a date and time in the future formatted according to the Internet profile of ISO 8601 as defined in RFC 3339',
 			['Expires'],
 			'2.5.5',

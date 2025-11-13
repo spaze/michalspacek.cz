@@ -65,11 +65,11 @@ final class SecurityTxtFetcher
 	 * @throws SecurityTxtHostIpAddressInvalidTypeException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
 	 */
-	public function fetchHost(string $host, bool $noIpv6 = false): SecurityTxtFetchResult
+	public function fetchHost(string $host, bool $requireTopLevelLocation = false, bool $noIpv6 = false): SecurityTxtFetchResult
 	{
 		$wellKnown = $this->fetchUrl('https://%s/.well-known/security.txt', $host, $noIpv6);
 		$topLevel = $this->fetchUrl('https://%s/security.txt', $host, $noIpv6);
-		return $this->getResult($wellKnown, $topLevel);
+		return $this->getResult($wellKnown, $topLevel, $requireTopLevelLocation);
 	}
 
 
@@ -89,7 +89,6 @@ final class SecurityTxtFetcher
 		$url = $this->buildUrl($urlTemplate, $host);
 		$finalUrl = $url;
 		$this->callOnCallback($this->onUrl, $url);
-		$this->redirects[$url] = [];
 		$records = @dns_get_record($host, DNS_A | DNS_AAAA); // intentionally @, converted to exception
 		if ($records === false) {
 			throw new SecurityTxtHostNotFoundException($url, $host);
@@ -163,7 +162,7 @@ final class SecurityTxtFetcher
 	/**
 	 * @throws SecurityTxtNotFoundException
 	 */
-	private function getResult(SecurityTxtFetcherFetchHostResult $wellKnown, SecurityTxtFetcherFetchHostResult $topLevel): SecurityTxtFetchResult
+	private function getResult(SecurityTxtFetcherFetchHostResult $wellKnown, SecurityTxtFetcherFetchHostResult $topLevel, bool $requireTopLevelLocation): SecurityTxtFetchResult
 	{
 		$errors = $warnings = [];
 		$isRegularHtmlPageWellKnown = $this->isRegularHtmlPage($wellKnown);
@@ -190,11 +189,13 @@ final class SecurityTxtFetcher
 				],
 			);
 		} elseif ($wellKnownContents !== null && $topLevelContents === null) {
-			$warnings[] = new SecurityTxtWellKnownPathOnly();
+			if ($requireTopLevelLocation) {
+				$warnings[] = new SecurityTxtWellKnownPathOnly();
+			}
 			$result = $wellKnown;
 			$contents = $wellKnownContents;
 		} elseif ($wellKnownContents === null) {
-			$warnings[] = new SecurityTxtTopLevelPathOnly();
+			$errors[] = new SecurityTxtTopLevelPathOnly();
 			$result = $topLevel;
 			$contents = $topLevelContents;
 		} elseif ($wellKnownContents !== $topLevelContents) {
@@ -303,7 +304,7 @@ final class SecurityTxtFetcher
 			throw new SecurityTxtNoLocationHeaderException($url, $response->getHttpCode());
 		} else {
 			$originalUrl = $this->buildUrl($urlTemplate, $host);
-			$previousUrl = $this->redirects[$originalUrl] !== [] ? $this->redirects[$originalUrl][array_key_last($this->redirects[$originalUrl])] : $originalUrl;
+			$previousUrl = isset($this->redirects[$originalUrl]) && $this->redirects[$originalUrl] !== [] ? $this->redirects[$originalUrl][array_key_last($this->redirects[$originalUrl])] : $originalUrl;
 			$this->callOnCallback($this->onRedirect, $previousUrl, $location);
 			$this->redirects[$originalUrl][] = $location;
 			$finalUrl = $location = $this->urlParser->getRedirectUrl($location, $url);

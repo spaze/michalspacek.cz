@@ -11,7 +11,7 @@ final class SecurityTxtExpiresTooLong extends SecurityTxtSpecViolation
 
 	public function __construct()
 	{
-		$correctValue = new DateTimeImmutable('+1 year midnight -1 sec')->format(SecurityTxtExpires::FORMAT);
+		$correctValue = (new DateTimeImmutable('+1 year midnight -1 sec'))->format(SecurityTxtExpires::FORMAT);
 		parent::__construct(
 			func_get_args(),
 			'The value of the %s field should be less than a year into the future to avoid staleness',

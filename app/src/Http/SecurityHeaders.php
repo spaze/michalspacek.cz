@@ -16,12 +16,8 @@ use Spaze\ContentSecurityPolicy\CspConfig;
 final readonly class SecurityHeaders
 {
 
-	/** @var array<string|string[]> */
-	private array $permissionsPolicy;
-
-
 	/**
-	 * @param array<string|string[]> $permissionsPolicy
+	 * @param array<string, string|list<string>> $permissionsPolicy
 	 */
 	public function __construct(
 		private IRequest $httpRequest,
@@ -29,31 +25,22 @@ final readonly class SecurityHeaders
 		private Application $application,
 		private CspConfig $contentSecurityPolicy,
 		private LocaleLinkGenerator $localeLinkGenerator,
-		array $permissionsPolicy,
+		private array $permissionsPolicy,
 	) {
-		$this->permissionsPolicy = $this->normalizePermissionsPolicyValues($permissionsPolicy);
 	}
 
 
-	/**
-	 * @param array<string|string[]> $values
-	 * @return array<string|string[]>
-	 */
-	private function normalizePermissionsPolicyValues(array $values): array
+	private function normalizePermissionsPolicyValue(string $value): string
 	{
-		foreach ($values as &$value) {
-			if ($value === 'none') {
-				$value = '';
-			} elseif (is_array($value)) {
-				$value = $this->normalizePermissionsPolicyValues($value);
-			} elseif ($value !== 'self') {
-				$value = trim($value);
-				if ($value !== '') {
-					$value = sprintf('"%s"', $value);
-				}
+		if ($value === 'none') {
+			$value = '';
+		} elseif ($value !== 'self') {
+			$value = trim($value);
+			if ($value !== '') {
+				$value = sprintf('"%s"', $value);
 			}
 		}
-		return $values;
+		return $value;
 	}
 
 
@@ -62,9 +49,11 @@ final readonly class SecurityHeaders
 		$directives = [];
 		foreach ($this->permissionsPolicy as $directive => $values) {
 			if (is_array($values)) {
-				$values = implode(' ', Arrays::filterEmpty($values));
+				$values = implode(' ', Arrays::filterEmpty(array_map($this->normalizePermissionsPolicyValue(...), $values)));
+			} else {
+				$values = $this->normalizePermissionsPolicyValue($values);
 			}
-			$directives[] = "$directive=({$values})";
+			$directives[] = sprintf('%s=(%s)', $directive, $values);
 		}
 		return implode(', ', $directives);
 	}

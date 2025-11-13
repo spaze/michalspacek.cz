@@ -23,7 +23,7 @@ final class SecurityTxtExpiresSoon extends SecurityTxtSpecViolation
 			$format,
 			$values,
 			'draft-foudil-securitytxt-10',
-			new DateTimeImmutable('+1 year midnight -1 sec')->format(SecurityTxtExpires::FORMAT),
+			(new DateTimeImmutable('+1 year midnight -1 sec'))->format(SecurityTxtExpires::FORMAT),
 			'Update the value of the %s field',
 			['Expires'],
 			'2.5.5',
