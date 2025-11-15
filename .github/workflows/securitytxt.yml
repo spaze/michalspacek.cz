@@ -36,4 +36,5 @@ jobs:
         10 \
         --colors \
         --no-ipv6 \
+        --require-top-level-location \
         --strict
