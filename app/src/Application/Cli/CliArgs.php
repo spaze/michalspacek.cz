@@ -26,6 +26,9 @@ final readonly class CliArgs
 
 	public function getArg(string $arg): string
 	{
+		if (!array_key_exists($arg, $this->args)) {
+			throw new LogicException("Argument {$arg} is not defined by the args provider");
+		}
 		if (!is_string($this->args[$arg])) {
 			throw new LogicException("Argument {$arg} is not a string");
 		}
