@@ -15,6 +15,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - name: OS info
       run: cat /etc/os-release
@@ -33,6 +34,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - name: Validate composer.json and composer.lock
@@ -50,6 +52,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
@@ -70,6 +73,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
@@ -84,6 +88,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
@@ -98,6 +103,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
@@ -118,6 +124,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - name: Get PHP_CodeSniffer cache file pattern
@@ -139,6 +146,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - name: Get PHPStan result cache directory
@@ -160,6 +168,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - name: Get PHPStan result cache directory
@@ -181,6 +190,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
     - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
     - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
@@ -223,6 +233,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2
