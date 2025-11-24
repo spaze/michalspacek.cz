@@ -7,7 +7,7 @@ class Parser
 {
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array<string, string|true|null>
 	 */
 	public function parse(?array $args = null): array
 	{

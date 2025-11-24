@@ -156,4 +156,11 @@ final class CertificateMonitor implements CliArgsProvider
 		return [self::NO_IPV6];
 	}
 
+
+	#[Override]
+	public static function getPositionalArgs(): array
+	{
+		return [];
+	}
+
 }

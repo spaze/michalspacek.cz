@@ -14,4 +14,11 @@ final class NoCliArgs implements CliArgsProvider
 		return [];
 	}
 
+
+	#[Override]
+	public static function getPositionalArgs(): array
+	{
+		return [];
+	}
+
 }
