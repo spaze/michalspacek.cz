@@ -460,16 +460,16 @@
         },
         {
             "name": "nette/application",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "262f16bc2adab6f489a715efd854f1e2c909c702"
+                "reference": "aaa18a09a488a2e632162539f77f90b3024c44f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/262f16bc2adab6f489a715efd854f1e2c909c702",
-                "reference": "262f16bc2adab6f489a715efd854f1e2c909c702",
+                "url": "https://api.github.com/repos/nette/application/zipball/aaa18a09a488a2e632162539f77f90b3024c44f8",
+                "reference": "aaa18a09a488a2e632162539f77f90b3024c44f8",
                 "shasum": ""
             },
             "require": {
@@ -477,7 +477,7 @@
                 "nette/http": "^3.3.2",
                 "nette/routing": "^3.1",
                 "nette/utils": "^4.0",
-                "php": "8.1 - 8.4"
+                "php": "8.1 - 8.5"
             },
             "conflict": {
                 "latte/latte": "<2.7.1 || >=3.0.0 <3.0.18 || >=3.2",
@@ -549,9 +549,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/application/issues",
-                "source": "https://github.com/nette/application/tree/v3.2.7"
+                "source": "https://github.com/nette/application/tree/v3.2.8"
             },
-            "time": "2025-07-17T22:41:57+00:00"
+            "time": "2025-11-24T00:10:57+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -781,16 +781,16 @@
         },
         {
             "name": "nette/component-model",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/component-model.git",
-                "reference": "f8debd4867117e969478a7142047c7c3c389d085"
+                "reference": "0d100ba05279a1f4b20acecaa617027fbda8ecb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/component-model/zipball/f8debd4867117e969478a7142047c7c3c389d085",
-                "reference": "f8debd4867117e969478a7142047c7c3c389d085",
+                "url": "https://api.github.com/repos/nette/component-model/zipball/0d100ba05279a1f4b20acecaa617027fbda8ecb2",
+                "reference": "0d100ba05279a1f4b20acecaa617027fbda8ecb2",
                 "shasum": ""
             },
             "require": {
@@ -840,9 +840,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/component-model/issues",
-                "source": "https://github.com/nette/component-model/tree/v3.1.2"
+                "source": "https://github.com/nette/component-model/tree/v3.1.3"
             },
-            "time": "2025-08-06T22:45:03+00:00"
+            "time": "2025-11-22T18:56:33+00:00"
         },
         {
             "name": "nette/database",
@@ -1000,23 +1000,23 @@
         },
         {
             "name": "nette/forms",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "cedc41fe0eff7568f8875d6e4347e95bc4f0cf7a"
+                "reference": "3bbf691ea0eb50d9594c2109d9252f267092b91f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/cedc41fe0eff7568f8875d6e4347e95bc4f0cf7a",
-                "reference": "cedc41fe0eff7568f8875d6e4347e95bc4f0cf7a",
+                "url": "https://api.github.com/repos/nette/forms/zipball/3bbf691ea0eb50d9594c2109d9252f267092b91f",
+                "reference": "3bbf691ea0eb50d9594c2109d9252f267092b91f",
                 "shasum": ""
             },
             "require": {
                 "nette/component-model": "^3.1",
                 "nette/http": "^3.3",
                 "nette/utils": "^4.0.4",
-                "php": "8.1 - 8.4"
+                "php": "8.1 - 8.5"
             },
             "conflict": {
                 "latte/latte": ">=3.0.0 <3.0.12 || >=3.2"
@@ -1074,9 +1074,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/forms/issues",
-                "source": "https://github.com/nette/forms/tree/v3.2.7"
+                "source": "https://github.com/nette/forms/tree/v3.2.8"
             },
-            "time": "2025-07-17T22:54:05+00:00"
+            "time": "2025-11-22T19:36:34+00:00"
         },
         {
             "name": "nette/http",
@@ -1654,16 +1654,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.0.8",
+            "version": "v4.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "c930ca4e3cf4f17dcfb03037703679d2396d2ede"
+                "reference": "505a30ad386daa5211f08a318e47015b501cad30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/c930ca4e3cf4f17dcfb03037703679d2396d2ede",
-                "reference": "c930ca4e3cf4f17dcfb03037703679d2396d2ede",
+                "url": "https://api.github.com/repos/nette/utils/zipball/505a30ad386daa5211f08a318e47015b501cad30",
+                "reference": "505a30ad386daa5211f08a318e47015b501cad30",
                 "shasum": ""
             },
             "require": {
@@ -1737,9 +1737,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.0.8"
+                "source": "https://github.com/nette/utils/tree/v4.0.9"
             },
-            "time": "2025-08-06T21:43:34+00:00"
+            "time": "2025-10-31T00:45:47+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -2137,16 +2137,16 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v4.1.0",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "31021738a099921dc582f96ddcd76fd9c7aa58d0"
+                "reference": "9e96d9363ba05d6f78430e5ba77a8f2bce4378e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/31021738a099921dc582f96ddcd76fd9c7aa58d0",
-                "reference": "31021738a099921dc582f96ddcd76fd9c7aa58d0",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/9e96d9363ba05d6f78430e5ba77a8f2bce4378e6",
+                "reference": "9e96d9363ba05d6f78430e5ba77a8f2bce4378e6",
                 "shasum": ""
             },
             "require": {
@@ -2158,7 +2158,7 @@
             "require-dev": {
                 "nette/bootstrap": "^3.2",
                 "nette/neon": "^3.4.4",
-                "nette/tester": "^2.5",
+                "nette/tester": "^2.5.7",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4",
                 "phpstan/phpstan": "^2.1",
@@ -2187,22 +2187,22 @@
             "description": "Build Content Security Policy from a config file",
             "support": {
                 "issues": "https://github.com/spaze/csp-config/issues",
-                "source": "https://github.com/spaze/csp-config/tree/v4.1.0"
+                "source": "https://github.com/spaze/csp-config/tree/v4.2.0"
             },
-            "time": "2025-07-27T19:40:07+00:00"
+            "time": "2025-11-23T00:03:16+00:00"
         },
         {
             "name": "spaze/encryption",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/encryption.git",
-                "reference": "095408b042ba902eca3ba5e20da6cc9167e239e7"
+                "reference": "322c078c1ee3c98e952b4335475e3b7151992f58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/encryption/zipball/095408b042ba902eca3ba5e20da6cc9167e239e7",
-                "reference": "095408b042ba902eca3ba5e20da6cc9167e239e7",
+                "url": "https://api.github.com/repos/spaze/encryption/zipball/322c078c1ee3c98e952b4335475e3b7151992f58",
+                "reference": "322c078c1ee3c98e952b4335475e3b7151992f58",
                 "shasum": ""
             },
             "require": {
@@ -2211,11 +2211,12 @@
                 "php": "^8.2"
             },
             "require-dev": {
-                "nette/tester": "^2.5",
+                "nette/tester": "^2.5.7",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan": "^1.10",
-                "spaze/coding-standard": "^1.7"
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "spaze/coding-standard": "^1.9.1"
             },
             "type": "library",
             "autoload": {
@@ -2237,9 +2238,9 @@
             "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
             "support": {
                 "issues": "https://github.com/spaze/encryption/issues",
-                "source": "https://github.com/spaze/encryption/tree/v2.0.1"
+                "source": "https://github.com/spaze/encryption/tree/v2.1.0"
             },
-            "time": "2024-10-26T00:02:23+00:00"
+            "time": "2025-11-24T03:57:05+00:00"
         },
         {
             "name": "spaze/feed-exports",
@@ -2293,16 +2294,16 @@
         },
         {
             "name": "spaze/mysql-session-handler",
-            "version": "v3.2.1",
+            "version": "v3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/mysql-session-handler.git",
-                "reference": "e04d16832cafec929435edc47061732abef8f2ce"
+                "reference": "0cc4d31cd91ec6b085b87e9fb71db034d15e0adf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/e04d16832cafec929435edc47061732abef8f2ce",
-                "reference": "e04d16832cafec929435edc47061732abef8f2ce",
+                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/0cc4d31cd91ec6b085b87e9fb71db034d15e0adf",
+                "reference": "0cc4d31cd91ec6b085b87e9fb71db034d15e0adf",
                 "shasum": ""
             },
             "require": {
@@ -2345,22 +2346,22 @@
             ],
             "description": "MySQL session handler for Nette Framework with optionally encrypted storage",
             "support": {
-                "source": "https://github.com/spaze/mysql-session-handler/tree/v3.2.1"
+                "source": "https://github.com/spaze/mysql-session-handler/tree/v3.2.2"
             },
-            "time": "2025-08-22T18:21:47+00:00"
+            "time": "2025-11-23T17:19:36+00:00"
         },
         {
             "name": "spaze/nonce-generator",
-            "version": "v4.0.2",
+            "version": "v4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "01ecb2b8a9439908c1d09e62a877e335f9710a58"
+                "reference": "d82b6aa4a455c7e78b87233181b6d54f94d41a3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/01ecb2b8a9439908c1d09e62a877e335f9710a58",
-                "reference": "01ecb2b8a9439908c1d09e62a877e335f9710a58",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/d82b6aa4a455c7e78b87233181b6d54f94d41a3c",
+                "reference": "d82b6aa4a455c7e78b87233181b6d54f94d41a3c",
                 "shasum": ""
             },
             "require": {
@@ -2370,7 +2371,7 @@
                 "php": "^8.2"
             },
             "require-dev": {
-                "nette/tester": "^2.5",
+                "nette/tester": "^2.5.7",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4",
                 "phpstan/phpstan": "^2.1",
@@ -2400,33 +2401,33 @@
             "description": "Content Security Policy nonce generator",
             "support": {
                 "issues": "https://github.com/spaze/nonce-generator/issues",
-                "source": "https://github.com/spaze/nonce-generator/tree/v4.0.2"
+                "source": "https://github.com/spaze/nonce-generator/tree/v4.0.3"
             },
-            "time": "2025-07-26T15:56:19+00:00"
+            "time": "2025-11-23T00:37:37+00:00"
         },
         {
             "name": "spaze/phpinfo",
-            "version": "v1.3.1",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpinfo.git",
-                "reference": "e09eb50e1b36968efe083c445cb6ef64093de061"
+                "reference": "d8f60df0bbb92a901ec9a6a217f248bda34a89c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/e09eb50e1b36968efe083c445cb6ef64093de061",
-                "reference": "e09eb50e1b36968efe083c445cb6ef64093de061",
+                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/d8f60df0bbb92a901ec9a6a217f248bda34a89c3",
+                "reference": "d8f60df0bbb92a901ec9a6a217f248bda34a89c3",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.5.7",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/phpstan": "^1.9",
-                "spaze/coding-standard": "^1.3"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "spaze/coding-standard": "^1.8"
             },
             "type": "library",
             "autoload": {
@@ -2452,9 +2453,9 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpinfo/issues",
-                "source": "https://github.com/spaze/phpinfo/tree/v1.3.1"
+                "source": "https://github.com/spaze/phpinfo/tree/v1.4.0"
             },
-            "time": "2024-10-26T00:35:48+00:00"
+            "time": "2025-11-23T00:51:19+00:00"
         },
         {
             "name": "spaze/security-txt",
@@ -2462,12 +2463,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "ced26746e8898cb8bb235ce5602ce41fbe01e6b8"
+                "reference": "3d647c2de94a07c22bfb03adcbc1e6c2aa3d90a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/ced26746e8898cb8bb235ce5602ce41fbe01e6b8",
-                "reference": "ced26746e8898cb8bb235ce5602ce41fbe01e6b8",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/3d647c2de94a07c22bfb03adcbc1e6c2aa3d90a1",
+                "reference": "3d647c2de94a07c22bfb03adcbc1e6c2aa3d90a1",
                 "shasum": ""
             },
             "require-dev": {
@@ -2510,20 +2511,20 @@
                 "issues": "https://github.com/spaze/security-txt/issues",
                 "source": "https://github.com/spaze/security-txt/tree/main"
             },
-            "time": "2025-11-13T14:53:38+00:00"
+            "time": "2025-11-22T23:51:51+00:00"
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "4248f36e8ab66b82c4d9b9e1ee3bb0b86138b1d3"
+                "reference": "324376d343966bf4e54649d220372b4efabab9e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/4248f36e8ab66b82c4d9b9e1ee3bb0b86138b1d3",
-                "reference": "4248f36e8ab66b82c4d9b9e1ee3bb0b86138b1d3",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/324376d343966bf4e54649d220372b4efabab9e8",
+                "reference": "324376d343966bf4e54649d220372b4efabab9e8",
                 "shasum": ""
             },
             "require": {
@@ -2533,7 +2534,7 @@
             },
             "require-dev": {
                 "nette/application": "^3.1.13",
-                "nette/tester": "^2.5.1",
+                "nette/tester": "^2.5.7",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4",
                 "phpstan/phpstan": "^2.1",
@@ -2563,22 +2564,22 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v2.3.0"
+                "source": "https://github.com/spaze/sri-macros/tree/v2.4.0"
             },
-            "time": "2025-07-28T02:48:08+00:00"
+            "time": "2025-11-23T01:08:32+00:00"
         },
         {
             "name": "spaze/svg-icons-latte",
-            "version": "v1.0.4",
+            "version": "v1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/svg-icons-latte.git",
-                "reference": "82083f16f705902a04fc2b7bb0d4954cb99b01d9"
+                "reference": "b091b9a688ea0658ab87ff50c8c6e54f6f93aa44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/svg-icons-latte/zipball/82083f16f705902a04fc2b7bb0d4954cb99b01d9",
-                "reference": "82083f16f705902a04fc2b7bb0d4954cb99b01d9",
+                "url": "https://api.github.com/repos/spaze/svg-icons-latte/zipball/b091b9a688ea0658ab87ff50c8c6e54f6f93aa44",
+                "reference": "b091b9a688ea0658ab87ff50c8c6e54f6f93aa44",
                 "shasum": ""
             },
             "require": {
@@ -2615,9 +2616,9 @@
             "description": "SVG Icons Custom Tag for Latte Templating System",
             "support": {
                 "issues": "https://github.com/spaze/svg-icons-latte/issues",
-                "source": "https://github.com/spaze/svg-icons-latte/tree/v1.0.4"
+                "source": "https://github.com/spaze/svg-icons-latte/tree/v1.0.5"
             },
-            "time": "2025-07-26T15:27:11+00:00"
+            "time": "2025-11-24T00:29:52+00:00"
         },
         {
             "name": "symfony/cache",
@@ -3543,16 +3544,16 @@
         },
         {
             "name": "texy/texy",
-            "version": "v3.2.6",
+            "version": "v3.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "ce49fed7129e9fbd0245b45dc0738ad8b5313afd"
+                "reference": "b2983ca40a29e8420d53cfd48a3a262d4283d501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/ce49fed7129e9fbd0245b45dc0738ad8b5313afd",
-                "reference": "ce49fed7129e9fbd0245b45dc0738ad8b5313afd",
+                "url": "https://api.github.com/repos/dg/texy/zipball/b2983ca40a29e8420d53cfd48a3a262d4283d501",
+                "reference": "b2983ca40a29e8420d53cfd48a3a262d4283d501",
                 "shasum": ""
             },
             "require": {
@@ -3597,7 +3598,7 @@
                 }
             ],
             "description": "Texy converts plain text in easy to read Texy syntax into structurally valid (X)HTML. It supports adding of images, links, nested lists, tables and has full support for CSS. Texy supports hyphenation of long words (which reflects language rules), clickable emails and URL (emails are obfuscated against spambots), national typographic single and double quotation marks, ellipses, em dashes, dimension sign, nonbreakable spaces (e.g. in phone numbers), acronyms, arrows and many others. Texy code can optionally contain HTML tags.",
-            "homepage": "https://texy.info",
+            "homepage": "https://texy.nette.org",
             "keywords": [
                 "html",
                 "markdown",
@@ -3609,9 +3610,9 @@
                 "wiki"
             ],
             "support": {
-                "source": "https://github.com/dg/texy/tree/v3.2.6"
+                "source": "https://github.com/dg/texy/tree/v3.2.7"
             },
-            "time": "2025-08-06T22:41:15+00:00"
+            "time": "2025-11-23T20:42:31+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -3737,16 +3738,16 @@
         },
         {
             "name": "nette/tester",
-            "version": "v2.5.6",
+            "version": "v2.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "f7328f743d06df233bbc9b68da9f4941f73ad661"
+                "reference": "dc02e7811f3491a72e87538044586cee2f483d58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/f7328f743d06df233bbc9b68da9f4941f73ad661",
-                "reference": "f7328f743d06df233bbc9b68da9f4941f73ad661",
+                "url": "https://api.github.com/repos/nette/tester/zipball/dc02e7811f3491a72e87538044586cee2f483d58",
+                "reference": "dc02e7811f3491a72e87538044586cee2f483d58",
                 "shasum": ""
             },
             "require": {
@@ -3809,9 +3810,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tester/issues",
-                "source": "https://github.com/nette/tester/tree/v2.5.6"
+                "source": "https://github.com/nette/tester/tree/v2.5.7"
             },
-            "time": "2025-08-07T00:28:58+00:00"
+            "time": "2025-11-22T18:50:53+00:00"
         },
         {
             "name": "php-parallel-lint/php-console-highlighter",
@@ -4224,12 +4225,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "ccc4996aff4ff810b514472932f677753ee5d8a4"
+                "reference": "f5a58d09ea64ab1d080876ee3abbd3b90dd022d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ccc4996aff4ff810b514472932f677753ee5d8a4",
-                "reference": "ccc4996aff4ff810b514472932f677753ee5d8a4",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f5a58d09ea64ab1d080876ee3abbd3b90dd022d6",
+                "reference": "f5a58d09ea64ab1d080876ee3abbd3b90dd022d6",
                 "shasum": ""
             },
             "conflict": {
@@ -4282,7 +4283,7 @@
                 "aws/aws-sdk-php": "<3.288.1",
                 "azuracast/azuracast": "<0.18.3",
                 "b13/seo_basics": "<0.8.2",
-                "backdrop/backdrop": "<1.27.3|>=1.28,<1.28.2",
+                "backdrop/backdrop": "<=1.32",
                 "backpack/crud": "<3.4.9",
                 "backpack/filemanager": "<2.0.2|>=3,<3.0.9",
                 "bacula-web/bacula-web": "<9.7.1",
@@ -4345,6 +4346,7 @@
                 "codeigniter4/shield": "<1.0.0.0-beta8",
                 "codiad/codiad": "<=2.8.4",
                 "codingms/additional-tca": ">=1.7,<1.15.17|>=1.16,<1.16.9",
+                "codingms/modules": "<4.3.11|>=5,<5.7.4|>=6,<6.4.2|>=7,<7.5.5",
                 "commerceteam/commerce": ">=0.9.6,<0.9.9",
                 "components/jquery": ">=1.0.3,<3.5",
                 "composer/composer": "<1.10.27|>=2,<2.2.24|>=2.3,<2.7.7",
@@ -4378,6 +4380,7 @@
                 "derhansen/sf_event_mgt": "<4.3.1|>=5,<5.1.1|>=7,<7.4",
                 "desperado/xml-bundle": "<=0.1.7",
                 "dev-lancer/minecraft-motd-parser": "<=1.0.5",
+                "devcode-it/openstamanager": "<=2.9.4",
                 "devgroup/dotplant": "<2020.09.14-dev",
                 "digimix/wp-svg-upload": "<=1",
                 "directmailteam/direct-mail": "<6.0.3|>=7,<7.0.3|>=8,<9.5.2",
@@ -4407,10 +4410,11 @@
                 "drupal/commerce_alphabank_redirect": "<1.0.3",
                 "drupal/commerce_eurobank_redirect": "<2.1.1",
                 "drupal/config_split": "<1.10|>=2,<2.0.2",
-                "drupal/core": ">=6,<6.38|>=7,<7.102|>=8,<10.3.14|>=10.4,<10.4.5|>=11,<11.0.13|>=11.1,<11.1.5",
+                "drupal/core": ">=6,<6.38|>=7,<7.102|>=8,<10.4.9|>=10.5,<10.5.6|>=11,<11.1.9|>=11.2,<11.2.8",
                 "drupal/core-recommended": ">=7,<7.102|>=8,<10.2.11|>=10.3,<10.3.9|>=11,<11.0.8",
                 "drupal/currency": "<3.5",
                 "drupal/drupal": ">=5,<5.11|>=6,<6.38|>=7,<7.102|>=8,<10.2.11|>=10.3,<10.3.9|>=11,<11.0.8",
+                "drupal/email_tfa": "<2.0.6",
                 "drupal/formatter_suite": "<2.1",
                 "drupal/gdpr": "<3.0.1|>=3.1,<3.1.2",
                 "drupal/google_tag": "<1.8|>=2,<2.0.8",
@@ -4426,6 +4430,7 @@
                 "drupal/quick_node_block": "<2",
                 "drupal/rapidoc_elements_field_formatter": "<1.0.1",
                 "drupal/reverse_proxy_header": "<1.1.2",
+                "drupal/simple_multistep": "<2",
                 "drupal/simple_oauth": ">=6,<6.0.7",
                 "drupal/spamspan": "<3.2.1",
                 "drupal/tfa": "<1.10",
@@ -4518,7 +4523,7 @@
                 "geshi/geshi": "<=1.0.9.1",
                 "getformwork/formwork": "<1.13.1|>=2.0.0.0-beta1,<2.0.0.0-beta4",
                 "getgrav/grav": "<1.7.46",
-                "getkirby/cms": "<3.9.8.3-dev|>=3.10,<3.10.1.2-dev|>=4,<4.7.1",
+                "getkirby/cms": "<3.9.8.3-dev|>=3.10,<3.10.1.2-dev|>=4,<4.7.1|>=5,<5.1.4",
                 "getkirby/kirby": "<3.9.8.3-dev|>=3.10,<3.10.1.2-dev|>=4,<4.7.1",
                 "getkirby/panel": "<2.5.14",
                 "getkirby/starterkit": "<=3.7.0.2",
@@ -4698,6 +4703,7 @@
                 "modx/revolution": "<=3.1",
                 "mojo42/jirafeau": "<4.4",
                 "mongodb/mongodb": ">=1,<1.9.2",
+                "mongodb/mongodb-extension": "<1.21.2",
                 "monolog/monolog": ">=1.8,<1.12",
                 "moodle/moodle": "<4.4.11|>=4.5.0.0-beta,<4.5.7|>=5.0.0.0-beta,<5.0.3",
                 "moonshine/moonshine": "<=3.12.5",
@@ -4705,10 +4711,9 @@
                 "movim/moxl": ">=0.8,<=0.10",
                 "movingbytes/social-network": "<=1.2.1",
                 "mpdf/mpdf": "<=7.1.7",
-                "munkireport/comment": "<4.1",
+                "munkireport/comment": "<4",
                 "munkireport/managedinstalls": "<2.6",
                 "munkireport/munki_facts": "<1.5",
-                "munkireport/munkireport": ">=2.5.3,<5.6.3",
                 "munkireport/reportdata": "<3.5",
                 "munkireport/softwareupdate": "<1.6",
                 "mustache/mustache": ">=2,<2.14.1",
@@ -4793,11 +4798,12 @@
                 "phpmailer/phpmailer": "<6.5",
                 "phpmussel/phpmussel": ">=1,<1.6",
                 "phpmyadmin/phpmyadmin": "<5.2.2",
-                "phpmyfaq/phpmyfaq": "<3.2.5|==3.2.5|>=3.2.10,<=4.0.1",
+                "phpmyfaq/phpmyfaq": "<=4.0.13",
                 "phpoffice/common": "<0.2.9",
                 "phpoffice/math": "<=0.2",
                 "phpoffice/phpexcel": "<=1.8.2",
                 "phpoffice/phpspreadsheet": "<1.30|>=2,<2.1.12|>=2.2,<2.4|>=3,<3.10|>=4,<5",
+                "phppgadmin/phppgadmin": "<=7.13",
                 "phpseclib/phpseclib": "<2.0.47|>=3,<3.0.36",
                 "phpservermon/phpservermon": "<3.6",
                 "phpsysinfo/phpsysinfo": "<3.4.3",
@@ -4833,7 +4839,7 @@
                 "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "prestashop/ps_linklist": "<3.1",
-                "privatebin/privatebin": "<1.4|>=1.5,<1.7.4|>=1.7.7,<2.0.2",
+                "privatebin/privatebin": "<1.4|>=1.5,<1.7.4|>=1.7.7,<2.0.3",
                 "processwire/processwire": "<=3.0.246",
                 "propel/propel": ">=2.0.0.0-alpha1,<=2.0.0.0-alpha7",
                 "propel/propel1": ">=1,<=1.7.1",
@@ -4877,7 +4883,7 @@
                 "setasign/fpdi": "<2.6.4",
                 "sfroemken/url_redirect": "<=1.2.1",
                 "sheng/yiicms": "<1.2.1",
-                "shopware/core": "<6.6.10.7-dev|>=6.7,<6.7.3.1-dev",
+                "shopware/core": "<6.6.10.9-dev|>=6.7,<6.7.4.1-dev",
                 "shopware/platform": "<6.6.10.7-dev|>=6.7,<6.7.3.1-dev",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<=5.7.17|>=6.7,<6.7.2.1-dev",
@@ -4922,7 +4928,7 @@
                 "slim/slim": "<2.6",
                 "slub/slub-events": "<3.0.3",
                 "smarty/smarty": "<4.5.3|>=5,<5.1.1",
-                "snipe/snipe-it": "<8.1.18",
+                "snipe/snipe-it": "<=8.3.4",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
                 "solspace/craft-freeform": ">=5,<5.10.16",
@@ -5014,7 +5020,7 @@
                 "thelia/thelia": ">=2.1,<2.1.3",
                 "theonedemon/phpwhois": "<=4.2.5",
                 "thinkcmf/thinkcmf": "<6.0.8",
-                "thorsten/phpmyfaq": "<=4.0.1|>=4.0.7,<4.0.13",
+                "thorsten/phpmyfaq": "<=4.0.13",
                 "tikiwiki/tiki-manager": "<=17.1",
                 "timber/timber": ">=0.16.6,<1.23.1|>=1.24,<1.24.1|>=2,<2.1",
                 "tinymce/tinymce": "<7.2",
@@ -5207,7 +5213,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-12T14:06:11+00:00"
+            "time": "2025-11-20T22:05:30+00:00"
         },
         {
             "name": "shipmonk/composer-dependency-analyser",
@@ -5277,32 +5283,32 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "8.24.0",
+            "version": "8.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "08e7989c0351f3f38b82172838195c35d9819efa"
+                "reference": "3ce4dafb4fe2493715f397f21772988ef2122e20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/08e7989c0351f3f38b82172838195c35d9819efa",
-                "reference": "08e7989c0351f3f38b82172838195c35d9819efa",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/3ce4dafb4fe2493715f397f21772988ef2122e20",
+                "reference": "3ce4dafb4fe2493715f397f21772988ef2122e20",
                 "shasum": ""
             },
             "require": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.1.2",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.2.0",
                 "php": "^7.4 || ^8.0",
                 "phpstan/phpdoc-parser": "^2.3.0",
-                "squizlabs/php_codesniffer": "^4.0.0"
+                "squizlabs/php_codesniffer": "^4.0.1"
             },
             "require-dev": {
                 "phing/phing": "3.0.1|3.1.0",
                 "php-parallel-lint/php-parallel-lint": "1.4.0",
-                "phpstan/phpstan": "2.1.29",
+                "phpstan/phpstan": "2.1.32",
                 "phpstan/phpstan-deprecation-rules": "2.0.3",
-                "phpstan/phpstan-phpunit": "2.0.7",
-                "phpstan/phpstan-strict-rules": "2.0.6",
-                "phpunit/phpunit": "9.6.8|10.5.48|11.4.4|11.5.36|12.3.14"
+                "phpstan/phpstan-phpunit": "2.0.8",
+                "phpstan/phpstan-strict-rules": "2.0.7",
+                "phpunit/phpunit": "9.6.8|10.5.48|11.4.4|11.5.36|12.4.4"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
@@ -5326,7 +5332,7 @@
             ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/8.24.0"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.25.0"
             },
             "funding": [
                 {
@@ -5338,20 +5344,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-25T21:37:40+00:00"
+            "time": "2025-11-22T10:33:53+00:00"
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v1.9.0",
+            "version": "v1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "a255d7c14677b655ac77025cf1a555408e738046"
+                "reference": "f6e60556738d425bbd8f7b1e3c9c14459606dc6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/a255d7c14677b655ac77025cf1a555408e738046",
-                "reference": "a255d7c14677b655ac77025cf1a555408e738046",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/f6e60556738d425bbd8f7b1e3c9c14459606dc6e",
+                "reference": "f6e60556738d425bbd8f7b1e3c9c14459606dc6e",
                 "shasum": ""
             },
             "require": {
@@ -5384,9 +5390,9 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/coding-standard/issues",
-                "source": "https://github.com/spaze/coding-standard/tree/v1.9.0"
+                "source": "https://github.com/spaze/coding-standard/tree/v1.9.1"
             },
-            "time": "2025-09-24T21:27:04+00:00"
+            "time": "2025-11-23T00:13:17+00:00"
         },
         {
             "name": "spaze/phpcs-phar",

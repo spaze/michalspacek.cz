@@ -10,7 +10,7 @@ Custom PHP session handler for [Nette Framework](http://nette.org/) that uses My
 
 ## Installation
 
-Preferred way to install spaze/mysql-session-handler is by using [Composer](http://getcomposer.org/):
+The preferred way to install spaze/mysql-session-handler is by using [Composer](http://getcomposer.org/):
 
 ```sh
 $ composer require spaze/mysql-session-handler
@@ -20,9 +20,13 @@ $ composer require spaze/mysql-session-handler
 
 After installation:
 
-1) Create the table sessions using SQL in [sql/create.sql](sql/create.sql).
+1) Create a table named `sessions` using SQL in [sql/create.sql](sql/create.sql). The name of the table can be changed in the configuration using the `tableName` key, like this:
+```neon
+sessionHandler:
+    tableName: sessions_table
+```
 
-2) Register an extension in config.neon:
+2) Register the extension in your configuration file (e.g. `config.neon`):
 
 ```neon
 	extensions:
@@ -31,14 +35,14 @@ After installation:
 
 ## Features
 
-- For security reasons, Session ID is stored in the database as an SHA-256 hash.
+- For security reasons, the session id is stored in the database as an SHA-256 hash.
 - Supports encrypted session storage via [spaze/encryption](https://github.com/spaze/encryption) which uses [paragonie/halite](https://github.com/paragonie/halite) which uses [Sodium](https://php.net/sodium).
-- Events that allow you to add additional columns to the session storage table for example.
-- Multi-Master Replication friendly (tested in Master-Master row-based replication setup).
+- Events that allow you, for example, to add additional columns to the session storage table.
+- Multi-master replication-friendly (tested in master-master row-based replication setup).
 
 ## Encrypted session storage
 
-Follow the guide at [spaze/encryption](https://github.com/spaze/encryption#usage-in-nette-framework) to define a new encryption key.
+Follow the guide at [spaze/encryption](https://github.com/spaze/encryption#usage-in-nette-framework) to create and configure a new encryption key.
 
 Define a new service:
 ```
@@ -51,12 +55,12 @@ sessionHandler:
     encryptionService: @sessionEncryption
 ```
 
-Migration from unecrypted to encrypted session storage is not (yet?) supported.
+Migration from unencrypted to encrypted session storage is not (yet?) supported.
 
 ## Events
 
 ### `onBeforeDataWrite`
-The event occurs before session data is written to the session table, both for a new session (when a new row is inserted) or an existing session (a row is updated), even if there's no change in the session data.
+The event occurs before session data is written to the session table, both for a new session (when a new row is inserted) and for an existing session (when a row is updated), even if there is no change in the session data.
 
 ## Additional columns
 
@@ -64,7 +68,7 @@ You can add a new column to the session table by calling `setAdditionalData()` i
 ```
 setAdditionalData(string $key, $value): void
 ```
-Use it to store for example user id to which the session belongs to. See for example [this code](https://github.com/spaze/michalspacek.cz/blob/fbd438e8f4c1da658a88bc8c3bf5af59fcd063e6/app/src/Application/WebApplication.php#L42-L50) that uses the `Nette\Security\User::onLoggedIn` handler to do that.
+Use it to store, for example, the user id the session belongs to. See for example [this code](https://github.com/spaze/michalspacek.cz/blob/fbd438e8f4c1da658a88bc8c3bf5af59fcd063e6/app/src/Application/WebApplication.php#L42-L50) which uses the `Nette\Security\User::onLoggedIn` handler to do that.
 
 ## Credits
 

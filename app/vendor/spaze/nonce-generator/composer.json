@@ -19,7 +19,7 @@
 		"psr-4": {"Spaze\\NonceGenerator\\": "src"}
 	},
 	"require-dev": {
-		"nette/tester": "^2.5",
+		"nette/tester": "^2.5.7",
 		"phpstan/phpstan": "^2.1",
 		"spaze/coding-standard": "^1.8",
 		"php-parallel-lint/php-parallel-lint": "^1.4",

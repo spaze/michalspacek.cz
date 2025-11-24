@@ -24,8 +24,13 @@
 		<exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace"/>
 	</rule>
 	<rule ref="PSR12.Files.FileHeader">
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterDeclareBlock"/>
 		<exclude name="PSR12.Files.FileHeader.SpacingAfterDocblockBlock"/>
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterNamespaceBlock"/>
 		<exclude name="PSR12.Files.FileHeader.SpacingAfterTagBlock"/>
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterUseBlock"/>
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterUseConstBlock"/>
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterUseFunctionBlock"/>
 	</rule>
 	<rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
 	<rule ref="SlevomatCodingStandard.Classes.BackedEnumTypeSpacing">

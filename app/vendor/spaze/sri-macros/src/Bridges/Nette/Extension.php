@@ -10,10 +10,10 @@ use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use Spaze\SubresourceIntegrity\Bridges\Latte\LatteExtension;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\SriNodeFactory;
-use Spaze\SubresourceIntegrity\Config;
 use Spaze\SubresourceIntegrity\FileBuilder;
 use Spaze\SubresourceIntegrity\HashingAlgo;
 use Spaze\SubresourceIntegrity\LocalMode;
+use Spaze\SubresourceIntegrity\SriConfig;
 
 class Extension extends CompilerExtension
 {
@@ -50,9 +50,11 @@ class Extension extends CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('config'))
-			->setType(Config::class)
+			->setType(SriConfig::class)
 			->addSetup('setResources', [$this->config->resources])
-			->addSetup('setLocalPrefix', [$this->config->localPrefix->url, $this->config->localPrefix->path, $this->config->localPrefix->build])
+			->addSetup('setLocalUrlPrefix', [$this->config->localPrefix->url])
+			->addSetup('setLocalPathPrefix', [$this->config->localPrefix->path])
+			->addSetup('setLocalBuildPrefix', [$this->config->localPrefix->build])
 			->addSetup('setLocalMode', [$this->config->localMode])
 			->addSetup('setHashingAlgos', [$this->config->hashingAlgos]);
 		$builder->addDefinition($this->prefix('fileBuilder'))

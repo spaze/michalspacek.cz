@@ -19,7 +19,7 @@
 		"psr-4": {"Spaze\\ContentSecurityPolicy\\": "src"}
 	},
 	"require-dev": {
-		"nette/tester": "^2.5",
+		"nette/tester": "^2.5.7",
 		"nette/bootstrap": "^3.2",
 		"nette/neon": "^3.4.4",
 		"phpstan/phpstan": "^2.1",
@@ -31,7 +31,7 @@
 		"lint": "vendor/bin/parallel-lint --colors src/ tests/",
 		"phpcs": "vendor/bin/phpcs src/ tests/",
 		"cs-fix": "vendor/bin/phpcbf src/ tests/",
-		"phpstan": "vendor/phpstan/phpstan/phpstan --ansi analyse --configuration phpstan.neon",
+		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 tests/",
 		"test": [
 			"@lint",
