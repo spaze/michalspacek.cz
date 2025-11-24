@@ -16,7 +16,6 @@ return (new Configuration())
 	->ignoreErrorsOnPackage('jetbrains/phpstorm-attributes', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
 	// It's used, believe me
-	->ignoreErrorsOnPackage('latte/latte', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('async-aws/lambda', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('spaze/security-txt', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('mlocati/ip-lib', [ErrorType::UNUSED_DEPENDENCY])
