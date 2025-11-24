@@ -9,7 +9,6 @@ parameters:
 		- php
 		- phpt
 	level: max
-	checkMissingOverrideMethodAttribute: true
 	ignoreErrors:
 		- # The getId() and getData() methods are called on a SimpleIdentity object, but are defined in a deprecated Identity class
 			identifier: method.deprecatedClass
