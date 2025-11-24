@@ -66,7 +66,7 @@ final class Request implements IRequest
 	#[Override]
 	public function getPost(?string $key = null)
 	{
-		return func_num_args() === 0 ? $this->post : $this->post[$key] ?? null;
+		return $key === null ? $this->post : $this->post[$key] ?? null;
 	}
 
 

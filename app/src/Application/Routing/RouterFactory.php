@@ -54,7 +54,7 @@ final class RouterFactory
 	/**
 	 * @param array<string, array<string, string>> $supportedLocales host => array of supported locales
 	 * @param array<string, string> $rootDomainMapping locale => root domain
-	 * @param array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> $translatedRoutes
+	 * @param array<string, array<string, array{mask:array<string, string|null>, actions?:array<string, array<string, string>>}>> $translatedRoutes
 	 */
 	public function __construct(
 		private readonly BlogPostLoader $blogPostLoader,
@@ -74,7 +74,7 @@ final class RouterFactory
 		foreach ($this->translatedRoutes as $module => $routes) {
 			foreach ($routes as $presenter => $items) {
 				foreach ($items['mask'] as $locale => $mask) {
-					$this->translatedPresenters[$module][$locale][$mask] = $presenter;
+					$this->translatedPresenters[$module][$locale][$mask ?? ''] = $presenter;
 				}
 				if (isset($items['actions'])) {
 					foreach ($items['actions'] as $action => $actions) {
