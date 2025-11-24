@@ -4,18 +4,21 @@ declare(strict_types = 1);
 namespace Spaze\SubresourceIntegrity\Bridges\Latte;
 
 use Latte\Compiler\Tag;
+use Latte\Engine;
 use Latte\Extension;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\ResourceHashNode;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\ResourceUrlNode;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\ScriptNode;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\SriNodeFactory;
 use Spaze\SubresourceIntegrity\Bridges\Latte\Nodes\StyleSheetNode;
+use Spaze\SubresourceIntegrity\SriConfig;
 
 class LatteExtension extends Extension
 {
 
 	public function __construct(
 		private readonly SriNodeFactory $sriNodeFactory,
+		private readonly SriConfig $sriConfig,
 	) {
 	}
 
@@ -28,6 +31,19 @@ class LatteExtension extends Extension
 			'styleSheet' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, StyleSheetNode::class),
 			'resourceUrl' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, ResourceUrlNode::class),
 			'resourceHash' => fn(Tag $tag) => $this->sriNodeFactory->create($tag, ResourceHashNode::class),
+		];
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	public function getCacheKey(Engine $engine): array
+	{
+		return [
+			$this->sriConfig->getLocalUrlPrefix(),
+			$this->sriConfig->getLocalPathPrefix(),
+			$this->sriConfig->getLocalBuildPrefix(),
 		];
 	}
 

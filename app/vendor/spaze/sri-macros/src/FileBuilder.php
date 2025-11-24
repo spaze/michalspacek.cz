@@ -12,8 +12,8 @@ class FileBuilder
 	 * Get build file mode data.
 	 *
 	 * @param ResourceInterface[] $resources
-	 * @param string $pathPrefix Should be an absolute path
-	 * @param string $buildPrefix
+	 * @param string $pathPrefix Should be an absolute path, no trailing slash
+	 * @param string $buildPrefix Both leading and trailing slashes removed
 	 * @param HtmlElement|null $targetHtmlElement
 	 * @return LocalFile
 	 */
@@ -29,11 +29,11 @@ class FileBuilder
 		}
 		$build = sprintf(
 			'%s/%s.%s',
-			trim($buildPrefix, '/'),
+			$buildPrefix,
 			rtrim(strtr(base64_encode(hash('sha256', $content, true)), '+/', '-_'), '='), // Encoded to base64url, see https://tools.ietf.org/html/rfc4648#section-5
 			$extension,
 		);
-		$buildFilename = sprintf('%s/%s', rtrim($pathPrefix, '/'), $build);
+		$buildFilename = sprintf('%s/%s', $pathPrefix, $build);
 
 		if (!is_writable(dirname($buildFilename))) {
 			throw new Exceptions\DirectoryNotWritableException('Directory ' . dirname($buildFilename) . " doesn't exist or isn't writable");

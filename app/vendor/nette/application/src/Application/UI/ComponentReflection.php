@@ -49,12 +49,13 @@ final class ComponentReflection extends \ReflectionClass
 				|| $prop->getAttributes(Attributes\Persistent::class)
 			) {
 				$params[$prop->getName()] = [
-					'def' => $prop->getDefaultValue(),
+					'def' => $prop->hasDefaultValue() ? $prop->getDefaultValue() : null,
 					'type' => ParameterConverter::getType($prop),
 					'since' => $isPresenter ? Reflection::getPropertyDeclaringClass($prop)->getName() : null,
 				];
 			} elseif ($prop->getAttributes(Attributes\Parameter::class)) {
 				$params[$prop->getName()] = [
+					'def' => $prop->hasDefaultValue() ? $prop->getDefaultValue() : null,
 					'type' => (string) ($prop->getType() ?? 'mixed'),
 				];
 			}

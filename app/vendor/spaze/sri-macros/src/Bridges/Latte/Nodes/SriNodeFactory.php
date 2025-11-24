@@ -8,16 +8,16 @@ use Latte\Compiler\Node;
 use Latte\Compiler\Nodes\Php\Expression\BinaryOpNode;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
 use Latte\Compiler\Tag;
-use Spaze\SubresourceIntegrity\Config;
 use Spaze\SubresourceIntegrity\Exceptions\ShouldNotHappenException;
 use Spaze\SubresourceIntegrity\Exceptions\UnsupportedNodeException;
 use Spaze\SubresourceIntegrity\Exceptions\UnsupportedOperatorException;
+use Spaze\SubresourceIntegrity\SriConfig;
 
 readonly class SriNodeFactory
 {
 
 	public function __construct(
-		private Config $sriConfig,
+		private SriConfig $sriConfig,
 	) {
 	}
 
@@ -73,8 +73,8 @@ readonly class SriNodeFactory
 		if ($node instanceof StringNode) {
 			$resources[] = $node->value;
 		} elseif ($node instanceof BinaryOpNode) {
-			if ($node->operator !== Config::BUILD_SEPARATOR) {
-				throw new UnsupportedOperatorException($node->operator, Config::BUILD_SEPARATOR);
+			if ($node->operator !== SriConfig::BUILD_SEPARATOR) {
+				throw new UnsupportedOperatorException($node->operator, SriConfig::BUILD_SEPARATOR);
 			}
 			foreach ($node as $item) {
 				$resources = array_merge($resources, $this->getResources($item));

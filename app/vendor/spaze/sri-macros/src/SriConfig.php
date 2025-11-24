@@ -10,7 +10,7 @@ use Spaze\SubresourceIntegrity\Exceptions\ShouldNotHappenException;
 use Spaze\SubresourceIntegrity\Resource\FileResource;
 use Spaze\SubresourceIntegrity\Resource\StringResource;
 
-class Config
+class SriConfig
 {
 
 	/** @internal separator between multiple resources */
@@ -19,12 +19,20 @@ class Config
 	/** @var array<string, string|array{url: string, hash: string|array<int, string>}> */
 	private array $resources = [];
 
-	/** @var array{url: string, path: string, build: string} */
-	private array $localPrefix = [
-		'url' => '',
-		'path' => '',
-		'build' => '',
-	];
+	/**
+	 * URL prefix for local files, will be used in templates, trailing slash removed
+	 */
+	private string $localUrlPrefix = '';
+
+	/**
+	 * Filesystem path prefix where the local files are located, trailing slash removed
+	 */
+	private string $localPathPrefix = '';
+
+	/**
+	 * Path prefix where files will be created, relative to the other prefixes, both leading and trailing slashes removed
+	 */
+	private string $localBuildPrefix = '';
 
 	private LocalMode $localMode = LocalMode::Direct;
 
@@ -50,23 +58,39 @@ class Config
 	}
 
 
-	public function setLocalPrefix(string $urlPrefix, string $pathPrefix, string $buildPrefix): void
+	public function setLocalUrlPrefix(string $prefix): void
 	{
-		$this->localPrefix['url'] = $urlPrefix;
-		$this->localPrefix['path'] = $pathPrefix;
-		$this->localPrefix['build'] = $buildPrefix;
+		$this->localUrlPrefix = rtrim($prefix, '/');
+	}
+
+
+	public function getLocalUrlPrefix(): string
+	{
+		return $this->localUrlPrefix;
+	}
+
+
+	public function setLocalPathPrefix(string $prefix): void
+	{
+		$this->localPathPrefix = rtrim($prefix, '/');
+	}
+
+
+	public function getLocalPathPrefix(): string
+	{
+		return $this->localPathPrefix;
 	}
 
 
 	public function setLocalBuildPrefix(string $prefix): void
 	{
-		$this->localPrefix['build'] = $prefix;
+		$this->localBuildPrefix = trim($prefix, '/');
 	}
 
 
-	public function getLocalPathBuildPrefix(): string
+	public function getLocalBuildPrefix(): string
 	{
-		return sprintf('%s/%s', rtrim($this->localPrefix['path'], '/'), trim($this->localPrefix['build'], '/'));
+		return $this->localBuildPrefix;
 	}
 
 
@@ -104,7 +128,7 @@ class Config
 		} else {
 			$url = sprintf(
 				'%s/%s',
-				rtrim($this->localPrefix['url'], '/'),
+				$this->localUrlPrefix,
 				$this->localFile($resource, $targetHtmlElement)->getUrl(),
 			);
 		}
@@ -172,7 +196,7 @@ class Config
 					if (!$cwd) {
 						throw new ShouldNotHappenException();
 					}
-					$filename = sprintf('%s/%s/%s', rtrim($cwd, '/'), trim($this->localPrefix['path'], '/'), $url);
+					$filename = sprintf('%s/%s/%s', rtrim($cwd, '/'), ltrim($this->localPathPrefix, '/'), $url);
 					$localFile = new LocalFile($url, $filename);
 					break;
 				case LocalMode::Build:
@@ -184,7 +208,7 @@ class Config
 							$resources[] = $this->getFileResource($value);
 						}
 					}
-					$localFile = $this->fileBuilder->build($resources, $this->localPrefix['path'], $this->localPrefix['build'], $targetHtmlElement);
+					$localFile = $this->fileBuilder->build($resources, $this->localPathPrefix, $this->localBuildPrefix, $targetHtmlElement);
 					break;
 			}
 			$this->localResources[$this->localMode->value][$resourceKey] = $localFile;
@@ -219,7 +243,7 @@ class Config
 	 */
 	public function getFileResource(string $resource): FileResource
 	{
-		return new FileResource(sprintf('%s/%s', rtrim($this->localPrefix['path'], '/'), $this->getFilePath($resource)));
+		return new FileResource(sprintf('%s/%s', $this->localPathPrefix, $this->getFilePath($resource)));
 	}
 
 }

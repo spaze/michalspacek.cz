@@ -7,8 +7,8 @@ use Generator;
 use Latte\Compiler\Nodes\StatementNode;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
-use Spaze\SubresourceIntegrity\Config;
 use Spaze\SubresourceIntegrity\HtmlElement;
+use Spaze\SubresourceIntegrity\SriConfig;
 
 abstract class SriNode extends StatementNode
 {
@@ -18,7 +18,7 @@ abstract class SriNode extends StatementNode
 	 * @param array<string, string|null> $attributes
 	 */
 	final public function __construct(
-		protected Config $sriConfig,
+		protected SriConfig $sriConfig,
 		protected array $resources,
 		private array $attributes,
 	) {

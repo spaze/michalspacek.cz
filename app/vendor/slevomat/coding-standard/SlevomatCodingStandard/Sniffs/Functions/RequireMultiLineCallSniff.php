@@ -2,15 +2,18 @@
 
 namespace SlevomatCodingStandard\Sniffs\Functions;
 
+use Exception;
 use PHP_CodeSniffer\Files\File;
 use SlevomatCodingStandard\Helpers\FixerHelper;
 use SlevomatCodingStandard\Helpers\IndentationHelper;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
+use UnexpectedValueException;
 use function array_unique;
 use function count;
 use function in_array;
 use function ltrim;
+use function preg_match;
 use function sprintf;
 use function strlen;
 use function trim;
@@ -27,12 +30,31 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 {
 
 	public const CODE_REQUIRED_MULTI_LINE_CALL = 'RequiredMultiLineCall';
+	private const DEFAULT_MIN_LINE_LENGTH = 121;
 
-	public int $minLineLength = 121;
+	public ?int $minLineLength = null;
+
+	public ?int $minParametersCount = null;
+
+	/** @var list<string> */
+	public array $excludedCallPatterns = [];
+
+	/** @var list<string>|null */
+	public ?array $excludedCallNormalizedPatterns = null;
 
 	public function process(File $phpcsFile, int $stringPointer): void
 	{
-		$this->minLineLength = SniffSettingsHelper::normalizeInteger($this->minLineLength);
+		$this->minLineLength = SniffSettingsHelper::normalizeNullableInteger($this->minLineLength);
+		$this->minParametersCount = SniffSettingsHelper::normalizeNullableInteger($this->minParametersCount);
+
+		if ($this->minLineLength !== null && $this->minParametersCount !== null) {
+			throw new UnexpectedValueException('Either minLineLength or minParametersCount can be set.');
+		}
+
+		// Backward compatibility if no configuration provided
+		if ($this->minLineLength === null && $this->minParametersCount === null) {
+			$this->minLineLength = self::DEFAULT_MIN_LINE_LENGTH;
+		}
 
 		if (!$this->isCall($phpcsFile, $stringPointer)) {
 			return;
@@ -124,6 +146,13 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 		$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $stringPointer - 1);
 
 		$name = ltrim($tokens[$stringPointer]['content'], '\\');
+
+		if (
+			count($this->excludedCallPatterns) !== 0
+			&& $this->isCallNameInPatterns($name, $this->getExcludedCallNormalizedPatterns())
+		) {
+			return;
+		}
 
 		if (in_array($tokens[$previousPointer]['code'], [T_OBJECT_OPERATOR, T_DOUBLE_COLON], true)) {
 			$error = sprintf('Call of method %s() should be split to more lines.', $name);
@@ -228,7 +257,11 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 			return true;
 		}
 
-		if ($lineLength < $this->minLineLength) {
+		if ($this->minLineLength !== null && $lineLength < $this->minLineLength) {
+			return false;
+		}
+
+		if ($this->minParametersCount !== null && $parametersCount < $this->minParametersCount) {
 			return false;
 		}
 
@@ -237,6 +270,33 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 		}
 
 		return strlen(trim($lineStart) . trim($lineEnd)) > $indentationLength;
+	}
+
+	/**
+	 * @param list<string> $normalizedPatterns
+	 */
+	private function isCallNameInPatterns(string $callName, array $normalizedPatterns): bool
+	{
+		foreach ($normalizedPatterns as $pattern) {
+			if (!SniffSettingsHelper::isValidRegularExpression($pattern)) {
+				throw new Exception(sprintf('%s is not valid PCRE pattern.', $pattern));
+			}
+
+			if (preg_match($pattern, $callName) !== 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	private function getExcludedCallNormalizedPatterns(): array
+	{
+		$this->excludedCallNormalizedPatterns ??= SniffSettingsHelper::normalizeArray($this->excludedCallPatterns);
+		return $this->excludedCallNormalizedPatterns;
 	}
 
 }
