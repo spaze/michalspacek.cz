@@ -118,6 +118,7 @@ services:
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalksListFactory
 	- MichalSpacekCz\Templating\Filters
+	- MichalSpacekCz\Templating\LatteLinter
 	latte.templateFactory:
 		create: MichalSpacekCz\Templating\TemplateFactory()
 		autowired: Nette\Application\UI\TemplateFactory

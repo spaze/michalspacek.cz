@@ -32,7 +32,6 @@
 	</universalObjectCrates>
 	<stubs>
 		<file name="stubs/Nette/Application/UI/Component.phpstub"/>
-		<file name="stubs/Nette/CommandLine/Parser.phpstub"/>
 		<file name="stubs/Nette/Database/Explorer.phpstub"/>
 		<file name="stubs/Nette/DI/Container.phpstub"/>
 	</stubs>
@@ -94,6 +93,7 @@
 				<referencedClass name="*Presenter" />
 				<referencedClass name="MichalSpacekCz\Application\Routing\RouterFactory" /> <!-- Used in services.neon -->
 				<referencedClass name="MichalSpacekCz\Formatter\Placeholders\*" /> <!-- An array of these is passed to MichalSpacekCz\Formatter\TexyFormatter::__construct() by the DIC -->
+				<referencedClass name="MichalSpacekCz\Templating\LatteLinter" /> <!-- Used in bin/latte-lint.php -->
 				<referencedClass name="MichalSpacekCz\Test\*\Null*" /> <!-- Used in tests.neon -->
 				<referencedClass name="MichalSpacekCz\Tls\CertificateMonitor" /> <!-- Used in bin/certmonitor.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
 				<referencedClass name="MichalSpacekCz\Http\Session\SessionGarbageCollector" /> <!-- Used in bin/clean_sessions.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->

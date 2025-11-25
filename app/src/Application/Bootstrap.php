@@ -106,16 +106,25 @@ final class Bootstrap
 	private static function getCliArgs(string $argsProvider): CliArgs
 	{
 		$args = $argsProvider::getArgs();
+		$hasCustomArgs = $args !== [];
 		$args[] = self::DEBUG;
 		$args[] = self::COLORS;
-		$cliArgsParser = new Parser("\n " . implode("\n ", $args));
+		if ($hasCustomArgs) {
+			$args = array_unique($args);
+		}
+		$cliArgsParser = new Parser("\n " . implode("\n ", $args), $argsProvider::getPositionalArgs());
+		$cliArgsParsed = [];
 		$cliArgsError = null;
 		try {
-			$cliArgsParsed = $cliArgsParser->parse();
+			foreach ($cliArgsParser->parse() as $key => $value) {
+				if (is_string($value) || $value === true || $value === null) {
+					$cliArgsParsed[$key] = $value;
+				}
+			}
 		} catch (Exception $e) {
 			$cliArgsError = $e->getMessage();
 		}
-		return new CliArgs($cliArgsParsed ?? [], $cliArgsError);
+		return new CliArgs($cliArgsParsed, $cliArgsError);
 	}
 
 }
