@@ -48,6 +48,12 @@
 				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->
 			</errorLevel>
 		</InternalMethod>
+		<InvalidAttribute>
+			<errorLevel type="suppress">
+				<file name="src/Presentation/Admin/Homepage/HomepagePresenter.php"/> <!-- PHP 8.5 allows the Override attribute on properties, but Psalm doesn't support 8.5 yet, see https://github.com/spaze/michalspacek.cz/issues/625 -->
+				<file name="src/Presentation/Pulse/Error/ErrorPresenter.php"/>
+			</errorLevel>
+		</InvalidAttribute>
 		<PossiblyUnusedMethod>
 			<errorLevel type="suppress">
 				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
