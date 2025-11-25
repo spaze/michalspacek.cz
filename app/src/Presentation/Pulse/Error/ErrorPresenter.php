@@ -5,10 +5,12 @@ namespace MichalSpacekCz\Presentation\Pulse\Error;
 
 use MichalSpacekCz\Presentation\Www\BaseErrorPresenter;
 use MichalSpacekCz\Pulse\Error\PulseError;
+use Override;
 
 final class ErrorPresenter extends BaseErrorPresenter
 {
 
+	#[Override]
 	protected bool $logAccess = false;
 
 

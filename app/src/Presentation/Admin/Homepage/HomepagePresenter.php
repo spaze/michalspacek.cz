@@ -17,10 +17,12 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
+use Override;
 
 final class HomepagePresenter extends BasePresenter
 {
 
+	#[Override]
 	protected bool $haveBacklink = false;
 
 
