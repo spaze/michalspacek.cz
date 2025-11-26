@@ -88,6 +88,13 @@ final class WinterIsComingTest extends TestCase
 	}
 
 
+	public function testRuleEmailHostConfigIsRegexp(): void
+	{
+		($this->ruleEmail)($this->textInput->setDefaultValue('regexp@ssemarketing-net'));
+		Assert::false($this->presenter->isResponseSent());
+	}
+
+
 	/**
 	 * @return list<array{name:string}>
 	 */

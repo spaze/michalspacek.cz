@@ -19,12 +19,12 @@ final class WinterIsComing
 		'arachni@email.gr',
 	];
 
-	private const array HOSTS = [
-		'burpcollaborator.net',
-		'mailrez.com',
-		'mailto.plus',
-		'ourtimesupport.com',
-		'ssemarketing.net',
+	private const array HOSTS_REGEXPS = [
+		'burpcollaborator\.net',
+		'mailrez\.com',
+		'mailto\.plus',
+		'ourtimesupport\.com',
+		'ssemarketing\.net',
 	];
 
 	private const array STREETS = [
@@ -43,7 +43,7 @@ final class WinterIsComing
 				is_string($value)
 				&& (
 					Arrays::contains(self::EMAILS, $value)
-					|| Regex::isMatch('/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/', $value)
+					|| Regex::isMatch('/@(' . implode('|', self::HOSTS_REGEXPS) . ')$/', $value)
 				)
 			) {
 				$this->sendSyntaxError($input);
