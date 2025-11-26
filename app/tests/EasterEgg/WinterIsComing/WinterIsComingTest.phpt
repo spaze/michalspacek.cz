@@ -65,7 +65,7 @@ final class WinterIsComingTest extends TestCase
 	public function getUnfriendlyEmails(): array
 	{
 		return [
-			'address' => ['email' => 'winter@example.com'],
+			'address' => ['email' => 'sample@email.tst'],
 			'host' => ['email' => random_int(0, PHP_INT_MAX) . '@ssemarketing.net'],
 		];
 	}

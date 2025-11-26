@@ -14,12 +14,12 @@ final class WinterIsComing
 {
 
 	private const array EMAILS = [
-		'winter@example.com',
 		'sample@email.tst',
 		'arachni@email.gr',
 	];
 
 	private const array HOSTS_REGEXPS = [
+		'example\.com',
 		'burpcollaborator\.net',
 		'mailrez\.com',
 		'mailto\.plus',
