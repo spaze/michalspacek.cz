@@ -11,6 +11,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Test\Utils\Insomnia;
 use Nette\Application\Responses\TextResponse;
 use Nette\Forms\Controls\TextInput;
 use Nette\InvalidStateException;
@@ -37,6 +38,7 @@ final class WinterIsComingTest extends TestCase
 
 	public function __construct(
 		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly Insomnia $sleep,
 		WinterIsComing $winterIsComing,
 	) {
 		$this->presenter = new UiPresenterMock();
@@ -155,6 +157,8 @@ final class WinterIsComingTest extends TestCase
 			if (!is_string($source)) {
 				Assert::fail('Source should be a string but is ' . get_debug_type($source));
 			} else {
+				Assert::true($this->sleep->minRandom > 0, "minRandom ({$this->sleep->minRandom}) > 0");
+				Assert::true($this->sleep->maxRandom <= 20, "maxRandom ({$this->sleep->maxRandom}) <= 20");
 				Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $source);
 			}
 		}

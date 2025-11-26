@@ -56,6 +56,7 @@ services:
 	- MichalSpacekCz\Test\TestCaseRunner
 	trainingFilesStorage: MichalSpacekCz\Test\Training\TrainingFilesNullStorage
 	- MichalSpacekCz\Test\Training\TrainingTestDataFactory
+	sleep: MichalSpacekCz\Test\Utils\Insomnia
 	cache.storage: Nette\Caching\Storages\DevNullStorage
 	netteHttpResponse:  # Needed for User\Manager because https://github.com/nette/http/issues/200
 		create: Nette\Http\Response

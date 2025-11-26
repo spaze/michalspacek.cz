@@ -5,12 +5,13 @@ namespace MichalSpacekCz\EasterEgg\WinterIsComing;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Utils\Sleep;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 
-final class WinterIsComing
+final readonly class WinterIsComing
 {
 
 	private const array EMAILS = [
@@ -30,6 +31,12 @@ final class WinterIsComing
 	private const array STREETS = [
 		'34 Watts road',
 	];
+
+
+	public function __construct(
+		private Sleep $sleep,
+	) {
+	}
 
 
 	/**
@@ -73,6 +80,7 @@ final class WinterIsComing
 		if (!$presenter instanceof Presenter) {
 			throw new ShouldNotHappenException(sprintf("This text input's form parent should be a %s but it's a %s", Presenter::class, get_debug_type($presenter)));
 		}
+		$this->sleep->randomSleep(5, 20);
 		$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/sqlSyntaxError.html')));
 	}
 

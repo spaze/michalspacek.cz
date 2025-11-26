@@ -170,6 +170,7 @@ services:
 	- MichalSpacekCz\UpcKeys\UpcKeysStorageConversions
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
 	- MichalSpacekCz\User\UserSessionAdditionalData
+	sleep: MichalSpacekCz\Utils\Sleep
 	- MichalSpacekCz\Utils\Strings
 	- MichalSpacekCz\Utils\JsonUtils
 	- Nette\Bridges\ApplicationLatte\TemplateFactory
