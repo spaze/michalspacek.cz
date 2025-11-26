@@ -45,10 +45,10 @@ phpstan-vendor:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon
 
 psalm:
-	vendor/bin/psalm.phar
+	php8.4 vendor/bin/psalm.phar
 
 psalm-clear-cache:
-	vendor/bin/psalm.phar --clear-cache
+	php8.4 vendor/bin/psalm.phar --clear-cache
 
 tester:
 	vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
