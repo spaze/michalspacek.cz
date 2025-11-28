@@ -74,7 +74,7 @@ final class NetteCve202015227
 		} else {
 			throw new BadRequestException(sprintf("[%s] Unknown value '%s' for callback '%s' and param '%s'", __CLASS__, $param, $callback, $paramNames[$callback]));
 		}
-		return new NetteCve202015227Rce($view, ...$data);
+		return new NetteCve202015227Rce($view, $data);
 	}
 
 

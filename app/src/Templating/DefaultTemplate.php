@@ -24,4 +24,15 @@ final class DefaultTemplate extends Template
 		return Arrays::toObject((array)$params, $this);
 	}
 
+
+	/**
+	 * A copy of Nette\Bridges\ApplicationLatte\DefaultTemplate::setParameters()
+	 *
+	 * @param array<string, string|int> $params
+	 */
+	public function setParametersArray(array $params): DefaultTemplate
+	{
+		return Arrays::toObject($params, $this);
+	}
+
 }

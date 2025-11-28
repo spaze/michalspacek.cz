@@ -58,18 +58,18 @@ final class NetteCve202015227Test extends TestCase
 	{
 		$rce = $this->cve202015227->rce('exec', $this->createComponent(['command' => 'ifconfig bar']));
 		Assert::same(NetteCve202015227View::Ifconfig, $rce->view);
-		Assert::type('string', $rce->eth0RxPackets);
-		Assert::type('string', $rce->eth1RxPackets);
-		Assert::type('string', $rce->loRxPackets);
-		Assert::type('string', $rce->eth0RxBytes);
-		Assert::type('string', $rce->eth1RxBytes);
-		Assert::type('string', $rce->loRxBytes);
-		Assert::type('string', $rce->eth0TxPackets);
-		Assert::type('string', $rce->eth1TxPackets);
-		Assert::type('string', $rce->loTxPackets);
-		Assert::type('string', $rce->eth0TxBytes);
-		Assert::type('string', $rce->eth1TxBytes);
-		Assert::type('string', $rce->loTxBytes);
+		Assert::type('string', $rce->parameters['eth0RxPackets']);
+		Assert::type('string', $rce->parameters['eth1RxPackets']);
+		Assert::type('string', $rce->parameters['loRxPackets']);
+		Assert::type('string', $rce->parameters['eth0RxBytes']);
+		Assert::type('string', $rce->parameters['eth1RxBytes']);
+		Assert::type('string', $rce->parameters['loRxBytes']);
+		Assert::type('string', $rce->parameters['eth0TxPackets']);
+		Assert::type('string', $rce->parameters['eth1TxPackets']);
+		Assert::type('string', $rce->parameters['loTxPackets']);
+		Assert::type('string', $rce->parameters['eth0TxBytes']);
+		Assert::type('string', $rce->parameters['eth1TxBytes']);
+		Assert::type('string', $rce->parameters['loTxBytes']);
 	}
 
 
@@ -85,7 +85,7 @@ final class NetteCve202015227Test extends TestCase
 	{
 		$rce = $this->cve202015227->rce('shell_exec', $this->createComponent(['cmd' => $cmd]));
 		Assert::same($view, $rce->view);
-		Assert::same($command, $rce->command);
+		Assert::same($command, $rce->parameters['command']);
 	}
 
 
