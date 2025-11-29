@@ -67,6 +67,12 @@ contentSecurityPolicy:
 			trusted-types:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
+		easteregg.nette.micro:
+			@extends: *.*
+			script-src:
+				- "'nonce'"
+			style-src:
+				- "'nonce'"
 		pulse.*.*:
 			@extends: www.*.*
 		upckeys.*.*:

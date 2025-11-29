@@ -1,0 +1,128 @@
+{block|strip}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
+	<title>mc.exe</title>
+	{* Colors from https://skins.midnight-commander.org/ *}
+	<style n:nonce>
+		@media all and (display-mode: fullscreen) {
+			body { background: #000; }
+		}
+		#container {
+			font-size: 15px;
+			line-height: 1.2;
+			margin: 0;
+			padding: 0;
+			color: #BABABA;
+			display: grid;
+			place-items: center;
+			min-height: 100vh;
+		}
+		#mc {
+			overflow-x: auto;
+			padding: 0.3rem;
+			margin: 1rem;
+			display: inline-block;
+			background: #000;
+			border-radius: 6px;
+			box-shadow: 7px 9px 20px 5px hsl(0deg 0% 0% / 20%);
+		}
+		#input {
+			position: fixed;
+			z-index: -1;
+		}
+		pre {
+			background: #00A;
+			margin: 0;
+		}
+		a {
+			cursor: text;
+			text-decoration: none;
+		}
+		.menu, .menu a {
+			color: #000;
+			background: #00BABA;
+		}
+		.current {
+			background-color: #BABABA;
+			color: #000;
+		}
+		.header { color: #FF5; }
+		.dir { color: #FFF; }
+		.executable { color: #5F5; }
+		.selected {
+			color: #000000;
+			background-color: #00BABA;
+		}
+		.prompt {
+			background: #000;
+			color: #BABABA;
+		}
+		.cursor {
+			font-size: 13px;
+			color: #01FF02;
+			animation: cursor 1s ease-in-out infinite;
+		}
+		@keyframes cursor { 50% { opacity: 0; } }
+		.history { background: #00B; }
+		.shortcut {
+			background: #000;
+			color: #FFF;
+		}
+	</style>
+	<script n:nonce>
+		document.addEventListener('DOMContentLoaded', () => {
+			const input = document.getElementById('input');
+			document.getElementById('mc').addEventListener('click', () => { input.focus(); });
+			const copyCommand = () => {
+				document.getElementById('command').innerText = input.value;
+				document.getElementById('padding').innerText = ' '.repeat(Math.max(0, 53 - input.value.length));
+			}
+			input.addEventListener('input', copyCommand);
+			document.addEventListener('readystatechange', (event) => {
+				if (event.target.readyState === 'complete') {
+					copyCommand();
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<div id="container">
+	<div id="mc">
+		<pre class="menu">  Left     File     Command     Options     Right                               </pre>
+		<pre>┌&lt;─<code class="current"> ~/bin </code>────────────────────────.[^]&gt;┐┌&lt;─ /var/www/vendor/nette ────────.[^]&gt;┐</pre>
+		<pre>│<code class="header">.n     Name</code>      │ <code class="header">Size</code>  │<code class="header">Modify time</code> ││<code class="header">.n     Name</code>      │ <code class="header">Size</code>  │<code class="header">Modify time</code> │</pre>
+		<pre>│<code class="selected">/..              │UP--DIR│Nov 14 22:59</code>││<code class="dir">/..</code>              │<code class="dir">UP--DIR</code>│<code class="dir">Nov 14 22:59</code>│</pre>
+		<pre>│<code class="executable">*mc              </code>│<code class="executable">1243456</code>│<code class="executable">Aug 26 18:08</code>││<a href="https://www.microsoft.com"><code class="dir">/micro           </code></a>│    <code class="dir">512</code>│<code class="dir">Jan  4  2021</code>│</pre>
+		{foreach $files as $file}
+			<pre>│<a href="{$file[0]}"><code class="executable">*{$file[1]}</code></a>│<code class="executable">{$file[2]}</code>│<code class="executable">{$file[3]}</code>││                 │       │            │</pre>
+		{/foreach}
+		{for $i = 0; $i < $emptyLines; $i++}
+			<pre>│                 │       │            ││                 │       │            │</pre>
+		{/for}
+		<pre>├──────────────────────────────────────┤├──────────────────────────────────────┤</pre>
+		<pre>│UP--DIR                               ││UP--DIR                               │</pre>
+		<pre>└───────────────── 808G / 1337G (60%) ─┘└────────────────── 303G / 909G (33%) ─┘</pre>
+		<pre class="prompt">{$hint}</pre>
+		<pre class="prompt">root@nsa-east-1:~/bin$ <code id="command"></code><code class="cursor">█</code><code id="padding">                                                     </code><code class="history">[^]</code></pre>
+		<pre class="menu"><code
+			class="shortcut"> 1</code>Help  <code
+			class="shortcut"> 2</code>Menu  <code
+			class="shortcut"> 3</code>View  <code
+			class="shortcut"> 4</code>Edit  <code
+			class="shortcut"> 5</code>Copy  <code
+			class="shortcut"> 6</code>RenMov<code
+			class="shortcut"> 7</code>Mkdir <code
+			class="shortcut"> 8</code>Delete<code
+			class="shortcut"> 9</code>PullDn<a n:href=":Www:Homepage:"><code
+			class="shortcut">10</code>Quit  </a></pre>
+	</div>
+	<input type="text" id="input" maxlength="53" autofocus aria-label="Command line">
+</div>
+</body>
+</html>
+{/block}

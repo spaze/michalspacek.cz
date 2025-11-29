@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\Route;
@@ -19,7 +21,20 @@ final class NetteCve202015227Test extends TestCase
 
 	public function __construct(
 		private readonly NetteCve202015227 $cve202015227,
+		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly Response $httpResponse,
 	) {
+	}
+
+
+	public function testRceNoCallback(): void
+	{
+		$rce = $this->cve202015227->rce(null, $this->createComponent([]));
+		Assert::same(NetteCve202015227View::MidnightCommander, $rce->view);
+		Assert::hasKey('hint', $rce->parameters);
+		Assert::hasKey('files', $rce->parameters);
+		Assert::hasKey('emptyLines', $rce->parameters);
+		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
 	}
 
 
@@ -28,6 +43,7 @@ final class NetteCve202015227Test extends TestCase
 		Assert::exception(function (): void {
 			$this->cve202015227->rce('foo', $this->createComponent(['bar' => 'baz']));
 		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown callback 'foo'");
+		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
 	}
 
 
@@ -51,6 +67,7 @@ final class NetteCve202015227Test extends TestCase
 	{
 		$rce = $this->cve202015227->rce('exec', $this->createComponent(['command' => 'ls foo']));
 		Assert::same(NetteCve202015227View::Ls, $rce->view);
+		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
 	}
 
 
@@ -148,8 +165,7 @@ final class NetteCve202015227Test extends TestCase
 	 */
 	private function createComponent(array $params): Component
 	{
-		$component = new class extends Component {
-		};
+		$component = $this->applicationPresenter->createUiPresenter('Www:Homepage', 'Www:Homepage', 'default');
 		$component->loadState($params);
 		return $component;
 	}

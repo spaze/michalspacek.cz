@@ -22,7 +22,7 @@ final class NettePresenter extends Presenter
 	}
 
 
-	public function actionMicro(string $callback): void
+	public function actionMicro(?string $callback): void
 	{
 		$this->sleep->randomSleep(5, 20);
 		$rce = $this->cve202015227->rce($callback, $this);

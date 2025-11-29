@@ -28,7 +28,7 @@ final class DefaultTemplate extends Template
 	/**
 	 * A copy of Nette\Bridges\ApplicationLatte\DefaultTemplate::setParameters()
 	 *
-	 * @param array<string, string|int> $params
+	 * @param array<string, string|int|array<array-key, mixed>> $params
 	 */
 	public function setParametersArray(array $params): DefaultTemplate
 	{
