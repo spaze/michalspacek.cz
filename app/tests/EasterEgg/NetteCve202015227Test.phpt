@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Test\Utils\Insomnia;
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
@@ -19,7 +22,23 @@ final class NetteCve202015227Test extends TestCase
 
 	public function __construct(
 		private readonly NetteCve202015227 $cve202015227,
+		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly Response $httpResponse,
+		private readonly Insomnia $sleep,
 	) {
+	}
+
+
+	public function testRceNoCallback(): void
+	{
+		$rce = $this->cve202015227->rce(null, $this->createComponent([]));
+		Assert::same(NetteCve202015227View::MidnightCommander, $rce->view);
+		Assert::hasKey('hint', $rce->parameters);
+		Assert::hasKey('files', $rce->parameters);
+		Assert::hasKey('emptyLines', $rce->parameters);
+		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
+		Assert::true($this->sleep->minRandom > 0, "minRandom ({$this->sleep->minRandom}) > 0");
+		Assert::true($this->sleep->maxRandom <= 20, "maxRandom ({$this->sleep->maxRandom}) <= 20");
 	}
 
 
@@ -28,6 +47,7 @@ final class NetteCve202015227Test extends TestCase
 		Assert::exception(function (): void {
 			$this->cve202015227->rce('foo', $this->createComponent(['bar' => 'baz']));
 		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown callback 'foo'");
+		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
 	}
 
 
@@ -51,6 +71,7 @@ final class NetteCve202015227Test extends TestCase
 	{
 		$rce = $this->cve202015227->rce('exec', $this->createComponent(['command' => 'ls foo']));
 		Assert::same(NetteCve202015227View::Ls, $rce->view);
+		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
 	}
 
 
@@ -58,18 +79,18 @@ final class NetteCve202015227Test extends TestCase
 	{
 		$rce = $this->cve202015227->rce('exec', $this->createComponent(['command' => 'ifconfig bar']));
 		Assert::same(NetteCve202015227View::Ifconfig, $rce->view);
-		Assert::type('string', $rce->eth0RxPackets);
-		Assert::type('string', $rce->eth1RxPackets);
-		Assert::type('string', $rce->loRxPackets);
-		Assert::type('string', $rce->eth0RxBytes);
-		Assert::type('string', $rce->eth1RxBytes);
-		Assert::type('string', $rce->loRxBytes);
-		Assert::type('string', $rce->eth0TxPackets);
-		Assert::type('string', $rce->eth1TxPackets);
-		Assert::type('string', $rce->loTxPackets);
-		Assert::type('string', $rce->eth0TxBytes);
-		Assert::type('string', $rce->eth1TxBytes);
-		Assert::type('string', $rce->loTxBytes);
+		Assert::type('string', $rce->parameters['eth0RxPackets']);
+		Assert::type('string', $rce->parameters['eth1RxPackets']);
+		Assert::type('string', $rce->parameters['loRxPackets']);
+		Assert::type('string', $rce->parameters['eth0RxBytes']);
+		Assert::type('string', $rce->parameters['eth1RxBytes']);
+		Assert::type('string', $rce->parameters['loRxBytes']);
+		Assert::type('string', $rce->parameters['eth0TxPackets']);
+		Assert::type('string', $rce->parameters['eth1TxPackets']);
+		Assert::type('string', $rce->parameters['loTxPackets']);
+		Assert::type('string', $rce->parameters['eth0TxBytes']);
+		Assert::type('string', $rce->parameters['eth1TxBytes']);
+		Assert::type('string', $rce->parameters['loTxBytes']);
 	}
 
 
@@ -85,7 +106,7 @@ final class NetteCve202015227Test extends TestCase
 	{
 		$rce = $this->cve202015227->rce('shell_exec', $this->createComponent(['cmd' => $cmd]));
 		Assert::same($view, $rce->view);
-		Assert::same($command, $rce->command);
+		Assert::same($command, $rce->parameters['command']);
 	}
 
 
@@ -148,8 +169,7 @@ final class NetteCve202015227Test extends TestCase
 	 */
 	private function createComponent(array $params): Component
 	{
-		$component = new class extends Component {
-		};
+		$component = $this->applicationPresenter->createUiPresenter('Www:Homepage', 'Www:Homepage', 'default');
 		$component->loadState($params);
 		return $component;
 	}

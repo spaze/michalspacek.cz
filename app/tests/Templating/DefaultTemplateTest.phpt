@@ -33,6 +33,17 @@ final class DefaultTemplateTest extends TestCase
 	}
 
 
+	public function testSetParametersArray(): void
+	{
+		$template = $this->templateFactory->createTemplate();
+		$rand = rand();
+		$result = $template->setParametersArray(['foo' => 'bar', 'baz' => $rand]);
+		Assert::same($template, $result);
+		Assert::same('bar', $template->foo);
+		Assert::same($rand, $template->baz);
+	}
+
+
 	public function testFlashes(): void
 	{
 		$presenter = $this->applicationPresenter->createUiPresenter('Www:Homepage', 'Foo', 'bar');
