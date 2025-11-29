@@ -6,6 +6,7 @@ namespace MichalSpacekCz\EasterEgg;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Test\Utils\Insomnia;
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
@@ -23,6 +24,7 @@ final class NetteCve202015227Test extends TestCase
 		private readonly NetteCve202015227 $cve202015227,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Response $httpResponse,
+		private readonly Insomnia $sleep,
 	) {
 	}
 
@@ -35,6 +37,8 @@ final class NetteCve202015227Test extends TestCase
 		Assert::hasKey('files', $rce->parameters);
 		Assert::hasKey('emptyLines', $rce->parameters);
 		Assert::same('noindex', $this->httpResponse->getHeader('X-Robots-Tag'));
+		Assert::true($this->sleep->minRandom > 0, "minRandom ({$this->sleep->minRandom}) > 0");
+		Assert::true($this->sleep->maxRandom <= 20, "maxRandom ({$this->sleep->maxRandom}) <= 20");
 	}
 
 

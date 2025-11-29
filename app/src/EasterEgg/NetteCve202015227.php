@@ -5,6 +5,7 @@ namespace MichalSpacekCz\EasterEgg;
 
 use MichalSpacekCz\Http\Robots\Robots;
 use MichalSpacekCz\Http\Robots\RobotsRule;
+use MichalSpacekCz\Utils\Sleep;
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\UI\Component;
@@ -35,6 +36,7 @@ final readonly class NetteCve202015227
 
 
 	public function __construct(
+		private Sleep $sleep,
 		private Robots $robots,
 	) {
 	}
@@ -42,6 +44,7 @@ final readonly class NetteCve202015227
 
 	public function rce(?string $callback, Component $component): NetteCve202015227Rce
 	{
+		$this->sleep->randomSleep(5, 20);
 		$this->robots->setHeader([RobotsRule::NoIndex]);
 		if ($callback === null) {
 			return $this->midnight($component);
