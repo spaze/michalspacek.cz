@@ -59,4 +59,10 @@ final readonly class WebApplication
 		}
 	}
 
+
+	public function getFqdn(): string
+	{
+		return $this->fqdn;
+	}
+
 }

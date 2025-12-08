@@ -30,6 +30,10 @@ parameters:
 		sharedStaticRoot: https://www.%domain.root%
 		imagesRoot: i/images
 		locationRoot: /srv/www/michalspacek.cz/app/public/www.michalspacek.cz
+	securityTxtDirs:
+			upcwifikeys.com: upcwifikeys.com
+			www.michalspacek.com: www.michalspacek.com
+			www.michalspacek.cz: www.michalspacek.cz
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce
 	vatRate: 0.21

@@ -60,3 +60,6 @@ services:
 
 	# easteregg module
 	- MichalSpacekCz\Presentation\EasterEgg\Nette\NettePresenter
+
+	# wellknown module
+	- MichalSpacekCz\Presentation\WellKnown\WellKnown\WellKnownPresenter

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Application\Routing;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use MichalSpacekCz\EasterEgg\NetteCve202015227;
+use MichalSpacekCz\SecurityTxt\SecurityTxtResponse;
 use Nette\Application\Routers\Route as ApplicationRoute;
 use Nette\Application\Routers\RouteList;
 use Nette\Routing\Route;
@@ -60,6 +61,7 @@ final class RouterFactory
 		private readonly BlogPostLoader $blogPostLoader,
 		private readonly Translator $translator,
 		private readonly NetteCve202015227 $netteCve202015227,
+		private readonly SecurityTxtResponse $securityTxtResponse,
 		private readonly array $supportedLocales,
 		private readonly array $rootDomainMapping,
 		private readonly array $translatedRoutes,
@@ -110,6 +112,7 @@ final class RouterFactory
 		}
 
 		$this->netteCve202015227->addRoute($router);
+		$this->securityTxtResponse->addRoute($router);
 
 		$this->initRouterLists($router, self::MODULE_ADMIN, [
 			new RouterFactoryRoute('.well-known[/<action>]', 'WellKnown', 'default'),
