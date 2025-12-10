@@ -5,7 +5,6 @@ namespace Spaze\SecurityTxt\Check;
 
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
-use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtCannotVerifySignatureException;
 
 final readonly class SecurityTxtCheckHostCli
 {
@@ -120,7 +119,7 @@ final readonly class SecurityTxtCheckHostCli
 			} else {
 				$this->exit(CheckExitStatus::Ok);
 			}
-		} catch (SecurityTxtFetcherException | SecurityTxtCannotVerifySignatureException $e) {
+		} catch (SecurityTxtFetcherException $e) {
 			$this->consolePrinter->error($e->getMessage());
 			$this->exit(CheckExitStatus::FileError);
 		}

@@ -96,6 +96,12 @@ final readonly class SecurityTxtJson
 	{
 		$securityTxt = new SecurityTxt(SecurityTxtValidationLevel::AllowInvalidValuesSilently);
 		try {
+			if (isset($values['fileLocation'])) {
+				if (!is_string($values['fileLocation'])) {
+					throw new SecurityTxtCannotParseJsonException('fileLocation is not a string');
+				}
+				$securityTxt->setFileLocation($values['fileLocation']);
+			}
 			if (isset($values['expires'])) {
 				if (!is_array($values['expires'])) {
 					throw new SecurityTxtCannotParseJsonException('expires is not an array');
@@ -176,8 +182,8 @@ final readonly class SecurityTxtJson
 	 */
 	private function addSecurityTxtUriField(array $values, string $field, string $class, callable $addField): void
 	{
-		if (!is_array($values[$field])) {
-			throw new SecurityTxtCannotParseJsonException("Field {$field} is not an array");
+		if (!isset($values[$field]) || !is_array($values[$field])) {
+			throw new SecurityTxtCannotParseJsonException("Field {$field} is missing or not an array");
 		}
 		foreach ($values[$field] as $value) {
 			if (!is_array($value)) {

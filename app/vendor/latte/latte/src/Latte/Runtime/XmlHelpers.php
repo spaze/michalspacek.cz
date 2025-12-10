@@ -10,7 +10,8 @@ declare(strict_types=1);
 namespace Latte\Runtime;
 
 use Latte;
-use function array_filter, get_debug_type, implode, is_array, is_string, preg_match, str_contains, str_replace;
+use function get_debug_type, htmlspecialchars, is_float, is_int, is_string, ord, preg_match, preg_replace, preg_replace_callback;
+use const ENT_QUOTES, ENT_SUBSTITUTE, ENT_XML1;
 
 
 /**
@@ -26,36 +27,58 @@ final class XmlHelpers
 
 
 	/**
-	 * Formats XML attribute value based on value type.
+	 * Escapes string for use everywhere inside XML (except for comments and tags).
 	 */
-	public static function formatAttribute(string $name, mixed $value): ?string
+	public static function escapeText($s): string
 	{
-		if ($value === null || $value === false) {
-			return null;
-
-		} elseif ($value === true) {
-			return $name . '="' . $name . '"';
-
-		} elseif (is_array($value)) {
-			$value = array_filter($value); // intentionally ==, skip nulls & empty string
-			if (!$value) {
-				return null;
-			}
-
-			$value = implode(' ', $value);
-
-		} else {
-			$value = (string) $value;
+		if ($s instanceof HtmlStringable) {
+			return $s->__toString();
 		}
 
-		$q = !str_contains($value, '"') ? '"' : "'";
-		return $name . '=' . $q
-			. str_replace(
-				['&', $q, '<'],
-				['&amp;', $q === '"' ? '&quot;' : '&#39;', '&lt;'],
-				$value,
-			)
-			. $q;
+		// XML 1.0: \x09 \x0A \x0D and C1 allowed directly, C0 forbidden
+		// XML 1.1: \x00 forbidden directly and as a character reference,
+		//   \x09 \x0A \x0D \x85 allowed directly, C0, C1 and \x7F allowed as character references
+		$s = preg_replace('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', "\u{FFFD}", (string) $s);
+		return htmlspecialchars($s, ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE, 'UTF-8');
+	}
+
+
+	/**
+	 * Escapes string for use inside XML attribute value.
+	 */
+	public static function escapeAttr($s): string
+	{
+		if ($s instanceof HtmlStringable) {
+			$s = HtmlHelpers::convertHtmlToText($s->__toString());
+		}
+		return self::escapeText($s);
+	}
+
+
+	/**
+	 * Escapes string for use inside XML tag.
+	 */
+	public static function escapeTag($s): string
+	{
+		$s = self::escapeText((string) $s);
+		return preg_replace_callback(
+			'#[=/\s]#',
+			fn($m) => '&#' . ord($m[0]) . ';',
+			$s,
+		);
+	}
+
+
+	public static function formatAttribute(string $namePart, mixed $value, bool $migrationWarnings = false): string
+	{
+		if ($migrationWarnings && $value === null) {
+			HtmlHelpers::triggerMigrationWarning(trim($namePart), $value);
+		}
+		return match (true) {
+			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart . '="' . self::escapeAttr($value) . '"',
+			$value === null => '',
+			default => HtmlHelpers::triggerInvalidValue(trim($namePart), $value) ?? '',
+		};
 	}
 
 
@@ -72,5 +95,16 @@ final class XmlHelpers
 			throw new Latte\RuntimeException("Invalid tag name '$name'");
 		}
 		return $name;
+	}
+
+
+	public static function validateAttributeName(mixed $name): void
+	{
+		if (!is_string($name)) {
+			throw new Latte\RuntimeException('Attribute name must be string, ' . get_debug_type($name) . ' given');
+
+		} elseif (!preg_match('~' . self::ReName . '$~DAu', $name)) {
+			throw new Latte\RuntimeException("Invalid attribute name '$name'");
+		}
 	}
 }

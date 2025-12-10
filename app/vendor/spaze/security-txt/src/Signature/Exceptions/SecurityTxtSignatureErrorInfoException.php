@@ -9,17 +9,26 @@ use Throwable;
 abstract class SecurityTxtSignatureErrorInfoException extends SecurityTxtSignatureException
 {
 
-	public function __construct(string $message, SecurityTxtSignatureErrorInfo $errorInfo, ?Throwable $previous = null)
-	{
+	public function __construct(
+		string $message,
+		private readonly SecurityTxtSignatureErrorInfo $errorInfo,
+		?Throwable $previous = null,
+	) {
 		$message = sprintf(
 			'%s: %s; code: %s, source: %s, library message: %s',
 			$message,
-			$errorInfo->getMessage() === false ? '<false>' : ($errorInfo->getMessage() === null ? '<null>' : $errorInfo->getMessage()),
-			$errorInfo->getCode() ?? '<null>',
-			$errorInfo->getSource() ?? '<null>',
-			$errorInfo->getLibraryMessage() ?? '<null>',
+			$errorInfo->getMessageAsString(),
+			$errorInfo->getCodeAsString(),
+			$errorInfo->getSourceAsString(),
+			$errorInfo->getLibraryMessageAsString(),
 		);
 		parent::__construct($message, $errorInfo->getCode() ?? 0, previous: $previous);
+	}
+
+
+	public function getErrorInfo(): SecurityTxtSignatureErrorInfo
+	{
+		return $this->errorInfo;
 	}
 
 }

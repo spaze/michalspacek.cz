@@ -169,6 +169,14 @@ class UsedSymbolExtractor
                             }
 
                             $usedSymbols[$kind][$symbolName][] = $token[2];
+
+                        } elseif (
+                            $inGlobalScope
+                            && $this->getTokenAfter($pointerAfterName)[0] === T_DOUBLE_COLON
+                        ) {
+                            // unqualified static access (e.g., Foo::class, Foo::method(), Foo::CONSTANT) in global scope
+                            // register to allow detection of classes not in $knownSymbols
+                            $usedSymbols[SymbolKind::CLASSLIKE][$name][] = $token[2];
                         }
 
                         break;
@@ -235,6 +243,15 @@ class UsedSymbolExtractor
                                 $symbolName = $name;
                                 $kind = $this->getFqnSymbolKind($pointerBeforeName, $pointerAfterName, false);
                                 $usedSymbols[$kind][$symbolName][] = $token[2];
+
+                            } elseif (
+                                strpos($name, '\\') === false
+                                && $inGlobalScope
+                                && $this->getTokenAfter($pointerAfterName)[0] === T_DOUBLE_COLON
+                            ) {
+                                // unqualified static access (e.g., Foo::class, Foo::method(), Foo::CONSTANT) in global scope
+                                // register to allow detection of classes not in $knownSymbols
+                                $usedSymbols[SymbolKind::CLASSLIKE][$name][] = $token[2];
                             }
                         }
 
@@ -422,6 +439,10 @@ class UsedSymbolExtractor
             || $tokenBeforeName[0] === T_FUNCTION
             || $tokenBeforeName[0] === T_OBJECT_OPERATOR
             || $tokenBeforeName[0] === T_NAMESPACE
+            || $tokenBeforeName[0] === T_CLASS
+            || $tokenBeforeName[0] === T_INTERFACE
+            || $tokenBeforeName[0] === T_TRAIT
+            || $tokenBeforeName[0] === (PHP_VERSION_ID >= 80100 ? T_ENUM : -1)
             || $tokenBeforeName[0] === (PHP_VERSION_ID > 80000 ? T_NULLSAFE_OBJECT_OPERATOR : -1)
             || $tokenAfterName[0] === T_INSTEADOF
             || $tokenAfterName[0] === T_AS

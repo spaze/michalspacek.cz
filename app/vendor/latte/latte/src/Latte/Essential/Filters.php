@@ -14,8 +14,8 @@ use Latte\ContentType;
 use Latte\Runtime\FilterInfo;
 use Latte\Runtime\Html;
 use Stringable;
-use function abs, array_combine, array_fill_keys, array_key_last, array_map, array_rand, array_reverse, array_search, array_slice, base64_encode, ceil, count, end, explode, extension_loaded, finfo_buffer, finfo_open, floor, func_num_args, htmlspecialchars, http_build_query, iconv, iconv_strlen, iconv_substr, implode, is_array, is_int, is_numeric, is_string, iterator_count, iterator_to_array, key, ltrim, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, min, nl2br, number_format, preg_last_error, preg_last_error_msg, preg_match, preg_quote, preg_replace, preg_replace_callback, preg_split, reset, round, rtrim, str_contains, str_repeat, str_replace, strftime, strip_tags, strlen, strrev, strtr, substr, trim, uasort, uksort, urlencode, utf8_decode;
-use const ENT_NOQUOTES, ENT_SUBSTITUTE, FILEINFO_MIME_TYPE, MB_CASE_TITLE, PHP_OUTPUT_HANDLER_FINAL, PHP_OUTPUT_HANDLER_START, PHP_VERSION_ID, PREG_SPLIT_NO_EMPTY;
+use function abs, array_combine, array_fill_keys, array_key_last, array_map, array_rand, array_reverse, array_search, array_slice, base64_encode, ceil, count, end, explode, extension_loaded, finfo_buffer, finfo_open, floor, func_num_args, htmlspecialchars, http_build_query, iconv, iconv_strlen, iconv_substr, implode, is_array, is_int, is_numeric, is_string, iterator_count, iterator_to_array, key, ltrim, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, min, nl2br, number_format, preg_last_error, preg_last_error_msg, preg_match, preg_quote, preg_replace, preg_replace_callback, preg_split, reset, round, rtrim, str_repeat, str_replace, strip_tags, strlen, strrev, strtr, substr, trim, uasort, uksort, urlencode, utf8_decode;
+use const ENT_NOQUOTES, ENT_SUBSTITUTE, FILEINFO_MIME_TYPE, MB_CASE_TITLE, PHP_OUTPUT_HANDLER_FINAL, PHP_OUTPUT_HANDLER_START, PREG_SPLIT_NO_EMPTY;
 
 
 /**
@@ -34,7 +34,7 @@ final class Filters
 	{
 		$info->validate([null, 'html', 'html/attr', 'xml', 'xml/attr'], __FUNCTION__);
 		$info->contentType = ContentType::Text;
-		return Latte\Runtime\Filters::convertHtmlToText((string) $s);
+		return Latte\Runtime\HtmlHelpers::convertHtmlToText((string) $s);
 	}
 
 
@@ -170,9 +170,11 @@ final class Filters
 	/**
 	 * Date/time formatting.
 	 */
-	public static function date(string|int|\DateTimeInterface|\DateInterval|null $time, ?string $format = null): ?string
+	public static function date(
+		string|int|\DateTimeInterface|\DateInterval|null $time,
+		string $format = "j.\u{a0}n.\u{a0}Y",
+	): ?string
 	{
-		$format ??= Latte\Runtime\Filters::$dateFormat;
 		if ($time == null) { // intentionally ==
 			return null;
 		} elseif ($time instanceof \DateInterval) {
@@ -181,14 +183,6 @@ final class Filters
 			$time = (new \DateTime)->setTimestamp((int) $time);
 		} elseif (!$time instanceof \DateTimeInterface) {
 			$time = new \DateTime($time);
-		}
-
-		if (str_contains($format, '%')) {
-			if (PHP_VERSION_ID >= 80100) {
-				trigger_error("Function strftime() used by filter |date is deprecated since PHP 8.1, use format without % characters like 'Y-m-d'.");
-			}
-
-			return @strftime($format, $time->format('U') + 0);
 		}
 
 		return $time->format($format);
@@ -764,5 +758,18 @@ final class Filters
 		return $values
 			? $values[array_rand($values, 1)]
 			: null;
+	}
+
+
+	/**
+	 * Sanitizes string for use inside href attribute.
+	 */
+	public static function checkUrl($s): string
+	{
+		$s = $s instanceof Latte\Runtime\HtmlStringable
+			? Latte\Runtime\HtmlHelpers::convertHtmlToText((string) $s)
+			: (string) $s;
+
+		return preg_match('~^(?:(?:https?|ftp)://[^@]+(?:/.*)?|(?:mailto|tel|sms):.+|[/?#].*|[^:]+)$~Di', $s) ? $s : '';
 	}
 }

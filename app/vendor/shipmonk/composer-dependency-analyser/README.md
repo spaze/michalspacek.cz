@@ -5,7 +5,7 @@
 - ⚙️ **Configurable:** Fine-grained ignores via PHP config
 - 🕸️ **Lightweight:** No composer dependencies
 - 🍰 **Easy-to-use:** No config needed for first try
-- ✨ **Compatible:** PHP 7.2 - 8.4
+- ✨ **Compatible:** PHP 7.2 - 8.5
 
 ## Comparison:
 
@@ -119,6 +119,8 @@ return $config
     ->ignoreErrorsOnPath(__DIR__ . '/cache/DIC.php', [ErrorType::SHADOW_DEPENDENCY])
     ->ignoreErrorsOnPackage('symfony/polyfill-php73', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackageAndPath('symfony/console', __DIR__ . '/src/OptionalCommand.php', [ErrorType::SHADOW_DEPENDENCY])
+    ->ignoreErrorsOnExtension('ext-intl', [ErrorType::SHADOW_DEPENDENCY])
+    ->ignoreErrorsOnExtensionAndPath('ext-sqlite3', __DIR__ . '/tests',  [ErrorType::SHADOW_DEPENDENCY])
 
     //// Ignoring unknown symbols
     ->ignoreUnknownClasses(['Memcached'])
@@ -177,5 +179,5 @@ NO_COLOR=1 vendor/bin/composer-dependency-analyser
 - All functionality must be tested
 
 ## Supported PHP versions
-- Runtime requires PHP 7.2 - 8.4
+- Runtime requires PHP 7.2 - 8.5
 - Scanned codebase should use PHP >= 5.3

@@ -17,11 +17,14 @@ use Latte\Helpers;
 
 class ModifierNode extends Node
 {
+	/** @deprecated */
+	public bool $check = true;
+
+
 	public function __construct(
 		/** @var FilterNode[] */
 		public array $filters,
 		public bool $escape = false,
-		public bool $check = true,
 		public ?Position $position = null,
 	) {
 		(function (FilterNode ...$args) {})(...$filters);
@@ -40,6 +43,18 @@ class ModifierNode extends Node
 	}
 
 
+	public function removeFilter(string $name): ?FilterNode
+	{
+		foreach ($this->filters as $i => $filter) {
+			if ($filter->name->name === $name) {
+				return array_splice($this->filters, $i, 1)[0];
+			}
+		}
+
+		return null;
+	}
+
+
 	public function print(PrintContext $context): string
 	{
 		throw new \LogicException('Cannot directly print ModifierNode');
@@ -48,48 +63,22 @@ class ModifierNode extends Node
 
 	public function printSimple(PrintContext $context, string $expr): string
 	{
-		$escape = $this->escape;
-		$check = $this->check;
-		foreach ($this->filters as $filter) {
-			$name = $filter->name->name;
-			if ($name === 'nocheck' || $name === 'noCheck') {
-				$check = false;
-			} elseif ($name === 'noescape') {
-				$escape = false;
-			} else {
-				if ($name === 'datastream' || $name === 'dataStream') {
-					$check = false;
-				}
-				$expr = $filter->printSimple($context, $expr);
-			}
-		}
+		$expr = FilterNode::printSimple($context, $this->filters, $expr);
 
 		$escaper = $context->getEscaper();
-		if ($check) {
-			$expr = $escaper->check($expr);
-		}
-
-		$expr = $escape
+		return $this->escape
 			? $escaper->escape($expr)
-			: $escaper->escapeMandatory($expr);
-
-		return $expr;
+			: $escaper->escapeMandatory($expr, $this->position);
 	}
 
 
 	public function printContentAware(PrintContext $context, string $expr): string
 	{
-		$escape = $this->escape;
 		foreach ($this->filters as $filter) {
-			$name = $filter->name->name;
-			if ($name === 'noescape') {
-				$escape = false;
-			} else {
-				$expr = $filter->printContentAware($context, $expr);
-			}
+			$expr = $filter->printContentAware($context, $expr);
 		}
 
-		return $escape
+		return $this->escape
 			? $context->getEscaper()->escapeContent($expr)
 			: $expr;
 	}

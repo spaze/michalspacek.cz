@@ -78,8 +78,10 @@ final class PrintContext
 	private array $escaperStack = [];
 
 
-	public function __construct(string $contentType = ContentType::Html)
-	{
+	public function __construct(
+		string $contentType = ContentType::Html,
+		public bool $migrationWarnings = false,
+	) {
 		$this->escaperStack[] = new Escaper($contentType);
 	}
 
@@ -130,10 +132,10 @@ final class PrintContext
 					},
 					'raw' => (string) $arg,
 					'args' => $this->implode($arg instanceof Expression\ArrayNode ? $arg->toArguments() : $arg),
-					'line' => $arg?->line ? "/* line $arg->line */" : '',
+					'line' => $arg?->line ? "/* pos $arg->line" . ($arg->column ? ":$arg->column" : '') . ' */' : '',
 				};
 
-				if ($cond && ($code === '[]' || $code === '')) {
+				if ($cond && ($code === '[]' || $code === '' || $code === 'null')) {
 					return $right ? $left : $right;
 				}
 

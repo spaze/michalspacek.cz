@@ -27,6 +27,8 @@ use Spaze\SecurityTxt\Violations\SecurityTxtEncryptionNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtEncryptionNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtExpired;
 use Spaze\SecurityTxt\Violations\SecurityTxtExpiresTooLong;
+use Spaze\SecurityTxt\Violations\SecurityTxtFileLocationNotHttps;
+use Spaze\SecurityTxt\Violations\SecurityTxtFileLocationNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtHiringNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtHiringNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtPolicyNotHttps;
@@ -38,10 +40,7 @@ use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesWrongLanguageTags;
 final class SecurityTxt implements JsonSerializable
 {
 
-	public const string CONTENT_TYPE = 'text/plain';
-	public const string CHARSET = 'charset=utf-8';
-	public const string CONTENT_TYPE_HEADER = self::CONTENT_TYPE . '; ' . self::CHARSET;
-
+	private ?string $fileLocation = null;
 	private ?SecurityTxtExpires $expires = null;
 	private ?SecurityTxtSignatureVerifyResult $signatureVerifyResult = null;
 	private ?SecurityTxtPreferredLanguages $preferredLanguages = null;
@@ -88,13 +87,32 @@ final class SecurityTxt implements JsonSerializable
 	}
 
 
+	public function setFileLocation(string $fileLocation): void
+	{
+		$this->setValue(
+			function () use ($fileLocation): void {
+				$this->fileLocation = $fileLocation;
+			},
+			function () use ($fileLocation): void {
+				$this->checkUri($fileLocation, SecurityTxtFileLocationNotUri::class, SecurityTxtFileLocationNotHttps::class);
+			},
+		);
+	}
+
+
+	public function getFileLocation(): ?string
+	{
+		return $this->fileLocation;
+	}
+
+
 	/**
 	 * @throws SecurityTxtError
 	 * @throws SecurityTxtWarning
 	 */
 	public function setExpires(SecurityTxtExpires $expires): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($expires): SecurityTxtExpires {
 				return $this->expires = $expires;
 			},
@@ -137,7 +155,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function addCanonical(SecurityTxtCanonical $canonical): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($canonical): SecurityTxtCanonical {
 				return $this->canonical[] = $canonical;
 			},
@@ -162,7 +180,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function addContact(SecurityTxtContact $contact): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($contact): SecurityTxtContact {
 				return $this->contact[] = $contact;
 			},
@@ -187,7 +205,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function setPreferredLanguages(SecurityTxtPreferredLanguages $preferredLanguages): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($preferredLanguages): SecurityTxtPreferredLanguages {
 				return $this->preferredLanguages = $preferredLanguages;
 			},
@@ -231,7 +249,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function addAcknowledgments(SecurityTxtAcknowledgments $acknowledgments): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($acknowledgments): SecurityTxtAcknowledgments {
 				return $this->acknowledgments[] = $acknowledgments;
 			},
@@ -256,7 +274,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function addHiring(SecurityTxtHiring $hiring): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($hiring): SecurityTxtHiring {
 				return $this->hiring[] = $hiring;
 			},
@@ -281,7 +299,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function addPolicy(SecurityTxtPolicy $policy): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($policy): SecurityTxtPolicy {
 				return $this->policy[] = $policy;
 			},
@@ -306,7 +324,7 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	public function addEncryption(SecurityTxtEncryption $encryption): void
 	{
-		$this->setValue(
+		$this->setFieldValue(
 			function () use ($encryption): SecurityTxtEncryption {
 				return $this->encryption[] = $encryption;
 			},
@@ -327,24 +345,40 @@ final class SecurityTxt implements JsonSerializable
 
 
 	/**
+	 * @param callable(): void $setValue
+	 * @param callable(): void $validator
+	 * @return void
+	 */
+	private function setValue(callable $setValue, callable $validator): void
+	{
+		if ($this->validationLevel === SecurityTxtValidationLevel::AllowInvalidValuesSilently) {
+			$setValue();
+			return;
+		}
+		if ($this->validationLevel === SecurityTxtValidationLevel::AllowInvalidValues) {
+			$setValue();
+			$validator();
+		} else {
+			$validator();
+			$setValue();
+		}
+	}
+
+
+	/**
 	 * @param callable(): SecurityTxtFieldValue $setValue
 	 * @param callable(): void $validator
 	 * @param (callable(): void)|null $warnings
 	 * @return void
 	 */
-	private function setValue(callable $setValue, callable $validator, ?callable $warnings = null): void
+	private function setFieldValue(callable $setValue, callable $validator, ?callable $warnings = null): void
 	{
-		if ($this->validationLevel === SecurityTxtValidationLevel::AllowInvalidValuesSilently) {
-			$this->orderedFields[] = $setValue();
-			return;
-		}
-		if ($this->validationLevel === SecurityTxtValidationLevel::AllowInvalidValues) {
-			$this->orderedFields[] = $setValue();
-			$validator();
-		} else {
-			$validator();
-			$this->orderedFields[] = $setValue();
-		}
+		$this->setValue(
+			function () use ($setValue): void {
+				$this->orderedFields[] = $setValue();
+			},
+			$validator,
+		);
 		if ($warnings !== null) {
 			$warnings();
 		}
@@ -352,8 +386,8 @@ final class SecurityTxt implements JsonSerializable
 
 
 	/**
-	 * @param class-string<SecurityTxtAcknowledgmentsNotUri|SecurityTxtCanonicalNotUri|SecurityTxtContactNotUri|SecurityTxtEncryptionNotUri|SecurityTxtHiringNotUri|SecurityTxtPolicyNotUri> $notUriError
-	 * @param class-string<SecurityTxtAcknowledgmentsNotHttps|SecurityTxtCanonicalNotHttps|SecurityTxtContactNotHttps|SecurityTxtEncryptionNotHttps|SecurityTxtHiringNotHttps|SecurityTxtPolicyNotHttps> $notHttpsError
+	 * @param class-string<SecurityTxtAcknowledgmentsNotUri|SecurityTxtCanonicalNotUri|SecurityTxtContactNotUri|SecurityTxtEncryptionNotUri|SecurityTxtHiringNotUri|SecurityTxtPolicyNotUri|SecurityTxtFileLocationNotUri> $notUriError
+	 * @param class-string<SecurityTxtAcknowledgmentsNotHttps|SecurityTxtCanonicalNotHttps|SecurityTxtContactNotHttps|SecurityTxtEncryptionNotHttps|SecurityTxtHiringNotHttps|SecurityTxtPolicyNotHttps|SecurityTxtFileLocationNotHttps> $notHttpsError
 	 * @throws SecurityTxtError
 	 */
 	private function checkUri(string $uri, string $notUriError, string $notHttpsError): void
@@ -384,6 +418,7 @@ final class SecurityTxt implements JsonSerializable
 	public function jsonSerialize(): array
 	{
 		return [
+			'fileLocation' => $this->getFileLocation(),
 			'expires' => $this->getExpires(),
 			'signatureVerifyResult' => $this->getSignatureVerifyResult(),
 			'preferredLanguages' => $this->getPreferredLanguages(),

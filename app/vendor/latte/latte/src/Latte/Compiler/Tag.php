@@ -35,18 +35,18 @@ final class Tag
 
 
 	public function __construct(
-		public /*readonly*/ string $name,
+		public readonly string $name,
 		array $tokens,
-		public /*readonly*/ Position $position,
-		public /*readonly*/ bool $void = false,
-		public /*readonly*/ bool $closing = false,
-		public /*readonly*/ bool $inHead = false,
-		public /*readonly*/ bool $inTag = false,
-		public /*readonly*/ ?ElementNode $htmlElement = null,
+		public readonly Position $position,
+		public readonly bool $void = false,
+		public readonly bool $closing = false,
+		public readonly bool $inHead = false,
+		public readonly bool $inTag = false,
+		public readonly ?ElementNode $htmlElement = null,
 		public ?self $parent = null,
-		public /*readonly*/ ?string $prefix = null,
+		public readonly ?string $prefix = null,
 		public ?AreaNode $node = null,
-		public ?AreaNode $nAttributeNode = null,
+		public ?AreaNode $nAttribute = null,
 	) {
 		$this->parser = new TagParser($tokens);
 	}
@@ -91,7 +91,7 @@ final class Tag
 	{
 		$tag = $this->parent;
 		while ($tag && (
-			(!in_array($tag->node ? $tag->node::class : null, $classes, true) && !in_array($tag->name, $classes, true))
+			!in_array($tag->node ? $tag->node::class : null, $classes, true)
 			|| ($condition && !$condition($tag))
 		)) {
 			$tag = $tag->parent;
@@ -111,7 +111,7 @@ final class Tag
 
 	public function replaceNAttribute(AreaNode $node): void
 	{
-		$index = array_search($this->nAttributeNode, $this->htmlElement->attributes->children, true);
-		$this->htmlElement->attributes->children[$index] = $this->nAttributeNode = $node;
+		$index = array_search($this->nAttribute, $this->htmlElement->attributes->children, true);
+		$this->htmlElement->attributes->children[$index] = $this->nAttribute = $node;
 	}
 }

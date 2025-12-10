@@ -5,6 +5,7 @@ namespace Spaze\SecurityTxt\Violations;
 
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
 
 final class SecurityTxtExpiresTooLong extends SecurityTxtSpecViolation
 {
@@ -15,11 +16,11 @@ final class SecurityTxtExpiresTooLong extends SecurityTxtSpecViolation
 		parent::__construct(
 			func_get_args(),
 			'The value of the %s field should be less than a year into the future to avoid staleness',
-			['Expires'],
+			[SecurityTxtField::Expires->value],
 			'draft-foudil-securitytxt-10',
 			$correctValue,
 			'Change the value of the %s field to less than a year into the future',
-			['Expires'],
+			[SecurityTxtField::Expires->value],
 			'2.5.5',
 		);
 	}
