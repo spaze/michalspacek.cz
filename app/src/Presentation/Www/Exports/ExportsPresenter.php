@@ -7,7 +7,7 @@ use MichalSpacekCz\Feed\Exports;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Utils\Hash;
-use Spaze\Exports\Bridges\Nette\Atom\Response;
+use Spaze\Exports\Bridges\Nette\AtomResponse;
 
 final class ExportsPresenter extends BasePresenter
 {
@@ -27,7 +27,7 @@ final class ExportsPresenter extends BasePresenter
 		if ($updated !== null) {
 			$this->lastModified($updated, Hash::nonCryptographic((string)$feed), '1 hour');
 		}
-		$this->sendResponse(new Response($feed));
+		$this->sendResponse(new AtomResponse($feed));
 	}
 
 }

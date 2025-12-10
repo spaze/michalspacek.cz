@@ -15,11 +15,13 @@ use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Utils\Html;
-use Spaze\Exports\Atom\Constructs\Person;
-use Spaze\Exports\Atom\Constructs\Text;
-use Spaze\Exports\Atom\Elements\Entry;
-use Spaze\Exports\Atom\Elements\Link;
-use Spaze\Exports\Atom\Feed;
+use Spaze\Exports\Atom\AtomFeed;
+use Spaze\Exports\Atom\Constructs\AtomPerson;
+use Spaze\Exports\Atom\Constructs\AtomText;
+use Spaze\Exports\Atom\Constructs\AtomTextType;
+use Spaze\Exports\Atom\Elements\AtomEntry;
+use Spaze\Exports\Atom\Elements\AtomLink;
+use Spaze\Exports\Atom\Elements\AtomLinkRel;
 
 final readonly class Exports
 {
@@ -39,17 +41,17 @@ final readonly class Exports
 	}
 
 
-	public function getArticles(string $self, ?string $filter = null): Feed
+	public function getArticles(string $self, ?string $filter = null): AtomFeed
 	{
 		$key = sprintf('Atom/%s/%s', $this->translator->getDefaultLocale(), $filter !== null ? "ArticlesByTag/{$filter}" : 'AllArticles');
-		$feed = $this->cache->load($key, function (array|null &$dependencies) use ($self, $filter): Feed {
+		$feed = $this->cache->load($key, function (array|null &$dependencies) use ($self, $filter): AtomFeed {
 			$nearest = $filter !== null ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate();
 			$dependencies[Cache::Expire] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
 			$title = $filter !== null ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles');
-			$feed = new Feed($self, "Michal Špaček: {$title}");
+			$feed = new AtomFeed($self, "Michal Špaček: {$title}");
 			$feed->setLinkSelf($self);
-			$feed->setAuthor(new Person('Michal Špaček'));
+			$feed->setAuthor(new AtomPerson('Michal Špaček'));
 
 			$articles = $filter !== null ? $this->articles->getAllByTags([$filter], self::ITEMS) : $this->articles->getAll(self::ITEMS);
 			if ($articles === []) {
@@ -73,14 +75,14 @@ final readonly class Exports
 						$updated = $updateTime;
 					}
 				}
-				$entry = new Entry(
+				$entry = new AtomEntry(
 					$article->getHref(),
-					new Text((string)$article->getTitle(), Text::TYPE_HTML),
+					new AtomText((string)$article->getTitle(), AtomTextType::Html),
 					$updated,
 					$publishTime,
 				);
 				if ($article->hasSummary()) {
-					$entry->setSummary(new Text(trim((string)$article->getSummary()), Text::TYPE_HTML));
+					$entry->setSummary(new AtomText(trim((string)$article->getSummary()), AtomTextType::Html));
 				}
 				if ($article instanceof ArticleWithTextAndEdits) {
 					$content = Html::el();
@@ -97,9 +99,9 @@ final readonly class Exports
 						$content->addHtml($edits);
 					}
 					$content->addHtml($article->getText());
-					$entry->setContent(new Text(trim($content->render()), Text::TYPE_HTML));
+					$entry->setContent(new AtomText(trim($content->render()), AtomTextType::Html));
 				}
-				$entry->addLink(new Link($article->getHref(), Link::REL_ALTERNATE, 'text/' . Text::TYPE_HTML));
+				$entry->addLink(new AtomLink($article->getHref(), AtomLinkRel::Alternate, 'text/' . AtomTextType::Html->value));
 				$feed->addEntry($entry);
 				if ($updated > $feedUpdated) {
 					$feedUpdated = $updated;
@@ -121,8 +123,8 @@ final readonly class Exports
 			}
 			return $feed;
 		});
-		if (!$feed instanceof Feed) {
-			throw new ShouldNotHappenException(sprintf("The cached feed should be a '%s' object but is a %s", Feed::class, get_debug_type($feed)));
+		if (!$feed instanceof AtomFeed) {
+			throw new ShouldNotHappenException(sprintf("The cached feed should be a '%s' object but is a %s", AtomFeed::class, get_debug_type($feed)));
 		}
 		return $feed;
 	}

@@ -15,7 +15,7 @@ use Nette\Caching\Storage;
 use Nette\Utils\Html;
 use Override;
 use SimpleXMLElement;
-use Spaze\Exports\Atom\Feed;
+use Spaze\Exports\Atom\AtomFeed;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -119,7 +119,7 @@ final class ExportsTest extends TestCase
 
 
 	/**
-	 * @return array{0: Feed, 1:non-negative-int, 2: SimpleXMLElement|null, 3: SimpleXMLElement|null}
+	 * @return array{0: AtomFeed, 1:non-negative-int, 2: SimpleXMLElement|null, 3: SimpleXMLElement|null}
 	 */
 	private function getEntries(): array
 	{
