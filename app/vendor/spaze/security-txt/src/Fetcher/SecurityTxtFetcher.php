@@ -17,10 +17,9 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherHttpClient;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
-use Spaze\SecurityTxt\SecurityTxt;
+use Spaze\SecurityTxt\SecurityTxtContentType;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeInvalid;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeWrongCharset;
-use Spaze\SecurityTxt\Violations\SecurityTxtSchemeNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtTopLevelDiffers;
 use Spaze\SecurityTxt\Violations\SecurityTxtTopLevelPathOnly;
 use Spaze\SecurityTxt\Violations\SecurityTxtWellKnownPathOnly;
@@ -214,14 +213,10 @@ final class SecurityTxtFetcher
 		$this->callOnCallback($this->onFinalUrl, $result->getFinalUrl());
 
 		$contentTypeHeader = $result->getContentType();
-		if ($contentTypeHeader === null || $contentTypeHeader->getLowercaseContentType() !== SecurityTxt::CONTENT_TYPE) {
+		if ($contentTypeHeader === null || $contentTypeHeader->getLowercaseContentType() !== SecurityTxtContentType::CONTENT_TYPE) {
 			$errors[] = new SecurityTxtContentTypeInvalid($result->getUrl(), $contentTypeHeader?->getContentType());
-		} elseif ($contentTypeHeader->getLowercaseCharset() !== SecurityTxt::CHARSET) {
-			$errors[] = new SecurityTxtContentTypeWrongCharset($result->getUrl(), $contentTypeHeader->getContentType(), $contentTypeHeader->getCharset());
-		}
-		$scheme = parse_url($result->getUrl(), PHP_URL_SCHEME);
-		if ($scheme !== 'https') {
-			$errors[] = new SecurityTxtSchemeNotHttps($result->getUrl());
+		} elseif ($contentTypeHeader->getLowercaseCharsetParameter() !== SecurityTxtContentType::CHARSET_PARAMETER) {
+			$errors[] = new SecurityTxtContentTypeWrongCharset($result->getUrl(), $contentTypeHeader->getContentType(), $contentTypeHeader->getCharsetParameter());
 		}
 		return new SecurityTxtFetchResult(
 			$result->getUrl(),

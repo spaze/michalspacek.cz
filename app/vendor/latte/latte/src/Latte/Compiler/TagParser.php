@@ -23,8 +23,10 @@ use function count, is_int, ord, preg_match, preg_replace, preg_replace_callback
  * Parser for PHP-like expression language used in tags.
  * Based on works by Nikita Popov, Moriyoshi Koizumi and Masato Bito.
  */
-final class TagParser extends TagParserData
+final class TagParser
 {
+	use TagParserData;
+
 	private const
 		SchemaExpression = 'e',
 		SchemaArguments = 'a',
@@ -33,12 +35,12 @@ final class TagParser extends TagParserData
 
 	private const SymbolNone = -1;
 
-	public TokenStream /*readonly*/ $stream;
+	public readonly TokenStream $stream;
 	public string $text;
 
 	/** @var \SplObjectStorage<Expression\ArrayNode> */
 	protected \SplObjectStorage $shortArrays;
-	private int /*readonly*/ $offsetDelta;
+	private readonly int $offsetDelta;
 
 
 	public function __construct(array $tokens)
@@ -143,9 +145,10 @@ final class TagParser extends TagParserData
 	}
 
 
-	/** @deprecated use tryConsumeTokenBeforeUnquotedString() */
+	#[\Deprecated('use tryConsumeTokenBeforeUnquotedString()')]
 	public function tryConsumeModifier(string ...$kind): ?Token
 	{
+		trigger_error(__METHOD__ . '() was renamed to tryConsumeTokenBeforeUnquotedString()', E_USER_DEPRECATED);
 		return $this->tryConsumeTokenBeforeUnquotedString(...$kind);
 	}
 

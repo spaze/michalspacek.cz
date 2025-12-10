@@ -9,7 +9,7 @@ namespace Spaze\SecurityTxt\Fetcher;
 final readonly class SecurityTxtFetcherFetchHostResult
 {
 
-	private ?SecurityTxtContentType $contentType;
+	private ?SecurityTxtFetchHostContentType $contentType;
 
 	private ?string $contents;
 
@@ -32,7 +32,7 @@ final readonly class SecurityTxtFetcherFetchHostResult
 			$this->contentType = null;
 		} else {
 			$parts = explode(';', $header, 2);
-			$this->contentType = new SecurityTxtContentType($parts[0], $parts[1] ?? null);
+			$this->contentType = new SecurityTxtFetchHostContentType($parts[0], $parts[1] ?? null);
 		}
 		$this->contents = $response?->getContents();
 		$this->isTruncated = $response !== null && $response->isTruncated();
@@ -78,7 +78,7 @@ final readonly class SecurityTxtFetcherFetchHostResult
 	}
 
 
-	public function getContentType(): ?SecurityTxtContentType
+	public function getContentType(): ?SecurityTxtFetchHostContentType
 	{
 		return $this->contentType;
 	}

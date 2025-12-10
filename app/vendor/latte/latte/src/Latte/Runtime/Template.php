@@ -27,8 +27,6 @@ class Template
 
 	public const ContentType = Latte\ContentType::Html;
 
-	public const Source = null;
-
 	public const Blocks = [];
 
 	/** global accumulators for intermediate results */
@@ -355,7 +353,7 @@ class Template
 		$this->blocks[$destId] = [];
 		foreach (static::Blocks[$staticId] ?? [] as $nm => $info) {
 			[$method, $contentType] = is_array($info) ? $info : [$info, static::ContentType];
-			$this->addBlock($nm, $contentType, [[$this, $method]], $destId);
+			$this->addBlock($nm, $contentType, [$this->$method(...)], $destId);
 		}
 	}
 

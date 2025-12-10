@@ -19,6 +19,7 @@ final class TemplateLexer
 	public const
 		StatePlain = 'Plain',
 		StateLatteTag = 'LatteTag',
+		StateLatteContent = 'LatteContent',
 		StateLatteComment = 'LatteComment',
 		StateHtmlText = 'HtmlText',
 		StateHtmlTag = 'HtmlTag',
@@ -35,7 +36,7 @@ final class TemplateLexer
 	public const NPrefix = 'n:';
 
 	/** HTML attribute name/value (\p{C} means \x00-\x1F except space) */
-	private const ReAttrName = '[^\p{C} "\'<>=`/]';
+	public const ReAttrName = '[^\p{C} "\'<>=`/]';
 
 	private string $openDelimiter = '';
 	private string $closeDelimiter = '';
@@ -99,6 +100,14 @@ final class TemplateLexer
 			(?<Latte_Name> = | _(?!_) | [a-z]\w*+(?:[.:-]\w+)*+(?!::|\(|\\\))?   # name, /name, but not function( or class:: or namespace\
 		~xsiAu');
 
+		$tokens[] = $this->stateLatteContent();
+
+		return array_merge(...$tokens);
+	}
+
+
+	private function stateLatteContent(): array
+	{
 		$tokens[] = $this->tagLexer->tokenizePartially($this->input, $this->position);
 
 		$tokens[] = $this->match('~

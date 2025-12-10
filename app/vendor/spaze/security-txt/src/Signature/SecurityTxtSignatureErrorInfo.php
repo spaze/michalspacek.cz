@@ -21,9 +21,21 @@ final readonly class SecurityTxtSignatureErrorInfo
 	}
 
 
+	public function getMessageAsString(): string
+	{
+		return $this->message === false ? '<false>' : ($this->message === null ? '<null>' : $this->message);
+	}
+
+
 	public function getCode(): ?int
 	{
 		return $this->code;
+	}
+
+
+	public function getCodeAsString(): string
+	{
+		return $this->code !== null ? (string)$this->code : '<null>';
 	}
 
 
@@ -33,9 +45,21 @@ final readonly class SecurityTxtSignatureErrorInfo
 	}
 
 
+	public function getSourceAsString(): string
+	{
+		return $this->source ?? '<null>';
+	}
+
+
 	public function getLibraryMessage(): ?string
 	{
 		return $this->libraryMessage;
+	}
+
+
+	public function getLibraryMessageAsString(): string
+	{
+		return $this->libraryMessage ?? '<null>';
 	}
 
 }

@@ -5,6 +5,7 @@ namespace Spaze\SecurityTxt\Violations;
 
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
 
 final class SecurityTxtExpired extends SecurityTxtSpecViolation
 {
@@ -18,7 +19,7 @@ final class SecurityTxtExpired extends SecurityTxtSpecViolation
 			'draft-foudil-securitytxt-09',
 			(new DateTimeImmutable('+1 year midnight -1 sec'))->format(SecurityTxtExpires::FORMAT),
 			'The %s field should contain a date and time in the future formatted according to the Internet profile of ISO 8601 as defined in RFC 3339',
-			['Expires'],
+			[SecurityTxtField::Expires->value],
 			'2.5.5',
 			['5.3'],
 		);

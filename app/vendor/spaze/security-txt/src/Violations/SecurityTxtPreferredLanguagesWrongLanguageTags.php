@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Violations;
 
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
+
 final class SecurityTxtPreferredLanguagesWrongLanguageTags extends SecurityTxtSpecViolation
 {
 
@@ -22,7 +24,7 @@ final class SecurityTxtPreferredLanguagesWrongLanguageTags extends SecurityTxtSp
 		parent::__construct(
 			func_get_args(),
 			$format,
-			[...$tagsValues, 'Preferred-Languages'],
+			[...$tagsValues, SecurityTxtField::PreferredLanguages->value],
 			'draft-foudil-securitytxt-05',
 			null,
 			'Use language tags as defined in RFC 5646, which usually means the shortest ISO 639 code like for example %s',

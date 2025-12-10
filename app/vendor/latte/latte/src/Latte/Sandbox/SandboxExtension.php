@@ -39,7 +39,7 @@ final class SandboxExtension extends Latte\Extension
 	public function getTags(): array
 	{
 		return [
-			'sandbox' => [Nodes\SandboxNode::class, 'create'],
+			'sandbox' => Nodes\SandboxNode::create(...),
 		];
 	}
 
@@ -47,7 +47,7 @@ final class SandboxExtension extends Latte\Extension
 	public function getPasses(): array
 	{
 		return $this->policy
-			? ['sandbox' => self::order([$this, 'processPass'], before: '*')]
+			? ['sandbox' => self::order($this->processPass(...), before: '*')]
 			: [];
 	}
 
@@ -67,9 +67,9 @@ final class SandboxExtension extends Latte\Extension
 	}
 
 
-	public function processPass(TemplateNode $node): void
+	private function processPass(TemplateNode $node): void
 	{
-		(new NodeTraverser)->traverse($node, leave: \Closure::fromCallable([$this, 'sandboxVisitor']));
+		(new NodeTraverser)->traverse($node, leave: $this->sandboxVisitor(...));
 	}
 
 
@@ -83,6 +83,9 @@ final class SandboxExtension extends Latte\Extension
 			}
 
 			return $node;
+
+		} elseif ($node instanceof Latte\Compiler\Nodes\PrintNode && !$node->modifier->escape) {
+			throw new SecurityViolationException('Filter |noescape is not allowed.', $node->modifier->position);
 
 		} elseif ($node instanceof Expression\NewNode) {
 			throw new SecurityViolationException("Forbidden keyword 'new'", $node->position);

@@ -5,6 +5,7 @@ namespace Spaze\SecurityTxt\Violations;
 
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
 
 final class SecurityTxtExpiresWrongFormat extends SecurityTxtSpecViolation
 {
@@ -17,11 +18,11 @@ final class SecurityTxtExpiresWrongFormat extends SecurityTxtSpecViolation
 		parent::__construct(
 			func_get_args(),
 			'The format of the value of the %s field is wrong',
-			['Expires'],
+			[SecurityTxtField::Expires->value],
 			'draft-foudil-securitytxt-09',
 			$correctValue,
 			'The %s field should contain a date and time in the future formatted according to the Internet profile of ISO 8601 as defined in RFC 3339',
-			['Expires'],
+			[SecurityTxtField::Expires->value],
 			'2.5.5',
 		);
 	}

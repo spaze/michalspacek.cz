@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Violations;
 
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
+
 final class SecurityTxtPreferredLanguagesSeparatorNotComma extends SecurityTxtSpecViolation
 {
 
@@ -23,11 +25,11 @@ final class SecurityTxtPreferredLanguagesSeparatorNotComma extends SecurityTxtSp
 		parent::__construct(
 			func_get_args(),
 			$message,
-			['Preferred-Languages', ...$separatorsValues, ','],
+			[SecurityTxtField::PreferredLanguages->value, ...$separatorsValues, ','],
 			'draft-foudil-securitytxt-05',
 			implode(', ', $languages),
 			'Use comma (%s) to list multiple languages in the %s field',
-			[',', 'Preferred-Languages'],
+			[',', SecurityTxtField::PreferredLanguages->value],
 			'2.5.8',
 		);
 	}

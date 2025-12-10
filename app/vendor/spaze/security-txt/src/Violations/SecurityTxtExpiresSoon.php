@@ -5,6 +5,7 @@ namespace Spaze\SecurityTxt\Violations;
 
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
 
 final class SecurityTxtExpiresSoon extends SecurityTxtSpecViolation
 {
@@ -25,7 +26,7 @@ final class SecurityTxtExpiresSoon extends SecurityTxtSpecViolation
 			'draft-foudil-securitytxt-10',
 			(new DateTimeImmutable('+1 year midnight -1 sec'))->format(SecurityTxtExpires::FORMAT),
 			'Update the value of the %s field',
-			['Expires'],
+			[SecurityTxtField::Expires->value],
 			'2.5.5',
 		);
 	}

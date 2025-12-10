@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Latte;
 
 use Latte\Compiler\Nodes\TemplateNode;
-use function array_map, array_merge, class_exists, extension_loaded, filemtime, get_debug_type, get_object_vars, is_array, md5, preg_match, serialize, strpos, substr;
+use function array_map, array_merge, class_exists, extension_loaded, get_debug_type, get_object_vars, is_array, preg_match, serialize, substr;
 use const PHP_VERSION_ID;
 
 
@@ -19,22 +19,31 @@ use const PHP_VERSION_ID;
  */
 class Engine
 {
-	public const Version = '3.0.24';
-	public const VersionId = 30024;
+	public const Version = '3.1.0';
+	public const VersionId = 30100;
 
 	/** @deprecated use Engine::Version */
 	public const
 		VERSION = self::Version,
 		VERSION_ID = self::VersionId;
 
-	/** @deprecated use ContentType::* */
-	public const
-		CONTENT_HTML = ContentType::Html,
-		CONTENT_XML = ContentType::Xml,
-		CONTENT_JS = ContentType::JavaScript,
-		CONTENT_CSS = ContentType::Css,
-		CONTENT_ICAL = ContentType::ICal,
-		CONTENT_TEXT = ContentType::Text;
+	#[\Deprecated('use Latte\ContentType::Html')]
+	public const CONTENT_HTML = ContentType::Html;
+
+	#[\Deprecated('use Latte\ContentType::Xml')]
+	public const CONTENT_XML = ContentType::Xml;
+
+	#[\Deprecated('use Latte\ContentType::JavaScript')]
+	public const CONTENT_JS = ContentType::JavaScript;
+
+	#[\Deprecated('use Latte\ContentType::Css')]
+	public const CONTENT_CSS = ContentType::Css;
+
+	#[\Deprecated('use Latte\ContentType::ICal')]
+	public const CONTENT_ICAL = ContentType::ICal;
+
+	#[\Deprecated('use Latte\ContentType::Text')]
+	public const CONTENT_TEXT = ContentType::Text;
 
 	private ?Loader $loader = null;
 	private Runtime\FilterExecutor $filters;
@@ -45,7 +54,7 @@ class Engine
 	private array $extensions = [];
 	private string $contentType = ContentType::Html;
 	private Cache $cache;
-	private bool $strictTypes = false;
+	private bool $strictTypes = true;
 	private bool $strictParsing = false;
 	private ?Policy $policy = null;
 	private bool $sandboxed = false;
@@ -53,6 +62,7 @@ class Engine
 	private ?string $configurationHash;
 	private ?string $locale = null;
 	private ?string $syntax = null;
+	private bool $migrationWarnings = false;
 
 
 	public function __construct()
@@ -186,12 +196,8 @@ class Engine
 	public function generate(TemplateNode $node, string $name): string
 	{
 		$generator = new Compiler\TemplateGenerator;
-		return $generator->generate(
-			$node,
-			$this->getTemplateClass($name),
-			$name,
-			$this->strictTypes,
-		);
+		$generator->buildClass($node, $this->migrationWarnings);
+		return $generator->generateCode($this->getTemplateClass($name), $name, $this->strictTypes);
 	}
 
 
@@ -252,9 +258,9 @@ class Engine
 	 */
 	public function generateTemplateHash(string $name): string
 	{
-		$hash = $this->configurationHash ?? md5(serialize($this->getCacheKey()));
+		$hash = $this->configurationHash ?? hash('xxh128', serialize($this->generateConfigurationSignature()));
 		$hash .= $this->getLoader()->getUniqueId($name);
-		return substr(md5($hash), 0, 10);
+		return substr(hash('xxh128', $hash), 0, 10);
 	}
 
 
@@ -262,7 +268,7 @@ class Engine
 	 * Returns values that determine isolation for different configurations.
 	 * When any of these values change, a new compiled template is created to avoid conflicts.
 	 */
-	protected function getCacheKey(): array
+	protected function generateConfigurationSignature(): array
 	{
 		return [
 			$this->contentType,
@@ -291,11 +297,10 @@ class Engine
 	}
 
 
-	/**
-	 * Registers filter loader.
-	 */
+	#[\Deprecated('Use addFilter() instead.')]
 	public function addFilterLoader(callable $loader): static
 	{
+		trigger_error('Filter loader is deprecated, use addFilter() instead.', E_USER_DEPRECATED);
 		$this->filters->add(null, $loader);
 		return $this;
 	}
@@ -534,6 +539,13 @@ class Engine
 	}
 
 
+	public function setMigrationWarnings(bool $state = true): static
+	{
+		$this->migrationWarnings = $state;
+		return $this;
+	}
+
+
 	/**
 	 * @param  object|mixed[]  $params
 	 * @return mixed[]
@@ -554,16 +566,6 @@ class Engine
 			if ($method->getAttributes(Attributes\TemplateFunction::class)) {
 				$this->addFunction($method->name, [$params, $method->name]);
 			}
-
-			if (strpos((string) $method->getDocComment(), '@filter')) {
-				trigger_error('Annotation @filter is deprecated, use attribute #[Latte\Attributes\TemplateFilter]');
-				$this->addFilter($method->name, [$params, $method->name]);
-			}
-
-			if (strpos((string) $method->getDocComment(), '@function')) {
-				trigger_error('Annotation @function is deprecated, use attribute #[Latte\Attributes\TemplateFunction]');
-				$this->addFunction($method->name, [$params, $method->name]);
-			}
 		}
 
 		$res = get_object_vars($params);
@@ -577,17 +579,5 @@ class Engine
 		}
 
 		return $res;
-	}
-
-
-	public function __get(string $name)
-	{
-		if ($name === 'onCompile') {
-			$trace = debug_backtrace(0)[0];
-			$loc = isset($trace['file'], $trace['line'])
-				? ' (in ' . $trace['file'] . ' on ' . $trace['line'] . ')'
-				: '';
-			throw new \LogicException('You use Latte 3 together with the code designed for Latte 2' . $loc);
-		}
 	}
 }

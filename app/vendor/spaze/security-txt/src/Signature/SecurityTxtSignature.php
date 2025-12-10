@@ -15,6 +15,7 @@ use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtSigningKeyNoPassphraseSetE
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtUnknownSigningKeyException;
 use Spaze\SecurityTxt\Signature\Exceptions\SecurityTxtUnusableSigningKeyException;
 use Spaze\SecurityTxt\Signature\Providers\SecurityTxtSignatureProvider;
+use Spaze\SecurityTxt\Violations\SecurityTxtSignatureCannotVerify;
 use Spaze\SecurityTxt\Violations\SecurityTxtSignatureExtensionNotLoaded;
 use Spaze\SecurityTxt\Violations\SecurityTxtSignatureInvalid;
 
@@ -37,7 +38,6 @@ final class SecurityTxtSignature
 	/**
 	 * @throws SecurityTxtError
 	 * @throws SecurityTxtWarning
-	 * @throws SecurityTxtCannotVerifySignatureException
 	 */
 	public function verify(string $contents): SecurityTxtSignatureVerifyResult
 	{
@@ -45,6 +45,8 @@ final class SecurityTxtSignature
 			$signature = $this->signatureProvider->verify($contents);
 		} catch (SecurityTxtCannotCreateSignatureExtensionNotLoadedException $e) {
 			throw new SecurityTxtWarning(new SecurityTxtSignatureExtensionNotLoaded(), $e);
+		} catch (SecurityTxtCannotVerifySignatureException $e) {
+			throw new SecurityTxtWarning(new SecurityTxtSignatureCannotVerify($e->getErrorInfo()), $e);
 		}
 
 		if (!$this->isSignatureKindaOkay($signature->getSummary())) {

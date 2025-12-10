@@ -13,7 +13,6 @@ use Latte;
 use Tracy;
 use Tracy\BlueScreen;
 use Tracy\Helpers;
-use function array_slice;
 use const ENT_IGNORE;
 
 
@@ -34,13 +33,13 @@ class BlueScreenPanel
 		self::$initialized = true;
 
 		$blueScreen ??= Tracy\Debugger::getBlueScreen();
-		$blueScreen->addPanel([self::class, 'renderError']);
-		$blueScreen->addAction([self::class, 'renderUnknownMacro']);
+		$blueScreen->addPanel(self::renderError(...));
+		$blueScreen->addAction(self::renderUnknownMacro(...));
 		if (
 			version_compare(Tracy\Debugger::VERSION, '2.9.0', '>=')
 			&& version_compare(Tracy\Debugger::VERSION, '3.0', '<')
 		) {
-			Tracy\Debugger::addSourceMapper([self::class, 'mapLatteSourceCode']);
+			Tracy\Debugger::addSourceMapper(self::mapLatteSourceCode(...));
 			$blueScreen->addFileGenerator(fn(string $file) => substr($file, -6) === '.latte'
 					? "{block content}\n\$END\$"
 					: null);
@@ -92,20 +91,8 @@ class BlueScreenPanel
 	/** @return array{file: string, line: int, label: string, active: bool} */
 	public static function mapLatteSourceCode(string $file, int $line): ?array
 	{
-		if (!strpos($file, 'latte--')) {
-			return null;
-		}
-
-		$lines = file($file);
-		if (
-			!preg_match('#^/\*\* source: (\S+\.latte)#m', implode('', array_slice($lines, 0, 10)), $m)
-			|| !@is_file($m[1]) // @ - may trigger error
-		) {
-			return null;
-		}
-
-		$file = $m[1];
-		$line = $line && preg_match('#/\* line (\d+) \*/#', $lines[$line - 1], $m) ? (int) $m[1] : 0;
-		return ['file' => $file, 'line' => $line, 'label' => 'Latte', 'active' => true];
+		return ($source = Latte\Helpers::mapCompiledToSource($file, $line)) && @is_file($source['name']) // @ - may trigger error
+			? ['file' => $source['name'], 'line' => $source['line'] ?? 0, 'column' => $source['column'] ?? 0, 'label' => 'Latte', 'active' => true]
+			: null;
 	}
 }
