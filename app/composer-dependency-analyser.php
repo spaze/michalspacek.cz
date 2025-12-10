@@ -17,7 +17,6 @@ return (new Configuration())
 
 	// It's used, believe me
 	->ignoreErrorsOnPackage('async-aws/lambda', [ErrorType::UNUSED_DEPENDENCY])
-	->ignoreErrorsOnPackage('spaze/security-txt', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('mlocati/ip-lib', [ErrorType::UNUSED_DEPENDENCY])
 
 	->ignoreErrorsOnExtensions([

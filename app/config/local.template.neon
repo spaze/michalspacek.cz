@@ -49,6 +49,9 @@ parameters:
 			cz: michalspacek.cz.test
 			com: michalspacek.com.test
 
+	securityTxtDirs:
+			www.michalspacek.cz.test: www.michalspacek.cz
+
 	encryption:
 		keys:
 			password:

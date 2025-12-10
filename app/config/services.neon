@@ -110,6 +110,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer, @typedDatabase.pulse)
+	- MichalSpacekCz\SecurityTxt\SecurityTxtResponse(dirs: %securityTxtDirs%)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Slides\TalkSlides
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
