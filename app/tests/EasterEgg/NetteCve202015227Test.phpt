@@ -115,17 +115,11 @@ final class NetteCve202015227Test extends TestCase
 		$routeList = new RouteList();
 		$this->cve202015227->addRoute($routeList);
 		$routeLists = $routeList->getRouters();
-		if (!isset($routeLists[0]) || !$routeLists[0] instanceof RouteList) {
-			Assert::fail('There should be at least one RouteList');
-		} else {
-			Assert::same('EasterEgg:', $routeLists[0]->getModule());
-			$routers = $routeLists[0]->getRouters();
-			if (!isset($routers[0]) || !$routers[0] instanceof Route) {
-				Assert::fail('There should be at least one Route in the RouteList');
-			} else {
-				Assert::same(['presenter' => 'Nette', 'action' => 'micro'], $routers[0]->getDefaults());
-			}
-		}
+		assert($routeLists[0] instanceof RouteList);
+		Assert::same('EasterEgg:', $routeLists[0]->getModule());
+		$routers = $routeLists[0]->getRouters();
+		assert($routers[0] instanceof Route);
+		Assert::same(['presenter' => 'Nette', 'action' => 'micro'], $routers[0]->getDefaults());
 	}
 
 
