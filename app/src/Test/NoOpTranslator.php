@@ -8,6 +8,7 @@ use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use Contributte\Translation\Wrappers\Message;
 use Contributte\Translation\Wrappers\NotTranslate;
+use LogicException;
 use Override;
 
 final class NoOpTranslator extends Translator
@@ -20,7 +21,7 @@ final class NoOpTranslator extends Translator
 	 */
 	public function __construct(
 		private readonly array $availableLocales,
-		private readonly string $defaultLocale,
+		private string $defaultLocale,
 	) {
 	}
 
@@ -29,6 +30,15 @@ final class NoOpTranslator extends Translator
 	public function getDefaultLocale(): string
 	{
 		return $this->defaultLocale;
+	}
+
+
+	public function setDefaultLocale(string $locale): void
+	{
+		if (!in_array($locale, $this->availableLocales, true)) {
+			throw new LogicException("Locale {$locale} not in the list of available locales");
+		}
+		$this->defaultLocale = $locale;
 	}
 
 
