@@ -27,7 +27,8 @@ final readonly class TrainingControlsFactory
 		$nameInput = $container->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')
 			->addRule(Form::MinLength, 'Minimální délka jména a příjmení je %d znaky', 3)
-			->addRule(Form::MaxLength, 'Maximální délka jména a příjmení je %d znaků', 200);
+			->addRule(Form::MaxLength, 'Maximální délka jména a příjmení je %d znaků', 200)
+			->addRule($this->winterIsComing->ruleName(), 'Winter is actually not coming');
 		$emailInput = $container->addText('email', 'E-mail:')
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::Email, 'Zadejte platnou e-mailovou adresu')

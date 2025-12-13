@@ -24,4 +24,14 @@ final readonly class Strings
 		return mb_strtoupper(mb_substr($initial, 0, 1)) . mb_strtolower(mb_substr($initial, 1));
 	}
 
+
+	/**
+	 * Get string length in characters.
+	 * Similar to Nette\Utils\Strings::length() but doesn't check for the mbstring extension availability.
+	 */
+	public function length(string $string): int
+	{
+		return mb_strlen($string);
+	}
+
 }

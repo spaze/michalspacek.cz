@@ -28,6 +28,9 @@ final class WinterIsComingTest extends TestCase
 	private TextInput $textInput;
 
 	/** @var callable(TextInput): true */
+	private $ruleName;
+
+	/** @var callable(TextInput): true */
 	private $ruleEmail;
 
 	/** @var callable(TextInput): true */
@@ -43,6 +46,7 @@ final class WinterIsComingTest extends TestCase
 	) {
 		$this->presenter = new UiPresenterMock();
 		$this->textInput = (new UiForm($this->presenter, 'leForm'))->addText('foo');
+		$this->ruleName = $winterIsComing->ruleName();
 		$this->ruleEmail = $winterIsComing->ruleEmail();
 		$this->ruleStreet = $winterIsComing->ruleStreet();
 	}
@@ -52,6 +56,60 @@ final class WinterIsComingTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->presenter->reset();
+	}
+
+
+	/**
+	 * @return list<array{0:string}>
+	 */
+	public function getNiceNames(): array
+	{
+		return [
+			['F.B.'],
+			['F.B'],
+			['FB'],
+			['Foo Bar'],
+			['Foo'],
+			['WaldoWaldo'],
+			["O'Brien'"],
+			['Jean-Paul'],
+			['Špaček'],
+			['¯\_(ツ)_/¯‽'],
+		];
+	}
+
+
+	/**
+	 * @return list<array{0:string}>
+	 */
+	public function getNonNames(): array
+	{
+		return [
+			['JsGWIUjpuLK'],
+			['JsGWIUjpuLKGjdXfV'],
+			['zTWDNmxugOQFjiGh'],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getNiceNames
+	 */
+	public function testRuleNameNiceNames(string $name): void
+	{
+		Assert::true(($this->ruleName)($this->textInput->setDefaultValue($name)));
+	}
+
+
+	/**
+	 * @dataProvider getNonNames
+	 */
+	public function testRuleNameNonNames(string $name): void
+	{
+		Assert::true($this->applicationPresenter->expectSendResponse(function () use ($name): void {
+			($this->ruleName)($this->textInput->setDefaultValue($name));
+		}));
+		$this->assertResponse();
 	}
 
 

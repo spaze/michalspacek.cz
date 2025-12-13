@@ -3,9 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg\WinterIsComing;
 
+use Composer\Pcre\Preg;
 use Composer\Pcre\Regex;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Utils\Sleep;
+use MichalSpacekCz\Utils\Strings;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
@@ -35,7 +37,27 @@ final readonly class WinterIsComing
 
 	public function __construct(
 		private Sleep $sleep,
+		private Strings $strings,
 	) {
+	}
+
+
+	/**
+	 * @return callable(TextInput): true
+	 */
+	public function ruleName(): callable
+	{
+		// Strings longer than x containing only word characters (no spaces, punctuation, etc.) are sus
+		return function (TextInput $input) {
+			if (
+				is_string($input->getValue())
+				&& count(Preg::split('/\W/', $input->getValue())) === 1
+				&& $this->strings->length($input->getValue()) > 10
+			) {
+				$this->sendSyntaxError($input);
+			}
+			return true;
+		};
 	}
 
 
