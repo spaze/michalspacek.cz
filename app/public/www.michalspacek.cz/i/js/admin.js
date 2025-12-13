@@ -69,7 +69,6 @@ App.ready(document, function () {
 		for (const item of document.querySelectorAll('#statuses #date-' + this.dataset.date)) {
 			item.classList.toggle('hidden');
 		}
-		return false;
 	});
 
 	App.onClick('#statusesShow', function () {
