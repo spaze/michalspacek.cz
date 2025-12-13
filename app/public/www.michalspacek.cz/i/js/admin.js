@@ -69,7 +69,6 @@ App.ready(document, function () {
 		for (const item of document.querySelectorAll('#statuses #date-' + this.dataset.date)) {
 			item.classList.toggle('hidden');
 		}
-		return false;
 	});
 
 	App.onClick('#statusesShow', function () {
@@ -303,9 +302,11 @@ App.ready(document, function () {
 		dateSelect.value = dateSelect.dataset.originalDateId;
 	});
 
-	App.onClick('.confirm-click', function () {
-		return confirm(this.dataset.confirm);
-	})
+	App.onClick('.confirm-click', function (event) {
+		if (!confirm(this.dataset.confirm)) {
+			event.preventDefault();
+		}
+	});
 
 	App.onClick('#preview-button', function () {
 		document.querySelector('#preview').classList.remove('hidden');
