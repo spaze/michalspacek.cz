@@ -12,6 +12,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
+use Tracy\Debugger;
 
 final class TrainingApplications
 {
@@ -413,6 +414,19 @@ final class TrainingApplications
 	public function setFamiliar(int $applicationId): void
 	{
 		$this->database->query('UPDATE training_applications SET familiar = TRUE WHERE id_application = ?', $applicationId);
+	}
+
+
+	/**
+	 * @param non-empty-list<int> $applicationIds
+	 */
+	public function deleteMultiple(array $applicationIds): void
+	{
+		Debugger::log('Deleting applications: ' . implode(' ', $applicationIds));
+		$this->database->query(
+			'DELETE FROM training_applications WHERE id_application IN (?)',
+			$applicationIds,
+		);
 	}
 
 }

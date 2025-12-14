@@ -8,10 +8,18 @@
 {define #content}
 <p n:if="!$preliminaryApplications">Žádné předběžné přihlášky, hurá!</p>
 {if $preliminaryApplications}
-<p></p>
+{form preliminaryApplications}
+<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
+	<legend><strong>{_messages.label.errors}</strong></legend>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
+{formContainer applications}
 <table id="applications">
 	<thead>
 		<tr>
+			<th></th>
 			<th></th>
 			<th><small>Jméno</small></th>
 			<th><small>E-mail</small></th>
@@ -29,7 +37,8 @@
 			</td>
 		</tr>
 		<tr n:foreach="$training->getApplications() as $application">
-			<td><small>{$iterator->getCounter()}.</small></td>
+			<td>{input (string)$application->getId():}</td>
+			<td><label n:name="(string)$application->getId()"><small>{$iterator->getCounter()}.</small></label></td>
 			<td><small n:tag-if="$application->getName() === null"><a n:href="Trainings:application $application->getId()">{$application->getName() ?? smazáno}</a></small></td>
 			<td><small>{$application->getEmail() ?? smazáno}</small></td>
 			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()->value}</code></small></td>
@@ -37,5 +46,8 @@
 		{/foreach}
 	</tbody>
 </table>
+{/formContainer}
+{input delete class => confirm-click, data-confirm => 'Opravdu smazat?'}
+{/form}
 {/if}
 {/define}

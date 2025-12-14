@@ -114,4 +114,17 @@ final class TrainingApplicationStatusHistory
 		);
 	}
 
+
+	/**
+	 * @param non-empty-list<int> $applicationIds
+	 */
+	public function deleteAllHistoryRecordsMultiple(array $applicationIds): void
+	{
+		Debugger::log('Deleting all status history records for applications: ' . implode(' ', $applicationIds));
+		$this->database->query(
+			'DELETE FROM training_application_status_history WHERE key_application IN (?)',
+			$applicationIds,
+		);
+	}
+
 }

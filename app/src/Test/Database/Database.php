@@ -63,6 +63,8 @@ final class Database extends Explorer
 
 	private ?ResultSet $resultSet = null;
 
+	private(set) DatabaseTransactionStatus $transactionStatus = DatabaseTransactionStatus::None;
+
 
 	public function reset(): void
 	{
@@ -85,24 +87,28 @@ final class Database extends Explorer
 		$this->fetchAllResultsPosition = 0;
 		$this->resultSet = null;
 		$this->wontThrow();
+		$this->transactionStatus = DatabaseTransactionStatus::None;
 	}
 
 
 	#[Override]
 	public function beginTransaction(): void
 	{
+		$this->transactionStatus = DatabaseTransactionStatus::Started;
 	}
 
 
 	#[Override]
 	public function commit(): void
 	{
+		$this->transactionStatus = DatabaseTransactionStatus::Committed;
 	}
 
 
 	#[Override]
 	public function rollBack(): void
 	{
+		$this->transactionStatus = DatabaseTransactionStatus::RolledBack;
 	}
 
 

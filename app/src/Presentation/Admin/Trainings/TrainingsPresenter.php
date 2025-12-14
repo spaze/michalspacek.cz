@@ -10,6 +10,7 @@ use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationStatusesFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
+use MichalSpacekCz\Form\TrainingPreliminaryApplicationsFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -29,6 +30,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
+use MichalSpacekCz\Training\Preliminary\PreliminaryTraining;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
@@ -56,6 +58,9 @@ final class TrainingsPresenter extends BasePresenter
 	/** @var list<TrainingDate> */
 	private array $pastWithPersonalData = [];
 
+	/** @var list<PreliminaryTraining> */
+	private array $preliminaryTrainings = [];
+
 
 	public function __construct(
 		private readonly TrainingApplications $trainingApplications,
@@ -75,6 +80,7 @@ final class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationStatusesFormFactory $trainingApplicationStatusesFormFactory,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 		private readonly TrainingReviewInputsFactory $trainingReviewInputsFactory,
+		private readonly TrainingPreliminaryApplicationsFormFactory $trainingPreliminaryApplicationsFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -203,7 +209,7 @@ final class TrainingsPresenter extends BasePresenter
 	public function actionPreliminary(): void
 	{
 		$this->template->pageTitle = 'Předběžné přihlášky';
-		$this->template->preliminaryApplications = $this->trainingPreliminaryApplications->getPreliminary();
+		$this->template->preliminaryApplications = $this->preliminaryTrainings = $this->trainingPreliminaryApplications->getPreliminary();
 		$this->template->upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 	}
 
@@ -359,6 +365,17 @@ final class TrainingsPresenter extends BasePresenter
 			throw new ShouldNotHappenException('actionDate() will be called first');
 		}
 		return $this->trainingReviewInputsFactory->create(true, $this->training->getId());
+	}
+
+
+	protected function createComponentPreliminaryApplications(): UiForm
+	{
+		return $this->trainingPreliminaryApplicationsFormFactory->create(
+			$this->preliminaryTrainings,
+			function (): never {
+				$this->redirect('this');
+			},
+		);
 	}
 
 }
