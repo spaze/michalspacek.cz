@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory
 use MichalSpacekCz\Training\Preliminary\PreliminaryTraining;
 use MichalSpacekCz\Utils\Arrays;
 use Nette\Database\Explorer;
-use Throwable;
+use PDOException;
 use Tracy\Debugger;
 
 final readonly class TrainingPreliminaryApplicationsFormFactory
@@ -46,7 +46,7 @@ final readonly class TrainingPreliminaryApplicationsFormFactory
 					$this->trainingApplications->deleteMultiple($selected);
 					$this->database->commit();
 					$onSuccess();
-				} catch (Throwable $e) {
+				} catch (PDOException $e) {
 					Debugger::log($e);
 					$this->database->rollBack();
 					$form->addError('Oops, something went wrong, please try again in a moment');
