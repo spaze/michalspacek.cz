@@ -10,13 +10,13 @@ final readonly class Arrays
 
 	/**
 	 * @template K of int|string
-	 * @template V of string|int|bool|null|array<array-key, mixed>
+	 * @template V
 	 * @param array<K, V> $array
 	 * @return array<K, V>
 	 */
 	public static function filterEmpty(array $array): array
 	{
-		$filter = function (string|int|bool|null|array $value): bool {
+		$filter = function (mixed $value): bool {
 			if (is_string($value)) {
 				return $value !== '';
 			} elseif (is_int($value)) {

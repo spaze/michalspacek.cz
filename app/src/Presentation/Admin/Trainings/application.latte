@@ -46,7 +46,7 @@
 				<tr class="row">
 					<td><code>{$status->value}</code></td>
 					<td><small>{$statusTime}</small></td>
-					<td><small><a href="#historie" class="open-container">Historie</a></small></td>
+					<td>{if ($history|length) > 0}<small><a href="#historie" class="open-container">Historie</a> ({$history|length})</small>{/if}</td>
 				</tr>
 				<tbody id="historie-container" class="hidden">
 				{formContainer statusHistoryDelete}
