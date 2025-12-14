@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Talks;
 
 use MichalSpacekCz\Application\UiControl;
-use MichalSpacekCz\Form\TalkFormFactory;
+use MichalSpacekCz\Form\Talk\TalkFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Utils\Html;

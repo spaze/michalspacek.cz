@@ -5,12 +5,12 @@ namespace MichalSpacekCz\Presentation\Admin\Trainings;
 
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
-use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationStatusesFormFactory;
-use MichalSpacekCz\Form\TrainingFileFormFactory;
-use MichalSpacekCz\Form\TrainingPreliminaryApplicationsFormFactory;
+use MichalSpacekCz\Form\Training\DeletePersonalDataFormFactory;
+use MichalSpacekCz\Form\Training\TrainingFileFormFactory;
+use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationAdminFormFactory;
+use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationsListFormFactory;
+use MichalSpacekCz\Form\TrainingApplication\TrainingMultipleApplicationsFormFactory;
+use MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationsListFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -74,13 +74,13 @@ final class TrainingsPresenter extends BasePresenter
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
-		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
+		private readonly TrainingMultipleApplicationsFormFactory $trainingMultipleApplicationsFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 		private readonly TrainingDateInputsFactory $trainingDateInputsFactory,
-		private readonly TrainingApplicationStatusesFormFactory $trainingApplicationStatusesFormFactory,
+		private readonly TrainingApplicationsListFormFactory $trainingApplicationsListFormFactory,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 		private readonly TrainingReviewInputsFactory $trainingReviewInputsFactory,
-		private readonly TrainingPreliminaryApplicationsFormFactory $trainingPreliminaryApplicationsFormFactory,
+		private readonly TrainingPreliminaryApplicationsListFormFactory $trainingPreliminaryApplicationsListFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -242,7 +242,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentStatuses(): UiForm
 	{
-		return $this->trainingApplicationStatusesFormFactory->create(
+		return $this->trainingApplicationsListFormFactory->create(
 			function (?Html $message): never {
 				if ($message !== null) {
 					$this->flashMessage($message);
@@ -259,7 +259,7 @@ final class TrainingsPresenter extends BasePresenter
 		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() will be called first');
 		}
-		return $this->trainingApplicationMultipleFormFactory->create(
+		return $this->trainingMultipleApplicationsFormFactory->create(
 			function (int $dateId): never {
 				$this->redirect($this->getAction(), $dateId);
 			},
@@ -370,7 +370,7 @@ final class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentPreliminaryApplications(): UiForm
 	{
-		return $this->trainingPreliminaryApplicationsFormFactory->create(
+		return $this->trainingPreliminaryApplicationsListFormFactory->create(
 			$this->preliminaryTrainings,
 			function (): never {
 				$this->redirect('this');

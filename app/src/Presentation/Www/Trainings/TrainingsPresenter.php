@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Presentation\Www\Trainings;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
-use MichalSpacekCz\Form\TrainingApplicationFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
+use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationFormFactory;
+use MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Http\Robots\Robots;
@@ -58,7 +58,7 @@ final class TrainingsPresenter extends BasePresenter
 		private readonly TrainingLocales $trainingLocales,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly TrainingApplicationFormFactory $trainingApplicationFactory,
-		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
+		private readonly TrainingPreliminaryApplicationFormFactory $trainingApplicationPreliminaryFactory,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly CompanyInfo $companyInfo,
 		private readonly TrainingFilesDownload $trainingFilesDownload,

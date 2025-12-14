@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Dates;
 
-use MichalSpacekCz\Form\TrainingDateFormFactory;
+use MichalSpacekCz\Form\Training\TrainingDateFormFactory;
 
 final readonly class TrainingDateInputsFactory
 {

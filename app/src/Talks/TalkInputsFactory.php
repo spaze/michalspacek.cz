@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Talks;
 
-use MichalSpacekCz\Form\TalkFormFactory;
+use MichalSpacekCz\Form\Talk\TalkFormFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
 
 final readonly class TalkInputsFactory

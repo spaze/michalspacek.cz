@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\User;
 
-use MichalSpacekCz\Form\ChangePasswordFormFactory;
-use MichalSpacekCz\Form\RegenerateTokensFormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Form\User\ChangePasswordFormFactory;
+use MichalSpacekCz\Form\User\RegenerateTokensFormFactory;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use Nette\Utils\Html;
 

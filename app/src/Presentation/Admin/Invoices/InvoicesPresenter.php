@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\Invoices;
 
-use MichalSpacekCz\Form\TrainingInvoiceFormFactory;
+use MichalSpacekCz\Form\Training\TrainingInvoiceFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
