@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Reviews;
 
 use MichalSpacekCz\Application\UiControl;
-use MichalSpacekCz\Form\TrainingReviewFormFactory;
+use MichalSpacekCz\Form\Training\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\UiForm;
 
 final class TrainingReviewInputs extends UiControl

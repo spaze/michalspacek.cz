@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Dates;
 
 use MichalSpacekCz\Application\UiControl;
-use MichalSpacekCz\Form\TrainingDateFormFactory;
+use MichalSpacekCz\Form\Training\TrainingDateFormFactory;
 use MichalSpacekCz\Form\UiForm;
 
 final class TrainingDateInputs extends UiControl

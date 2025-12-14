@@ -42,33 +42,33 @@ services:
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
 	- MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing
 	- MichalSpacekCz\Feed\Exports
-	- MichalSpacekCz\Form\ChangePasswordFormFactory
 	- MichalSpacekCz\Form\Controls\FormControlsFactory
 	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
-	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\FormValidators
 	- MichalSpacekCz\Form\InterviewFormFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
-	- MichalSpacekCz\Form\RegenerateTokensFormFactory
-	- MichalSpacekCz\Form\SignInFormFactory
-	- MichalSpacekCz\Form\SignInHoneypotFormFactory
-	- MichalSpacekCz\Form\TalkFormFactory(videoThumbnails: @talkVideoThumbnails)
-	- MichalSpacekCz\Form\TalkSlidesFormFactory
+	- MichalSpacekCz\Form\Talk\TalkFormFactory(videoThumbnails: @talkVideoThumbnails)
+	- MichalSpacekCz\Form\Talk\TalkSlidesFormFactory
 	- MichalSpacekCz\Form\ThemeFormFactory
-	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
-	- MichalSpacekCz\Form\TrainingApplicationFormFactory
-	- MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory
-	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory
-	- MichalSpacekCz\Form\TrainingApplicationStatusesFormFactory
-	- MichalSpacekCz\Form\TrainingDateFormFactory
-	- MichalSpacekCz\Form\TrainingFileFormFactory
-	- MichalSpacekCz\Form\TrainingInvoiceFormFactory
-	- MichalSpacekCz\Form\TrainingMailsOutboxFormFactory
-	- MichalSpacekCz\Form\TrainingPreliminaryApplicationsFormFactory
-	- MichalSpacekCz\Form\TrainingReviewFormFactory
+	- MichalSpacekCz\Form\TrainingApplication\TrainingApplicationAdminFormFactory
+	- MichalSpacekCz\Form\TrainingApplication\TrainingApplicationFormFactory
+	- MichalSpacekCz\Form\TrainingApplication\TrainingApplicationsListFormFactory
+	- MichalSpacekCz\Form\TrainingApplication\TrainingMultipleApplicationsFormFactory
+	- MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationFormFactory
+	- MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationsListFormFactory
+	- MichalSpacekCz\Form\Training\DeletePersonalDataFormFactory
+	- MichalSpacekCz\Form\Training\TrainingDateFormFactory
+	- MichalSpacekCz\Form\Training\TrainingFileFormFactory
+	- MichalSpacekCz\Form\Training\TrainingInvoiceFormFactory
+	- MichalSpacekCz\Form\Training\TrainingMailsOutboxFormFactory
+	- MichalSpacekCz\Form\Training\TrainingReviewFormFactory
+	- MichalSpacekCz\Form\User\ChangePasswordFormFactory
+	- MichalSpacekCz\Form\User\RegenerateTokensFormFactory
+	- MichalSpacekCz\Form\User\SignInFormFactory
+	- MichalSpacekCz\Form\User\SignInHoneypotFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\Placeholders\TrainingDateTexyFormatterPlaceholder

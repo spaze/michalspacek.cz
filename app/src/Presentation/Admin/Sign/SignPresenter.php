@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\Sign;
 
-use MichalSpacekCz\Form\SignInFormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Form\User\SignInFormFactory;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\User\Manager;
 use Nette\Http\Session;

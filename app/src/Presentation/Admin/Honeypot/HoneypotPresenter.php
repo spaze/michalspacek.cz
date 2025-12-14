@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\Honeypot;
 
-use MichalSpacekCz\Form\SignInHoneypotFormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Form\User\SignInHoneypotFormFactory;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 
 final class HoneypotPresenter extends BasePresenter

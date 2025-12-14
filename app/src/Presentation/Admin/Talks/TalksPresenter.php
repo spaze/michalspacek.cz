@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Talks;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Form\TalkSlidesFormFactory;
+use MichalSpacekCz\Form\Talk\TalkSlidesFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
