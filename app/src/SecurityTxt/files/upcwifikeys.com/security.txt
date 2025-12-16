@@ -16,22 +16,22 @@ Contact: https://m.me/spaze
 Encryption: https://www.michalspacek.cz/key.asc
 Canonical: https://upcwifikeys.com/.well-known/security.txt
 Preferred-Languages: en, cs
-Expires: 2026-09-01T00:00:00+00:00
+Expires: 2026-12-01T00:00:00+00:00
 # Rick: <img/src=//xss.sk>
 # Rolling: <script/src=//xss.sk></script>
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAmjStoUACgkQtkvdbkZK
-tSmt6A//Q90vDn7h57kRWHmgcsHhV7q9o/p347/SmNuvS/MS/+HaqA6ymPjzb5bp
-CoF7PClozF6srVmRZQbw7LZ+O3av6gk/IhypepAg5zysL4MCi+XplJEW+jyOCoaf
-wpL+dLKJVcPjAexhZp6MQ4kDqMuk0dk0ltHRgARb/Z2p9nsBiTYdln6nAf6ocN6U
-U4BC9pqhZAsQ1MLa2WGZRnobn/SQ3eemJTFy+2d9hNR6VJMw4ofKs+VLvWwNmECc
-DH64xggjoMLRKDvSd8WUJJNN3GgsQt2iuVdgrn2vEHXGVH7oKrPYu79sI6OxVxDm
-ljZxA13PfM/jOzI3SPqrt3P+THKjzyKlhvdhUaVYbA1JzY1rYlMMrh9MMPaOPXzO
-Wxgmm7kl4ukh/hdF6UKNKz01vOYEYHn+S5Tlai2G1SCpAp91zygmwUGwEczSZEIa
-2NM0dg0ZtgDXsMoXhu9tzTEX3ECPlKnzBXGznhtHd/3DNd51tRF7kZDbEoZ9ZfKK
-FTHjO1Z2BTHHO/UGqiiD18rB9foB0oG1hf/gq6EVqXi1SJNllPNvzssSQYeGViXD
-VRbLWY+1MplGK55y0iybXQpj822aUiTOLvln29I6HKVJHkt4Ci2X+J1qrbvdirE5
-MBVweyy3Ql+qf7RXjTfVcz1TTSNLJuTCRUeLwIAn7sT5ptIHdsY=
-=Ul9J
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAmlAq1EACgkQtkvdbkZK
+tSnXwRAAvzSwYb0uuZP1OqTrDN4xmdH9qdDvtCCRR1QQpLzc2ngS270DtKDw9yvm
+DjPFABxVxZ8xs7btiefvw7VWcgKtB4tE8ujzZJq0XUC23bZaiJsKke77eRB6MFGW
+JDfNLJPlGN6xqBe43yBtBC9W/kmgnoJ8dFQxZatGoI74dVfchVn+f5rgyrVCCw8V
+AysYUIV/zoLSljZrFqj6cFetfDFsoFuiCJmxUt9BqxET/gCGOrkh1lVSQAwkEx3K
+qT8Vg2E3icSwwm6KkGCI7cCF+nNmOEBKtrJKWwIPZi6h/M/yefMjlpWMop+bRqWH
+7eCpuUcmVJPYjwQnvwsfBzADYT1yGnQl3eUbtm5yg7FgK5JEcFP8fHs5kXjBPECi
+PnaUllNs+PEXZm0vDUB9N/oaMmXXHNZcHFztPIQEy/zGZ06Dc5t3ReGQYpy7+hbc
+hKQXML8aru6mEpVYzwGvqiiL9sh3CS7zKWPUlStjqtjycMBCXL6Kpzox1/2BMvD7
+Yj5ZxdnK7o2pPJtotbqgRUHRvGsC6yWOlxfDbPJDL/A3hoOBEZSMy/f2+WrVkE+1
+at4Iw6kSBxYDqRXfOLGo5XoT4qPRZoVCJS8nFIjzJveWt+EW6yxGzS7KIB6V05Gh
+uEkvhEAsrz90OxLwMkztrqyn2H+bajWbGKXGg3G66or9S993T8U=
+=xMn9
 -----END PGP SIGNATURE-----
