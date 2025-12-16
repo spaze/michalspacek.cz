@@ -17,8 +17,8 @@ Encryption: https://www.michalspacek.cz/key.asc
 Canonical: https://upcwifikeys.com/.well-known/security.txt
 Preferred-Languages: en, cs
 Expires: 2026-09-01T00:00:00+00:00
-Rick: <img/src=//xss.sk>
-Rolling: <script/src=//xss.sk></script>
+# Rick: <img/src=//xss.sk>
+# Rolling: <script/src=//xss.sk></script>
 -----BEGIN PGP SIGNATURE-----
 
 iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAmjStoUACgkQtkvdbkZK
