@@ -27,6 +27,6 @@ function update() {
 }
 
 APP_DIR="$(dirname "$0")/.."
-update "$APP_DIR/public/upcwifikeys.com/.well-known/security.txt"
-update "$APP_DIR/public/www.michalspacek.com/.well-known/security.txt"
-update "$APP_DIR/public/www.michalspacek.cz/.well-known/security.txt"
+update "$APP_DIR/src/SecurityTxt/files/upcwifikeys.com/security.txt"
+update "$APP_DIR/src/SecurityTxt/files/www.michalspacek.com/security.txt"
+update "$APP_DIR/src/SecurityTxt/files/www.michalspacek.cz/security.txt"
