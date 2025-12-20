@@ -9,7 +9,7 @@ npm-audit:
 	npm audit
 
 cs-fix:
-	vendor/bin/phpcbf src/ public/ tests/
+	vendor/bin/phpcbf src/ public/ tests/ bin/
 
 check-file-patterns:
 	bin/check-file-patterns.sh
@@ -36,7 +36,7 @@ lint-xml-auto-install:
 	bin/xmllint.sh --auto-install-with-apt
 
 phpcs:
-	vendor/bin/phpcs src/ public/ tests/
+	vendor/bin/phpcs src/ public/ tests/ bin/
 
 phpstan:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon

@@ -2,7 +2,7 @@
 <?php
 declare(strict_types = 1);
 
-/**
+/*
  * Deletes stale session rows from the database.
  *
  * - Run daily or hourly via cron or a systemd timer (adjust the frequency to session expiry)
