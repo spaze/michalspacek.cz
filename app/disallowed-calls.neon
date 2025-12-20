@@ -28,6 +28,9 @@ parameters:
 					position: 2
 					name: callback
 					typeString: 'callable'
+		-
+			function: 'parse_url()'
+			message: 'use the Uri\WhatWg\Url class for standards-compliant URL parsing'
 	disallowedStaticCalls:
 		-
 			method: 'Tester\Environment::skip()'
@@ -91,6 +94,10 @@ parameters:
 			message: 'use MichalSpacekCz\Application\SanitizedPhpInfo with additional sanitization'
 			allowIn:
 				- src/Application/SanitizedPhpInfo.php
+		-
+			class: 'Uri\Rfc3986\Uri'
+			message: 'instead use the Uri\WhatWg\Url class for standards-compliant URL parsing'
+			errorTip: 'The WHATWG URL Living Standard is followed by web browsers, unlike RFC 3986 which is used by Uri\Rfc3986\Url'
 
 includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon

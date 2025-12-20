@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
+use Uri\WhatWg\Url;
+
 enum VideoPlatform: string
 {
 
@@ -13,7 +15,7 @@ enum VideoPlatform: string
 
 	public static function tryFromUrl(string $url): ?self
 	{
-		return match (parse_url($url, PHP_URL_HOST)) {
+		return match (Url::parse($url)?->getUnicodeHost()) {
 			'youtube.com', 'www.youtube.com', 'youtu.be' => self::YouTube,
 			'vimeo.com', 'www.vimeo.com' => self::Vimeo,
 			'slideslive.com', 'www.slideslive.com' => self::SlidesLive,

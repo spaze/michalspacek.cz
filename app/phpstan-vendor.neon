@@ -56,6 +56,10 @@ parameters:
 			function: 'array_filter()'
 			allowIn:
 				- vendor/*.php
+		-
+			function: 'parse_url()'
+			allowIn:
+				- vendor/*.php
 		# bundled disallowed-dangerous-calls.neon
 		-
 			function: 'eval()'
