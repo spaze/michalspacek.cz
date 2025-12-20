@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Http\Client;
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException;
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use OpenSSLCertificate;
+use Uri\WhatWg\Url;
 
 final readonly class HttpClientResponse
 {
@@ -30,8 +31,8 @@ final readonly class HttpClientResponse
 	 */
 	public function getTlsCertificate(): OpenSSLCertificate
 	{
-		$scheme = parse_url($this->request->getUrl(), PHP_URL_SCHEME);
-		if (!is_string($scheme) || strtolower($scheme) !== 'https') {
+		$scheme = Url::parse($this->request->getUrl())?->getScheme();
+		if ($scheme !== 'https') {
 			throw new HttpClientTlsCertificateNotAvailableException($this->request->getUrl());
 		}
 		if ($this->request->getTlsCaptureCertificate() !== true || $this->tlsCertificate === null) {

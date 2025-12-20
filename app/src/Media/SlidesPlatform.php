@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
+use Uri\WhatWg\Url;
+
 enum SlidesPlatform: string
 {
 
@@ -12,7 +14,7 @@ enum SlidesPlatform: string
 
 	public static function tryFromUrl(string $url): ?self
 	{
-		return match (parse_url($url, PHP_URL_HOST)) {
+		return match (Url::parse($url)?->getUnicodeHost()) {
 			'slideshare.net', 'www.slideshare.net' => self::SlideShare,
 			'speakerdeck.com', 'www.speakerdeck.com' => self::SpeakerDeck,
 			default => null,

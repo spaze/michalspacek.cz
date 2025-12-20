@@ -6,6 +6,8 @@ namespace MichalSpacekCz\Http;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Exceptions\HttpRedirectDestinationUrlMalformedException;
 use Nette\Http\UrlScript;
+use Uri\WhatWg\InvalidUrlException;
+use Uri\WhatWg\Url;
 
 final readonly class Redirections
 {
@@ -22,14 +24,12 @@ final readonly class Redirections
 		if ($destination === null) {
 			return null;
 		}
-		$destinationUrl = parse_url($destination);
-		if ($destinationUrl === false) {
-			throw new HttpRedirectDestinationUrlMalformedException($destination);
+		try {
+			$destinationUrl = new Url($destination, Url::parse($sourceUrl->getAbsoluteUrl()));
+		} catch (InvalidUrlException $e) {
+			throw new HttpRedirectDestinationUrlMalformedException($destination, $e);
 		}
-		if (!isset($destinationUrl['host'])) {
-			$destination = $sourceUrl->withPath($destination)->getAbsoluteUrl();
-		}
-		return $destination;
+		return $destinationUrl->toUnicodeString();
 	}
 
 }
