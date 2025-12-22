@@ -16,7 +16,7 @@ use function array_unshift, class_exists, is_a, iterator_to_array, preg_match, p
 
 
 /**
- * Latte powered template factory.
+ * Creates a class of parameters of Latte templates.
  */
 class TemplateFactory implements UI\TemplateFactory
 {
@@ -36,11 +36,15 @@ class TemplateFactory implements UI\TemplateFactory
 			throw new Nette\InvalidArgumentException("Class $templateClass does not implement " . Template::class . ' or it does not exist.');
 		}
 
-		$this->templateClass = $templateClass ?: DefaultTemplate::class;
+		$this->templateClass = $templateClass ?? DefaultTemplate::class;
 	}
 
 
-	/** @return Template */
+	/**
+	 * @template T of Template = Template
+	 * @param class-string<T>|null $class
+	 * @return T
+	 */
 	public function createTemplate(?UI\Control $control = null, ?string $class = null): UI\Template
 	{
 		$class ??= $this->templateClass;
@@ -50,15 +54,24 @@ class TemplateFactory implements UI\TemplateFactory
 
 		$latte = $this->latteFactory->create($control);
 		$template = new $class($latte);
-		$presenter = $control?->getPresenterIfExists();
 
 		if (version_compare(Latte\Engine::VERSION, '3', '<')) {
-			$this->setupLatte2($latte, $control, $presenter, $template);
+			$this->setupLatte2($latte, $control, $template);
 		} elseif (!Nette\Utils\Arrays::some($latte->getExtensions(), fn($e) => $e instanceof UIExtension)) {
 			$latte->addExtension(new UIExtension($control));
 		}
 
-		// default parameters
+		$this->injectDefaultVariables($template, $control);
+
+		Nette\Utils\Arrays::invoke($this->onCreate, $template);
+
+		return $template;
+	}
+
+
+	private function injectDefaultVariables(Template $template, ?UI\Control $control): void
+	{
+		$presenter = $control?->getPresenterIfExists();
 		$baseUrl = $this->httpRequest
 			? rtrim($this->httpRequest->getUrl()->withoutUserInfo()->getBaseUrl(), '/')
 			: null;
@@ -66,7 +79,7 @@ class TemplateFactory implements UI\TemplateFactory
 			? (array) $presenter->getFlashSession()->get($control->getParameterId('flash'))
 			: [];
 
-		$params = [
+		$vars = [
 			'user' => $this->user,
 			'baseUrl' => $baseUrl,
 			'basePath' => $baseUrl ? preg_replace('#https?://[^/]+#A', '', $baseUrl) : null,
@@ -75,7 +88,7 @@ class TemplateFactory implements UI\TemplateFactory
 			'presenter' => $presenter,
 		];
 
-		foreach ($params as $key => $value) {
+		foreach ($vars as $key => $value) {
 			if ($value !== null && property_exists($template, $key)) {
 				try {
 					$template->$key = $value;
@@ -83,17 +96,12 @@ class TemplateFactory implements UI\TemplateFactory
 				}
 			}
 		}
-
-		Nette\Utils\Arrays::invoke($this->onCreate, $template);
-
-		return $template;
 	}
 
 
 	private function setupLatte2(
 		Latte\Engine $latte,
 		?UI\Control $control,
-		?UI\Presenter $presenter,
 		Template $template,
 	): void
 	{
@@ -116,6 +124,7 @@ class TemplateFactory implements UI\TemplateFactory
 
 		$latte->addProvider('cacheStorage', $this->cacheStorage);
 
+		$presenter = $control?->getPresenterIfExists();
 		if ($control) {
 			$latte->addProvider('uiControl', $control);
 			$latte->addProvider('uiPresenter', $presenter);

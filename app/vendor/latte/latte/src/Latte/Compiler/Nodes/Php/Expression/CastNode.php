@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php\ExpressionNode;
+use Latte\Compiler\Nodes\Php\OperatorNode;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 
 
-class CastNode extends ExpressionNode
+class CastNode extends ExpressionNode implements OperatorNode
 {
 	private const Types = ['int' => 1, 'float' => 1, 'string' => 1, 'array' => 1, 'object' => 1, 'bool' => 1];
 
@@ -32,7 +33,13 @@ class CastNode extends ExpressionNode
 
 	public function print(PrintContext $context): string
 	{
-		return $context->prefixOp($this, '(' . $this->type . ') ', $this->expr);
+		return '(' . $this->type . ') ' . $context->parenthesize($this, $this->expr, self::AssocRight);
+	}
+
+
+	public function getOperatorPrecedence(): array
+	{
+		return [240, self::AssocRight];
 	}
 
 

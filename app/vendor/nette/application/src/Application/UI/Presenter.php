@@ -77,13 +77,13 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	public int $invalidLinkMode = self::InvalidLinkSilent;
 
-	/** @var array<callable(self): void>  Occurs when the presenter is starting */
+	/** @var array<callable(self): void>  Occurs before starup() */
 	public array $onStartup = [];
 
-	/** @var array<callable(self): void>  Occurs when the presenter is rendering after beforeRender */
+	/** @var array<callable(self): void>  Occurs before render*() and after beforeRender() */
 	public array $onRender = [];
 
-	/** @var array<callable(self, Application\Response): void>  Occurs when the presenter is shutting down */
+	/** @var array<callable(self, Application\Response): void>  Occurs before shutdown() */
 	public array $onShutdown = [];
 
 	/** automatically call canonicalize() */
@@ -187,7 +187,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		try {
 			// CHECK REQUIREMENTS
-			(new AccessPolicy($this, static::getReflection()))->checkAccess();
+			(new AccessPolicy(static::getReflection()))->checkAccess($this);
 			$this->checkRequirements(static::getReflection());
 			$this->checkHttpMethod();
 
@@ -477,7 +477,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function sendTemplate(?Template $template = null): void
 	{
 		$template ??= $this->getTemplate();
-		if (!$template->getFile()) {
+		foreach ($this->getReflection()->getTemplateVariables($this) as $name) {
+			$template->$name ??= $this->$name;
+		}
+		if ($template->getFile() === null) {
 			$template->setFile($this->findTemplateFile());
 		}
 		$this->sendResponse(new Responses\TextResponse($template));

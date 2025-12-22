@@ -17,6 +17,9 @@ use const PHP_BINARY, STDERR;
 
 final class Linter
 {
+	public array $excludedDirs = ['.*', '*.tmp', 'temp', 'vendor', 'node_modules'];
+
+
 	public function __construct(
 		private ?Latte\Engine $engine = null,
 		private bool $debug = false,
@@ -27,11 +30,18 @@ final class Linter
 
 	public function scanDirectory(string $path): bool
 	{
+		echo "Scanning $path\n";
+		return $this->scanFiles($this->getFiles($path));
+	}
+
+
+	/**
+	 * @param  iterable<\Stringable>  $files
+	 */
+	public function scanFiles(iterable $files): bool
+	{
 		$this->initialize();
 
-		echo "Scanning $path\n";
-
-		$files = $this->getFiles($path);
 		$counter = 0;
 		$errors = 0;
 		foreach ($files as $file) {
@@ -66,6 +76,12 @@ final class Linter
 			$engine->addExtension(new Nette\Bridges\FormsLatte\FormsExtension);
 		}
 
+		if (class_exists(Nette\Bridges\AssetsLatte\LatteExtension::class)) {
+			$engine->addExtension(new Nette\Bridges\AssetsLatte\LatteExtension(new Nette\Assets\Registry));
+		}
+
+		$engine->addExtension(new LinterExtension);
+
 		return $engine;
 	}
 
@@ -82,7 +98,8 @@ final class Linter
 		set_error_handler(function (int $severity, string $message) use ($file) {
 			if (in_array($severity, [E_USER_DEPRECATED, E_USER_WARNING, E_USER_NOTICE], true)) {
 				$pos = preg_match('~on line (\d+)~', $message, $m) ? ':' . $m[1] : '';
-				fwrite(STDERR, "[DEPRECATED] $file$pos    $message\n");
+				$label = $severity === E_USER_DEPRECATED ? 'DEPRECATED' : 'WARNING';
+				$this->writeError($label, $file . $pos, $message);
 				return null;
 			}
 			return false;
@@ -93,7 +110,7 @@ final class Linter
 		}
 		$s = file_get_contents($file);
 		if (substr($s, 0, 3) === "\xEF\xBB\xBF") {
-			fwrite(STDERR, "[WARNING]    $file    contains BOM\n");
+			$this->writeError('WARNING', $file, 'contains BOM');
 		}
 
 		try {
@@ -107,7 +124,7 @@ final class Linter
 			}
 			$pos = $e->position?->line ? ':' . $e->position->line : '';
 			$pos .= $e->position?->column ? ':' . $e->position->column : '';
-			fwrite(STDERR, "[ERROR]      $file$pos    {$e->getMessage()}\n");
+			$this->writeError('ERROR', $file . $pos, $e->getMessage());
 			return false;
 
 		} finally {
@@ -139,17 +156,38 @@ final class Linter
 
 	private function getFiles(string $path): \Iterator
 	{
-		if (is_file($path)) {
-			return new \ArrayIterator([$path]);
+		$it = match (true) {
+			is_file($path) => new \ArrayIterator([$path]),
+			is_dir($path) => $this->findLatteFiles($path),
+			preg_match('~[*?]~', $path) => new \GlobIterator($path),
+			default => throw new \InvalidArgumentException("File or directory '$path' not found."),
+		};
+		$it = new \CallbackFilterIterator($it, fn($file) => is_file((string) $file));
+		return $it;
+	}
 
-		} elseif (preg_match('~[*?]~', $path)) {
-			return new \GlobIterator($path);
 
-		} else {
-			$it = new \RecursiveDirectoryIterator($path);
-			$it = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD);
-			$it = new \RegexIterator($it, '~\.latte$~');
-			return $it;
+	private function findLatteFiles(string $dir): \Generator
+	{
+		foreach (scandir($dir) as $name) {
+			$path = ($dir === '.' ? '' : $dir . DIRECTORY_SEPARATOR) . $name;
+			if ($name !== '.' && $name !== '..' && is_dir($path)) {
+				foreach ($this->excludedDirs as $pattern) {
+					if (fnmatch($pattern, $name)) {
+						continue 2;
+					}
+				}
+				yield from $this->findLatteFiles($path);
+
+			} elseif (str_ends_with($name, '.latte')) {
+				yield $path;
+			}
 		}
+	}
+
+
+	private function writeError(string $label, string $file, string $message): void
+	{
+		fwrite(STDERR, str_pad("[$label]", 13) . ' ' . $file . '    ' . $message . "\n");
 	}
 }

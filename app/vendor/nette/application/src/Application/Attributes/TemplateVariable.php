@@ -13,9 +13,9 @@ use Attribute;
 
 
 /**
- * Marks property as request parameter. Value is automatically populated from HTTP request and type-cast.
+ * Marks property to be automatically passed as variable to template.
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class Parameter
+final class TemplateVariable
 {
 }
