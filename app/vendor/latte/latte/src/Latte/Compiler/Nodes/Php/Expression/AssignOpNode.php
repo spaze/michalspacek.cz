@@ -11,12 +11,13 @@ namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\CompileException;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
+use Latte\Compiler\Nodes\Php\OperatorNode;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 use function in_array;
 
 
-class AssignOpNode extends ExpressionNode
+class AssignOpNode extends ExpressionNode implements OperatorNode
 {
 	private const Ops = ['+', '-', '*', '/', '.', '%', '&', '|', '^', '<<', '>>', '**', '??'];
 
@@ -37,7 +38,15 @@ class AssignOpNode extends ExpressionNode
 	public function print(PrintContext $context): string
 	{
 		$this->validate();
-		return $context->infixOp($this, $this->var, ' ' . $this->operator . '= ', $this->expr);
+		return $context->parenthesize($this, $this->var, self::AssocLeft)
+			. ' ' . $this->operator . '= '
+			. $context->parenthesize($this, $this->expr, self::AssocRight);
+	}
+
+
+	public function getOperatorPrecedence(): array
+	{
+		return AssignNode::Precedence;
 	}
 
 

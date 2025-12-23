@@ -10,13 +10,14 @@ declare(strict_types=1);
 namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php\ExpressionNode;
+use Latte\Compiler\Nodes\Php\OperatorNode;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 
 
-class UnaryOpNode extends ExpressionNode
+class UnaryOpNode extends ExpressionNode implements OperatorNode
 {
-	private const Ops = ['+' => 1, '-' => 1, '~' => 1];
+	private const Ops = ['+' => 1, '-' => 1, '~' => 1, '@' => 1, '!' => 1];
 
 
 	public function __construct(
@@ -32,9 +33,17 @@ class UnaryOpNode extends ExpressionNode
 
 	public function print(PrintContext $context): string
 	{
-		return $this->expr instanceof self || $this->expr instanceof PreOpNode
-			? $this->operator . '(' . $this->expr->print($context) . ')' // Enforce -(-$expr) instead of --$expr
-			: $context->prefixOp($this, $this->operator, $this->expr);
+		$pos = $this->expr instanceof self || $this->expr instanceof PreOpNode ? self::AssocLeft : self::AssocRight; // Enforce -(-$expr) instead of --$expr
+		return $this->operator . $context->parenthesize($this, $this->expr, $pos);
+	}
+
+
+	public function getOperatorPrecedence(): array
+	{
+		return match ($this->operator) {
+			'+', '-', '~', '@' => [240, self::AssocRight],
+			'!' => [220, self::AssocRight],
+		};
 	}
 
 

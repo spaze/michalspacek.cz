@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
@@ -43,7 +42,6 @@ final readonly class TrainingApplicationFormSuccess
 	 * @param array<int, TrainingDate> $dates
 	 * @throws HaliteAlert
 	 * @throws SodiumException
-	 * @throws WrongTemplateClassException
 	 */
 	public function success(
 		UiForm $form,

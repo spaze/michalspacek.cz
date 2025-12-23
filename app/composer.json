@@ -17,7 +17,7 @@
 		"async-aws/lambda": "^2.10",
 		"composer/pcre": "^3.3.1",
 		"contributte/translation": "^2.0",
-		"latte/latte": "^3.0.3",
+		"latte/latte": "^3.1.1",
 		"mlocati/ip-lib": "^1.20",
 		"nette/application": "^3.1.10",
 		"nette/bootstrap": "^3.1.2",
