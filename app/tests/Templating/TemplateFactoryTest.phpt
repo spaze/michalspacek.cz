@@ -5,11 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Templating;
 
 use DateTimeImmutable;
-use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Bridges\ApplicationLatte\LatteFactory;
-use Nette\Bridges\ApplicationLatte\Template;
-use Nette\InvalidArgumentException;
 use Spaze\NonceGenerator\Nonce;
 use Tester\Assert;
 use Tester\FileMock;
@@ -23,7 +19,6 @@ final class TemplateFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly Nonce $nonce,
-		private readonly LatteFactory $latteFactory,
 		private readonly TemplateFactory $templateFactory,
 	) {
 	}
@@ -40,26 +35,6 @@ final class TemplateFactoryTest extends TestCase
 		Assert::hasKey('uiNonce', $providers);
 		Assert::same($this->nonce->getValue(), $providers['uiNonce']);
 		Assert::same('https://www.domain.example/foo.png, https://www.domain.example/i/images/bar.png, <strong>baz</strong>, 23. srpna 2023, srpen 2023, 23. srpna – 3. září 2023, srpen–září 2023', $template->renderToString($file));
-	}
-
-
-	public function testCreateTemplateWrongClassExtendsTemplateOnly(): void
-	{
-		$class = new class ($this->latteFactory->create()) extends Template {
-		};
-		Assert::exception(function () use ($class): void {
-			$this->templateFactory->createTemplate(class: $class::class);
-		}, WrongTemplateClassException::class);
-	}
-
-
-	public function testCreateTemplateWrongClass(): void
-	{
-		$class = new class () {
-		};
-		Assert::exception(function () use ($class): void {
-			$this->templateFactory->createTemplate(class: $class::class);
-		}, InvalidArgumentException::class);
 	}
 
 }
