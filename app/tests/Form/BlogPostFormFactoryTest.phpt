@@ -25,7 +25,7 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-final class PostFormFactoryTest extends TestCase
+final class BlogPostFormFactoryTest extends TestCase
 {
 
 	private const int LOCALE_ID = 47;
@@ -40,7 +40,7 @@ final class PostFormFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly PostFormFactory $formFactory,
+		private readonly BlogPostFormFactory $formFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		private readonly DateTimeMachineFactory $dateTimeFactory,
@@ -250,4 +250,4 @@ final class PostFormFactoryTest extends TestCase
 
 }
 
-TestCaseRunner::run(PostFormFactoryTest::class);
+TestCaseRunner::run(BlogPostFormFactoryTest::class);
