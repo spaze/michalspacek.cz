@@ -24,6 +24,7 @@ services:
 	- MichalSpacekCz\Articles\Blog\BlogPostPreview
 	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%)
 	- MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks
+	- MichalSpacekCz\Articles\Blog\BlogPostTranslation
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz
