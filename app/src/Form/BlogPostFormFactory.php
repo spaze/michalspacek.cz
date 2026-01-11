@@ -11,6 +11,7 @@ use MichalSpacekCz\Articles\Blog\BlogPostFactory;
 use MichalSpacekCz\Articles\Blog\BlogPostPreview;
 use MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPostTranslation;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -31,7 +32,7 @@ use Nette\Utils\Strings;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
-final readonly class PostFormFactory
+final readonly class BlogPostFormFactory
 {
 
 	public function __construct(
@@ -47,6 +48,7 @@ final readonly class PostFormFactory
 		private BlogPostPreview $blogPostPreview,
 		private TwitterCards $twitterCards,
 		private BlogPostRecommendedLinks $recommendedLinks,
+		private BlogPostTranslation $blogPostTranslation,
 		private Locales $locales,
 	) {
 	}
@@ -56,7 +58,8 @@ final readonly class PostFormFactory
 	{
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
-			->setRequired(false);
+			->setRequired(false)
+			->setDefaultValue($post === null ? $this->blogPostTranslation->getNextTranslationId() : null);
 		$form->addSelect('locale', 'Jazyk:', $this->locales->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');

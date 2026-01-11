@@ -15,6 +15,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Override;
@@ -24,11 +25,12 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-final class PostFormFactoryTest extends TestCase
+final class BlogPostFormFactoryTest extends TestCase
 {
 
 	private const int LOCALE_ID = 47;
 	private const string EDIT_SUMMARY = 'Edit yo';
+	private const int MAX_TRANSLATION_ID = 1337;
 
 	private ?BlogPost $blogPostAdd = null;
 	private ?BlogPost $blogPostEdit = null;
@@ -38,7 +40,7 @@ final class PostFormFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly PostFormFactory $formFactory,
+		private readonly BlogPostFormFactory $formFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		private readonly DateTimeMachineFactory $dateTimeFactory,
@@ -66,6 +68,8 @@ final class PostFormFactoryTest extends TestCase
 		$this->database->addFetchAllResult([]);
 		// Blog post edits
 		$this->database->addFetchAllResult([]);
+		// Max translation group id
+		$this->database->setFetchFieldDefaultResult(self::MAX_TRANSLATION_ID);
 
 		$this->database->setDefaultInsertId('48');
 		$this->localeLinkGenerator->setLinks(['en_US' => 'https://com.example/']);
@@ -79,6 +83,24 @@ final class PostFormFactoryTest extends TestCase
 		$this->blogPostEdit = null;
 		$this->templateSent = null;
 		$this->database->reset();
+	}
+
+
+	public function testDefaultValuesAdd(): void
+	{
+		$form = $this->buildFormAdd();
+		$translationGroup = $form->getComponent('translationGroup');
+		assert($translationGroup instanceof TextInput);
+		Assert::same(self::MAX_TRANSLATION_ID + 1, $translationGroup->getValue());
+	}
+
+
+	public function testDefaultValuesEdit(): void
+	{
+		$form = $this->buildFormEdit();
+		$translationGroup = $form->getComponent('translationGroup');
+		assert($translationGroup instanceof TextInput);
+		Assert::same(null, $translationGroup->getValue());
 	}
 
 
@@ -228,4 +250,4 @@ final class PostFormFactoryTest extends TestCase
 
 }
 
-TestCaseRunner::run(PostFormFactoryTest::class);
+TestCaseRunner::run(BlogPostFormFactoryTest::class);

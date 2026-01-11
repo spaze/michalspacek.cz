@@ -9,7 +9,7 @@ use MichalSpacekCz\Articles\ArticleHeaderIconsFactory;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
-use MichalSpacekCz\Form\PostFormFactory;
+use MichalSpacekCz\Form\BlogPostFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
@@ -25,7 +25,7 @@ final class BlogPresenter extends BasePresenter
 	public function __construct(
 		private readonly BlogPosts $blogPosts,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly PostFormFactory $postFormFactory,
+		private readonly BlogPostFormFactory $blogPostFormFactory,
 		private readonly ArticleHeaderIconsFactory $articleHeaderIconsFactory,
 	) {
 		parent::__construct();
@@ -55,7 +55,7 @@ final class BlogPresenter extends BasePresenter
 
 	protected function createComponentPost(): UiForm
 	{
-		return $this->postFormFactory->create(
+		return $this->blogPostFormFactory->create(
 			function (BlogPost $post): never {
 				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
 				$this->redirect('Blog:');
