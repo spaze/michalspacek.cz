@@ -125,7 +125,7 @@ services:
 	latte.templateFactory:
 		create: MichalSpacekCz\Templating\TemplateFactory()
 		autowired: Nette\Application\UI\TemplateFactory
-	- MichalSpacekCz\Tls\CertificateFactory(expiringThreshold: %certificatesApi.expiringThreshold%)
+	- MichalSpacekCz\Tls\CertificateFactory
 	- MichalSpacekCz\Tls\CertificateGatherer
 	- MichalSpacekCz\Tls\CertificateMonitor
 	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)

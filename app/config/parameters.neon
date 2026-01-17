@@ -41,7 +41,6 @@ parameters:
 	permanentLogin:
 		interval: 14 days
 	certificatesApi:
-		expiringThreshold: 20
 		hideExpiredAfter: 10
 		users:  # Added in local.neon
 	blog:

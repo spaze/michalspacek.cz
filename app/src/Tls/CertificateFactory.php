@@ -26,7 +26,6 @@ final readonly class CertificateFactory
 		private DateTimeZoneFactory $dateTimeZoneFactory,
 		private DateTimeFactory $dateTimeFactory,
 		private Processor $schemaProcessor,
-		private int $expiringThreshold,
 	) {
 	}
 
@@ -54,7 +53,6 @@ final readonly class CertificateFactory
 			$san,
 			$this->dateTimeFactory->createFrom($row->notBefore, $row->notBeforeTimezone),
 			$this->dateTimeFactory->createFrom($row->notAfter, $row->notAfterTimezone),
-			$this->expiringThreshold,
 			null,
 			$this->dateTimeFactory->create(),
 		);
@@ -98,7 +96,6 @@ final readonly class CertificateFactory
 			$details->getSubjectAlternativeNames(),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidFromTimeT()),
 			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidToTimeT()),
-			$this->expiringThreshold,
 			$details->getSerialNumberHex(),
 			$this->dateTimeFactory->create(),
 		);
@@ -119,7 +116,6 @@ final readonly class CertificateFactory
 		string $notBeforeTz,
 		string $notAfter,
 		string $notAfterTz,
-		int $expiringThreshold,
 		?string $serialNumber,
 		string $now,
 		string $nowTz,
@@ -131,7 +127,6 @@ final readonly class CertificateFactory
 			$subjectAlternativeNames,
 			$this->createDateTimeImmutable($notBefore, $notBeforeTz),
 			$this->createDateTimeImmutable($notAfter, $notAfterTz),
-			$expiringThreshold,
 			$serialNumber,
 			$this->createDateTimeImmutable($now, $nowTz),
 		);
