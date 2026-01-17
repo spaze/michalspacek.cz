@@ -23,7 +23,6 @@ final class CertificateTest extends TestCase
 			['cert.example'],
 			new DateTimeImmutable('2025-09-01 00:00:00'),
 			new DateTimeImmutable('2025-09-09 00:00:00'),
-			3,
 			null,
 			new DateTimeImmutable('2025-09-02 00:00:01'),
 		);
@@ -40,7 +39,6 @@ final class CertificateTest extends TestCase
 			['cert.example'],
 			new DateTimeImmutable('2025-09-01 00:00:00'),
 			new DateTimeImmutable('2025-09-09 00:00:00'),
-			3,
 			null,
 			new DateTimeImmutable('2025-09-06 00:00:01'),
 		);
@@ -57,7 +55,6 @@ final class CertificateTest extends TestCase
 			['cert.example'],
 			new DateTimeImmutable('2025-09-01 00:00:00'),
 			new DateTimeImmutable('2025-09-09 00:00:00'),
-			3,
 			null,
 			new DateTimeImmutable('2025-09-10 00:00:01'),
 		);

@@ -27,7 +27,6 @@ final readonly class Certificate implements JsonSerializable
 		private ?array $subjectAlternativeNames,
 		private DateTimeImmutable $notBefore,
 		private DateTimeImmutable $notAfter,
-		private int $expiringThreshold,
 		private ?string $serialNumber,
 		private DateTimeImmutable $now,
 	) {
@@ -37,9 +36,10 @@ final readonly class Certificate implements JsonSerializable
 		$expiryDays = $this->notAfter->diff($this->now)->days;
 		assert(is_int($expiryDays));
 		$this->expiryDays = $expiryDays;
-
 		$this->expired = $this->notAfter < $this->now;
-		$this->expiringSoon = !$this->expired && $this->expiryDays < $this->expiringThreshold;
+		$validity = $this->notAfter->diff($this->notBefore)->days;
+		assert(is_int($validity));
+		$this->expiringSoon = !$this->expired && $this->expiryDays < $validity / 3;
 	}
 
 
@@ -119,7 +119,7 @@ final readonly class Certificate implements JsonSerializable
 
 
 	/**
-	 * @return array{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}
+	 * @return array{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, serialNumber:string|null, now:string, nowTz:string}
 	 */
 	#[Override]
 	public function jsonSerialize(): array
@@ -133,7 +133,6 @@ final readonly class Certificate implements JsonSerializable
 			'notBeforeTz' => $this->notBefore->getTimezone()->getName(),
 			'notAfter' => $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'notAfterTz' => $this->notAfter->getTimezone()->getName(),
-			'expiringThreshold' => $this->expiringThreshold,
 			'serialNumber' => $this->serialNumber,
 			'now' => $this->now->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'nowTz' => $this->now->getTimezone()->getName(),

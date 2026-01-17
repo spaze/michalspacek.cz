@@ -53,7 +53,7 @@ final class CertificatesTest extends TestCase
 	public function testLog(): void
 	{
 		$this->database->setDefaultInsertId('42');
-		$certificate = new Certificate('foo.example', null, 'cn.example', [], $this->notBefore, $this->notAfter, 0, null, new DateTimeImmutable());
+		$certificate = new Certificate('foo.example', null, 'cn.example', [], $this->notBefore, $this->notAfter, null, new DateTimeImmutable());
 		$this->certificates->log($certificate);
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificate_requests');
 		Assert::count(1, $params);
@@ -80,7 +80,7 @@ final class CertificatesTest extends TestCase
 	{
 		$exception = new DriverException();
 		$this->database->willThrow($exception);
-		$certificate = new Certificate('foo.example', null, null, null, $this->notBefore, $this->notAfter, 0, null, new DateTimeImmutable());
+		$certificate = new Certificate('foo.example', null, null, null, $this->notBefore, $this->notAfter, null, new DateTimeImmutable());
 		Assert::exception(function () use ($certificate): void {
 			$this->certificates->log($certificate);
 		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');
@@ -106,7 +106,7 @@ final class CertificatesTest extends TestCase
 
 	public function testGetNewestAndGetNewestWithWarnings(): void
 	{
-		$now = new DateTimeImmutable('2025-12-01 00:00:00 UTC');
+		$now = new DateTimeImmutable('2025-11-29 00:00:00 UTC');
 		$this->dateTimeFactory->setDateTime($now);
 		$this->database->addFetchAllResult([
 			[
@@ -124,9 +124,9 @@ final class CertificatesTest extends TestCase
 				'certificateNameExt' => null,
 				'cn' => null,
 				'san' => Json::encode(['cert2.name.example']),
-				'notBefore' => new DateTime('2025-10-20 10:20:30 UTC'),
+				'notBefore' => new DateTime('2025-09-20 10:20:30 UTC'),
 				'notBeforeTimezone' => 'UTC',
-				'notAfter' => new DateTime('2025-11-20 10:20:29 UTC'),
+				'notAfter' => new DateTime('2025-10-20 10:20:29 UTC'),
 				'notAfterTimezone' => 'UTC',
 			],
 			[
@@ -147,7 +147,6 @@ final class CertificatesTest extends TestCase
 			['cert1.name.example'],
 			new DateTimeImmutable('2025-09-30 10:20:30 UTC'),
 			new DateTimeImmutable('2025-12-30 10:20:29 UTC'),
-			20,
 			null,
 			$now,
 		);
@@ -158,7 +157,6 @@ final class CertificatesTest extends TestCase
 			['cert3.name.example'],
 			new DateTimeImmutable('2025-09-08 10:20:30 UTC'),
 			new DateTimeImmutable('2025-12-08 10:20:29 UTC'),
-			20,
 			null,
 			$now,
 		);

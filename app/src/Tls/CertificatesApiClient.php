@@ -63,7 +63,6 @@ final readonly class CertificatesApiClient
 					'notBeforeTz' => Expect::string()->required(),
 					'notAfter' => Expect::string()->required(),
 					'notAfterTz' => Expect::string()->required(),
-					'expiringThreshold' => Expect::int()->required(),
 					'serialNumber' => Expect::string()->required()->nullable(),
 					'now' => Expect::string()->required(),
 					'nowTz' => Expect::string()->required(),
@@ -71,7 +70,7 @@ final readonly class CertificatesApiClient
 			),
 		]);
 		try {
-			/** @var object{status:string, certificates:list<object{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}>} $data */
+			/** @var object{status:string, certificates:list<object{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, serialNumber:string|null, now:string, nowTz:string}>} $data */
 			$data = $this->schemaProcessor->process($schema, $decoded);
 		} catch (ValidationException $e) {
 			throw new CertificatesApiException(sprintf('Cannot validate response from %s (`%s`): %s', $request->getUrl(), $json, implode(', ', $e->getMessages())), previous: $e);
@@ -89,7 +88,6 @@ final readonly class CertificatesApiClient
 				$details->notBeforeTz,
 				$details->notAfter,
 				$details->notAfterTz,
-				$details->expiringThreshold,
 				$details->serialNumber,
 				$details->now,
 				$details->nowTz,
