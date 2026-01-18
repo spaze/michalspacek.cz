@@ -11,7 +11,7 @@ use Override;
 final readonly class Certificate implements JsonSerializable
 {
 
-	private int $validDays;
+	private int $validityPeriod;
 	private int $expiryDays;
 	private bool $expired;
 	private bool $expiringSoon;
@@ -30,16 +30,14 @@ final readonly class Certificate implements JsonSerializable
 		private ?string $serialNumber,
 		private DateTimeImmutable $now,
 	) {
-		$validDays = $this->notBefore->diff($this->now)->days;
-		assert(is_int($validDays));
-		$this->validDays = $validDays;
 		$expiryDays = $this->notAfter->diff($this->now)->days;
 		assert(is_int($expiryDays));
 		$this->expiryDays = $expiryDays;
 		$this->expired = $this->notAfter < $this->now;
-		$validity = $this->notAfter->diff($this->notBefore)->days;
-		assert(is_int($validity));
-		$this->expiringSoon = !$this->expired && $this->expiryDays < $validity / 3;
+		$validityPeriod = $this->notAfter->diff($this->notBefore)->days;
+		assert(is_int($validityPeriod));
+		$this->validityPeriod = $validityPeriod;
+		$this->expiringSoon = !$this->expired && $this->expiryDays < $this->validityPeriod / 3;
 	}
 
 
@@ -82,9 +80,9 @@ final readonly class Certificate implements JsonSerializable
 	}
 
 
-	public function getValidDays(): int
+	public function getValidityPeriod(): int
 	{
-		return $this->validDays;
+		return $this->validityPeriod;
 	}
 
 

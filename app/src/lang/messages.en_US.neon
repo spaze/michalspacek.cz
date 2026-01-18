@@ -368,7 +368,7 @@ projects:
 	phpstanDisallowedCalls: "\"PHPStan\":https://phpstan.org/ extension to detect disallowed methods & functions, constants, namespaces, attributes & superglobals. Contains predefined config files to forbid calling dangerous or even insecure functions, and you can also add your own custom rules. With 7 million installs now, it is used by e.g. PrestaShop and many others, including \"this very website\":https://github.com/spaze/michalspacek.cz/blob/a1a5cfb79ff2726bc6f3629173506ef2b1ed7823/site/disallowed-calls.neon."
 certificates:
 	admin:
-		validdays: "%count% day ago|%count% days ago"
+		validityPeriod: "%count% day|%count% days"
 		expireddaysago: "%count% day ago|%count% days ago"
 		expiresindays: "in %count% day|in %count% days"
 		howItWorks: "How it works"
