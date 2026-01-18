@@ -368,9 +368,9 @@ projects:
 	phpstanDisallowedCalls: "\"PHPStan\":https://phpstan.org/ extension to detect disallowed methods & functions, constants, namespaces, attributes & superglobals. Contains predefined config files to forbid calling dangerous or even insecure functions, and you can also add your own custom rules. With 7 million installs now, it is used by e.g. PrestaShop and many others, including \"this very website\":https://github.com/spaze/michalspacek.cz/blob/a1a5cfb79ff2726bc6f3629173506ef2b1ed7823/site/disallowed-calls.neon."
 certificates:
 	admin:
-		validdays: "%count% day ago|%count% days ago"
-		expireddaysago: "%count% day ago|%count% days ago"
-		expiresindays: "in %count% day|in %count% days"
+		validityPeriod: "%count% day|%count% days"
+		expiredDaysAgo: "%count% day ago|%count% days ago"
+		expiresInDays: "in %count% day|in %count% days"
 		howItWorks: "How it works"
 		certbotHook: "\"Certbot deploy hook\":[%s] reports renewed certificates, that's what you see in the table below."
 		certbotHookNewCert: "The deploy hook runs on renewals only, so the first certificate for a domain needs to be reported manually. To log a fresh certificate for `example.com`, run:"
