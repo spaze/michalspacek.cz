@@ -20,9 +20,9 @@
 					{if $cert->getExpiryDays() === 0}
 						dnes
 					{elseif $cert->isExpired()}
-						{_messages.certificates.admin.expireddaysago, $cert->getExpiryDays()}
+						{_messages.certificates.admin.expiredDaysAgo, $cert->getExpiryDays()}
 					{else}
-						{_messages.certificates.admin.expiresindays, $cert->getExpiryDays()}
+						{_messages.certificates.admin.expiresInDays, $cert->getExpiryDays()}
 					{/if}
 				</small>
 			</strong>

@@ -369,8 +369,8 @@ projects:
 certificates:
 	admin:
 		validityPeriod: "%count% day|%count% days"
-		expireddaysago: "%count% day ago|%count% days ago"
-		expiresindays: "in %count% day|in %count% days"
+		expiredDaysAgo: "%count% day ago|%count% days ago"
+		expiresInDays: "in %count% day|in %count% days"
 		howItWorks: "How it works"
 		certbotHook: "\"Certbot deploy hook\":[%s] reports renewed certificates, that's what you see in the table below."
 		certbotHookNewCert: "The deploy hook runs on renewals only, so the first certificate for a domain needs to be reported manually. To log a fresh certificate for `example.com`, run:"
