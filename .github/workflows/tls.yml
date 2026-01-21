@@ -49,29 +49,11 @@ jobs:
         name: testssl.sh reports
         path: 'output/*'
 
-  certmonitor:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version:
-          - "8.5"
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2
-        with:
-          coverage: none
-          php-version: ${{ matrix.php-version }}
-      - run: php app/bin/certmonitor.php --colors --no-ipv6
-        env:
-          CERTMONITOR_USER: ${{ secrets.CERTMONITOR_USER }}
-          CERTMONITOR_KEY: ${{ secrets.CERTMONITOR_KEY }}
-
   heartbeat:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - tls
       - testssl
-      - certmonitor
     steps:
       - run: curl --no-progress-meter ${{ secrets.SSLTLSSCANS_HEARTBEAT_URL }}

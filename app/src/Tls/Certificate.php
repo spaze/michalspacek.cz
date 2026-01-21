@@ -37,7 +37,8 @@ final readonly class Certificate implements JsonSerializable
 		$validityPeriod = $this->notAfter->diff($this->notBefore)->days;
 		assert(is_int($validityPeriod));
 		$this->validityPeriod = $validityPeriod;
-		$this->expiringSoon = !$this->expired && $this->expiryDays < $this->validityPeriod / 3;
+		// Let's Encrypt: we recommend renewing 90-day certificates every 60 days and six day certificates every three days.
+		$this->expiringSoon = !$this->expired && $this->expiryDays < ($this->validityPeriod === 6 ? 3 : $this->validityPeriod / 3);
 	}
 
 
