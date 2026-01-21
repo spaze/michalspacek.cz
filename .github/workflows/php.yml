@@ -123,7 +123,7 @@ jobs:
     - name: Get PHP_CodeSniffer cache file pattern
       id: phpcs-cache
       run: echo "file=$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+    - uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
       with:
         path: ${{ steps.phpcs-cache.outputs.file }}
         key: phpcs-cache-php${{ matrix.php-version }}
@@ -144,7 +144,7 @@ jobs:
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+    - uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-cache-php${{ matrix.php-version }}
@@ -165,7 +165,7 @@ jobs:
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
-    - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+    - uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-vendor-cache-php${{ matrix.php-version }}
