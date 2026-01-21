@@ -63,6 +63,39 @@ final class CertificateTest extends TestCase
 		Assert::false($certificate->isExpiringSoon());
 		Assert::true($certificate->isExpired());
 		Assert::true($certificate->hasWarning());
+
+		// 6-day certificates
+		$certificate = new Certificate(
+			'certificate_name',
+			null,
+			null,
+			['cert.example'],
+			new DateTimeImmutable('2025-09-01 00:00:00'),
+			new DateTimeImmutable('2025-09-07 15:59:59'),
+			null,
+			new DateTimeImmutable('2025-09-04 16:00:00'),
+		);
+		Assert::same(6, $certificate->getValidityPeriod());
+		Assert::same(2, $certificate->getExpiryDays());
+		Assert::true($certificate->isExpiringSoon());
+		Assert::false($certificate->isExpired());
+		Assert::true($certificate->hasWarning());
+
+		$certificate = new Certificate(
+			'certificate_name',
+			null,
+			null,
+			['cert.example'],
+			new DateTimeImmutable('2025-09-01 00:00:00'),
+			new DateTimeImmutable('2025-09-07 15:59:59'),
+			null,
+			new DateTimeImmutable('2025-09-04 15:59:59'),
+		);
+		Assert::same(6, $certificate->getValidityPeriod());
+		Assert::same(3, $certificate->getExpiryDays());
+		Assert::false($certificate->isExpiringSoon());
+		Assert::false($certificate->isExpired());
+		Assert::false($certificate->hasWarning());
 	}
 
 }
