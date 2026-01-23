@@ -24,8 +24,13 @@ abstract class AbstractGenerator
 		LineTested = 1,
 		LineUntested = -1;
 
+	/** @var string[]  file extensions to accept */
 	public array $acceptFiles = ['php', 'phpt', 'phtml'];
+
+	/** @var array<string, array<int, int>>  file path => line number => coverage count */
 	protected array $data;
+
+	/** @var string[]  source paths */
 	protected array $sources;
 	protected int $totalSum = 0;
 	protected int $coveredSum = 0;
@@ -33,20 +38,16 @@ abstract class AbstractGenerator
 
 	/**
 	 * @param  string  $file  path to coverage.dat file
-	 * @param  array   $sources  paths to covered source files or directories
+	 * @param  string[]  $sources  paths to covered source files or directories
 	 */
 	public function __construct(string $file, array $sources = [])
 	{
-		if (!is_file($file)) {
-			throw new \Exception("File '$file' is missing.");
-		}
-
-		$this->data = @unserialize(file_get_contents($file)); // @ is escalated to exception
-		if (!is_array($this->data)) {
+		$data = @unserialize(Helpers::readFile($file)); // @ - unserialization may fail
+		if (!is_array($data)) {
 			throw new \Exception("Content of file '$file' is invalid.");
 		}
 
-		$this->data = array_filter($this->data, fn(string $path): bool => @is_file($path), ARRAY_FILTER_USE_KEY);
+		$this->data = array_filter($data, fn(string $path): bool => @is_file($path), ARRAY_FILTER_USE_KEY);
 
 		if (!$sources) {
 			$sources = [Helpers::findCommonDirectory(array_keys($this->data))];
@@ -112,12 +113,15 @@ abstract class AbstractGenerator
 		return new \CallbackFilterIterator(
 			$iterator,
 			fn(\SplFileInfo $file): bool => $file->getBasename()[0] !== '.'  // . or .. or .gitignore
-				&& in_array($file->getExtension(), $this->acceptFiles, true),
+				&& in_array($file->getExtension(), $this->acceptFiles, strict: true),
 		);
 	}
 
 
-	/** @deprecated  */
+	/**
+	 * @param string[] $files
+	 * @deprecated
+	 */
 	protected static function getCommonFilesPath(array $files): string
 	{
 		return Helpers::findCommonDirectory($files);

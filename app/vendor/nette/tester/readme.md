@@ -40,7 +40,7 @@ composer require nette/tester --dev
 
 Alternatively, you can download the [tester.phar](https://github.com/nette/tester/releases) file.
 
-Nette Tester 2.5 is compatible with PHP 8.0 to 8.5. Collecting and processing code coverage information depends on Xdebug or PCOV extension, or PHPDBG SAPI.
+Nette Tester 2.6 is compatible with PHP 8.0 to 8.5. Collecting and processing code coverage information depends on Xdebug or PCOV extension, or PHPDBG SAPI.
 
  <!---->
 
@@ -83,9 +83,9 @@ Now we run tests from command-line using the `tester` command:
 > tester
  _____ ___  ___ _____ ___  ___
 |_   _/ __)( __/_   _/ __)| _ )
-  |_| \___ /___) |_| \___ |_|_\  v2.5
+  |_| \___ /___) |_| \___ |_|_\  v2.6
 
-PHP 8.2.0 | php -n | 8 threads
+PHP 8.2.0 | php | 8 threads
 .
 OK (1 tests, 0 skipped, 0.0 seconds)
 ```
@@ -217,8 +217,8 @@ Usage:
 
 Options:
     -p <path>                    Specify PHP interpreter to run (default: php).
-    -c <path>                    Look for php.ini file (or look in directory) <path>.
-    -C                           Use system-wide php.ini.
+    -c <path>                    Use custom php.ini, ignore system configuration.
+    -C                           With -c, include system configuration as well.
     -l | --log <path>            Write log to file <path>.
     -d <key=value>...            Define INI entry 'key' with value 'val'.
     -s                           Show information about skipped tests.

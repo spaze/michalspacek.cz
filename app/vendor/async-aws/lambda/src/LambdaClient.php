@@ -7,7 +7,6 @@ use AsyncAws\Core\AwsError\AwsErrorFactoryInterface;
 use AsyncAws\Core\AwsError\JsonRestAwsErrorFactory;
 use AsyncAws\Core\Configuration;
 use AsyncAws\Core\RequestContext;
-use AsyncAws\Core\Result;
 use AsyncAws\Lambda\Enum\Architecture;
 use AsyncAws\Lambda\Enum\FunctionVersion;
 use AsyncAws\Lambda\Enum\InvocationType;
@@ -16,6 +15,7 @@ use AsyncAws\Lambda\Enum\Runtime;
 use AsyncAws\Lambda\Exception\CodeSigningConfigNotFoundException;
 use AsyncAws\Lambda\Exception\CodeStorageExceededException;
 use AsyncAws\Lambda\Exception\CodeVerificationFailedException;
+use AsyncAws\Lambda\Exception\DurableExecutionAlreadyStartedException;
 use AsyncAws\Lambda\Exception\EC2AccessDeniedException;
 use AsyncAws\Lambda\Exception\EC2ThrottledException;
 use AsyncAws\Lambda\Exception\EC2UnexpectedException;
@@ -35,6 +35,7 @@ use AsyncAws\Lambda\Exception\KMSAccessDeniedException;
 use AsyncAws\Lambda\Exception\KMSDisabledException;
 use AsyncAws\Lambda\Exception\KMSInvalidStateException;
 use AsyncAws\Lambda\Exception\KMSNotFoundException;
+use AsyncAws\Lambda\Exception\NoPublishedVersionException;
 use AsyncAws\Lambda\Exception\PolicyLengthExceededException;
 use AsyncAws\Lambda\Exception\PreconditionFailedException;
 use AsyncAws\Lambda\Exception\RecursiveInvocationException;
@@ -42,6 +43,7 @@ use AsyncAws\Lambda\Exception\RequestTooLargeException;
 use AsyncAws\Lambda\Exception\ResourceConflictException;
 use AsyncAws\Lambda\Exception\ResourceNotFoundException;
 use AsyncAws\Lambda\Exception\ResourceNotReadyException;
+use AsyncAws\Lambda\Exception\SerializedRequestEntityTooLargeException;
 use AsyncAws\Lambda\Exception\ServiceException;
 use AsyncAws\Lambda\Exception\SnapStartException;
 use AsyncAws\Lambda\Exception\SnapStartNotReadyException;
@@ -59,13 +61,16 @@ use AsyncAws\Lambda\Input\ListVersionsByFunctionRequest;
 use AsyncAws\Lambda\Input\PublishLayerVersionRequest;
 use AsyncAws\Lambda\Input\UpdateFunctionConfigurationRequest;
 use AsyncAws\Lambda\Result\AddLayerVersionPermissionResponse;
+use AsyncAws\Lambda\Result\DeleteFunctionResponse;
 use AsyncAws\Lambda\Result\FunctionConfiguration;
 use AsyncAws\Lambda\Result\InvocationResponse;
 use AsyncAws\Lambda\Result\ListFunctionsResponse;
 use AsyncAws\Lambda\Result\ListLayerVersionsResponse;
 use AsyncAws\Lambda\Result\ListVersionsByFunctionResponse;
 use AsyncAws\Lambda\Result\PublishLayerVersionResponse;
+use AsyncAws\Lambda\ValueObject\CapacityProviderConfig;
 use AsyncAws\Lambda\ValueObject\DeadLetterConfig;
+use AsyncAws\Lambda\ValueObject\DurableConfig;
 use AsyncAws\Lambda\ValueObject\Environment;
 use AsyncAws\Lambda\ValueObject\EphemeralStorage;
 use AsyncAws\Lambda\ValueObject\FileSystemConfig;
@@ -96,8 +101,8 @@ class LambdaClient extends AbstractApi
      *   StatementId: string,
      *   Action: string,
      *   Principal: string,
-     *   OrganizationId?: null|string,
-     *   RevisionId?: null|string,
+     *   OrganizationId?: string|null,
+     *   RevisionId?: string|null,
      *   '@region'?: string|null,
      * }|AddLayerVersionPermissionRequest $input
      *
@@ -129,6 +134,9 @@ class LambdaClient extends AbstractApi
      * Deletes a Lambda function. To delete a specific function version, use the `Qualifier` parameter. Otherwise, all
      * versions and aliases are deleted. This doesn't require the user to have explicit permissions for DeleteAlias.
      *
+     * > A deleted Lambda function cannot be recovered. Ensure that you specify the correct function name and version before
+     * > deleting.
+     *
      * To delete Lambda event source mappings that invoke a function, use DeleteEventSourceMapping. For Amazon Web Services
      * services and resources that invoke your function directly, delete the trigger in the service where you originally
      * configured it.
@@ -138,7 +146,7 @@ class LambdaClient extends AbstractApi
      *
      * @param array{
      *   FunctionName: string,
-     *   Qualifier?: null|string,
+     *   Qualifier?: string|null,
      *   '@region'?: string|null,
      * }|DeleteFunctionRequest $input
      *
@@ -148,7 +156,7 @@ class LambdaClient extends AbstractApi
      * @throws ServiceException
      * @throws TooManyRequestsException
      */
-    public function deleteFunction($input): Result
+    public function deleteFunction($input): DeleteFunctionResponse
     {
         $input = DeleteFunctionRequest::create($input);
         $response = $this->getResponse($input->request(), new RequestContext(['operation' => 'DeleteFunction', 'region' => $input->getRegion(), 'exceptionMapping' => [
@@ -159,7 +167,7 @@ class LambdaClient extends AbstractApi
             'TooManyRequestsException' => TooManyRequestsException::class,
         ]]));
 
-        return new Result($response);
+        return new DeleteFunctionResponse($response);
     }
 
     /**
@@ -173,7 +181,7 @@ class LambdaClient extends AbstractApi
      *
      * @param array{
      *   FunctionName: string,
-     *   Qualifier?: null|string,
+     *   Qualifier?: string|null,
      *   '@region'?: string|null,
      * }|GetFunctionConfigurationRequest $input
      *
@@ -200,6 +208,9 @@ class LambdaClient extends AbstractApi
      * default, Lambda invokes your function synchronously (i.e. the`InvocationType` is `RequestResponse`). To invoke a
      * function asynchronously, set `InvocationType` to `Event`. Lambda passes the `ClientContext` object to your function
      * for synchronous invocations only.
+     *
+     * For synchronous invocations, the maximum payload size is 6 MB. For asynchronous invocations, the maximum payload size
+     * is 1 MB.
      *
      * For synchronous invocation [^1], details about the function response, including errors, are included in the response
      * body and headers. For either invocation type, you can find more information in the execution log [^2] and trace [^3].
@@ -242,14 +253,17 @@ class LambdaClient extends AbstractApi
      *
      * @param array{
      *   FunctionName: string,
-     *   InvocationType?: null|InvocationType::*,
-     *   LogType?: null|LogType::*,
-     *   ClientContext?: null|string,
-     *   Payload?: null|string,
-     *   Qualifier?: null|string,
+     *   InvocationType?: InvocationType::*|null,
+     *   LogType?: LogType::*|null,
+     *   ClientContext?: string|null,
+     *   DurableExecutionName?: string|null,
+     *   Payload?: string|null,
+     *   Qualifier?: string|null,
+     *   TenantId?: string|null,
      *   '@region'?: string|null,
      * }|InvocationRequest $input
      *
+     * @throws DurableExecutionAlreadyStartedException
      * @throws EC2AccessDeniedException
      * @throws EC2ThrottledException
      * @throws EC2UnexpectedException
@@ -268,11 +282,13 @@ class LambdaClient extends AbstractApi
      * @throws KMSDisabledException
      * @throws KMSInvalidStateException
      * @throws KMSNotFoundException
+     * @throws NoPublishedVersionException
      * @throws RecursiveInvocationException
      * @throws RequestTooLargeException
      * @throws ResourceConflictException
      * @throws ResourceNotFoundException
      * @throws ResourceNotReadyException
+     * @throws SerializedRequestEntityTooLargeException
      * @throws ServiceException
      * @throws SnapStartException
      * @throws SnapStartNotReadyException
@@ -285,6 +301,7 @@ class LambdaClient extends AbstractApi
     {
         $input = InvocationRequest::create($input);
         $response = $this->getResponse($input->request(), new RequestContext(['operation' => 'Invoke', 'region' => $input->getRegion(), 'exceptionMapping' => [
+            'DurableExecutionAlreadyStartedException' => DurableExecutionAlreadyStartedException::class,
             'EC2AccessDeniedException' => EC2AccessDeniedException::class,
             'EC2ThrottledException' => EC2ThrottledException::class,
             'EC2UnexpectedException' => EC2UnexpectedException::class,
@@ -303,11 +320,13 @@ class LambdaClient extends AbstractApi
             'KMSDisabledException' => KMSDisabledException::class,
             'KMSInvalidStateException' => KMSInvalidStateException::class,
             'KMSNotFoundException' => KMSNotFoundException::class,
+            'NoPublishedVersionException' => NoPublishedVersionException::class,
             'RecursiveInvocationException' => RecursiveInvocationException::class,
             'RequestTooLargeException' => RequestTooLargeException::class,
             'ResourceConflictException' => ResourceConflictException::class,
             'ResourceNotFoundException' => ResourceNotFoundException::class,
             'ResourceNotReadyException' => ResourceNotReadyException::class,
+            'SerializedRequestEntityTooLargeException' => SerializedRequestEntityTooLargeException::class,
             'ServiceException' => ServiceException::class,
             'SnapStartException' => SnapStartException::class,
             'SnapStartNotReadyException' => SnapStartNotReadyException::class,
@@ -335,10 +354,10 @@ class LambdaClient extends AbstractApi
      * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-lambda-2015-03-31.html#listfunctions
      *
      * @param array{
-     *   MasterRegion?: null|string,
-     *   FunctionVersion?: null|FunctionVersion::*,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
+     *   MasterRegion?: string|null,
+     *   FunctionVersion?: FunctionVersion::*|null,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
      *   '@region'?: string|null,
      * }|ListFunctionsRequest $input
      *
@@ -370,11 +389,11 @@ class LambdaClient extends AbstractApi
      * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-lambda-2015-03-31.html#listlayerversions
      *
      * @param array{
-     *   CompatibleRuntime?: null|Runtime::*,
+     *   CompatibleRuntime?: Runtime::*|null,
      *   LayerName: string,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
-     *   CompatibleArchitecture?: null|Architecture::*,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
+     *   CompatibleArchitecture?: Architecture::*|null,
      *   '@region'?: string|null,
      * }|ListLayerVersionsRequest $input
      *
@@ -407,8 +426,8 @@ class LambdaClient extends AbstractApi
      *
      * @param array{
      *   FunctionName: string,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
      *   '@region'?: string|null,
      * }|ListVersionsByFunctionRequest $input
      *
@@ -443,11 +462,11 @@ class LambdaClient extends AbstractApi
      *
      * @param array{
      *   LayerName: string,
-     *   Description?: null|string,
+     *   Description?: string|null,
      *   Content: LayerVersionContentInput|array,
-     *   CompatibleRuntimes?: null|array<Runtime::*>,
-     *   LicenseInfo?: null|string,
-     *   CompatibleArchitectures?: null|array<Architecture::*>,
+     *   CompatibleRuntimes?: array<Runtime::*>|null,
+     *   LicenseInfo?: string|null,
+     *   CompatibleArchitectures?: array<Architecture::*>|null,
      *   '@region'?: string|null,
      * }|PublishLayerVersionRequest $input
      *
@@ -493,24 +512,26 @@ class LambdaClient extends AbstractApi
      *
      * @param array{
      *   FunctionName: string,
-     *   Role?: null|string,
-     *   Handler?: null|string,
-     *   Description?: null|string,
-     *   Timeout?: null|int,
-     *   MemorySize?: null|int,
-     *   VpcConfig?: null|VpcConfig|array,
-     *   Environment?: null|Environment|array,
-     *   Runtime?: null|Runtime::*,
-     *   DeadLetterConfig?: null|DeadLetterConfig|array,
-     *   KMSKeyArn?: null|string,
-     *   TracingConfig?: null|TracingConfig|array,
-     *   RevisionId?: null|string,
-     *   Layers?: null|string[],
-     *   FileSystemConfigs?: null|array<FileSystemConfig|array>,
-     *   ImageConfig?: null|ImageConfig|array,
-     *   EphemeralStorage?: null|EphemeralStorage|array,
-     *   SnapStart?: null|SnapStart|array,
-     *   LoggingConfig?: null|LoggingConfig|array,
+     *   Role?: string|null,
+     *   Handler?: string|null,
+     *   Description?: string|null,
+     *   Timeout?: int|null,
+     *   MemorySize?: int|null,
+     *   VpcConfig?: VpcConfig|array|null,
+     *   Environment?: Environment|array|null,
+     *   Runtime?: Runtime::*|null,
+     *   DeadLetterConfig?: DeadLetterConfig|array|null,
+     *   KMSKeyArn?: string|null,
+     *   TracingConfig?: TracingConfig|array|null,
+     *   RevisionId?: string|null,
+     *   Layers?: string[]|null,
+     *   FileSystemConfigs?: array<FileSystemConfig|array>|null,
+     *   ImageConfig?: ImageConfig|array|null,
+     *   EphemeralStorage?: EphemeralStorage|array|null,
+     *   SnapStart?: SnapStart|array|null,
+     *   LoggingConfig?: LoggingConfig|array|null,
+     *   CapacityProviderConfig?: CapacityProviderConfig|array|null,
+     *   DurableConfig?: DurableConfig|array|null,
      *   '@region'?: string|null,
      * }|UpdateFunctionConfigurationRequest $input
      *
@@ -562,6 +583,13 @@ class LambdaClient extends AbstractApi
                     'signService' => 'lambda',
                     'signVersions' => ['v4'],
                 ];
+            case 'eusc-de-east-1':
+                return [
+                    'endpoint' => 'https://lambda.eusc-de-east-1.amazonaws.eu',
+                    'signRegion' => 'eusc-de-east-1',
+                    'signService' => 'lambda',
+                    'signVersions' => ['v4'],
+                ];
             case 'fips-us-east-1':
                 return [
                     'endpoint' => 'https://lambda-fips.us-east-1.amazonaws.com',
@@ -604,10 +632,25 @@ class LambdaClient extends AbstractApi
                     'signService' => 'lambda',
                     'signVersions' => ['v4'],
                 ];
+            case 'eu-isoe-west-1':
+                return [
+                    'endpoint' => 'https://lambda.eu-isoe-west-1.cloud.adc-e.uk',
+                    'signRegion' => 'eu-isoe-west-1',
+                    'signService' => 'lambda',
+                    'signVersions' => ['v4'],
+                ];
             case 'us-iso-east-1':
             case 'us-iso-west-1':
                 return [
                     'endpoint' => "https://lambda.$region.c2s.ic.gov",
+                    'signRegion' => $region,
+                    'signService' => 'lambda',
+                    'signVersions' => ['v4'],
+                ];
+            case 'us-isob-east-1':
+            case 'us-isob-west-1':
+                return [
+                    'endpoint' => "https://lambda.$region.sc2s.sgov.gov",
                     'signRegion' => $region,
                     'signService' => 'lambda',
                     'signVersions' => ['v4'],
@@ -617,20 +660,6 @@ class LambdaClient extends AbstractApi
                 return [
                     'endpoint' => "https://lambda.$region.csp.hci.ic.gov",
                     'signRegion' => $region,
-                    'signService' => 'lambda',
-                    'signVersions' => ['v4'],
-                ];
-            case 'eu-isoe-west-1':
-                return [
-                    'endpoint' => 'https://lambda.eu-isoe-west-1.cloud.adc-e.uk',
-                    'signRegion' => 'eu-isoe-west-1',
-                    'signService' => 'lambda',
-                    'signVersions' => ['v4'],
-                ];
-            case 'us-isob-east-1':
-                return [
-                    'endpoint' => 'https://lambda.us-isob-east-1.sc2s.sgov.gov',
-                    'signRegion' => 'us-isob-east-1',
                     'signService' => 'lambda',
                     'signVersions' => ['v4'],
                 ];

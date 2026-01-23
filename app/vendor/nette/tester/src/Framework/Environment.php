@@ -95,7 +95,7 @@ class Environment
 				);
 
 		ob_start(
-			fn(string $s): string => self::$useColors ? $s : Dumper::removeColors($s),
+			fn(string $s): string => self::$useColors ? $s : Ansi::stripAnsi($s),
 			1,
 			PHP_OUTPUT_HANDLER_FLUSHABLE,
 		);
@@ -114,9 +114,9 @@ class Environment
 
 		set_exception_handler([self::class, 'handleException']);
 
-		set_error_handler(function (int $severity, string $message, string $file, int $line): ?bool {
+		set_error_handler(function (int $severity, string $message, string $file, int $line): bool {
 			if (
-				in_array($severity, [E_RECOVERABLE_ERROR, E_USER_ERROR], true)
+				in_array($severity, [E_RECOVERABLE_ERROR, E_USER_ERROR], strict: true)
 				|| ($severity & error_reporting()) === $severity
 			) {
 				self::handleException(new \ErrorException($message, 0, $severity, $file, $line));
@@ -130,15 +130,15 @@ class Environment
 
 			$error = error_get_last();
 			register_shutdown_function(function () use ($error): void {
-				if (in_array($error['type'] ?? null, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE], true)) {
+				if (in_array($error['type'] ?? null, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE], strict: true)) {
 					if (($error['type'] & error_reporting()) !== $error['type']) { // show fatal errors hidden by @shutup
-						self::print("\n" . Dumper::color('white/red', "Fatal error: $error[message] in $error[file] on line $error[line]"));
+						self::print("\n" . Ansi::colorize("Fatal error: $error[message] in $error[file] on line $error[line]", 'white/red'));
 					}
 				} elseif (self::$checkAssertions && !Assert::$counter) {
-					self::print("\n" . Dumper::color('white/red', 'Error: This test forgets to execute an assertion.'));
+					self::print("\n" . Ansi::colorize('Error: This test forgets to execute an assertion.', 'white/red'));
 					self::exit(Runner\Job::CodeFail);
 				} elseif (!getenv(self::VariableRunner) && self::$exitCode !== Runner\Job::CodeSkip) {
-					self::print("\n" . (self::$exitCode ? Dumper::color('white/red', 'FAILURE') : Dumper::color('white/green', 'OK')));
+					self::print("\n" . (self::$exitCode ? Ansi::colorize('FAILURE', 'white/red') : Ansi::colorize('OK', 'white/green')));
 				}
 			});
 		});
@@ -185,19 +185,21 @@ class Environment
 		static $locks;
 		$file = "$path/lock-" . md5($name);
 		if (!isset($locks[$file])) {
-			flock($locks[$file] = fopen($file, 'w'), LOCK_EX);
+			$locks[$file] = fopen($file, 'w') ?: throw new \RuntimeException("Unable to create lock file '$file'.");
+			flock($locks[$file], LOCK_EX);
 		}
 	}
 
 
 	/**
 	 * Returns current test annotations.
+	 * @return array<string, mixed>
 	 */
 	public static function getTestAnnotations(): array
 	{
 		$trace = debug_backtrace();
 		return ($file = $trace[count($trace) - 1]['file'] ?? null)
-			? Helpers::parseDocComment(file_get_contents($file)) + ['file' => $file]
+			? Helpers::parseDocComment(Helpers::readFile($file)) + ['file' => $file]
 			: [];
 	}
 
@@ -223,6 +225,7 @@ class Environment
 
 	/**
 	 * Loads data according to the file annotation or specified by Tester\Runner\TestHandler::initiateDataProvider()
+	 * @return array<string, mixed>
 	 */
 	public static function loadData(): array
 	{
@@ -265,7 +268,7 @@ class Environment
 	{
 		$s = $s === '' || str_ends_with($s, "\n") ? $s : $s . "\n";
 		if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
-			fwrite(STDOUT, self::$useColors ? $s : Dumper::removeColors($s));
+			fwrite(STDOUT, self::$useColors ? $s : Ansi::stripAnsi($s));
 		} else {
 			echo $s;
 		}

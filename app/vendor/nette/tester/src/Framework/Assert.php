@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Tester;
 
-use function abs, array_key_exists, array_keys, array_shift, array_slice, basename, constant, count, current, error_reporting, file_get_contents, func_num_args, get_debug_type, implode, in_array, ini_set, is_array, is_finite, is_float, is_int, is_nan, is_object, is_string, ksort, max, next, preg_last_error, preg_match, preg_replace, preg_replace_callback, preg_split, range, reset, restore_error_handler, rtrim, set_error_handler, str_contains, str_replace, strlen, substr;
+use function abs, array_key_exists, array_keys, array_shift, array_slice, basename, constant, count, current, error_reporting, func_num_args, get_debug_type, implode, in_array, ini_set, is_array, is_finite, is_float, is_int, is_nan, is_object, is_string, ksort, max, next, preg_last_error, preg_match, preg_replace, preg_replace_callback, preg_split, range, reset, restore_error_handler, rtrim, set_error_handler, str_contains, str_replace, strlen, substr;
 use const PREG_SPLIT_DELIM_CAPTURE, SORT_STRING;
 
 
@@ -21,8 +21,8 @@ class Assert
 	/** used by equal() for comparing floats */
 	private const Epsilon = 1e-10;
 
-	/** used by match(); in values, each $ followed by number is backreference */
-	public static $patterns = [
+	/** @var array<string, string> used by match(); in values, each $ followed by number is backreference */
+	public static array $patterns = [
 		'%%' => '%',            // one % character
 		'%a%' => '[^\r\n]+',    // one or more of anything except the end of line characters
 		'%a\?%' => '[^\r\n]*',  // zero or more of anything except the end of line characters
@@ -46,7 +46,7 @@ class Assert
 	/** expand patterns in match() and matchFile() */
 	public static bool $expandPatterns = true;
 
-	/** @var callable  function (AssertException $exception): void */
+	/** @var ?(callable(AssertException): void) */
 	public static $onFailure;
 	public static int $counter = 0;
 
@@ -101,6 +101,7 @@ class Assert
 	public static function notEqual(mixed $expected, mixed $actual, ?string $description = null): void
 	{
 		self::$counter++;
+		$res = false;
 		try {
 			$res = self::isEqual($expected, $actual, matchOrder: false, matchIdentity: false);
 		} catch (AssertException $e) {
@@ -114,12 +115,13 @@ class Assert
 
 	/**
 	 * Asserts that a haystack (string or array) contains an expected needle.
+	 * @param mixed[]|string  $actual
 	 */
 	public static function contains(mixed $needle, array|string $actual, ?string $description = null): void
 	{
 		self::$counter++;
 		if (is_array($actual)) {
-			if (!in_array($needle, $actual, true)) {
+			if (!in_array($needle, $actual, strict: true)) {
 				self::fail(self::describe('%1 should contain %2', $description), $actual, $needle);
 			}
 		} elseif (!is_string($needle)) {
@@ -133,12 +135,13 @@ class Assert
 
 	/**
 	 * Asserts that a haystack (string or array) does not contain an expected needle.
+	 * @param mixed[]|string  $actual
 	 */
 	public static function notContains(mixed $needle, array|string $actual, ?string $description = null): void
 	{
 		self::$counter++;
 		if (is_array($actual)) {
-			if (in_array($needle, $actual, true)) {
+			if (in_array($needle, $actual, strict: true)) {
 				self::fail(self::describe('%1 should not contain %2', $description), $actual, $needle);
 			}
 		} elseif (!is_string($needle)) {
@@ -152,6 +155,7 @@ class Assert
 
 	/**
 	 * Asserts that a haystack has an expected key.
+	 * @param mixed[]  $actual
 	 */
 	public static function hasKey(string|int $key, array $actual, ?string $description = null): void
 	{
@@ -164,6 +168,7 @@ class Assert
 
 	/**
 	 * Asserts that a haystack doesn't have an expected key.
+	 * @param mixed[]  $actual
 	 */
 	public static function hasNotKey(string|int $key, array $actual, ?string $description = null): void
 	{
@@ -260,6 +265,7 @@ class Assert
 
 	/**
 	 * Asserts the number of items in an array or Countable.
+	 * @param mixed[]  $value
 	 */
 	public static function count(int $count, array|\Countable $value, ?string $description = null): void
 	{
@@ -281,7 +287,7 @@ class Assert
 				self::fail(self::describe("%1 should be $type", $description), $value);
 			}
 		} elseif (in_array($type, ['array', 'bool', 'callable', 'float',
-			'int', 'integer', 'null', 'object', 'resource', 'scalar', 'string', ], true)
+			'int', 'integer', 'null', 'object', 'resource', 'scalar', 'string', ], strict: true)
 		) {
 			if (!("is_$type")($value)) {
 				self::fail(self::describe(get_debug_type($value) . " should be $type", $description));
@@ -296,12 +302,13 @@ class Assert
 
 	/**
 	 * Asserts that a function throws exception of given type and its message matches given pattern.
+	 * @param  class-string<\Throwable>  $class
 	 */
 	public static function exception(
 		callable $function,
 		string $class,
 		?string $message = null,
-		$code = null,
+		int|string|null $code = null,
 	): ?\Throwable
 	{
 		self::$counter++;
@@ -330,6 +337,7 @@ class Assert
 
 	/**
 	 * Asserts that a function throws exception of given type and its message matches given pattern. Alias for exception().
+	 * @param  class-string<\Throwable>  $class
 	 */
 	public static function throws(
 		callable $function,
@@ -344,6 +352,7 @@ class Assert
 
 	/**
 	 * Asserts that a function generates one or more PHP errors or throws exceptions.
+	 * @param  int|string|mixed[]  $expectedType
 	 * @throws \Exception
 	 */
 	public static function error(
@@ -353,6 +362,7 @@ class Assert
 	): ?\Throwable
 	{
 		if (is_string($expectedType) && !preg_match('#^E_[A-Z_]+$#D', $expectedType)) {
+			/** @var class-string<\Throwable> $expectedType */
 			return static::exception($function, $expectedType, $expectedMessage);
 		}
 
@@ -372,7 +382,7 @@ class Assert
 
 		set_error_handler(function (int $severity, string $message, string $file, int $line) use (&$expected) {
 			if (($severity & error_reporting()) !== $severity) {
-				return;
+				return false;
 			}
 
 			$errorStr = Helpers::errorTypeToString($severity) . ($message ? " ($message)" : '');
@@ -386,6 +396,8 @@ class Assert
 			} elseif ($expectedMessage && !self::isMatching($expectedMessage, $message)) {
 				self::fail("$expectedTypeStr with a message matching %2 was expected but got %1", $message, $expectedMessage);
 			}
+
+			return true;
 		});
 
 		reset($expected);
@@ -468,11 +480,8 @@ class Assert
 	public static function matchFile(string $file, string $actual, ?string $description = null): void
 	{
 		self::$counter++;
-		$pattern = @file_get_contents($file); // @ is escalated to exception
-		if ($pattern === false) {
-			throw new \Exception("Unable to read file '$file'.");
-
-		} elseif (!self::isMatching($pattern, $actual)) {
+		$pattern = Helpers::readFile($file);
+		if (!self::isMatching($pattern, $actual)) {
 			if (self::$expandPatterns) {
 				[$pattern, $actual] = self::expandMatchingPatterns($pattern, $actual);
 			}
@@ -487,8 +496,8 @@ class Assert
 	 */
 	public static function fail(
 		string $message,
-		$actual = null,
-		$expected = null,
+		mixed $actual = null,
+		mixed $expected = null,
 		?\Throwable $previous = null,
 		?string $outputName = null,
 	): void
@@ -511,6 +520,7 @@ class Assert
 
 	/**
 	 * Executes function that can access private and protected members of given object via $this.
+	 * @param object|class-string $objectOrClass
 	 */
 	public static function with(object|string $objectOrClass, \Closure $closure): mixed
 	{
@@ -558,6 +568,7 @@ class Assert
 
 
 	/**
+	 * @return array{string, string}  [expanded pattern, expanded actual]
 	 * @internal
 	 */
 	public static function expandMatchingPatterns(string $pattern, string $actual): array
@@ -567,6 +578,7 @@ class Assert
 		}
 
 		$parts = preg_split('#(%)#', $pattern, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$patternX = $patternY = $patternZ = '';
 		for ($i = count($parts); $i >= 0; $i--) {
 			$patternX = implode('', array_slice($parts, 0, $i));
 			$patternY = "$patternX%A?%";
@@ -577,7 +589,7 @@ class Assert
 		}
 
 		foreach (['%A%', '%A?%'] as $greedyPattern) {
-			if (substr($patternX, -strlen($greedyPattern)) === $greedyPattern) {
+			if (str_ends_with($patternX, $greedyPattern)) {
 				$patternX = substr($patternX, 0, -strlen($greedyPattern));
 				$patternY = "$patternX%A?%";
 				$patternZ = $greedyPattern . $patternZ;
@@ -620,6 +632,7 @@ class Assert
 	/**
 	 * Compares two structures and checks expectations. The identity of objects, the order of keys
 	 * in the arrays and marginally different floats are ignored.
+	 * @param ?\SplObjectStorage<object, object>  $objects
 	 */
 	private static function isEqual(
 		mixed $expected,

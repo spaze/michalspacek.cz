@@ -23,13 +23,12 @@ use const DIRECTORY_SEPARATOR;
 class TestHandler
 {
 	private const HttpOk = 200;
-	private Runner $runner;
 	private ?string $tempDir = null;
 
 
-	public function __construct(Runner $runner)
-	{
-		$this->runner = $runner;
+	public function __construct(
+		private Runner $runner,
+	) {
 	}
 
 
@@ -145,6 +144,7 @@ class TestHandler
 	}
 
 
+	/** @return Test[]|Test */
 	private function initiateDataProvider(Test $test, string $provider): array|Test
 	{
 		try {
@@ -164,6 +164,7 @@ class TestHandler
 	}
 
 
+	/** @return Test[] */
 	private function initiateMultiple(Test $test, string $count): array
 	{
 		return array_map(
@@ -173,14 +174,15 @@ class TestHandler
 	}
 
 
-	private function initiateTestCase(Test $test, $foo, PhpInterpreter $interpreter)
+	/** @return Test|Test[] */
+	private function initiateTestCase(Test $test, mixed $value, PhpInterpreter $interpreter): Test|array
 	{
 		$methods = null;
 
 		if ($this->tempDir) {
 			$cacheFile = $this->tempDir . DIRECTORY_SEPARATOR . 'TestHandler.testCase.' . md5($test->getSignature()) . '.list';
 			if (is_file($cacheFile)) {
-				$cache = unserialize(file_get_contents($cacheFile));
+				$cache = unserialize(Helpers::readFile($cacheFile));
 
 				$valid = true;
 				foreach ($cache['files'] as $path => $mTime) {
@@ -201,7 +203,7 @@ class TestHandler
 			$job->setTempDirectory($this->tempDir);
 			$job->run();
 
-			if (in_array($job->getExitCode(), [Job::CodeError, Job::CodeFail, Job::CodeSkip], true)) {
+			if (in_array($job->getExitCode(), [Job::CodeError, Job::CodeFail, Job::CodeSkip], strict: true)) {
 				return $test->withResult($job->getExitCode() === Job::CodeSkip ? Test::Skipped : Test::Failed, $job->getTest()->getOutput());
 			}
 
@@ -280,7 +282,7 @@ class TestHandler
 			return $job->getTest()->withResult(Test::Failed, "Missing matching file '$file'.");
 		}
 
-		return $this->assessOutputMatch($job, file_get_contents($file));
+		return $this->assessOutputMatch($job, Helpers::readFile($file));
 	}
 
 
@@ -298,9 +300,10 @@ class TestHandler
 	}
 
 
+	/** @return array{array<string, mixed>, ?string}  [annotations, test title] */
 	private function getAnnotations(string $file): array
 	{
-		$annotations = Helpers::parseDocComment(file_get_contents($file));
+		$annotations = Helpers::parseDocComment(Helpers::readFile($file));
 		$testTitle = isset($annotations[0])
 			? preg_replace('#^TEST:\s*#i', '', $annotations[0])
 			: null;

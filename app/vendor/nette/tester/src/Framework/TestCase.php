@@ -58,11 +58,11 @@ class TestCase
 			foreach ($methods as $method) {
 				try {
 					$this->runTest($method);
-					Environment::print(Dumper::color('lime', '√') . " $method");
+					Environment::print(Ansi::colorize('√', 'lime') . " $method");
 				} catch (TestCaseSkippedException $e) {
 					Environment::print("s $method {$e->getMessage()}");
 				} catch (\Throwable $e) {
-					Environment::print(Dumper::color('red', '×') . " $method\n\n");
+					Environment::print(Ansi::colorize('×', 'red') . " $method\n\n");
 					throw $e;
 				}
 			}
@@ -72,7 +72,7 @@ class TestCase
 
 	/**
 	 * Executes a specified test method within this test case, handling data providers and errors.
-	 * @param  ?array  $args  arguments provided for the test method, bypassing data provider if provided.
+	 * @param  ?array<string, mixed>  $args  arguments provided for the test method, bypassing data provider if provided.
 	 */
 	public function runTest(string $method, ?array $args = null): void
 	{
@@ -154,7 +154,7 @@ class TestCase
 	}
 
 
-	protected function getData(string $provider)
+	protected function getData(string $provider): mixed
 	{
 		if (!str_contains($provider, '.')) {
 			return $this->$provider();
@@ -189,10 +189,10 @@ class TestCase
 	 */
 	private function silentTearDown(): void
 	{
-		set_error_handler(fn() => null);
+		set_error_handler(fn() => true);
 		try {
 			$this->tearDown();
-		} catch (\Throwable $e) {
+		} catch (\Throwable) {
 		}
 
 		restore_error_handler();
@@ -210,6 +210,7 @@ class TestCase
 
 	/**
 	 * Outputs a list of all test methods in the current test case. Used for Runner.
+	 * @param string[]  $methods
 	 */
 	private function sendMethodList(array $methods): void
 	{
@@ -240,6 +241,8 @@ class TestCase
 
 	/**
 	 * Prepares test data from specified data providers or default method parameters if no provider is specified.
+	 * @param  string[]  $dataprovider
+	 * @return array<string|int, array<string, mixed>>
 	 */
 	private function prepareTestData(\ReflectionMethod $method, array $dataprovider): array
 	{

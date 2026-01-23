@@ -11,10 +11,15 @@
         "lambda"
     ],
     "require": {
-        "php": "^7.2.5 || ^8.0",
+        "php": "^8.2",
         "ext-filter": "*",
         "ext-json": "*",
         "async-aws/core": "^1.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5.42",
+        "symfony/error-handler": "^7.3.2 || ^8.0",
+        "symfony/phpunit-bridge": "^7.3.2 || ^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -28,7 +33,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.12-dev"
+            "dev-master": "2.13-dev"
         }
     }
 }

@@ -20,22 +20,20 @@ class TapPrinter implements Tester\Runner\OutputHandler
 {
 	/** @var resource */
 	private $file;
+
+	/** @var array<int, int>  result type (Test::*) => count */
 	private array $results;
 
 
 	public function __construct(?string $file = null)
 	{
-		$this->file = fopen($file ?: 'php://output', 'w');
+		$this->file = fopen($file ?? 'php://output', 'w') ?: throw new \RuntimeException("Cannot open file '$file' for writing.");
 	}
 
 
 	public function begin(): void
 	{
-		$this->results = [
-			Test::Passed => 0,
-			Test::Skipped => 0,
-			Test::Failed => 0,
-		];
+		$this->results = [Test::Passed => 0, Test::Skipped => 0, Test::Failed => 0];
 		fwrite($this->file, "TAP version 13\n");
 	}
 

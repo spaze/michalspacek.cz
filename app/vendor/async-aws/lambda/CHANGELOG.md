@@ -2,6 +2,32 @@
 
 ## NOT RELEASED
 
+## 2.13.0
+
+### Added
+
+- Add `UNKNOWN_TO_SDK` value to enums that is used when the API returns an value that is not (or not yet) known by the AsyncAws
+- AWS api-change: Add NodeJs 24 (nodejs24.x) support to AWS Lambda.
+- AWS api-change: Added `us-isob-west-1` region
+- AWS api-change: Added SerializedRequestEntityTooLargeException to Lambda Invoke API
+- AWS api-change: Add Python3.14 (python3.14) and Java 25 (java25) support to AWS Lambda
+- AWS api-change: Added support for creating and invoking Tenant Isolated functions in AWS Lambda APIs.
+- AWS api-change: Launching Lambda durable functions - a new feature to build reliable multi-step applications and AI workflows natively within the Lambda developer experience.
+- AWS api-change: Launching Lambda Managed Instances - a new feature to run Lambda on EC2.
+- AWS api-change: Add DisallowedByVpcEncryptionControl to the LastUpdateStatusReasonCode and StateReasonCode enums to represent failures caused by VPC Encryption Controls.
+- AWS api-change: Added `eusc-de-east-1` region
+- AWS api-change: Add Dotnet 10 (dotnet10) support to AWS Lambda.
+
+### Dependency bumped
+
+- Drop support for PHP versions lower than 8.2
+
+### Changed
+
+- Apply new CodingStandard from latest php-cs-fixer.
+- Use a more stable sorting for the list of generated region metadata
+- change case of `executionEnvironmentMemoryGibPerVcpu` method to `executionEnvironmentMemoryGiBPerVCpu`
+
 ## 2.12.0
 
 ### Added

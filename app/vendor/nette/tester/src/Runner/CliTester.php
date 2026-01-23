@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tester\Runner;
 
+use Tester\Ansi;
 use Tester\CodeCoverage;
 use Tester\Dumper;
 use Tester\Environment;
@@ -22,6 +23,7 @@ use const PATHINFO_EXTENSION, PHP_SAPI;
  */
 class CliTester
 {
+	/** @var array<string, mixed>  parsed command-line options */
 	private array $options;
 	private PhpInterpreter $interpreter;
 	private bool $debugMode = true;
@@ -39,7 +41,7 @@ class CliTester
 		$this->debugMode = (bool) $this->options['--debug'];
 		if (isset($this->options['--colors'])) {
 			Environment::$useColors = (bool) $this->options['--colors'];
-		} elseif (in_array($this->stdoutFormat, ['tap', 'junit'], true)) {
+		} elseif (in_array($this->stdoutFormat, ['tap', 'junit'], strict: true)) {
 			Environment::$useColors = false;
 		}
 
@@ -74,6 +76,9 @@ class CliTester
 
 		ob_end_flush();
 
+		echo Ansi::hideCursor();
+		register_shutdown_function(fn() => print Ansi::showCursor());
+
 		if ($this->options['--watch']) {
 			$this->watch($runner);
 			return 0;
@@ -96,7 +101,7 @@ class CliTester
 		echo <<<'XX'
 			 _____ ___  ___ _____ ___  ___
 			|_   _/ __)( __/_   _/ __)| _ )
-			  |_| \___ /___) |_| \___ |_|_\  v2.5.7
+			  |_| \___ /___) |_| \___ |_|_\  v2.6.0
 
 
 			XX;
@@ -108,8 +113,8 @@ class CliTester
 
 				Options:
 				    -p <path>                    Specify PHP interpreter to run (default: php).
-				    -c <path>                    Look for php.ini file (or look in directory) <path>.
-				    -C                           Use system-wide php.ini.
+				    -c <path>                    Use custom php.ini, ignore system configuration.
+				    -C                           With -c, include system configuration as well.
 				    -d <key=value>...            Define INI entry 'key' with value 'value'.
 				    -s                           Show information about skipped tests.
 				    --stop-on-fail               Stop execution upon the first failure.
@@ -138,7 +143,7 @@ class CliTester
 				'-o' => [CommandLine::Repeatable => true, CommandLine::Normalizer => function ($arg) use (&$outputFiles) {
 					[$format, $file] = explode(':', $arg, 2) + [1 => null];
 
-					if (isset($outputFiles[$file])) {
+					if (isset($outputFiles[$file ?? ''])) {
 						throw new \Exception(
 							$file === null
 								? 'Option -o <format> without file name parameter can be used only once.'
@@ -148,7 +153,7 @@ class CliTester
 						$this->stdoutFormat = $format;
 					}
 
-					$outputFiles[$file] = true;
+					$outputFiles[$file ?? ''] = true;
 
 					return [$format, $file];
 				}],
@@ -189,14 +194,15 @@ class CliTester
 
 	private function createPhpInterpreter(): void
 	{
-		$args = $this->options['-C'] ? [] : ['-n'];
+		$args = [];
 		if ($this->options['-c']) {
+			if (!$this->options['-C']) {
+				$args[] = '-n';
+			}
 			array_push($args, '-c', $this->options['-c']);
-		} elseif (!$this->options['--info'] && !$this->options['-C']) {
-			echo "Note: No php.ini is used.\n";
 		}
 
-		if (in_array($this->stdoutFormat, ['tap', 'junit'], true)) {
+		if (in_array($this->stdoutFormat, ['tap', 'junit'], strict: true)) {
 			array_push($args, '-d', 'html_errors=off');
 		}
 
@@ -207,7 +213,7 @@ class CliTester
 		$this->interpreter = new PhpInterpreter($this->options['-p'], $args);
 
 		if ($error = $this->interpreter->getStartupError()) {
-			echo Dumper::color('red', "PHP startup error: $error") . "\n";
+			echo Ansi::colorize("PHP startup error: $error", 'red') . "\n";
 		}
 	}
 
@@ -224,8 +230,7 @@ class CliTester
 			$runner->outputHandlers[] = new Output\ConsolePrinter(
 				$runner,
 				(bool) $this->options['-s'],
-				'php://output',
-				(bool) $this->options['--cider'],
+				mode: $this->options['--cider'] ? Output\ConsolePrinter::ModeCider : Output\ConsolePrinter::ModeDots,
 			);
 		}
 
@@ -236,8 +241,7 @@ class CliTester
 					$runner,
 					(bool) $this->options['-s'],
 					$file,
-					(bool) $this->options['--cider'],
-					$format === 'console-lines',
+					mode: $format === 'console-lines' ? Output\ConsolePrinter::ModeLines : Output\ConsolePrinter::ModeDots,
 				),
 				'tap' => $runner->outputHandlers[] = new Output\TapPrinter($file),
 				'junit' => $runner->outputHandlers[] = new Output\JUnitPrinter($file),
@@ -265,7 +269,7 @@ class CliTester
 		}
 
 		file_put_contents($this->options['--coverage'], '');
-		$file = realpath($this->options['--coverage']);
+		$file = realpath($this->options['--coverage']) ?: throw new \RuntimeException("Cannot resolve path '{$this->options['--coverage']}'.");
 
 		[$engine, $version] = reset($engines);
 
@@ -287,7 +291,7 @@ class CliTester
 
 	private function finishCodeCoverage(string $file): void
 	{
-		if (!in_array($this->stdoutFormat, ['none', 'tap', 'junit'], true)) {
+		if (!in_array($this->stdoutFormat, ['none', 'tap', 'junit'], strict: true)) {
 			echo 'Generating code coverage report... ';
 		}
 
@@ -308,11 +312,12 @@ class CliTester
 	{
 		$prev = [];
 		$counter = 0;
+		$time = time();
 		while (true) {
 			$state = [];
 			foreach ($this->options['--watch'] as $directory) {
 				foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file) {
-					if (substr($file->getExtension(), 0, 3) === 'php' && substr($file->getBasename(), 0, 1) !== '.') {
+					if (str_starts_with($file->getExtension(), 'php') && !str_starts_with($file->getBasename(), '.')) {
 						$state[(string) $file] = @filemtime((string) $file); // @ file could be deleted in the meantime
 					}
 				}
@@ -339,7 +344,7 @@ class CliTester
 				$idle .= ' sec';
 			}
 
-			echo 'Watching ' . implode(', ', $this->options['--watch']) . " (idle for $idle) " . str_repeat('.', ++$counter % 5) . "    \r";
+			echo 'Watching ' . implode(', ', $this->options['--watch']) . " (idle for $idle) " . str_repeat('.', ++$counter % 5) . Ansi::clearLine();
 			sleep(2);
 		}
 	}
@@ -373,7 +378,7 @@ class CliTester
 		echo "\n";
 		echo $this->debugMode
 			? Dumper::dumpException($e)
-			: Dumper::color('white/red', 'Error: ' . $e->getMessage());
+			: Ansi::colorize('Error: ' . $e->getMessage(), 'white/red');
 		echo "\n";
 	}
 

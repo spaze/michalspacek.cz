@@ -48,10 +48,10 @@ final class LoggingConfig
 
     /**
      * @param array{
-     *   LogFormat?: null|LogFormat::*,
-     *   ApplicationLogLevel?: null|ApplicationLogLevel::*,
-     *   SystemLogLevel?: null|SystemLogLevel::*,
-     *   LogGroup?: null|string,
+     *   LogFormat?: LogFormat::*|null,
+     *   ApplicationLogLevel?: ApplicationLogLevel::*|null,
+     *   SystemLogLevel?: SystemLogLevel::*|null,
+     *   LogGroup?: string|null,
      * } $input
      */
     public function __construct(array $input)
@@ -64,10 +64,10 @@ final class LoggingConfig
 
     /**
      * @param array{
-     *   LogFormat?: null|LogFormat::*,
-     *   ApplicationLogLevel?: null|ApplicationLogLevel::*,
-     *   SystemLogLevel?: null|SystemLogLevel::*,
-     *   LogGroup?: null|string,
+     *   LogFormat?: LogFormat::*|null,
+     *   ApplicationLogLevel?: ApplicationLogLevel::*|null,
+     *   SystemLogLevel?: SystemLogLevel::*|null,
+     *   LogGroup?: string|null,
      * }|LoggingConfig $input
      */
     public static function create($input): self
@@ -112,18 +112,21 @@ final class LoggingConfig
         $payload = [];
         if (null !== $v = $this->logFormat) {
             if (!LogFormat::exists($v)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "LogFormat" for "%s". The value "%s" is not a valid "LogFormat".', __CLASS__, $v));
             }
             $payload['LogFormat'] = $v;
         }
         if (null !== $v = $this->applicationLogLevel) {
             if (!ApplicationLogLevel::exists($v)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "ApplicationLogLevel" for "%s". The value "%s" is not a valid "ApplicationLogLevel".', __CLASS__, $v));
             }
             $payload['ApplicationLogLevel'] = $v;
         }
         if (null !== $v = $this->systemLogLevel) {
             if (!SystemLogLevel::exists($v)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "SystemLogLevel" for "%s". The value "%s" is not a valid "SystemLogLevel".', __CLASS__, $v));
             }
             $payload['SystemLogLevel'] = $v;

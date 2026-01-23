@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Tester\Ansi;
 use Tester\Assert;
-use Tester\Dumper;
 use Tester\Environment;
 
 
@@ -23,45 +23,49 @@ function test(string $description, Closure $closure): void
 	try {
 		$closure();
 		if ($description !== '') {
-			Environment::print(Dumper::color('lime', '√') . " $description");
+			Environment::print(Ansi::colorize('√', 'lime') . " $description");
 		}
 
 	} catch (Throwable $e) {
 		if ($description !== '') {
-			Environment::print(Dumper::color('red', '×') . " $description\n\n");
+			Environment::print(Ansi::colorize('×', 'red') . " $description\n\n");
 		}
 		throw $e;
-	}
 
-	if ($fn = (new ReflectionFunction('tearDown'))->getStaticVariables()['fn']) {
-		$fn();
+	} finally {
+		if ($fn = (new ReflectionFunction('tearDown'))->getStaticVariables()['fn']) {
+			$fn();
+		}
 	}
 }
 
 
 /**
  * Tests for exceptions thrown by a provided closure matching specific criteria.
+ * @param  class-string<\Throwable>  $class
  */
 function testException(
 	string $description,
 	Closure $function,
 	string $class,
 	?string $message = null,
-	$code = null,
+	int|string|null $code = null,
 ): void
 {
-	try {
-		Assert::exception($function, $class, $message, $code);
-		if ($description !== '') {
-			Environment::print(Dumper::color('lime', '√') . " $description");
-		}
+	test($description, fn() => Assert::exception($function, $class, $message, $code));
+}
 
-	} catch (Throwable $e) {
-		if ($description !== '') {
-			Environment::print(Dumper::color('red', '×') . " $description\n\n");
-		}
-		throw $e;
+
+/**
+ * Tests that a provided closure does not generate any errors or exceptions.
+ */
+function testNoError(string $description, Closure $function): void
+{
+	if (($count = func_num_args()) > 2) {
+		throw new Exception(__FUNCTION__ . "() expects 2 parameters, $count given.");
 	}
+
+	test($description, fn() => Assert::noError($function));
 }
 
 

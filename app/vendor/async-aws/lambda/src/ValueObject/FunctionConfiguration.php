@@ -313,43 +313,76 @@ final class FunctionConfiguration
     private $loggingConfig;
 
     /**
+     * Configuration for the capacity provider that manages compute resources for Lambda functions.
+     *
+     * @var CapacityProviderConfig|null
+     */
+    private $capacityProviderConfig;
+
+    /**
+     * The SHA256 hash of the function configuration.
+     *
+     * @var string|null
+     */
+    private $configSha256;
+
+    /**
+     * The function's durable execution configuration settings, if the function is configured for durability.
+     *
+     * @var DurableConfig|null
+     */
+    private $durableConfig;
+
+    /**
+     * The function's tenant isolation configuration settings. Determines whether the Lambda function runs on a shared or
+     * dedicated infrastructure per unique tenant.
+     *
+     * @var TenancyConfig|null
+     */
+    private $tenancyConfig;
+
+    /**
      * @param array{
-     *   FunctionName?: null|string,
-     *   FunctionArn?: null|string,
-     *   Runtime?: null|Runtime::*,
-     *   Role?: null|string,
-     *   Handler?: null|string,
-     *   CodeSize?: null|int,
-     *   Description?: null|string,
-     *   Timeout?: null|int,
-     *   MemorySize?: null|int,
-     *   LastModified?: null|string,
-     *   CodeSha256?: null|string,
-     *   Version?: null|string,
-     *   VpcConfig?: null|VpcConfigResponse|array,
-     *   DeadLetterConfig?: null|DeadLetterConfig|array,
-     *   Environment?: null|EnvironmentResponse|array,
-     *   KMSKeyArn?: null|string,
-     *   TracingConfig?: null|TracingConfigResponse|array,
-     *   MasterArn?: null|string,
-     *   RevisionId?: null|string,
-     *   Layers?: null|array<Layer|array>,
-     *   State?: null|State::*,
-     *   StateReason?: null|string,
-     *   StateReasonCode?: null|StateReasonCode::*,
-     *   LastUpdateStatus?: null|LastUpdateStatus::*,
-     *   LastUpdateStatusReason?: null|string,
-     *   LastUpdateStatusReasonCode?: null|LastUpdateStatusReasonCode::*,
-     *   FileSystemConfigs?: null|array<FileSystemConfig|array>,
-     *   PackageType?: null|PackageType::*,
-     *   ImageConfigResponse?: null|ImageConfigResponse|array,
-     *   SigningProfileVersionArn?: null|string,
-     *   SigningJobArn?: null|string,
-     *   Architectures?: null|array<Architecture::*>,
-     *   EphemeralStorage?: null|EphemeralStorage|array,
-     *   SnapStart?: null|SnapStartResponse|array,
-     *   RuntimeVersionConfig?: null|RuntimeVersionConfig|array,
-     *   LoggingConfig?: null|LoggingConfig|array,
+     *   FunctionName?: string|null,
+     *   FunctionArn?: string|null,
+     *   Runtime?: Runtime::*|null,
+     *   Role?: string|null,
+     *   Handler?: string|null,
+     *   CodeSize?: int|null,
+     *   Description?: string|null,
+     *   Timeout?: int|null,
+     *   MemorySize?: int|null,
+     *   LastModified?: string|null,
+     *   CodeSha256?: string|null,
+     *   Version?: string|null,
+     *   VpcConfig?: VpcConfigResponse|array|null,
+     *   DeadLetterConfig?: DeadLetterConfig|array|null,
+     *   Environment?: EnvironmentResponse|array|null,
+     *   KMSKeyArn?: string|null,
+     *   TracingConfig?: TracingConfigResponse|array|null,
+     *   MasterArn?: string|null,
+     *   RevisionId?: string|null,
+     *   Layers?: array<Layer|array>|null,
+     *   State?: State::*|null,
+     *   StateReason?: string|null,
+     *   StateReasonCode?: StateReasonCode::*|null,
+     *   LastUpdateStatus?: LastUpdateStatus::*|null,
+     *   LastUpdateStatusReason?: string|null,
+     *   LastUpdateStatusReasonCode?: LastUpdateStatusReasonCode::*|null,
+     *   FileSystemConfigs?: array<FileSystemConfig|array>|null,
+     *   PackageType?: PackageType::*|null,
+     *   ImageConfigResponse?: ImageConfigResponse|array|null,
+     *   SigningProfileVersionArn?: string|null,
+     *   SigningJobArn?: string|null,
+     *   Architectures?: array<Architecture::*>|null,
+     *   EphemeralStorage?: EphemeralStorage|array|null,
+     *   SnapStart?: SnapStartResponse|array|null,
+     *   RuntimeVersionConfig?: RuntimeVersionConfig|array|null,
+     *   LoggingConfig?: LoggingConfig|array|null,
+     *   CapacityProviderConfig?: CapacityProviderConfig|array|null,
+     *   ConfigSha256?: string|null,
+     *   DurableConfig?: DurableConfig|array|null,
+     *   TenancyConfig?: TenancyConfig|array|null,
      * } $input
      */
     public function __construct(array $input)
@@ -390,46 +423,54 @@ final class FunctionConfiguration
         $this->snapStart = isset($input['SnapStart']) ? SnapStartResponse::create($input['SnapStart']) : null;
         $this->runtimeVersionConfig = isset($input['RuntimeVersionConfig']) ? RuntimeVersionConfig::create($input['RuntimeVersionConfig']) : null;
         $this->loggingConfig = isset($input['LoggingConfig']) ? LoggingConfig::create($input['LoggingConfig']) : null;
+        $this->capacityProviderConfig = isset($input['CapacityProviderConfig']) ? CapacityProviderConfig::create($input['CapacityProviderConfig']) : null;
+        $this->configSha256 = $input['ConfigSha256'] ?? null;
+        $this->durableConfig = isset($input['DurableConfig']) ? DurableConfig::create($input['DurableConfig']) : null;
+        $this->tenancyConfig = isset($input['TenancyConfig']) ? TenancyConfig::create($input['TenancyConfig']) : null;
     }
 
     /**
      * @param array{
-     *   FunctionName?: null|string,
-     *   FunctionArn?: null|string,
-     *   Runtime?: null|Runtime::*,
-     *   Role?: null|string,
-     *   Handler?: null|string,
-     *   CodeSize?: null|int,
-     *   Description?: null|string,
-     *   Timeout?: null|int,
-     *   MemorySize?: null|int,
-     *   LastModified?: null|string,
-     *   CodeSha256?: null|string,
-     *   Version?: null|string,
-     *   VpcConfig?: null|VpcConfigResponse|array,
-     *   DeadLetterConfig?: null|DeadLetterConfig|array,
-     *   Environment?: null|EnvironmentResponse|array,
-     *   KMSKeyArn?: null|string,
-     *   TracingConfig?: null|TracingConfigResponse|array,
-     *   MasterArn?: null|string,
-     *   RevisionId?: null|string,
-     *   Layers?: null|array<Layer|array>,
-     *   State?: null|State::*,
-     *   StateReason?: null|string,
-     *   StateReasonCode?: null|StateReasonCode::*,
-     *   LastUpdateStatus?: null|LastUpdateStatus::*,
-     *   LastUpdateStatusReason?: null|string,
-     *   LastUpdateStatusReasonCode?: null|LastUpdateStatusReasonCode::*,
-     *   FileSystemConfigs?: null|array<FileSystemConfig|array>,
-     *   PackageType?: null|PackageType::*,
-     *   ImageConfigResponse?: null|ImageConfigResponse|array,
-     *   SigningProfileVersionArn?: null|string,
-     *   SigningJobArn?: null|string,
-     *   Architectures?: null|array<Architecture::*>,
-     *   EphemeralStorage?: null|EphemeralStorage|array,
-     *   SnapStart?: null|SnapStartResponse|array,
-     *   RuntimeVersionConfig?: null|RuntimeVersionConfig|array,
-     *   LoggingConfig?: null|LoggingConfig|array,
+     *   FunctionName?: string|null,
+     *   FunctionArn?: string|null,
+     *   Runtime?: Runtime::*|null,
+     *   Role?: string|null,
+     *   Handler?: string|null,
+     *   CodeSize?: int|null,
+     *   Description?: string|null,
+     *   Timeout?: int|null,
+     *   MemorySize?: int|null,
+     *   LastModified?: string|null,
+     *   CodeSha256?: string|null,
+     *   Version?: string|null,
+     *   VpcConfig?: VpcConfigResponse|array|null,
+     *   DeadLetterConfig?: DeadLetterConfig|array|null,
+     *   Environment?: EnvironmentResponse|array|null,
+     *   KMSKeyArn?: string|null,
+     *   TracingConfig?: TracingConfigResponse|array|null,
+     *   MasterArn?: string|null,
+     *   RevisionId?: string|null,
+     *   Layers?: array<Layer|array>|null,
+     *   State?: State::*|null,
+     *   StateReason?: string|null,
+     *   StateReasonCode?: StateReasonCode::*|null,
+     *   LastUpdateStatus?: LastUpdateStatus::*|null,
+     *   LastUpdateStatusReason?: string|null,
+     *   LastUpdateStatusReasonCode?: LastUpdateStatusReasonCode::*|null,
+     *   FileSystemConfigs?: array<FileSystemConfig|array>|null,
+     *   PackageType?: PackageType::*|null,
+     *   ImageConfigResponse?: ImageConfigResponse|array|null,
+     *   SigningProfileVersionArn?: string|null,
+     *   SigningJobArn?: string|null,
+     *   Architectures?: array<Architecture::*>|null,
+     *   EphemeralStorage?: EphemeralStorage|array|null,
+     *   SnapStart?: SnapStartResponse|array|null,
+     *   RuntimeVersionConfig?: RuntimeVersionConfig|array|null,
+     *   LoggingConfig?: LoggingConfig|array|null,
+     *   CapacityProviderConfig?: CapacityProviderConfig|array|null,
+     *   ConfigSha256?: string|null,
+     *   DurableConfig?: DurableConfig|array|null,
+     *   TenancyConfig?: TenancyConfig|array|null,
      * }|FunctionConfiguration $input
      */
     public static function create($input): self
@@ -445,6 +486,11 @@ final class FunctionConfiguration
         return $this->architectures ?? [];
     }
 
+    public function getCapacityProviderConfig(): ?CapacityProviderConfig
+    {
+        return $this->capacityProviderConfig;
+    }
+
     public function getCodeSha256(): ?string
     {
         return $this->codeSha256;
@@ -455,6 +501,11 @@ final class FunctionConfiguration
         return $this->codeSize;
     }
 
+    public function getConfigSha256(): ?string
+    {
+        return $this->configSha256;
+    }
+
     public function getDeadLetterConfig(): ?DeadLetterConfig
     {
         return $this->deadLetterConfig;
@@ -463,6 +514,11 @@ final class FunctionConfiguration
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getDurableConfig(): ?DurableConfig
+    {
+        return $this->durableConfig;
     }
 
     public function getEnvironment(): ?EnvironmentResponse
@@ -622,6 +678,11 @@ final class FunctionConfiguration
     public function getStateReasonCode(): ?string
     {
         return $this->stateReasonCode;
+    }
+
+    public function getTenancyConfig(): ?TenancyConfig
+    {
+        return $this->tenancyConfig;
     }
 
     public function getTimeout(): ?int
