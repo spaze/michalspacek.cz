@@ -48,6 +48,11 @@
 				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->
 			</errorLevel>
 		</InternalMethod>
+		<InvalidArgument>
+			<errorLevel type="suppress">
+				<file name="tests/Training/Files/TrainingFilesCollectionTest.phpt"/> <!-- https://github.com/nette/tester/pull/466 -->
+			</errorLevel>
+		</InvalidArgument>
 		<InvalidAttribute>
 			<errorLevel type="suppress">
 				<file name="src/Presentation/Admin/Homepage/HomepagePresenter.php"/> <!-- PHP 8.5 allows the Override attribute on properties, but Psalm doesn't support 8.5 yet, see https://github.com/spaze/michalspacek.cz/issues/625 -->
