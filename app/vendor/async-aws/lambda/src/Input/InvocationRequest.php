@@ -58,7 +58,16 @@ final class InvocationRequest extends Input
     private $clientContext;
 
     /**
-     * The JSON that you want to provide to your Lambda function as input.
+     * Optional unique name for the durable execution. When you start your special function, you can give it a unique name
+     * to identify this specific execution. It's like giving a nickname to a task.
+     *
+     * @var string|null
+     */
+    private $durableExecutionName;
+
+    /**
+     * The JSON that you want to provide to your Lambda function as input. The maximum payload size is 6 MB for synchronous
+     * invocations and 1 MB for asynchronous invocations.
      *
      * You can enter the JSON directly. For example, `--payload '{ "key": "value" }'`. You can also specify a file path. For
      * example, `--payload file://payload.json`.
@@ -75,13 +84,22 @@ final class InvocationRequest extends Input
     private $qualifier;
 
     /**
+     * The identifier of the tenant in a multi-tenant Lambda function.
+     *
+     * @var string|null
+     */
+    private $tenantId;
+
+    /**
      * @param array{
      *   FunctionName?: string,
-     *   InvocationType?: null|InvocationType::*,
-     *   LogType?: null|LogType::*,
-     *   ClientContext?: null|string,
-     *   Payload?: null|string,
-     *   Qualifier?: null|string,
+     *   InvocationType?: InvocationType::*|null,
+     *   LogType?: LogType::*|null,
+     *   ClientContext?: string|null,
+     *   DurableExecutionName?: string|null,
+     *   Payload?: string|null,
+     *   Qualifier?: string|null,
+     *   TenantId?: string|null,
      *   '@region'?: string|null,
      * } $input
      */
@@ -91,19 +109,23 @@ final class InvocationRequest extends Input
         $this->invocationType = $input['InvocationType'] ?? null;
         $this->logType = $input['LogType'] ?? null;
         $this->clientContext = $input['ClientContext'] ?? null;
+        $this->durableExecutionName = $input['DurableExecutionName'] ?? null;
         $this->payload = $input['Payload'] ?? null;
         $this->qualifier = $input['Qualifier'] ?? null;
+        $this->tenantId = $input['TenantId'] ?? null;
         parent::__construct($input);
     }
 
     /**
      * @param array{
      *   FunctionName?: string,
-     *   InvocationType?: null|InvocationType::*,
-     *   LogType?: null|LogType::*,
-     *   ClientContext?: null|string,
-     *   Payload?: null|string,
-     *   Qualifier?: null|string,
+     *   InvocationType?: InvocationType::*|null,
+     *   LogType?: LogType::*|null,
+     *   ClientContext?: string|null,
+     *   DurableExecutionName?: string|null,
+     *   Payload?: string|null,
+     *   Qualifier?: string|null,
+     *   TenantId?: string|null,
      *   '@region'?: string|null,
      * }|InvocationRequest $input
      */
@@ -115,6 +137,11 @@ final class InvocationRequest extends Input
     public function getClientContext(): ?string
     {
         return $this->clientContext;
+    }
+
+    public function getDurableExecutionName(): ?string
+    {
+        return $this->durableExecutionName;
     }
 
     public function getFunctionName(): ?string
@@ -148,6 +175,11 @@ final class InvocationRequest extends Input
         return $this->qualifier;
     }
 
+    public function getTenantId(): ?string
+    {
+        return $this->tenantId;
+    }
+
     /**
      * @internal
      */
@@ -160,18 +192,26 @@ final class InvocationRequest extends Input
         ];
         if (null !== $this->invocationType) {
             if (!InvocationType::exists($this->invocationType)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "InvocationType" for "%s". The value "%s" is not a valid "InvocationType".', __CLASS__, $this->invocationType));
             }
             $headers['X-Amz-Invocation-Type'] = $this->invocationType;
         }
         if (null !== $this->logType) {
             if (!LogType::exists($this->logType)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "LogType" for "%s". The value "%s" is not a valid "LogType".', __CLASS__, $this->logType));
             }
             $headers['X-Amz-Log-Type'] = $this->logType;
         }
         if (null !== $this->clientContext) {
             $headers['X-Amz-Client-Context'] = $this->clientContext;
+        }
+        if (null !== $this->durableExecutionName) {
+            $headers['X-Amz-Durable-Execution-Name'] = $this->durableExecutionName;
+        }
+        if (null !== $this->tenantId) {
+            $headers['X-Amz-Tenant-Id'] = $this->tenantId;
         }
 
         // Prepare query
@@ -198,6 +238,13 @@ final class InvocationRequest extends Input
     public function setClientContext(?string $value): self
     {
         $this->clientContext = $value;
+
+        return $this;
+    }
+
+    public function setDurableExecutionName(?string $value): self
+    {
+        $this->durableExecutionName = $value;
 
         return $this;
     }
@@ -239,6 +286,13 @@ final class InvocationRequest extends Input
     public function setQualifier(?string $value): self
     {
         $this->qualifier = $value;
+
+        return $this;
+    }
+
+    public function setTenantId(?string $value): self
+    {
+        $this->tenantId = $value;
 
         return $this;
     }

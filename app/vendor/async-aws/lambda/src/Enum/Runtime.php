@@ -8,12 +8,14 @@ final class Runtime
     public const DOTNETCORE_2_0 = 'dotnetcore2.0';
     public const DOTNETCORE_2_1 = 'dotnetcore2.1';
     public const DOTNETCORE_3_1 = 'dotnetcore3.1';
+    public const DOTNET_10 = 'dotnet10';
     public const DOTNET_6 = 'dotnet6';
     public const DOTNET_8 = 'dotnet8';
     public const GO_1_X = 'go1.x';
     public const JAVA_11 = 'java11';
     public const JAVA_17 = 'java17';
     public const JAVA_21 = 'java21';
+    public const JAVA_25 = 'java25';
     public const JAVA_8 = 'java8';
     public const JAVA_8_AL_2 = 'java8.al2';
     public const NODEJS = 'nodejs';
@@ -24,6 +26,7 @@ final class Runtime
     public const NODEJS_18_X = 'nodejs18.x';
     public const NODEJS_20_X = 'nodejs20.x';
     public const NODEJS_22_X = 'nodejs22.x';
+    public const NODEJS_24_X = 'nodejs24.x';
     public const NODEJS_4_3 = 'nodejs4.3';
     public const NODEJS_4_3_EDGE = 'nodejs4.3-edge';
     public const NODEJS_6_10 = 'nodejs6.10';
@@ -36,6 +39,7 @@ final class Runtime
     public const PYTHON_3_11 = 'python3.11';
     public const PYTHON_3_12 = 'python3.12';
     public const PYTHON_3_13 = 'python3.13';
+    public const PYTHON_3_14 = 'python3.14';
     public const PYTHON_3_6 = 'python3.6';
     public const PYTHON_3_7 = 'python3.7';
     public const PYTHON_3_8 = 'python3.8';
@@ -45,7 +49,11 @@ final class Runtime
     public const RUBY_3_2 = 'ruby3.2';
     public const RUBY_3_3 = 'ruby3.3';
     public const RUBY_3_4 = 'ruby3.4';
+    public const UNKNOWN_TO_SDK = 'UNKNOWN_TO_SDK';
 
+    /**
+     * @psalm-assert-if-true self::* $value
+     */
     public static function exists(string $value): bool
     {
         return isset([
@@ -53,12 +61,14 @@ final class Runtime
             self::DOTNETCORE_2_0 => true,
             self::DOTNETCORE_2_1 => true,
             self::DOTNETCORE_3_1 => true,
+            self::DOTNET_10 => true,
             self::DOTNET_6 => true,
             self::DOTNET_8 => true,
             self::GO_1_X => true,
             self::JAVA_11 => true,
             self::JAVA_17 => true,
             self::JAVA_21 => true,
+            self::JAVA_25 => true,
             self::JAVA_8 => true,
             self::JAVA_8_AL_2 => true,
             self::NODEJS => true,
@@ -69,6 +79,7 @@ final class Runtime
             self::NODEJS_18_X => true,
             self::NODEJS_20_X => true,
             self::NODEJS_22_X => true,
+            self::NODEJS_24_X => true,
             self::NODEJS_4_3 => true,
             self::NODEJS_4_3_EDGE => true,
             self::NODEJS_6_10 => true,
@@ -81,6 +92,7 @@ final class Runtime
             self::PYTHON_3_11 => true,
             self::PYTHON_3_12 => true,
             self::PYTHON_3_13 => true,
+            self::PYTHON_3_14 => true,
             self::PYTHON_3_6 => true,
             self::PYTHON_3_7 => true,
             self::PYTHON_3_8 => true,

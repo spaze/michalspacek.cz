@@ -4,14 +4,23 @@ namespace AsyncAws\Lambda\Result;
 
 use AsyncAws\Core\Response;
 use AsyncAws\Core\Result;
+use AsyncAws\Lambda\Enum\ApplicationLogLevel;
 use AsyncAws\Lambda\Enum\Architecture;
 use AsyncAws\Lambda\Enum\LastUpdateStatus;
 use AsyncAws\Lambda\Enum\LastUpdateStatusReasonCode;
+use AsyncAws\Lambda\Enum\LogFormat;
 use AsyncAws\Lambda\Enum\PackageType;
 use AsyncAws\Lambda\Enum\Runtime;
+use AsyncAws\Lambda\Enum\SnapStartApplyOn;
+use AsyncAws\Lambda\Enum\SnapStartOptimizationStatus;
 use AsyncAws\Lambda\Enum\State;
 use AsyncAws\Lambda\Enum\StateReasonCode;
+use AsyncAws\Lambda\Enum\SystemLogLevel;
+use AsyncAws\Lambda\Enum\TenantIsolationMode;
+use AsyncAws\Lambda\Enum\TracingMode;
+use AsyncAws\Lambda\ValueObject\CapacityProviderConfig;
 use AsyncAws\Lambda\ValueObject\DeadLetterConfig;
+use AsyncAws\Lambda\ValueObject\DurableConfig;
 use AsyncAws\Lambda\ValueObject\EnvironmentError;
 use AsyncAws\Lambda\ValueObject\EnvironmentResponse;
 use AsyncAws\Lambda\ValueObject\EphemeralStorage;
@@ -19,11 +28,13 @@ use AsyncAws\Lambda\ValueObject\FileSystemConfig;
 use AsyncAws\Lambda\ValueObject\ImageConfig;
 use AsyncAws\Lambda\ValueObject\ImageConfigError;
 use AsyncAws\Lambda\ValueObject\ImageConfigResponse;
+use AsyncAws\Lambda\ValueObject\LambdaManagedInstancesCapacityProviderConfig;
 use AsyncAws\Lambda\ValueObject\Layer;
 use AsyncAws\Lambda\ValueObject\LoggingConfig;
 use AsyncAws\Lambda\ValueObject\RuntimeVersionConfig;
 use AsyncAws\Lambda\ValueObject\RuntimeVersionError;
 use AsyncAws\Lambda\ValueObject\SnapStartResponse;
+use AsyncAws\Lambda\ValueObject\TenancyConfig;
 use AsyncAws\Lambda\ValueObject\TracingConfigResponse;
 use AsyncAws\Lambda\ValueObject\VpcConfigResponse;
 
@@ -330,6 +341,35 @@ class FunctionConfiguration extends Result
     private $loggingConfig;
 
     /**
+     * Configuration for the capacity provider that manages compute resources for Lambda functions.
+     *
+     * @var CapacityProviderConfig|null
+     */
+    private $capacityProviderConfig;
+
+    /**
+     * The SHA256 hash of the function configuration.
+     *
+     * @var string|null
+     */
+    private $configSha256;
+
+    /**
+     * The function's durable execution configuration settings, if the function is configured for durability.
+     *
+     * @var DurableConfig|null
+     */
+    private $durableConfig;
+
+    /**
+     * The function's tenant isolation configuration settings. Determines whether the Lambda function runs on a shared or
+     * dedicated infrastructure per unique tenant.
+     *
+     * @var TenancyConfig|null
+     */
+    private $tenancyConfig;
+
+    /**
      * @return list<Architecture::*>
      */
     public function getArchitectures(): array
@@ -337,6 +377,13 @@ class FunctionConfiguration extends Result
         $this->initialize();
 
         return $this->architectures;
+    }
+
+    public function getCapacityProviderConfig(): ?CapacityProviderConfig
+    {
+        $this->initialize();
+
+        return $this->capacityProviderConfig;
     }
 
     public function getCodeSha256(): ?string
@@ -353,6 +400,13 @@ class FunctionConfiguration extends Result
         return $this->codeSize;
     }
 
+    public function getConfigSha256(): ?string
+    {
+        $this->initialize();
+
+        return $this->configSha256;
+    }
+
     public function getDeadLetterConfig(): ?DeadLetterConfig
     {
         $this->initialize();
@@ -365,6 +419,13 @@ class FunctionConfiguration extends Result
         $this->initialize();
 
         return $this->description;
+    }
+
+    public function getDurableConfig(): ?DurableConfig
+    {
+        $this->initialize();
+
+        return $this->durableConfig;
     }
 
     public function getEnvironment(): ?EnvironmentResponse
@@ -580,6 +641,13 @@ class FunctionConfiguration extends Result
         return $this->stateReasonCode;
     }
 
+    public function getTenancyConfig(): ?TenancyConfig
+    {
+        $this->initialize();
+
+        return $this->tenancyConfig;
+    }
+
     public function getTimeout(): ?int
     {
         $this->initialize();
@@ -614,7 +682,7 @@ class FunctionConfiguration extends Result
 
         $this->functionName = isset($data['FunctionName']) ? (string) $data['FunctionName'] : null;
         $this->functionArn = isset($data['FunctionArn']) ? (string) $data['FunctionArn'] : null;
-        $this->runtime = isset($data['Runtime']) ? (string) $data['Runtime'] : null;
+        $this->runtime = isset($data['Runtime']) ? (!Runtime::exists((string) $data['Runtime']) ? Runtime::UNKNOWN_TO_SDK : (string) $data['Runtime']) : null;
         $this->role = isset($data['Role']) ? (string) $data['Role'] : null;
         $this->handler = isset($data['Handler']) ? (string) $data['Handler'] : null;
         $this->codeSize = isset($data['CodeSize']) ? (int) $data['CodeSize'] : null;
@@ -632,14 +700,14 @@ class FunctionConfiguration extends Result
         $this->masterArn = isset($data['MasterArn']) ? (string) $data['MasterArn'] : null;
         $this->revisionId = isset($data['RevisionId']) ? (string) $data['RevisionId'] : null;
         $this->layers = empty($data['Layers']) ? [] : $this->populateResultLayersReferenceList($data['Layers']);
-        $this->state = isset($data['State']) ? (string) $data['State'] : null;
+        $this->state = isset($data['State']) ? (!State::exists((string) $data['State']) ? State::UNKNOWN_TO_SDK : (string) $data['State']) : null;
         $this->stateReason = isset($data['StateReason']) ? (string) $data['StateReason'] : null;
-        $this->stateReasonCode = isset($data['StateReasonCode']) ? (string) $data['StateReasonCode'] : null;
-        $this->lastUpdateStatus = isset($data['LastUpdateStatus']) ? (string) $data['LastUpdateStatus'] : null;
+        $this->stateReasonCode = isset($data['StateReasonCode']) ? (!StateReasonCode::exists((string) $data['StateReasonCode']) ? StateReasonCode::UNKNOWN_TO_SDK : (string) $data['StateReasonCode']) : null;
+        $this->lastUpdateStatus = isset($data['LastUpdateStatus']) ? (!LastUpdateStatus::exists((string) $data['LastUpdateStatus']) ? LastUpdateStatus::UNKNOWN_TO_SDK : (string) $data['LastUpdateStatus']) : null;
         $this->lastUpdateStatusReason = isset($data['LastUpdateStatusReason']) ? (string) $data['LastUpdateStatusReason'] : null;
-        $this->lastUpdateStatusReasonCode = isset($data['LastUpdateStatusReasonCode']) ? (string) $data['LastUpdateStatusReasonCode'] : null;
+        $this->lastUpdateStatusReasonCode = isset($data['LastUpdateStatusReasonCode']) ? (!LastUpdateStatusReasonCode::exists((string) $data['LastUpdateStatusReasonCode']) ? LastUpdateStatusReasonCode::UNKNOWN_TO_SDK : (string) $data['LastUpdateStatusReasonCode']) : null;
         $this->fileSystemConfigs = empty($data['FileSystemConfigs']) ? [] : $this->populateResultFileSystemConfigList($data['FileSystemConfigs']);
-        $this->packageType = isset($data['PackageType']) ? (string) $data['PackageType'] : null;
+        $this->packageType = isset($data['PackageType']) ? (!PackageType::exists((string) $data['PackageType']) ? PackageType::UNKNOWN_TO_SDK : (string) $data['PackageType']) : null;
         $this->imageConfigResponse = empty($data['ImageConfigResponse']) ? null : $this->populateResultImageConfigResponse($data['ImageConfigResponse']);
         $this->signingProfileVersionArn = isset($data['SigningProfileVersionArn']) ? (string) $data['SigningProfileVersionArn'] : null;
         $this->signingJobArn = isset($data['SigningJobArn']) ? (string) $data['SigningJobArn'] : null;
@@ -648,6 +716,10 @@ class FunctionConfiguration extends Result
         $this->snapStart = empty($data['SnapStart']) ? null : $this->populateResultSnapStartResponse($data['SnapStart']);
         $this->runtimeVersionConfig = empty($data['RuntimeVersionConfig']) ? null : $this->populateResultRuntimeVersionConfig($data['RuntimeVersionConfig']);
         $this->loggingConfig = empty($data['LoggingConfig']) ? null : $this->populateResultLoggingConfig($data['LoggingConfig']);
+        $this->capacityProviderConfig = empty($data['CapacityProviderConfig']) ? null : $this->populateResultCapacityProviderConfig($data['CapacityProviderConfig']);
+        $this->configSha256 = isset($data['ConfigSha256']) ? (string) $data['ConfigSha256'] : null;
+        $this->durableConfig = empty($data['DurableConfig']) ? null : $this->populateResultDurableConfig($data['DurableConfig']);
+        $this->tenancyConfig = empty($data['TenancyConfig']) ? null : $this->populateResultTenancyConfig($data['TenancyConfig']);
     }
 
     /**
@@ -659,6 +731,9 @@ class FunctionConfiguration extends Result
         foreach ($json as $item) {
             $a = isset($item) ? (string) $item : null;
             if (null !== $a) {
+                if (!Architecture::exists($a)) {
+                    $a = Architecture::UNKNOWN_TO_SDK;
+                }
                 $items[] = $a;
             }
         }
@@ -666,10 +741,25 @@ class FunctionConfiguration extends Result
         return $items;
     }
 
+    private function populateResultCapacityProviderConfig(array $json): CapacityProviderConfig
+    {
+        return new CapacityProviderConfig([
+            'LambdaManagedInstancesCapacityProviderConfig' => $this->populateResultLambdaManagedInstancesCapacityProviderConfig($json['LambdaManagedInstancesCapacityProviderConfig']),
+        ]);
+    }
+
     private function populateResultDeadLetterConfig(array $json): DeadLetterConfig
     {
         return new DeadLetterConfig([
             'TargetArn' => isset($json['TargetArn']) ? (string) $json['TargetArn'] : null,
+        ]);
+    }
+
+    private function populateResultDurableConfig(array $json): DurableConfig
+    {
+        return new DurableConfig([
+            'RetentionPeriodInDays' => isset($json['RetentionPeriodInDays']) ? (int) $json['RetentionPeriodInDays'] : null,
+            'ExecutionTimeout' => isset($json['ExecutionTimeout']) ? (int) $json['ExecutionTimeout'] : null,
         ]);
     }
 
@@ -755,6 +845,15 @@ class FunctionConfiguration extends Result
         ]);
     }
 
+    private function populateResultLambdaManagedInstancesCapacityProviderConfig(array $json): LambdaManagedInstancesCapacityProviderConfig
+    {
+        return new LambdaManagedInstancesCapacityProviderConfig([
+            'CapacityProviderArn' => (string) $json['CapacityProviderArn'],
+            'PerExecutionEnvironmentMaxConcurrency' => isset($json['PerExecutionEnvironmentMaxConcurrency']) ? (int) $json['PerExecutionEnvironmentMaxConcurrency'] : null,
+            'ExecutionEnvironmentMemoryGiBPerVCpu' => isset($json['ExecutionEnvironmentMemoryGiBPerVCpu']) ? (float) $json['ExecutionEnvironmentMemoryGiBPerVCpu'] : null,
+        ]);
+    }
+
     private function populateResultLayer(array $json): Layer
     {
         return new Layer([
@@ -781,9 +880,9 @@ class FunctionConfiguration extends Result
     private function populateResultLoggingConfig(array $json): LoggingConfig
     {
         return new LoggingConfig([
-            'LogFormat' => isset($json['LogFormat']) ? (string) $json['LogFormat'] : null,
-            'ApplicationLogLevel' => isset($json['ApplicationLogLevel']) ? (string) $json['ApplicationLogLevel'] : null,
-            'SystemLogLevel' => isset($json['SystemLogLevel']) ? (string) $json['SystemLogLevel'] : null,
+            'LogFormat' => isset($json['LogFormat']) ? (!LogFormat::exists((string) $json['LogFormat']) ? LogFormat::UNKNOWN_TO_SDK : (string) $json['LogFormat']) : null,
+            'ApplicationLogLevel' => isset($json['ApplicationLogLevel']) ? (!ApplicationLogLevel::exists((string) $json['ApplicationLogLevel']) ? ApplicationLogLevel::UNKNOWN_TO_SDK : (string) $json['ApplicationLogLevel']) : null,
+            'SystemLogLevel' => isset($json['SystemLogLevel']) ? (!SystemLogLevel::exists((string) $json['SystemLogLevel']) ? SystemLogLevel::UNKNOWN_TO_SDK : (string) $json['SystemLogLevel']) : null,
             'LogGroup' => isset($json['LogGroup']) ? (string) $json['LogGroup'] : null,
         ]);
     }
@@ -823,8 +922,8 @@ class FunctionConfiguration extends Result
     private function populateResultSnapStartResponse(array $json): SnapStartResponse
     {
         return new SnapStartResponse([
-            'ApplyOn' => isset($json['ApplyOn']) ? (string) $json['ApplyOn'] : null,
-            'OptimizationStatus' => isset($json['OptimizationStatus']) ? (string) $json['OptimizationStatus'] : null,
+            'ApplyOn' => isset($json['ApplyOn']) ? (!SnapStartApplyOn::exists((string) $json['ApplyOn']) ? SnapStartApplyOn::UNKNOWN_TO_SDK : (string) $json['ApplyOn']) : null,
+            'OptimizationStatus' => isset($json['OptimizationStatus']) ? (!SnapStartOptimizationStatus::exists((string) $json['OptimizationStatus']) ? SnapStartOptimizationStatus::UNKNOWN_TO_SDK : (string) $json['OptimizationStatus']) : null,
         ]);
     }
 
@@ -860,10 +959,17 @@ class FunctionConfiguration extends Result
         return $items;
     }
 
+    private function populateResultTenancyConfig(array $json): TenancyConfig
+    {
+        return new TenancyConfig([
+            'TenantIsolationMode' => !TenantIsolationMode::exists((string) $json['TenantIsolationMode']) ? TenantIsolationMode::UNKNOWN_TO_SDK : (string) $json['TenantIsolationMode'],
+        ]);
+    }
+
     private function populateResultTracingConfigResponse(array $json): TracingConfigResponse
     {
         return new TracingConfigResponse([
-            'Mode' => isset($json['Mode']) ? (string) $json['Mode'] : null,
+            'Mode' => isset($json['Mode']) ? (!TracingMode::exists((string) $json['Mode']) ? TracingMode::UNKNOWN_TO_SDK : (string) $json['Mode']) : null,
         ]);
     }
 

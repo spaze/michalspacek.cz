@@ -23,24 +23,22 @@ class Logger implements Tester\Runner\OutputHandler
 	private $file;
 	private Runner $runner;
 	private int $count;
+
+	/** @var array<int, int>  result type (Test::*) => count */
 	private array $results;
 
 
 	public function __construct(Runner $runner, ?string $file = null)
 	{
 		$this->runner = $runner;
-		$this->file = fopen($file ?: 'php://output', 'w');
+		$this->file = fopen($file ?? 'php://output', 'w') ?: throw new \RuntimeException("Cannot open file '$file' for writing.");
 	}
 
 
 	public function begin(): void
 	{
 		$this->count = 0;
-		$this->results = [
-			Test::Passed => 0,
-			Test::Skipped => 0,
-			Test::Failed => 0,
-		];
+		$this->results = [Test::Passed => 0, Test::Skipped => 0, Test::Failed => 0];
 		fwrite($this->file, 'PHP ' . $this->runner->getInterpreter()->getVersion()
 			. ' | ' . $this->runner->getInterpreter()->getCommandLine()
 			. " | {$this->runner->threadCount} threads\n\n");
@@ -56,7 +54,7 @@ class Logger implements Tester\Runner\OutputHandler
 	public function finish(Test $test): void
 	{
 		$this->results[$test->getResult()]++;
-		$message = '   ' . str_replace("\n", "\n   ", Tester\Dumper::removeColors(trim((string) $test->message)));
+		$message = '   ' . str_replace("\n", "\n   ", Tester\Ansi::stripAnsi(trim((string) $test->message)));
 		$outputs = [
 			Test::Passed => "-- OK: {$test->getSignature()}",
 			Test::Skipped => "-- Skipped: {$test->getSignature()}\n$message",

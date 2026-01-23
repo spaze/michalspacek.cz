@@ -24,24 +24,22 @@ class JUnitPrinter implements Tester\Runner\OutputHandler
 	private $file;
 	private string $buffer;
 	private float $startTime;
+
+	/** @var array<int, int>  result type (Test::*) => count */
 	private array $results;
 
 
 	public function __construct(?string $file = null)
 	{
-		$this->file = fopen($file ?: 'php://output', 'w');
+		$this->file = fopen($file ?? 'php://output', 'w') ?: throw new \RuntimeException("Cannot open file '$file' for writing.");
 	}
 
 
 	public function begin(): void
 	{
 		$this->buffer = '';
-		$this->results = [
-			Test::Passed => 0,
-			Test::Skipped => 0,
-			Test::Failed => 0,
-		];
-		$this->startTime = microtime(true);
+		$this->results = [Test::Passed => 0, Test::Skipped => 0, Test::Failed => 0];
+		$this->startTime = microtime(as_float: true);
 		fwrite($this->file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<testsuites>\n");
 	}
 
@@ -65,7 +63,7 @@ class JUnitPrinter implements Tester\Runner\OutputHandler
 
 	public function end(): void
 	{
-		$time = sprintf('%0.1f', microtime(true) - $this->startTime);
+		$time = sprintf('%0.1f', microtime(as_float: true) - $this->startTime);
 		$output = $this->buffer;
 		$this->buffer = "\t<testsuite errors=\"{$this->results[Test::Failed]}\" skipped=\"{$this->results[Test::Skipped]}\" tests=\"" . array_sum($this->results) . "\" time=\"$time\" timestamp=\"" . @date('Y-m-d\TH:i:s') . "\">\n";
 		$this->buffer .= $output;

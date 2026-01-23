@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tester\Runner;
 
 use Tester\Environment;
+use Tester\Helpers;
 use function count, in_array;
 use const DIRECTORY_SEPARATOR, GLOB_ONLYDIR, PATHINFO_FILENAME;
 
@@ -31,6 +32,8 @@ class Runner
 	public array $outputHandlers = [];
 	public bool $stopOnFail = false;
 	private PhpInterpreter $interpreter;
+
+	/** @var array<string, string>  environment variables for test processes */
 	private array $envVars = [];
 
 	/** @var Job[] */
@@ -38,6 +41,8 @@ class Runner
 	private bool $interrupted = false;
 	private ?string $tempDir = null;
 	private bool $result;
+
+	/** @var array<string, int>  test signature => result (Test::Prepared|Passed|Failed|Skipped) */
 	private array $lastResults = [];
 
 
@@ -54,6 +59,7 @@ class Runner
 	}
 
 
+	/** @return array<string, string> */
 	public function getEnvironmentVariables(): array
 	{
 		return $this->envVars;
@@ -110,7 +116,7 @@ class Runner
 				}
 
 				if ($async) {
-					usleep(Job::RunSleep); // stream_select() doesn't work with proc_open()
+					Job::waitForActivity($running);
 				}
 
 				foreach ($running as $key => $job) {
@@ -143,7 +149,7 @@ class Runner
 
 		if (is_dir($path)) {
 			foreach (glob(str_replace('[', '[[]', $path) . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
-				if (in_array(basename($dir), $this->ignoreDirs, true)) {
+				if (in_array(basename($dir), $this->ignoreDirs, strict: true)) {
 					continue;
 				}
 
@@ -156,7 +162,7 @@ class Runner
 		} else {
 			foreach (glob(str_replace('[', '[[]', $path)) ?: [] as $file) {
 				if (is_file($file)) {
-					$this->testHandler->initiate(realpath($file));
+					$this->testHandler->initiate(realpath($file) ?: $file);
 				}
 			}
 		}
@@ -219,7 +225,7 @@ class Runner
 
 		$file = $this->getLastResultFilename($test);
 		if (is_file($file)) {
-			return $this->lastResults[$signature] = (int) file_get_contents($file);
+			return $this->lastResults[$signature] = (int) Helpers::readFile($file);
 		}
 
 		return $this->lastResults[$signature] = Test::Prepared;

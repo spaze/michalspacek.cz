@@ -11,7 +11,7 @@ namespace Tester\Runner;
 
 use Tester\Helpers;
 use function count, is_array, is_resource;
-use const DIRECTORY_SEPARATOR;
+use const DIRECTORY_SEPARATOR, PHP_OS_FAMILY, PHP_VERSION_ID;
 
 
 /**
@@ -45,12 +45,13 @@ class Job
 
 	/** @var string[]  output headers */
 	private array $headers = [];
-	private ?float $duration;
+	private float $duration;
 
 
+	/** @param ?array<string, string>  $envVars */
 	public function __construct(Test $test, PhpInterpreter $interpreter, ?array $envVars = null)
 	{
-		if ($test->getResult() !== Test::Prepared) {
+		if ($test->hasResult()) {
 			throw new \LogicException("Test '{$test->getSignature()}' already has result '{$test->getResult()}'.");
 		}
 
@@ -92,17 +93,12 @@ class Job
 			putenv("$name=$value");
 		}
 
-		$args = [];
-		foreach ($this->test->getArguments() as $value) {
-			$args[] = is_array($value)
-				? Helpers::escapeArg("--$value[0]=$value[1]")
-				: Helpers::escapeArg($value);
-		}
-
-		$this->duration = -microtime(true);
+		$args = array_map(fn($arg) => is_array($arg) ? "--$arg[0]=$arg[1]" : $arg, $this->test->getArguments());
+		$this->duration = -microtime(as_float: true);
 		$this->proc = proc_open(
-			$this->interpreter->getCommandLine()
-			. ' -d register_argc_argv=on ' . Helpers::escapeArg($this->test->getFile()) . ' ' . implode(' ', $args),
+			$this->interpreter
+				->withArguments(['-d register_argc_argv=on', $this->test->getFile(), ...$args])
+				->getCommandLine(),
 			[
 				['pipe', 'r'],
 				['pipe', 'w'],
@@ -112,7 +108,7 @@ class Job
 			dirname($this->test->getFile()),
 			null,
 			['bypass_shell' => true],
-		);
+		) ?: throw new \RuntimeException('Cannot start test process.');
 
 		foreach (array_keys($this->envVars) as $name) {
 			putenv($name);
@@ -129,7 +125,7 @@ class Job
 			stream_set_blocking($this->stdout, enable: false); // on Windows does not work with proc_open()
 		} else {
 			while ($this->isRunning()) {
-				usleep(self::RunSleep); // stream_select() doesn't work with proc_open()
+				usleep(self::RunSleep);
 			}
 		}
 	}
@@ -144,18 +140,37 @@ class Job
 			return false;
 		}
 
-		$this->test->stdout .= stream_get_contents($this->stdout);
+		// PHP 8.5+ Windows: stream_select() works with pipes (PeekNamedPipe fix),
+		if (PHP_OS_FAMILY === 'Windows' && PHP_VERSION_ID >= 80500) {
+			$read = [$this->stdout];
+			$w = $e = [];
+			while (@stream_select($read, $w, $e, 0, 0) > 0) {
+				$chunk = fread($this->stdout, 8192);
+				if ($chunk === false || $chunk === '') {
+					break;
+				}
+				$this->test->stdout .= $chunk;
+				$read = [$this->stdout];
+			}
+		} else {
+			// Linux/macOS: stream_get_contents() works without blocking
+			// Windows < 8.5: blocks, but is necessary to prevent deadlock when output exceeds pipe buffer (~64KB)
+			$this->test->stdout .= stream_get_contents($this->stdout);
+		}
 
 		$status = proc_get_status($this->proc);
 		if ($status['running']) {
 			return true;
 		}
 
-		$this->duration += microtime(true);
+		$this->duration += microtime(as_float: true);
 
+		stream_set_blocking($this->stdout, true);
+		$this->test->stdout .= stream_get_contents($this->stdout);
 		fclose($this->stdout);
+
 		if ($this->stderrFile) {
-			$this->test->stderr .= file_get_contents($this->stderrFile);
+			$this->test->stderr .= Helpers::readFile($this->stderrFile);
 			unlink($this->stderrFile);
 		}
 
@@ -211,5 +226,24 @@ class Job
 		return $this->duration > 0
 			? $this->duration
 			: null;
+	}
+
+
+	/**
+	 * Waits for activity on any of the running jobs.
+	 * @param  self[]  $jobs
+	 */
+	public static function waitForActivity(array $jobs): void
+	{
+		if (PHP_OS_FAMILY === 'Windows' && PHP_VERSION_ID < 80500) {
+			usleep(self::RunSleep);
+			return;
+		}
+
+		$streams = array_filter(array_map(fn($job) => $job->stdout, $jobs));
+		if ($streams) {
+			$w = $e = [];
+			@stream_select($streams, $w, $e, 0, self::RunSleep);
+		}
 	}
 }

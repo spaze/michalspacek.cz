@@ -59,11 +59,11 @@ final class ListLayerVersionsRequest extends Input
 
     /**
      * @param array{
-     *   CompatibleRuntime?: null|Runtime::*,
+     *   CompatibleRuntime?: Runtime::*|null,
      *   LayerName?: string,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
-     *   CompatibleArchitecture?: null|Architecture::*,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
+     *   CompatibleArchitecture?: Architecture::*|null,
      *   '@region'?: string|null,
      * } $input
      */
@@ -79,11 +79,11 @@ final class ListLayerVersionsRequest extends Input
 
     /**
      * @param array{
-     *   CompatibleRuntime?: null|Runtime::*,
+     *   CompatibleRuntime?: Runtime::*|null,
      *   LayerName?: string,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
-     *   CompatibleArchitecture?: null|Architecture::*,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
+     *   CompatibleArchitecture?: Architecture::*|null,
      *   '@region'?: string|null,
      * }|ListLayerVersionsRequest $input
      */
@@ -138,6 +138,7 @@ final class ListLayerVersionsRequest extends Input
         $query = [];
         if (null !== $this->compatibleRuntime) {
             if (!Runtime::exists($this->compatibleRuntime)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "CompatibleRuntime" for "%s". The value "%s" is not a valid "Runtime".', __CLASS__, $this->compatibleRuntime));
             }
             $query['CompatibleRuntime'] = $this->compatibleRuntime;
@@ -150,6 +151,7 @@ final class ListLayerVersionsRequest extends Input
         }
         if (null !== $this->compatibleArchitecture) {
             if (!Architecture::exists($this->compatibleArchitecture)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "CompatibleArchitecture" for "%s". The value "%s" is not a valid "Architecture".', __CLASS__, $this->compatibleArchitecture));
             }
             $query['CompatibleArchitecture'] = $this->compatibleArchitecture;

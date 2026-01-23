@@ -43,10 +43,10 @@ final class ListFunctionsRequest extends Input
 
     /**
      * @param array{
-     *   MasterRegion?: null|string,
-     *   FunctionVersion?: null|FunctionVersion::*,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
+     *   MasterRegion?: string|null,
+     *   FunctionVersion?: FunctionVersion::*|null,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
      *   '@region'?: string|null,
      * } $input
      */
@@ -61,10 +61,10 @@ final class ListFunctionsRequest extends Input
 
     /**
      * @param array{
-     *   MasterRegion?: null|string,
-     *   FunctionVersion?: null|FunctionVersion::*,
-     *   Marker?: null|string,
-     *   MaxItems?: null|int,
+     *   MasterRegion?: string|null,
+     *   FunctionVersion?: FunctionVersion::*|null,
+     *   Marker?: string|null,
+     *   MaxItems?: int|null,
      *   '@region'?: string|null,
      * }|ListFunctionsRequest $input
      */
@@ -114,6 +114,7 @@ final class ListFunctionsRequest extends Input
         }
         if (null !== $this->functionVersion) {
             if (!FunctionVersion::exists($this->functionVersion)) {
+                /** @psalm-suppress NoValue */
                 throw new InvalidArgument(\sprintf('Invalid parameter "FunctionVersion" for "%s". The value "%s" is not a valid "FunctionVersion".', __CLASS__, $this->functionVersion));
             }
             $query['FunctionVersion'] = $this->functionVersion;

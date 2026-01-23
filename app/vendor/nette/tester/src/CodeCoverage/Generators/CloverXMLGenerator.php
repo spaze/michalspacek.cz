@@ -12,12 +12,14 @@ namespace Tester\CodeCoverage\Generators;
 use DOMDocument;
 use DOMElement;
 use Tester\CodeCoverage\PhpParser;
+use Tester\Helpers;
 use function count;
 use const FILE_SKIP_EMPTY_LINES;
 
 
 class CloverXMLGenerator extends AbstractGenerator
 {
+	/** @var array<string, string>  metric name => XML attribute name */
 	private static array $metricAttributesMap = [
 		'packageCount' => 'packages',
 		'fileCount' => 'files',
@@ -95,7 +97,7 @@ class CloverXMLGenerator extends AbstractGenerator
 			$elFileMetrics = $elFile->appendChild($doc->createElement('metrics'));
 
 			try {
-				$code = $parser->parse(file_get_contents($file));
+				$code = $parser->parse(Helpers::readFile($file));
 			} catch (\ParseError $e) {
 				throw new \ParseError($e->getMessage() . ' in file ' . $file);
 			}
@@ -157,6 +159,7 @@ class CloverXMLGenerator extends AbstractGenerator
 	}
 
 
+	/** @param ?array<int, int>  $coverageData  line number => coverage count */
 	private function calculateClassMetrics(\stdClass $info, ?array $coverageData = null): \stdClass
 	{
 		$stats = (object) [
@@ -188,6 +191,10 @@ class CloverXMLGenerator extends AbstractGenerator
 	}
 
 
+	/**
+	 * @param  ?array<int, int>  $coverageData  line number => coverage count
+	 * @return array{int, int}   [line count, covered line count]
+	 */
 	private static function analyzeMethod(\stdClass $info, ?array $coverageData = null): array
 	{
 		$count = 0;
