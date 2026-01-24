@@ -11,7 +11,7 @@ use Override;
 final class Certificate implements JsonSerializable
 {
 
-	private ?int $validityPeriod = null;
+	private ?int $validityPeriodDays = null;
 	private ?int $expiryDays = null;
 	private ?bool $expired = null;
 	private ?bool $expiringSoon = null;
@@ -72,14 +72,14 @@ final class Certificate implements JsonSerializable
 	}
 
 
-	public function getValidityPeriod(): int
+	public function getValidityPeriodDays(): int
 	{
-		if ($this->validityPeriod === null) {
-			$validityPeriod = $this->notAfter->diff($this->notBefore)->days;
-			assert(is_int($validityPeriod));
-			$this->validityPeriod = $validityPeriod;
+		if ($this->validityPeriodDays === null) {
+			$validityPeriodDays = $this->notAfter->diff($this->notBefore)->days;
+			assert(is_int($validityPeriodDays));
+			$this->validityPeriodDays = $validityPeriodDays;
 		}
-		return $this->validityPeriod;
+		return $this->validityPeriodDays;
 	}
 
 
@@ -107,7 +107,7 @@ final class Certificate implements JsonSerializable
 	{
 		if ($this->expiringSoon === null) {
 			// Let's Encrypt: we recommend renewing 90-day certificates every 60 days and six day certificates every three days.
-			$this->expiringSoon = !$this->isExpired() && $this->getExpiryDays() < ($this->getValidityPeriod() === 6 ? 3 : $this->getValidityPeriod() / 3);
+			$this->expiringSoon = !$this->isExpired() && $this->getExpiryDays() < ($this->getValidityPeriodDays() === 6 ? 3 : $this->getValidityPeriodDays() / 3);
 		}
 		return $this->expiringSoon;
 	}
