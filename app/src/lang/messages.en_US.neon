@@ -375,7 +375,7 @@ certificates:
 		certbotHook: "\"Certbot deploy hook\":[%s] reports renewed certificates, that's what you see in the table below."
 		certbotHookNewCert: "The deploy hook runs on renewals only, so the first certificate for a domain needs to be reported manually. To log a fresh certificate for `example.com`, run:"
 		certmonitor: "The `bin/certmonitor.php` script reads the certificate log and sends a request to each domain, checking whether the logged certificate's `notAfter` matches the `notAfter` of the certificate fetched from the domain's IP addresses."
-		certmonitorPeriodic: "The monitoring script is executed periodically in GitHub Actions as one of the jobs in the \"//SSL/TLS scans// workflow\":[%s]."
+		certmonitorPeriodic: "The monitoring script is executed periodically in the //Certificate monitoring// GitHub Actions \"workflow\":[%s]."
 blog:
 	post:
 		recommendedreading: "Recommended reading"
