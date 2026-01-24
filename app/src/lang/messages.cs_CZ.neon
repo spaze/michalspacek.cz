@@ -375,7 +375,7 @@ certificates:
 		certbotHook: "\"Certbot deploy hook\":[%s] reportuje obnovené certifikáty, ty jsou zobrazeny v tabulce níže."
 		certbotHookNewCert: "Deploy hook se spouští pouze při obnově, pro první certifikát v řadě je potřeba to udělat ručně. Pro zalogování nového certifikátu pro `example.com` spusťte:"
 		certmonitor: "Skript `bin/certmonitor.php` čte log certifikátů a posílá požadavky na jednotlivé domény, přičemž kontroluje, zda hodnota `notAfter` zalogovaného certifikátu odpovídá hodnotě `notAfter` certifikátu načteného z IP adres domény."
-		certmonitorPeriodic: "Monitorovací skript se pravidelně spouští v GitHub Actions jako jeden z jobů v \"//SSL/TLS scans// workflow\":[%s]."
+		certmonitorPeriodic: "Monitorovací skript se pravidelně spouští v GitHub Actions v \"//Certificate monitoring// workflow\":[%s]."
 blog:
 	post:
 		recommendedreading: "Mohlo by vás také zajímat"
