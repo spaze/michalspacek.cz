@@ -8,37 +8,28 @@ use JsonSerializable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use Override;
 
-final readonly class Certificate implements JsonSerializable
+final class Certificate implements JsonSerializable
 {
 
-	private int $validityPeriod;
-	private int $expiryDays;
-	private bool $expired;
-	private bool $expiringSoon;
+	private ?int $validityPeriod = null;
+	private ?int $expiryDays = null;
+	private ?bool $expired = null;
+	private ?bool $expiringSoon = null;
 
 
 	/**
 	 * @param list<string>|null $subjectAlternativeNames
 	 */
 	public function __construct(
-		private string $certificateName,
-		private ?string $certificateNameExtension,
-		private ?string $commonName,
-		private ?array $subjectAlternativeNames,
-		private DateTimeImmutable $notBefore,
-		private DateTimeImmutable $notAfter,
-		private ?string $serialNumber,
-		private DateTimeImmutable $now,
+		private readonly string $certificateName,
+		private readonly ?string $certificateNameExtension,
+		private readonly ?string $commonName,
+		private readonly ?array $subjectAlternativeNames,
+		private readonly DateTimeImmutable $notBefore,
+		private readonly DateTimeImmutable $notAfter,
+		private readonly ?string $serialNumber,
+		private readonly DateTimeImmutable $now,
 	) {
-		$expiryDays = $this->notAfter->diff($this->now)->days;
-		assert(is_int($expiryDays));
-		$this->expiryDays = $expiryDays;
-		$this->expired = $this->notAfter < $this->now;
-		$validityPeriod = $this->notAfter->diff($this->notBefore)->days;
-		assert(is_int($validityPeriod));
-		$this->validityPeriod = $validityPeriod;
-		// Let's Encrypt: we recommend renewing 90-day certificates every 60 days and six day certificates every three days.
-		$this->expiringSoon = !$this->expired && $this->expiryDays < ($this->validityPeriod === 6 ? 3 : $this->validityPeriod / 3);
 	}
 
 
@@ -83,24 +74,41 @@ final readonly class Certificate implements JsonSerializable
 
 	public function getValidityPeriod(): int
 	{
+		if ($this->validityPeriod === null) {
+			$validityPeriod = $this->notAfter->diff($this->notBefore)->days;
+			assert(is_int($validityPeriod));
+			$this->validityPeriod = $validityPeriod;
+		}
 		return $this->validityPeriod;
 	}
 
 
 	public function getExpiryDays(): int
 	{
+		if ($this->expiryDays === null) {
+			$expiryDays = $this->notAfter->diff($this->now)->days;
+			assert(is_int($expiryDays));
+			$this->expiryDays = $expiryDays;
+		}
 		return $this->expiryDays;
 	}
 
 
 	public function isExpired(): bool
 	{
+		if ($this->expired === null) {
+			$this->expired = $this->notAfter < $this->now;
+		}
 		return $this->expired;
 	}
 
 
 	public function isExpiringSoon(): bool
 	{
+		if ($this->expiringSoon === null) {
+			// Let's Encrypt: we recommend renewing 90-day certificates every 60 days and six day certificates every three days.
+			$this->expiringSoon = !$this->isExpired() && $this->getExpiryDays() < ($this->getValidityPeriod() === 6 ? 3 : $this->getValidityPeriod() / 3);
+		}
 		return $this->expiringSoon;
 	}
 
