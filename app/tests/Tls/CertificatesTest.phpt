@@ -140,33 +140,26 @@ final class CertificatesTest extends TestCase
 				'notAfterTimezone' => 'UTC',
 			],
 		]);
-		$expected1 = new Certificate(
-			'cert1.name',
-			null,
-			null,
-			['cert1.name.example'],
-			new DateTimeImmutable('2025-09-30 10:20:30 UTC'),
-			new DateTimeImmutable('2025-12-30 10:20:29 UTC'),
-			null,
-			$now,
-		);
-		$expected2 = new Certificate(
-			'cert3 expires soon',
-			null,
-			null,
-			['cert3.name.example'],
-			new DateTimeImmutable('2025-09-08 10:20:30 UTC'),
-			new DateTimeImmutable('2025-12-08 10:20:29 UTC'),
-			null,
-			$now,
-		);
-		Assert::equal([$expected1, $expected2], $this->certificates->getNewest());
-		Assert::equal([$expected2], $this->certificates->getNewestWithWarnings());
+		Assert::equal(['cert1.name', 'cert3 expires soon'], $this->getCertificateNames($this->certificates->getNewest()));
+		Assert::equal(['cert3 expires soon'], $this->getCertificateNames($this->certificates->getNewestWithWarnings()));
 
 		// Test memoization
 		$this->database->willThrow(new DriverException());
-		Assert::equal([$expected1, $expected2], $this->certificates->getNewest());
-		Assert::equal([$expected2], $this->certificates->getNewestWithWarnings());
+		Assert::equal(['cert1.name', 'cert3 expires soon'], $this->getCertificateNames($this->certificates->getNewest()));
+		Assert::equal(['cert3 expires soon'], $this->getCertificateNames($this->certificates->getNewestWithWarnings()));
+	}
+
+
+	/**
+	 * @param list<Certificate> $certificates
+	 * @return list<string>
+	 */
+	private function getCertificateNames(array $certificates): array
+	{
+		return array_map(
+			fn(Certificate $certificate): string => $certificate->getCertificateName(),
+			$certificates,
+		);
 	}
 
 }
