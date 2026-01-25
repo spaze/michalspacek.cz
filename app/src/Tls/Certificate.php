@@ -105,15 +105,14 @@ final class Certificate implements JsonSerializable
 	}
 
 
+	/**
+	 * Return the number of hours either to expiration, or after expiration.
+	 */
 	public function getExpiryHours(): int
 	{
 		if ($this->expiryHours === null) {
 			$seconds = abs($this->notAfter->getTimestamp() - $this->now->getTimestamp());
-			$hours = (int)floor($seconds / 3600);
-			if ($seconds > 0 && $hours > 0 && $seconds % 3600 === 0) {
-				$hours--; // Only count whole hours, not started hours
-			}
-			$this->expiryHours = $hours;
+			$this->expiryHours = (int)floor($seconds / 3600);
 		}
 		return $this->expiryHours;
 	}
