@@ -79,7 +79,7 @@ final class CertificateTest extends TestCase
 			new DateTimeImmutable('2025-09-01 00:00:00'),
 			new DateTimeImmutable('2025-09-07 15:59:59'),
 			null,
-			new DateTimeImmutable('2025-09-05 01:59:59'),
+			new DateTimeImmutable('2025-09-05 02:59:59'),
 		);
 		Assert::same(6, $certificate->getValidityPeriodDays());
 		Assert::same(6 * 24 + 15, $certificate->getValidityPeriodHours());
