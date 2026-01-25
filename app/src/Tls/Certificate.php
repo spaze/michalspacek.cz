@@ -12,7 +12,9 @@ final class Certificate implements JsonSerializable
 {
 
 	private ?int $validityPeriodDays = null;
+	private ?int $validityPeriodHours = null;
 	private ?int $expiryDays = null;
+	private ?int $expiryHours = null;
 	private ?bool $expired = null;
 	private ?bool $expiringSoon = null;
 
@@ -83,6 +85,15 @@ final class Certificate implements JsonSerializable
 	}
 
 
+	public function getValidityPeriodHours(): int
+	{
+		if ($this->validityPeriodHours === null) {
+			$this->validityPeriodHours = (int)(($this->notAfter->getTimestamp() - $this->notBefore->getTimestamp()) / 3600);
+		}
+		return $this->validityPeriodHours;
+	}
+
+
 	public function getExpiryDays(): int
 	{
 		if ($this->expiryDays === null) {
@@ -91,6 +102,20 @@ final class Certificate implements JsonSerializable
 			$this->expiryDays = $expiryDays;
 		}
 		return $this->expiryDays;
+	}
+
+
+	public function getExpiryHours(): int
+	{
+		if ($this->expiryHours === null) {
+			$seconds = abs($this->notAfter->getTimestamp() - $this->now->getTimestamp());
+			$hours = (int)floor($seconds / 3600);
+			if ($seconds > 0 && $hours > 0 && $seconds % 3600 === 0) {
+				$hours--; // Only count whole hours, not started hours
+			}
+			$this->expiryHours = $hours;
+		}
+		return $this->expiryHours;
 	}
 
 
@@ -103,11 +128,17 @@ final class Certificate implements JsonSerializable
 	}
 
 
+	/**
+	 * Is the certificate expiring soon?
+	 *
+	 * Let's Encrypt recommends renewing 90-day certificates every 60 days and six day certificates every three days,
+	 * and because certbot runs only twice a day, we'll give it a few more buffer hours before the certificate will be flagged as expiring.
+	 */
 	public function isExpiringSoon(): bool
 	{
 		if ($this->expiringSoon === null) {
-			// Let's Encrypt: we recommend renewing 90-day certificates every 60 days and six day certificates every three days.
-			$this->expiringSoon = !$this->isExpired() && $this->getExpiryDays() < ($this->getValidityPeriodDays() === 6 ? 3 : $this->getValidityPeriodDays() / 3);
+			$denominator = $this->getValidityPeriodDays() <= 6 ? 2 : 3;
+			$this->expiringSoon = !$this->isExpired() && $this->getExpiryHours() <= (int)($this->getValidityPeriodHours() / $denominator) - 18; // The buffer hours
 		}
 		return $this->expiringSoon;
 	}
