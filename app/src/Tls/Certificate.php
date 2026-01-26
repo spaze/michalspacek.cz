@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use DateInterval;
 use DateTimeImmutable;
 use JsonSerializable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
@@ -17,6 +18,7 @@ final class Certificate implements JsonSerializable
 	private ?int $expiryHours = null;
 	private ?bool $expired = null;
 	private ?bool $expiringSoon = null;
+	private ?DateTimeImmutable $expiredAfter = null;
 
 
 	/**
@@ -77,7 +79,7 @@ final class Certificate implements JsonSerializable
 	public function getValidityPeriodDays(): int
 	{
 		if ($this->validityPeriodDays === null) {
-			$validityPeriodDays = $this->notAfter->diff($this->notBefore)->days;
+			$validityPeriodDays = $this->getExpiredAfter()->diff($this->notBefore)->days;
 			assert(is_int($validityPeriodDays));
 			$this->validityPeriodDays = $validityPeriodDays;
 		}
@@ -88,7 +90,7 @@ final class Certificate implements JsonSerializable
 	public function getValidityPeriodHours(): int
 	{
 		if ($this->validityPeriodHours === null) {
-			$this->validityPeriodHours = (int)(($this->notAfter->getTimestamp() - $this->notBefore->getTimestamp()) / 3600);
+			$this->validityPeriodHours = (int)(($this->getExpiredAfter()->getTimestamp() - $this->notBefore->getTimestamp()) / 3600);
 		}
 		return $this->validityPeriodHours;
 	}
@@ -97,7 +99,7 @@ final class Certificate implements JsonSerializable
 	public function getExpiryDays(): int
 	{
 		if ($this->expiryDays === null) {
-			$expiryDays = $this->notAfter->diff($this->now)->days;
+			$expiryDays = $this->getExpiredAfter()->diff($this->now)->days;
 			assert(is_int($expiryDays));
 			$this->expiryDays = $expiryDays;
 		}
@@ -111,7 +113,7 @@ final class Certificate implements JsonSerializable
 	public function getExpiryHours(): int
 	{
 		if ($this->expiryHours === null) {
-			$seconds = abs($this->notAfter->getTimestamp() - $this->now->getTimestamp());
+			$seconds = abs($this->getExpiredAfter()->getTimestamp() - $this->now->getTimestamp());
 			$this->expiryHours = (int)floor($seconds / 3600);
 		}
 		return $this->expiryHours;
@@ -121,7 +123,7 @@ final class Certificate implements JsonSerializable
 	public function isExpired(): bool
 	{
 		if ($this->expired === null) {
-			$this->expired = $this->notAfter < $this->now;
+			$this->expired = $this->getExpiredAfter() <= $this->now;
 		}
 		return $this->expired;
 	}
@@ -174,6 +176,20 @@ final class Certificate implements JsonSerializable
 			'now' => $this->now->format(DateTimeFormat::RFC3339_MICROSECONDS),
 			'nowTz' => $this->now->getTimezone()->getName(),
 		];
+	}
+
+
+	/**
+	 * Returns when the certificate becomes expired.
+	 *
+	 * The certificate is still valid at the notAfter timestamp and becomes expired only the next second after.
+	 */
+	private function getExpiredAfter(): DateTimeImmutable
+	{
+		if ($this->expiredAfter === null) {
+			$this->expiredAfter = $this->notAfter->add(new DateInterval('PT1S'));
+		}
+		return $this->expiredAfter;
 	}
 
 }

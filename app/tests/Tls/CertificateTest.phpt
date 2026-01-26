@@ -26,8 +26,8 @@ final class CertificateTest extends TestCase
 			null,
 			new DateTimeImmutable('2025-09-02 00:00:01'),
 		);
-		Assert::same(7, $certificate->getValidityPeriodDays());
-		Assert::same(7 * 24 + 23, $certificate->getValidityPeriodHours());
+		Assert::same(8, $certificate->getValidityPeriodDays());
+		Assert::same(8 * 24, $certificate->getValidityPeriodHours());
 		Assert::same(6, $certificate->getExpiryDays());
 		Assert::same(7 * 24 - 1, $certificate->getExpiryHours());
 		Assert::false($certificate->isExpiringSoon());
@@ -40,7 +40,7 @@ final class CertificateTest extends TestCase
 			null,
 			['cert.example'],
 			new DateTimeImmutable('2025-09-01 00:00:00'),
-			new DateTimeImmutable('2025-09-29 00:00:00'),
+			new DateTimeImmutable('2025-09-28 23:59:59'),
 			null,
 			new DateTimeImmutable('2025-09-21 00:00:01'),
 		);
@@ -79,12 +79,12 @@ final class CertificateTest extends TestCase
 			new DateTimeImmutable('2025-09-01 00:00:00'),
 			new DateTimeImmutable('2025-09-07 15:59:59'),
 			null,
-			new DateTimeImmutable('2025-09-05 02:59:59'),
+			new DateTimeImmutable('2025-09-05 01:59:59'),
 		);
 		Assert::same(6, $certificate->getValidityPeriodDays());
-		Assert::same(6 * 24 + 15, $certificate->getValidityPeriodHours());
+		Assert::same(6 * 24 + 16, $certificate->getValidityPeriodHours());
 		Assert::same(2, $certificate->getExpiryDays());
-		Assert::same(2 * 24 + 13, $certificate->getExpiryHours());
+		Assert::same(2 * 24 + 14, $certificate->getExpiryHours());
 		Assert::true($certificate->isExpiringSoon());
 		Assert::false($certificate->isExpired());
 		Assert::true($certificate->hasWarning());
@@ -97,15 +97,51 @@ final class CertificateTest extends TestCase
 			new DateTimeImmutable('2025-09-01 00:00:00'),
 			new DateTimeImmutable('2025-09-07 15:59:59'),
 			null,
-			new DateTimeImmutable('2025-09-05 01:59:58'),
+			new DateTimeImmutable('2025-09-05 00:59:59'),
 		);
 		Assert::same(6, $certificate->getValidityPeriodDays());
-		Assert::same(6 * 24 + 15, $certificate->getValidityPeriodHours());
+		Assert::same(6 * 24 + 16, $certificate->getValidityPeriodHours());
 		Assert::same(2, $certificate->getExpiryDays());
-		Assert::same(2 * 24 + 14, $certificate->getExpiryHours());
+		Assert::same(2 * 24 + 15, $certificate->getExpiryHours());
 		Assert::false($certificate->isExpiringSoon());
 		Assert::false($certificate->isExpired());
 		Assert::false($certificate->hasWarning());
+
+		$certificate = new Certificate(
+			'certificate_name',
+			null,
+			null,
+			['cert.example'],
+			new DateTimeImmutable('2025-09-01 00:00:00'),
+			new DateTimeImmutable('2025-09-07 15:59:59'),
+			null,
+			new DateTimeImmutable('2025-09-07 15:59:59'),
+		);
+		Assert::same(6, $certificate->getValidityPeriodDays());
+		Assert::same(6 * 24 + 16, $certificate->getValidityPeriodHours());
+		Assert::same(0, $certificate->getExpiryDays());
+		Assert::same(0, $certificate->getExpiryHours());
+		Assert::true($certificate->isExpiringSoon());
+		Assert::false($certificate->isExpired());
+		Assert::true($certificate->hasWarning());
+
+		$certificate = new Certificate(
+			'certificate_name',
+			null,
+			null,
+			['cert.example'],
+			new DateTimeImmutable('2025-09-01 00:00:00'),
+			new DateTimeImmutable('2025-09-07 15:59:59'),
+			null,
+			new DateTimeImmutable('2025-09-07 16:00:00'),
+		);
+		Assert::same(6, $certificate->getValidityPeriodDays());
+		Assert::same(6 * 24 + 16, $certificate->getValidityPeriodHours());
+		Assert::same(0, $certificate->getExpiryDays());
+		Assert::same(0, $certificate->getExpiryHours());
+		Assert::false($certificate->isExpiringSoon());
+		Assert::true($certificate->isExpired());
+		Assert::true($certificate->hasWarning());
 	}
 
 }
