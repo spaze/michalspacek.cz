@@ -1,3 +1,7 @@
+http:
+	headers:
+		Integrity-Policy: "blocked-destinations=()"
+
 di:
 	debugger: true
 
