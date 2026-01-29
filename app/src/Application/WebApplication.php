@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Application;
 use MichalSpacekCz\EasterEgg\CrLfUrlInjections;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy;
-use MichalSpacekCz\Http\SecurityHeaders;
+use MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders;
 use MichalSpacekCz\User\UserSessionAdditionalData;
 use Nette\Application\Application;
 use Nette\Http\IRequest;

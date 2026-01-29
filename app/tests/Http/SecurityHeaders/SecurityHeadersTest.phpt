@@ -2,11 +2,10 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Http;
+namespace MichalSpacekCz\Http\SecurityHeaders;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Http\Response;
-use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
@@ -15,19 +14,32 @@ use Spaze\ContentSecurityPolicy\CspConfig;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 final class SecurityHeadersTest extends TestCase
 {
 
-	private SecurityHeaders $securityHeaders;
+	/**
+	 * @var array<string, string>
+	 */
+	private array $expected = [
+		'server' => '<script/src=//xss.sk></script>',
+		'x-powered-by' => "<script>document.write('<img src=//xss.sk title=inline_js_is_bad_mkay.gif>');</script>",
+		'x-content-type-options' => 'nosniff',
+		'x-frame-options' => 'DENY',
+		'referrer-policy' => 'no-referrer, strict-origin-when-cross-origin',
+		'permissions-policy' => 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()',
+		'integrity-policy' => 'blocked-destinations=(script), endpoints=(default)',
+		'report-to' => '{"group":"default","max_age":31536000,"endpoints":[{"url":"https://plz.report-uri.com/a/d/g"}],"include_subdomains":true}',
+		'nel' => '{"report_to":"default","max_age":31536000,"include_subdomains":true}',
+	];
 
 
 	public function __construct(
 		private readonly Response $httpResponse,
 		CspConfig $cspConfig,
-		SecurityHeadersFactory $securityHeadersFactory,
+		private readonly SecurityHeaders $securityHeaders,
 		private readonly IPresenterFactory $presenterFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Application $application,
@@ -55,17 +67,6 @@ final class SecurityHeadersTest extends TestCase
 				],
 			],
 		]);
-
-		$this->securityHeaders = $securityHeadersFactory->create([
-			'camera' => 'none',
-			'geolocation' => '',
-			'midi' => [
-				'self',
-				'none',
-				' ',
-				'https://example.com',
-			],
-		]);
 	}
 
 
@@ -80,11 +81,7 @@ final class SecurityHeadersTest extends TestCase
 		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 
 		$this->securityHeaders->sendHeaders();
-		$expected = [
-			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
-			'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
-		];
-		Assert::same($expected, $this->httpResponse->getHeaders());
+		Assert::equal($this->expected + ['content-security-policy' => "script-src 'none' example.com; form-action 'self'"], $this->httpResponse->getHeaders());
 	}
 
 
@@ -94,11 +91,7 @@ final class SecurityHeadersTest extends TestCase
 		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 
 		$this->securityHeaders->sendHeaders();
-		$expected = [
-			'content-security-policy' => "script-src default.example; trusted-types",
-			'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
-		];
-		Assert::same($expected, $this->httpResponse->getHeaders());
+		Assert::equal($this->expected + ['content-security-policy' => "script-src default.example; trusted-types"], $this->httpResponse->getHeaders());
 	}
 
 }

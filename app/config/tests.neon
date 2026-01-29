@@ -48,7 +48,6 @@ services:
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
-	- MichalSpacekCz\Test\Http\SecurityHeadersFactory
 	mail.mailer: MichalSpacekCz\Test\NullMailer
 	translation.translator: MichalSpacekCz\Test\NoOpTranslator(availableLocales: [cs_CZ, en_US], defaultLocale: cs_CZ)
 	tracy.logger: MichalSpacekCz\Test\NullLogger
