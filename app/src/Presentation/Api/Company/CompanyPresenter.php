@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Presentation\Api\Company;
 
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
-use MichalSpacekCz\Http\SecurityHeaders;
+use MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders;
 use MichalSpacekCz\Presentation\Api\BasePresenter;
 use Nette\Application\BadRequestException;
 

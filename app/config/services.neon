@@ -87,10 +87,11 @@ services:
 	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\Robots\Robots
-	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
+	- MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders(reportingApiUrl: %reporting.reportingApi%)
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollector
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusFactory
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusMessageFactory
+	- MichalSpacekCz\Http\StructuredHeaders
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
 	- MichalSpacekCz\Makefile\Makefile

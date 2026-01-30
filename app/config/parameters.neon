@@ -36,6 +36,7 @@ parameters:
 			www.michalspacek.cz: www.michalspacek.cz
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce
+		reportingApi: https://plz.report-uri.com/a/d/g
 	vatRate: 0.21
 	loadCompanyDataVisible: true
 	permanentLogin:
@@ -53,16 +54,6 @@ parameters:
 	texyFormatter:
 		allowed:
 			longWords: true
-	permissionsPolicy:
-		accelerometer: none
-		camera: none
-		geolocation: none
-		gyroscope: none
-		magnetometer: none
-		microphone: none
-		midi: none
-		payment: none
-		usb: none
 
 	# Added/changed in local.neon
 	contact:
