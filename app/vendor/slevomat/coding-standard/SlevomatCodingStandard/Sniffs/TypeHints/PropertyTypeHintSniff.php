@@ -19,6 +19,7 @@ use PHPStan\PhpDocParser\Ast\Type\UnionTypeNode;
 use SlevomatCodingStandard\Helpers\Annotation;
 use SlevomatCodingStandard\Helpers\AnnotationHelper;
 use SlevomatCodingStandard\Helpers\AnnotationTypeHelper;
+use SlevomatCodingStandard\Helpers\AttributeHelper;
 use SlevomatCodingStandard\Helpers\DocCommentHelper;
 use SlevomatCodingStandard\Helpers\FixerHelper;
 use SlevomatCodingStandard\Helpers\NamespaceHelper;
@@ -183,6 +184,8 @@ class PropertyTypeHintSniff implements Sniff
 		array $prefixedPropertyAnnotations
 	): void
 	{
+		$isInherited = AttributeHelper::hasAttribute($phpcsFile, $propertyPointer, '\Override');
+
 		$suppressNameAnyTypeHint = $this->getSniffName(self::CODE_MISSING_ANY_TYPE_HINT);
 		$isSuppressedAnyTypeHint = SuppressHelper::isSniffSuppressed($phpcsFile, $propertyPointer, $suppressNameAnyTypeHint);
 
@@ -201,7 +204,10 @@ class PropertyTypeHintSniff implements Sniff
 				return;
 			}
 
-			if (!$isSuppressedAnyTypeHint) {
+			if (
+				!$isSuppressedAnyTypeHint
+				&& !$isInherited
+			) {
 				$phpcsFile->addError(
 					sprintf(
 						$this->enableNativeTypeHint
@@ -357,7 +363,7 @@ class PropertyTypeHintSniff implements Sniff
 			$nullableTypeHint = true;
 		}
 
-		if ($isSuppressedNativeTypeHint) {
+		if ($isSuppressedNativeTypeHint || $isInherited) {
 			return;
 		}
 
@@ -421,6 +427,8 @@ class PropertyTypeHintSniff implements Sniff
 		array $prefixedPropertyAnnotations
 	): void
 	{
+		$isInherited = AttributeHelper::hasAttribute($phpcsFile, $propertyPointer, '\Override');
+
 		$suppressName = $this->getSniffName(self::CODE_MISSING_TRAVERSABLE_TYPE_HINT_SPECIFICATION);
 		$isSuppressed = SuppressHelper::isSniffSuppressed($phpcsFile, $propertyPointer, $suppressName);
 
@@ -434,7 +442,10 @@ class PropertyTypeHintSniff implements Sniff
 					return;
 				}
 
-				if (!$isSuppressed) {
+				if (
+					!$isSuppressed
+					&& !$isInherited
+				) {
 					$phpcsFile->addError(
 						sprintf(
 							'@var annotation of property %s does not specify type hint for its items.',
