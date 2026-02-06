@@ -87,6 +87,7 @@ services:
 	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\Robots\Robots
+	integrityPolicy: MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyDefault
 	- MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders(reportingApiUrl: %reporting.reportingApi%)
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollector
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusFactory

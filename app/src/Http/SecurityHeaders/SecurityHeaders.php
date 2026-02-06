@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Http\SecurityHeaders;
 
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
+use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicy;
 use MichalSpacekCz\Http\StructuredHeaders;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
@@ -24,6 +25,7 @@ final readonly class SecurityHeaders
 		private CspConfig $contentSecurityPolicy,
 		private LocaleLinkGenerator $localeLinkGenerator,
 		private StructuredHeaders $structuredHeaders,
+		private IntegrityPolicy $integrityPolicy,
 		private string $reportingApiUrl,
 	) {
 	}
@@ -51,10 +53,7 @@ final readonly class SecurityHeaders
 			'payment' => PermissionsPolicyOrigin::None,
 			'usb' => PermissionsPolicyOrigin::None,
 		]));
-		$this->httpResponse->setHeader('Integrity-Policy', $this->structuredHeaders->get([
-			'blocked-destinations' => IntegrityPolicyBlockedDestination::Script,
-			'endpoints' => ReportingApiEndpointName::Default,
-		]));
+		$this->integrityPolicy->set();
 		$this->httpResponse->setHeader('Report-To', Json::encode([
 			'group' => ReportingApiEndpointName::Default->value,
 			'max_age' => 31536000,
@@ -118,6 +117,12 @@ final readonly class SecurityHeaders
 		if ($header !== '') {
 			$this->httpResponse->setHeader('Content-Security-Policy-Report-Only', $header);
 		}
+	}
+
+
+	public function withIntegrityPolicy(IntegrityPolicy $integrityPolicy): self
+	{
+		return clone($this, ['integrityPolicy' => $integrityPolicy]);
 	}
 
 }

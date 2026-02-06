@@ -4,12 +4,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\SecurityHeaders;
 
+use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyNone;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Http\Response;
+use MichalSpacekCz\Test\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyMock;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
+use Override;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use Tester\Assert;
 use Tester\TestCase;
@@ -30,7 +33,7 @@ final class SecurityHeadersTest extends TestCase
 		'x-frame-options' => 'DENY',
 		'referrer-policy' => 'no-referrer, strict-origin-when-cross-origin',
 		'permissions-policy' => 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()',
-		'integrity-policy' => 'blocked-destinations=(script), endpoints=(default)',
+		'integrity-policy' => 'foo=(bar)',
 		'report-to' => '{"group":"default","max_age":31536000,"endpoints":[{"url":"https://plz.report-uri.com/a/d/g"}],"include_subdomains":true}',
 		'nel' => '{"report_to":"default","max_age":31536000,"include_subdomains":true}',
 	];
@@ -43,6 +46,7 @@ final class SecurityHeadersTest extends TestCase
 		private readonly IPresenterFactory $presenterFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Application $application,
+		IntegrityPolicyMock $integrityPolicy,
 	) {
 		$cspConfig->setPolicy([
 			'*.*' => [
@@ -67,6 +71,14 @@ final class SecurityHeadersTest extends TestCase
 				],
 			],
 		]);
+		$integrityPolicy->setValue('foo=(bar)');
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->httpResponse->reset();
 	}
 
 
@@ -92,6 +104,14 @@ final class SecurityHeadersTest extends TestCase
 
 		$this->securityHeaders->sendHeaders();
 		Assert::equal($this->expected + ['content-security-policy' => "script-src default.example; trusted-types"], $this->httpResponse->getHeaders());
+	}
+
+
+	public function testSendHeadersNoIntegrityPolicyHeaderWithIntegrityPolicyNone(): void
+	{
+		$this->securityHeaders->sendHeaders();
+		$this->securityHeaders->withIntegrityPolicy(new IntegrityPolicyNone($this->httpResponse))->sendHeaders();
+		Assert::hasNotKey('integrity-policy', $this->httpResponse->getHeaders());
 	}
 
 }
