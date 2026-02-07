@@ -1,7 +1,3 @@
-http:
-	headers:
-		Integrity-Policy: "blocked-destinations=()"
-
 di:
 	debugger: true
 
@@ -86,4 +82,5 @@ parameters:
 
 services:
 	sleep: MichalSpacekCz\Test\Utils\Insomnia
+	integrityPolicy: MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyNone
 	cache.journal: \Nette\Caching\Storages\SQLiteJournal('/tmp/michalspacek.cz/journal.cz.s3db') # file-based SQLiteJournal (default in nette/caching 2.4+) throws "SQLSTATE[HY000]: General error: 10 disk I/O error" when the journal is on shared Windows drive
