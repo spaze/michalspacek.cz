@@ -87,6 +87,7 @@ services:
 	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\Robots\Robots
+	- MichalSpacekCz\Http\SecurityHeaders\CrossOriginResourceSharing
 	integrityPolicy: MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyDefault
 	- MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders(reportingApiUrl: %reporting.reportingApi%)
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollector
@@ -178,6 +179,7 @@ services:
 	sleep: MichalSpacekCz\Utils\Sleep
 	- MichalSpacekCz\Utils\Strings
 	- MichalSpacekCz\Utils\JsonUtils
+	- MichalSpacekCz\Utils\UrlOrigin
 	- Nette\Bridges\ApplicationLatte\TemplateFactory
 	- Nette\Schema\Processor
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])

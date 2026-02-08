@@ -3,15 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\SecurityHeaders;
 
-use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicy;
 use MichalSpacekCz\Http\StructuredHeaders;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
-use Nette\Http\IRequest;
 use Nette\Http\IResponse;
-use Nette\Http\UrlImmutable;
 use Nette\Utils\Json;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
@@ -19,11 +16,9 @@ final readonly class SecurityHeaders
 {
 
 	public function __construct(
-		private IRequest $httpRequest,
 		private IResponse $httpResponse,
 		private Application $application,
 		private CspConfig $contentSecurityPolicy,
-		private LocaleLinkGenerator $localeLinkGenerator,
 		private StructuredHeaders $structuredHeaders,
 		private IntegrityPolicy $integrityPolicy,
 		private string $reportingApiUrl,
@@ -65,39 +60,6 @@ final readonly class SecurityHeaders
 			'max_age' => 31536000,
 			'include_subdomains' => true,
 		]));
-	}
-
-
-	/**
-	 * Generates Access-Control-Allow-Origin header, if there's an Origin request header, and it matches any source link.
-	 *
-	 * @param string $source URL to allow in format "[[[module:]presenter:]action] [#fragment]"
-	 */
-	public function accessControlAllowOrigin(string $source): void
-	{
-		$this->localeLinkGenerator->allLinks($source);
-		$origin = $this->httpRequest->getHeader('Origin');
-		if ($origin !== null) {
-			foreach ($this->getOrigins($source) as $from) {
-				if ($from === $origin) {
-					$this->httpResponse->setHeader('Access-Control-Allow-Origin', $origin);
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * @param string $link
-	 * @return string[]
-	 */
-	private function getOrigins(string $link): array
-	{
-		$origins = $this->localeLinkGenerator->allLinks($link);
-		foreach ($origins as &$url) {
-			$url = (new UrlImmutable($url))->getHostUrl();
-		}
-		return $origins;
 	}
 
 

@@ -97,6 +97,7 @@ class LocaleLinkGenerator
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
 	 * @param array<string, list<string>|array<string, string|null>> $params of locale => [position|name => value]
 	 * @return array<string, string> of locale => URL
+	 * @throws InvalidLinkException
 	 */
 	public function allLinks(string $destination, array $params = []): array
 	{

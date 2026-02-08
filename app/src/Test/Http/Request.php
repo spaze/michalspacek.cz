@@ -240,9 +240,17 @@ final class Request implements IRequest
 	}
 
 
-	public function resetHeaders(): void
+	public function reset(): void
 	{
+		$this->post = [];
+		$this->cookies = [];
+		$this->files = [];
+		$this->method = '';
 		$this->headers = [];
+		$this->remoteAddress = null;
+		$this->remoteHost = null;
+		$this->rawBody = null;
+		$this->sameSite = false;
 	}
 
 }

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Presentation\Api\Company;
 
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
-use MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders;
+use MichalSpacekCz\Http\SecurityHeaders\CrossOriginResourceSharing;
 use MichalSpacekCz\Presentation\Api\BasePresenter;
 use Nette\Application\BadRequestException;
 
@@ -14,7 +14,7 @@ final class CompanyPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly CompanyInfo $companyInfo,
-		private readonly SecurityHeaders $securityHeaders,
+		private readonly CrossOriginResourceSharing $crossOriginResourceSharing,
 	) {
 		parent::__construct();
 	}
@@ -27,7 +27,7 @@ final class CompanyPresenter extends BasePresenter
 			throw new BadRequestException('No country or companyId specified');
 		}
 
-		$this->securityHeaders->accessControlAllowOrigin('Www:Homepage:');
+		$this->crossOriginResourceSharing->accessControlAllowOrigin('Www:Homepage:');
 		$this->sendJson($this->companyInfo->getDetails($country, $companyId));
 	}
 
