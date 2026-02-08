@@ -5,10 +5,14 @@ namespace MichalSpacekCz\Test\Application;
 
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
+use MichalSpacekCz\Test\WillThrow;
 use Override;
 
 final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 {
+
+	use WillThrow;
+
 
 	/** @var array<string, string> */
 	private array $links = [];
@@ -28,6 +32,15 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	public function __construct(
 		private readonly array $languages,
 	) {
+	}
+
+
+	public function reset(): void
+	{
+		$this->links = [];
+		$this->allLinks = [];
+		$this->allLinksParams = [];
+		$this->wontThrow();
 	}
 
 
@@ -77,6 +90,7 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	#[Override]
 	public function allLinks(string $destination, array $params = []): array
 	{
+		$this->maybeThrow();
 		$this->allLinksParams = $params;
 		return $this->allLinks;
 	}
