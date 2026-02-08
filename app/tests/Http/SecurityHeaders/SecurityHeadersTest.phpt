@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\SecurityHeaders;
 
+use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicy;
 use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyNone;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Http\Response;
@@ -111,7 +112,7 @@ final class SecurityHeadersTest extends TestCase
 	{
 		$this->securityHeaders->sendHeaders();
 		$this->securityHeaders->withIntegrityPolicy(new IntegrityPolicyNone($this->httpResponse))->sendHeaders();
-		Assert::hasNotKey('integrity-policy', $this->httpResponse->getHeaders());
+		Assert::null($this->httpResponse->getHeader(IntegrityPolicy::HEADER_NAME));
 	}
 
 }
