@@ -17,6 +17,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
+use Nette\Utils\JsonException;
 use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
@@ -43,6 +44,7 @@ final readonly class TexyPhraseHandler
 	/**
 	 * @throws InvalidLinkException
 	 * @throws UnexpectedHandlerInvocationReturnType
+	 * @throws JsonException
 	 */
 	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
@@ -108,6 +110,9 @@ final readonly class TexyPhraseHandler
 	}
 
 
+	/**
+	 * @throws InvalidLinkException
+	 */
 	private function getLink(string $url, string $locale): string
 	{
 		$args = Preg::split('/[\s,]+/', $url);
@@ -122,6 +127,10 @@ final readonly class TexyPhraseHandler
 	}
 
 
+	/**
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 */
 	private function getBlogLink(string $url, string $locale): string
 	{
 		$args = explode('#', $url);
@@ -140,6 +149,7 @@ final readonly class TexyPhraseHandler
 
 	/**
 	 * @param non-empty-array<string, list<string>|array<string, string|null>> $params
+	 * @throws InvalidLinkException
 	 */
 	private function getLinkWithParams(string $destination, array $params, string $locale): string
 	{
