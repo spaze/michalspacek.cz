@@ -63,7 +63,7 @@ final class ResourceIsolationPolicyTest extends TestCase
 	{
 		$this->logger->reset();
 		$this->application->onPresenter = [];
-		$this->httpRequest->resetHeaders();
+		$this->httpRequest->reset();
 	}
 
 
