@@ -78,6 +78,22 @@ final class TagsTest extends TestCase
 				'slug' => '',
 				'published' => null,
 				'previewKey' => null,
+				'slugTags' => $this->tags->serialize(['random']),
+			],
+			[
+				'locale' => 'cs_CZ',
+				'slug' => '',
+				'published' => null,
+				'previewKey' => null,
+				'slugTags' => $this->tags->serialize(['nahoda']),
+			],
+		]);
+		$this->database->addFetchAllResult([
+			[
+				'locale' => 'en_US',
+				'slug' => '',
+				'published' => null,
+				'previewKey' => null,
 				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
 			],
 			[
@@ -94,9 +110,11 @@ final class TagsTest extends TestCase
 		];
 		$articles = [
 			$this->buildArticlePublishedElsewhere(),
-			$this->buildBlogPost(),
+			$this->buildBlogPost('random'),
+			$this->buildBlogPost(self::SLUG_TAG_EN),
 		];
 		Assert::same($expected, $this->tags->findLocaleLinkParams($articles, self::SLUG_TAG_EN));
+		Assert::same([], $this->tags->findLocaleLinkParams($articles, 'not-found'));
 	}
 
 
@@ -111,7 +129,7 @@ final class TagsTest extends TestCase
 				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
 			],
 		]);
-		Assert::same([], $this->tags->findLocaleLinkParams([$this->buildBlogPost()], self::SLUG_TAG_EN));
+		Assert::same([], $this->tags->findLocaleLinkParams([$this->buildBlogPost(self::SLUG_TAG_EN)], self::SLUG_TAG_EN));
 	}
 
 
@@ -133,7 +151,7 @@ final class TagsTest extends TestCase
 	}
 
 
-	private function buildBlogPost(): BlogPost
+	private function buildBlogPost(string $slugTag): BlogPost
 	{
 		$title = 'Title something';
 		$text = 'Text something';
@@ -156,7 +174,7 @@ final class TagsTest extends TestCase
 			null,
 			null,
 			['Something'],
-			[self::SLUG_TAG_EN],
+			[$slugTag],
 			[],
 			null,
 			'https://example.com/something',
