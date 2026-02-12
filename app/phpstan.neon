@@ -19,14 +19,6 @@ parameters:
 			identifier: property.deprecatedClass
 			path: tests/User/ManagerTest.phpt
 			count: 1
-		- # https://github.com/phpstan/phpstan/discussions/14038
-			identifier: argument.type
-			path: src/Presentation/Admin/Talks/TalksPresenter.php
-			count: 1
-		- # Same as or similar to https://github.com/phpstan/phpstan/discussions/14038
-			identifier: argument.type
-			path: src/Presentation/Admin/Trainings/TrainingsPresenter.php
-			count: 1
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
