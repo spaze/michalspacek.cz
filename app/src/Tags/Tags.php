@@ -104,6 +104,9 @@ final readonly class Tags
 				continue; // post and tags not translated yet
 			}
 			$tagKey = array_search($tag, $article->getSlugTags(), true);
+			if ($tagKey === false) {
+				continue;
+			}
 			foreach ($posts as $post) {
 				if (isset($post->getSlugTags()[$tagKey])) {
 					$localeLinkParams[$post->getLocale()] = ['tag' => $post->getSlugTags()[$tagKey]];
