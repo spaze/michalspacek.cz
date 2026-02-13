@@ -50,10 +50,10 @@ final class PhpNamespace
 		self::NameConstant => [],
 	];
 
-	/** @var (ClassType|InterfaceType|TraitType|EnumType)[] */
+	/** @var array<string, ClassType|InterfaceType|TraitType|EnumType> */
 	private array $classes = [];
 
-	/** @var GlobalFunction[] */
+	/** @var array<string, GlobalFunction> */
 	private array $functions = [];
 
 
@@ -161,7 +161,7 @@ final class PhpNamespace
 	}
 
 
-	/** @return string[] */
+	/** @return array<string, string> */
 	public function getUses(string $of = self::NameNormal): array
 	{
 		uasort($this->aliases[$of], fn(string $a, string $b): int => strtr($a, '\\', ' ') <=> strtr($b, '\\', ' '));
@@ -254,23 +254,26 @@ final class PhpNamespace
 
 
 	/**
-	 * Adds a class-like type to the namespace. If it already exists, throws an exception.
+	 * Adds a class-like type or function to the namespace. If it already exists, throws an exception.
 	 */
-	public function add(ClassType|InterfaceType|TraitType|EnumType $class): static
+	public function add(ClassType|InterfaceType|TraitType|EnumType|GlobalFunction $item): static
 	{
-		$name = $class->getName();
-		if ($name === null) {
-			throw new Nette\InvalidArgumentException('Class does not have a name.');
-		}
-
+		$name = $item->getName() ?? throw new Nette\InvalidArgumentException('Class does not have a name.');
 		$lower = strtolower($name);
-		if (isset($this->classes[$lower]) && $this->classes[$lower] !== $class) {
+		[$list, $type] = $item instanceof GlobalFunction ? [$this->functions, self::NameFunction] : [$this->classes, self::NameNormal];
+		if (isset($list[$lower]) && $list[$lower] !== $item) {
 			throw new Nette\InvalidStateException("Cannot add '$name', because it already exists.");
-		} elseif ($orig = array_change_key_case($this->aliases[self::NameNormal])[$lower] ?? null) {
+		} elseif ($orig = array_change_key_case($this->aliases[$type])[$lower] ?? null) {
 			throw new Nette\InvalidStateException("Name '$name' used already as alias for $orig.");
 		}
 
-		$this->classes[$lower] = $class;
+		if ($item instanceof GlobalFunction) {
+			$this->functions[$lower] = $item;
+		} else {
+			$this->classes[$lower] = $item;
+			$item->setNamespace($this);
+		}
+
 		return $this;
 	}
 
@@ -280,7 +283,7 @@ final class PhpNamespace
 	 */
 	public function addClass(string $name): ClassType
 	{
-		$this->add($class = new ClassType($name, $this));
+		$this->add($class = (new ClassType($name))->setNamespace($this));
 		return $class;
 	}
 
@@ -290,7 +293,7 @@ final class PhpNamespace
 	 */
 	public function addInterface(string $name): InterfaceType
 	{
-		$this->add($iface = new InterfaceType($name, $this));
+		$this->add($iface = (new InterfaceType($name))->setNamespace($this));
 		return $iface;
 	}
 
@@ -300,7 +303,7 @@ final class PhpNamespace
 	 */
 	public function addTrait(string $name): TraitType
 	{
-		$this->add($trait = new TraitType($name, $this));
+		$this->add($trait = (new TraitType($name))->setNamespace($this));
 		return $trait;
 	}
 
@@ -310,7 +313,7 @@ final class PhpNamespace
 	 */
 	public function addEnum(string $name): EnumType
 	{
-		$this->add($enum = new EnumType($name, $this));
+		$this->add($enum = (new EnumType($name))->setNamespace($this));
 		return $enum;
 	}
 
@@ -326,7 +329,7 @@ final class PhpNamespace
 
 	/**
 	 * Returns all class-like types in the namespace.
-	 * @return (ClassType|InterfaceType|TraitType|EnumType)[]
+	 * @return array<string, ClassType|InterfaceType|TraitType|EnumType>
 	 */
 	public function getClasses(): array
 	{
@@ -354,14 +357,8 @@ final class PhpNamespace
 	 */
 	public function addFunction(string $name): GlobalFunction
 	{
-		$lower = strtolower($name);
-		if (isset($this->functions[$lower])) {
-			throw new Nette\InvalidStateException("Cannot add '$name', because it already exists.");
-		} elseif ($orig = array_change_key_case($this->aliases[self::NameFunction])[$lower] ?? null) {
-			throw new Nette\InvalidStateException("Name '$name' used already as alias for $orig.");
-		}
-
-		return $this->functions[$lower] = new GlobalFunction($name);
+		$this->add($function = new GlobalFunction($name));
+		return $function;
 	}
 
 
@@ -376,7 +373,7 @@ final class PhpNamespace
 
 	/**
 	 * Returns all functions in the namespace.
-	 * @return GlobalFunction[]
+	 * @return array<string, GlobalFunction>
 	 */
 	public function getFunctions(): array
 	{

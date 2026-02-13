@@ -1409,17 +1409,17 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v4.2.0",
-            "version_normalized": "4.2.0.0",
+            "version": "v4.2.1",
+            "version_normalized": "4.2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "4707546a1f11badd72f5d82af4f8a6bc64bd56ac"
+                "reference": "52aff4d9b12f20ca9f3e31a559b646d2fd21dd61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/4707546a1f11badd72f5d82af4f8a6bc64bd56ac",
-                "reference": "4707546a1f11badd72f5d82af4f8a6bc64bd56ac",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/52aff4d9b12f20ca9f3e31a559b646d2fd21dd61",
+                "reference": "52aff4d9b12f20ca9f3e31a559b646d2fd21dd61",
                 "shasum": ""
             },
             "require": {
@@ -1428,15 +1428,15 @@
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "^1.2",
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.6",
                 "nikic/php-parser": "^5.0",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "phpstan/phpstan": "^2.0@stable",
                 "tracy/tracy": "^2.8"
             },
             "suggest": {
                 "nikic/php-parser": "to use ClassType::from(withBodies: true) & ClassType::fromCode()"
             },
-            "time": "2025-08-06T18:24:31+00:00",
+            "time": "2026-02-09T05:43:31+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1478,23 +1478,23 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/php-generator/issues",
-                "source": "https://github.com/nette/php-generator/tree/v4.2.0"
+                "source": "https://github.com/nette/php-generator/tree/v4.2.1"
             },
             "install-path": "../nette/php-generator"
         },
         {
             "name": "nette/robot-loader",
-            "version": "v4.1.0",
-            "version_normalized": "4.1.0.0",
+            "version": "v4.1.1",
+            "version_normalized": "4.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/robot-loader.git",
-                "reference": "805fb81376c24755d50bdb8bc69ca4db3def71d1"
+                "reference": "fb255f5da2676d58863bef1716baf52993c7ffec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/robot-loader/zipball/805fb81376c24755d50bdb8bc69ca4db3def71d1",
-                "reference": "805fb81376c24755d50bdb8bc69ca4db3def71d1",
+                "url": "https://api.github.com/repos/nette/robot-loader/zipball/fb255f5da2676d58863bef1716baf52993c7ffec",
+                "reference": "fb255f5da2676d58863bef1716baf52993c7ffec",
                 "shasum": ""
             },
             "require": {
@@ -1503,11 +1503,11 @@
                 "php": "8.1 - 8.5"
             },
             "require-dev": {
-                "nette/tester": "^2.4",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "nette/tester": "^2.6",
+                "phpstan/phpstan": "^2.0@stable",
                 "tracy/tracy": "^2.9"
             },
-            "time": "2025-08-06T18:34:21+00:00",
+            "time": "2026-02-08T03:51:26+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1550,7 +1550,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/robot-loader/issues",
-                "source": "https://github.com/nette/robot-loader/tree/v4.1.0"
+                "source": "https://github.com/nette/robot-loader/tree/v4.1.1"
             },
             "install-path": "../nette/robot-loader"
         },
@@ -1624,17 +1624,17 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.3.3",
-            "version_normalized": "1.3.3.0",
+            "version": "v1.3.4",
+            "version_normalized": "1.3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "2befc2f42d7c715fd9d95efc31b1081e5d765004"
+                "reference": "086497a2f34b82fede9b5a41cc8e131d087cd8f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/2befc2f42d7c715fd9d95efc31b1081e5d765004",
-                "reference": "2befc2f42d7c715fd9d95efc31b1081e5d765004",
+                "url": "https://api.github.com/repos/nette/schema/zipball/086497a2f34b82fede9b5a41cc8e131d087cd8f7",
+                "reference": "086497a2f34b82fede9b5a41cc8e131d087cd8f7",
                 "shasum": ""
             },
             "require": {
@@ -1642,11 +1642,11 @@
                 "php": "8.1 - 8.5"
             },
             "require-dev": {
-                "nette/tester": "^2.5.2",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "nette/tester": "^2.6",
+                "phpstan/phpstan": "^2.0@stable",
                 "tracy/tracy": "^2.8"
             },
-            "time": "2025-10-30T22:57:59+00:00",
+            "time": "2026-02-08T02:54:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1686,7 +1686,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/schema/issues",
-                "source": "https://github.com/nette/schema/tree/v1.3.3"
+                "source": "https://github.com/nette/schema/tree/v1.3.4"
             },
             "install-path": "../nette/schema"
         },
@@ -2797,12 +2797,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0827484199a3d7d67a4f0f72637f235ca29b48d6"
+                "reference": "9ad81949d95f2c5abc5eee283ca8349db6b42be9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0827484199a3d7d67a4f0f72637f235ca29b48d6",
-                "reference": "0827484199a3d7d67a4f0f72637f235ca29b48d6",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9ad81949d95f2c5abc5eee283ca8349db6b42be9",
+                "reference": "9ad81949d95f2c5abc5eee283ca8349db6b42be9",
                 "shasum": ""
             },
             "conflict": {
@@ -2910,6 +2910,7 @@
                 "causal/oidc": "<4",
                 "cecil/cecil": "<7.47.1",
                 "centreon/centreon": "<22.10.15",
+                "cesargb/laravel-magiclink": ">=2,<2.25.1",
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "chriskacerguis/codeigniter-restserver": "<=2.7.1",
                 "chrome-php/chrome": "<1.14",
@@ -3776,7 +3777,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2026-02-11T19:25:13+00:00",
+            "time": "2026-02-12T23:09:51+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -5707,17 +5708,17 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.11.0",
-            "version_normalized": "2.11.0.0",
+            "version": "v2.11.1",
+            "version_normalized": "2.11.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "eec57bcf2ff11d79f519a19da9d7ae1e2c63c42e"
+                "reference": "c4a03c921af532b74c63edd8bf3f68a99dec7e77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/eec57bcf2ff11d79f519a19da9d7ae1e2c63c42e",
-                "reference": "eec57bcf2ff11d79f519a19da9d7ae1e2c63c42e",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/c4a03c921af532b74c63edd8bf3f68a99dec7e77",
+                "reference": "c4a03c921af532b74c63edd8bf3f68a99dec7e77",
                 "shasum": ""
             },
             "require": {
@@ -5733,12 +5734,12 @@
                 "nette/di": "^3.0",
                 "nette/http": "^3.0",
                 "nette/mail": "^3.0 || ^4.0",
-                "nette/tester": "^2.2",
+                "nette/tester": "^2.6",
                 "nette/utils": "^3.0 || ^4.0",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "phpstan/phpstan": "^2.0@stable",
                 "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
-            "time": "2025-10-31T00:12:50+00:00",
+            "time": "2026-02-08T02:51:45+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5782,7 +5783,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.11.0"
+                "source": "https://github.com/nette/tracy/tree/v2.11.1"
             },
             "install-path": "../tracy/tracy"
         }

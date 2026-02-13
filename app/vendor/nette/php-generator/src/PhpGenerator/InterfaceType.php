@@ -21,13 +21,11 @@ final class InterfaceType extends ClassLike
 	use Traits\MethodsAware;
 	use Traits\PropertiesAware;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private array $extends = [];
 
 
-	/**
-	 * @param  string|string[]  $names
-	 */
+	/** @param string|list<string>  $names */
 	public function setExtends(string|array $names): static
 	{
 		$names = (array) $names;
@@ -37,7 +35,7 @@ final class InterfaceType extends ClassLike
 	}
 
 
-	/** @return string[] */
+	/** @return list<string> */
 	public function getExtends(): array
 	{
 		return $this->extends;
@@ -87,9 +85,8 @@ final class InterfaceType extends ClassLike
 	public function __clone(): void
 	{
 		parent::__clone();
-		$clone = fn($item) => clone $item;
-		$this->consts = array_map($clone, $this->consts);
-		$this->methods = array_map($clone, $this->methods);
-		$this->properties = array_map($clone, $this->properties);
+		$this->consts = array_map(fn(Constant $c) => clone $c, $this->consts);
+		$this->methods = array_map(fn(Method $m) => clone $m, $this->methods);
+		$this->properties = array_map(fn(Property $p) => clone $p, $this->properties);
 	}
 }

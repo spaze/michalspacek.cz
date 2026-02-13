@@ -31,21 +31,21 @@ class RobotLoader
 {
 	private const RetryLimit = 3;
 
-	/** @var string[] */
+	/** @var list<string> */
 	public array $ignoreDirs = ['.*', '*.old', '*.bak', '*.tmp', 'temp'];
 
-	/** @var string[] */
+	/** @var list<string> */
 	public array $acceptFiles = ['*.php'];
 	private bool $autoRebuild = true;
 	private bool $reportParseErrors = true;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private array $scanPaths = [];
 
-	/** @var string[] */
+	/** @var list<string> */
 	private array $excludeDirs = [];
 
-	/** @var array<string, array{string, int}>  class => [file, time] */
+	/** @var array<class-string, array{string, int}>  class => [file, time] */
 	private array $classes = [];
 	private bool $cacheLoaded = false;
 	private bool $refreshed = false;
@@ -80,7 +80,7 @@ class RobotLoader
 	 */
 	public function register(bool $prepend = false): static
 	{
-		spl_autoload_register([$this, 'tryLoad'], prepend: $prepend);
+		spl_autoload_register($this->tryLoad(...), prepend: $prepend);
 		return $this;
 	}
 
@@ -115,7 +115,7 @@ class RobotLoader
 
 			if (!$file || !is_file($file)) {
 				$this->missingClasses[$type] = ++$missing;
-				$this->needSave = $this->needSave || $file || ($missing <= self::RetryLimit);
+				$this->needSave = true;
 				unset($this->classes[$type]);
 				$file = null;
 			}
@@ -132,7 +132,7 @@ class RobotLoader
 	 */
 	public function addDirectory(string ...$paths): static
 	{
-		$this->scanPaths = array_merge($this->scanPaths, $paths);
+		$this->scanPaths = array_merge($this->scanPaths, array_values($paths));
 		return $this;
 	}
 
@@ -149,13 +149,13 @@ class RobotLoader
 	 */
 	public function excludeDirectory(string ...$paths): static
 	{
-		$this->excludeDirs = array_merge($this->excludeDirs, $paths);
+		$this->excludeDirs = array_merge($this->excludeDirs, array_values($paths));
 		return $this;
 	}
 
 
 	/**
-	 * @return array<string, string>  class => filename
+	 * @return array<class-string, string>  class => filename
 	 */
 	public function getIndexedClasses(): array
 	{
@@ -301,14 +301,14 @@ class RobotLoader
 				));
 			}
 
-			$this->classes[$class] = [$file, filemtime($file)];
+			$this->classes[$class] = [$file, (int) filemtime($file)];
 		}
 	}
 
 
 	/**
 	 * Searches classes, interfaces and traits in PHP file.
-	 * @return string[]
+	 * @return list<class-string>
 	 */
 	private function scanPhp(string $file): array
 	{
@@ -464,7 +464,7 @@ class RobotLoader
 		// on Windows: that the file is not read by another thread
 		$file = $this->generateCacheFileName();
 		$lock = $lock ?: $this->acquireLock("$file.lock", LOCK_EX);
-		$code = "<?php\nreturn " . var_export([$this->classes, $this->missingClasses, $this->emptyFiles], true) . ";\n";
+		$code = "<?php\nreturn " . var_export([$this->classes, $this->missingClasses, $this->emptyFiles], return: true) . ";\n";
 
 		if (file_put_contents("$file.tmp", $code) !== strlen($code) || !rename("$file.tmp", $file)) {
 			@unlink("$file.tmp"); // @ file may not exist
@@ -477,7 +477,10 @@ class RobotLoader
 	}
 
 
-	/** @return resource */
+	/**
+	 * @param  LOCK_SH|LOCK_EX  $mode
+	 * @return resource
+	 */
 	private function acquireLock(string $file, int $mode)
 	{
 		$handle = @fopen($file, 'w'); // @ is escalated to exception
@@ -506,6 +509,7 @@ class RobotLoader
 	}
 
 
+	/** @return array{list<string>, list<string>, list<string>, list<string>, string} */
 	protected function generateCacheKey(): array
 	{
 		return [$this->ignoreDirs, $this->acceptFiles, $this->scanPaths, $this->excludeDirs, 'v2'];

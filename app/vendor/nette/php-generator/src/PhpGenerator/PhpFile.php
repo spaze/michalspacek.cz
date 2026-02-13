@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nette\PhpGenerator;
 
+use Nette;
 use function count;
 
 
@@ -24,7 +25,7 @@ final class PhpFile
 {
 	use Traits\CommentAware;
 
-	/** @var PhpNamespace[] */
+	/** @var array<string, PhpNamespace> */
 	private array $namespaces = [];
 	private bool $strictTypes = false;
 
@@ -32,6 +33,30 @@ final class PhpFile
 	public static function fromCode(string $code): self
 	{
 		return (new Factory)->fromCode($code);
+	}
+
+
+	/**
+	 * Adds a namespace, class-like type, or function to the file. If the item has a namespace,
+	 * it will be added to that namespace (creating it if needed).
+	 */
+	public function add(ClassType|InterfaceType|TraitType|EnumType|GlobalFunction|PhpNamespace $item): static
+	{
+		if ($item instanceof PhpNamespace) {
+			if (isset($this->namespaces[$name = $item->getName()])) {
+				throw new Nette\InvalidStateException("Namespace '$name' already exists in the file.");
+			}
+			$this->namespaces[$name] = $item;
+			$this->refreshBracketedSyntax();
+
+		} elseif ($item instanceof GlobalFunction) {
+			$this->addNamespace('')->add($item);
+
+		} else {
+			$this->addNamespace($item->getNamespace()?->getName() ?? '')->add($item);
+		}
+
+		return $this;
 	}
 
 
@@ -104,10 +129,7 @@ final class PhpFile
 			? ($this->namespaces[$namespace->getName()] = $namespace)
 			: ($this->namespaces[$namespace] ??= new PhpNamespace($namespace));
 
-		foreach ($this->namespaces as $namespace) {
-			$namespace->setBracketedSyntax(count($this->namespaces) > 1 && isset($this->namespaces['']));
-		}
-
+		$this->refreshBracketedSyntax();
 		return $res;
 	}
 
@@ -123,14 +145,14 @@ final class PhpFile
 	}
 
 
-	/** @return PhpNamespace[] */
+	/** @return array<string, PhpNamespace> */
 	public function getNamespaces(): array
 	{
 		return $this->namespaces;
 	}
 
 
-	/** @return (ClassType|InterfaceType|TraitType|EnumType)[] */
+	/** @return array<string, ClassType|InterfaceType|TraitType|EnumType> */
 	public function getClasses(): array
 	{
 		$classes = [];
@@ -145,7 +167,7 @@ final class PhpFile
 	}
 
 
-	/** @return GlobalFunction[] */
+	/** @return array<string, GlobalFunction> */
 	public function getFunctions(): array
 	{
 		$functions = [];
@@ -189,5 +211,13 @@ final class PhpFile
 	public function __toString(): string
 	{
 		return (new Printer)->printFile($this);
+	}
+
+
+	private function refreshBracketedSyntax(): void
+	{
+		foreach ($this->namespaces as $namespace) {
+			$namespace->setBracketedSyntax(count($this->namespaces) > 1 && isset($this->namespaces['']));
+		}
 	}
 }

@@ -16,7 +16,7 @@ use const PHP_VERSION_ID;
 final class ClassManipulator
 {
 	public function __construct(
-		private ClassType $class,
+		private readonly ClassType $class,
 	) {
 	}
 
@@ -77,6 +77,7 @@ final class ClassManipulator
 
 	/**
 	 * Implements all methods from the given interface or abstract class.
+	 * @param class-string  $name
 	 */
 	public function implement(string $name): void
 	{
