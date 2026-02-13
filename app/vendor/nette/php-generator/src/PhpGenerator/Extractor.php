@@ -15,7 +15,7 @@ use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
-use function addcslashes, array_map, assert, class_exists, end, in_array, is_array, rtrim, str_contains, str_repeat, str_replace, str_starts_with, strlen, substr, substr_replace, usort;
+use function addcslashes, array_map, assert, class_exists, end, in_array, is_array, is_string, rtrim, str_contains, str_repeat, str_replace, str_starts_with, strlen, substr, substr_replace, usort;
 
 
 /**
@@ -26,7 +26,7 @@ final class Extractor
 {
 	private string $code;
 
-	/** @var Node[] */
+	/** @var list<Node> */
 	private array $statements;
 	private PhpParser\PrettyPrinterAbstract $printer;
 
@@ -159,7 +159,7 @@ final class Extractor
 
 			} elseif (
 				$node instanceof Node\Scalar\String_
-				&& in_array($node->getAttribute('kind'), [Node\Scalar\String_::KIND_SINGLE_QUOTED, Node\Scalar\String_::KIND_DOUBLE_QUOTED], true)
+				&& in_array($node->getAttribute('kind'), [Node\Scalar\String_::KIND_SINGLE_QUOTED, Node\Scalar\String_::KIND_DOUBLE_QUOTED], strict: true)
 				&& str_contains($node->getAttribute('rawValue'), "\n")
 			) { // multi-line strings -> single line
 				$replacements[] = [
@@ -170,7 +170,7 @@ final class Extractor
 
 			} elseif (
 				$node instanceof Node\Scalar\String_
-				&& in_array($node->getAttribute('kind'), [Node\Scalar\String_::KIND_NOWDOC, Node\Scalar\String_::KIND_HEREDOC], true)
+				&& in_array($node->getAttribute('kind'), [Node\Scalar\String_::KIND_NOWDOC, Node\Scalar\String_::KIND_HEREDOC], strict: true)
 				&& Helpers::unindent($node->getAttribute('docIndentation'), $level) === $node->getAttribute('docIndentation')
 			) { // fix indentation of NOWDOW/HEREDOC
 				$replacements[] = [
@@ -475,10 +475,12 @@ final class Extractor
 		}
 
 		foreach ($node->getParams() as $item) {
+			assert($item->var instanceof Node\Expr\Variable && is_string($item->var->name));
 			$getVisibility = $this->toVisibility($item->flags);
 			$setVisibility = $this->toSetterVisibility($item->flags);
 			$final = (bool) ($item->flags & Modifiers::FINAL);
 			if ($getVisibility || $setVisibility || $final) {
+				assert($function instanceof Method);
 				$param = $function->addPromotedParameter($item->var->name)
 					->setVisibility($getVisibility, $setVisibility)
 					->setReadonly($item->isReadonly())

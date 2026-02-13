@@ -148,10 +148,11 @@ final class Dumper
 			return '(object) ' . $this->dumpArray($var, $parents, $level, $column + 10);
 
 		} elseif ($class === \DateTime::class || $class === \DateTimeImmutable::class) {
+			assert($var instanceof \DateTimeInterface);
 			return $this->format(
 				"new \\$class(?, new \\DateTimeZone(?))",
 				$var->format('Y-m-d H:i:s.u'),
-				$var->getTimeZone()->getName(),
+				$var->getTimezone()->getName(),
 			);
 
 		} elseif ($var instanceof \UnitEnum) {
@@ -159,7 +160,7 @@ final class Dumper
 
 		} elseif ($var instanceof \Closure) {
 			$inner = Nette\Utils\Callback::unwrap($var);
-			if (Nette\Utils\Callback::isStatic($inner)) {
+			if (is_callable($inner) && Nette\Utils\Callback::isStatic($inner)) {
 				return implode('::', (array) $inner) . '(...)';
 			}
 
@@ -273,12 +274,13 @@ final class Dumper
 
 
 	/**
+	 * @param  class-string  $class
 	 * @param  mixed[]  $props
 	 * @internal
 	 */
 	public static function createObject(string $class, array $props): object
 	{
-		if (method_exists($class, '__serialize')) {
+		if (method_exists($class, '__unserialize')) {
 			$obj = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
 			$obj->__unserialize($props);
 			return $obj;
