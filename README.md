@@ -7,6 +7,7 @@
 [![Certificate monitor](https://github.com/spaze/michalspacek.cz/actions/workflows/certmonitor.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/certmonitor.yml)
 [![security.txt checks](https://github.com/spaze/michalspacek.cz/actions/workflows/securitytxt.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/securitytxt.yml)
 [![Scan for secrets](https://github.com/spaze/michalspacek.cz/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/gitleaks.yml)
+[![Production mode](https://github.com/spaze/michalspacek.cz/actions/workflows/prodmode.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/prodmode.yml)
 
 I believe your threat model should include a scenario when somebody gains access to your code repository, and having my source code publicly available helps me to keep that in mind and apply mitigations before it's too late.
 Plus sometimes, I want to show the code of some of the tricks used on my site and this makes it far easier.
