@@ -14,5 +14,5 @@ jobs:
     steps:
     - name: Check no debug mode
       run: |
-        composer create-project --no-dev spaze/url-checker url-checker
-        php url-checker/bin/check.php https://www.michalspacek.cz 200 "Michal Špaček" "Tracy Debug"
+        composer create-project --no-dev spaze/url-checker:^1.1 url-checker
+        php url-checker/bin/check.php https://www.michalspacek.cz 200 "Michal Špaček" "Tracy Debug" --ignore-case-forbidden-text
