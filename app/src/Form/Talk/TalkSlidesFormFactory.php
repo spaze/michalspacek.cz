@@ -15,6 +15,7 @@ use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
+use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
@@ -84,12 +85,14 @@ final readonly class TalkSlidesFormFactory
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
 			$files = $request->getFiles();
-			array_walk_recursive($files, function () use (&$uploaded) {
-				$uploaded++;
+			array_walk_recursive($files, function (?FileUpload $file) use (&$uploaded) {
+				if ($file !== null && $file->hasFile()) {
+					$uploaded++;
+				}
 			});
-			// If there's no error yet then the number of uploaded just coincidentally matches max allowed
-			if ($form->hasErrors() && $uploaded >= $this->getMaxSlideUploads()) {
-				$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$this->getMaxSlideUploads()]));
+			$maxSlideUploads = $this->getMaxSlideUploads();
+			if ($uploaded > $maxSlideUploads) {
+				$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$maxSlideUploads]));
 			}
 		};
 
@@ -138,7 +141,10 @@ final readonly class TalkSlidesFormFactory
 
 	public function getMaxSlideUploads(): int
 	{
-		return (int)ini_get('max_file_uploads');
+		// To catch the "uploaded more files than allowed" error we allow 𝑛+1 (max_file_uploads) files on the PHP level,
+		// but only 𝑛 on the app level. It's difficult if not impossible, to distinguish between the error
+		// and "uploaded all the files but not more than max" if those two numbers would be the same.
+		return (int)floor((int)ini_get('max_file_uploads') / 2) * 2;
 	}
 
 }

@@ -9,6 +9,7 @@ use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Request;
+use Nette\Http\FileUpload;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Tester\Assert;
@@ -52,6 +53,60 @@ final class TalkSlidesFormFactoryTest extends TestCase
 		Assert::same('messages.talks.admin.slideadded', $onSuccessMessage);
 		Assert::same('info', $onSuccessType);
 		Assert::same($talkId, $onSuccessTalkId);
+	}
+
+
+	/**
+	 * @return list<array{0:int, 1:string|null}>
+	 */
+	public function getMaxFiles(): array
+	{
+		return [
+			[$this->talkSlidesFormFactory->getMaxSlideUploads(), null],
+			[$this->talkSlidesFormFactory->getMaxSlideUploads() + 1, 'messages.talks.admin.maxslideuploadsexceeded'],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getMaxFiles
+	 */
+	public function testCreateOnValidate(int $maxFiles, ?string $errorMessage): void
+	{
+		$files = [];
+		for ($i = 0; $i < $maxFiles; $i++) {
+			$files[] = new FileUpload([
+				'name' => 'test',
+				'size' => 123,
+				'tmp_name' => 'test.temp',
+				'error' => UPLOAD_ERR_OK,
+			]);
+		}
+		// FileUploads with UPLOAD_ERR_NO_FILE are not counted as uploaded files
+		$files[] = new FileUpload([
+			'name' => 'no.file',
+			'size' => 123,
+			'tmp_name' => 'no.file.temp',
+			'error' => UPLOAD_ERR_NO_FILE,
+		]);
+		$form = $this->talkSlidesFormFactory->create(
+			function (): void {
+			},
+			303,
+			new TalkSlideCollection(303),
+			25,
+			new Request('foo', files: $files),
+		);
+		$this->applicationPresenter->anchorForm($form);
+		Arrays::invoke($form->onValidate, $form);
+		if ($errorMessage === null) {
+			Assert::count(0, $form->getErrors());
+		} else {
+			Assert::count(1, $form->getErrors());
+			$error = $form->getErrors()[0];
+			assert($error instanceof Html);
+			Assert::same($errorMessage, $error->render());
+		}
 	}
 
 }
