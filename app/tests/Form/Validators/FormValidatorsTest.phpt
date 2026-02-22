@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Form;
+namespace MichalSpacekCz\Form\Validators;
 
 use MichalSpacekCz\Test\ComponentProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -11,7 +11,7 @@ use Nette\Forms\Form;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 final class FormValidatorsTest extends TestCase
