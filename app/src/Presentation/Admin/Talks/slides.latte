@@ -9,10 +9,10 @@
 <p id="{_html.id.slides}"></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form slides, data-uploads => $maxSlideUploads, class => blocking, data-dimensions => $dimensions}
-	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
+	<fieldset id="{_html.id.errors}" n:if="$form->getOwnErrors() !== []">
 		<legend><strong>{_messages.label.errors}</strong></legend>
 		<ul>
-			<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+			<li n:foreach="$form->getOwnErrors() as $error"><strong>{$error}</strong></li>
 		</ul>
 	</fieldset>
 	<table id="slides">
@@ -54,7 +54,10 @@
 			</tr>
 			<tr>
 				<td class="align-top"><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
-				<td colspan="5">{input speakerNotes}</td>
+				<td colspan="5" n:class="$form[slides][$slide->getId()][speakerNotes]->hasErrors() ? error">
+					{input speakerNotes}
+					<div n:if="$form[slides][$slide->getId()][speakerNotes]->hasErrors()"><strong>{inputError speakerNotes}</strong></div>
+				</td>
 			</tr>
 			</tbody>
 			{/formContainer}

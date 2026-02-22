@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Form\Talk;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\Validators\FormValidators;
+use MichalSpacekCz\Form\Validators\FormValidatorTexyRuleFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
@@ -23,6 +24,7 @@ final readonly class TalkSlidesFormFactory
 	public function __construct(
 		private FormFactory $factory,
 		private FormValidators $validators,
+		private FormValidatorTexyRuleFactory $texyRuleFactory,
 		private TalkSlides $talkSlides,
 		private TexyFormatter $texyFormatter,
 		private SupportedImageFileFormats $supportedImageFileFormats,
@@ -127,7 +129,9 @@ final readonly class TalkSlidesFormFactory
 		$container->addText('filenameAlternative', 'Soubor:')
 			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('class', 'slide-filename');
+		$texyRule = $this->texyRuleFactory->create();
 		$container->addTextArea('speakerNotes', 'Poznámky:')
+			->addRule($texyRule->getRule(), $texyRule)
 			->setRequired('Zadejte prosím poznámky');
 	}
 
