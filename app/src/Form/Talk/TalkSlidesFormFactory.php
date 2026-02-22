@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Talk;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\FormValidators;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
