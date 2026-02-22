@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Validators;
 
-use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Formatter\TexyPhraseHandler;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
@@ -16,7 +14,6 @@ use Nette\Forms\Controls\TextArea;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
-use Texy\Texy;
 
 require __DIR__ . '/../../bootstrap.php';
 
@@ -24,15 +21,18 @@ require __DIR__ . '/../../bootstrap.php';
 final class FormValidatorTexyRuleTest extends TestCase
 {
 
+	private FormValidatorTexyRule $rule;
+
+
 	public function __construct(
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly TexyPhraseHandler $phraseHandler,
+		FormValidatorTexyRuleFactory $texyRuleFactory,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
 	) {
 		$applicationPresenter->setLinkCallback($application, fn() => 'https://example.com');
 		$this->localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://com.example/']);
+		$this->rule = $texyRuleFactory->create();
 	}
 
 
@@ -45,7 +45,7 @@ final class FormValidatorTexyRuleTest extends TestCase
 
 	public function testGetRule(): void
 	{
-		$rule = $this->getRule()->getRule();
+		$rule = $this->rule->getRule();
 
 		$textArea = new TextArea();
 		$textArea->value = 303;
@@ -62,7 +62,7 @@ final class FormValidatorTexyRuleTest extends TestCase
 		$this->localeLinkGenerator->willThrow(new ShouldNotHappenException('wuh'));
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
-		$rule = $this->getRule();
+		$rule = $this->rule;
 		Assert::false($rule->getRule()($textArea));
 		Assert::same(ShouldNotHappenException::class . ': wuh', (string)$rule);
 	}
@@ -73,17 +73,9 @@ final class FormValidatorTexyRuleTest extends TestCase
 		$this->localeLinkGenerator->willThrow(new InvalidLinkException('oops/bar'));
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
-		$rule = $this->getRule();
+		$rule = $this->rule;
 		Assert::false($rule->getRule()($textArea));
 		Assert::same('Invalid link: oops/bar', (string)$rule);
-	}
-
-
-	protected function getRule(): FormValidatorTexyRule
-	{
-		$texy = new Texy();
-		$texy->addHandler('phrase', $this->phraseHandler->solve(...));
-		return new FormValidatorTexyRule($this->texyFormatter->withTexy($texy));
 	}
 
 }

@@ -39,7 +39,8 @@ final class FormValidatorTexyRule implements HtmlStringable, Stringable
 				return true;
 			}
 			try {
-				$this->texyFormatter->format($input->value);
+				// Use a fresh Texy instance to avoid stale internal status throwing "Processing is in progress" exception on next Texy render
+				$this->texyFormatter->withTexy($this->texyFormatter->getTexy())->format($input->value);
 			} catch (Exception $e) {
 				$this->message = ($e instanceof InvalidLinkException ? 'Invalid link: ' : $e::class . ': ') . $e->getMessage();
 				return false;

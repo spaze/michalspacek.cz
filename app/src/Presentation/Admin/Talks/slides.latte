@@ -9,10 +9,10 @@
 <p id="{_html.id.slides}"></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form slides, data-uploads => $maxSlideUploads, class => blocking, data-dimensions => $dimensions}
-	<fieldset id="{_html.id.errors}" n:if="$form->getOwnErrors() !== []">
+	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
 		<legend><strong>{_messages.label.errors}</strong></legend>
 		<ul>
-			<li n:foreach="$form->getOwnErrors() as $error"><strong>{$error}</strong></li>
+			<li n:foreach="$form->getErrors() as $error"><strong>{$error}</strong></li>
 		</ul>
 	</fieldset>
 	<table id="slides">
