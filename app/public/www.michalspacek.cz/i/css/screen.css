@@ -383,7 +383,7 @@ div.flash {
 	border: 2px solid #EC2;
 }
 .error { color: #F34; }
-div.error, td.error {
+div.error, .inputError {
 	color: #F34;
 	background-color: #FEE;
 	border: 2px solid #F56;
