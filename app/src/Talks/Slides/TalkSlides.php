@@ -13,6 +13,7 @@ use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideNameDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Utils\Base64;
 use MichalSpacekCz\Utils\Hash;
@@ -63,7 +64,7 @@ final class TalkSlides
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
-				throw new TalkSlideDoesNotExistException($talkId, $slide);
+				throw new TalkSlideNameDoesNotExistException($talkId, $slide);
 			}
 		}
 		return $slideNo;
@@ -271,8 +272,8 @@ final class TalkSlides
 			$slideFilenameAlternative = $slide->filenameAlternative;
 
 			if (isset($slide->replace, $slide->replaceAlternative)) {
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides->getByNumber($slide->number)->getFilename(), $width, $height);
-				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides->getByNumber($slide->number)->getFilenameAlternative(), $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides->getById($id)->getFilename(), $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides->getById($id)->getFilenameAlternative(), $width, $height);
 				if ($removeFiles) {
 					foreach ($this->deleteFiles as $key => $value) {
 						if (unlink($value)) {
