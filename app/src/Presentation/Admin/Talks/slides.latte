@@ -54,7 +54,7 @@
 			</tr>
 			<tr>
 				<td class="align-top"><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
-				<td colspan="5" n:class="$form[slides][$slide->getId()][speakerNotes]->hasErrors() ? error">
+				<td colspan="5" n:class="$form[slides][$slide->getId()][speakerNotes]->hasErrors() ? inputError">
 					{input speakerNotes}
 					<div n:if="$form[slides][$slide->getId()][speakerNotes]->hasErrors()"><strong>{inputError speakerNotes}</strong></div>
 				</td>

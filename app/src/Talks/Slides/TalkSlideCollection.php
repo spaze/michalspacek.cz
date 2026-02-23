@@ -6,7 +6,8 @@ namespace MichalSpacekCz\Talks\Slides;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
-use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideIdDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideNumberDoesNotExistException;
 use Override;
 
 /**
@@ -15,8 +16,11 @@ use Override;
 final class TalkSlideCollection implements IteratorAggregate, Countable
 {
 
+	/** @var array<int, TalkSlide> slide id => slide */
+	private array $slidesById = [];
+
 	/** @var array<int, TalkSlide> slide number => slide */
-	private array $slides = [];
+	private array $slidesByNumber = [];
 
 
 	public function __construct(
@@ -27,19 +31,31 @@ final class TalkSlideCollection implements IteratorAggregate, Countable
 
 	public function add(TalkSlide $slide): void
 	{
-		$this->slides[$slide->getNumber()] = $slide;
+		$this->slidesById[$slide->getId()] = $this->slidesByNumber[$slide->getNumber()] = $slide;
 	}
 
 
 	/**
-	 * @throws TalkSlideDoesNotExistException
+	 * @throws TalkSlideIdDoesNotExistException
+	 */
+	public function getById(int $id): TalkSlide
+	{
+		if (!isset($this->slidesById[$id])) {
+			throw new TalkSlideIdDoesNotExistException($this->talkId, $id);
+		}
+		return $this->slidesById[$id];
+	}
+
+
+	/**
+	 * @throws TalkSlideNumberDoesNotExistException
 	 */
 	public function getByNumber(int $number): TalkSlide
 	{
-		if (!isset($this->slides[$number])) {
-			throw new TalkSlideDoesNotExistException($this->talkId, $number);
+		if (!isset($this->slidesByNumber[$number])) {
+			throw new TalkSlideNumberDoesNotExistException($this->talkId, $number);
 		}
-		return $this->slides[$number];
+		return $this->slidesByNumber[$number];
 	}
 
 
@@ -49,14 +65,14 @@ final class TalkSlideCollection implements IteratorAggregate, Countable
 	#[Override]
 	public function getIterator(): ArrayIterator
 	{
-		return new ArrayIterator($this->slides);
+		return new ArrayIterator($this->slidesByNumber);
 	}
 
 
 	#[Override]
 	public function count(): int
 	{
-		return count($this->slides);
+		return count($this->slidesByNumber);
 	}
 
 }
