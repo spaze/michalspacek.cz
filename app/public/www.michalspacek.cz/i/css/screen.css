@@ -483,6 +483,7 @@ div.notice {
 	body {
 		color: #222 !important;
 		background-color: #FFF !important;
+		font-size: smaller;
 	}
 	img {
 		max-width: 75%;
