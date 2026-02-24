@@ -489,6 +489,11 @@ div.notice {
 		max-width: 75%;
 		opacity: 1 !important;
 	}
+	.column-content img, #slides-container img {
+		border: 1px solid hsl(0, 0%, 87%) !important;
+		box-shadow: none !important;
+		background-color: transparent !important;
+	}
 	code, .highlight pre code { background-color: #F5F5F5 !important; }
 	.column-sidebar .widget { background-color: #FAFAFA !important; }
 	.print { display: block; }
