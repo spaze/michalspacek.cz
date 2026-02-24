@@ -43,20 +43,6 @@ final class FormValidatorTexyRuleTest extends TestCase
 	}
 
 
-	public function testGetRule(): void
-	{
-		$rule = $this->rule->getRule();
-
-		$textArea = new TextArea();
-		$textArea->value = 303;
-		Assert::true($rule($textArea));
-
-		$textArea = new TextArea();
-		$textArea->value = 'string';
-		Assert::true($rule($textArea));
-	}
-
-
 	public function testGetRuleException(): void
 	{
 		$this->localeLinkGenerator->willThrow(new ShouldNotHappenException('wuh'));
@@ -76,6 +62,47 @@ final class FormValidatorTexyRuleTest extends TestCase
 		$rule = $this->rule;
 		Assert::false($rule->getRule()($textArea));
 		Assert::same('Invalid link: oops/bar', (string)$rule);
+	}
+
+
+	/**
+	 * @return array<string, array{0:int|string, 1:string|null}>
+	 */
+	public function getEndsWith(): array
+	{
+		return [
+			'number' => [303, null],
+			'text' => ['string', null],
+			'para' => ["Foo\n- Bar\n- Baz\nFred", null],
+			'inline tag' => ['Hello **world**', null],
+			'link' => ['See "foo":[https://example.com]', null],
+			'code' => ['Call `this`', null],
+			'empty' => ['', null],
+			'whitespace' => ["   \n\t", null],
+			'ordered list' => ["Foo\n1. Bar\n2. Baz", 'OL'],
+			'unordered list' => ["Foo\n- Bar\n-Baz", 'UL'],
+			'blockquote' => ["Foo\n> Bar\n> Baz", 'BLOCKQUOTE'],
+			'code block' => ["Foo\n/--\ncode\n\--", 'PRE'],
+			'table' => ["| Foo | Bar |\n|-----|-----|\n| Baz | Qux |", 'TABLE'],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getEndsWith
+	 */
+	public function testGetRule(string|int $input, ?string $endTag): void
+	{
+		$textArea = new TextArea();
+		$textArea->value = $input;
+		$rule = $this->rule;
+		if ($endTag !== null) {
+			Assert::false($rule->getRule()($textArea));
+			Assert::same("Text ends with $endTag, but it should end with a paragraph, otherwise the slide number will be on a separate line", (string)$rule);
+		} else {
+			Assert::true($rule->getRule()($textArea));
+			Assert::same('', (string)$rule);
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Validators;
 
+use Composer\Pcre\Regex;
 use Exception;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Application\UI\InvalidLinkException;
@@ -35,14 +36,20 @@ final class FormValidatorTexyRule implements HtmlStringable, Stringable
 	public function getRule(): callable
 	{
 		return function (TextBase $input): bool {
+			$this->message = '';
 			if (!is_string($input->value)) {
 				return true;
 			}
 			try {
 				// Use a fresh Texy instance to avoid stale internal status throwing "Processing is in progress" exception on next Texy render
-				$this->texyFormatter->withTexy($this->texyFormatter->getTexy())->format($input->value);
+				$html = $this->texyFormatter->withTexy($this->texyFormatter->getTexy())->format($input->value);
 			} catch (Exception $e) {
 				$this->message = ($e instanceof InvalidLinkException ? 'Invalid link: ' : $e::class . ': ') . $e->getMessage();
+				return false;
+			}
+			$result = Regex::matchStrictGroups('~</(ol|ul|blockquote|pre|table)>\Z~i', rtrim($html->render()));
+			if ($result->matched) {
+				$this->message = 'Text ends with ' . strtoupper($result->matches[1]) . ', but it should end with a paragraph, otherwise the slide number will be on a separate line';
 				return false;
 			}
 			return true;
