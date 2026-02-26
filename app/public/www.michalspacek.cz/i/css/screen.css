@@ -200,7 +200,7 @@ button:disabled { cursor: not-allowed; }
 .with-sidebar { padding-bottom: 0.5em; }
 .column-content, .column-sidebar { margin: 10px; }
 .column-content { float: left; }
-.blog .column-content { max-width: 720px; }
+.blog .column-content, #editTalkInputs .inputError div { max-width: 720px; }
 .talk .column-content { max-width: 800px; }
 .column-content img, #slides-container img {
 	display: block;
@@ -329,7 +329,7 @@ td.short input, form.wide td.short input, form.wide td.short select, #frm-applic
 td.narrow input { width: 40px; }
 td.wider input, form.wide td.narrower input { width: 280px; }
 form.wide input, form.wide select, form.wide textarea, textarea.wide, td.wide input { width: 740px; }
-form.wide textarea, textarea.wide { height: 200px; }
+form.wide textarea, textarea.wide, #editTalkInputs textarea.wide { height: 200px; }
 .blog form {
 	margin: 1em 0;
 	text-align: center;
@@ -349,7 +349,7 @@ form.wide textarea, textarea.wide { height: 200px; }
 	font-family: Consolas, sans-serif;
 }
 #submit { font-weight: bold; }
-#frm-slides textarea {
+#frm-slides textarea, #editTalkInputs textarea {
 	width: 100%;
 	height: 100px;
 	display: block;
@@ -359,6 +359,7 @@ form.wide textarea, textarea.wide { height: 200px; }
 	width: 25%;
 	vertical-align: top;
 }
+#editTalkInputs .inputError { white-space: normal; }
 #currentVideoThumbnail img, #currentVideoThumbnailAlternative img { vertical-align: middle; }
 #videoThumbnailFormField[hidden], #videoThumbnailAlternativeFormField[hidden] {
 	display: initial;

@@ -3,15 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test;
 
+use Closure;
 use Exception;
 
 trait WillThrow
 {
 
-	private ?Exception $willThrow = null;
+	/** @var Exception|(Closure(): Exception)|null */
+	private Exception|Closure|null $willThrow = null;
 
 
-	public function willThrow(Exception $e): void
+	/**
+	 * @param Exception|Closure(): Exception $e
+	 */
+	public function willThrow(Exception|Closure $e): void
 	{
 		$this->willThrow = $e;
 	}
@@ -26,7 +31,8 @@ trait WillThrow
 	private function maybeThrow(): void
 	{
 		if ($this->willThrow !== null) {
-			throw $this->willThrow;
+			$e = $this->willThrow instanceof Closure ? ($this->willThrow)() : $this->willThrow;
+			throw $e;
 		}
 	}
 

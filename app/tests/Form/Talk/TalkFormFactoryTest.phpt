@@ -4,12 +4,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Talk;
 
+use Exception;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Application\Application;
+use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Override;
+use Stringable;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -26,7 +34,13 @@ final class TalkFormFactoryTest extends TestCase
 		private readonly Database $database,
 		private readonly TalkFormFactory $formFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
+		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
+		IPresenterFactory $presenterFactory,
+		Application $application,
 	) {
+		$presenter = $presenterFactory->createPresenter('Www:Homepage'); // Has to be a real presenter that extends Ui\Presenter
+		assert($presenter instanceof Presenter);
+		PrivateProperty::setValue($application, 'presenter', $presenter);
 	}
 
 
@@ -44,6 +58,7 @@ final class TalkFormFactoryTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		$this->localeLinkGenerator->reset();
 	}
 
 
@@ -91,6 +106,47 @@ final class TalkFormFactoryTest extends TestCase
 				'publish_slides' => false,
 			],
 		], $this->database->getParamsArrayForQuery('INSERT INTO talks'));
+	}
+
+
+	public function testValidate(): void
+	{
+		$texyFieldsValues = [
+			'title' => '"foo":[link:invalid]',
+			'description' => '"foo":[link:invalid]',
+			'slidesNote' => '"foo":[link:invalid]',
+			'event' => '"foo":[link:invalid]',
+			'transcript' => '"foo":[link:invalid]',
+		];
+		$texyFields = array_keys($texyFieldsValues);
+		$i = 0;
+		// Each Texy field must throw an exception with a unique message to have them all in the errors array below
+		$this->localeLinkGenerator->willThrow(function () use ($texyFields, &$i): Exception {
+			return new InvalidLinkException("Texy {$texyFields[$i++]}");
+		});
+
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+		);
+		$form->setDefaults($texyFieldsValues);
+		$form->validate();
+
+		$expected = [
+			'This field is required.', // CSRF protection error message because the field is missing in the test
+			'Zadejte prosím jazyk',
+			'Invalid link: Texy title',
+			'Invalid link: Texy description',
+			'Zadejte datum',
+			'Invalid link: Texy slidesNote',
+			'Invalid link: Texy event',
+			'Invalid link: Texy transcript',
+		];
+		$errors = [];
+		foreach ($form->getErrors() as $error) {
+			$errors[] = $error instanceof Stringable ? (string)$error : $error;
+		}
+		Assert::same($expected, $errors);
 	}
 
 }
