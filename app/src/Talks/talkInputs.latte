@@ -1,8 +1,18 @@
 {varType MichalSpacekCz\Talks\Talk|null $talk}
 {varType int $videoThumbnailWidth}
 {varType int $videoThumbnailHeight}
+<p class="center">
+<a href="{plink :Www:Talks:talk $talk->getAction()}" n:if="$talk?->getAction()">{icon desktop class => space-after}Zobrazit přednášku</a>
+• <a n:if="$talk?->getId()" href="{plink slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a>
+</p>
 {form talk class => "aligned wide"}
-	<table>
+	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
+		<legend><strong>{_messages.label.errors}</strong></legend>
+		<ul>
+			<li n:foreach="$form->getErrors() as $error"><strong>{$error}</strong></li>
+		</ul>
+	</fieldset>
+	<table id="editTalkInputs">
 		<tr>
 			<th>{label translationGroup /}</th><td class="short">{input translationGroup}</td>
 		</tr>
@@ -13,10 +23,18 @@
 			<th class="align-top">{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
 		</tr>
 		<tr>
-			<th n:class="$talk?->getAction() ? align-top">{label title /}</th><td>{input title}<br><small n:if="$talk?->getAction()"><a href="{plink :Www:Talks:talk $talk->getAction()}">zobrazit přednášku</a></small></td>
+			<th n:class="$talk?->getAction() ? align-top">{label title /}</th>
+			<td n:class="$form[title]->hasErrors() ? inputError">
+				{input title}
+				<div n:if="$form[title]->hasErrors()"><strong>{inputError title}</strong></div>
+			</td>
 		</tr>
 		<tr>
-			<th class="align-top">{label description /}</th><td>{input description}</td>
+			<th class="align-top">{label description /}</th>
+			<td n:class="$form[description]->hasErrors() ? inputError">
+				{input description}
+				<div n:if="$form[description]->hasErrors()"><strong>{inputError description}</strong></div>
+			</td>
 		</tr>
 		<tr>
 			<th>{label date /}</th><td>{input date}</td>
@@ -40,7 +58,11 @@
 			<th class="align-top">{label slidesEmbed /}</th><td>{input slidesEmbed}<br><small><em>deprecated</em></small></td>
 		</tr>
 		<tr>
-			<th class="align-top">{label slidesNote /}</th><td>{input slidesNote}</td>
+			<th class="align-top">{label slidesNote /}</th>
+			<td n:class="$form[slidesNote]->hasErrors() ? inputError">
+				{input slidesNote}
+				<div n:if="$form[slidesNote]->hasErrors()"><strong>{inputError slidesNote}</strong></div>
+			</td>
 		</tr>
 		<tr>
 			<th>{label videoHref /}</th><td>{input videoHref}</td>
@@ -50,7 +72,11 @@
 			<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
 		</tr>
 		<tr>
-			<th>{label event /}</th><td>{input event}</td>
+			<th>{label event /}</th>
+			<td n:class="$form[event]->hasErrors() ? inputError">
+				{input event}
+				<div n:if="$form[event]->hasErrors()"><strong>{inputError event}</strong></div>
+			</td>
 		</tr>
 		<tr>
 			<th>{label eventHref /}</th><td>{input eventHref}</td>
@@ -59,7 +85,11 @@
 			<th class="align-top">{label ogImage /}</th><td>{input ogImage}<br><small>místo čísla slajdu v URL použijte <code>%d</code></small></td>
 		</tr>
 		<tr>
-			<th class="align-top">{label transcript /}</th><td>{input transcript}</td>
+			<th class="align-top">{label transcript /}</th>
+			<td n:class="$form[transcript]->hasErrors() ? inputError">
+				{input transcript}
+				<div n:if="$form[transcript]->hasErrors()"><strong>{inputError transcript}</strong></div>
+			</td>
 		</tr>
 		<tr>
 			<th class="align-top">{label favorite /}</th><td>{input favorite}</td>
@@ -68,7 +98,7 @@
 			<th>{label supersededBy /}</th><td>{input supersededBy}</td>
 		</tr>
 		<tr>
-			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk?->getId()" href="{plink slides $talk->getId()}">Upravit slajdy</a></td>
+			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk?->getId()" href="{plink slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a></td>
 		</tr>
 		<tr>
 			<th></th><td class="short"><p>{input submit}</p></td>
