@@ -11,6 +11,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Utils\Arrays;
 use Nette\Application\Application;
 use Override;
 use Tester\Assert;
@@ -84,6 +85,21 @@ final class TexyPhraseHandlerTest extends TestCase
 	}
 
 
+	public function testSolveTalkLink(): void
+	{
+		$this->assertUrl(
+			'pizza hawaii fan club',
+			$this->buildUrl('//:Www:Talks:talk', ['foo', 'bar']),
+			'"pizza hawaii fan club":[talk:foo#bar]',
+		);
+		$this->assertUrl(
+			'anti pizza hawaii fan club',
+			$this->buildUrl('//:Www:Talks:talk', ['foo']),
+			'"anti pizza hawaii fan club":[talk:foo]',
+		);
+	}
+
+
 	public function testSolveBlogPostLink(): void
 	{
 		$this->database->setFetchAllDefaultResult([
@@ -152,7 +168,7 @@ final class TexyPhraseHandlerTest extends TestCase
 	{
 		return 'https://example.com/?' . http_build_query([
 			'dest' => $destination,
-			'args' => implode(',', $args),
+			'args' => implode(',', Arrays::filterEmpty($args)),
 		]);
 	}
 

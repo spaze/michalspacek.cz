@@ -72,6 +72,16 @@ final readonly class TexyPhraseHandler
 			}
 		}
 
+		// "title":[talk:title#slide]
+		if (str_starts_with($url, 'talk:')) {
+			$args = explode('#', substr($url, 5));
+			$params = [
+				'name' => $args[0],
+				'slide' => $args[1] ?? null,
+			];
+			$link->URL = $presenter->link('//:Www:Talks:talk', $params);
+		}
+
 		// "title":[blog:post#fragment]
 		if (str_starts_with($url, 'blog:')) {
 			$link->URL = $this->getBlogLink(substr($url, 5), $this->translator->getDefaultLocale());
