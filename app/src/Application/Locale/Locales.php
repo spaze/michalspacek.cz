@@ -8,6 +8,8 @@ use MichalSpacekCz\Database\TypedDatabase;
 final class Locales
 {
 
+	public const string LOCALE_REGEXP_SUBSTRING = '[a-z]{2}_[A-Z]{2}';
+
 	/** @var array<int, string>|null */
 	private ?array $locales = null;
 

@@ -2,9 +2,8 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Formatter;
+namespace MichalSpacekCz\Formatter\TexyPhraseHandler;
 
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
@@ -13,12 +12,13 @@ use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Utils\Arrays;
 use Nette\Application\Application;
+use Nette\Application\UI\InvalidLinkException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 final class TexyPhraseHandlerTest extends TestCase
@@ -134,7 +134,7 @@ final class TexyPhraseHandlerTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->assertUrl('le post', '[irrelevant]', '"le post":[blog:post#fragment]');
-		}, ShouldNotHappenException::class, "The blog links array should not be empty, maybe the linked blog post 'post#fragment' is missing?");
+		}, InvalidLinkException::class, "Blog post linked in [blog:post#fragment] doesn't exist");
 	}
 
 
