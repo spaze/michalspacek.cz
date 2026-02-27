@@ -115,11 +115,13 @@
 		<MoreSpecificReturnType>
 			<errorLevel type="suppress">
 				<file name="src/Http/SecurityHeaders/SecurityHeaders.php"/> <!-- clone(...) is a PHP 8.5 feature supported only in Psalm 7 currently in beta -->
+				<file name="src/Formatter/TexyFormatter.php"/> <!-- clone(...) is a PHP 8.5 feature supported only in Psalm 7 currently in beta -->
 			</errorLevel>
 		</MoreSpecificReturnType>
 		<LessSpecificReturnStatement>
 			<errorLevel type="suppress">
 				<file name="src/Http/SecurityHeaders/SecurityHeaders.php"/> <!-- clone(...) is a PHP 8.5 feature supported only in Psalm 7 currently in beta -->
+				<file name="src/Formatter/TexyFormatter.php"/> <!-- clone(...) is a PHP 8.5 feature supported only in Psalm 7 currently in beta -->
 			</errorLevel>
 		</LessSpecificReturnStatement>
 	</issueHandlers>

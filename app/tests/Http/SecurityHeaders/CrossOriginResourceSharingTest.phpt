@@ -31,7 +31,7 @@ final class CrossOriginResourceSharingTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->localeLinkGenerator->setAllLinks([
-			'cz_CZ' => 'https://www.michalspacek.cz.test/',
+			'cs_CZ' => 'https://www.michalspacek.cz.test/',
 			'en_US' => 'https://www.michalspacek.com.test/',
 		]);
 	}

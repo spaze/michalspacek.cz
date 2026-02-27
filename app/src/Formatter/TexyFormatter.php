@@ -218,9 +218,7 @@ class TexyFormatter
 
 	public function withTexy(Texy $texy): self
 	{
-		$texyFormatter = clone $this;
-		$texyFormatter->texy = $texy;
-		return $texyFormatter;
+		return clone($this, ['texy' => $texy]);
 	}
 
 }

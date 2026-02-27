@@ -71,7 +71,7 @@ final readonly class VideoThumbnails
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
 		$form->onValidate[] = function (UiForm $form) use ($videoThumbnail, $videoThumbnailAlternative): void {
-			$values = $form->getFormValues();
+			$values = $form->getUntrustedFormValues();
 			assert($values->videoThumbnail instanceof FileUpload);
 			assert($values->videoThumbnailAlternative instanceof FileUpload);
 			$this->validateUpload($values->videoThumbnail, $videoThumbnail);
