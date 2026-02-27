@@ -42,7 +42,7 @@ final readonly class TalkSlidesFormFactory
 		$slidesContainer = $form->addContainer('slides');
 		foreach ($slides as $slide) {
 			$slideIdContainer = $slidesContainer->addContainer($slide->getId());
-			$this->addSlideFields($form, $slideIdContainer, $slide->getFilenamesTalkId());
+			$this->addSlideFields($slideIdContainer, $slide->getFilenamesTalkId());
 			$values = [
 				'alias' => $slide->getAlias(),
 				'number' => $slide->getNumber(),
@@ -60,7 +60,7 @@ final readonly class TalkSlidesFormFactory
 		$newContainer = $form->addContainer('new');
 		for ($i = 0; $i < $newCount; $i++) {
 			$newIdContainer = $newContainer->addContainer($i);
-			$this->addSlideFields($form, $newIdContainer, null);
+			$this->addSlideFields($newIdContainer, null);
 		}
 
 		$form->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
@@ -100,7 +100,7 @@ final readonly class TalkSlidesFormFactory
 	}
 
 
-	private function addSlideFields(UiForm $form, Container $container, ?int $filenamesTalkId): void
+	private function addSlideFields(Container $container, ?int $filenamesTalkId): void
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
