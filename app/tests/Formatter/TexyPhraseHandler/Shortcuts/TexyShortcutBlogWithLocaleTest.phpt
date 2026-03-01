@@ -35,7 +35,7 @@ final class TexyShortcutBlogWithLocaleTest extends TestCase
 		ApplicationPresenter $applicationPresenter,
 		Application $application,
 	) {
-		$applicationPresenter->setLinkCallback($application, fn() => '');
+		$applicationPresenter->setLinkCallback($application, null);
 		$localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://cz.example/']);
 	}
 

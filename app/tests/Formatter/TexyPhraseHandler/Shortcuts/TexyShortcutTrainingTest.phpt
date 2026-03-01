@@ -33,7 +33,7 @@ final class TexyShortcutTrainingTest extends TestCase
 		ApplicationPresenter $applicationPresenter,
 		Application $application,
 	) {
-		$applicationPresenter->setLinkCallback($application, fn() => '');
+		$applicationPresenter->setLinkCallback($application, null);
 	}
 
 

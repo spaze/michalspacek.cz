@@ -25,19 +25,20 @@ final readonly class ApplicationPresenter
 
 
 	/**
+	 * @param null|Closure(string, list<mixed>): string $buildLink
 	 * @throws ReflectionException
 	 */
-	public function setLinkCallback(Application $application, Closure $buildLink): void
+	public function setLinkCallback(Application $application, ?Closure $buildLink): void
 	{
 		PrivateProperty::setValue($application, 'presenter', new class ($buildLink) extends Presenter {
 
 			/**
-			 * @param Closure(string, list<mixed>): string $buildLink
+			 * @param null|Closure(string, list<mixed>): string $buildLink
 			 * @noinspection PhpMissingParentConstructorInspection
 			 * @phpstan-ignore constructor.missingParentCall
 			 */
 			public function __construct(
-				private readonly Closure $buildLink,
+				private readonly ?Closure $buildLink,
 			) {
 			}
 
@@ -51,7 +52,7 @@ final readonly class ApplicationPresenter
 				$args = func_num_args() < 3 && is_array($args)
 					? $args
 					: array_slice(func_get_args(), 1);
-				return ($this->buildLink)($destination, array_values($args));
+				return $this->buildLink === null ? '' : ($this->buildLink)($destination, array_values($args));
 			}
 
 		});
