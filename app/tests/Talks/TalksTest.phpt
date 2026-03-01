@@ -1,9 +1,12 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Talks;
 
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Talks\TalkTestDataFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Override;
 use Tester\Assert;
@@ -18,6 +21,7 @@ final class TalksTest extends TestCase
 	public function __construct(
 		private readonly Talks $talks,
 		private readonly Database $database,
+		private readonly TalkTestDataFactory $talkTestDataFactory,
 	) {
 	}
 
@@ -205,6 +209,22 @@ final class TalksTest extends TestCase
 		Assert::null($this->talks->getId('foo'));
 		$this->database->setFetchFieldDefaultResult(42);
 		Assert::same(42, $this->talks->getId('foo'));
+	}
+
+
+	public function testGet(): void
+	{
+		Assert::exception(function (): void {
+			$this->talks->get('le-talk');
+		}, TalkDoesNotExistException::class);
+
+		$this->database->setFetchDefaultResult($this->talkTestDataFactory->getDatabaseResultData(
+			title: '**Title**',
+			description: 'Description `code`',
+		));
+		$talk = $this->talks->get('le-talk');
+		Assert::same('<strong>Title</strong>', $talk->getTitle()->render());
+		Assert::same("<p>Description <code>code</code></p>\n", $talk->getDescription()?->render());
 	}
 
 
