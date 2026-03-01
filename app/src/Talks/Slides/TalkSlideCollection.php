@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Talks\Slides;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideAliasDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideIdDoesNotExistException;
-use MichalSpacekCz\Talks\Exceptions\TalkSlideNameDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideNumberDoesNotExistException;
 use Override;
 
@@ -64,12 +64,12 @@ final class TalkSlideCollection implements IteratorAggregate, Countable
 
 
 	/**
-	 * @throws TalkSlideNameDoesNotExistException
+	 * @throws TalkSlideAliasDoesNotExistException
 	 */
 	public function getByAlias(string $alias): TalkSlide
 	{
 		if (!isset($this->slidesByAlias[$alias])) {
-			throw new TalkSlideNameDoesNotExistException($this->talkId, $alias);
+			throw new TalkSlideAliasDoesNotExistException($this->talkId, $alias);
 		}
 		return $this->slidesByAlias[$alias];
 	}
