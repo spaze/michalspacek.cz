@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Formatter\Exceptions;
 use Exception;
 use Throwable;
 
-final class UnexpectedHandlerInvocationReturnType extends Exception
+final class UnexpectedHandlerInvocationReturnTypeException extends Exception
 {
 
 	public function __construct(mixed $result, ?Throwable $previous = null)

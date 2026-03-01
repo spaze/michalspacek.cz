@@ -11,6 +11,8 @@ use Nette\Database\Explorer;
 final class Trainings
 {
 
+	public const string TRAINING_ACTION = 'Www:Trainings:training';
+
 	/** @var array<int, Training> */
 	private array $trainingsById = [];
 

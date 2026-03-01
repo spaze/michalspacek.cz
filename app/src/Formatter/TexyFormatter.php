@@ -7,6 +7,7 @@ use Composer\Pcre\Regex;
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder;
+use MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandler;
 use MichalSpacekCz\Utils\Hash;
 use Nette\Utils\Html;
 use Stringable;
