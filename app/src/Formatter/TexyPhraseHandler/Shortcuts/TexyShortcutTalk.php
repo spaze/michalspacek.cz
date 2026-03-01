@@ -4,6 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
 use MichalSpacekCz\Application\WebApplication;
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
+use MichalSpacekCz\Talks\Slides\TalkSlides;
+use MichalSpacekCz\Talks\Talks;
 use Nette\Application\UI\InvalidLinkException;
 use Override;
 use Texy\HandlerInvocation;
@@ -18,6 +22,8 @@ final readonly class TexyShortcutTalk implements TexyShortcut
 
 	public function __construct(
 		private WebApplication $webApplication,
+		private Talks $talks,
+		private TalkSlides $talkSlides,
 	) {
 	}
 
@@ -31,6 +37,7 @@ final readonly class TexyShortcutTalk implements TexyShortcut
 
 	/**
 	 * @throws InvalidLinkException
+	 * @throws ContentTypeException
 	 */
 	#[Override]
 	public function resolve(string $url, HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, Link $link): null
@@ -40,10 +47,19 @@ final readonly class TexyShortcutTalk implements TexyShortcut
 		if ($args[0] === '') {
 			throw new InvalidLinkException(sprintf('No talk specified in [%s]', self::PREFIX));
 		}
-		$params = [
-			'name' => $args[0],
-			'slide' => $args[1] ?? null,
-		];
+		try {
+			$talk = $this->talks->get($args[0]);
+		} catch (TalkDoesNotExistException $e) {
+			throw new InvalidLinkException($e->getMessage(), previous: $e);
+		}
+		$params = ['name' => $args[0]];
+		$slide = $args[1] ?? null;
+		if ($slide !== null) {
+			if (!$this->talkSlides->hasSlideAlias($talk->getId(), $slide)) {
+				throw new InvalidLinkException("The slide linked in [{$url}] doesn't exist, only the talk does");
+			}
+			$params['slide'] = $slide;
+		}
 		$link->URL = $this->webApplication->getPresenter()->link('//:Www:Talks:talk', $params);
 		return null;
 	}

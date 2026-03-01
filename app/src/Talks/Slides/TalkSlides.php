@@ -71,6 +71,13 @@ final class TalkSlides
 	}
 
 
+	public function hasSlideAlias(int $talkId, string $slide): bool
+	{
+		$has = $this->typedDatabase->fetchFieldIntNullable('SELECT 1 FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
+		return $has !== null;
+	}
+
+
 	/**
 	 * @throws ContentTypeException
 	 */
