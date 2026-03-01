@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
-use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Formatter\Exceptions\TexyFormatterTexyProcessLoopException;
+use MichalSpacekCz\Test\Formatter\TexyFormatterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
@@ -27,7 +28,7 @@ final class TexyShortcutTrainingTest extends TestCase
 
 	public function __construct(
 		private readonly TexyShortcutTraining $shortcutTraining,
-		private readonly TexyFormatter $texyFormatter,
+		private readonly TexyFormatterMock $texyFormatter,
 		private readonly Database $database,
 		ApplicationPresenter $applicationPresenter,
 		Application $application,
@@ -39,6 +40,7 @@ final class TexyShortcutTrainingTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
+		$this->texyFormatter->willThrow(new TexyFormatterTexyProcessLoopException());
 		$this->database->setFetchPairsDefaultResult(['cs_CZ' => 'něco']);
 	}
 

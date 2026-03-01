@@ -77,7 +77,7 @@ services:
 	- MichalSpacekCz\Form\Validators\FormValidatorTexyFormatter
 	- MichalSpacekCz\Formatter\Placeholders\TrainingDateTexyFormatterPlaceholder
 	- MichalSpacekCz\Formatter\Placeholders\FetchMetadataTexyFormatterPlaceholder
-	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+	texyFormatter: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	texyFormatterNoPlaceholders:
 		create: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: [], allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 		autowired: false

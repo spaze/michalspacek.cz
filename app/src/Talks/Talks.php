@@ -187,6 +187,12 @@ final readonly class Talks
 	}
 
 
+	public function getId(string $name): ?int
+	{
+		return $this->typedDatabase->fetchFieldIntNullable('SELECT id_talk FROM talks WHERE action = ?', $name);
+	}
+
+
 	/**
 	 * @throws TalkDoesNotExistException
 	 * @throws ContentTypeException

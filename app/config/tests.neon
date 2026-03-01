@@ -44,6 +44,7 @@ services:
 	database.upcKeys.explorer: @database.default.explorer
 	database.pulse.explorer: @database.default.explorer
 	dateTimeFactory: MichalSpacekCz\Test\DateTime\DateTimeMachineFactory
+	texyFormatter: MichalSpacekCz\Test\Formatter\TexyFormatterMock(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	httpClient: MichalSpacekCz\Test\Http\Client\HttpClientMock
 	- MichalSpacekCz\Test\Form\FormComponents
 	session.session: MichalSpacekCz\Test\Http\NullSession

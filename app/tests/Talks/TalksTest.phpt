@@ -200,6 +200,14 @@ final class TalksTest extends TestCase
 	}
 
 
+	public function testGetId(): void
+	{
+		Assert::null($this->talks->getId('foo'));
+		$this->database->setFetchFieldDefaultResult(42);
+		Assert::same(42, $this->talks->getId('foo'));
+	}
+
+
 	private function assertParams(
 		int $localeId,
 		?int $translationGroupId,

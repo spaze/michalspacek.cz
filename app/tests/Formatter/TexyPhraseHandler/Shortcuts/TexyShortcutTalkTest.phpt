@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
-use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
-use MichalSpacekCz\Test\Talks\TalkTestDataFactory;
+use MichalSpacekCz\Test\Formatter\Exceptions\TexyFormatterTexyProcessLoopException;
+use MichalSpacekCz\Test\Formatter\TexyFormatterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
@@ -29,8 +29,7 @@ final class TexyShortcutTalkTest extends TestCase
 
 	public function __construct(
 		private readonly TexyShortcutTalk $shortcutTalk,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly TalkTestDataFactory $talkDataFactory,
+		private readonly TexyFormatterMock $texyFormatter,
 		private readonly Database $database,
 		LocaleLinkGeneratorMock $localeLinkGenerator,
 		ApplicationPresenter $applicationPresenter,
@@ -44,10 +43,11 @@ final class TexyShortcutTalkTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
-		// Talk data
-		$this->database->setFetchDefaultResult($this->talkDataFactory->getDatabaseResultData());
+		$this->texyFormatter->willThrow(new TexyFormatterTexyProcessLoopException());
+		// Talk id
+		$this->database->setFetchFieldDefaultResult(42);
 		// Slide exists
-		$this->database->setFetchFieldDefaultResult(1);
+		$this->database->addFetchFieldResult(1);
 	}
 
 
@@ -82,7 +82,7 @@ final class TexyShortcutTalkTest extends TestCase
 		$this->database->reset();
 		Assert::exception(function (): void {
 			$this->resolve('talk:foo', new Link(''));
-		}, InvalidLinkException::class, "I haven't talked about name 'foo', yet");
+		}, InvalidLinkException::class, "Talk specified in [talk:foo] doesn't exist");
 	}
 
 

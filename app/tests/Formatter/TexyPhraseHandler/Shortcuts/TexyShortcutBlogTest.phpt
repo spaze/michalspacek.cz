@@ -4,10 +4,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
-use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Formatter\Exceptions\TexyFormatterTexyProcessLoopException;
+use MichalSpacekCz\Test\Formatter\TexyFormatterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
@@ -29,7 +30,7 @@ final class TexyShortcutBlogTest extends TestCase
 
 	public function __construct(
 		private readonly TexyShortcutBlog $shortcutBlog,
-		private readonly TexyFormatter $texyFormatter,
+		private readonly TexyFormatterMock $texyFormatter,
 		private readonly Database $database,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		ApplicationPresenter $applicationPresenter,
@@ -42,6 +43,7 @@ final class TexyShortcutBlogTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
+		$this->texyFormatter->willThrow(new TexyFormatterTexyProcessLoopException());
 		$this->localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://cz.example/']);
 		$this->database->setFetchAllDefaultResult([
 			[
