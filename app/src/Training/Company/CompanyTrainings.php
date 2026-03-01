@@ -16,9 +16,6 @@ use Nette\Utils\Html;
 final readonly class CompanyTrainings
 {
 
-	public const string COMPANY_TRAINING_ACTION = 'Www:CompanyTrainings:training';
-
-
 	public function __construct(
 		private Explorer $database,
 		private TypedDatabase $typedDatabase,

@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Talks\Slides;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
-use MichalSpacekCz\Talks\Exceptions\TalkSlideAliasDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideIdDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideNumberDoesNotExistException;
 use Override;
@@ -23,9 +22,6 @@ final class TalkSlideCollection implements IteratorAggregate, Countable
 	/** @var array<int, TalkSlide> slide number => slide */
 	private array $slidesByNumber = [];
 
-	/** @var array<string, TalkSlide> slide alias => slide */
-	private array $slidesByAlias = [];
-
 
 	public function __construct(
 		private readonly int $talkId,
@@ -35,7 +31,7 @@ final class TalkSlideCollection implements IteratorAggregate, Countable
 
 	public function add(TalkSlide $slide): void
 	{
-		$this->slidesById[$slide->getId()] = $this->slidesByNumber[$slide->getNumber()] = $this->slidesByAlias[$slide->getAlias()] = $slide;
+		$this->slidesById[$slide->getId()] = $this->slidesByNumber[$slide->getNumber()] = $slide;
 	}
 
 
@@ -60,18 +56,6 @@ final class TalkSlideCollection implements IteratorAggregate, Countable
 			throw new TalkSlideNumberDoesNotExistException($this->talkId, $number);
 		}
 		return $this->slidesByNumber[$number];
-	}
-
-
-	/**
-	 * @throws TalkSlideAliasDoesNotExistException
-	 */
-	public function getByAlias(string $alias): TalkSlide
-	{
-		if (!isset($this->slidesByAlias[$alias])) {
-			throw new TalkSlideAliasDoesNotExistException($this->talkId, $alias);
-		}
-		return $this->slidesByAlias[$alias];
 	}
 
 

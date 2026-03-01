@@ -14,7 +14,6 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
-use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -28,13 +27,6 @@ final class TalkSlidesTest extends TestCase
 		private readonly TalkSlides $talkSlides,
 		private readonly Database $database,
 	) {
-	}
-
-
-	#[Override]
-	protected function tearDown(): void
-	{
-		$this->database->reset();
 	}
 
 
@@ -186,14 +178,6 @@ final class TalkSlidesTest extends TestCase
 		Assert::same('https://www.domain.example/i/images/talks/789/other-talk.jpg', $slide3->getImage());
 		Assert::same('https://www.domain.example/i/images/talks/789/other-talk.webp', $slide3->getImageAlternative());
 		Assert::same('image/webp', $slide3->getImageAlternativeType());
-	}
-
-
-	public function testHasSlideAlias(): void
-	{
-		Assert::false($this->talkSlides->hasSlideAlias(123, 'foo'));
-		$this->database->setFetchFieldDefaultResult(1);
-		Assert::true($this->talkSlides->hasSlideAlias(123, 'foo'));
 	}
 
 

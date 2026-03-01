@@ -7,10 +7,8 @@ use MichalSpacekCz\EasterEgg\CrLfUrlInjections;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy;
 use MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\User\UserSessionAdditionalData;
 use Nette\Application\Application;
-use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 
@@ -65,16 +63,6 @@ final readonly class WebApplication
 	public function getFqdn(): string
 	{
 		return $this->fqdn;
-	}
-
-
-	public function getPresenter(): Presenter
-	{
-		$presenter = $this->application->getPresenter();
-		if (!$presenter instanceof Presenter) {
-			throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", Presenter::class, get_debug_type($presenter)));
-		}
-		return $presenter;
 	}
 
 }

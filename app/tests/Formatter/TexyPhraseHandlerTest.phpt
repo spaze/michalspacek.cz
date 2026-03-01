@@ -2,24 +2,23 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Formatter\TexyPhraseHandler;
+namespace MichalSpacekCz\Formatter;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\PrivateProperty;
-use MichalSpacekCz\Test\Talks\TalkTestDataFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Utils\Arrays;
 use Nette\Application\Application;
-use Nette\Application\UI\InvalidLinkException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 final class TexyPhraseHandlerTest extends TestCase
@@ -28,20 +27,21 @@ final class TexyPhraseHandlerTest extends TestCase
 	private const string EN_LOCALE = 'en_US';
 
 	private Texy $texy;
+	private string $defaultLocale;
 
 
 	public function __construct(
 		private readonly Database $database,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
-		private readonly TalkTestDataFactory $talkDataFactory,
-		private readonly NoOpTranslator $translator,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
+		NoOpTranslator $translator,
 		TexyPhraseHandler $phraseHandler,
 	) {
 		$this->texy = new Texy();
 		$this->texy->addHandler('phrase', $phraseHandler->solve(...));
 		$applicationPresenter->setLinkCallback($application, $this->buildUrl(...));
+		$this->defaultLocale = $translator->getDefaultLocale();
 	}
 
 
@@ -64,11 +64,11 @@ final class TexyPhraseHandlerTest extends TestCase
 		$defaultLocaleUrl = 'https://cz.example/prezentr/akce?paramy';
 		$enLocaleUrl = 'https://example.com/presenter/action?params';
 		$this->localeLinkGenerator->setAllLinks([
-			$this->translator->getDefaultLocale() => $defaultLocaleUrl,
+			$this->defaultLocale => $defaultLocaleUrl,
 			self::EN_LOCALE => $enLocaleUrl,
 		]);
 		$this->assertUrl('title', $defaultLocaleUrl, '"title":[link:Module:Presenter:action params,foo]');
-		Assert::same(['params', 'foo'], $this->localeLinkGenerator->getAllLinksParams()[$this->translator->getDefaultLocale()]);
+		Assert::same(['params', 'foo'], $this->localeLinkGenerator->getAllLinksParams()[$this->defaultLocale]);
 		$this->assertUrl('title', $enLocaleUrl, '"title":[link-' . self::EN_LOCALE . ':Module:Presenter:action params , bar]');
 		Assert::same(['params', 'bar'], $this->localeLinkGenerator->getAllLinksParams()[self::EN_LOCALE]);
 	}
@@ -76,10 +76,10 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult([$this->translator->getDefaultLocale() => 'fjó']);
+		$this->database->setFetchPairsDefaultResult([$this->defaultLocale => 'fjó']);
 		$defaultLocaleUrl = 'https://cz.example/skoleni/foo';
 		$this->localeLinkGenerator->setAllLinks([
-			$this->translator->getDefaultLocale() => $defaultLocaleUrl,
+			$this->defaultLocale => $defaultLocaleUrl,
 		]);
 		$this->assertUrl('title', $defaultLocaleUrl, '"title":[link:Www:Trainings:training foo]');
 	}
@@ -87,10 +87,6 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTalkLink(): void
 	{
-		// Talk data
-		$this->database->setFetchDefaultResult($this->talkDataFactory->getDatabaseResultData());
-		// Slide exists
-		$this->database->setFetchFieldDefaultResult(1);
 		$this->assertUrl(
 			'pizza hawaii fan club',
 			$this->buildUrl('//:Www:Talks:talk', ['foo', 'bar']),
@@ -108,7 +104,7 @@ final class TexyPhraseHandlerTest extends TestCase
 	{
 		$this->database->setFetchAllDefaultResult([
 			[
-				'locale' => $this->translator->getDefaultLocale(),
+				'locale' => $this->defaultLocale,
 				'slug' => 'fó',
 				'published' => null,
 				'previewKey' => (string)rand(),
@@ -125,11 +121,11 @@ final class TexyPhraseHandlerTest extends TestCase
 		$postUrl = 'https://blog.example/fó#fragment';
 		$postEnUrl = 'https://blog.example/foo#fragment';
 		$this->localeLinkGenerator->setAllLinks([
-			$this->translator->getDefaultLocale() => $postUrl,
+			$this->defaultLocale => $postUrl,
 			self::EN_LOCALE => $postEnUrl,
 		]);
 		$this->assertUrl('le post', $postUrl, '"le post":[blog:post#fragment]');
-		$this->assertUrl('le post', $postUrl, '"le post":[blog-' . $this->translator->getDefaultLocale() . ':post#fragment]');
+		$this->assertUrl('le post', $postUrl, '"le post":[blog-' . $this->defaultLocale . ':post#fragment]');
 		$this->assertUrl('teh post', $postEnUrl, '"teh post":[blog-' . self::EN_LOCALE . ':post#fragment]');
 	}
 
@@ -138,13 +134,13 @@ final class TexyPhraseHandlerTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->assertUrl('le post', '[irrelevant]', '"le post":[blog:post#fragment]');
-		}, InvalidLinkException::class, "Blog post linked in [blog:post#fragment] doesn't exist");
+		}, ShouldNotHappenException::class, "The blog links array should not be empty, maybe the linked blog post 'post#fragment' is missing?");
 	}
 
 
 	public function testSolveInhouseTrainingLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult([$this->translator->getDefaultLocale() => 'fjó']);
+		$this->database->setFetchPairsDefaultResult([$this->defaultLocale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:CompanyTrainings:training', ['fjó']),
@@ -155,7 +151,7 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingWithDatesLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult([$this->translator->getDefaultLocale() => 'fjó']);
+		$this->database->setFetchPairsDefaultResult([$this->defaultLocale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:Trainings:training', ['fjó']),

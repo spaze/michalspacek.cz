@@ -81,16 +81,7 @@ services:
 	texyFormatterNoPlaceholders:
 		create: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: [], allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 		autowired: false
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutBlog
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutBlogWithLocale
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutInhouseTraining
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutLink
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutLinkWithLocale
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutTalk
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcutTraining
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandler(shortcuts: typed(MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut))
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandlerInvocation
-	- MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandlerLinks
+	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	httpClient: MichalSpacekCz\Http\Client\HttpClient
 	- MichalSpacekCz\Http\Cookies\CookieDescriptions
 	- MichalSpacekCz\Http\Cookies\Cookies

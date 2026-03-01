@@ -12,8 +12,8 @@ use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
-use MichalSpacekCz\Talks\Exceptions\TalkSlideAliasDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideNameDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Utils\Base64;
 use MichalSpacekCz\Utils\Hash;
@@ -64,17 +64,10 @@ final class TalkSlides
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
-				throw new TalkSlideAliasDoesNotExistException($talkId, $slide);
+				throw new TalkSlideNameDoesNotExistException($talkId, $slide);
 			}
 		}
 		return $slideNo;
-	}
-
-
-	public function hasSlideAlias(int $talkId, string $slide): bool
-	{
-		$has = $this->typedDatabase->fetchFieldIntNullable('SELECT 1 FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
-		return $has !== null;
 	}
 
 

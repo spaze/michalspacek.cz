@@ -17,7 +17,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class TalkSlidesCollectionTest extends TestCase
 {
 
-	public function testAddCountGetByIdByNumberByAlias(): void
+	public function testAddCountGetByIdByNumber(): void
 	{
 		$slide1 = new TalkSlide(11, 'slide1', 1, 'slide1.jpg', 'slide1-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null);
 		$slide2 = new TalkSlide(22, 'slide2', 2, 'slide2.jpg', 'slide2-alt.jpg', null, 'Title 2', Html::fromText('Notes 2'), 'Notes 2', null, null, null);
@@ -29,8 +29,6 @@ final class TalkSlidesCollectionTest extends TestCase
 		Assert::same($slide2, $slides->getById(22));
 		Assert::same($slide1, $slides->getByNumber(1));
 		Assert::same($slide2, $slides->getByNumber(2));
-		Assert::same($slide1, $slides->getByAlias('slide1'));
-		Assert::same($slide2, $slides->getByAlias('slide2'));
 	}
 
 
