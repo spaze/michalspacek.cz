@@ -21,6 +21,7 @@ final readonly class Talks
 		private TypedDatabase $typedDatabase,
 		private TexyFormatter $texyFormatter,
 		private TalkFactory $talkFactory,
+		private TalkMetadataFactory $talkMetadataFactory,
 	) {
 	}
 
@@ -187,9 +188,45 @@ final readonly class Talks
 	}
 
 
-	public function getId(string $name): ?int
+	/**
+	 * @throws TalkDoesNotExistException
+	 */
+	public function getMetadata(string $name): TalkMetadata
 	{
-		return $this->typedDatabase->fetchFieldIntNullable('SELECT id_talk FROM talks WHERE action = ?', $name);
+		$result = $this->database->fetch(
+			'SELECT
+				id_talk AS id,
+				action,
+				key_talk_slides AS slidesTalkId,
+				publish_slides AS publishSlides
+			FROM talks WHERE action = ?',
+			$name,
+		);
+		if ($result === null) {
+			throw new TalkDoesNotExistException(name: $name);
+		}
+		return $this->talkMetadataFactory->createFromDatabaseRow($result);
+	}
+
+
+	/**
+	 * @throws TalkDoesNotExistException
+	 */
+	public function getMetadataById(int $id): TalkMetadata
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				id_talk AS id,
+				action,
+				key_talk_slides AS slidesTalkId,
+				publish_slides AS publishSlides
+			FROM talks WHERE id_talk = ?',
+			$id,
+		);
+		if ($result === null) {
+			throw new TalkDoesNotExistException(id: $id);
+		}
+		return $this->talkMetadataFactory->createFromDatabaseRow($result);
 	}
 
 

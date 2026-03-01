@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
 use MichalSpacekCz\Application\WebApplication;
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\UI\InvalidLinkException;
@@ -44,15 +45,34 @@ final readonly class TexyShortcutTalk implements TexyShortcut
 		if ($args[0] === '') {
 			throw new InvalidLinkException(sprintf('No talk specified in [%s]', self::PREFIX));
 		}
-		$talkId = $this->talks->getId($args[0]);
-		if ($talkId === null) {
-			throw new InvalidLinkException("Talk specified in [{$url}] doesn't exist");
+		try {
+			$talkMetadata = $this->talks->getMetadata($args[0]);
+		} catch (TalkDoesNotExistException $e) {
+			throw new InvalidLinkException("Talk specified in [{$url}] doesn't exist", previous: $e);
 		}
 		$params = ['name' => $args[0]];
 		$slide = $args[1] ?? null;
 		if ($slide !== null) {
-			if (!$this->talkSlides->hasSlideAlias($talkId, $slide)) {
-				throw new InvalidLinkException("The slide linked in [{$url}] doesn't exist, only the talk does");
+			$slidesTalkId = $talkMetadata->getSlidesTalkId();
+			if ($slidesTalkId === null) {
+				if (!$talkMetadata->isPublishSlides()) {
+					throw new InvalidLinkException("Slides are not published for the talk specified in [{$url}]");
+				}
+				if (!$this->talkSlides->hasSlideAlias($talkMetadata->getId(), $slide)) {
+					throw new InvalidLinkException("The slide linked in [{$url}] doesn't exist, only the talk does");
+				}
+			} else {
+				try {
+					$slidesTalkMetadata = $this->talks->getMetadataById($slidesTalkId);
+				} catch (TalkDoesNotExistException $e) {
+					throw new InvalidLinkException("Slides talk for the talk specified in [{$url}] doesn't exist", previous: $e);
+				}
+				if (!$slidesTalkMetadata->isPublishSlides()) {
+					throw new InvalidLinkException("Slides are not published for the slide talk for the talk specified in [{$url}]");
+				}
+				if (!$this->talkSlides->hasSlideAlias($slidesTalkId, $slide)) {
+					throw new InvalidLinkException("The slide linked in [{$url}] doesn't exist, only the slides talk does");
+				}
 			}
 			$params['slide'] = $slide;
 		}

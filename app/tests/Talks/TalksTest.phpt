@@ -204,11 +204,59 @@ final class TalksTest extends TestCase
 	}
 
 
-	public function testGetId(): void
+	public function testGetMetadata(): void
 	{
-		Assert::null($this->talks->getId('foo'));
-		$this->database->setFetchFieldDefaultResult(42);
-		Assert::same(42, $this->talks->getId('foo'));
+		Assert::exception(function (): void {
+			$this->talks->getMetadata('foo');
+		}, TalkDoesNotExistException::class);
+
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 0,
+		]);
+		$metadata = $this->talks->getMetadata('foo');
+		Assert::same(42, $metadata->getId());
+		Assert::null($metadata->getSlidesTalkId());
+		Assert::false($metadata->isPublishSlides());
+
+		$this->database->setFetchDefaultResult([
+			'id' => 303,
+			'slidesTalkId' => 808,
+			'publishSlides' => 1,
+		]);
+		$metadata = $this->talks->getMetadata('foo');
+		Assert::same(303, $metadata->getId());
+		Assert::same(808, $metadata->getSlidesTalkId());
+		Assert::true($metadata->isPublishSlides());
+	}
+
+
+	public function testGetMetadataById(): void
+	{
+		Assert::exception(function (): void {
+			$this->talks->getMetadataById(0xF00);
+		}, TalkDoesNotExistException::class);
+
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 0,
+		]);
+		$metadata = $this->talks->getMetadataById(42);
+		Assert::same(42, $metadata->getId());
+		Assert::null($metadata->getSlidesTalkId());
+		Assert::false($metadata->isPublishSlides());
+
+		$this->database->setFetchDefaultResult([
+			'id' => 303,
+			'slidesTalkId' => 808,
+			'publishSlides' => 1,
+		]);
+		$metadata = $this->talks->getMetadataById(303);
+		Assert::same(303, $metadata->getId());
+		Assert::same(808, $metadata->getSlidesTalkId());
+		Assert::true($metadata->isPublishSlides());
 	}
 
 

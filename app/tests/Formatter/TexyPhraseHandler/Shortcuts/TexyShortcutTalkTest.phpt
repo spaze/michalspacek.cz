@@ -44,10 +44,14 @@ final class TexyShortcutTalkTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->texyFormatter->willThrow(new TexyFormatterTexyProcessLoopException());
-		// Talk id
-		$this->database->setFetchFieldDefaultResult(42);
+		// Talk metadata
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 1,
+		]);
 		// Slide exists
-		$this->database->addFetchFieldResult(1);
+		$this->database->setFetchFieldDefaultResult(1);
 	}
 
 
@@ -83,6 +87,98 @@ final class TexyShortcutTalkTest extends TestCase
 		Assert::exception(function (): void {
 			$this->resolve('talk:foo', new Link(''));
 		}, InvalidLinkException::class, "Talk specified in [talk:foo] doesn't exist");
+	}
+
+
+	public function testResolveTalkSlidesNotPublished(): void
+	{
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 0,
+		]);
+		Assert::exception(function (): void {
+			$this->resolve('talk:foo#bar', new Link(''));
+		}, InvalidLinkException::class, 'Slides are not published for the talk specified in [talk:foo#bar]');
+	}
+
+
+	public function testResolveSlideTalkSlidesNotPublished(): void
+	{
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => 24,
+			'publishSlides' => 0,
+		]);
+		Assert::exception(function (): void {
+			$this->resolve('talk:foo#bar', new Link(''));
+		}, InvalidLinkException::class, 'Slides are not published for the slide talk for the talk specified in [talk:foo#bar]');
+	}
+
+
+	public function testResolveTalkSlidesNotPublishedButNotSlideLink(): void
+	{
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => 24,
+			'publishSlides' => 0,
+		]);
+		$link = new Link('');
+		$this->resolve('talk:foo', $link);
+		Assert::same('//:Www:Talks:talk foo', $link->URL);
+	}
+
+
+	public function testResolveNoSlidesTalk(): void
+	{
+		$this->database->reset();
+		$this->database->addFetchResult([
+			'id' => 42,
+			'slidesTalkId' => 24,
+			'publishSlides' => 1,
+		]);
+		Assert::exception(function (): void {
+			$this->resolve('talk:foo#bar', new Link(''));
+		}, InvalidLinkException::class, "Slides talk for the talk specified in [talk:foo#bar] doesn't exist");
+	}
+
+
+	public function testResolveSlidesTalkButNoSlide(): void
+	{
+		$this->database->reset();
+		$this->database->addFetchResult([
+			'id' => 42,
+			'slidesTalkId' => 24,
+			'publishSlides' => 1,
+		]);
+		$this->database->addFetchResult([
+			'id' => 24,
+			'slidesTalkId' => null,
+			'publishSlides' => 1,
+		]);
+		Assert::exception(function (): void {
+			$this->resolve('talk:foo#bar', new Link(''));
+		}, InvalidLinkException::class, "The slide linked in [talk:foo#bar] doesn't exist, only the slides talk does");
+	}
+
+
+	public function testResolveSlidesTalk(): void
+	{
+		$this->database->reset();
+		$this->database->addFetchResult([
+			'id' => 42,
+			'slidesTalkId' => 24,
+			'publishSlides' => 1,
+		]);
+		$this->database->addFetchResult([
+			'id' => 24,
+			'slidesTalkId' => null,
+			'publishSlides' => 0,
+		]);
+		$this->database->setFetchFieldDefaultResult(1);
+		$link = new Link('');
+		$this->resolve('talk:foo', $link);
+		Assert::same('//:Www:Talks:talk foo', $link->URL);
 	}
 
 

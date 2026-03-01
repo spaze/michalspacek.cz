@@ -133,6 +133,7 @@ services:
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
 	- MichalSpacekCz\Talks\TalkInputsFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Talks\TalkLocaleUrls
+	- MichalSpacekCz\Talks\TalkMetadataFactory
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalksListFactory
 	- MichalSpacekCz\Templating\Filters

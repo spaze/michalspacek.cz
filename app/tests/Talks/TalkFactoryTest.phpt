@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace Talks;
+namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Talks\TalkFactory;

@@ -9,7 +9,6 @@ use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\PrivateProperty;
-use MichalSpacekCz\Test\Talks\TalkTestDataFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Utils\Arrays;
 use Nette\Application\Application;
@@ -33,7 +32,6 @@ final class TexyPhraseHandlerTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
-		private readonly TalkTestDataFactory $talkDataFactory,
 		private readonly NoOpTranslator $translator,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
@@ -87,8 +85,12 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTalkLink(): void
 	{
-		// Talk data
-		$this->database->setFetchDefaultResult($this->talkDataFactory->getDatabaseResultData());
+		// Talk metadata
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 1,
+		]);
 		// Slide exists
 		$this->database->setFetchFieldDefaultResult(1);
 		$this->assertUrl(
