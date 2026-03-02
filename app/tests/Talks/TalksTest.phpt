@@ -1,9 +1,12 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Talks;
 
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Talks\TalkTestDataFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Override;
 use Tester\Assert;
@@ -18,6 +21,7 @@ final class TalksTest extends TestCase
 	public function __construct(
 		private readonly Talks $talks,
 		private readonly Database $database,
+		private readonly TalkTestDataFactory $talkTestDataFactory,
 	) {
 	}
 
@@ -197,6 +201,78 @@ final class TalksTest extends TestCase
 			null,
 			false,
 		);
+	}
+
+
+	public function testGetMetadata(): void
+	{
+		Assert::exception(function (): void {
+			$this->talks->getMetadata('foo');
+		}, TalkDoesNotExistException::class);
+
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 0,
+		]);
+		$metadata = $this->talks->getMetadata('foo');
+		Assert::same(42, $metadata->getId());
+		Assert::null($metadata->getSlidesTalkId());
+		Assert::false($metadata->isPublishSlides());
+
+		$this->database->setFetchDefaultResult([
+			'id' => 303,
+			'slidesTalkId' => 808,
+			'publishSlides' => 1,
+		]);
+		$metadata = $this->talks->getMetadata('foo');
+		Assert::same(303, $metadata->getId());
+		Assert::same(808, $metadata->getSlidesTalkId());
+		Assert::true($metadata->isPublishSlides());
+	}
+
+
+	public function testGetMetadataById(): void
+	{
+		Assert::exception(function (): void {
+			$this->talks->getMetadataById(0xF00);
+		}, TalkDoesNotExistException::class);
+
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'slidesTalkId' => null,
+			'publishSlides' => 0,
+		]);
+		$metadata = $this->talks->getMetadataById(42);
+		Assert::same(42, $metadata->getId());
+		Assert::null($metadata->getSlidesTalkId());
+		Assert::false($metadata->isPublishSlides());
+
+		$this->database->setFetchDefaultResult([
+			'id' => 303,
+			'slidesTalkId' => 808,
+			'publishSlides' => 1,
+		]);
+		$metadata = $this->talks->getMetadataById(303);
+		Assert::same(303, $metadata->getId());
+		Assert::same(808, $metadata->getSlidesTalkId());
+		Assert::true($metadata->isPublishSlides());
+	}
+
+
+	public function testGet(): void
+	{
+		Assert::exception(function (): void {
+			$this->talks->get('le-talk');
+		}, TalkDoesNotExistException::class);
+
+		$this->database->setFetchDefaultResult($this->talkTestDataFactory->getDatabaseResultData(
+			title: '**Title**',
+			description: 'Description `code`',
+		));
+		$talk = $this->talks->get('le-talk');
+		Assert::same('<strong>Title</strong>', $talk->getTitle()->render());
+		Assert::same("<p>Description <code>code</code></p>\n", $talk->getDescription()?->render());
 	}
 
 

@@ -1,0 +1,83 @@
+<?php
+declare(strict_types = 1);
+
+namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
+
+use MichalSpacekCz\Application\WebApplication;
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
+use MichalSpacekCz\Talks\Slides\TalkSlides;
+use MichalSpacekCz\Talks\Talks;
+use Nette\Application\UI\InvalidLinkException;
+use Override;
+use Texy\HandlerInvocation;
+use Texy\Link;
+use Texy\Modifier;
+
+final readonly class TexyShortcutTalk implements TexyShortcut
+{
+
+	private const string PREFIX = 'talk:';
+
+
+	public function __construct(
+		private WebApplication $webApplication,
+		private Talks $talks,
+		private TalkSlides $talkSlides,
+	) {
+	}
+
+
+	#[Override]
+	public function canResolve(string $url): bool
+	{
+		return str_starts_with($url, self::PREFIX);
+	}
+
+
+	/**
+	 * @throws InvalidLinkException
+	 */
+	#[Override]
+	public function resolve(string $url, HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, Link $link): null
+	{
+		// "title":[talk:title#slide]
+		$args = explode('#', substr($url, strlen(self::PREFIX)));
+		if ($args[0] === '') {
+			throw new InvalidLinkException(sprintf('No talk specified in [%s]', self::PREFIX));
+		}
+		try {
+			$talkMetadata = $this->talks->getMetadata($args[0]);
+		} catch (TalkDoesNotExistException $e) {
+			throw new InvalidLinkException("Talk specified in [{$url}] doesn't exist", previous: $e);
+		}
+		$params = ['name' => $args[0]];
+		$slide = $args[1] ?? null;
+		if ($slide !== null) {
+			$slidesTalkId = $talkMetadata->getSlidesTalkId();
+			if ($slidesTalkId === null) {
+				if (!$talkMetadata->isPublishSlides()) {
+					throw new InvalidLinkException("Slides are not published for the talk specified in [{$url}]");
+				}
+				if (!$this->talkSlides->hasSlideAlias($talkMetadata->getId(), $slide)) {
+					throw new InvalidLinkException("The slide linked in [{$url}] doesn't exist, only the talk does");
+				}
+			} else {
+				try {
+					$slidesTalkMetadata = $this->talks->getMetadataById($slidesTalkId);
+				} catch (TalkDoesNotExistException $e) {
+					throw new InvalidLinkException("Slides talk for the talk specified in [{$url}] doesn't exist", previous: $e);
+				}
+				if (!$slidesTalkMetadata->isPublishSlides()) {
+					throw new InvalidLinkException("Slides are not published for the slide talk for the talk specified in [{$url}]");
+				}
+				if (!$this->talkSlides->hasSlideAlias($slidesTalkId, $slide)) {
+					throw new InvalidLinkException("The slide linked in [{$url}] doesn't exist, only the slides talk does");
+				}
+			}
+			$params['slide'] = $slide;
+		}
+		$link->URL = $this->webApplication->getPresenter()->link('//:Www:Talks:talk', $params);
+		return null;
+	}
+
+}

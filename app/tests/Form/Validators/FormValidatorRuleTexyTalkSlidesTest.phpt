@@ -29,7 +29,7 @@ final class FormValidatorRuleTexyTalkSlidesTest extends TestCase
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
 	) {
-		$applicationPresenter->setLinkCallback($application, fn() => 'https://example.com');
+		$applicationPresenter->setLinkCallback($application, null);
 		$this->localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://com.example/']);
 		$this->rule = $talkSlidesTexyRuleFactory->create();
 	}
