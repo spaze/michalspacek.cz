@@ -49,25 +49,31 @@ final class TalkSlides
 	}
 
 
-	/**
-	 * Return slide number by given alias.
-	 *
-	 * @throws TalkSlideDoesNotExistException
-	 */
-	public function getSlideNo(int $talkId, ?string $slide): ?int
+	public function getOgImage(?string $slide, ?TalkSlideCollection $slides): ?string
 	{
-		if ($slide === null) {
+		if ($slides === null) {
 			return null;
 		}
-		$slideNo = $this->typedDatabase->fetchFieldIntNullable('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
-		if ($slideNo === null) {
-			if (ctype_digit($slide)) {
-				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
-			} else {
-				throw new TalkSlideAliasDoesNotExistException($talkId, $slide);
+		if ($slide === null) {
+			return $this->getFirstSlideImage($slides);
+		}
+		try {
+			return $slides->getByAlias($slide)->getImage();
+		} catch (TalkSlideAliasDoesNotExistException) {
+			return $this->getFirstSlideImage($slides);
+		}
+	}
+
+
+	private function getFirstSlideImage(TalkSlideCollection $slides): ?string
+	{
+		foreach ($slides as $slide) {
+			$image = $slide->getImage();
+			if ($image !== null) {
+				return $image;
 			}
 		}
-		return $slideNo;
+		return null;
 	}
 
 

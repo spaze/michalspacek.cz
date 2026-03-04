@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Talks\Slides;
 
 use DateTime;
 use MichalSpacekCz\Media\Video;
-use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -38,20 +37,19 @@ final class TalkSlidesTest extends TestCase
 	}
 
 
-	public function testGetSlideNo(): void
+	public function testGetOgImage(): void
 	{
-		Assert::null($this->talkSlides->getSlideNo(1, null));
-
-		$this->database->setFetchFieldDefaultResult(null);
-		Assert::same(303, $this->talkSlides->getSlideNo(1, '303'));
-
-		$this->database->setFetchFieldDefaultResult(null);
-		Assert::exception(function (): void {
-			$this->talkSlides->getSlideNo(1, 'yo');
-		}, TalkSlideDoesNotExistException::class, "Talk id 1 doesn't have a slide 'yo'");
-
-		$this->database->setFetchFieldDefaultResult(808);
-		Assert::same(808, $this->talkSlides->getSlideNo(1, 'yo'));
+		$slides = new TalkSlideCollection(123);
+		Assert::null($this->talkSlides->getOgImage(null, null));
+		Assert::null($this->talkSlides->getOgImage('foo', null));
+		Assert::null($this->talkSlides->getOgImage(null, $slides));
+		Assert::null($this->talkSlides->getOgImage('foo', $slides));
+		$slides->add(new TalkSlide(1, 'foo', 1, null, null, null, 'Title 1', Html::fromText('Notes'), 'Notes', null, null, null));
+		Assert::null($this->talkSlides->getOgImage('foo', $slides));
+		Assert::null($this->talkSlides->getOgImage('bar', $slides));
+		$slides->add(new TalkSlide(1, 'foo', 1, null, null, null, 'Title 1', Html::fromText('Notes'), 'Notes', 'image', null, null));
+		Assert::same('image', $this->talkSlides->getOgImage('foo', $slides));
+		Assert::same('image', $this->talkSlides->getOgImage('bar', $slides));
 	}
 
 
