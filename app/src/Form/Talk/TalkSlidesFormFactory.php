@@ -83,6 +83,9 @@ final readonly class TalkSlidesFormFactory
 			$onSuccess($message, $type, $talkId);
 		};
 		$form->onValidate[] = function (UiForm $form) use ($request): void {
+			if (!$this->hasSlideNo1($form)) {
+				$form->addError($this->texyFormatter->translate('messages.talks.admin.slideNumber1Missing'));
+			}
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
 			$files = $request->getFiles();
@@ -98,6 +101,27 @@ final readonly class TalkSlidesFormFactory
 		};
 
 		return $form;
+	}
+
+
+	private function hasSlideNo1(UiForm $form): bool
+	{
+		$values = $form->getUntrustedFormValues();
+		assert($values->slides instanceof ArrayHash);
+		assert($values->new instanceof ArrayHash);
+		foreach ($values->slides as $slide) {
+			assert($slide instanceof ArrayHash);
+			if ($slide->number === 1) {
+				return true;
+			}
+		}
+		foreach ($values->new as $slide) {
+			assert($slide instanceof ArrayHash);
+			if ($slide->number === 1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
