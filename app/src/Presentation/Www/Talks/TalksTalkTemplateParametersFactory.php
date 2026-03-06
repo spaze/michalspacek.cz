@@ -6,8 +6,12 @@ namespace MichalSpacekCz\Presentation\Www\Talks;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
+use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideAliasDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideNumberDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlidesNotPublishedException;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
@@ -31,6 +35,9 @@ final readonly class TalksTalkTemplateParametersFactory
 	 * @throws ContentTypeException
 	 * @throws TalkDoesNotExistException
 	 * @throws TalkExistsInOtherLocaleException
+	 * @throws TalkSlideAliasDoesNotExistException
+	 * @throws TalkSlidesNotPublishedException
+	 * @throws IncorrectSlideAliasInUrlException
 	 * @throws InvalidLinkException
 	 */
 	public function create(string $talkName, ?string $slide = null): TalksTalkTemplateParameters
@@ -47,6 +54,21 @@ final readonly class TalksTalkTemplateParametersFactory
 		} else {
 			$slides = $talk->isPublishSlides() ? $this->talkSlides->getSlides($talk) : null;
 			$action = $talk->getAction();
+		}
+
+		if ($slide !== null) {
+			if ($this->talkSlides->isNumberSlideAlias($slide)) {
+				try {
+					$alias = $slides?->getByNumber((int)$slide)->getAlias();
+				} catch (TalkSlideNumberDoesNotExistException) {
+					$alias = null;
+				}
+				throw new IncorrectSlideAliasInUrlException($alias);
+			} elseif ($slides === null) {
+				throw new TalkSlidesNotPublishedException($talk->getId());
+			} else {
+				$slides->getByAlias($slide); // Check that the slide exists
+			}
 		}
 
 		return new TalksTalkTemplateParameters(

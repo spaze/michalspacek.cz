@@ -152,6 +152,12 @@ App.ready(document, function () {
 		const slide = App.clone(tbody);
 		let index = 0;
 		slide.classList.add('new-slide', 'changed');
+		for (const td of slide.querySelectorAll('td')) {
+			td.classList.remove('inputError');
+			for (const message of td.querySelectorAll('.inputErrorMessage')) {
+				message.remove();
+			}
+		}
 		for (const input of slide.querySelectorAll('input:not(.slide-nr), textarea')) {
 			input.value = '';
 		}

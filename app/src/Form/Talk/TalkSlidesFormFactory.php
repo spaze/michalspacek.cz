@@ -14,6 +14,7 @@ use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
@@ -106,6 +107,9 @@ final readonly class TalkSlidesFormFactory
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$aliasInput = $container->addText('alias', 'Alias:')
+			->addRule(function (BaseControl $input): bool {
+				return is_string($input->getValue()) && !$this->talkSlides->isNumberSlideAlias($input->getValue());
+			}, "Alias slajdu '%value' nesmí být číslo")
 			->setRequired('Zadejte prosím alias');
 		$this->validators->addValidateSlugRules($aliasInput);
 		$container->addInteger('number', 'Slajd:')

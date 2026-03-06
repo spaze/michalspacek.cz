@@ -5,8 +5,11 @@ declare(strict_types = 1);
 namespace Presentation\Www\Talks;
 
 use MichalSpacekCz\Media\SlidesPlatform;
+use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
 use MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParametersFactory;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlidesNotPublishedException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\Talks\TalkTestDataFactory;
@@ -143,6 +146,150 @@ final class TalksTalkTemplateParametersFactoryTest extends TestCase
 		Assert::same('https://www.domain.example/i/images/talks/303/file2.jpg', $parameters->ogImage);
 		Assert::true($parameters->video->isLazyLoad());
 		Assert::null($parameters->slidesPlatform);
+	}
+
+
+	public function testCreateWithSlideWithSlidesNotPublished(): void
+	{
+		$this->database->addFetchResult($this->testDataFactory->getDatabaseResultData(
+			id: 303,
+			locale: $this->translator->getDefaultLocale(),
+			action: 'some-talk',
+			publishSlides: 0,
+		));
+		// Slides
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+		]);
+		Assert::exception(function (): void {
+			$this->templateParametersFactory->create('some-talk', 'slide-1');
+		}, TalkSlidesNotPublishedException::class, 'Slides not published for talk id 303');
+	}
+
+
+	public function testCreateWithUnknownSlide(): void
+	{
+		$this->database->addFetchResult($this->testDataFactory->getDatabaseResultData(
+			id: 303,
+			locale: $this->translator->getDefaultLocale(),
+			action: 'some-talk',
+			publishSlides: 1,
+		));
+		// Slides
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+		]);
+		Assert::exception(function (): void {
+			$this->templateParametersFactory->create('some-talk', 'slide-2');
+		}, TalkSlideDoesNotExistException::class, "Talk id 303 doesn't have a slide 'slide-2'");
+	}
+
+
+	public function testCreateWithNumericSlide(): void
+	{
+		$this->database->addFetchResult($this->testDataFactory->getDatabaseResultData(
+			id: 303,
+			locale: $this->translator->getDefaultLocale(),
+			action: 'some-talk',
+			publishSlides: 1,
+		));
+		// Slides
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+			[
+				'id' => 43,
+				'alias' => 'slide-2',
+				'number' => 2,
+				'filename' => 'file2.jpg',
+				'filenameAlternative' => 'file2.webp',
+				'title' => 'Slide 2',
+				'speakerNotesTexy' => 'Slide 2',
+			],
+		]);
+		$e = Assert::exception(function (): void {
+			$this->templateParametersFactory->create('some-talk', '2');
+		}, IncorrectSlideAliasInUrlException::class);
+		assert($e instanceof IncorrectSlideAliasInUrlException);
+		Assert::same('slide-2', $e->correctAlias);
+	}
+
+
+	public function testCreateWithNumericSlideSlidesNotPublished(): void
+	{
+		$this->database->addFetchResult($this->testDataFactory->getDatabaseResultData(
+			id: 303,
+			locale: $this->translator->getDefaultLocale(),
+			action: 'some-talk',
+		));
+		// Slides
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+		]);
+		$e = Assert::exception(function (): void {
+			$this->templateParametersFactory->create('some-talk', '1');
+		}, IncorrectSlideAliasInUrlException::class);
+		assert($e instanceof IncorrectSlideAliasInUrlException);
+		Assert::null($e->correctAlias);
+	}
+
+
+	public function testCreateWithUnknownNumericSlide(): void
+	{
+		$this->database->addFetchResult($this->testDataFactory->getDatabaseResultData(
+			id: 303,
+			locale: $this->translator->getDefaultLocale(),
+			action: 'some-talk',
+			publishSlides: 1,
+		));
+		// Slides
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+		]);
+		$e = Assert::exception(function (): void {
+			$this->templateParametersFactory->create('some-talk', '2');
+		}, IncorrectSlideAliasInUrlException::class);
+		assert($e instanceof IncorrectSlideAliasInUrlException);
+		Assert::null($e->correctAlias);
 	}
 
 

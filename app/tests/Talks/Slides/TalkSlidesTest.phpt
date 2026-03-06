@@ -195,6 +195,19 @@ final class TalkSlidesTest extends TestCase
 	}
 
 
+	public function testIsNumberSlideAlias(): void
+	{
+		Assert::true($this->talkSlides->isNumberSlideAlias('0'));
+		Assert::true($this->talkSlides->isNumberSlideAlias('808'));
+		Assert::false($this->talkSlides->isNumberSlideAlias('808state'));
+		Assert::false($this->talkSlides->isNumberSlideAlias('-303'));
+		Assert::false($this->talkSlides->isNumberSlideAlias('foo'));
+		Assert::false($this->talkSlides->isNumberSlideAlias('3.14'));
+		Assert::false($this->talkSlides->isNumberSlideAlias('0x123'));
+		Assert::false($this->talkSlides->isNumberSlideAlias('3e4'));
+	}
+
+
 	private function buildTalk(int $id, ?int $filenamesTalkId): Talk
 	{
 		$video = new Video(

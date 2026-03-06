@@ -377,4 +377,10 @@ final class TalkSlides
 		]);
 	}
 
+
+	public function isNumberSlideAlias(string $alias): bool
+	{
+		return ctype_digit($alias);
+	}
+
 }
