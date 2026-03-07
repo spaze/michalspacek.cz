@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Presentation\Www\Talks;
 
 use MichalSpacekCz\Media\SlidesPlatform;
+use MichalSpacekCz\Presentation\Www\Talks\Exceptions\DeprecatedEmbedSlideInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
 use MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParametersFactory;
@@ -262,6 +263,33 @@ final class TalksTalkTemplateParametersFactoryTest extends TestCase
 		}, IncorrectSlideAliasInUrlException::class);
 		assert($e instanceof IncorrectSlideAliasInUrlException);
 		Assert::null($e->correctAlias);
+	}
+
+
+	public function testCreateWithSlideWithSlideEmbed(): void
+	{
+		$this->database->addFetchResult($this->testDataFactory->getDatabaseResultData(
+			id: 303,
+			locale: $this->translator->getDefaultLocale(),
+			action: 'some-talk',
+			slidesEmbed: 'https://example.com/slides.js',
+			publishSlides: 0,
+		));
+		// Slides
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+		]);
+		Assert::exception(function (): void {
+			$this->templateParametersFactory->create('some-talk', 'slide-1');
+		}, DeprecatedEmbedSlideInUrlException::class, 'Slide of the deprecated slide embed in the page URL');
 	}
 
 

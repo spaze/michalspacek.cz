@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Presentation\Www\Talks;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
+use MichalSpacekCz\Presentation\Www\Talks\Exceptions\DeprecatedEmbedSlideInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
@@ -33,6 +34,7 @@ final readonly class TalksTalkTemplateParametersFactory
 
 	/**
 	 * @throws ContentTypeException
+	 * @throws DeprecatedEmbedSlideInUrlException
 	 * @throws TalkDoesNotExistException
 	 * @throws TalkExistsInOtherLocaleException
 	 * @throws TalkSlideAliasDoesNotExistException
@@ -47,17 +49,14 @@ final readonly class TalksTalkTemplateParametersFactory
 			throw new TalkExistsInOtherLocaleException($talk->getLocale());
 		}
 
-		if ($talk->getSlidesTalkId() !== null) {
-			$slidesTalk = $this->talks->getById($talk->getSlidesTalkId());
-			$slides = $slidesTalk->isPublishSlides() ? $this->talkSlides->getSlides($slidesTalk) : null;
-			$action = $slidesTalk->getAction();
-		} else {
-			$slides = $talk->isPublishSlides() ? $this->talkSlides->getSlides($talk) : null;
-			$action = $talk->getAction();
-		}
+		$slidesTalk = $talk->getSlidesTalkId() !== null ? $this->talks->getById($talk->getSlidesTalkId()) : $talk;
+		$slides = $slidesTalk->isPublishSlides() ? $this->talkSlides->getSlides($slidesTalk) : null;
+		$action = $slidesTalk->getAction();
 
 		if ($slide !== null) {
-			if ($this->talkSlides->isNumberSlideAlias($slide)) {
+			if ($slidesTalk->getSlidesEmbed() !== null) {
+				throw new DeprecatedEmbedSlideInUrlException();
+			} elseif ($this->talkSlides->isNumberSlideAlias($slide)) {
 				try {
 					$alias = $slides?->getByNumber((int)$slide)->getAlias();
 				} catch (TalkSlideNumberDoesNotExistException) {

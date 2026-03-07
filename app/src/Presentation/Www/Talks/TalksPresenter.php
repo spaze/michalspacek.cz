@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Presentation\Www\Talks;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Presentation\Www\Talks\Exceptions\DeprecatedEmbedSlideInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
@@ -63,6 +64,8 @@ final class TalksPresenter extends BasePresenter
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		} catch (IncorrectSlideAliasInUrlException $e) {
 			$this->redirectPermanent('this', ['slide' => $e->correctAlias]);
+		} catch (DeprecatedEmbedSlideInUrlException) {
+			$this->redirectPermanent('this', ['slide' => null]);
 		}
 		$this->localeLinkParams = $this->talkLocaleUrls->getLinkParams($templateParameters->talk);
 		$this->template->setParameters($templateParameters);
