@@ -1,17 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Texy;
 
 
 /**
- * Link.
+ * Stores link URL, modifiers, and reference info.
  */
 final class Link
 {
@@ -49,8 +47,6 @@ final class Link
 
 	public function __clone()
 	{
-		if ($this->modifier) {
-			$this->modifier = clone $this->modifier;
-		}
+		$this->modifier = clone $this->modifier;
 	}
 }

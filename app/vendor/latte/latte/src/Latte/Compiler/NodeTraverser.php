@@ -1,34 +1,39 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Latte\Compiler;
 
 
+/**
+ * Traverses and transforms AST nodes using visitor pattern.
+ */
 final class NodeTraverser
 {
 	public const DontTraverseChildren = 1;
 	public const StopTraversal = 2;
 	public const RemoveNode = 3;
 
-	/** @var ?callable(Node): (Node|int|null) */
-	private $enter;
+	/** @var ?(\Closure(Node): (Node|int|void|null)) */
+	private ?\Closure $enter = null;
 
-	/** @var ?callable(Node): (Node|int|null) */
-	private $leave;
+	/** @var ?(\Closure(Node): (Node|int|void|null)) */
+	private ?\Closure $leave = null;
 
 	private bool $stop;
 
 
+	/**
+	 * @param ?(callable(Node): (Node|int|void|null))  $enter
+	 * @param ?(callable(Node): (Node|int|void|null))  $leave
+	 */
 	public function traverse(Node $node, ?callable $enter = null, ?callable $leave = null): ?Node
 	{
-		$this->enter = $enter;
-		$this->leave = $leave;
+		$this->enter = $enter ? $enter(...) : null;
+		$this->leave = $leave ? $leave(...) : null;
 		$this->stop = false;
 		return $this->traverseNode($node);
 	}

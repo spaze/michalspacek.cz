@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -14,7 +12,7 @@ use function max, strlen;
 
 
 /**
- * Blockquote module.
+ * Processes blockquote syntax with nested content.
  */
 final class BlockQuoteModule extends Texy\Module
 {
@@ -38,8 +36,9 @@ final class BlockQuoteModule extends Texy\Module
 	 * swath of the marching Orcs tramped its ugly slot; the sweet grass
 	 * of Rohan had been bruised and blackened as they passed.
 	 * >:http://www.mycom.com/tolkien/twotowers.html
+	 * @param  string[]  $matches
 	 */
-	public function pattern(Texy\BlockParser $parser, array $matches): Texy\HtmlElement|string|null
+	public function pattern(Texy\BlockParser $parser, array $matches): ?Texy\HtmlElement
 	{
 		[, $mMod, $mPrefix, $mContent] = $matches;
 		// [1] => .(title)[class]{style}<>

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -17,7 +15,7 @@ use Latte\Helpers;
 
 
 /**
- * Custom function call node.
+ * Wrapper for custom function calls in Latte expressions.
  */
 class CustomFunctionCallNode extends ExpressionNode
 {

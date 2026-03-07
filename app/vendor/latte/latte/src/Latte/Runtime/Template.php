@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Runtime;
 
@@ -16,7 +14,7 @@ use function array_keys, array_merge, array_pop, end, in_array, is_array, next, 
 
 
 /**
- * Template.
+ * Base class for compiled templates.
  */
 class Template
 {
@@ -29,14 +27,6 @@ class Template
 
 	public const Blocks = [];
 
-	/** global accumulators for intermediate results */
-	public \stdClass $global;
-
-	/** @var mixed[]  @internal */
-	protected array $params = [];
-
-	protected FilterExecutor $filters;
-
 	/** @internal */
 	protected string|false|null $parentName = null;
 
@@ -48,28 +38,18 @@ class Template
 
 	/** @var mixed[][] */
 	private array $blockStack = [];
-
-	private Engine $engine;
-	private string $name;
 	private ?Template $referringTemplate = null;
 	private ?string $referenceType = null;
 
 
-	/**
-	 * @param  mixed[]  $params
-	 */
 	public function __construct(
-		Engine $engine,
-		array $params,
-		FilterExecutor $filters,
-		\stdClass $providers,
-		string $name,
+		private readonly Engine $engine,
+		/** @var array<string, mixed> */
+		protected array $params,
+		protected FilterExecutor $filters,
+		public \stdClass $global,
+		private readonly string $name,
 	) {
-		$this->engine = $engine;
-		$this->params = $params;
-		$this->filters = $filters;
-		$this->name = $name;
-		$this->global = $providers;
 		$this->initBlockLayer(self::LayerTop);
 		$this->initBlockLayer(self::LayerLocal);
 		$this->initBlockLayer(self::LayerSnippet);
@@ -135,10 +115,12 @@ class Template
 			throw new Latte\RuntimeException("Cannot include undefined block '$name'$hint");
 		}
 
+		$fn = reset($block->functions);
+		assert($fn !== false);
 		$this->filter(
-			fn() => reset($block->functions)($params),
+			fn() => $fn($params),
 			$mod,
-			$block->contentType,
+			$block->contentType ?? static::ContentType,
 			"block $name",
 		);
 	}
@@ -191,9 +173,9 @@ class Template
 		$child->referenceType = $relation;
 		$child->global = $this->global;
 
-		if (in_array($relation, ['extends', 'includeblock', 'import', 'embed'], true)) {
+		if (in_array($relation, ['extends', 'includeblock', 'import', 'embed'], strict: true)) {
 			foreach ($child->blocks[self::LayerTop] as $nm => $block) {
-				$this->addBlock($nm, $block->contentType, $block->functions);
+				$this->addBlock($nm, $block->contentType ?? static::ContentType, $block->functions);
 			}
 
 			$child->blocks[self::LayerTop] = &$this->blocks[self::LayerTop];
@@ -261,7 +243,7 @@ class Template
 
 	/**
 	 * Returns array of all parameters.
-	 * @return mixed[]
+	 * @return array<string, mixed>
 	 */
 	public function getParameters(): array
 	{
@@ -287,14 +269,14 @@ class Template
 	}
 
 
-	/** @return mixed[] */
+	/** @return array<string, mixed> */
 	public function prepare(): array
 	{
 		return $this->params;
 	}
 
 
-	/** @param mixed[] $params */
+	/** @param mixed[]  $params */
 	public function main(array $params): void
 	{
 	}
@@ -305,7 +287,7 @@ class Template
 
 	/**
 	 * Creates block if doesn't exist and checks if content type is the same.
-	 * @param  callable[]  $functions
+	 * @param  \Closure[]  $functions
 	 * @internal
 	 */
 	protected function addBlock(
@@ -338,9 +320,7 @@ class Template
 	}
 
 
-	/**
-	 * @return string[]
-	 */
+	/** @return list<string> */
 	public function getBlockNames(int|string $layer = self::LayerTop): array
 	{
 		return array_keys($this->blocks[$layer] ?? []);
@@ -358,6 +338,7 @@ class Template
 	}
 
 
+	/** @param array<string, mixed> $vars */
 	protected function enterBlockLayer(int $staticId, array $vars): void
 	{
 		$this->blockStack[] = $this->blocks[self::LayerTop];
@@ -368,15 +349,15 @@ class Template
 
 	protected function copyBlockLayer(): void
 	{
-		foreach (end($this->blockStack) as $nm => $block) {
-			$this->addBlock($nm, $block->contentType, $block->functions);
+		foreach (end($this->blockStack) ?: [] as $nm => $block) {
+			$this->addBlock($nm, $block->contentType ?? static::ContentType, $block->functions);
 		}
 	}
 
 
 	protected function leaveBlockLayer(): void
 	{
-		$this->blocks[self::LayerTop] = array_pop($this->blockStack);
+		$this->blocks[self::LayerTop] = array_pop($this->blockStack) ?? [];
 		array_pop($this->varStack);
 	}
 }

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -74,14 +72,13 @@ final class Escaper
 	];
 
 	private string $state = '';
-	private string $tag = '';
 	private string $subType = '';
 
 
 	public function __construct(
 		private string $contentType,
 	) {
-		$this->state = in_array($contentType, [ContentType::Html, ContentType::Xml], true)
+		$this->state = in_array($contentType, [ContentType::Html, ContentType::Xml], strict: true)
 			? self::HtmlText
 			: $contentType;
 	}
@@ -119,7 +116,7 @@ final class Escaper
 				$type = $el->getAttribute('type');
 				$this->subType = $type === true || $type === null
 					? self::JavaScript
-					: HtmlHelpers::classifyScriptType($type);
+					: (is_string($type) ? HtmlHelpers::classifyScriptType($type) : '');
 			} elseif ($el->is('style')) {
 				$this->subType = self::Css;
 			}
@@ -134,7 +131,6 @@ final class Escaper
 	public function enterHtmlTag(string $name): void
 	{
 		$this->state = self::HtmlTag;
-		$this->tag = $name;
 	}
 
 
@@ -236,7 +232,7 @@ final class Escaper
 	public function escapeContent(string $str): string
 	{
 		return 'LR\Helpers::convertTo($ʟ_fi, '
-			. var_export($this->export(), true) . ', '
+			. var_export($this->export(), return: true) . ', '
 			. $str
 			. ')';
 	}

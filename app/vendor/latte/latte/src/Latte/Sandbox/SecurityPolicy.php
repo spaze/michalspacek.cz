@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Sandbox;
 
@@ -14,26 +12,26 @@ use function array_flip, array_map, assert, is_a, is_bool, strtolower;
 
 
 /**
- * Default-deny policy.
+ * Default-deny security policy. Whitelist allowed tags, filters, functions, methods and properties.
  */
 class SecurityPolicy implements Latte\Policy
 {
 	public const All = ['*'];
 	public const ALL = self::All;
 
-	/** @var string[] */
+	/** @var array<string, int> */
 	private array $tags = [];
 
-	/** @var string[] */
+	/** @var array<string, int> */
 	private array $filters = [];
 
-	/** @var string[] */
+	/** @var array<string, int> */
 	private array $functions = [];
 
-	/** @var string[][] */
+	/** @var array<string, array<string, int>> */
 	private array $methods = [];
 
-	/** @var string[][] */
+	/** @var array<string, array<string, int>> */
 	private array $properties = [];
 
 	/** @var array<string, array<string, bool>> */
@@ -43,6 +41,9 @@ class SecurityPolicy implements Latte\Policy
 	private array $propertyCache = [];
 
 
+	/**
+	 * Creates policy with safe defaults for user-generated templates.
+	 */
 	public static function createSafePolicy(): self
 	{
 		$policy = new self;
@@ -80,7 +81,7 @@ class SecurityPolicy implements Latte\Policy
 	 */
 	public function allowTags(array $tags): self
 	{
-		$this->tags += array_flip(array_map('strtolower', $tags));
+		$this->tags += array_flip(array_map(strtolower(...), $tags));
 		return $this;
 	}
 
@@ -90,7 +91,7 @@ class SecurityPolicy implements Latte\Policy
 	 */
 	public function allowFilters(array $filters): self
 	{
-		$this->filters += array_flip(array_map('strtolower', $filters));
+		$this->filters += array_flip(array_map(strtolower(...), $filters));
 		return $this;
 	}
 
@@ -100,7 +101,7 @@ class SecurityPolicy implements Latte\Policy
 	 */
 	public function allowFunctions(array $functions): self
 	{
-		$this->functions += array_flip(array_map('strtolower', $functions));
+		$this->functions += array_flip(array_map(strtolower(...), $functions));
 		return $this;
 	}
 
@@ -111,7 +112,7 @@ class SecurityPolicy implements Latte\Policy
 	public function allowMethods(string $class, array $methods): self
 	{
 		$this->methodCache = [];
-		$this->methods[$class] = array_flip(array_map('strtolower', $methods));
+		$this->methods[$class] = array_flip(array_map(strtolower(...), $methods));
 		return $this;
 	}
 
@@ -122,7 +123,7 @@ class SecurityPolicy implements Latte\Policy
 	public function allowProperties(string $class, array $properties): self
 	{
 		$this->propertyCache = [];
-		$this->properties[$class] = array_flip(array_map('strtolower', $properties));
+		$this->properties[$class] = array_flip(array_map(strtolower(...), $properties));
 		return $this;
 	}
 
@@ -155,7 +156,7 @@ class SecurityPolicy implements Latte\Policy
 		}
 
 		foreach ($this->methods as $c => $methods) {
-			if (is_a($class, $c, true) && (isset($methods[$method]) || isset($methods['*']))) {
+			if (is_a($class, $c, allow_string: true) && (isset($methods[$method]) || isset($methods['*']))) {
 				return $res = true;
 			}
 		}
@@ -174,7 +175,7 @@ class SecurityPolicy implements Latte\Policy
 		}
 
 		foreach ($this->properties as $c => $properties) {
-			if (is_a($class, $c, true) && (isset($properties[$property]) || isset($properties['*']))) {
+			if (is_a($class, $c, allow_string: true) && (isset($properties[$property]) || isset($properties['*']))) {
 				return $res = true;
 			}
 		}

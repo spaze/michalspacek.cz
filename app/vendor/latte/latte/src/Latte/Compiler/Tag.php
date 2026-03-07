@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -16,7 +14,7 @@ use function array_search, in_array;
 
 
 /**
- * Latte tag or n:attribute.
+ * Represents a Latte tag or n:attribute during parsing.
  */
 final class Tag
 {
@@ -34,6 +32,7 @@ final class Tag
 	public int $outputMode = self::OutputNone;
 
 
+	/** @param list<Token> $tokens */
 	public function __construct(
 		public readonly string $name,
 		array $tokens,
@@ -91,7 +90,7 @@ final class Tag
 	{
 		$tag = $this->parent;
 		while ($tag && (
-			!in_array($tag->node ? $tag->node::class : null, $classes, true)
+			!in_array($tag->node ? $tag->node::class : null, $classes, strict: true)
 			|| ($condition && !$condition($tag))
 		)) {
 			$tag = $tag->parent;
@@ -111,7 +110,8 @@ final class Tag
 
 	public function replaceNAttribute(AreaNode $node): void
 	{
-		$index = array_search($this->nAttribute, $this->htmlElement->attributes->children, true);
+		assert($this->htmlElement !== null);
+		$index = array_search($this->nAttribute, $this->htmlElement->attributes->children, strict: true);
 		$this->htmlElement->attributes->children[$index] = $this->nAttribute = $node;
 	}
 }

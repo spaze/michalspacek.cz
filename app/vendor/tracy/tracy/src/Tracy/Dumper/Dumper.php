@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Tracy;
 
@@ -47,7 +45,7 @@ class Dumper
 
 	public const HIDDEN_VALUE = Describer::HiddenValue;
 
-	/** @var Dumper\Value[] */
+	/** @var array{0?: Dumper\Value[], 1?: mixed[]} */
 	public static array $liveSnapshot = [];
 
 	/** @var ?array<string, string> */
@@ -106,14 +104,17 @@ class Dumper
 
 	/**
 	 * Dumps variable to the output.
+	 * @template T
+	 * @param  T  $var
 	 * @param  array<string, mixed>  $options
+	 * @return T
 	 */
 	public static function dump(mixed $var, array $options = []): mixed
 	{
 		if (Helpers::isCli()) {
 			$useColors = self::$terminalColors && Helpers::detectColors();
 			$dumper = new self($options);
-			fwrite(STDOUT, $dumper->asTerminal($var, $useColors ? self::$terminalColors : []));
+			fwrite(STDOUT, $dumper->asTerminal($var, $useColors ? self::$terminalColors ?? [] : []));
 
 		} elseif (Helpers::isHtmlMode()) {
 			$options[self::LOCATION] ??= true;
@@ -154,7 +155,7 @@ class Dumper
 	 */
 	public static function toTerminal(mixed $var, array $options = []): string
 	{
-		return (new self($options))->asTerminal($var, self::$terminalColors);
+		return (new self($options))->asTerminal($var, self::$terminalColors ?? []);
 	}
 
 
@@ -170,7 +171,7 @@ class Dumper
 
 		$sent = true;
 
-		$nonceAttr = Helpers::getNonceAttr();
+		$nonceAttr = ($nonce = Helpers::getNonce()) ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
 		$s = (Debugger::$showBar ? '' : file_get_contents(__DIR__ . '/../assets/reset.css'))
 			. file_get_contents(__DIR__ . '/../assets/toggle.css')
 			. file_get_contents(__DIR__ . '/assets/dumper-light.css')

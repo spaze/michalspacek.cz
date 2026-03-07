@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -16,7 +14,7 @@ use function array_intersect, array_keys, array_unshift, max, reset, rtrim, str_
 
 
 /**
- * HTML output
+ * Formats and validates HTML output (well-forming, indentation, line wrapping).
  */
 final class HtmlOutputModule extends Texy\Module
 {
@@ -38,7 +36,7 @@ final class HtmlOutputModule extends Texy\Module
 	/** @var array<string, int> */
 	private array $tagUsed = [];
 
-	/** @var array<int, array{tag: string, open: string, close: string, dtdContent: array<string, int>, indent: int}> */
+	/** @var array<int, array{tag: string, open: ?string, close: ?string, dtdContent: array<string, int>, indent: int}> */
 	private array $tagStack = [];
 
 	/** @var array<string, int>  content DTD used, when context is not defined */
@@ -103,6 +101,7 @@ final class HtmlOutputModule extends Texy\Module
 
 	/**
 	 * Callback function: <tag> | </tag> | ....
+	 * @param  string[]  $matches
 	 */
 	private function cb(array $matches): string
 	{
@@ -122,7 +121,7 @@ final class HtmlOutputModule extends Texy\Module
 			$item = reset($this->tagStack);
 			if ($item && !isset($item['dtdContent'][HtmlElement::InnerText])) {  // text not allowed?
 
-			} elseif (array_intersect(array_keys($this->tagUsed, true, false), $this->preserveSpaces)) { // inside pre & textarea preserve spaces
+			} elseif (array_intersect(array_keys($this->tagUsed, filter_value: true, strict: false), $this->preserveSpaces)) { // inside pre & textarea preserve spaces
 				$s = Texy\Helpers::freezeSpaces($mText);
 
 			} else {
@@ -182,7 +181,7 @@ final class HtmlOutputModule extends Texy\Module
 				return $s;
 			}
 
-			$indent = $this->indent && !array_intersect(array_keys($this->tagUsed, true, false), $this->preserveSpaces);
+			$indent = $this->indent && !array_intersect(array_keys($this->tagUsed, filter_value: true, strict: false), $this->preserveSpaces);
 
 			if ($indent && $tag === 'br') { // formatting exception
 				return rtrim($s) . '<' . $tag . $attr . ">\n" . str_repeat("\t", max(0, $this->space - 1)) . "\x07";
@@ -290,6 +289,7 @@ final class HtmlOutputModule extends Texy\Module
 	}
 
 
+	/** @param  array<string, int>  $dtdContent */
 	private function closeOptionalTags(string $tag, array &$dtdContent): string
 	{
 		$s = '';
@@ -327,6 +327,7 @@ final class HtmlOutputModule extends Texy\Module
 
 	/**
 	 * Callback function: wrap lines.
+	 * @param  string[]  $m
 	 */
 	private function wrap(array $m): string
 	{

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\CacheDI;
 
@@ -19,7 +17,7 @@ use Nette\Utils\FileSystem;
 final class CacheExtension extends Nette\DI\CompilerExtension
 {
 	public function __construct(
-		private string $tempDir,
+		private readonly string $tempDir,
 	) {
 	}
 

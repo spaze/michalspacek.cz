@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy;
 
@@ -13,11 +11,11 @@ use function array_keys, strlen, substr_replace;
 
 
 /**
- * Parser for single line structures.
+ * Parses inline structures (links, images, formatting, etc.).
  */
 class LineParser extends Parser
 {
-	/** @var array<string, array{handler: callable, pattern: string, again: ?string}> */
+	/** @var array<string, array{handler: \Closure(LineParser, array<string>, string): (HtmlElement|string|null), pattern: string, again: ?string}> */
 	public array $patterns;
 	public bool $again;
 
@@ -30,6 +28,9 @@ class LineParser extends Parser
 	}
 
 
+	/**
+	 * Parses text and appends results to parent element.
+	 */
 	public function parse(string $text): void
 	{
 		if (!$this->patterns) { // nothing to do
@@ -39,7 +40,6 @@ class LineParser extends Parser
 
 		$offset = 0;
 		$names = array_keys($this->patterns);
-		/** @var array<string, array<int, array{string, int}>> $matches */
 		$matches = $offsets = [];
 		foreach ($names as $name) {
 			$offsets[$name] = -1;
@@ -93,6 +93,11 @@ class LineParser extends Parser
 	}
 
 
+	/**
+	 * @param  array<int, string>  $names
+	 * @param  array<string, int>  $offsets
+	 * @param  array<string, array<string>>  $matches
+	 */
 	private function match(string $text, int $offset, array &$names, array &$offsets, array &$matches): ?string
 	{
 		$first = null;
@@ -115,20 +120,21 @@ class LineParser extends Parser
 					unset($names[$index]);
 					continue;
 
-				} elseif ($matches[$name] = Regexp::match(
+				} elseif ($m = Regexp::match(
 					$text,
 					$this->patterns[$name]['pattern'],
 					Regexp::OFFSET_CAPTURE,
 					$offset + $delta,
 				)) {
-					$m = &$matches[$name];
+					/** @var non-empty-array<array{string, int}> $m */
 					if (!strlen($m[0][0])) {
 						continue;
 					}
 
 					$offsets[$name] = $m[0][1];
+					$matches[$name] = [];
 					foreach ($m as $keyx => $value) {
-						$m[$keyx] = $value[0];
+						$matches[$name][$keyx] = $value[0];
 					}
 				} else {
 					// try next time?

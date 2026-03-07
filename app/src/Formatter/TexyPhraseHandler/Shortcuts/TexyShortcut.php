@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
-use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnTypeException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\JsonException;
 use Texy\HandlerInvocation;
@@ -20,7 +19,6 @@ interface TexyShortcut
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws UnexpectedHandlerInvocationReturnTypeException
 	 */
 	public function resolve(string $url, HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, Link $link): ?HtmlElement;
 

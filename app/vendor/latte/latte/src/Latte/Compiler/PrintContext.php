@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -14,15 +12,19 @@ use Latte\Compiler\Nodes\Php\Expression;
 use Latte\Compiler\Nodes\Php\OperatorNode;
 use Latte\Compiler\Nodes\Php\Scalar;
 use Latte\ContentType;
-use function addcslashes, array_map, array_pop, end, implode, preg_replace, preg_replace_callback, strtolower, substr, trim, ucfirst;
+use Latte\Feature;
+use function addcslashes, array_pop, count, end, implode, preg_replace, preg_replace_callback, strtolower, substr, trim, ucfirst;
 
 
 /**
- * PHP printing helpers and context.
+ * Context for PHP code generation with escaping management.
  */
 final class PrintContext
 {
+	/** @var Nodes\ParameterNode[] */
 	public array $paramsExtraction = [];
+
+	/** @var array<string, Block> */
 	public array $blocks = [];
 	private int $counter = 0;
 
@@ -32,7 +34,8 @@ final class PrintContext
 
 	public function __construct(
 		string $contentType = ContentType::Html,
-		public bool $migrationWarnings = false,
+		/** @var array<string, bool> */
+		private array $features = [],
 	) {
 		$this->escaperStack[] = new Escaper($contentType);
 	}
@@ -63,7 +66,7 @@ final class PrintContext
 				return match ($fn) {
 					'modify' => $args[$pos]->printSimple($this, $var),
 					'modifyContent' => $args[$pos]->printContentAware($this, $var),
-					'escape' => end($this->escaperStack)->escape($var),
+					'escape' => $this->getEscaper()->escape($var),
 				};
 			},
 			$mask,
@@ -100,12 +103,18 @@ final class PrintContext
 	}
 
 
+	/**
+	 * Pushes current escaper onto stack.
+	 */
 	public function beginEscape(): Escaper
 	{
 		return $this->escaperStack[] = $this->getEscaper();
 	}
 
 
+	/**
+	 * Restores previous escaper from stack.
+	 */
 	public function restoreEscape(): void
 	{
 		array_pop($this->escaperStack);
@@ -114,7 +123,9 @@ final class PrintContext
 
 	public function getEscaper(): Escaper
 	{
-		return clone end($this->escaperStack);
+		$escaper = end($this->escaperStack);
+		assert($escaper instanceof Escaper);
+		return clone $escaper;
 	}
 
 
@@ -134,9 +145,18 @@ final class PrintContext
 	}
 
 
+	/**
+	 * Generates unique ID for temporary variables.
+	 */
 	public function generateId(): int
 	{
 		return $this->counter++;
+	}
+
+
+	public function hasFeature(Feature $feature): bool
+	{
+		return $this->features[$feature->name] ?? false;
 	}
 
 
@@ -180,7 +200,7 @@ final class PrintContext
 	public function parenthesize(OperatorNode $parentNode, Node $childNode, int $childPosition): string
 	{
 		[$parentPrec, $parentAssoc] = $parentNode->getOperatorPrecedence();
-		[$childPrec] = $childNode instanceof OperatorNode ? $childNode->getOperatorPrecedence() : null;
+		[$childPrec] = $childNode instanceof OperatorNode ? $childNode->getOperatorPrecedence() : [null];
 		return $childPrec && ($childPrec < $parentPrec || ($parentPrec === $childPrec && $parentAssoc !== $childPosition))
 			? '(' . $childNode->print($this) . ')'
 			: $childNode->print($this);
@@ -189,6 +209,7 @@ final class PrintContext
 
 	/**
 	 * Prints an array of nodes and implodes the printed values with $glue
+	 * @param  (?Node)[]  $nodes
 	 */
 	public function implode(array $nodes, string $glue = ', '): string
 	{

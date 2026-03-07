@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -23,7 +21,8 @@ use function is_string;
 
 
 /**
- * {parameters [type] $var, ...}
+ * {parameters [Type] $name [= default], ...}
+ * Declares and filters template parameters.
  */
 class ParametersNode extends StatementNode
 {
@@ -43,6 +42,7 @@ class ParametersNode extends StatementNode
 	}
 
 
+	/** @return ParameterNode[] */
 	private static function parseParameters(Tag $tag): array
 	{
 		$stream = $tag->parser->stream;

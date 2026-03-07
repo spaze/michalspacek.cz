@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\CommandLine;
 
@@ -28,9 +26,9 @@ final readonly class Option
 		public mixed $fallback = null,
 		/** Can be specified multiple times (collects into array) */
 		public bool $repeatable = false,
-		/** Allowed values */
+		/** @var ?list<string> $enum  Allowed values */
 		public ?array $enum = null,
-		/** Transform function applied to the value */
+		/** @var ?(\Closure(mixed): mixed) $normalizer  Transform function applied to the value */
 		public ?\Closure $normalizer = null,
 	) {
 		$this->positional = !str_starts_with($name, '-');

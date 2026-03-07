@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Loaders;
 
@@ -15,7 +13,7 @@ use const DIRECTORY_SEPARATOR;
 
 
 /**
- * Template loader.
+ * Loads templates from filesystem.
  */
 class FileLoader implements Latte\Loader
 {
@@ -41,7 +39,12 @@ class FileLoader implements Latte\Loader
 			throw new Latte\TemplateNotFoundException("Missing template file '$file'.");
 		}
 
-		return file_get_contents($file);
+		$content = file_get_contents($file);
+		if ($content === false) {
+			throw new Latte\RuntimeException("Unable to read file '$file'.");
+		}
+
+		return $content;
 	}
 
 

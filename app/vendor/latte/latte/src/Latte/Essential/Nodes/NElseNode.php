@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -21,7 +19,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * n:else & n:elseif
+ * <div n:if="$cond"> ... <div n:else>
+ * <div n:if="$cond"> ... <div n:elseif="$cond2">
  */
 final class NElseNode extends StatementNode
 {
@@ -29,7 +28,7 @@ final class NElseNode extends StatementNode
 	public ?ExpressionNode $condition = null;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$node = $tag->node = new static;
@@ -69,6 +68,10 @@ final class NElseNode extends StatementNode
 	}
 
 
+	/**
+	 * @param  AreaNode[]  $children
+	 * @return AreaNode[]
+	 */
 	private static function processFragment(array $children): array
 	{
 		$currentNode = null;

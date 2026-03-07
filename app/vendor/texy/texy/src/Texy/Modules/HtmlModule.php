@@ -1,23 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Texy\Modules;
 
 use Texy;
 use Texy\HtmlElement;
 use Texy\Patterns;
-use function array_flip, explode, is_array, is_string, preg_match, preg_match_all, str_contains, str_ends_with, strtolower, strtoupper, strtr, substr, trim;
+use function array_flip, count, explode, is_array, is_string, preg_match, preg_match_all, str_contains, str_ends_with, strtolower, strtoupper, strtr, substr, trim;
 use const PREG_SET_ORDER;
 
 
 /**
- * Html tags module.
+ * Processes HTML tags and comments in input text.
  */
 final class HtmlModule extends Texy\Module
 {
@@ -48,6 +46,7 @@ final class HtmlModule extends Texy\Module
 
 	/**
 	 * Callback for: <!-- comment -->.
+	 * @param  string[]  $matches
 	 */
 	public function patternComment(Texy\LineParser $parser, array $matches): HtmlElement|string|null
 	{
@@ -58,8 +57,9 @@ final class HtmlModule extends Texy\Module
 
 	/**
 	 * Callback for: <tag attr="...">.
+	 * @param  string[]  $matches
 	 */
-	public function patternTag(Texy\LineParser $parser, array $matches): HtmlElement|string|null
+	public function patternTag(Texy\LineParser $parser, array $matches): ?string
 	{
 		[, $mEnd, $mTag, $mAttr, $mEmpty] = $matches;
 		// [1] => /
@@ -108,7 +108,7 @@ final class HtmlModule extends Texy\Module
 		HtmlElement $el,
 		bool $isStart,
 		?bool $forceEmpty = null,
-	): HtmlElement|string|null
+	): ?HtmlElement
 	{
 		$texy = $this->texy;
 
@@ -120,6 +120,7 @@ final class HtmlModule extends Texy\Module
 
 		// convert case
 		$name = $el->getName();
+		assert($name !== null);
 		$lower = strtolower($name);
 		if (isset($texy->getDTD()[$lower]) || $name === strtoupper($name)) {
 			// complete UPPER convert to lower
@@ -133,7 +134,7 @@ final class HtmlModule extends Texy\Module
 			}
 		} else { // allowedTags === Texy\Texy::ALL
 			if ($forceEmpty) {
-				$el->setName($name, true);
+				$el->setName($name, empty: true);
 			}
 		}
 
@@ -172,7 +173,11 @@ final class HtmlModule extends Texy\Module
 	}
 
 
-	private function applyAttrs(&$attrs, $allowedAttrs): void
+	/**
+	 * @param  array<string, array<string|int|bool>|string|int|bool|null>  $attrs
+	 * @param  bool|string[]  $allowedAttrs
+	 */
+	private function applyAttrs(array &$attrs, bool|array $allowedAttrs): void
 	{
 		if (!$allowedAttrs) {
 			$attrs = [];
@@ -189,11 +194,15 @@ final class HtmlModule extends Texy\Module
 	}
 
 
-	private function applyClasses(&$attrs, $allowedClasses): void
+	/**
+	 * @param  array<string, string|int|bool|array<string|int|bool>|null>  $attrs
+	 * @param  array<string, int>|bool  $allowedClasses
+	 */
+	private function applyClasses(array &$attrs, bool|array $allowedClasses): void
 	{
 		if (!isset($attrs['class'])) {
 		} elseif (is_array($allowedClasses)) {
-			$attrs['class'] = explode(' ', $attrs['class']);
+			$attrs['class'] = is_string($attrs['class']) ? explode(' ', $attrs['class']) : (array) $attrs['class'];
 			foreach ($attrs['class'] as $key => $value) {
 				if (!isset($allowedClasses[$value])) {
 					unset($attrs['class'][$key]); // id & class are case-sensitive
@@ -205,26 +214,39 @@ final class HtmlModule extends Texy\Module
 
 		if (!isset($attrs['id'])) {
 		} elseif (is_array($allowedClasses)) {
-			if (!isset($allowedClasses['#' . $attrs['id']])) {
+			if (!is_string($attrs['id']) || !isset($allowedClasses['#' . $attrs['id']])) {
 				$attrs['id'] = null;
 			}
+
 		} elseif ($allowedClasses !== Texy\Texy::ALL) {
 			$attrs['id'] = null;
 		}
 	}
 
 
-	private function applyStyles(&$attrs, $allowedStyles): void
+	/**
+	 * @param  array<string, string|int|bool|array<string|int|bool>|null>  $attrs
+	 * @param  array<string, int>|bool  $allowedStyles
+	 */
+	private function applyStyles(array &$attrs, bool|array $allowedStyles): void
 	{
 		if (!isset($attrs['style'])) {
 		} elseif (is_array($allowedStyles)) {
-			$tmp = explode(';', $attrs['style']);
-			$attrs['style'] = null;
-			foreach ($tmp as $value) {
-				$pair = explode(':', $value, 2);
-				$prop = trim($pair[0]);
-				if (isset($pair[1], $allowedStyles[strtolower($prop)])) { // CSS is case-insensitive
-					$attrs['style'][$prop] = $pair[1];
+			if (is_string($attrs['style'])) {
+				$parts = explode(';', $attrs['style']);
+				$attrs['style'] = [];
+				foreach ($parts as $value) {
+					if (count($pair = explode(':', $value, 2)) === 2) {
+						$attrs['style'][trim($pair[0])] = trim($pair[1]);
+					}
+				}
+			} else {
+				$attrs['style'] = (array) $attrs['style'];
+			}
+
+			foreach ($attrs['style'] as $key => $value) {
+				if (!isset($allowedStyles[strtolower((string) $key)])) { // CSS is case-insensitive
+					unset($attrs['style'][$key]);
 				}
 			}
 		} elseif ($allowedStyles !== Texy\Texy::ALL) {
@@ -248,7 +270,12 @@ final class HtmlModule extends Texy\Module
 
 		$name = $el->getName();
 		if ($name === 'img') {
-			if (!isset($el->attrs['src']) || !$texy->checkURL($el->attrs['src'], $texy::FILTER_IMAGE)) {
+			if (!isset($el->attrs['src'])) {
+				return false;
+			}
+
+			assert(is_string($el->attrs['src']));
+			if (!$texy->checkURL($el->attrs['src'], $texy::FILTER_IMAGE)) {
 				return false;
 			}
 
@@ -260,11 +287,9 @@ final class HtmlModule extends Texy\Module
 			}
 
 			if (isset($el->attrs['href'])) {
+				assert(is_string($el->attrs['href']));
 				if ($texy->linkModule->forceNoFollow && str_contains($el->attrs['href'], '//')) {
-					if (isset($el->attrs['rel'])) {
-						$el->attrs['rel'] = (array) $el->attrs['rel'];
-					}
-
+					settype($el->attrs['rel'], 'array');
 					$el->attrs['rel'][] = 'nofollow';
 				}
 
@@ -274,7 +299,8 @@ final class HtmlModule extends Texy\Module
 
 				$texy->summary['links'][] = $el->attrs['href'];
 			}
-		} elseif (preg_match('#^h[1-6]#i', $name)) {
+
+		} elseif (preg_match('#^h[1-6]#i', $name ?? '')) {
 			$texy->headingModule->TOC[] = [
 				'el' => $el,
 				'level' => (int) substr($name, 1),
@@ -286,6 +312,7 @@ final class HtmlModule extends Texy\Module
 	}
 
 
+	/** @return array<string, string|bool> */
 	private function parseAttributes(string $attrs): array
 	{
 		$matches = $res = [];

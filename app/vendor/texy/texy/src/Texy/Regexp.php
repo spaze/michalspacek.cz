@@ -1,18 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Texy;
 
-use function array_keys, array_values, is_array, is_object, preg_last_error, preg_last_error_msg, preg_match, preg_match_all, preg_replace, preg_replace_callback, preg_split, strlen;
+use function array_keys, array_values, is_array, preg_last_error, preg_last_error_msg, preg_match, preg_match_all, preg_replace, preg_replace_callback, preg_split, strlen;
 use const PREG_OFFSET_CAPTURE, PREG_SET_ORDER, PREG_SPLIT_DELIM_CAPTURE, PREG_SPLIT_OFFSET_CAPTURE;
 
 
+/**
+ * Regular expression utilities with error handling.
+ */
 class Regexp
 {
 	public const ALL = 1;
@@ -21,14 +22,16 @@ class Regexp
 
 	/**
 	 * Splits string by a regular expression.
-	 * @param  int $flags  OFFSET_CAPTURE
+	 * @param  int  $flags  OFFSET_CAPTURE
+	 * @return list<string|array{string, int}>
 	 */
 	public static function split(string $subject, string $pattern, int $flags = 0): array
 	{
 		$reFlags = (($flags & self::OFFSET_CAPTURE) ? PREG_SPLIT_OFFSET_CAPTURE : 0) | PREG_SPLIT_DELIM_CAPTURE;
 		$res = preg_split($pattern, $subject, -1, $reFlags);
-		if (preg_last_error()) { // run-time error
+		if ($res === false || preg_last_error()) { // run-time error
 			trigger_error(preg_last_error_msg(), E_USER_WARNING);
+			return [];
 		}
 
 		return $res;
@@ -37,7 +40,7 @@ class Regexp
 
 	/**
 	 * Performs a regular expression match.
-	 * @param  int $flags  OFFSET_CAPTURE, ALL
+	 * @param  int  $flags  OFFSET_CAPTURE, ALL
 	 */
 	public static function match(string $subject, string $pattern, int $flags = 0, int $offset = 0): mixed
 	{
@@ -62,27 +65,29 @@ class Regexp
 
 	/**
 	 * Perform a regular expression search and replace.
+	 * @param  string|string[]  $pattern
+	 * @param  string|\Closure(string[]): string|null  $replacement
 	 */
 	public static function replace(
 		string $subject,
 		string|array $pattern,
-		string|callable|null $replacement = null,
+		string|\Closure|null $replacement = null,
 	): string
 	{
-		if (is_object($replacement) || is_array($replacement)) {
+		if ($replacement instanceof \Closure) {
 			$res = preg_replace_callback($pattern, $replacement, $subject);
 			if ($res === null && preg_last_error()) { // run-time error
 				trigger_error(preg_last_error_msg(), E_USER_WARNING);
 			}
 
-			return $res;
+			return $res ?? '';
 
 		} elseif ($replacement === null && is_array($pattern)) {
 			$replacement = array_values($pattern);
 			$pattern = array_keys($pattern);
 		}
 
-		$res = preg_replace($pattern, $replacement, $subject);
+		$res = preg_replace($pattern, $replacement ?? '', $subject);
 		if (preg_last_error()) { // run-time error
 			trigger_error(preg_last_error_msg(), E_USER_WARNING);
 		}

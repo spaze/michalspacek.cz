@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -31,10 +29,11 @@ final class TemplateGenerator
 
 	/**
 	 * Builds template class.
+	 * @param array<string, bool>  $features
 	 */
-	public function buildClass(Nodes\TemplateNode $node, bool $migrationWarnings): void
+	public function buildClass(Nodes\TemplateNode $node, array $features = []): void
 	{
-		$context = new PrintContext($node->contentType, $migrationWarnings);
+		$context = new PrintContext($node->contentType, $features);
 		$this->generateBase($node, $context);
 		$this->generateBlocks($context);
 	}
@@ -47,11 +46,11 @@ final class TemplateGenerator
 	{
 		$members = [];
 		foreach ($this->constants as $name => $value) {
-			$members[] = "\tpublic const $name = " . PhpHelpers::dump($value, true) . ';';
+			$members[] = "\tpublic const $name = " . PhpHelpers::dump($value, multiline: true) . ';';
 		}
 
 		foreach ($this->properties as $name => $value) {
-			$members[] = "\tpublic $$name = " . PhpHelpers::dump($value, true) . ';';
+			$members[] = "\tpublic $$name = " . PhpHelpers::dump($value, multiline: true) . ';';
 		}
 
 		foreach (array_filter($this->methods) as $name => $method) {
@@ -87,7 +86,7 @@ final class TemplateGenerator
 			$node->head,
 			fn(Node $node) => $node instanceof Nodes\TextNode ? new Nodes\NopNode : $node,
 		);
-		$code = $head->print($context);
+		$code = $head?->print($context) ?? '';
 		if ($code || $context->paramsExtraction) {
 			$code .= 'return get_defined_vars();';
 			$code = self::buildParams($code, $context->paramsExtraction, '$this->params', $context);
@@ -100,13 +99,15 @@ final class TemplateGenerator
 	}
 
 
-	/** @param  Block[]  $blocks */
 	private function generateBlocks(PrintContext $context): void
 	{
 		$contentType = $context->getEscaper()->getContentType();
 		foreach ($context->blocks as $block) {
-			if (!$block->isDynamic()) {
-				$meta[$block->layer][$block->name->value] = $contentType === $block->escaping
+			$name = $block->name;
+			if (!$block->isDynamic()
+				&& ($name instanceof Nodes\Php\Scalar\StringNode || $name instanceof Nodes\Php\Scalar\IntegerNode)
+			) {
+				$meta[$block->layer][$name->value] = $contentType === $block->escaping
 					? $block->method
 					: [$block->method, $block->escaping];
 			}
@@ -132,6 +133,7 @@ final class TemplateGenerator
 	}
 
 
+	/** @param Nodes\Php\ParameterNode[] $params */
 	private function buildParams(string $body, array $params, string $cont, PrintContext $context): string
 	{
 		if (!str_contains($body, '$') && !str_contains($body, 'get_defined_vars()')) {

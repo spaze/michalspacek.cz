@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
@@ -16,6 +14,9 @@ use Latte\Compiler\PrintContext;
 use function count, in_array, strtolower;
 
 
+/**
+ * Binary operation: arithmetic, logical, bitwise, comparison, null-coalescing, or pipe.
+ */
 class BinaryOpNode extends ExpressionNode implements OperatorNode
 {
 	private const Ops = ['||', '&&', 'or', 'and', 'xor', '|', '&', '^', '.', '+', '-', '*', '/', '%', '<<', '>>', '**',
@@ -28,7 +29,7 @@ class BinaryOpNode extends ExpressionNode implements OperatorNode
 		public ExpressionNode $right,
 		public ?Position $position = null,
 	) {
-		if (!in_array(strtolower($this->operator), self::Ops, true)) {
+		if (!in_array(strtolower($this->operator), self::Ops, strict: true)) {
 			throw new \InvalidArgumentException("Unexpected operator '$this->operator'");
 		}
 	}

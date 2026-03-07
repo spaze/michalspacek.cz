@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Tracy;
 
@@ -27,7 +25,7 @@ class Logger implements ILogger
 	/** @var ?string sender of email notifications */
 	public $fromEmail;
 
-	/** @var mixed interval for sending email is 2 days */
+	/** @var string|int  interval for sending email is 2 days */
 	public $emailSnooze = '2 days';
 
 	/** @var callable(mixed $message, string $email): void  handler for sending emails */
@@ -136,6 +134,7 @@ class Logger implements ILogger
 		}
 
 		$hash = substr(hash('xxh128', serialize($data)), 0, 10);
+		assert($this->directory !== null);
 		$dir = strtr($this->directory . '/', '\/', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
 		foreach (new \DirectoryIterator($this->directory) as $file) {
 			if (strpos($file->getBasename(), $hash)) {

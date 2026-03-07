@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Tracy\Bridges\Nette;
 
@@ -182,7 +180,8 @@ class TracyExtension extends Nette\DI\CompilerExtension
 	private function parseErrorSeverity(string|array $value): int
 	{
 		$value = implode('|', (array) $value);
-		$res = (int) @parse_ini_string('e = ' . $value)['e']; // @ may fail
+		$ini = @parse_ini_string('e = ' . $value); // @ may fail
+		$res = (int) ($ini['e'] ?? 0);
 		if (!$res) {
 			throw new Nette\InvalidStateException("Syntax error in expression '$value'");
 		}

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Sandbox;
 
@@ -22,6 +20,7 @@ final class RuntimeChecker
 	}
 
 
+	/** @param  array<mixed>  $args */
 	public function call(mixed $callable, array $args): mixed
 	{
 		self::checkCallable($callable);
@@ -30,6 +29,7 @@ final class RuntimeChecker
 	}
 
 
+	/** @param  array<mixed>  $args */
 	public function callMethod(mixed $object, mixed $method, array $args, bool $nullsafe = false): mixed
 	{
 		if ($object === null) {
@@ -53,11 +53,12 @@ final class RuntimeChecker
 	public function closure(mixed $callable): \Closure
 	{
 		self::checkCallable($callable);
-		return \Closure::fromCallable($callable);
+		return $callable(...);
 	}
 
 
-	public function args(...$args): array
+	/** @return list<mixed> */
+	public function args(mixed ...$args): array
 	{
 		foreach ($args as $arg) {
 			if (

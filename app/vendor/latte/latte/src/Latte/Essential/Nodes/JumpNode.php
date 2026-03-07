@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -17,10 +15,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {breakIf ...}
- * {continueIf ...}
- * {skipIf ...}
- * {exitIf ...}
+ * {breakIf $cond}, {continueIf $cond}, {skipIf $cond}, {exitIf $cond}
+ * Note: {skipIf} is like {continueIf} but doesn't increment $iterator->counter.
  */
 class JumpNode extends StatementNode
 {
@@ -50,7 +46,7 @@ class JumpNode extends StatementNode
 		}
 
 		$last = $parent?->prefix === Tag::PrefixNone
-			? $parent->htmlElement->parent
+			? $parent->htmlElement?->parent
 			: $parent?->htmlElement;
 		$el = $tag->htmlElement;
 		while ($el && $el !== $last) {

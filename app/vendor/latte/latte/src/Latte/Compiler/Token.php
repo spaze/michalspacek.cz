@@ -1,18 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Latte\Compiler;
 
 use function in_array;
 
 
-final class Token
+/**
+ * Token produced by lexers.
+ */
+final readonly class Token
 {
 	public const
 		End = 0,
@@ -236,17 +237,17 @@ final class Token
 
 
 	public function __construct(
-		public readonly int $type,
-		public readonly string $text,
-		public readonly ?Position $position = null,
+		public int $type,
+		public string $text,
+		public ?Position $position = null,
 	) {
 	}
 
 
 	public function is(int|string ...$kind): bool
 	{
-		return in_array($this->type, $kind, true)
-			|| in_array($this->text, $kind, true);
+		return in_array($this->type, $kind, strict: true)
+			|| in_array($this->text, $kind, strict: true);
 	}
 
 

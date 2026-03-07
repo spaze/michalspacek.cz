@@ -1,15 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Latte;
 
 
+/**
+ * Security policy for sandbox mode.
+ */
 interface Policy
 {
 	function isTagAllowed(string $tag): bool;

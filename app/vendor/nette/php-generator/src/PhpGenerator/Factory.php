@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\PhpGenerator;
 
@@ -50,7 +48,9 @@ final class Factory
 		if ($from->isAnonymous()) {
 			return new ClassType;
 		} elseif ($from->isEnum()) {
-			$from = new \ReflectionEnum($from->getName());
+			$name = $from->getName();
+			/** @var class-string<\UnitEnum> $name */
+			$from = new \ReflectionEnum($name);
 			$class = new EnumType($from->getName());
 		} elseif ($from->isInterface()) {
 			$class = new InterfaceType($from->getName());
@@ -111,8 +111,10 @@ final class Factory
 				$props[] = $p = $this->fromPropertyReflection($prop);
 				if ($withBodies && ($file = $declaringClass->getFileName())) {
 					$hookBodies ??= $this->getExtractor($file)->extractPropertyHookBodies($declaringClass->name);
-					foreach ($hookBodies[$prop->getName()] ?? [] as $hookType => [$body, $short]) {
-						$p->getHook($hookType)->setBody($body, short: $short);
+					/** @var array<'set'|'get', array{string, bool}> $propHookBodies */
+					$propHookBodies = $hookBodies[$prop->getName()] ?? [];
+					foreach ($propHookBodies as $hookType => [$body, $short]) {
+						$p->getHook($hookType)?->setBody($body, short: $short);
 					}
 				}
 			}
@@ -243,10 +245,11 @@ final class Factory
 	public function fromParameterReflection(\ReflectionParameter $from): Parameter
 	{
 		if ($from->isPromoted()) {
-			$property = $from->getDeclaringClass()->getProperty($from->name);
+			$property = $from->getDeclaringClass()?->getProperty($from->name);
+			\assert($property instanceof \ReflectionProperty);
 			$param = (new PromotedParameter($from->name))
 				->setVisibility($this->getVisibility($property))
-				->setReadOnly($property->isReadonly())
+				->setReadOnly($property->isReadOnly())
 				->setFinal(PHP_VERSION_ID >= 80500 && $property->isFinal() && !$property->isPrivateSet());
 			$this->addHooks($property, $param);
 		} else {
@@ -257,7 +260,7 @@ final class Factory
 
 		if ($from->isDefaultValueAvailable()) {
 			if ($from->isDefaultValueConstant()) {
-				$parts = explode('::', $from->getDefaultValueConstantName());
+				$parts = explode('::', $from->getDefaultValueConstantName() ?? '');
 				if (count($parts) > 1) {
 					$parts[0] = Helpers::tagName($parts[0]);
 				}
@@ -337,6 +340,7 @@ final class Factory
 			$prop->setVisibility($getV === Visibility::Public ? null : $getV, $setV);
 		}
 
+		/** @var 'set'|'get' $type */
 		foreach ($from->getHooks() as $type => $hook) {
 			$params = $hook->getParameters();
 			if (

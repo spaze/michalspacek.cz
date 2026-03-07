@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter\TexyPhraseHandler;
 
-use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnTypeException;
 use MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\JsonException;
@@ -28,9 +27,8 @@ final readonly class TexyPhraseHandler
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws UnexpectedHandlerInvocationReturnTypeException
 	 */
-	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
+	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|null
 	{
 		if ($link === null) {
 			return $this->handlerInvocation->proceed($invocation, $phrase, $content, $modifier, $link);

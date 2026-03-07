@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
+use Latte\Feature;
 use Latte\Tools\Linter;
 use Latte\Tools\LinterExtension;
 use MichalSpacekCz\Application\Cli\CliArgs;
@@ -54,7 +55,7 @@ final readonly class LatteLinter implements CliArgsProvider
 		}
 
 		$latteEngine = $this->templateFactory->createTemplate()->getLatte();
-		$latteEngine->setStrictParsing($strictParsing);
+		$latteEngine->setFeature(Feature::StrictParsing, $strictParsing);
 		$latteEngine->addExtension(new LinterExtension());
 		$linter = new Linter($latteEngine, $debug);
 		$ok = $linter->scanDirectory($this->cliArgs->getArg(self::ARG_PATH));

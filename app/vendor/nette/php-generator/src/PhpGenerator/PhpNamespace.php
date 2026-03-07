@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\PhpGenerator;
 
@@ -43,7 +41,7 @@ final class PhpNamespace
 
 	private bool $bracketedSyntax = false;
 
-	/** @var string[][] */
+	/** @var array<string, array<string, string>> */
 	private array $aliases = [
 		self::NameNormal => [],
 		self::NameFunction => [],
@@ -91,6 +89,7 @@ final class PhpNamespace
 
 	/**
 	 * Adds a use statement to the namespace for class, function or constant.
+	 * @param  self::Name*  $of
 	 * @throws InvalidStateException
 	 */
 	public function addUse(string $name, ?string $alias = null, string $of = self::NameNormal): static
@@ -133,6 +132,7 @@ final class PhpNamespace
 	}
 
 
+	/** @param  self::Name*  $of */
 	public function removeUse(string $name, string $of = self::NameNormal): void
 	{
 		foreach ($this->aliases[$of] as $alias => $item) {
@@ -161,7 +161,10 @@ final class PhpNamespace
 	}
 
 
-	/** @return array<string, string> */
+	/**
+	 * @param  self::Name*  $of
+	 * @return array<string, string>
+	 */
 	public function getUses(string $of = self::NameNormal): array
 	{
 		uasort($this->aliases[$of], fn(string $a, string $b): int => strtr($a, '\\', ' ') <=> strtr($b, '\\', ' '));
@@ -175,6 +178,7 @@ final class PhpNamespace
 
 	/**
 	 * Resolves relative name to full name.
+	 * @param  self::Name*  $of
 	 */
 	public function resolveName(string $name, string $of = self::NameNormal): string
 	{
@@ -199,6 +203,7 @@ final class PhpNamespace
 
 	/**
 	 * Simplifies type hint with relative names.
+	 * @param  self::Name*  $of
 	 */
 	public function simplifyType(string $type, string $of = self::NameNormal): string
 	{
@@ -208,6 +213,7 @@ final class PhpNamespace
 
 	/**
 	 * Simplifies the full name of a class, function, or constant to a relative name.
+	 * @param  self::Name*  $of
 	 */
 	public function simplifyName(string $name, string $of = self::NameNormal): string
 	{
@@ -335,7 +341,9 @@ final class PhpNamespace
 	{
 		$res = [];
 		foreach ($this->classes as $class) {
-			$res[$class->getName()] = $class;
+			$name = $class->getName();
+			assert($name !== null);
+			$res[$name] = $class;
 		}
 
 		return $res;

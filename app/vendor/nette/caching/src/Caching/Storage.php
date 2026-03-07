@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Caching;
 
@@ -28,8 +26,9 @@ interface Storage
 
 	/**
 	 * Writes item into the cache.
+	 * @param  array<string, mixed>  $dependencies
 	 */
-	function write(string $key, $data, array $dependencies): void;
+	function write(string $key, mixed $data, array $dependencies): void;
 
 	/**
 	 * Removes item from the cache.
@@ -38,6 +37,7 @@ interface Storage
 
 	/**
 	 * Removes items from the cache by conditions.
+	 * @param  array<string, mixed>  $conditions
 	 */
 	function clean(array $conditions): void;
 }

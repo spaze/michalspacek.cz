@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -24,11 +22,12 @@ use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 use Latte\Compiler\Tag;
 use Latte\Compiler\TagParser;
-use function array_map, array_unshift, implode, preg_match;
+use function array_map, array_unshift, implode, is_string, preg_match;
 
 
 /**
- * {foreach $expr as $key => $value} & {else}
+ * {foreach $array as $item} ... {/foreach}
+ * {foreach $array as $key => $value} ... {else} ... {/foreach}
  */
 class ForeachNode extends StatementNode
 {
@@ -43,7 +42,7 @@ class ForeachNode extends StatementNode
 	public bool $checkArgs = true;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static|NopNode> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$tag->expectArguments();
@@ -160,8 +159,8 @@ class ForeachNode extends StatementNode
 		(new NodeTraverser)->traverse($node, function (Node $node) use (&$vars) {
 			if ($node instanceof self && $node->checkArgs) {
 				foreach ([$node->key, $node->value] as $var) {
-					if ($var instanceof VariableNode) {
-						$vars[$var->name][] = $node->position->line;
+					if ($var instanceof VariableNode && is_string($var->name)) {
+						$vars[$var->name][] = $node->position?->line;
 					}
 				}
 			}

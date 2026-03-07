@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy;
 
@@ -15,7 +13,7 @@ use const ENT_HTML5, ENT_QUOTES, ICONV_IMPL;
 
 
 /**
- * Helpers.
+ * Static utility helpers.
  */
 final class Helpers
 {
@@ -28,7 +26,7 @@ final class Helpers
 	/**
 	 * StrToLower in UTF-8.
 	 */
-	public static function toLower($s)
+	public static function toLower(string $s): string
 	{
 		return function_exists('mb_strtolower')
 			? mb_strtolower($s, 'UTF-8')

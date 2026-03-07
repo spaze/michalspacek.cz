@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -49,11 +47,11 @@ final class PhpHelpers
 				} elseif ($name === T_WHITESPACE) {
 					$prev = $tokens[$n - 1];
 					$lines = substr_count($token, "\n");
-					if ($prev === '}' && in_array($next[0], [T_ELSE, T_ELSEIF, T_CATCH, T_FINALLY], true)) {
+					if ($prev === '}' && in_array($next[0], [T_ELSE, T_ELSEIF, T_CATCH, T_FINALLY], strict: true)) {
 						$token = ' ';
 					} elseif ($prev === '{' || $prev === '}' || $prev === ';' || $lines) {
 						$token = str_repeat("\n", max(1, $lines)) . str_repeat("\t", $level); // indent last line
-					} elseif ($prev[0] === T_OPEN_TAG) {
+					} elseif (is_array($prev) && $prev[0] === T_OPEN_TAG) {
 						$token = '';
 					}
 
@@ -70,7 +68,7 @@ final class PhpHelpers
 					throw new \LogicException('Unexpected token');
 
 				} else {
-					if (in_array($name, [T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES], true)) {
+					if (in_array($name, [T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES], strict: true)) {
 						$level++;
 					}
 
@@ -100,6 +98,9 @@ final class PhpHelpers
 	}
 
 
+	/**
+	 * Exports value to PHP code representation.
+	 */
 	public static function dump(mixed $value, bool $multiline = false): string
 	{
 		if (is_array($value)) {
@@ -115,33 +116,37 @@ final class PhpHelpers
 		} elseif ($value === null) {
 			return 'null';
 		} else {
-			return var_export($value, true);
+			return var_export($value, return: true);
 		}
 	}
 
 
+	/**
+	 * Optimizes consecutive echo statements into single call.
+	 */
 	public static function optimizeEcho(string $source): string
 	{
 		$res = '';
 		$tokens = token_get_all($source);
 		$start = null;
+		$str = '';
 
 		for ($i = 0; $i < count($tokens); $i++) {
 			$token = $tokens[$i];
 			if ($token[0] === T_ECHO) {
-				if (!$start) {
+				if ($start === null) {
 					$str = '';
 					$start = strlen($res);
 				}
 
-			} elseif ($start && $token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === "'") {
+			} elseif ($start !== null && $token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === "'") {
 				$str .= stripslashes(substr($token[1], 1, -1));
 
-			} elseif ($start && $token === ';') {
+			} elseif ($start !== null && $token === ';') {
 				if ($str !== '') {
 					$res = substr_replace(
 						$res,
-						'echo ' . ($str === "\n" ? '"\n"' : var_export($str, true)),
+						'echo ' . ($str === "\n" ? '"\n"' : var_export($str, return: true)),
 						$start,
 						strlen($res) - $start,
 					);
@@ -158,7 +163,10 @@ final class PhpHelpers
 	}
 
 
-	public static function decodeNumber(string $str, &$base = null): int|float|null
+	/**
+	 * Decodes number string to int or float value.
+	 */
+	public static function decodeNumber(string $str, ?int &$base = null): int|float|null
 	{
 		$str = str_replace('_', '', $str);
 
@@ -203,11 +211,11 @@ final class PhpHelpers
 				if (isset($replacements[$ch])) {
 					return $replacements[$ch];
 				} elseif ($ch[0] === 'x' || $ch[0] === 'X') {
-					return chr(hexdec(substr($ch, 1)));
+					return chr((int) hexdec(substr($ch, 1)));
 				} elseif ($ch[0] === 'u') {
-					return self::codePointToUtf8(hexdec($matches[2]));
+					return self::codePointToUtf8((int) hexdec($matches[2]));
 				} else {
-					$num = octdec($ch);
+					$num = (int) octdec($ch);
 					if ($num > 255) {
 						throw new CompileException("Octal escape sequence \\$ch is greater than \\377");
 					}

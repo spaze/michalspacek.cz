@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
@@ -17,6 +15,9 @@ use Latte\Compiler\PrintContext;
 use Latte\Helpers;
 
 
+/**
+ * Closure or arrow function (fn($x) => $x or function($x) use ($y) {}).
+ */
 class ClosureNode extends ExpressionNode
 {
 	public function __construct(
@@ -36,12 +37,12 @@ class ClosureNode extends ExpressionNode
 
 	public function print(PrintContext $context): string
 	{
-		$arrow = (bool) $this->expr;
+		$usesByRef = false;
 		foreach ($this->uses as $use) {
-			$arrow = $arrow && !$use->byRef;
+			$usesByRef = $usesByRef || $use->byRef;
 		}
 
-		return $arrow
+		return $this->expr && !$usesByRef
 			? 'fn' . ($this->byRef ? '&' : '')
 				. '(' . $context->implode($this->params) . ')'
 				. ($this->returnType !== null ? ': ' . $this->returnType->print($context) : '')

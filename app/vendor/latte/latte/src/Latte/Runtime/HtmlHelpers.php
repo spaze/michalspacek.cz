@@ -1,19 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Latte\Runtime;
 
 use Latte;
 use Latte\ContentType;
 use Nette;
-use function get_debug_type, html_entity_decode, htmlspecialchars, in_array, is_array, is_bool, is_float, is_int, is_scalar, is_string, ord, preg_match, preg_replace, preg_replace_callback, str_replace, strip_tags, strtolower, strtr, substr;
-use const ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES, ENT_SUBSTITUTE;
+use function get_debug_type, html_entity_decode, htmlspecialchars, in_array, is_array, is_bool, is_float, is_int, is_string, ord, preg_match, preg_replace, preg_replace_callback, str_replace, strip_tags, strtolower, strtr;
+use const ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES, ENT_SUBSTITUTE, JSON_INVALID_UTF8_SUBSTITUTE, JSON_THROW_ON_ERROR, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE;
 
 
 /**
@@ -38,7 +36,7 @@ final class HtmlHelpers
 	/**
 	 * Escapes string for use inside HTML text.
 	 */
-	public static function escapeText($s): string
+	public static function escapeText(mixed $s): string
 	{
 		if ($s instanceof HtmlStringable || $s instanceof Nette\HtmlStringable) {
 			return $s->__toString();
@@ -53,7 +51,7 @@ final class HtmlHelpers
 	/**
 	 * Escapes string for use inside HTML attribute value.
 	 */
-	public static function escapeAttr($s): string
+	public static function escapeAttr(mixed $s): string
 	{
 		if ($s instanceof HtmlStringable) {
 			$s = self::convertHtmlToText($s->__toString());
@@ -68,7 +66,7 @@ final class HtmlHelpers
 	/**
 	 * Escapes string for use inside HTML tag.
 	 */
-	public static function escapeTag($s): string
+	public static function escapeTag(mixed $s): string
 	{
 		$s = (string) $s;
 		$s = htmlspecialchars($s, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8');
@@ -83,7 +81,7 @@ final class HtmlHelpers
 	/**
 	 * Escapes string for use inside HTML/XML comments.
 	 */
-	public static function escapeComment($s): string
+	public static function escapeComment(mixed $s): string
 	{
 		$s = (string) $s;
 		if ($s && ($s[0] === '-' || $s[0] === '>' || $s[0] === '!')) {
@@ -91,7 +89,7 @@ final class HtmlHelpers
 		}
 
 		$s = str_replace('--', '- - ', $s);
-		if (substr($s, -1) === '-') {
+		if (str_ends_with($s, '-')) {
 			$s .= ' ';
 		}
 
@@ -102,7 +100,7 @@ final class HtmlHelpers
 	/**
 	 * Escapes HTML for usage in <script type=text/html>
 	 */
-	public static function escapeRawHtml($s): string
+	public static function escapeRawHtml(mixed $s): string
 	{
 		if ($s instanceof HtmlStringable || $s instanceof Nette\HtmlStringable) {
 			return self::convertHtmlToRawText($s->__toString());
@@ -115,7 +113,7 @@ final class HtmlHelpers
 	/**
 	 * Escapes only quotes.
 	 */
-	public static function escapeQuotes($s): string
+	public static function escapeQuotes(mixed $s): string
 	{
 		return strtr((string) $s, ['"' => '&quot;', "'" => '&apos;']);
 	}
@@ -124,7 +122,7 @@ final class HtmlHelpers
 	/**
 	 * Converts JS and CSS for usage in <script> or <style>
 	 */
-	public static function convertJSToRawText($s): string
+	public static function convertJSToRawText(mixed $s): string
 	{
 		return preg_replace('#</(script|style)#i', '<\/$1', (string) $s);
 	}
@@ -196,7 +194,7 @@ final class HtmlHelpers
 		return match (true) {
 			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart . '="' . self::escapeAttr($value) . '"',
 			$value === null => '',
-			default => self::triggerInvalidValue(trim($namePart), $value) ?? '',
+			default => self::triggerInvalidValue(trim($namePart), $value),
 		};
 	}
 
@@ -269,7 +267,8 @@ final class HtmlHelpers
 	}
 
 
-	private static function formatArrayAttribute(string $namePart, array $items, \Closure $cb, $separator): string
+	/** @param  array<mixed>  $items */
+	private static function formatArrayAttribute(string $namePart, array $items, \Closure $cb, string $separator): string
 	{
 		$res = [];
 		foreach ($items as $k => $v) {
@@ -281,11 +280,12 @@ final class HtmlHelpers
 	}
 
 
-	public static function triggerInvalidValue(string $name, mixed $value): void
+	public static function triggerInvalidValue(string $name, mixed $value): string
 	{
 		$source = Latte\Helpers::guessTemplatePosition();
 		$type = get_debug_type($value);
 		trigger_error("Invalid value for attribute '$name': $type is not allowed" . ($source ? " ($source)" : '.'), E_USER_WARNING);
+		return '';
 	}
 
 
@@ -321,7 +321,7 @@ final class HtmlHelpers
 	public static function isUrlAttribute(string $tag, string $attr): bool
 	{
 		$attr = strtolower($attr);
-		return in_array($attr, ['href', 'src', 'action', 'formaction'], true)
+		return in_array($attr, ['href', 'src', 'action', 'formaction'], strict: true)
 			|| ($attr === 'data' && strtolower($tag) === 'object');
 	}
 
@@ -355,7 +355,7 @@ final class HtmlHelpers
 			throw new Latte\RuntimeException("Invalid tag name '$name'");
 
 		} elseif (self::isVoidElement($name) !== self::isVoidElement($origName ?? 'div') // non-void is default
-			|| in_array(strtolower($name), ['style', 'script'], true)) {
+			|| in_array(strtolower($name), ['style', 'script'], strict: true)) {
 			throw new Latte\RuntimeException("Forbidden: Cannot change element to <$name>");
 		}
 		return $name;

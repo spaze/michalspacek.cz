@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Caching;
 
 use Nette;
-use function array_keys, array_map, array_shift, array_slice, array_unique, array_values, constant, count, defined, filemtime, func_get_args, get_class, is_array, is_object, is_scalar, serialize, substr, time;
+use function array_keys, array_map, array_shift, array_slice, array_unique, array_values, constant, count, defined, filemtime, func_get_args, is_array, is_object, is_scalar, serialize, substr, time;
 
 
 /**
@@ -109,6 +107,8 @@ class Cache
 
 	/**
 	 * Reads the specified item from the cache or generate it.
+	 * @param ?(\Closure(mixed &$dependencies): mixed)  $generator
+	 * @param ?array<string, mixed>  $dependencies
 	 */
 	public function load(mixed $key, ?callable $generator = null, ?array $dependencies = null): mixed
 	{
@@ -132,6 +132,10 @@ class Cache
 
 	/**
 	 * Reads multiple items from the cache.
+	 * @template TKey of int|string
+	 * @param list<TKey>  $keys
+	 * @param ?(\Closure(TKey $key, mixed &$dependencies): mixed)  $generator
+	 * @return array<TKey, mixed>
 	 */
 	public function bulkLoad(array $keys, ?callable $generator = null): array
 	{
@@ -159,7 +163,7 @@ class Cache
 			return $result;
 		}
 
-		$storageKeys = array_map([$this, 'generateKey'], $keys);
+		$storageKeys = array_map($this->generateKey(...), $keys);
 		$cacheData = $this->storage->bulkRead($storageKeys);
 		foreach ($keys as $i => $key) {
 			$storageKey = $storageKeys[$i];
@@ -186,6 +190,7 @@ class Cache
 	 * - Cache::Files => (array|string) file names
 	 * - Cache::Items => (array|string) cache items
 	 * - Cache::Constants => (array|string) cache items
+	 * @param ?array<string, mixed>  $dependencies
 	 * @return mixed  value itself
 	 * @throws Nette\InvalidArgumentException
 	 */
@@ -220,7 +225,9 @@ class Cache
 
 
 	/**
-	 * Writes multiple items into cache
+	 * Writes multiple items into cache.
+	 * @param mixed[]  $items
+	 * @param ?array<string, mixed>  $dependencies
 	 */
 	public function bulkSave(array $items, ?array $dependencies = null): void
 	{
@@ -235,7 +242,7 @@ class Cache
 
 		$dependencies = $this->completeDependencies($dependencies);
 		if (isset($dependencies[self::Expire]) && $dependencies[self::Expire] <= 0) {
-			$this->storage->bulkRemove(array_map(fn($key) => $this->generateKey($key), array_keys($items)));
+			$this->storage->bulkRemove(array_map($this->generateKey(...), array_keys($items)));
 			return;
 		}
 
@@ -258,6 +265,10 @@ class Cache
 	}
 
 
+	/**
+	 * @param ?array<string, mixed>  $dp
+	 * @return array<string, mixed>
+	 */
 	private function completeDependencies(?array $dp): array
 	{
 		// convert expire into relative amount of seconds
@@ -286,7 +297,7 @@ class Cache
 
 		// add namespaces to items
 		if (isset($dp[self::Items])) {
-			$dp[self::Items] = array_unique(array_map([$this, 'generateKey'], (array) $dp[self::Items]));
+			$dp[self::Items] = array_unique(array_map($this->generateKey(...), (array) $dp[self::Items]));
 		}
 
 		// convert CONSTS into CALLBACKS
@@ -321,6 +332,7 @@ class Cache
 	 * - Cache::Priority => (int) priority
 	 * - Cache::Tags => (array) tags
 	 * - Cache::All => true
+	 * @param ?array<string, mixed>  $conditions
 	 */
 	public function clean(?array $conditions = null): void
 	{
@@ -335,12 +347,13 @@ class Cache
 
 	/**
 	 * Caches results of function/method calls.
+	 * @param  callable(mixed...): mixed  $function
 	 */
 	public function call(callable $function): mixed
 	{
 		$key = func_get_args();
 		if (is_array($function) && is_object($function[0])) {
-			$key[0][0] = get_class($function[0]);
+			$key[0][0] = $function[0]::class;
 		}
 
 		return $this->load($key, fn() => $function(...array_slice($key, 1)));
@@ -349,13 +362,16 @@ class Cache
 
 	/**
 	 * Caches results of function/method calls.
+	 * @param  callable(mixed...): mixed  $function
+	 * @param  ?array<string, mixed>  $dependencies
+	 * @return \Closure(mixed...): mixed
 	 */
 	public function wrap(callable $function, ?array $dependencies = null): \Closure
 	{
 		return function () use ($function, $dependencies) {
 			$key = [$function, $args = func_get_args()];
 			if (is_array($function) && is_object($function[0])) {
-				$key[0][0] = get_class($function[0]);
+				$key[0][0] = $function[0]::class;
 			}
 
 			return $this->load($key, function (&$deps) use ($function, $args, $dependencies) {
@@ -384,7 +400,7 @@ class Cache
 	/**
 	 * @deprecated  use capture()
 	 */
-	public function start($key): ?OutputHelper
+	public function start(mixed $key): ?OutputHelper
 	{
 		return $this->capture($key);
 	}
@@ -393,7 +409,7 @@ class Cache
 	/**
 	 * Generates internal cache key.
 	 */
-	protected function generateKey($key): string
+	protected function generateKey(mixed $key): string
 	{
 		return $this->namespace . hash('xxh128', is_scalar($key) ? (string) $key : serialize($key));
 	}
@@ -404,6 +420,7 @@ class Cache
 
 	/**
 	 * Checks CALLBACKS dependencies.
+	 * @param list<array{0: callable(mixed...): bool, 1?: mixed, 2?: mixed}>  $callbacks
 	 */
 	public static function checkCallbacks(array $callbacks): bool
 	{
@@ -420,7 +437,7 @@ class Cache
 	/**
 	 * Checks CONSTS dependency.
 	 */
-	private static function checkConst(string $const, $value): bool
+	private static function checkConst(string $const, mixed $value): bool
 	{
 		return defined($const) && constant($const) === $value;
 	}

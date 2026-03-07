@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Tracy\Bridges\Nette;
 
@@ -46,16 +44,12 @@ class Bridge
 
 		$loc = Tracy\Debugger::mapSource($loc['file'], $loc['line']) ?? $loc;
 		if (preg_match('#Cannot (?:read|write to) an undeclared property .+::\$(\w+), did you mean \$(\w+)\?#A', $e->getMessage(), $m)) {
-			return [
-				'link' => Helpers::editorUri($loc['file'], $loc['line'], 'fix', '->' . $m[1], '->' . $m[2]),
-				'label' => 'fix it',
-			];
+			$link = Helpers::editorUri($loc['file'], $loc['line'], 'fix', '->' . $m[1], '->' . $m[2]);
+			return $link !== null ? ['link' => $link, 'label' => 'fix it'] : null;
 		} elseif (preg_match('#Call to undefined (static )?method .+::(\w+)\(\), did you mean (\w+)\(\)?#A', $e->getMessage(), $m)) {
 			$operator = $m[1] ? '::' : '->';
-			return [
-				'link' => Helpers::editorUri($loc['file'], $loc['line'], 'fix', $operator . $m[2] . '(', $operator . $m[3] . '('),
-				'label' => 'fix it',
-			];
+			$link = Helpers::editorUri($loc['file'], $loc['line'], 'fix', $operator . $m[2] . '(', $operator . $m[3] . '(');
+			return $link !== null ? ['link' => $link, 'label' => 'fix it'] : null;
 		}
 
 		return null;

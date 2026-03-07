@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Html;
 
@@ -21,7 +19,7 @@ use Latte\ContentType;
 
 
 /**
- * HTML element node.
+ * HTML/XML element with attributes, content, and n:attribute support.
  */
 class ElementNode extends AreaNode
 {
@@ -91,16 +89,16 @@ class ElementNode extends AreaNode
 			? $this->dynamicTag->print($context)
 			: (new TagNode($this))->print($context, captureEnd: false);
 
-		if ($this->content) {
+		if ($innerContent = $this->content) {
 			if ($this->dynamicTag) {
 				$endTag = '$ʟ_tags[' . ($context->generateId()) . ']';
 				$res = "\$ʟ_tag = ''; $res $endTag = \$ʟ_tag;";
 			} else {
-				$endTag = var_export('</' . $this->name . '>', true);
+				$endTag = var_export('</' . $this->name . '>', return: true);
 			}
 
 			$context->beginEscape()->enterHtmlText($this);
-			$content = $this->content->print($context);
+			$content = $innerContent->print($context);
 			$context->restoreEscape();
 			$res .= $this->breakable
 				? 'try { ' . $content . ' } finally { echo ' . $endTag . '; } '

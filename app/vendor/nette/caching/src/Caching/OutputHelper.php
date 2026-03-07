@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Caching;
 
@@ -17,21 +15,21 @@ use Nette;
  */
 class OutputHelper
 {
+	/** @var array<string, mixed> */
 	public array $dependencies = [];
-	private ?Cache $cache;
-	private mixed $key;
 
 
-	public function __construct(Cache $cache, mixed $key)
-	{
-		$this->cache = $cache;
-		$this->key = $key;
+	public function __construct(
+		private ?Cache $cache,
+		private mixed $key,
+	) {
 		ob_start();
 	}
 
 
 	/**
 	 * Stops and saves the cache.
+	 * @param  array<string, mixed>  $dependencies
 	 */
 	public function end(array $dependencies = []): void
 	{

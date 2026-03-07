@@ -1,17 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Tracy\Dumper;
 
 use Dom;
 use Ds;
-use function array_diff_key, array_key_exists, array_key_last, count, end, explode, get_mangled_object_vars, implode, iterator_to_array, preg_match_all, sort;
+use function array_diff_key, array_key_exists, count, end, explode, get_mangled_object_vars, implode, iterator_to_array, preg_match_all, sort;
+use const PHP_VERSION_ID;
 
 
 /**
@@ -216,6 +215,7 @@ final class Exposer
 			$describer->addPropertyTo($pair, 'key', $v);
 			$describer->addPropertyTo($pair, 'value', $obj[$v]);
 			$describer->addPropertyTo($value, '', null, described: $pair);
+			assert($value->items !== null);
 			$value->items[count($value->items) - 1][0] = '';
 		}
 	}
@@ -230,6 +230,7 @@ final class Exposer
 			$describer->addPropertyTo($pair, 'key', $k);
 			$describer->addPropertyTo($pair, 'value', $v);
 			$describer->addPropertyTo($value, '', null, described: $pair);
+			assert($value->items !== null);
 			$value->items[count($value->items) - 1][0] = '';
 		}
 	}

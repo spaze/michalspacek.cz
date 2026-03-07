@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
@@ -16,6 +14,9 @@ use Latte\Compiler\PrintContext;
 use function strtr, substr;
 
 
+/**
+ * String literal, single or double quoted.
+ */
 class StringNode extends ScalarNode
 {
 	public function __construct(
@@ -25,7 +26,7 @@ class StringNode extends ScalarNode
 	}
 
 
-	public static function parse(string $str, Position $position): static
+	public static function parse(string $str, ?Position $position): static
 	{
 		$str = $str[0] === "'"
 			? strtr(substr($str, 1, -1), ['\\\\' => '\\', "\\'" => "'"])

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\Psr;
 
@@ -17,7 +15,7 @@ use Psr;
 class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 {
 	public function __construct(
-		private Nette\Caching\Storage $storage,
+		private readonly Nette\Caching\Storage $storage,
 	) {
 	}
 
@@ -67,7 +65,7 @@ class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 
 
 	/**
-	 * @param iterable<string|int, mixed> $values
+	 * @param iterable<int|string, mixed>  $values
 	 */
 	public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
 	{
@@ -81,6 +79,7 @@ class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 	}
 
 
+	/** @param  iterable<int|string, string>  $keys */
 	public function deleteMultiple(iterable $keys): bool
 	{
 		foreach ($keys as $value) {

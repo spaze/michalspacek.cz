@@ -43,6 +43,11 @@
 				<referencedClass name="Nette\Security\IAuthenticator"/> <!-- MichalSpacekCz\User\Manager implements Nette\Security\Authenticator which in turn extends Nette\Security\IAuthenticator for backwards compatibility -->
 			</errorLevel>
 		</DeprecatedInterface>
+		<DeprecatedProperty>
+			<errorLevel type="suppress">
+				<referencedProperty name="Texy\Modules\FigureModule::$widthDelta"/> <!-- Deprecated in Texy 3.2.8, but needed to avoid adding inline style to figure elements -->
+			</errorLevel>
+		</DeprecatedProperty>
 		<InternalMethod>
 			<errorLevel type="suppress">
 				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->

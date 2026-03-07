@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -19,7 +17,7 @@ use function is_array;
 
 
 /**
- * n:attr="..."
+ * <div n:attr="class => $class, id => $id">
  */
 final class NAttrNode extends StatementNode
 {
@@ -43,7 +41,7 @@ final class NAttrNode extends StatementNode
 			$this->args,
 			self::class,
 			$context->getEscaper()->getContentType() === Latte\ContentType::Xml,
-			$context->migrationWarnings ?: null,
+			$context->hasFeature(Latte\Feature::MigrationWarnings) ?: null,
 			$this->position,
 		);
 	}

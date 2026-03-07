@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\PhpGenerator;
 
@@ -75,7 +73,7 @@ final class EnumType extends ClassLike
 
 	/**
 	 * Sets cases to enum
-	 * @param  EnumCase[]  $cases
+	 * @param  list<EnumCase>  $cases
 	 */
 	public function setCases(array $cases): static
 	{
@@ -89,7 +87,7 @@ final class EnumType extends ClassLike
 	}
 
 
-	/** @return EnumCase[] */
+	/** @return array<string, EnumCase> */
 	public function getCases(): array
 	{
 		return $this->cases;

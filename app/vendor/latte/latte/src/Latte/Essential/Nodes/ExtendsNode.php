@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -19,8 +17,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {extends none | auto | "file"}
- * {layout none | auto | "file"}
+ * {extends 'parent.latte'}
+ * {layout 'layout.latte'}
  */
 class ExtendsNode extends StatementNode
 {
