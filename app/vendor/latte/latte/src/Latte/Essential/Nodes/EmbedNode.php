@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -23,7 +21,7 @@ use function count, preg_match;
 
 
 /**
- * {embed [block|file] name [,] [params]}
+ * {embed 'file.latte'|#block} ... {/embed}
  */
 class EmbedNode extends StatementNode
 {
@@ -34,7 +32,7 @@ class EmbedNode extends StatementNode
 	public int|string|null $layer;
 
 
-	/** @return \Generator<int, ?array, array{FragmentNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{FragmentNode, ?Tag}, static> */
 	public static function create(Tag $tag, TemplateParser $parser): \Generator
 	{
 		if ($tag->isNAttribute()) {

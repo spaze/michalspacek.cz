@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -15,10 +13,11 @@ use function strtr;
 
 
 /**
- * Typography replacements module.
+ * Applies typographic corrections (quotes, dashes, ellipsis, non-breaking spaces).
  */
 final class TypographyModule extends Texy\Module
 {
+	/** @var array<string, array{singleQuotes: array{string, string}, doubleQuotes: array{string, string}}> */
 	public static array $locales = [
 		'cs' => [
 			'singleQuotes' => ["\u{201A}", "\u{2018}"],
@@ -48,6 +47,7 @@ final class TypographyModule extends Texy\Module
 
 	public string $locale = 'cs';
 
+	/** @var array<string, string> */
 	private static array $patterns = [
 		'#(?<![.\x{2026}])\.{3,4}(?![.\x{2026}])#mu' => "\u{2026}",                // ellipsis  ...
 		'#(?<=[\d ]|^)-(?=[\d ]|$)#' /*.          */ => "\u{2013}",                // en dash 123-123
@@ -88,6 +88,7 @@ final class TypographyModule extends Texy\Module
 		'#(?<!\'|\w)\'(?!\ |\')((?:[^\']++|\')+)(?<!\ |\')\'(?![\'' . Patterns::CHAR . '])()#Uu' => ':lsq:$1:rsq:',
 	];
 
+	/** @var array<string, string> */
 	private array $pattern = [];
 
 
@@ -102,9 +103,9 @@ final class TypographyModule extends Texy\Module
 	/**
 	 * Text pre-processing.
 	 */
-	public function beforeParse(Texy\Texy $texy, &$text): void
+	public function beforeParse(Texy\Texy $texy, string &$text): void
 	{
-		$locale = self::$locales[$this->locale] ?: self::$locales['en'];
+		$locale = self::$locales[$this->locale] ?? self::$locales['en'];
 		$dq = $locale['doubleQuotes'];
 		$sq = $locale['singleQuotes'];
 		foreach (self::$patterns as $k => $v) {

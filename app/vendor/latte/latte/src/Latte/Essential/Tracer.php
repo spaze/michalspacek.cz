@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential;
 
@@ -25,9 +23,9 @@ final class Tracer
 	{
 		$e = new Latte\RuntimeException('Your location in Latte templates');
 		$trace = debug_backtrace();
-		$source = Helpers::mapCompiledToSource($trace[0]['file'], $trace[0]['line']);
+		$source = Helpers::mapCompiledToSource($trace[0]['file'] ?? '', $trace[0]['line'] ?? 0);
 		$props = [
-			'file' => $source['name'],
+			'file' => $source['name'] ?? '',
 			'line' => $source['line'] ?? 0,
 			'trace' => self::generateTrace($trace),
 		];
@@ -40,6 +38,10 @@ final class Tracer
 	}
 
 
+	/**
+	 * @param  array<array{file?: string, line?: int, function?: string, object?: object, args?: mixed[]}>  $trace
+	 * @return array<array{function: string, file: string, line: int, args: mixed[]}>
+	 */
 	private static function generateTrace(array $trace): array
 	{
 		$res = [];
@@ -50,7 +52,7 @@ final class Tracer
 
 				if (str_starts_with($method, 'block')) {
 					// begin of block
-					$comment = (new \ReflectionMethod($object, $method))->getDocComment();
+					$comment = (new \ReflectionMethod($object, $method))->getDocComment() ?: '';
 					$res[] = [
 						'function' => preg_match('~(\{.+\})~', $comment, $m) ? $m[1] : '?',
 						'file' => $object->getName(),
@@ -62,25 +64,26 @@ final class Tracer
 					// begin of included/extended/... file
 					$res[] = [
 						'function' => '{' . $object->getReferenceType() . ' ' . basename($object->getName()) . '}',
-						'file' => $object->getReferringTemplate()->getName(),
+						'file' => $object->getReferringTemplate()?->getName() ?? '',
 						'line' => 0, // will be added in next step
 						'args' => self::filterParams($object->getParameters()),
 					];
 
 				} elseif ($method === 'renderToContentType') {
 					// {include file}, extends, embed, sandbox, ...
-					$res[count($res) - 1]['line'] = Helpers::mapCompiledToSource($item['file'], $item['line'])['line'] ?? 0;
+					$res[count($res) - 1]['line'] = Helpers::mapCompiledToSource($item['file'] ?? '', $item['line'] ?? 0)['line'] ?? 0;
 
 				} elseif ($method === 'renderBlock' || $method === 'renderParentBlock') {
 					// {include block}
-					$res[count($res) - 1]['args'] = self::filterParams($item['args'][1] + $object->getParameters());
+					$args = $item['args'] ?? [];
+					$res[count($res) - 1]['args'] = self::filterParams($args[1] + $object->getParameters());
 
-					if ($method !== 'renderBlock' || isset($item['args'][2])) { // is not {block}
+					if ($method !== 'renderBlock' || isset($args[2])) { // is not {block}
 						$res[] = [
-							'function' => '{include ' . ($method === 'renderParentBlock' ? 'parent' : $item['args'][0]) . '}',
+							'function' => '{include ' . ($method === 'renderParentBlock' ? 'parent' : $args[0]) . '}',
 							'file' => $object->getName(),
-							'line' => Helpers::mapCompiledToSource($item['file'], $item['line'])['line'] ?? 0,
-							'args' => self::filterParams($item['args'][1]),
+							'line' => Helpers::mapCompiledToSource($item['file'] ?? '', $item['line'] ?? 0)['line'] ?? 0,
+							'args' => self::filterParams($args[1]),
 						];
 					}
 				}
@@ -93,6 +96,10 @@ final class Tracer
 	}
 
 
+	/**
+	 * @param  array<mixed>  $params
+	 * @return array<mixed>
+	 */
 	private static function filterParams(array $params): array
 	{
 		foreach ($params as $key => $foo) {

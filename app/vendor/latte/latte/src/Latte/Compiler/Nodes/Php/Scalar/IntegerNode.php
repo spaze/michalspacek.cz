@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
@@ -17,6 +15,9 @@ use Latte\Compiler\PrintContext;
 use const PHP_INT_MAX;
 
 
+/**
+ * Integer literal in decimal, hex, octal, or binary notation.
+ */
 class IntegerNode extends ScalarNode
 {
 	public const KindBinary = 2;
@@ -33,7 +34,7 @@ class IntegerNode extends ScalarNode
 	}
 
 
-	public static function parse(string $str, Position $position): static
+	public static function parse(string $str, ?Position $position): static
 	{
 		$num = PhpHelpers::decodeNumber($str, $base);
 		if ($num === null) {

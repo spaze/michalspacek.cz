@@ -1,29 +1,31 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Latte\Tools;
 
 use Latte;
 use Nette;
 use function in_array, strlen;
-use const PHP_BINARY, STDERR;
+use const DIRECTORY_SEPARATOR, PHP_BINARY, STDERR;
 
 
+/**
+ * Validates Latte template syntax.
+ */
 final class Linter
 {
+	/** @var string[] */
 	public array $excludedDirs = ['.*', '*.tmp', 'temp', 'vendor', 'node_modules'];
 
 
 	public function __construct(
 		private ?Latte\Engine $engine = null,
-		private bool $debug = false,
-		private bool $strict = false,
+		private readonly bool $debug = false,
+		private readonly bool $strict = false,
 	) {
 	}
 
@@ -61,7 +63,7 @@ final class Linter
 	{
 		$engine = new Latte\Engine;
 		$engine->enablePhpLinter(PHP_BINARY);
-		$engine->setStrictParsing($this->strict);
+		$engine->setFeature(Latte\Feature::StrictParsing, $this->strict);
 		$engine->addExtension(new Latte\Essential\TranslatorExtension(null));
 
 		if (class_exists(Nette\Bridges\ApplicationLatte\UIExtension::class)) {
@@ -95,12 +97,12 @@ final class Linter
 
 	public function lintLatte(string $file): bool
 	{
-		set_error_handler(function (int $severity, string $message) use ($file) {
-			if (in_array($severity, [E_USER_DEPRECATED, E_USER_WARNING, E_USER_NOTICE], true)) {
+		set_error_handler(function (int $severity, string $message, string $errFile = '', int $errLine = 0) use ($file): bool {
+			if (in_array($severity, [E_USER_DEPRECATED, E_USER_WARNING, E_USER_NOTICE], strict: true)) {
 				$pos = preg_match('~on line (\d+)~', $message, $m) ? ':' . $m[1] : '';
 				$label = $severity === E_USER_DEPRECATED ? 'DEPRECATED' : 'WARNING';
 				$this->writeError($label, $file . $pos, $message);
-				return null;
+				return true;
 			}
 			return false;
 		});
@@ -109,7 +111,11 @@ final class Linter
 			echo $file, "\n";
 		}
 		$s = file_get_contents($file);
-		if (substr($s, 0, 3) === "\xEF\xBB\xBF") {
+		if ($s === false) {
+			$this->writeError('ERROR', $file, 'unable to read file');
+			return false;
+		}
+		if (str_starts_with($s, "\xEF\xBB\xBF")) {
 			$this->writeError('WARNING', $file, 'contains BOM');
 		}
 
@@ -138,13 +144,13 @@ final class Linter
 	private function initialize(): void
 	{
 		if (function_exists('pcntl_signal')) {
-			pcntl_signal(SIGINT, function (): void {
+			pcntl_signal(SIGINT, function (): never {
 				pcntl_signal(SIGINT, SIG_DFL);
 				echo "Terminated\n";
 				exit(1);
 			});
 		} elseif (function_exists('sapi_windows_set_ctrl_handler')) {
-			sapi_windows_set_ctrl_handler(function () {
+			sapi_windows_set_ctrl_handler(function (): never {
 				echo "Terminated\n";
 				exit(1);
 			});
@@ -159,7 +165,7 @@ final class Linter
 		$it = match (true) {
 			is_file($path) => new \ArrayIterator([$path]),
 			is_dir($path) => $this->findLatteFiles($path),
-			preg_match('~[*?]~', $path) => new \GlobIterator($path),
+			(bool) preg_match('~[*?]~', $path) => new \GlobIterator($path),
 			default => throw new \InvalidArgumentException("File or directory '$path' not found."),
 		};
 		$it = new \CallbackFilterIterator($it, fn($file) => is_file((string) $file));

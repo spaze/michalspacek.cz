@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy;
 
@@ -27,7 +25,7 @@ final class Modifier
 {
 	public ?string $id = null;
 
-	/** @var array<string, bool> of classes (as keys) */
+	/** @var array<string, true> of classes (as keys) */
 	public array $classes = [];
 
 	/** @var array<string, string> of CSS styles */
@@ -39,7 +37,7 @@ final class Modifier
 	public ?string $vAlign = null;
 	public ?string $title = null;
 
-	/** @var array<string, int>  list of properties which are regarded as HTML element attributes */
+	/** @var array<string, 1>  list of properties which are regarded as HTML element attributes */
 	public static array $elAttrs = [
 		'abbr' => 1, 'accesskey' => 1, 'alt' => 1, 'cite' => 1, 'colspan' => 1, 'contenteditable' => 1, 'crossorigin' => 1,
 		'datetime' => 1, 'decoding' => 1, 'download' => 1, 'draggable' => 1, 'for' => 1, 'headers' => 1, 'hidden' => 1,
@@ -65,8 +63,10 @@ final class Modifier
 
 			if ($ch === '(') { // title
 				preg_match('#(?:\\\\\)|[^)\n])++\)#', $s, $m, 0, $p);
-				$this->title = Helpers::unescapeHtml(str_replace('\)', ')', trim(substr($m[0], 1, -1))));
-				$p += strlen($m[0]);
+				if (isset($m[0])) {
+					$this->title = Helpers::unescapeHtml(str_replace('\)', ')', trim(substr($m[0], 1, -1))));
+					$p += strlen($m[0]);
+				}
 
 			} elseif ($ch === '{') { // style & attributes
 				$a = strpos($s, '}', $p) + 1;
@@ -101,7 +101,7 @@ final class Modifier
 	 */
 	public function decorate(Texy $texy, HtmlElement $el): HtmlElement
 	{
-		$this->decorateAttrs($texy, $el->attrs, $el->getName());
+		$this->decorateAttrs($texy, $el->attrs, $el->getName() ?? '');
 		$el->validateAttrs($texy->getDTD());
 		$this->decorateClasses($texy, $el->attrs);
 		$this->decorateStyles($texy, $el->attrs);
@@ -110,6 +110,7 @@ final class Modifier
 	}
 
 
+	/** @param  array<string, mixed>  $attrs */
 	private function decorateAttrs(Texy $texy, array &$attrs, string $name): void
 	{
 		if (!$this->attrs) {
@@ -138,6 +139,7 @@ final class Modifier
 	}
 
 
+	/** @param  array<string, mixed>  $attrs */
 	private function decorateClasses(Texy $texy, array &$attrs): void
 	{
 		if ($this->classes || $this->id !== null) {
@@ -164,6 +166,7 @@ final class Modifier
 	}
 
 
+	/** @param  array<string, mixed>  $attrs */
 	private function decorateStyles(Texy $texy, array &$attrs): void
 	{
 		if ($this->styles) {
@@ -184,6 +187,7 @@ final class Modifier
 	}
 
 
+	/** @param  array<string, mixed>  $attrs */
 	private function decorateAligns(Texy $texy, array &$attrs): void
 	{
 		if ($this->hAlign) {

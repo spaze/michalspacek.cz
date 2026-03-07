@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -26,7 +24,8 @@ use function is_string;
 
 
 /**
- * {define [local] name}
+ * {define name($params)} ... {/define}
+ * Defines reusable block with parameters.
  */
 class DefineNode extends StatementNode
 {
@@ -34,7 +33,7 @@ class DefineNode extends StatementNode
 	public AreaNode $content;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag, TemplateParser $parser): \Generator
 	{
 		$tag->expectArguments();
@@ -61,6 +60,7 @@ class DefineNode extends StatementNode
 	}
 
 
+	/** @return ParameterNode[] */
 	private static function parseParameters(Tag $tag): array
 	{
 		$stream = $tag->parser->stream;
@@ -114,7 +114,7 @@ class DefineNode extends StatementNode
 		$this->block->content = $this->content->print($context); // must be compiled after is added
 
 		return $context->format(
-			'$this->addBlock(%raw, %dump, [[$this, %dump]], %dump);',
+			'$this->addBlock(%raw, %dump, [$this->%raw(...)], %dump);',
 			$context->ensureString($this->block->name, 'Block name'),
 			$context->getEscaper()->export(),
 			$this->block->method,

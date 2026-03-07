@@ -1,17 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Caching\Storages;
 
 use Nette;
 use Nette\Caching\Cache;
-use function count, extension_loaded, implode, is_file, str_repeat, touch;
+use function array_values, count, extension_loaded, implode, is_file, str_repeat, touch;
 
 
 /**
@@ -19,18 +17,15 @@ use function count, extension_loaded, implode, is_file, str_repeat, touch;
  */
 class SQLiteJournal implements Journal
 {
-	/** @string */
-	private $path;
 	private \PDO $pdo;
 
 
-	public function __construct(string $path)
-	{
+	public function __construct(
+		private readonly string $path,
+	) {
 		if (!extension_loaded('pdo_sqlite')) {
 			throw new Nette\NotSupportedException('SQLiteJournal requires PHP extension pdo_sqlite which is not loaded.');
 		}
-
-		$this->path = $path;
 	}
 
 
@@ -72,12 +67,13 @@ class SQLiteJournal implements Journal
 		if (!empty($dependencies[Cache::Tags])) {
 			$this->pdo->prepare('DELETE FROM tags WHERE key = ?')->execute([$key]);
 
+			$arr = [];
 			foreach ($dependencies[Cache::Tags] as $tag) {
 				$arr[] = $key;
 				$arr[] = $tag;
 			}
 
-			$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', count($arr) / 2 - 1))
+			$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', intdiv(count($arr), 2) - 1))
 				->execute($arr);
 		}
 
@@ -140,6 +136,6 @@ class SQLiteJournal implements Journal
 		$this->pdo->prepare("DELETE FROM priorities WHERE key IN ($unionSql)")->execute($args);
 		$this->pdo->exec('COMMIT');
 
-		return $keys;
+		return array_values($keys);
 	}
 }

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy;
 
@@ -24,7 +22,7 @@ use const ENT_NOQUOTES;
 class Texy
 {
 	// Texy version
-	public const VERSION = '3.2.6';
+	public const VERSION = '3.2.8';
 
 	// configuration directives
 	public const
@@ -43,7 +41,7 @@ class Texy
 		FILTER_ANCHOR = 'anchor',
 		FILTER_IMAGE = 'image';
 
-	/** @deprecated  */
+	#[\Deprecated]
 	public const
 		HTML4_TRANSITIONAL = 0,
 		HTML4_STRICT = 1,
@@ -71,13 +69,13 @@ class Texy
 	/** Do obfuscate e-mail addresses? */
 	public bool $obfuscateEmail = true;
 
-	/** @var array<string|string>  regexps to check URL schemes */
+	/** @var array<string, string>  regexps to check URL schemes */
 	public array $urlSchemeFilters; // disable URL scheme filter
 
 	/** Paragraph merging mode */
 	public bool $mergeLines = true;
 
-	/** @var array<string, string[]>  Parsing summary */
+	/** @var array{images: list<string>, links: list<string>}  Parsing summary */
 	public array $summary = [
 		'images' => [],
 		'links' => [],
@@ -116,40 +114,40 @@ class Texy
 
 	/**
 	 * Registered regexps and associated handlers for inline parsing.
-	 * @var array<string, array{handler: callable, pattern: string, again: ?string}>
+	 * @var array<string, array{handler: \Closure(LineParser, array<string>, string): (HtmlElement|string|null), pattern: string, again: ?string}>
 	 */
 	private array $linePatterns = [];
 
-	/** @var array<string, array{handler: callable, pattern: string, again: ?string}> */
+	/** @var array<string, array{handler: \Closure(LineParser, array<string>, string): (HtmlElement|string|null), pattern: string, again: ?string}> */
 	private array $_linePatterns;
 
 	/**
 	 * Registered regexps and associated handlers for block parsing.
-	 * @var array<string, array{handler: callable, pattern: string}>
+	 * @var array<string, array{handler: \Closure(BlockParser, array<string>, string): (HtmlElement|string|null), pattern: string}>
 	 */
 	private array $blockPatterns = [];
 
-	/** @var array<string, array{handler: callable, pattern: string}> */
+	/** @var array<string, array{handler: \Closure(BlockParser, array<string>, string): (HtmlElement|string|null), pattern: string}> */
 	private array $_blockPatterns;
 
-	/** @var array<string, callable> */
+	/** @var array<string, \Closure(string): string> */
 	private array $postHandlers = [];
 
 	/** DOM structure for parsed text */
-	private ?HtmlElement $DOM;
+	private HtmlElement $DOM;
 
-	/** Texy protect markup table */
+	/** @var array<string, string>  Texy protect markup table */
 	private array $marks = [];
 
-	/** for internal usage */
+	/** @var array<string, int>|bool  for internal usage */
 	private bool|array $_classes;
 
-	/** for internal usage */
+	/** @var array<string, int>|bool  for internal usage */
 	private bool|array $_styles;
 
 	private bool $processing = false;
 
-	/** @var array<string, array<int, callable>> of events and registered handlers */
+	/** @var array<string, list<\Closure(mixed...): mixed>> of events and registered handlers */
 	private array $handlers = [];
 
 	/**
@@ -228,6 +226,9 @@ class Texy
 	}
 
 
+	/**
+	 * @param  callable(LineParser, string[], string): (HtmlElement|string|null)  $handler
+	 */
 	final public function registerLinePattern(
 		callable $handler,
 		string $pattern,
@@ -240,13 +241,16 @@ class Texy
 		}
 
 		$this->linePatterns[$name] = [
-			'handler' => $handler,
+			'handler' => $handler(...),
 			'pattern' => $pattern,
 			'again' => $againTest,
 		];
 	}
 
 
+	/**
+	 * @param  callable(BlockParser, string[], string): (HtmlElement|string|null)  $handler
+	 */
 	final public function registerBlockPattern(callable $handler, string $pattern, string $name): void
 	{
 		// if (!preg_match('#(.)\^.*\$\1[a-z]*#is', $pattern)) die("Texy: Not a block pattern $name");
@@ -255,19 +259,20 @@ class Texy
 		}
 
 		$this->blockPatterns[$name] = [
-			'handler' => $handler,
+			'handler' => $handler(...),
 			'pattern' => $pattern . 'm', // force multiline
 		];
 	}
 
 
+	/** @param  callable(string): string  $handler */
 	final public function registerPostLine(callable $handler, string $name): void
 	{
 		if (!isset($this->allowed[$name])) {
 			$this->allowed[$name] = true;
 		}
 
-		$this->postHandlers[$name] = $handler;
+		$this->postHandlers[$name] = $handler(...);
 	}
 
 
@@ -355,7 +360,7 @@ class Texy
 	 */
 	public function processLine(string $text): string
 	{
-		return $this->process($text, true);
+		return $this->process($text, singleLine: true);
 	}
 
 
@@ -368,7 +373,7 @@ class Texy
 		$text = Helpers::normalize($text);
 
 		$this->typographyModule->beforeParse($this, $text);
-		$text = $this->typographyModule->postLine($text, true);
+		$text = $this->typographyModule->postLine($text, preserveSpaces: true);
 
 		if (!empty($this->allowed['longwords'])) {
 			$text = $this->longWordsModule->postLine($text);
@@ -383,7 +388,7 @@ class Texy
 	 */
 	public function toText(): string
 	{
-		if (!$this->DOM) {
+		if (!isset($this->DOM)) {
 			throw new \RuntimeException('Call $texy->process() first.');
 		}
 
@@ -419,7 +424,7 @@ class Texy
 		$s = htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8');
 
 		// replace protected marks
-		$s = $this->unProtect($s);
+		$s = $this->unprotect($s);
 
 		// wellform and reformat HTML
 		$this->invokeHandlers('postProcess', [$this, &$s]);
@@ -462,12 +467,13 @@ class Texy
 	 */
 	final public function addHandler(string $event, callable $callback): void
 	{
-		$this->handlers[$event][] = $callback;
+		$this->handlers[$event][] = $callback(...);
 	}
 
 
 	/**
 	 * Invoke registered around-handlers.
+	 * @param  mixed[]  $args
 	 */
 	final public function invokeAroundHandlers(string $event, Parser $parser, array $args): mixed
 	{
@@ -482,6 +488,7 @@ class Texy
 
 	/**
 	 * Invoke registered after-handlers.
+	 * @param  mixed[]  $args
 	 */
 	final public function invokeHandlers(string $event, array $args): void
 	{
@@ -527,20 +534,20 @@ class Texy
 	}
 
 
-	final public function unProtect(string $html): string
+	final public function unprotect(string $html): string
 	{
 		return strtr($html, $this->marks);
 	}
 
 
-	/** @return array<string, array{handler: callable, pattern: string, again: ?string}> */
+	/** @return array<string, array{handler: \Closure(LineParser, string[], string): (HtmlElement|string|null), pattern: string, again: ?string}> */
 	final public function getLinePatterns(): array
 	{
 		return $this->_linePatterns;
 	}
 
 
-	/** @return array<string, array{handler: callable, pattern: string}> */
+	/** @return array<string, array{handler: \Closure(BlockParser, string[], string): (HtmlElement|string|null), pattern: string}> */
 	final public function getBlockPatterns(): array
 	{
 		return $this->_blockPatterns;
@@ -563,7 +570,10 @@ class Texy
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @return array{array<string, int>|bool, array<string, int>|bool}
+	 */
 	final public function getAllowedProps(): array
 	{
 		return [$this->_classes, $this->_styles];

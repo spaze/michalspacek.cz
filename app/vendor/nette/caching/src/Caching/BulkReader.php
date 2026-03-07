@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Caching;
 
@@ -17,7 +15,8 @@ interface BulkReader
 {
 	/**
 	 * Reads from cache in bulk.
-	 * @return array key => value pairs, missing items are omitted
+	 * @param  list<string>  $keys
+	 * @return array<string, mixed>  key => value pairs, missing items are omitted
 	 */
 	function bulkRead(array $keys): array;
 }

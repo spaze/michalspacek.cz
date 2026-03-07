@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -25,22 +23,20 @@ use function array_keys, array_pop, end, implode, in_array, key, preg_replace, s
  */
 final class TemplateParserHtml
 {
-	/** @var array<string, callable(Tag, TemplateParser): (Node|\Generator|void)> */
-	private readonly array $attrParsers;
 	private ?Html\ElementNode $element = null;
-	private readonly TemplateParser $parser;
 
-	/** @var array{string, ?Nodes\Php\ExpressionNode} */
+	/** @var array{string, ?Nodes\Php\ExpressionNode}|null */
 	private ?array $endName = null;
 
 	/** @var \WeakMap<Html\ElementNode, object{tag: mixed, textualName: string, unclosedTags?: array<string>}> */
 	private \WeakMap $elementData;
 
 
-	public function __construct(TemplateParser $parser, array $attrParsers)
-	{
-		$this->parser = $parser;
-		$this->attrParsers = $attrParsers;
+	public function __construct(
+		private readonly TemplateParser $parser,
+		/** @var array<string, \Closure(Tag, TemplateParser): (Node|\Generator|void)> */
+		private readonly array $attrParsers,
+	) {
 		$this->elementData = new \WeakMap;
 	}
 
@@ -85,7 +81,7 @@ final class TemplateParserHtml
 		$stream = $this->parser->getStream();
 		$lexer = $this->parser->getLexer();
 		$lexer->pushState(TemplateLexer::StateHtmlTag);
-		$closing = $stream->peek(1)?->is(Token::Slash);
+		$closing = $stream->tryPeek(1)?->is(Token::Slash);
 		$lexer->popState();
 		if (!$closing) {
 			return $this->parseElement();
@@ -100,7 +96,7 @@ final class TemplateParserHtml
 				return null; // go to parseElement() one level up to close the element
 			}
 			$stream->seek($save);
-			if (!in_array($endText, $this->elementData[$this->element]->unclosedTags ?? [], true)) {
+			if (!in_array($endText, $this->elementData[$this->element]->unclosedTags ?? [], strict: true)) {
 				return null; // go to parseElement() one level up to collapse
 			}
 		}
@@ -145,7 +141,7 @@ final class TemplateParserHtml
 				$this->parser->getLexer()->popState();
 			}
 
-			[$endText, $endVariable] = $this->endName;
+			[$endText, $endVariable] = $this->endName ?? [null, null];
 			$this->endName = null;
 			if ($endText && ($this->element->is($endText) || $this->elementData[$this->element]->textualName === $endText)) {
 				$elem->content = $content;
@@ -159,7 +155,7 @@ final class TemplateParserHtml
 			) {
 				$stream->throwUnexpectedException(
 					addendum: ", expecting </{$this->elementData[$elem]->textualName}> for element started $elem->position",
-					excerpt: $endText ? "/{$endText}>" : $stream->peek(1)?->text . $stream->peek(2)?->text,
+					excerpt: $endText ? "/{$endText}>" : ($stream->tryPeek(1)->text ?? '') . ($stream->tryPeek(2)->text ?? ''),
 				);
 			} else { // element collapsed to tags
 				$res->append($content);
@@ -193,6 +189,7 @@ final class TemplateParserHtml
 	}
 
 
+	/** @param-out Html\ElementNode $elem */
 	private function parseStartTag(&$elem = null): Html\ElementNode
 	{
 		$stream = $this->parser->getStream();
@@ -252,7 +249,8 @@ final class TemplateParserHtml
 	/** @return array{string, ?Nodes\Php\ExpressionNode} */
 	private function parseTagName(bool $strict = true): array
 	{
-		$variable = $text = null;
+		$variable = null;
+		$text = '';
 		$parts = [];
 		$stream = $this->parser->getStream();
 		do {
@@ -261,7 +259,7 @@ final class TemplateParserHtml
 				$statement = $this->parser->parseLatteStatement($this->inTagResolve(...));
 				if (!$statement instanceof Nodes\PrintNode) {
 					if (!$parts || $strict) {
-						throw new CompileException('Only expression can be used as a HTML tag name.', $statement->position);
+						throw new CompileException('Only expression can be used as a HTML tag name.', $statement?->position);
 					}
 					$stream->seek($save);
 					break;
@@ -291,7 +289,7 @@ final class TemplateParserHtml
 	}
 
 
-	private function parseBogusEndTag(): ?Html\BogusTagNode
+	private function parseBogusEndTag(): Html\BogusTagNode
 	{
 		$stream = $this->parser->getStream();
 		$lexer = $this->parser->getLexer();
@@ -371,7 +369,7 @@ final class TemplateParserHtml
 			$name = $this->parser->parseText();
 		}
 
-		[$value, $quote] = $this->parseAttributeValue();
+		[$value, $quote] = $this->parseAttributeValue() ?? [null, null];
 		if ($name instanceof Nodes\TextNode && $value instanceof Nodes\PrintNode && $value->modifier->escape) {
 			if (($indent = end($fragment->children)) instanceof Nodes\TextNode && $indent->isWhitespace()) {
 				array_pop($fragment->children);
@@ -395,6 +393,7 @@ final class TemplateParserHtml
 	}
 
 
+	/** @return ?array{AreaNode|Nodes\PrintNode, ?string} */
 	private function parseAttributeValue(): ?array
 	{
 		$stream = $this->parser->getStream();
@@ -410,6 +409,7 @@ final class TemplateParserHtml
 			$lexer = $this->parser->getLexer();
 			$lexer->pushState(TemplateLexer::StateHtmlQuotedValue, $quoteToken->text);
 			$value = $this->parser->parseFragment($this->parser->inTextResolve(...))->simplify(allowsNull: false);
+			assert($value !== null);
 			$stream->tryConsume(Token::Quote) || $stream->throwUnexpectedException([$quoteToken->text], addendum: ", end of HTML attribute started $quoteToken->position");
 			$lexer->popState();
 			return [$value, $quoteToken->text];
@@ -429,6 +429,7 @@ final class TemplateParserHtml
 
 	private function parseNAttribute(): Nodes\TextNode
 	{
+		assert($this->element !== null);
 		$stream = $this->parser->getStream();
 		$nameToken = $stream->consume(Token::Html_Name);
 		$save = $stream->getIndex();
@@ -468,6 +469,8 @@ final class TemplateParserHtml
 		}
 		$tokens ??= [new Token(Token::End, '', $pos)];
 
+		assert($nameToken->position !== null);
+		assert($this->element !== null);
 		$this->element->nAttributes[$name] = new Tag(
 			name: preg_replace('~(inner-|tag-|)~', '', $name),
 			tokens: $tokens,
@@ -520,6 +523,10 @@ final class TemplateParserHtml
 	}
 
 
+	/**
+	 * @param  array<Tag>  $attrs
+	 * @return array<string, list<Tag>>
+	 */
 	private function prepareNAttrs(array $attrs, bool $void): array
 	{
 		$res = [];
@@ -591,8 +598,8 @@ final class TemplateParserHtml
 	}
 
 
-	/** @return callable(Tag, TemplateParser): (Node|\Generator|void) */
-	private function getAttrParser(string $name, Position $pos): callable
+	/** @return \Closure(Tag, TemplateParser): (Node|\Generator|void) */
+	private function getAttrParser(string $name, Position $pos): \Closure
 	{
 		if (!isset($this->attrParsers[$name])) {
 			$hint = ($t = Helpers::getSuggestion(array_keys($this->attrParsers), $name))

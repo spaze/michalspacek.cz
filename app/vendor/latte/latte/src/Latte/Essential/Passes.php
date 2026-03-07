@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential;
 
@@ -22,10 +20,14 @@ use Latte\Compiler\Nodes\TextNode;
 use Latte\Compiler\NodeTraverser;
 use Latte\ContentType;
 use Latte\Engine;
+use Latte\Feature;
 use Latte\Runtime\HtmlHelpers;
 use function is_string;
 
 
+/**
+ * Built-in compiler passes.
+ */
 final class Passes
 {
 	public function __construct(
@@ -45,7 +47,13 @@ final class Passes
 				&& $node->name instanceof Php\NameNode
 				&& isset($functions[$node->name->name])
 			) {
-				return new Nodes\CustomFunctionCallNode($node->name, $node->args, $node->position);
+				if ($node->isPartialFunction()) {
+					throw new CompileException("Custom function '{$node->name->name}' cannot be used as partial function.", $node->position);
+				}
+
+				/** @var array<Php\ArgumentNode> $args */
+				$args = $node->args;
+				return new Nodes\CustomFunctionCallNode($node->name, $args, $node->position);
 			}
 		});
 	}
@@ -61,7 +69,7 @@ final class Passes
 				&& is_string($node->name)
 				&& (preg_match('/ʟ_|__|GLOBALS$|this$/A', $node->name))
 			) {
-				if (preg_match('/__|this$/A', $node->name) && !$this->engine->isStrictParsing()) {
+				if (preg_match('/__|this$/A', $node->name) && !$this->engine->hasFeature(Feature::StrictParsing)) {
 					trigger_error("Using the \$$node->name variable in the template is deprecated ($node->position)", E_USER_DEPRECATED);
 					return;
 				}
@@ -80,17 +88,20 @@ final class Passes
 			return;
 		}
 		(new NodeTraverser)->traverse($node, function (Node $node) {
-			if ($node instanceof ElementNode && $node->is('script')
-				&& HtmlHelpers::classifyScriptType((string) $node->getAttribute('type')) === ContentType::JavaScript
-			) {
-				$prev = null;
-				foreach ($node->content ?? [] as $child) {
-					if ($prev instanceof PrintNode && $child instanceof TextNode) {
-						if (preg_match('/^["\']/', $child->content)) {
-							throw new CompileException('Do not place print statement {...} inside quotes in JavaScript.', $prev->position);
+			if ($node instanceof ElementNode && $node->is('script')) {
+				$type = $node->getAttribute('type');
+				if ((is_string($type) || $type === null)
+					&& HtmlHelpers::classifyScriptType((string) $type) === ContentType::JavaScript
+				) {
+					$prev = null;
+					foreach ($node->content ?? [] as $child) {
+						if ($prev instanceof PrintNode && $child instanceof TextNode) {
+							if (preg_match('/^["\']/', $child->content)) {
+								throw new CompileException('Do not place print statement {...} inside quotes in JavaScript.', $prev->position);
+							}
 						}
+						$prev = $child;
 					}
-					$prev = $child;
 				}
 			}
 		});
@@ -112,7 +123,7 @@ final class Passes
 				$elem = $node;
 
 			} elseif ($node instanceof ExpressionAttributeNode
-				&& HtmlHelpers::isUrlAttribute($elem->name, $node->name)
+				&& $elem && HtmlHelpers::isUrlAttribute($elem->name, $node->name)
 				&& !$node->modifier->removeFilter('nocheck') && !$node->modifier->removeFilter('noCheck')
 				&& !$node->modifier->hasFilter('datastream') && !$node->modifier->hasFilter('dataStream')
 			) {

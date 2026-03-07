@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Routing;
 
 use Nette;
-use function array_column, array_filter, array_keys, array_reverse, array_splice, count, explode, ip2long, is_scalar, rtrim, strlen, strncmp, strtr;
+use function array_column, array_filter, array_keys, array_reverse, array_splice, count, explode, ip2long, is_scalar, rtrim, strtr;
 
 
 /**
@@ -20,24 +18,28 @@ class RouteList implements Router
 {
 	protected ?self $parent;
 
-	/** @var array<array{Router, int}> */
+	/** @var list<array{Router, int}> */
 	private array $list = [];
 
-	/** @var Router[][]|null */
+	/** @var array<string, list<Router>>|null */
 	private ?array $ranks = null;
 	private ?string $cacheKey;
 	private ?string $domain = null;
 	private ?string $path = null;
-	private ?\SplObjectStorage $refUrlCache;
+
+	/** @var \SplObjectStorage<Nette\Http\UrlScript, Nette\Http\UrlScript> */
+	private \SplObjectStorage $refUrlCache;
 
 
 	public function __construct()
 	{
+		$this->refUrlCache = new \SplObjectStorage;
 	}
 
 
 	/**
 	 * Maps HTTP request to an array.
+	 * @return ?array<string, mixed>
 	 * @final
 	 */
 	public function match(Nette\Http\IRequest $httpRequest): ?array
@@ -68,7 +70,7 @@ class RouteList implements Router
 		if ($this->path) {
 			$url = $httpRequest->getUrl();
 			$relativePath = $url->getRelativePath();
-			if (strncmp($relativePath, $this->path, strlen($this->path)) === 0) {
+			if (str_starts_with($relativePath, $this->path)) {
 				$url = $url->withPath($url->getPath(), $url->getBasePath() . $this->path);
 			} elseif ($relativePath . '/' === $this->path) {
 				$url = $url->withPath($url->getPath() . '/');
@@ -83,6 +85,10 @@ class RouteList implements Router
 	}
 
 
+	/**
+	 * @param array<string, mixed>  $params
+	 * @return ?array<string, mixed>
+	 */
 	protected function completeParameters(array $params): ?array
 	{
 		return $params;
@@ -91,33 +97,36 @@ class RouteList implements Router
 
 	/**
 	 * Constructs absolute URL from array.
+	 * @param array<string, mixed>  $params
 	 */
 	public function constructUrl(array $params, Nette\Http\UrlScript $refUrl): ?string
 	{
 		if ($this->domain) {
-			if (!isset($this->refUrlCache[$refUrl])) {
-				$this->refUrlCache[$refUrl] = $refUrl->withHost(
+			if (!$this->refUrlCache->offsetExists($refUrl)) {
+				$this->refUrlCache->offsetSet($refUrl, $refUrl->withHost(
 					$this->expandDomain($refUrl->getHost()),
-				);
+				));
 			}
 
-			$refUrl = $this->refUrlCache[$refUrl];
+			$refUrl = $this->refUrlCache->offsetGet($refUrl);
 		}
 
 		if ($this->path) {
-			if (!isset($this->refUrlCache[$refUrl])) {
-				$this->refUrlCache[$refUrl] = $refUrl->withPath($refUrl->getBasePath() . $this->path);
+			if (!$this->refUrlCache->offsetExists($refUrl)) {
+				$this->refUrlCache->offsetSet($refUrl, $refUrl->withPath($refUrl->getBasePath() . $this->path));
 			}
 
-			$refUrl = $this->refUrlCache[$refUrl];
+			$refUrl = $this->refUrlCache->offsetGet($refUrl);
 		}
 
 		if ($this->ranks === null) {
 			$this->warmupCache();
 		}
 
+		assert($this->ranks !== null);
 		$key = $params[$this->cacheKey ?? ''] ?? null;
-		if (!is_scalar($key) || !isset($this->ranks[$key])) {
+		$key = is_scalar($key) ? (string) $key : '*';
+		if (!isset($this->ranks[$key])) {
 			$key = '*';
 		}
 
@@ -148,8 +157,8 @@ class RouteList implements Router
 				? $router->getConstantParameters()
 				: [];
 
-			foreach (array_filter($params, 'is_scalar') as $name => $value) {
-				$candidates[$name][$value] = true;
+			foreach (array_filter($params, is_scalar(...)) as $name => $value) {
+				$candidates[$name][(string) $value] = true;
 			}
 
 			$routers[] = [$router, $params];
@@ -170,9 +179,10 @@ class RouteList implements Router
 			$value = $params[$this->cacheKey ?? ''] ?? null;
 			$values = $value === null
 				? array_keys($ranks)
-				: [is_scalar($value) ? $value : '*'];
+				: [is_scalar($value) ? (string) $value : '*'];
 
 			foreach ($values as $value) {
+				$value = (string) $value;
 				if (!isset($ranks[$value])) {
 					$ranks[$value] = $ranks['*'];
 				}
@@ -222,8 +232,8 @@ class RouteList implements Router
 
 
 	/**
-	 * @param  string  $mask  e.g. '<presenter>/<action>/<id \d{1,3}>'
-	 * @param  array  $metadata  default values or metadata
+	 * @param string  $mask e.g. '<presenter>/<action>/<id \d{1,3}>'
+	 * @param array<string, mixed>  $metadata default values or metadata
 	 * @return static
 	 */
 	public function addRoute(string $mask, array $metadata = [], int $oneWay = 0)
@@ -265,7 +275,7 @@ class RouteList implements Router
 
 
 	/**
-	 * @return Router[]
+	 * @return list<Router>
 	 */
 	public function getRouters(): array
 	{
@@ -274,7 +284,7 @@ class RouteList implements Router
 
 
 	/**
-	 * @return int[]
+	 * @return list<int>
 	 */
 	public function getFlags(): array
 	{
@@ -296,6 +306,7 @@ class RouteList implements Router
 
 	private function expandDomain(string $host): string
 	{
+		assert($this->domain !== null);
 		$parts = ip2long($host) ? [$host] : array_reverse(explode('.', $host));
 		return strtr($this->domain, [
 			'%tld%' => $parts[0],

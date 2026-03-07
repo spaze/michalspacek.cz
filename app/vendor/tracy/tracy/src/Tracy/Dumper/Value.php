@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Tracy (https://tracy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Tracy\Dumper;
 
@@ -39,7 +37,7 @@ final class Value implements \JsonSerializable
 	public int|string|null $id = null;
 	public object $holder;
 
-	/** @var list<mixed[]>|null */
+	/** @var array<int, mixed[]>|null */
 	public ?array $items = null;
 	public ?\stdClass $editor = null;
 	public ?bool $collapsed = null;

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -14,6 +12,9 @@ use function array_merge, array_pop, array_shift, array_unshift, constant, deche
 use const PREG_UNMATCHED_AS_NULL;
 
 
+/**
+ * Tokenizes Latte template source code.
+ */
 final class TemplateLexer
 {
 	public const
@@ -40,6 +41,8 @@ final class TemplateLexer
 
 	private string $openDelimiter = '';
 	private string $closeDelimiter = '';
+
+	/** @var array{string, string}[] */
 	private array $delimiters = [];
 	private TagLexer $tagLexer;
 
@@ -79,6 +82,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function statePlain(): array
 	{
 		return $this->match('~
@@ -93,6 +97,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateLatteTag(): array
 	{
 		$tokens[] = $this->match('~
@@ -106,6 +111,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateLatteContent(): array
 	{
 		$tokens[] = $this->tagLexer->tokenizePartially($this->input, $this->position);
@@ -120,6 +126,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateLatteComment(): array
 	{
 		return $this->match('~
@@ -132,6 +139,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlText(): array
 	{
 		return $this->match('~(?J)
@@ -148,6 +156,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlTag(): array
 	{
 		return $this->match('~(?J)
@@ -165,6 +174,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlQuotedValue(string $quote): array
 	{
 		return $this->match('~
@@ -179,6 +189,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlQuotedNAttrValue(string $quote): array
 	{
 		return $this->match('~
@@ -191,6 +202,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlRawText(string $tagName): array
 	{
 		return $this->match('~
@@ -206,6 +218,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlComment(): array
 	{
 		return $this->match('~(?J)
@@ -220,6 +233,7 @@ final class TemplateLexer
 	}
 
 
+	/** @return Token[] */
 	private function stateHtmlBogus(): array
 	{
 		return $this->match('~
@@ -257,15 +271,15 @@ final class TemplateLexer
 	}
 
 
-	public function setState(string $state, ...$args): void
+	public function setState(string $state, mixed ...$args): void
 	{
 		$this->states[0] = ['name' => $state, 'args' => $args];
 	}
 
 
-	public function pushState(string $state, ...$args): void
+	public function pushState(string $state, mixed ...$args): void
 	{
-		array_unshift($this->states, null);
+		array_unshift($this->states, ['name' => '', 'args' => []]);
 		$this->setState($state, ...$args);
 	}
 
@@ -305,7 +319,7 @@ final class TemplateLexer
 
 	public function popSyntax(): void
 	{
-		[$this->openDelimiter, $this->closeDelimiter] = array_pop($this->delimiters);
+		[$this->openDelimiter, $this->closeDelimiter] = array_pop($this->delimiters) ?? throw new \LogicException;
 	}
 
 

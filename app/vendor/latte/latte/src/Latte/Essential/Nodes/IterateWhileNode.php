@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -19,7 +17,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {iterateWhile $cond}
+ * {iterateWhile [$cond]} ... {/iterateWhile [$cond]}
+ * Groups consecutive items in {foreach} by condition.
  */
 class IterateWhileNode extends StatementNode
 {
@@ -30,11 +29,11 @@ class IterateWhileNode extends StatementNode
 	public bool $postTest;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$foreach = $tag->closestTag([ForeachNode::class])?->node;
-		if (!$foreach) {
+		if (!$foreach instanceof ForeachNode) {
 			throw new CompileException("Tag {{$tag->name}} must be inside {foreach} ... {/foreach}.", $tag->position);
 		}
 
@@ -48,6 +47,7 @@ class IterateWhileNode extends StatementNode
 		$node->value = $foreach->value;
 		[$node->content, $nextTag] = yield;
 		if ($node->postTest) {
+			assert($nextTag !== null);
 			$nextTag->expectArguments();
 			$node->condition = $nextTag->parser->parseExpression();
 		}

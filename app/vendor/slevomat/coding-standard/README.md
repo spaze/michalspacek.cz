@@ -72,6 +72,7 @@ Slevomat Coding Standard for [PHP_CodeSniffer](https://github.com/PHPCSStandards
  - [SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming](doc/classes.md#slevomatcodingstandardclassessuperfluousinterfacenaming)
  - [SlevomatCodingStandard.Classes.SuperfluousTraitNaming](doc/classes.md#slevomatcodingstandardclassessuperfluoustraitnaming)
  - [SlevomatCodingStandard.Classes.TraitUseDeclaration](doc/classes.md#slevomatcodingstandardclassestraitusedeclaration-) 🔧
+ - [SlevomatCodingStandard.Classes.TraitUseOrder](doc/classes.md#slevomatcodingstandardclassestraituseorder-) 🔧
  - [SlevomatCodingStandard.Classes.TraitUseSpacing](doc/classes.md#slevomatcodingstandardclassestraitusespacing-) 🔧
  - [SlevomatCodingStandard.Classes.UselessLateStaticBinding](doc/classes.md#slevomatcodingstandardclassesuselesslatestaticbinding-) 🔧
  - [SlevomatCodingStandard.Commenting.AnnotationName](doc/commenting.md#slevomatcodingstandardcommentingannotationname-)
@@ -86,6 +87,7 @@ Slevomat Coding Standard for [PHP_CodeSniffer](https://github.com/PHPCSStandards
  - [SlevomatCodingStandard.Commenting.RequireOneDocComment](doc/commenting.md#slevomatcodingstandardcommentingrequireonedoccomment-) 🔧
  - [SlevomatCodingStandard.Commenting.RequireOneLineDocComment](doc/commenting.md#slevomatcodingstandardcommentingrequireonelinedoccomment-) 🔧
  - [SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment](doc/commenting.md#slevomatcodingstandardcommentingrequireonelinepropertydoccomment-) 🔧
+ - [SlevomatCodingStandard.Commenting.ThrowsAnnotationsOrder](doc/commenting.md#slevomatcodingstandardcommentingthrowsannotationsorder-) 🔧
  - [SlevomatCodingStandard.Commenting.UselessFunctionDocComment](doc/commenting.md#slevomatcodingstandardcommentinguselessfunctiondoccomment-) 🔧
  - [SlevomatCodingStandard.Commenting.UselessInheritDocComment](doc/commenting.md#slevomatcodingstandardcommentinguselessinheritdoccomment-) 🔧
  - [SlevomatCodingStandard.Complexity.Cognitive](doc/complexity.md#slevomatcodingstandardcomplexitycognitive)
@@ -114,6 +116,7 @@ Slevomat Coding Standard for [PHP_CodeSniffer](https://github.com/PHPCSStandards
  - [SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn](doc/control-structures.md#slevomatcodingstandardcontrolstructuresuselessifconditionwithreturn-) 🔧
  - [SlevomatCodingStandard.ControlStructures.UselessTernaryOperator](doc/control-structures.md#slevomatcodingstandardcontrolstructuresuselessternaryoperator-) 🔧
  - [SlevomatCodingStandard.Exceptions.DeadCatch](doc/exceptions.md#slevomatcodingstandardexceptionsdeadcatch)
+ - [SlevomatCodingStandard.Exceptions.CatchExceptionsOrder](doc/exceptions.md#slevomatcodingstandardexceptionscatchexceptionsorder-) 🔧
  - [SlevomatCodingStandard.Exceptions.DisallowNonCapturingCatch](doc/exceptions.md#slevomatcodingstandardexceptionsdisallownoncapturingcatch)
  - [SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly](doc/exceptions.md#slevomatcodingstandardexceptionsreferencethrowableonly-) 🔧🚧
  - [SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch](doc/exceptions.md#slevomatcodingstandardexceptionsrequirenoncapturingcatch-) 🔧

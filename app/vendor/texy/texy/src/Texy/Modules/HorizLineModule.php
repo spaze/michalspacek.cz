@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -13,7 +11,7 @@ use Texy;
 
 
 /**
- * Horizontal line module.
+ * Processes horizontal line syntax (---, ***).
  */
 final class HorizLineModule extends Texy\Module
 {
@@ -40,6 +38,7 @@ final class HorizLineModule extends Texy\Module
 
 	/**
 	 * Callback for: -------.
+	 * @param  string[]  $matches
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches): Texy\HtmlElement
 	{
@@ -61,6 +60,7 @@ final class HorizLineModule extends Texy\Module
 		$modifier->decorate($invocation->getTexy(), $el);
 
 		$class = $this->classes[$type[0]];
+		settype($el->attrs['class'], 'array');
 		if ($class && !isset($modifier->classes[$class])) {
 			$el->attrs['class'][] = $class;
 		}

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -15,7 +13,7 @@ use function array_flip, array_values, asort, count, is_array, max, min, reset, 
 
 
 /**
- * Heading module.
+ * Processes heading syntax (underlined and surrounded) and builds table of contents.
  */
 final class HeadingModule extends Texy\Module
 {
@@ -26,7 +24,7 @@ final class HeadingModule extends Texy\Module
 	/** textual content of first heading */
 	public ?string $title = null;
 
-	/** @var array<int, array{el: Texy\HtmlElement, level: int, type: string}>  generated Table of Contents */
+	/** @var list<array{el: Texy\HtmlElement, level: int, type: string, title?: string}>  generated Table of Contents */
 	public array $TOC = [];
 
 	public bool $generateID = false;
@@ -128,8 +126,9 @@ final class HeadingModule extends Texy\Module
 			}
 
 			if ($this->generateID) {
-				if (!empty($item['el']->attrs['style']['toc']) && is_array($item['el']->attrs['style'])) {
-					$title = $item['el']->attrs['style']['toc'];
+				$style = $item['el']->attrs['style'] ?? null;
+				if (is_array($style) && !empty($style['toc'])) {
+					$title = (string) $style['toc'];
 					unset($item['el']->attrs['style']['toc']);
 				} else {
 					$title = trim($item['el']->toText($this->texy));
@@ -167,6 +166,7 @@ final class HeadingModule extends Texy\Module
 	 *
 	 * Heading .(title)[class]{style}>
 	 * -------------------------------
+	 * @param  string[]  $matches
 	 */
 	public function patternUnderline(Texy\BlockParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
@@ -186,6 +186,7 @@ final class HeadingModule extends Texy\Module
 	 * Callback for surrounded heading.
 	 *
 	 * ### Heading .(title)[class]{style}>
+	 * @param  string[]  $matches
 	 */
 	public function patternSurround(Texy\BlockParser $parser, array $matches): Texy\HtmlElement|string|null
 	{

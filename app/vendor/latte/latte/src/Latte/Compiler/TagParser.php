@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -38,11 +36,12 @@ final class TagParser
 	public readonly TokenStream $stream;
 	public string $text;
 
-	/** @var \SplObjectStorage<Expression\ArrayNode> */
+	/** @var \SplObjectStorage<Expression\ArrayNode, null> */
 	protected \SplObjectStorage $shortArrays;
 	private readonly int $offsetDelta;
 
 
+	/** @param array<int, mixed>  $tokens */
 	public function __construct(array $tokens)
 	{
 		$this->offsetDelta = $tokens[0]->position->offset;
@@ -124,6 +123,7 @@ final class TagParser
 
 	/**
 	 * Parses variables used in foreach.
+	 * @return array{?Nodes\Php\ExpressionNode, Nodes\Php\ExpressionNode|Nodes\Php\ListNode, bool}
 	 * @internal
 	 */
 	public function parseForeach(): array
@@ -291,13 +291,13 @@ final class TagParser
 	}
 
 
-	public function throwReservedKeywordException(Token $token)
+	public function throwReservedKeywordException(Token $token): never
 	{
 		throw new Latte\CompileException("Keyword '$token->text' cannot be used in Latte.", $token->position);
 	}
 
 
-	protected function checkFunctionName(Expression\FunctionCallNode $func): ExpressionNode
+	private function checkFunctionName(Expression\FunctionCallNode $func): Expression\FunctionCallNode
 	{
 		if ($func->name instanceof NameNode && $func->name->isKeyword()) {
 			$this->throwReservedKeywordException(new Token(0, (string) $func->name, $func->name->position));
@@ -306,7 +306,7 @@ final class TagParser
 	}
 
 
-	protected static function handleBuiltinTypes(NameNode $name): NameNode|Node\IdentifierNode
+	private static function handleBuiltinTypes(NameNode $name): NameNode|Node\IdentifierNode
 	{
 		$builtinTypes = [
 			'bool' => true, 'int' => true, 'float' => true, 'string' => true, 'iterable' => true, 'void' => true,
@@ -320,7 +320,7 @@ final class TagParser
 	}
 
 
-	protected static function parseOffset(string $str, Position $position): Scalar\StringNode|Scalar\IntegerNode
+	private static function parseOffset(string $str, Position $position): Scalar\StringNode|Scalar\IntegerNode
 	{
 		if (!preg_match('/^(?:0|-?[1-9][0-9]*)$/', $str)) {
 			return new Scalar\StringNode($str, $position);
@@ -335,8 +335,8 @@ final class TagParser
 	}
 
 
-	/** @param ExpressionNode[] $parts */
-	protected function parseDocString(
+	/** @param ExpressionNode[]  $parts */
+	private function parseDocString(
 		string $startToken,
 		array $parts,
 		string $endToken,
@@ -458,7 +458,10 @@ final class TagParser
 	}
 
 
-	/** @param  Token[]  $tokens */
+	/**
+	 * @param  Token[]  $tokens
+	 * @return Token[]
+	 */
 	private function filterTokens(array $tokens): array
 	{
 		$this->text = '';

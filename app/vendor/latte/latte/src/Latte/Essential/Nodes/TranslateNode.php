@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -24,6 +22,7 @@ use function array_unshift, is_array, is_string;
 
 /**
  * {translate} ... {/translate}
+ * Translates block content.
  */
 class TranslateNode extends StatementNode
 {
@@ -31,7 +30,7 @@ class TranslateNode extends StatementNode
 	public ModifierNode $modifier;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static|NopNode> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static|NopNode> */
 	public static function create(Tag $tag, ?callable $translator): \Generator
 	{
 		$tag->outputMode = $tag::OutputKeepIndentation;

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Caching\Storages;
 
@@ -19,7 +17,7 @@ use function array_merge, count, is_file, serialize, str_repeat, time, touch, un
  */
 class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 {
-	private \PDO $pdo;
+	private readonly \PDO $pdo;
 
 
 	public function __construct(string $path)
@@ -93,7 +91,7 @@ class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 	}
 
 
-	public function write(string $key, $data, array $dependencies): void
+	public function write(string $key, mixed $data, array $dependencies): void
 	{
 		$expire = isset($dependencies[Cache::Expire])
 			? $dependencies[Cache::Expire] + time()
@@ -107,12 +105,13 @@ class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 			->execute([$key, serialize($data), $expire, $slide]);
 
 		if (!empty($dependencies[Cache::Tags])) {
+			$arr = [];
 			foreach ($dependencies[Cache::Tags] as $tag) {
 				$arr[] = $key;
 				$arr[] = $tag;
 			}
 
-			$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', count($arr) / 2 - 1))
+			$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', intdiv(count($arr), 2) - 1))
 				->execute($arr);
 		}
 

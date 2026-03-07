@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -21,13 +19,12 @@ final class TokenStream
 {
 	/** @var Token[] */
 	private array $tokens = [];
-	private readonly \Iterator $source;
 	private int $index = 0;
 
 
-	public function __construct(\Iterator $source)
-	{
-		$this->source = $source;
+	public function __construct(
+		private readonly \Iterator $source,
+	) {
 	}
 
 
@@ -41,9 +38,18 @@ final class TokenStream
 
 
 	/**
+	 * Gets the token at $offset from the current position or throws.
+	 */
+	public function peek(int $offset = 0): Token
+	{
+		return $this->tryPeek($offset) ?? throw new CompileException('Unexpected end');
+	}
+
+
+	/**
 	 * Gets the token at $offset from the current position.
 	 */
-	public function peek(int $offset = 0): ?Token
+	public function tryPeek(int $offset = 0): ?Token
 	{
 		$pos = $this->index + $offset;
 		while ($pos >= 0 && !isset($this->tokens[$pos]) && $this->source->valid()) {
@@ -82,8 +88,8 @@ final class TokenStream
 	 */
 	public function tryConsume(int|string ...$kind): ?Token
 	{
-		$token = $this->peek();
-		if (!$token->is(...$kind)) {
+		$token = $this->tryPeek();
+		if (!$token?->is(...$kind)) {
 			return null;
 		} elseif (!$token->isEnd()) {
 			$this->index++;
@@ -115,11 +121,11 @@ final class TokenStream
 
 	/**
 	 * @throws CompileException
-	 * @return never
+	 * @param  array<string|int>  $expected
 	 */
-	public function throwUnexpectedException(array $expected = [], string $addendum = '', string $excerpt = ''): void
+	public function throwUnexpectedException(array $expected = [], string $addendum = '', string $excerpt = ''): never
 	{
-		$token = $this->peek()->text . $excerpt;
+		$token = ($this->tryPeek()->text ?? '') . $excerpt;
 		$expected = array_map(fn($item) => is_int($item) ? Token::Names[$item] : $item, $expected);
 		throw new CompileException(
 			'Unexpected '
@@ -130,7 +136,7 @@ final class TokenStream
 				? ', expecting ' . implode(', ', $expected)
 				: '')
 			. $addendum,
-			$this->peek()->position,
+			$this->tryPeek()?->position,
 		);
 	}
 }

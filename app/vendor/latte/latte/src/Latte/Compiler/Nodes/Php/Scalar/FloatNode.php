@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
@@ -17,6 +15,9 @@ use function is_finite, preg_match, sprintf, str_replace, strpbrk;
 use const INF;
 
 
+/**
+ * Floating-point literal including infinity and NaN.
+ */
 class FloatNode extends ScalarNode
 {
 	public function __construct(
@@ -26,7 +27,7 @@ class FloatNode extends ScalarNode
 	}
 
 
-	public static function parse(string $str, Position $position): static
+	public static function parse(string $str, ?Position $position): static
 	{
 		return strpbrk($str, '.eE') === false
 			? new static((float) PhpHelpers::decodeNumber($str), $position)

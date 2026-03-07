@@ -1,23 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Latte\Compiler;
 
 use function strlen, strrpos, substr_count;
 
 
-final class Position
+final readonly class Position
 {
 	public function __construct(
-		public readonly int $line = 1,
-		public readonly int $column = 1,
-		public readonly int $offset = 0,
+		public int $line = 1,
+		public int $column = 1,
+		public int $offset = 0,
 	) {
 	}
 

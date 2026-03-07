@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
@@ -19,6 +17,9 @@ use Latte\Helpers;
 use function substr;
 
 
+/**
+ * Double-quoted string with embedded expressions ("Hello $name").
+ */
 class InterpolatedStringNode extends ScalarNode
 {
 	public function __construct(
@@ -29,8 +30,8 @@ class InterpolatedStringNode extends ScalarNode
 	}
 
 
-	/** @param array<ExpressionNode|InterpolatedStringPartNode> $parts */
-	public static function parse(array $parts, Position $position): static
+	/** @param array<ExpressionNode|InterpolatedStringPartNode>  $parts */
+	public static function parse(array $parts, ?Position $position): static
 	{
 		foreach ($parts as $part) {
 			if ($part instanceof InterpolatedStringPartNode) {

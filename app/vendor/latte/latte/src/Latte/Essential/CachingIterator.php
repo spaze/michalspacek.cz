@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential;
 
@@ -25,6 +23,7 @@ use function get_debug_type, is_array, max, method_exists, sprintf;
  * @property-read mixed $nextKey
  * @property-read mixed $nextValue
  * @property-read ?self $parent
+ * @extends \CachingIterator<mixed, mixed, \Iterator<mixed, mixed>>
  * @internal
  */
 class CachingIterator extends \CachingIterator implements \Countable

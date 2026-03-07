@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Runtime;
 
@@ -29,7 +27,7 @@ final class XmlHelpers
 	/**
 	 * Escapes string for use everywhere inside XML (except for comments and tags).
 	 */
-	public static function escapeText($s): string
+	public static function escapeText(mixed $s): string
 	{
 		if ($s instanceof HtmlStringable) {
 			return $s->__toString();
@@ -46,7 +44,7 @@ final class XmlHelpers
 	/**
 	 * Escapes string for use inside XML attribute value.
 	 */
-	public static function escapeAttr($s): string
+	public static function escapeAttr(mixed $s): string
 	{
 		if ($s instanceof HtmlStringable) {
 			$s = HtmlHelpers::convertHtmlToText($s->__toString());
@@ -58,7 +56,7 @@ final class XmlHelpers
 	/**
 	 * Escapes string for use inside XML tag.
 	 */
-	public static function escapeTag($s): string
+	public static function escapeTag(mixed $s): string
 	{
 		$s = self::escapeText((string) $s);
 		return preg_replace_callback(
@@ -77,7 +75,7 @@ final class XmlHelpers
 		return match (true) {
 			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart . '="' . self::escapeAttr($value) . '"',
 			$value === null => '',
-			default => HtmlHelpers::triggerInvalidValue(trim($namePart), $value) ?? '',
+			default => HtmlHelpers::triggerInvalidValue(trim($namePart), $value),
 		};
 	}
 

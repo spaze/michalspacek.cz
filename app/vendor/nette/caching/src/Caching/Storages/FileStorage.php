@@ -1,17 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Caching\Storages;
 
 use Nette;
 use Nette\Caching\Cache;
-use function dirname, fclose, filemtime, flock, fopen, fseek, ftruncate, fwrite, is_dir, is_string, microtime, mkdir, mt_getrandmax, mt_rand, rmdir, serialize, str_pad, str_repeat, stream_get_contents, strlen, strrpos, substr_replace, time, touch, unlink, unserialize, urlencode;
+use function dirname, fclose, filemtime, flock, fopen, fseek, ftruncate, fwrite, is_array, is_dir, is_string, microtime, mkdir, mt_getrandmax, mt_rand, rmdir, serialize, str_pad, str_repeat, stream_get_contents, strlen, strrpos, substr_replace, time, touch, unlink, unserialize, urlencode;
 use const LOCK_EX, LOCK_SH, LOCK_UN, STR_PAD_LEFT;
 
 
@@ -52,6 +50,8 @@ class FileStorage implements Nette\Caching\Storage
 
 	private string $dir;
 	private ?Journal $journal;
+
+	/** @var array<string, resource>  key => file handle */
 	private array $locks;
 
 
@@ -81,6 +81,7 @@ class FileStorage implements Nette\Caching\Storage
 
 	/**
 	 * Verifies dependencies.
+	 * @param  array<string, mixed>  $meta
 	 */
 	private function verify(array $meta): bool
 	{
@@ -135,7 +136,8 @@ class FileStorage implements Nette\Caching\Storage
 	}
 
 
-	public function write(string $key, $data, array $dp): void
+	/** @param  array<string, mixed>  $dp */
+	public function write(string $key, mixed $data, array $dp): void
 	{
 		$meta = [
 			self::MetaTime => microtime(),
@@ -223,6 +225,7 @@ class FileStorage implements Nette\Caching\Storage
 	}
 
 
+	/** @param  array<string, mixed>  $conditions */
 	public function clean(array $conditions): void
 	{
 		$all = !empty($conditions[Cache::All]);
@@ -283,7 +286,7 @@ class FileStorage implements Nette\Caching\Storage
 
 		// cleaning using journal
 		if ($this->journal) {
-			foreach ($this->journal->clean($conditions) as $file) {
+			foreach ($this->journal->clean($conditions) ?? [] as $file) {
 				$this->delete($file);
 			}
 		}
@@ -292,6 +295,8 @@ class FileStorage implements Nette\Caching\Storage
 
 	/**
 	 * Reads cache data from disk.
+	 * @param  int<0, 7>  $lock
+	 * @return ?array<string, mixed>  meta data with 'file' and 'handle' keys added, or null if not found
 	 */
 	protected function readMetaAndLock(string $file, int $lock): ?array
 	{
@@ -305,10 +310,13 @@ class FileStorage implements Nette\Caching\Storage
 		$size = (int) stream_get_contents($handle, self::MetaHeaderLen);
 		if ($size) {
 			$meta = stream_get_contents($handle, $size, self::MetaHeaderLen);
-			$meta = unserialize($meta);
-			$meta[self::File] = $file;
-			$meta[self::Handle] = $handle;
-			return $meta;
+			if ($meta !== false) {
+				$meta = unserialize($meta);
+				assert(is_array($meta));
+				$meta[self::File] = $file;
+				$meta[self::Handle] = $handle;
+				return $meta;
+			}
 		}
 
 		flock($handle, LOCK_UN);
@@ -319,14 +327,18 @@ class FileStorage implements Nette\Caching\Storage
 
 	/**
 	 * Reads cache data from disk and closes cache file handle.
+	 * @param  array<string, mixed>  $meta
 	 */
 	protected function readData(array $meta): mixed
 	{
 		$data = stream_get_contents($meta[self::Handle]);
 		flock($meta[self::Handle], LOCK_UN);
 		fclose($meta[self::Handle]);
-
-		return empty($meta[self::MetaSerialized]) ? $data : unserialize($data);
+		return match (true) {
+			$data === false => null,
+			empty($meta[self::MetaSerialized]) => $data,
+			default => unserialize($data),
+		};
 	}
 
 

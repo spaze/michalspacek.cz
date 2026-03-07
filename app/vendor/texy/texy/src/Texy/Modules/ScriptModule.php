@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -14,7 +12,7 @@ use function preg_quote, preg_split, trim;
 
 
 /**
- * Scripts module.
+ * Processes {{macro}} script commands.
  */
 final class ScriptModule extends Texy\Module
 {
@@ -38,6 +36,7 @@ final class ScriptModule extends Texy\Module
 
 	/**
 	 * Callback for: {{...}}.
+	 * @param  string[]  $matches
 	 */
 	public function pattern(Texy\LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
@@ -66,13 +65,14 @@ final class ScriptModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
+	 * @param ?list<string>  $args
 	 */
 	private function solve(
 		Texy\HandlerInvocation $invocation,
 		string $cmd,
 		?array $args = null,
 		?string $raw = null,
-	): Texy\HtmlElement|string|null
+	): ?string
 	{
 		if ($cmd === 'texy' && $args) {
 			switch ($args[0]) {

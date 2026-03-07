@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
@@ -15,6 +13,9 @@ use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 
 
+/**
+ * Global constant access (CONST or \CONST).
+ */
 class ConstantFetchNode extends ExpressionNode
 {
 	public function __construct(
@@ -28,7 +29,7 @@ class ConstantFetchNode extends ExpressionNode
 	{
 		if ($this->name->kind === NameNode::KindNormal) {
 			return match ((string) $this->name) {
-				'__LINE__' => (string) $this->position->line,
+				'__LINE__' => (string) ($this->position->line ?? 0),
 				'__FILE__' => '(is_file($this->getName()) ? $this->getName() : null)',
 				'__DIR__' => '(is_file($this->getName()) ? dirname($this->getName()) : null)',
 				default => $this->name->print($context),

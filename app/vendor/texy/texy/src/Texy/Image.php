@@ -1,17 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Texy;
 
 
 /**
- * Image.
+ * Stores image URL, dimensions, modifiers, and reference info.
  */
 final class Image
 {
@@ -30,7 +28,7 @@ final class Image
 	/** image width and height are maximal */
 	public bool $asMax = false;
 
-	public ?Modifier $modifier;
+	public Modifier $modifier;
 
 	/** reference name (if is stored as reference) */
 	public ?string $name;
@@ -44,8 +42,6 @@ final class Image
 
 	public function __clone()
 	{
-		if ($this->modifier) {
-			$this->modifier = clone $this->modifier;
-		}
+		$this->modifier = clone $this->modifier;
 	}
 }

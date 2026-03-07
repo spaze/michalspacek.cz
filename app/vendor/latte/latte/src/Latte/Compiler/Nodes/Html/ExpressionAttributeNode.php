@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Html;
 
@@ -15,9 +13,13 @@ use Latte\Compiler\Nodes\Php\ModifierNode;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 use Latte\ContentType;
+use Latte\Feature;
 use Latte\Runtime as LR;
 
 
+/**
+ * Dynamic HTML attribute generated from expression.
+ */
 class ExpressionAttributeNode extends AreaNode
 {
 	public function __construct(
@@ -44,7 +46,7 @@ class ExpressionAttributeNode extends AreaNode
 			$this->indentation . $this->name,
 			$this->modifier,
 			$this->value,
-			(!$this->modifier->removeFilter('accept') && $context->migrationWarnings) ?: null,
+			(!$this->modifier->removeFilter('accept') && $context->hasFeature(Feature::MigrationWarnings)) ?: null,
 			$this->value->position,
 		);
 	}

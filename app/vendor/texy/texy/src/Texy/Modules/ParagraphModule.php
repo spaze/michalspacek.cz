@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -16,7 +14,7 @@ use const PREG_SPLIT_NO_EMPTY;
 
 
 /**
- * Paragraph module.
+ * Processes paragraphs and handles line breaks.
  */
 final class ParagraphModule extends Texy\Module
 {
@@ -33,7 +31,7 @@ final class ParagraphModule extends Texy\Module
 			? preg_split('#(\n(?!\ )|\n{2,})#', $content, -1, PREG_SPLIT_NO_EMPTY)
 			: preg_split('#(\n{2,})#', $content, -1, PREG_SPLIT_NO_EMPTY);
 
-		foreach ($parts as $s) {
+		foreach ($parts ?: [] as $s) {
 			$s = trim($s);
 			if ($s === '') {
 				continue;
@@ -67,7 +65,7 @@ final class ParagraphModule extends Texy\Module
 		Texy\HandlerInvocation $invocation,
 		string $content,
 		?Texy\Modifier $mod = null,
-	): ?Texy\HtmlElement
+	): Texy\HtmlElement
 	{
 		$texy = $this->texy;
 
@@ -80,7 +78,8 @@ final class ParagraphModule extends Texy\Module
 
 		$el = new Texy\HtmlElement('p');
 		$el->parseLine($texy, $content);
-		$content = $el->getText(); // string
+		$content = $el->getText();
+		assert($content !== null);
 
 		// check content type
 		// block contains block tag

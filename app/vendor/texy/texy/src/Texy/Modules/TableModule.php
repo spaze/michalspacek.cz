@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -18,7 +16,7 @@ use function explode, ltrim, rtrim, str_contains, str_replace, strtr;
 
 
 /**
- * Table module.
+ * Processes table syntax with headers, colspan, and rowspan support.
  */
 final class TableModule extends Texy\Module
 {
@@ -51,8 +49,9 @@ final class TableModule extends Texy\Module
 	 * | xxx | xxx | xxx | .(..){..}[..]
 	 * |------------------
 	 * | aa | bb | cc |
+	 * @param  string[]  $matches
 	 */
-	public function patternTable(Texy\BlockParser $parser, array $matches): HtmlElement|string|null
+	public function patternTable(Texy\BlockParser $parser, array $matches): ?HtmlElement
 	{
 		if ($this->disableTables) {
 			return null;
@@ -149,6 +148,10 @@ final class TableModule extends Texy\Module
 	}
 
 
+	/**
+	 * @param  array<int, TableCellElement>  $prevRow
+	 * @param  array<int, Modifier|null>  $colModifier
+	 */
 	private function processRow(
 		string $content,
 		string $mMod,
@@ -165,7 +168,8 @@ final class TableModule extends Texy\Module
 		$mod->decorate($texy, $elRow);
 
 		$rowClass = $rowCounter % 2 === 0 ? $this->oddClass : $this->evenClass;
-		if ($rowClass && !isset($mod->classes[$this->oddClass]) && !isset($mod->classes[$this->evenClass])) {
+		if ($rowClass && !isset($mod->classes[$this->oddClass ?? '']) && !isset($mod->classes[$this->evenClass ?? ''])) {
+			settype($elRow->attrs['class'], 'array');
 			$elRow->attrs['class'][] = $rowClass;
 		}
 
@@ -261,7 +265,9 @@ final class TableModule extends Texy\Module
 	private function finishPart(HtmlElement $elPart): void
 	{
 		foreach ($elPart->getChildren() as $elRow) {
+			assert($elRow instanceof HtmlElement);
 			foreach ($elRow->getChildren() as $elCell) {
+				assert($elCell instanceof TableCellElement);
 				if ($elCell->colSpan > 1) {
 					$elCell->attrs['colspan'] = $elCell->colSpan;
 				}

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -18,9 +16,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {first [$width]}
- * {last [$width]}
- * {sep [$width]}
+ * {first} ... {/first}, {last} ... {/last}, {sep} ... {/sep}
+ * Loop iteration helpers inside {foreach}.
  */
 class FirstLastSepNode extends StatementNode
 {
@@ -31,7 +28,7 @@ class FirstLastSepNode extends StatementNode
 	public ?Position $elseLine = null;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$node = $tag->node = new static;

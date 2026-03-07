@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Tools;
 
@@ -50,7 +48,7 @@ final class LinterExtension extends Latte\Extension
 				$this->validateFunction($node);
 
 			} elseif ($node instanceof Expression\NewNode && $node->class instanceof Php\NameNode) {
-				$this->validateClass($node);
+				$this->validateNewObject($node);
 
 			} elseif ($node instanceof Expression\StaticMethodCallNode
 				&& $node->class instanceof Php\NameNode
@@ -62,7 +60,9 @@ final class LinterExtension extends Latte\Extension
 				&& $node->class instanceof Php\NameNode
 				&& $node->name instanceof Php\IdentifierNode
 			) {
-				$this->validateClassConstant($node);
+				$node->name->name === 'class'
+					? $this->validateClassType($node->class)
+					: $this->validateClassConstant($node);
 
 			} elseif ($node instanceof Expression\ConstantFetchNode) {
 				$this->validateConstant($node);
@@ -83,6 +83,7 @@ final class LinterExtension extends Latte\Extension
 	private function validateFilter(Php\FilterNode $node): void
 	{
 		$name = $node->name->name;
+		assert($this->engine !== null);
 		$filters = $this->engine->getFilters();
 		if (!isset($filters[$name])) {
 			trigger_error("Unknown filter |$name $node->position", E_USER_WARNING);
@@ -92,6 +93,7 @@ final class LinterExtension extends Latte\Extension
 
 	private function validateFunction(Expression\FunctionCallNode $node): void
 	{
+		assert($node->name instanceof Php\NameNode);
 		$name = (string) $node->name;
 		if (!function_exists($name)) {
 			trigger_error("Unknown function $name() $node->position", E_USER_WARNING);
@@ -99,10 +101,11 @@ final class LinterExtension extends Latte\Extension
 	}
 
 
-	private function validateClass(Expression\NewNode $node): void
+	private function validateNewObject(Expression\NewNode $node): void
 	{
+		assert($node->class instanceof Php\NameNode);
 		$className = (string) $node->class;
-		if (!class_exists($className) && !interface_exists($className)) {
+		if (!class_exists($className)) {
 			trigger_error("Unknown class $className $node->position", E_USER_WARNING);
 		}
 	}
@@ -110,6 +113,8 @@ final class LinterExtension extends Latte\Extension
 
 	private function validateStaticMethod(Expression\StaticMethodCallNode $node): void
 	{
+		assert($node->class instanceof Php\NameNode);
+		assert($node->name instanceof Php\IdentifierNode);
 		$className = (string) $node->class;
 		$methodName = $node->name->name;
 		if (!method_exists($className, $methodName)) {
@@ -118,8 +123,19 @@ final class LinterExtension extends Latte\Extension
 	}
 
 
+	private function validateClassType(Php\NameNode $node): void
+	{
+		$className = (string) $node;
+		if (!class_exists($className) && !interface_exists($className) && !trait_exists($className)) {
+			trigger_error("Unknown class $className $node->position", E_USER_WARNING);
+		}
+	}
+
+
 	private function validateClassConstant(Expression\ClassConstantFetchNode $node): void
 	{
+		assert($node->class instanceof Php\NameNode);
+		assert($node->name instanceof Php\IdentifierNode);
 		$name = "{$node->class}::{$node->name->name}";
 		if (!defined($name)) {
 			trigger_error("Unknown class constant $name $node->position", E_USER_WARNING);
@@ -139,6 +155,7 @@ final class LinterExtension extends Latte\Extension
 
 	private function validateInstanceof(Expression\InstanceofNode $node): void
 	{
+		assert($node->class instanceof Php\NameNode);
 		$className = (string) $node->class;
 		if (!class_exists($className) && !interface_exists($className)) {
 			trigger_error("Unknown class $className in instanceof $node->position", E_USER_WARNING);
@@ -148,6 +165,8 @@ final class LinterExtension extends Latte\Extension
 
 	private function validateStaticProperty(Expression\StaticPropertyFetchNode $node): void
 	{
+		assert($node->class instanceof Php\NameNode);
+		assert($node->name instanceof Php\VarLikeIdentifierNode);
 		$className = (string) $node->class;
 		$propertyName = $node->name->name;
 		if (!property_exists($className, $propertyName)) {

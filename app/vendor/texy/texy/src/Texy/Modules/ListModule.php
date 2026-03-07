@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -18,10 +16,11 @@ use function implode, ord, preg_match, strlen;
 
 
 /**
- * Ordered / unordered nested list module.
+ * Processes ordered, unordered, and definition lists with nesting.
  */
 final class ListModule extends Texy\Module
 {
+	/** @var array<string, array{string, int, string, 3?: string}> [regex, ordered?, list-style-type, next-regex?] */
 	public array $bullets = [
 		// first-rexexp ordered? list-style-type next-regexp
 		'*' => ['\*[\ \t]', 0, ''],
@@ -81,6 +80,7 @@ final class ListModule extends Texy\Module
 	 *   + ...
 	 *   + ...
 	 * 3) ....
+	 * @param  string[]  $matches
 	 */
 	public function patternList(BlockParser $parser, array $matches): ?HtmlElement
 	{
@@ -96,6 +96,7 @@ final class ListModule extends Texy\Module
 				$bullet = $desc[3] ?? $desc[0];
 				$min = isset($desc[3]) ? 2 : 1;
 				$el->setName($desc[1] ? 'ol' : 'ul');
+				settype($el->attrs['style'], 'array');
 				$el->attrs['style']['list-style-type'] = $desc[2];
 				if ($desc[1]) { // ol
 					if ($type[0] === '1' && (int) $mBullet > 1) {
@@ -110,6 +111,7 @@ final class ListModule extends Texy\Module
 				break;
 			}
 		}
+		assert($bullet !== null);
 
 		$mod = new Modifier($mMod);
 		$mod->decorate($this->texy, $el);
@@ -138,6 +140,7 @@ final class ListModule extends Texy\Module
 	 * - description 1
 	 * - description 2
 	 * - description 3
+	 * @param  string[]  $matches
 	 */
 	public function patternDefList(BlockParser $parser, array $matches): HtmlElement
 	{
@@ -157,6 +160,7 @@ final class ListModule extends Texy\Module
 				break;
 			}
 		}
+		assert($bullet !== null);
 
 		$el = new HtmlElement('dl');
 		$mod = new Modifier($mMod);

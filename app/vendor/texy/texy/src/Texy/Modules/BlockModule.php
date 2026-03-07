@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -17,7 +15,7 @@ use const ENT_NOQUOTES;
 
 
 /**
- * Special blocks module.
+ * Processes special blocks (/-- code, html, text, div, etc.).
  */
 final class BlockModule extends Texy\Module
 {
@@ -66,6 +64,7 @@ final class BlockModule extends Texy\Module
 	 * ....
 	 * ....
 	 * \----
+	 * @param  string[]  $matches
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches): HtmlElement|string|null
 	{
@@ -91,7 +90,7 @@ final class BlockModule extends Texy\Module
 		Texy\HandlerInvocation $invocation,
 		string $blocktype,
 		string $s,
-		$param,
+		?string $param,
 		Texy\Modifier $mod,
 	): HtmlElement|string|null
 	{
@@ -133,7 +132,7 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	private function blockTexySource(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param): string|HtmlElement
+	private function blockTexySource(string $s, Texy\Texy $texy, Texy\Modifier $mod, ?string $param): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {
@@ -152,7 +151,7 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	private function blockCode(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param): string|HtmlElement
+	private function blockCode(string $s, Texy\Texy $texy, Texy\Modifier $mod, ?string $param): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {
@@ -163,13 +162,16 @@ final class BlockModule extends Texy\Module
 		$s = $texy->protect($s, $texy::CONTENT_BLOCK);
 		$el = new HtmlElement('pre');
 		$mod->decorate($texy, $el);
-		$el->attrs['class'][] = $param; // lang
+		if ($param !== null) {
+			settype($el->attrs['class'], 'array');
+			$el->attrs['class'][] = $param;
+		}
 		$el->create('code', $s);
 		return $el;
 	}
 
 
-	private function blockDefault(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param): string|HtmlElement
+	private function blockDefault(string $s, Texy\Texy $texy, Texy\Modifier $mod, ?string $param): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {
@@ -178,7 +180,10 @@ final class BlockModule extends Texy\Module
 
 		$el = new HtmlElement('pre');
 		$mod->decorate($texy, $el);
-		$el->attrs['class'][] = $param; // lang
+		if ($param !== null) {
+			settype($el->attrs['class'], 'array');
+			$el->attrs['class'][] = $param;
+		}
 		$s = htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8');
 		$s = $texy->protect($s, $texy::CONTENT_BLOCK);
 		$el->setText($s);
@@ -211,6 +216,7 @@ final class BlockModule extends Texy\Module
 
 		$lineParser->parse($s);
 		$s = $el->getText();
+		assert($s !== null);
 		$s = Helpers::unescapeHtml($s);
 		$s = htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8');
 		$s = $texy->unprotect($s);
@@ -244,6 +250,7 @@ final class BlockModule extends Texy\Module
 
 		$lineParser->parse($s);
 		$s = $el->getText();
+		assert($s !== null);
 		$s = Helpers::unescapeHtml($s);
 		$s = htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8');
 		$s = $texy->unprotect($s);
@@ -270,9 +277,14 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	private function blockDiv(string $s, Texy\Texy $texy, Texy\Modifier $mod, Texy\BlockParser $parser)
+	private function blockDiv(
+		string $s,
+		Texy\Texy $texy,
+		Texy\Modifier $mod,
+		Texy\BlockParser $parser,
+	): string|HtmlElement
 	{
-		$s = Helpers::outdent($s, true);
+		$s = Helpers::outdent($s, firstLine: true);
 		if ($s === '') {
 			return "\n";
 		}

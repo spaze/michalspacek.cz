@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Bridges\Latte;
 
@@ -19,21 +17,20 @@ use Texy\Texy;
 
 
 /**
- * Macro {texy} ... {/texy} for Latte v3
+ * Provides {texy} tag and |texy filter for Latte v3.
  */
 class TexyExtension extends Latte\Extension
 {
-	private $processor;
+	/** @var \Closure(string, mixed...): string */
+	private \Closure $processor;
 
 
+	/** @param  Texy|callable(string, mixed...): string  $texy */
 	public function __construct(Texy|callable $texy)
 	{
 		$this->processor = $texy instanceof Texy
-			? function (string $text) use ($texy): string {
-				$text = Helpers::outdent(str_replace("\t", '    ', $text));
-				return $texy->process($text);
-			}
-		: $texy;
+			? fn(string $text): string => $texy->process(Helpers::outdent(str_replace("\t", '    ', $text)))
+			: $texy(...);
 	}
 
 
@@ -61,7 +58,7 @@ class TexyExtension extends Latte\Extension
 	}
 
 
-	public function texyFilter(FilterInfo $info, string $text, ...$args): string
+	public function texyFilter(FilterInfo $info, string $text, mixed ...$args): string
 	{
 		$info->contentType ??= ContentType::Html;
 		return ($this->processor)($text, ...$args);

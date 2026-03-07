@@ -2,6 +2,16 @@
 
 ## NOT RELEASED
 
+## 1.28.1
+
+### Changed
+
+- Remove redundant ext-json requirement
+
+### Fixed
+
+- SignerV4: Fix presign request for some S3 compatible third services
+
 ## 1.28.0
 
 ### Added

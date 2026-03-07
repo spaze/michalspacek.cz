@@ -1,41 +1,43 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Texy;
 
-use function array_unshift, count, get_class, is_string;
+use function array_unshift, count, is_string;
 
 
 /**
- * Around advice handlers.
+ * Implements chain of responsibility for element handlers.
  */
 final class HandlerInvocation
 {
-	/** @var array<int, callable> */
-	private array $handlers;
 	private int $pos;
+
+	/** @var mixed[] */
 	private array $args;
-	private Parser $parser;
 
 
-	public function __construct(array $handlers, Parser $parser, array $args)
-	{
-		$this->handlers = $handlers;
-		$this->pos = count($handlers);
-		$this->parser = $parser;
+	/** @param mixed[] $args */
+	public function __construct(
+		/** @var list<\Closure(mixed...): mixed> */
+		private array $handlers,
+		private readonly Parser $parser,
+		array $args,
+	) {
+		$this->pos = count($this->handlers);
 		array_unshift($args, $this);
 		$this->args = $args;
 	}
 
 
-	/** @return mixed */
-	public function proceed(...$args)
+	/**
+	 * Invokes next handler in chain, or throws if none remain.
+	 */
+	public function proceed(mixed ...$args): string|HtmlElement|null
 	{
 		if ($this->pos === 0) {
 			throw new \RuntimeException('No more handlers.');
@@ -49,7 +51,7 @@ final class HandlerInvocation
 		$this->pos--;
 		$res = $this->handlers[$this->pos](...$this->args);
 		if ($res !== null && !is_string($res) && !$res instanceof HtmlElement) {
-			throw new \UnexpectedValueException("Invalid value returned from handler '" . get_class($this->handlers[$this->pos][0]) . "'.");
+			throw new \UnexpectedValueException('Invalid value returned from handler.');
 		}
 
 		return $res;

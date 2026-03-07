@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -20,7 +18,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {capture $variable}
+ * {capture $var} ... {/capture}
+ * Captures block output into variable.
  */
 class CaptureNode extends StatementNode
 {
@@ -29,7 +28,7 @@ class CaptureNode extends StatementNode
 	public AreaNode $content;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$tag->expectArguments();
@@ -37,7 +36,7 @@ class CaptureNode extends StatementNode
 		if (!$variable->isWritable()) {
 			$text = '';
 			$i = 0;
-			while ($token = $tag->parser->stream->peek(--$i)) {
+			while ($token = $tag->parser->stream->tryPeek(--$i)) {
 				$text = $token->text . $text;
 			}
 

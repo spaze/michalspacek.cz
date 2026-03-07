@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -24,7 +22,7 @@ use Latte\Runtime\Template;
 
 
 /**
- * {include [block] name [from file] [, args]}
+ * {include #name|parent|this [from 'file.latte']}
  */
 class IncludeBlockNode extends StatementNode
 {
@@ -65,12 +63,14 @@ class IncludeBlockNode extends StatementNode
 		} elseif ($node->parent || $tokenName->is('this')) {
 			$item = $tag->closestTag(
 				[BlockNode::class, DefineNode::class],
-				fn($item) => $item->node?->block && !$item->node->block->isDynamic() && $item->node->block->name !== '',
+				fn($item) => ($item->node instanceof BlockNode || $item->node instanceof DefineNode)
+					&& $item->node->block && !$item->node->block->isDynamic(),
 			);
-			if (!$item) {
+			if (!$item || !($item->node instanceof BlockNode || $item->node instanceof DefineNode)) {
 				throw new CompileException("Cannot include $tokenName->text block outside of any block.", $tag->position);
 			}
 
+			assert($item->node->block !== null);
 			$node->name = $item->node->block->name;
 		}
 
@@ -100,7 +100,7 @@ class IncludeBlockNode extends StatementNode
 	{
 		if ($this->name instanceof Scalar\StringNode || $this->name instanceof Scalar\IntegerNode) {
 			$staticName = (string) $this->name->value;
-			$block = $this->blocks[$this->layer][$staticName] ?? $this->blocks[Template::LayerLocal][$staticName] ?? null;
+			$block = ($this->layer !== null ? $this->blocks[$this->layer][$staticName] ?? null : null) ?? $this->blocks[Template::LayerLocal][$staticName] ?? null;
 		}
 
 		return $context->format(
@@ -118,6 +118,7 @@ class IncludeBlockNode extends StatementNode
 
 	private function printBlockFrom(PrintContext $context, string $contentFilter): string
 	{
+		assert($this->from !== null);
 		return $context->format(
 			'$this->createTemplate(%raw, %node? + $this->params, "include")->renderToContentType(%raw, %raw) %line;',
 			$context->ensureString($this->from, 'Template name'),

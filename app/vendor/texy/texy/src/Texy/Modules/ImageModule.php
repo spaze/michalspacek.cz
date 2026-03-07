@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -17,14 +15,14 @@ use function explode, getimagesize, is_file, is_int, min, round, rtrim, str_cont
 
 
 /**
- * Images module.
+ * Processes image syntax and detects image dimensions.
  */
 final class ImageModule extends Texy\Module
 {
 	/** root of relative images (http) */
 	public ?string $root = 'images/';
 
-	/** root of linked images (http) */
+	/** @deprecated */
 	public ?string $linkedRoot = 'images/';
 
 	/** physical location of images on server */
@@ -36,7 +34,7 @@ final class ImageModule extends Texy\Module
 	/** right-floated images CSS class */
 	public ?string $rightClass = null;
 
-	/** default alternative text */
+	/** @deprecated */
 	public ?string $defaultAlt = '';
 
 	/** @var array<string, Image> image references */
@@ -64,7 +62,7 @@ final class ImageModule extends Texy\Module
 	/**
 	 * Text pre-processing.
 	 */
-	private function beforeParse(Texy\Texy $texy, &$text): void
+	private function beforeParse(Texy\Texy $texy, string &$text): void
 	{
 		if (!empty($texy->allowed['image/definition'])) {
 			// [*image*]: urls .(title)[class]{style}
@@ -79,6 +77,7 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Callback for: [*image*]: urls .(title)[class]{style}.
+	 * @param  string[]  $matches
 	 */
 	private function patternReferenceDef(array $matches): string
 	{
@@ -87,7 +86,7 @@ final class ImageModule extends Texy\Module
 		// [2] => urls
 		// [3] => .(title)[class]{style}<>
 
-		$image = $this->factoryImage($mURLs, $mMod, false);
+		$image = $this->factoryImage($mURLs, $mMod, tryRef: false);
 		$this->addReference($mRef, $image);
 		return '';
 	}
@@ -95,6 +94,7 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Callback for [* small.jpg 80x13 || big.jpg .(alternative text)[class]{style}>]:LINK.
+	 * @param  string[]  $matches
 	 */
 	public function patternImage(Texy\LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
@@ -194,9 +194,9 @@ final class ImageModule extends Texy\Module
 		?Texy\HandlerInvocation $invocation,
 		Image $image,
 		?Texy\Link $link = null,
-	): ?Texy\HtmlElement
+	): Texy\HtmlElement|string|null
 	{
-		if ($image->URL == null) {
+		if ($image->URL === null) {
 			return null;
 		}
 
@@ -221,12 +221,15 @@ final class ImageModule extends Texy\Module
 		if ($hAlign) {
 			$var = $hAlign . 'Class'; // leftClass, rightClass
 			if (!empty($this->$var)) {
+				settype($el->attrs['class'], 'array');
 				$el->attrs['class'][] = $this->$var;
 
 			} elseif (empty($texy->alignClasses[$hAlign])) {
+				settype($el->attrs['style'], 'array');
 				$el->attrs['style']['float'] = $hAlign;
 
 			} else {
+				settype($el->attrs['class'], 'array');
 				$el->attrs['class'][] = $texy->alignClasses[$hAlign];
 			}
 		}
@@ -238,7 +241,7 @@ final class ImageModule extends Texy\Module
 		$el->attrs['width'] = $image->width;
 		$el->attrs['height'] = $image->height;
 
-		$texy->summary['images'][] = $el->attrs['src'];
+		$texy->summary['images'][] = (string) $el->attrs['src'];
 
 		if ($link) {
 			return $texy->linkModule->solve(null, $link, $el);
@@ -251,7 +254,7 @@ final class ImageModule extends Texy\Module
 	private function detectDimensions(Image $image): void
 	{
 		// absolute URL & security check for double dot
-		if (!Helpers::isRelative($image->URL) || str_contains($image->URL, '..')) {
+		if ($image->URL === null || !Helpers::isRelative($image->URL) || str_contains($image->URL, '..')) {
 			return;
 		}
 

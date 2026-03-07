@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -18,14 +16,14 @@ use function iconv_strlen, iconv_substr, link, preg_match, str_contains, str_rep
 
 
 /**
- * Links module.
+ * Processes links, email addresses, and URL references.
  */
 final class LinkModule extends Texy\Module
 {
 	/** root of relative links */
 	public ?string $root = null;
 
-	/** linked image class */
+	/** @deprecated */
 	public ?string $imageClass = null;
 
 	/** always use rel="nofollow" for absolute links? */
@@ -37,7 +35,7 @@ final class LinkModule extends Texy\Module
 	/** @var array<string, Link> link references */
 	private array $references = [];
 
-	/** @var array<string, bool> */
+	/** @var array<string, true> */
 	private static array $livelock;
 
 	private static string $EMAIL;
@@ -83,7 +81,7 @@ final class LinkModule extends Texy\Module
 	/**
 	 * Text pre-processing.
 	 */
-	private function beforeParse(Texy\Texy $texy, &$text): void
+	private function beforeParse(Texy\Texy $texy, string &$text): void
 	{
 		self::$livelock = [];
 
@@ -100,6 +98,7 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: [la trine]: http://www.latrine.cz/ text odkazu .(title)[class]{style}.
+	 * @param  string[]  $matches
 	 */
 	private function patternReferenceDef(array $matches): string
 	{
@@ -120,6 +119,7 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: [ref].
+	 * @param  string[]  $matches
 	 */
 	public function patternReference(LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
@@ -138,6 +138,7 @@ final class LinkModule extends Texy\Module
 
 		if ($link->label != '') { // null or ''
 			// prevent circular references
+			assert($link->name !== null);
 			if (isset(self::$livelock[$link->name])) {
 				$content = $link->label;
 			} else {
@@ -159,6 +160,7 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: http://davidgrudl.com david@grudl.com.
+	 * @param  string[]  $matches
 	 */
 	public function patternUrlEmail(LineParser $parser, array $matches, string $name): Texy\HtmlElement|string|null
 	{
@@ -243,7 +245,7 @@ final class LinkModule extends Texy\Module
 		}
 
 		if (str_contains((string) $link->URL, '%s')) {
-			$link->URL = str_replace('%s', urlencode($texy->stringToText($label)), $link->URL);
+			$link->URL = str_replace('%s', urlencode($texy->stringToText($label ?? '')), $link->URL);
 		}
 
 		$link->modifier->setProperties($mMod);
@@ -259,9 +261,9 @@ final class LinkModule extends Texy\Module
 		?HandlerInvocation $invocation,
 		Link $link,
 		Texy\HtmlElement|string|null $content = null,
-	): Texy\HtmlElement|string
+	): Texy\HtmlElement|string|null
 	{
-		if ($link->URL == null) {
+		if ($link->URL === null) {
 			return $content;
 		}
 
@@ -282,6 +284,7 @@ final class LinkModule extends Texy\Module
 			// image
 			$el->attrs['href'] = Texy\Helpers::prependRoot($link->URL, $texy->imageModule->linkedRoot);
 			if ($this->imageClass) {
+				settype($el->attrs['class'], 'array');
 				$el->attrs['class'][] = $this->imageClass;
 			}
 		} else {
@@ -306,7 +309,7 @@ final class LinkModule extends Texy\Module
 	/**
 	 * Finish invocation.
 	 */
-	private function solveUrlEmail(HandlerInvocation $invocation, Link $link): Texy\HtmlElement|string
+	private function solveUrlEmail(HandlerInvocation $invocation, Link $link): Texy\HtmlElement|string|null
 	{
 		$content = $this->textualUrl($link);
 		$content = $this->texy->protect($content, Texy\Texy::CONTENT_TEXTUAL);
@@ -317,7 +320,7 @@ final class LinkModule extends Texy\Module
 	/**
 	 * Finish invocation.
 	 */
-	private function solveNewReference(HandlerInvocation $invocation, string $name)
+	private function solveNewReference(HandlerInvocation $invocation, string $name): void
 	{
 		// no change
 	}
@@ -328,6 +331,10 @@ final class LinkModule extends Texy\Module
 	 */
 	private function checkLink(Link $link): void
 	{
+		if ($link->URL === null) {
+			return;
+		}
+
 		// remove soft hyphens; if not removed by Texy\Texy::process()
 		$link->URL = str_replace("\u{AD}", '', $link->URL);
 

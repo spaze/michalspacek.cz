@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php;
 
@@ -15,6 +13,9 @@ use Latte\Compiler\PrintContext;
 use function array_flip, str_starts_with, strtolower, substr;
 
 
+/**
+ * Qualified name for functions, classes, or constants (\Foo\Bar).
+ */
 class NameNode extends Node
 {
 	public const

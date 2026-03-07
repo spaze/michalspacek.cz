@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler;
 
@@ -20,6 +18,9 @@ use Latte\SecurityViolationException;
 use function array_keys, array_splice, count, end, in_array, preg_match, str_ends_with, str_starts_with, substr, trim, ucfirst;
 
 
+/**
+ * Parses Latte template tokens into AST.
+ */
 final class TemplateParser
 {
 	/** @var Block[][] */
@@ -29,26 +30,29 @@ final class TemplateParser
 	public bool $strict = false;
 	public ?Nodes\TextNode $lastIndentation = null;
 
-	/** @var array<string, callable(Tag, self): (Node|\Generator|void)> */
+	/** @var array<string, \Closure(Tag, self): (Node|\Generator|void)> */
 	private array $tagParsers = [];
 
 	/** @var array<string, \stdClass> */
 	private array $attrParsersInfo = [];
 
 	private TemplateParserHtml $html;
-	private ?TokenStream $stream = null;
+	private TokenStream $stream;
 	private TemplateLexer $lexer;
 	private ?Policy $policy = null;
 	private string $contentType;
 	private int $counter = 0;
 	private ?Tag $tag = null;
-	private $lastResolver;
+	private ?\Closure $lastResolver = null;
+
+	/** @var \WeakMap<Tag, ?list<string>> */
 	private \WeakMap $lookFor;
 
 
 	public function __construct()
 	{
 		$this->lexer = new TemplateLexer;
+		$this->stream = new TokenStream(new \EmptyIterator);
 		$this->setContentType(ContentType::Html);
 	}
 
@@ -83,7 +87,11 @@ final class TemplateParser
 	}
 
 
-	public function parseFragment(callable $resolver, ?callable $after = null): FragmentNode
+	/**
+	 * @param  \Closure(FragmentNode): ?Node  $resolver
+	 * @param  ?(\Closure(FragmentNode): void)  $after
+	 */
+	public function parseFragment(\Closure $resolver, ?\Closure $after = null): FragmentNode
 	{
 		$res = new FragmentNode;
 		$save = [$this->lastResolver, $this->tag];
@@ -91,6 +99,7 @@ final class TemplateParser
 		try {
 			while (!$this->stream->peek()->isEnd()) {
 				if ($node = $resolver($res)) {
+					assert($node instanceof Nodes\AreaNode);
 					$res->append($node);
 					$after && $after($res);
 				} else {
@@ -150,7 +159,7 @@ final class TemplateParser
 
 	public function parseLatteComment(): Nodes\NopNode
 	{
-		if (str_ends_with($this->stream->peek(-1)?->text ?? "\n", "\n")) {
+		if (str_ends_with($this->stream->tryPeek(-1)->text ?? "\n", "\n")) {
 			$this->lastIndentation ??= new Nodes\TextNode('');
 		}
 		$openToken = $this->stream->consume(Token::Latte_CommentOpen);
@@ -162,11 +171,11 @@ final class TemplateParser
 	}
 
 
-	public function parseLatteStatement(?callable $resolver = null): ?Node
+	public function parseLatteStatement(?\Closure $resolver = null): ?Node
 	{
 		$this->lexer->pushState(TemplateLexer::StateLatteTag);
 		if ($this->stream->peek(1)->is(Token::Slash)
-			|| (isset($this->tag, $this->lookFor[$this->tag]) && in_array($this->stream->peek(1)->text, $this->lookFor[$this->tag], true))
+			|| (isset($this->tag, $this->lookFor[$this->tag]) && in_array($this->stream->peek(1)->text, $this->lookFor[$this->tag], strict: true))
 		) {
 			$this->lexer->popState();
 			return null; // go back to previous parseLatteStatement()
@@ -212,13 +221,13 @@ final class TemplateParser
 						$res->send([$content, $tag]);
 						$this->ensureIsConsumed($tag);
 						break;
-					} elseif (in_array($tag->name, $this->lookFor[$startTag] ?? [], true)) {
+					} elseif (in_array($tag->name, $this->lookFor[$startTag] ?? [], strict: true)) {
 						$this->pushTag($tag);
 						$res->send([$content, $tag]);
 						$this->ensureIsConsumed($tag);
 						$this->popTag();
 					} else {
-						throw new CompileException('Unexpected tag ' . substr($tag->getNotation(true), 0, -1) . '}', $tag->position);
+						throw new CompileException('Unexpected tag ' . substr($tag->getNotation(withArgs: true), 0, -1) . '}', $tag->position);
 					}
 				}
 			}
@@ -230,7 +239,7 @@ final class TemplateParser
 			$node = $res->getReturn();
 
 		} elseif ($startTag->void) {
-			throw new CompileException('Unexpected /} in tag ' . substr($startTag->getNotation(true), 0, -1) . '/}', $startTag->position);
+			throw new CompileException('Unexpected /} in tag ' . substr($startTag->getNotation(withArgs: true), 0, -1) . '/}', $startTag->position);
 
 		} else {
 			$this->ensureIsConsumed($startTag);
@@ -256,17 +265,19 @@ final class TemplateParser
 	private function parseLatteTag(): Tag
 	{
 		$stream = $this->stream;
-		if (str_ends_with($stream->peek(-1)?->text ?? "\n", "\n")) {
+		if (str_ends_with($stream->tryPeek(-1)->text ?? "\n", "\n")) {
 			$this->lastIndentation ??= new Nodes\TextNode('');
 		}
 
-		$inTag = in_array($this->lexer->getState(), [TemplateLexer::StateHtmlTag, TemplateLexer::StateHtmlQuotedValue, TemplateLexer::StateHtmlComment, TemplateLexer::StateHtmlBogus], true);
+		$inTag = in_array($this->lexer->getState(), [TemplateLexer::StateHtmlTag, TemplateLexer::StateHtmlQuotedValue, TemplateLexer::StateHtmlComment, TemplateLexer::StateHtmlBogus], strict: true);
 		$openToken = $stream->consume(Token::Latte_TagOpen);
 		$this->lexer->pushState(TemplateLexer::StateLatteTag);
+		$closing = (bool) $stream->tryConsume(Token::Slash);
+		$nameToken = $stream->tryConsume(Token::Latte_Name);
 		$tag = new Tag(
 			position: $openToken->position,
-			closing: $closing = (bool) $stream->tryConsume(Token::Slash),
-			name: $stream->tryConsume(Token::Latte_Name)?->text ?? ($closing ? '' : '='),
+			closing: $closing,
+			name: $nameToken ? $nameToken->text : ($closing ? '' : '='),
 			tokens: $this->consumeTag(),
 			void: (bool) $stream->tryConsume(Token::Slash),
 			inHead: $this->inHead,
@@ -279,6 +290,7 @@ final class TemplateParser
 	}
 
 
+	/** @return Token[] */
 	public function consumeTag(): array
 	{
 		$res = [];
@@ -310,8 +322,8 @@ final class TemplateParser
 	}
 
 
-	/** @return callable(Tag, self): (Node|\Generator|void) */
-	private function getTagParser(string $name, Position $pos): callable
+	/** @return \Closure(Tag, self): (Node|\Generator|void) */
+	private function getTagParser(string $name, Position $pos): \Closure
 	{
 		if (!isset($this->tagParsers[$name])) {
 			$hint = ($t = Helpers::getSuggestion(array_keys($this->tagParsers), $name))
@@ -329,6 +341,7 @@ final class TemplateParser
 	}
 
 
+	/** @return array<string, \Closure(Tag, self): (Node|\Generator|void)> */
 	private function completeAttrParsers(): array
 	{
 		$list = Helpers::sortBeforeAfter($this->attrParsersInfo);

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Modules;
 
@@ -15,7 +13,7 @@ use function trim;
 
 
 /**
- * The captioned figures.
+ * Processes images with captions.
  */
 final class FigureModule extends Texy\Module
 {
@@ -30,10 +28,10 @@ final class FigureModule extends Texy\Module
 	/** right-floated box CSS class */
 	public ?string $rightClass = null;
 
-	/** how calculate div's width */
+	/** @deprecated */
 	public int|false $widthDelta = 10;
 
-	/** caption after *** is required */
+	/** @deprecated */
 	public bool $requireCaption = true;
 
 
@@ -60,6 +58,7 @@ final class FigureModule extends Texy\Module
 
 	/**
 	 * Callback for [*image*]:link *** .... .(title)[class]{style}>.
+	 * @param  string[]  $matches
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
@@ -115,12 +114,13 @@ final class FigureModule extends Texy\Module
 
 		$el = new Texy\HtmlElement($this->tagName);
 		if (!empty($image->width) && $this->widthDelta !== false) {
+			settype($el->attrs['style'], 'array');
 			$el->attrs['style']['max-width'] = ($image->width + $this->widthDelta) . 'px';
 		}
 
 		$mod->decorate($texy, $el);
 
-		$el[0] = $elImg;
+		$el->add($elImg);
 
 		if ($content !== '') {
 			$el[1] = new Texy\HtmlElement($this->tagName === 'figure' ? 'figcaption' : 'p');
@@ -134,6 +134,7 @@ final class FigureModule extends Texy\Module
 				$class = $this->$var;
 
 			} elseif (empty($texy->alignClasses[$hAlign])) {
+				settype($el->attrs['style'], 'array');
 				$el->attrs['style']['float'] = $hAlign;
 
 			} else {
@@ -141,6 +142,7 @@ final class FigureModule extends Texy\Module
 			}
 		}
 
+		settype($el->attrs['class'], 'array');
 		$el->attrs['class'][] = $class;
 
 		return $el;

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Texy! (https://texy.nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Texy\Bridges\Latte;
 
@@ -29,8 +27,11 @@ class TexyNode extends StatementNode
 	public ArrayNode $args;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
-	public static function create(Tag $tag, TemplateParser $parser, callable $processor): \Generator
+	/**
+	 * @param  \Closure(string, mixed...): string  $processor
+	 * @return \Generator<int, ?array{list<string>}, array{AreaNode, ?Tag}, static|Latte\Compiler\Nodes\TextNode>
+	 */
+	public static function create(Tag $tag, TemplateParser $parser, \Closure $processor): \Generator
 	{
 		if ($tag->isNAttribute()) {
 			throw new \LogicException('The n:texy is not supported');

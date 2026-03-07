@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
@@ -15,6 +13,9 @@ use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 
 
+/**
+ * Unary prefix operation (+, -, ~, @, !).
+ */
 class UnaryOpNode extends ExpressionNode implements OperatorNode
 {
 	private const Ops = ['+' => 1, '-' => 1, '~' => 1, '@' => 1, '!' => 1];

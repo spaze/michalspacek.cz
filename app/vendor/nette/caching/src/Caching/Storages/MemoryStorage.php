@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Caching\Storages;
 
@@ -17,6 +15,7 @@ use Nette;
  */
 class MemoryStorage implements Nette\Caching\Storage
 {
+	/** @var array<string, mixed>  key => cached value */
 	private array $data = [];
 
 
@@ -31,7 +30,7 @@ class MemoryStorage implements Nette\Caching\Storage
 	}
 
 
-	public function write(string $key, $data, array $dependencies): void
+	public function write(string $key, mixed $data, array $dependencies): void
 	{
 		$this->data[$key] = $data;
 	}

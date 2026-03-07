@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte;
 
@@ -39,7 +37,7 @@ class Helpers
 
 
 	/** intentionally without callable typehint, because it generates bad error messages */
-	public static function toReflection($callable): \ReflectionFunctionAbstract
+	public static function toReflection(mixed $callable): \ReflectionFunctionAbstract
 	{
 		if (is_string($callable) && strpos($callable, '::')) {
 			return PHP_VERSION_ID < 80300
@@ -55,6 +53,10 @@ class Helpers
 	}
 
 
+	/**
+	 * @param  array<string, mixed|\stdClass>  $list
+	 * @return array<string, mixed|\stdClass>
+	 */
 	public static function sortBeforeAfter(array $list): array
 	{
 		foreach ($list as $name => $info) {
@@ -70,7 +72,7 @@ class Helpers
 				if ($target === '*') {
 					$best = 0;
 				} elseif (isset($list[$target])) {
-					$pos = array_search($target, $names, true);
+					$pos = (int) array_search($target, $names, strict: true);
 					$best = min($pos, $best ?? $pos);
 				}
 			}
@@ -79,20 +81,22 @@ class Helpers
 				if ($target === '*') {
 					$best = count($names);
 				} elseif (isset($list[$target])) {
-					$pos = array_search($target, $names, true);
+					$pos = (int) array_search($target, $names, strict: true);
 					$best = max($pos + 1, $best);
 				}
 			}
 
-			$list = array_slice($list, 0, $best, true)
+			$best ??= count($names);
+			$list = array_slice($list, 0, $best, preserve_keys: true)
 				+ [$name => $info]
-				+ array_slice($list, $best, null, true);
+				+ array_slice($list, $best, null, preserve_keys: true);
 		}
 
 		return $list;
 	}
 
 
+	/** @param  mixed[]  $items */
 	public static function removeNulls(array &$items): void
 	{
 		$items = array_values(array_filter($items, fn($item) => $item !== null));
@@ -101,14 +105,18 @@ class Helpers
 
 	/**
 	 * Attempts to map the compiled template to the source.
+	 * @return array{name: ?string, line: ?int, column: ?int}|null
 	 */
 	public static function mapCompiledToSource(string $compiledFile, ?int $compiledLine = null): ?array
 	{
-		if (!Cache::isCacheFile($compiledFile)) {
+		if (!Runtime\Cache::isCacheFile($compiledFile)) {
 			return null;
 		}
 
 		$content = file_get_contents($compiledFile);
+		if ($content === false) {
+			return null;
+		}
 		$name = preg_match('#^/\*\* source: (\S.+) \*/#m', $content, $m) ? $m[1] : null;
 		$compiledLine && preg_match('~/\* pos (\d+)(?::(\d+))? \*/~', explode("\n", $content)[$compiledLine - 1], $pos);
 		$line = isset($pos[1]) ? (int) $pos[1] : null;
@@ -124,7 +132,7 @@ class Helpers
 	{
 		$trace = debug_backtrace();
 		foreach ($trace as $item) {
-			if (isset($item['file']) && ($source = self::mapCompiledToSource($item['file'], $item['line']))) {
+			if (isset($item['file']) && ($source = self::mapCompiledToSource($item['file'], $item['line'] ?? null))) {
 				$res = [];
 				if ($source['name'] && is_file($source['name'])) {
 					$res[] = "in '" . str_replace(dirname($source['name'], 2), '...', $source['name']) . "'";

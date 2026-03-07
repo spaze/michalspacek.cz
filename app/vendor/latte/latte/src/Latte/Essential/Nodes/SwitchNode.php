@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Latte\Essential\Nodes;
 
@@ -15,22 +13,24 @@ use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\StatementNode;
 use Latte\Compiler\Nodes\TextNode;
+use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 use Latte\Compiler\Tag;
 
 
 /**
- * {switch} ... {case} ... {default}
+ * {switch $expr} {case $val} ... {default} ... {/switch}
+ * Uses strict comparison (===) without fallthrough.
  */
 class SwitchNode extends StatementNode
 {
 	public ?ExpressionNode $expression;
 
-	/** @var array<array{?ArrayNode, int, FragmentNode}> */
+	/** @var array<array{?ArrayNode, Position, FragmentNode}> */
 	public array $cases = [];
 
 
-	/** @return \Generator<int, ?array, array{FragmentNode, Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{FragmentNode, Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		if ($tag->isNAttribute()) {
@@ -107,7 +107,9 @@ class SwitchNode extends StatementNode
 
 	public function &getIterator(): \Generator
 	{
-		yield $this->expression;
+		if ($this->expression) {
+			yield $this->expression;
+		}
 		foreach ($this->cases as [&$case, , &$stmt]) {
 			if ($case) {
 				yield $case;
