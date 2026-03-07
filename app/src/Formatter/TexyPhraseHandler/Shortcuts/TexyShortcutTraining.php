@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\WebApplication;
-use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnTypeException;
 use MichalSpacekCz\Formatter\Placeholders\TrainingDateTexyFormatterPlaceholder;
 use MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandlerInvocation;
 use MichalSpacekCz\Training\TrainingLocales;
@@ -43,7 +42,6 @@ final readonly class TexyShortcutTraining implements TexyShortcut
 
 	/**
 	 * @throws InvalidLinkException
-	 * @throws UnexpectedHandlerInvocationReturnTypeException
 	 */
 	#[Override]
 	public function resolve(string $url, HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, Link $link): ?HtmlElement
@@ -66,7 +64,7 @@ final readonly class TexyShortcutTraining implements TexyShortcut
 		$link->URL = $this->webApplication->getPresenter()->link('//:' . Trainings::TRAINING_ACTION, $name);
 		$el = HtmlElement::el();
 		$trainingLink = $this->handlerInvocation->proceed($invocation, $phrase, $content, $modifier, $link);
-		if ($trainingLink !== false) {
+		if ($trainingLink !== null) {
 			$el->add($trainingLink);
 			$el->add($texy->protect($this->getTrainingSuffix($name), Texy::CONTENT_TEXTUAL));
 			return $el;
