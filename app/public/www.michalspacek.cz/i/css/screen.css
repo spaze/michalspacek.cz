@@ -359,7 +359,7 @@ form.wide textarea, textarea.wide, #editTalkInputs textarea.wide { height: 200px
 	width: 25%;
 	vertical-align: top;
 }
-#editTalkInputs .inputError { white-space: normal; }
+.inputErrorMessage { white-space: normal; }
 #currentVideoThumbnail img, #currentVideoThumbnailAlternative img { vertical-align: middle; }
 #videoThumbnailFormField[hidden], #videoThumbnailAlternativeFormField[hidden] {
 	display: initial;

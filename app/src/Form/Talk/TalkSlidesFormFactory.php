@@ -14,6 +14,7 @@ use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
@@ -82,6 +83,9 @@ final readonly class TalkSlidesFormFactory
 			$onSuccess($message, $type, $talkId);
 		};
 		$form->onValidate[] = function (UiForm $form) use ($request): void {
+			if (!$this->hasSlideNo1($form)) {
+				$form->addError($this->texyFormatter->translate('messages.talks.admin.slideNumber1Missing'));
+			}
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
 			$files = $request->getFiles();
@@ -100,12 +104,36 @@ final readonly class TalkSlidesFormFactory
 	}
 
 
+	private function hasSlideNo1(UiForm $form): bool
+	{
+		$values = $form->getUntrustedFormValues();
+		assert($values->slides instanceof ArrayHash);
+		assert($values->new instanceof ArrayHash);
+		foreach ($values->slides as $slide) {
+			assert($slide instanceof ArrayHash);
+			if ($slide->number === 1) {
+				return true;
+			}
+		}
+		foreach ($values->new as $slide) {
+			assert($slide instanceof ArrayHash);
+			if ($slide->number === 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 	private function addSlideFields(Container $container, ?int $filenamesTalkId): void
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$aliasInput = $container->addText('alias', 'Alias:')
+			->addRule(function (BaseControl $input): bool {
+				return is_string($input->getValue()) && !$this->talkSlides->isNumberSlideAlias($input->getValue());
+			}, "Alias slajdu '%value' nesmí být číslo")
 			->setRequired('Zadejte prosím alias');
 		$this->validators->addValidateSlugRules($aliasInput);
 		$container->addInteger('number', 'Slajd:')

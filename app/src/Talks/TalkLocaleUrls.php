@@ -15,17 +15,18 @@ final readonly class TalkLocaleUrls
 
 
 	/**
-	 * @return array<string, string> locale => action
+	 * @return array<string, array{name: string}> locale => ['name' => action]
 	 */
-	public function get(Talk $talk): array
+	public function getLinkParams(Talk $talk): array
 	{
 		if ($talk->getTranslationGroupId() === null) {
 			return [];
 		}
-		return $this->database->fetchPairsStringString(
+		$actions = $this->database->fetchPairsStringString(
 			'SELECT l.locale, t.action FROM talks t JOIN locales l ON t.key_locale = l.id_locale WHERE t.key_translation_group = ?',
 			$talk->getTranslationGroupId(),
 		);
+		return array_map(fn($action) => ['name' => $action], $actions);
 	}
 
 }

@@ -94,19 +94,30 @@ final class TalkSlidesFormFactoryTest extends TestCase
 			},
 			303,
 			new TalkSlideCollection(303),
-			25,
+			2,
 			new Request('foo', files: $files),
 		);
 		$this->applicationPresenter->anchorForm($form);
 		Arrays::invoke($form->onValidate, $form);
-		if ($errorMessage === null) {
-			Assert::count(0, $form->getErrors());
-		} else {
-			Assert::count(1, $form->getErrors());
+		$errorCount = $errorMessage === null ? 0 : 1;
+		Assert::count($errorCount, $form->getErrors());
+		if ($errorMessage !== null) {
 			$error = $form->getErrors()[0];
 			assert($error instanceof Html);
 			Assert::same($errorMessage, $error->render());
 		}
+
+		$form->setDefaults([
+			'new' => [
+				['number' => 123],
+				['number' => 124],
+			],
+		]);
+		Arrays::invoke($form->onValidate, $form);
+		Assert::count($errorCount + 1, $form->getErrors());
+		$error = array_last($form->getErrors());
+		assert($error instanceof Html);
+		Assert::same('messages.talks.admin.slideNumber1Missing', $error->render());
 	}
 
 }

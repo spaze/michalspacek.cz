@@ -30,7 +30,10 @@
 			</tr>
 			<tr>
 				<td class="narrow">{input number}</td>
-				<td>{input alias}</td>
+				<td n:class="$form['slides'][$slide->getId()]['alias']->hasErrors() ? inputError">
+					{input alias}
+					<div class="inputErrorMessage" n:if="$form['slides'][$slide->getId()]['alias']->hasErrors()"><strong>{inputError alias}</strong></div>
+				</td>
 				<td class="wider">{input title}</td>
 				<td class="wider">{input filename}</td>
 				<td>{input replace data-type => image}</td>
@@ -54,9 +57,9 @@
 			</tr>
 			<tr>
 				<td class="align-top"><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
-				<td colspan="5" n:class="$form[slides][$slide->getId()][speakerNotes]->hasErrors() ? inputError">
+				<td colspan="5" n:class="$form['slides'][$slide->getId()]['speakerNotes']->hasErrors() ? inputError">
 					{input speakerNotes}
-					<div n:if="$form[slides][$slide->getId()][speakerNotes]->hasErrors()"><strong>{inputError speakerNotes}</strong></div>
+					<div class="inputErrorMessage" n:if="$form['slides'][$slide->getId()]['speakerNotes']->hasErrors()"><strong>{inputError speakerNotes}</strong></div>
 				</td>
 			</tr>
 			</tbody>
@@ -77,7 +80,10 @@
 				</tr>
 				<tr>
 					<td class="narrow">{input number}</td>
-					<td>{input alias}</td>
+					<td n:class="$form['new'][$i]['alias']->hasErrors() ? inputError">
+						{input alias}
+						<div class="inputErrorMessage" n:if="$form['new'][$i]['alias']->hasErrors()"><strong>{inputError alias}</strong></div>
+					</td>
 					<td class="wider">{input title}</td>
 					<td class="wider">{input filename}</td>
 					<td>{input replace data-type => image}</td>
@@ -99,7 +105,10 @@
 				</tr>
 				<tr>
 					<td class="align-top"><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
-					<td colspan="5">{input speakerNotes}</td>
+					<td colspan="5" n:class="$form['new'][$i]['speakerNotes']->hasErrors() ? inputError">
+						{input speakerNotes}
+						<div class="inputErrorMessage" n:if="$form['new'][$i]['speakerNotes']->hasErrors()"><strong>{inputError speakerNotes}</strong></div>
+					</td>
 				</tr>
 				</tbody>
 			{/formContainer}

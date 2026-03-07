@@ -27,14 +27,16 @@ final readonly class VideoFactory
 		assert($row->videoHref === null || is_string($row->videoHref));
 		assert($row->videoThumbnail === null || is_string($row->videoThumbnail));
 		assert($row->videoThumbnailAlternative === null || is_string($row->videoThumbnailAlternative));
+		$videoThumbnail = $row->videoThumbnail === null || $row->videoThumbnail === '' ? null : $row->videoThumbnail;
+		$videoThumbnailAlternative = $row->videoThumbnailAlternative === null || $row->videoThumbnailAlternative === '' ? null : $row->videoThumbnailAlternative;
 
 		return new Video(
 			$row->videoHref,
-			$row->videoThumbnail,
-			$row->videoThumbnail !== null ? $this->mediaResources->getImageUrl($row->id, $row->videoThumbnail) : null,
-			$row->videoThumbnailAlternative,
-			$row->videoThumbnailAlternative !== null ? $this->mediaResources->getImageUrl($row->id, $row->videoThumbnailAlternative) : null,
-			$row->videoThumbnailAlternative !== null ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($row->videoThumbnailAlternative, PATHINFO_EXTENSION)) : null,
+			$videoThumbnail,
+			$videoThumbnail !== null ? $this->mediaResources->getImageUrl($row->id, $videoThumbnail) : null,
+			$videoThumbnailAlternative,
+			$videoThumbnailAlternative !== null ? $this->mediaResources->getImageUrl($row->id, $videoThumbnailAlternative) : null,
+			$videoThumbnailAlternative !== null ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($videoThumbnailAlternative, PATHINFO_EXTENSION)) : null,
 			$this->videoThumbnails->getWidth(),
 			$this->videoThumbnails->getHeight(),
 			$row->videoHref !== null ? VideoPlatform::tryFromUrl($row->videoHref)?->getName() : null,

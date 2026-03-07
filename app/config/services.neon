@@ -117,6 +117,8 @@ services:
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
+	- MichalSpacekCz\Presentation\Www\Talks\TalksDefaultTemplateParametersFactory
+	- MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParametersFactory
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Error\PulseError
 	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer, @typedDatabase.pulse)

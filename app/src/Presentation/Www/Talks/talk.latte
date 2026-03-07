@@ -1,4 +1,4 @@
-{varType MichalSpacekCz\Talks\Talk $talk}
+{templateType MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParameters}
 {var $containerExtraClass = 'talk'}
 {var $containerColsClass = 'with-sidebar'}
 {define #headerIcon}{/define}
@@ -46,7 +46,7 @@
 {else}
 	<div n:if="$slides" id="slides-container">
 	{foreach $slides as $slide}
-		<div id="slide-{$slide->getAlias()}" n:class="$slide->getNumber() === $slideNo ? highlight, nobreak">
+		<div id="slide-{$slide->getAlias()}" n:class="$slide->getAlias() === $slideAlias ? highlight, nobreak">
 		<picture n:tag-if="$slide->getImageAlternative()">
 			<source n:if="$slide->getImageAlternative()" srcset="{$slide->getImageAlternative()}" type="{$slide->getImageAlternativeType()}">
 			<img n:if="$slide->getImage()" src="{$slide->getImage()}" alt="{$slide->getTitle()}" title="{$slide->getTitle()}" width="800" height="450" {if $iterator->counter > 3}loading="lazy"{/if}>

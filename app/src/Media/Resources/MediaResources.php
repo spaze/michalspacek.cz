@@ -28,6 +28,10 @@ abstract class MediaResources
 	}
 
 
+	/**
+	 * @param non-empty-string $fileName
+	 * @return non-empty-string
+	 */
 	public function getImageUrl(int $id, string $fileName): string
 	{
 		return "{$this->staticRoot}/{$this->imagesRoot}/{$this->getSubDir()}/{$id}/{$fileName}";
