@@ -33,7 +33,6 @@ final readonly class CookieDescriptions
 		if (!is_int($cookieLifetime)) {
 			throw new ShouldNotHappenException("The cookie_lifetime option should be an int, but it's a " . get_debug_type($cookieLifetime));
 		}
-		/** @noinspection PhpInternalEntityUsedInspection */
 		return [
 			new CookieDescription(
 				CookieName::PermanentLogin->value,
