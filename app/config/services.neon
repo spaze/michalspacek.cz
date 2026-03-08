@@ -154,7 +154,7 @@ services:
 	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess
 	- MichalSpacekCz\Training\Applications\TrainingApplications
 	- MichalSpacekCz\Training\Applications\TrainingApplicationFactory(emailEncryption: @emailEncryption)
-	- MichalSpacekCz\Training\Applications\TrainingApplicationSources
+	- MichalSpacekCz\Training\Applications\TrainingApplicationSources(sourceResolvers: typed(MichalSpacekCz\Training\Resolver\ApplicationSourceResolver))
 	- MichalSpacekCz\Training\Applications\TrainingApplicationStorage(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses
 	- MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory
