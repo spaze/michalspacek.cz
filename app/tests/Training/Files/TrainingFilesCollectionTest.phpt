@@ -47,7 +47,9 @@ final class TrainingFilesCollectionTest extends TestCase
 
 	public function testGetNewestFile(): void
 	{
-		Assert::same(456, $this->collection->getNewestFile()?->getId());
+		$newestFile = $this->collection->getNewestFile();
+		Assert::same(456, $newestFile?->getId());
+		Assert::same('bar', $newestFile?->getFilename());
 	}
 
 

@@ -7,6 +7,8 @@ use DateTime;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use MichalSpacekCz\Training\Dates\TrainingDate;
+use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Utils\Html;
@@ -139,6 +141,52 @@ final readonly class TrainingTestDataFactory
 			'sourceAlias' => 'michal-spacek',
 			'sourceName' => 'Michal Špaček',
 		];
+	}
+
+
+	public function getTrainingDate(
+		?int $id = null,
+		bool $tentative = false,
+		?DateTime $start = null,
+		?DateTime $end = null,
+		?TrainingDateStatus $status = null,
+		bool $remote = false,
+		?string $venueCity = null,
+	): TrainingDate {
+		return new TrainingDate(
+			$id ?? 123,
+			'',
+			1,
+			$tentative,
+			false,
+			$start ?? new DateTime(),
+			$end ?? new DateTime(),
+			null,
+			null,
+			true,
+			$status ?? TrainingDateStatus::Confirmed,
+			'',
+			$remote,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			$venueCity,
+			null,
+			null,
+			null,
+			null,
+			null,
+			false,
+			null,
+			false,
+			null,
+			null,
+			null,
+			null,
+		);
 	}
 
 }

@@ -35,6 +35,9 @@ final class CookieDescriptionsTest extends TestCase
 		$cookieDescriptions = $this->cookieDescriptions->get();
 		$describedCookieNames = array_map(fn(CookieDescription $cookieDescription): string => $cookieDescription->getName(), $cookieDescriptions);
 		Assert::same($expectedCookieNames, $describedCookieNames, 'All cookies must be described');
+		Assert::same('messages.cookies.cookie.permanentLogin', $cookieDescriptions[0]->getDescription()->render());
+		Assert::true($cookieDescriptions[0]->isInternal());
+		Assert::same(14, $cookieDescriptions[0]->getValidDays());
 	}
 
 }

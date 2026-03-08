@@ -36,8 +36,12 @@ final class PreliminaryTrainingsTest extends TestCase
 		$this->setDatabaseResultsForGetPreliminary();
 		$preliminaryTrainings = $this->preliminaryTrainings->getPreliminary();
 		Assert::count(2, $preliminaryTrainings);
+		Assert::same('action-1', $preliminaryTrainings[0]->getAction());
+		Assert::same('Training 1', $preliminaryTrainings[0]->getName());
 		$training1Applications = $preliminaryTrainings[0]->getApplications();
 		Assert::count(1, $training1Applications);
+		Assert::same('action-2', $preliminaryTrainings[1]->getAction());
+		Assert::same('Training 2', $preliminaryTrainings[1]->getName());
 		$training2Applications = $preliminaryTrainings[1]->getApplications();
 		Assert::count(1, $training2Applications);
 		Assert::same('Name One', $training1Applications[0]->getName());
