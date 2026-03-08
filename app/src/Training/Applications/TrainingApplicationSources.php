@@ -5,15 +5,19 @@ namespace MichalSpacekCz\Training\Applications;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\Database\TypedDatabase;
-use MichalSpacekCz\Training\Resolver\Vrana;
+use MichalSpacekCz\Training\Resolver\ApplicationSourceResolver;
 use Nette\Utils\Strings;
 
 final readonly class TrainingApplicationSources
 {
 
+	/**
+	 * @param TypedDatabase $database
+	 * @param list<ApplicationSourceResolver> $sourceResolvers
+	 */
 	public function __construct(
 		private TypedDatabase $database,
-		private Vrana $vranaResolver,
+		private array $sourceResolvers,
 	) {
 	}
 
@@ -41,7 +45,13 @@ final readonly class TrainingApplicationSources
 
 	public function resolveSource(string $note): string
 	{
-		return $this->vranaResolver->isTrainingApplicationOwner($note) ? 'jakub-vrana' : $this->getDefaultSource();
+		foreach ($this->sourceResolvers as $sourceResolver) {
+			$result = $sourceResolver->getTrainingApplicationOwner($note);
+			if ($result !== null) {
+				return $result;
+			}
+		}
+		return $this->getDefaultSource();
 	}
 
 

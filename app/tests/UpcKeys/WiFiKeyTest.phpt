@@ -28,6 +28,8 @@ final class WiFiKeyTest extends TestCase
 			'serialPrefix' => 'Le',
 		];
 		Assert::same($expected, Json::decode(Json::encode($key), forceArrays: true));
+		Assert::same('OUI', $key->getOui());
+		Assert::same('AB:CD', $key->getMac());
 	}
 
 }

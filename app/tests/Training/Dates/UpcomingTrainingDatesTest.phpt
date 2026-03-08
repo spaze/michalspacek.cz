@@ -164,6 +164,10 @@ final class UpcomingTrainingDatesTest extends TestCase
 		Assert::count(2, $upcoming);
 		Assert::hasKey('action-1', $upcoming);
 		Assert::hasKey('action-2', $upcoming);
+		Assert::same('action-1', $upcoming['action-1']->getAction());
+		Assert::same('Action 1', $upcoming['action-1']->getName());
+		Assert::same('action-2', $upcoming['action-2']->getAction());
+		Assert::same('Action 2', $upcoming['action-2']->getName());
 		Assert::count(2, $upcoming['action-1']->getDates());
 		Assert::true(isset($upcoming['action-1']->getDates()[1]));
 		Assert::true(isset($upcoming['action-1']->getDates()[3]));

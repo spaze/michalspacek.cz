@@ -40,6 +40,21 @@ final class ThemeTest extends TestCase
 	}
 
 
+	public function testCookieParams(): void
+	{
+		$this->response->cookiePath = '/foo';
+		$this->response->cookieDomain = 'example.org';
+		$this->theme->setDarkMode();
+		$cookie = $this->response->getCookie('future')[0];
+		Assert::same('future', $cookie->getName());
+		Assert::true($cookie->getExpire() > time() + 364 * 24 * 60 * 60); // Using > and 364 days to avoid failures when time changes during the test execution
+		Assert::true($cookie->isSecure());
+		Assert::same('/foo', $cookie->getPath());
+		Assert::same('example.org', $cookie->getDomain());
+		Assert::same('None', $cookie->getSameSite());
+	}
+
+
 	public function testIsDarkMode(): void
 	{
 		Assert::null($this->theme->isDarkMode());

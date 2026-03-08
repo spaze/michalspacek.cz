@@ -58,6 +58,10 @@ final class TrainingDateFactoryTest extends TestCase
 		Assert::same('Name', $trainingDate->getName());
 		Assert::same('lej-bl', $trainingDate->getLabel());
 		Assert::same('Not-E', $trainingDate->getNote());
+		Assert::same('venue-1', $trainingDate->getVenueAction());
+		Assert::same('https://venue.example', $trainingDate->getVenueHref());
+		Assert::same('Venue <strong>description</strong>', $trainingDate->getVenueDescription()?->render());
+		Assert::same('Co-op', $trainingDate->getCooperationDescription()?->render());
 
 		$row->labelJson = '{}';
 		$trainingDate = $this->trainingDateFactory->get($row);

@@ -6,6 +6,6 @@ namespace MichalSpacekCz\Training\Resolver;
 interface ApplicationSourceResolver
 {
 
-	public function isTrainingApplicationOwner(string $note): bool;
+	public function getTrainingApplicationOwner(string $note): ?string;
 
 }

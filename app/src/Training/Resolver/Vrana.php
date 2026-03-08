@@ -10,9 +10,12 @@ final class Vrana implements ApplicationSourceResolver
 {
 
 	#[Override]
-	public function isTrainingApplicationOwner(string $note): bool
+	public function getTrainingApplicationOwner(string $note): ?string
 	{
-		return (str_contains(Strings::lower($note), 'jakub vrána') || str_contains(Strings::lower($note), 'od jakuba'));
+		if (str_contains(Strings::lower($note), 'jakub vrána') || str_contains(Strings::lower($note), 'od jakuba')) {
+			return 'jakub-vrana';
+		}
+		return null;
 	}
 
 }

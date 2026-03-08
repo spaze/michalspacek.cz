@@ -15,6 +15,7 @@ final readonly class Cookie
 		private string $path,
 		private string $domain,
 		private bool $secure,
+		private ?string $sameSite,
 	) {
 	}
 
@@ -52,6 +53,12 @@ final readonly class Cookie
 	public function isSecure(): bool
 	{
 		return $this->secure;
+	}
+
+
+	public function getSameSite(): ?string
+	{
+		return $this->sameSite;
 	}
 
 }

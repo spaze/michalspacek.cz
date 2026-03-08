@@ -29,18 +29,6 @@ final class Response implements IResponse
 
 	public bool $cookieSecure = false;
 
-	private string $contentType = '';
-
-	private ?string $contentCharset = null;
-
-	private string $redirectTo = '';
-
-	private int $redirectCode = IResponse::S302_Found;
-
-	private ?string $expiration = null;
-
-	private bool $isSent = false;
-
 
 	#[Override]
 	public function setCode(int $code, ?string $reason = null): self
@@ -87,8 +75,6 @@ final class Response implements IResponse
 	#[Override]
 	public function setContentType(string $type, ?string $charset = null): self
 	{
-		$this->contentType = $type;
-		$this->contentCharset = $charset;
 		return $this;
 	}
 
@@ -96,15 +82,12 @@ final class Response implements IResponse
 	#[Override]
 	public function redirect(string $url, int $code = self::S302_Found): void
 	{
-		$this->redirectTo = $url;
-		$this->redirectCode = $code;
 	}
 
 
 	#[Override]
 	public function setExpiration(?string $expire): self
 	{
-		$this->expiration = $expire;
 		return $this;
 	}
 
@@ -112,7 +95,7 @@ final class Response implements IResponse
 	#[Override]
 	public function isSent(): bool
 	{
-		return $this->isSent;
+		return false;
 	}
 
 
@@ -160,6 +143,7 @@ final class Response implements IResponse
 			$path ?? $this->cookiePath,
 			$domain ?? $this->cookieDomain,
 			$secure ?? $this->cookieSecure,
+			$sameSite,
 		);
 		return $this;
 	}
@@ -190,56 +174,13 @@ final class Response implements IResponse
 	}
 
 
-	/**
-	 * @return array<string, array<int, string>>
-	 */
-	public function getAllHeaders(): array
-	{
-		return $this->allHeaders;
-	}
-
-
-	public function getContentType(): string
-	{
-		return $this->contentType;
-	}
-
-
-	public function getContentCharset(): ?string
-	{
-		return $this->contentCharset;
-	}
-
-
-	public function getRedirectTo(): string
-	{
-		return $this->redirectTo;
-	}
-
-
-	public function getRedirectCode(): int
-	{
-		return $this->redirectCode;
-	}
-
-
-	public function getExpiration(): ?string
-	{
-		return $this->expiration;
-	}
-
-
-	public function sent(bool $isSent): void
-	{
-		$this->isSent = $isSent;
-	}
-
-
 	public function reset(): void
 	{
 		$this->headers = [];
 		$this->allHeaders = [];
 		$this->cookies = [];
+		$this->cookieDomain = '';
+		$this->cookiePath = '/';
 	}
 
 }

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Talks\TalkFactory;
+use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Tester\Assert;
@@ -19,16 +20,18 @@ final class TalkFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly TalkFactory $talkFactory,
+		private readonly LocaleLinkGeneratorMock $localeLinkGeneratorMock,
 	) {
 	}
 
 
 	public function testCreateFromDatabaseRow(): void
 	{
+		$this->localeLinkGeneratorMock->setLinks(['en_US' => 'https://foo.example/']);
 		$row = new Row();
 		$row->id = 303;
 		$row->localeId = 808;
-		$row->locale = 'fo_BR';
+		$row->locale = 'en_US';
 		$row->translationGroupId = 909;
 		$row->action = 'le-action';
 		$row->title = '**Title**';
@@ -58,9 +61,10 @@ final class TalkFactoryTest extends TestCase
 		$talk = $this->talkFactory->createFromDatabaseRow($row);
 		Assert::same(303, $talk->getId());
 		Assert::same(808, $talk->getLocaleId());
-		Assert::same('fo_BR', $talk->getLocale());
+		Assert::same('en_US', $talk->getLocale());
 		Assert::same(909, $talk->getTranslationGroupId());
 		Assert::same('le-action', $talk->getAction());
+		Assert::same('https://foo.example/', $talk->getUrl());
 		Assert::same('**Title**', $talk->getTitleTexy());
 		Assert::same('<strong>Title</strong>', $talk->getTitle()->render());
 		Assert::same('//Description//', $talk->getDescriptionTexy());
