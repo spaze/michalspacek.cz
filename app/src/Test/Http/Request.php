@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Test\Http;
 
 use Nette\Http\FileUpload;
 use Nette\Http\IRequest;
-use Nette\Http\UrlImmutable;
 use Nette\Http\UrlScript;
 use Override;
 
@@ -27,12 +26,6 @@ final class Request implements IRequest
 	private array $headers = [];
 
 	private ?string $remoteAddress = null;
-
-	private ?string $remoteHost = null;
-
-	private ?string $rawBody = null;
-
-	private bool $sameSite = false;
 
 	private UrlScript $url;
 
@@ -169,38 +162,20 @@ final class Request implements IRequest
 	#[Override]
 	public function getRemoteHost(): ?string
 	{
-		return $this->remoteHost;
+		return null;
 	}
 
 
 	#[Override]
 	public function getRawBody(): ?string
 	{
-		return $this->rawBody;
-	}
-
-
-	public function getReferer(): ?UrlImmutable
-	{
-		return isset($this->headers['referer']) ? new UrlImmutable($this->headers['referer']) : null;
-	}
-
-
-	public function isSameSite(): bool
-	{
-		return $this->sameSite;
+		return null;
 	}
 
 
 	public function setCookie(string $name, string $value): void
 	{
 		$this->cookies[$name] = $value;
-	}
-
-
-	public function addFile(string $name, FileUpload $fileUpload): void
-	{
-		$this->files[$name] = $fileUpload;
 	}
 
 
@@ -222,24 +197,6 @@ final class Request implements IRequest
 	}
 
 
-	public function setRemoteHost(string $remoteHost): void
-	{
-		$this->remoteHost = $remoteHost;
-	}
-
-
-	public function setRawBody(string $rawBody): void
-	{
-		$this->rawBody = $rawBody;
-	}
-
-
-	public function setSameSite(bool $sameSite): void
-	{
-		$this->sameSite = $sameSite;
-	}
-
-
 	public function reset(): void
 	{
 		$this->post = [];
@@ -248,9 +205,6 @@ final class Request implements IRequest
 		$this->method = '';
 		$this->headers = [];
 		$this->remoteAddress = null;
-		$this->remoteHost = null;
-		$this->rawBody = null;
-		$this->sameSite = false;
 	}
 
 }
