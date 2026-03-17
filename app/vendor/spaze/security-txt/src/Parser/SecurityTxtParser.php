@@ -9,8 +9,11 @@ use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory;
 use Spaze\SecurityTxt\Fields\SecurityTxtField;
 use Spaze\SecurityTxt\Parser\FieldProcessors\AcknowledgmentsAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\BugBountyCheckMultipleFields;
+use Spaze\SecurityTxt\Parser\FieldProcessors\BugBountySetFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\CanonicalAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ContactAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\CsafAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\EncryptionAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckFieldFormat;
 use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckFieldValueExpiresSoon;
@@ -64,11 +67,18 @@ final class SecurityTxtParser
 		$this->fieldProcessors[SecurityTxtField::Acknowledgments->value] = [
 			new AcknowledgmentsAddFieldValue(),
 		];
+		$this->fieldProcessors[SecurityTxtField::BugBounty->value] = [
+			new BugBountyCheckMultipleFields(),
+			new BugBountySetFieldValue(),
+		];
 		$this->fieldProcessors[SecurityTxtField::Canonical->value] = [
 			new CanonicalAddFieldValue(),
 		];
 		$this->fieldProcessors[SecurityTxtField::Contact->value] = [
 			new ContactAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Csaf->value] = [
+			new CsafAddFieldValue(),
 		];
 		$this->fieldProcessors[SecurityTxtField::Encryption->value] = [
 			new EncryptionAddFieldValue(),

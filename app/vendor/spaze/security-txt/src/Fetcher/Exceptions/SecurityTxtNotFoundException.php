@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
+use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcherFetchHostResult;
 use Throwable;
 
 final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
@@ -16,30 +17,43 @@ final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 
 
 	/**
-	 * @param non-empty-array<string, array{0:string, 1:1|134217728, 2:int, 3:list<string>, 4:bool}> $urls URL => 0: IP address, 1: DNS record type, 2: HTTP code, 3: redirects, 4: is regular HTML page?
+	 * @param non-empty-list<SecurityTxtFetcherFetchHostResult> $results
+	 * @param array<string, list<string>> $observedRedirects
 	 * @param Throwable|null $previous
 	 */
-	public function __construct(array $urls, ?Throwable $previous = null)
+	public function __construct(array $results, array $observedRedirects, ?Throwable $previous = null)
 	{
 		$message = "Can't read %s: ";
 		$messageValues = ['security.txt'];
-		foreach ($urls as $url => $components) {
+
+		$urls = [];
+		foreach ($results as $result) {
+			$urls[] = $result->getUrl();
 			if ($this->ipAddresses !== []) {
 				$message .= ', '; // Not added in the first iteration
 			}
-			$message .= $components[4] ? '%s (%s) => regular HTML page' : '%s (%s) => %s';
-			$messageValues[] = $url;
-			$messageValues[] = $components[0];
-			if (!$components[4]) {
-				$messageValues[] = (string)$components[2];
+			if ($result->isTruncated() && $result->isRegularHtmlPage()) {
+				$message .= '%s (%s) => regular HTML page and too long';
+			} elseif ($result->isTruncated()) {
+				$message .= '%s (%s) => response too long';
+			} elseif ($result->isRegularHtmlPage()) {
+				$message .= '%s (%s) => regular HTML page';
+			} else {
+				$message .= '%s (%s) => %s';
 			}
-			$this->ipAddresses[$components[0]] = [$components[1], $components[2]];
-			if ($components[3] !== []) {
-				$this->allRedirects[$url] = $components[3];
-				$message .= $components[4] ? ' (final page after redirects)' : ' (final code after redirects)';
+			$messageValues[] = $result->getUrl();
+			$messageValues[] = $result->getIpAddress();
+			if (!$result->isRegularHtmlPage() && !$result->isTruncated()) {
+				$messageValues[] = (string)$result->getHttpCode();
+			}
+			$this->ipAddresses[$result->getIpAddress()] = [$result->getIpAddressType(), $result->getHttpCode()];
+			$redirects = $observedRedirects[$result->getUrl()] ?? [];
+			if ($redirects !== []) {
+				$this->allRedirects[$result->getUrl()] = $redirects;
+				$message .= $result->isRegularHtmlPage() || $result->isTruncated() ? ' (final page after redirects)' : ' (final code after redirects)';
 			}
 		}
-		parent::__construct([$urls], $message, $messageValues, array_key_first($urls), previous: $previous);
+		parent::__construct([$urls], $message, $messageValues, $urls[0], previous: $previous);
 	}
 
 

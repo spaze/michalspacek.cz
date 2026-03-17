@@ -10,7 +10,7 @@ final class SecurityTxtEncryptionNotUri extends SecurityTxtFieldNotUri
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Encryption, $uri, 'draft-foudil-securitytxt-00', null, null, '2.5.4');
+		parent::__construct(func_get_args(), SecurityTxtField::Encryption, $uri, 'draft-foudil-securitytxt-00', null, null, '2.5.4');
 	}
 
 }

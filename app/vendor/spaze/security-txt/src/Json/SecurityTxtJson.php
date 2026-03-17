@@ -12,8 +12,10 @@ use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
 use Spaze\SecurityTxt\Fields\SecurityTxtAcknowledgments;
+use Spaze\SecurityTxt\Fields\SecurityTxtBugBounty;
 use Spaze\SecurityTxt\Fields\SecurityTxtCanonical;
 use Spaze\SecurityTxt\Fields\SecurityTxtContact;
+use Spaze\SecurityTxt\Fields\SecurityTxtCsaf;
 use Spaze\SecurityTxt\Fields\SecurityTxtEncryption;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
 use Spaze\SecurityTxt\Fields\SecurityTxtHiring;
@@ -160,12 +162,21 @@ final readonly class SecurityTxtJson
 				}
 				$securityTxt->setPreferredLanguages(new SecurityTxtPreferredLanguages($languages));
 			}
+			if (isset($values['bugBounty'])) {
+				if (!is_array($values['bugBounty'])) {
+					throw new SecurityTxtCannotParseJsonException('bugBounty is not an array');
+				} elseif (!isset($values['bugBounty']['rewards']) || !is_bool($values['bugBounty']['rewards'])) {
+					throw new SecurityTxtCannotParseJsonException('bugBounty > rewards is missing or not a bool');
+				}
+				$securityTxt->setBugBounty(new SecurityTxtBugBounty($values['bugBounty']['rewards']));
+			}
 			$this->addSecurityTxtUriField($values, 'canonical', SecurityTxtCanonical::class, $securityTxt->addCanonical(...));
 			$this->addSecurityTxtUriField($values, 'contact', SecurityTxtContact::class, $securityTxt->addContact(...));
 			$this->addSecurityTxtUriField($values, 'acknowledgments', SecurityTxtAcknowledgments::class, $securityTxt->addAcknowledgments(...));
 			$this->addSecurityTxtUriField($values, 'hiring', SecurityTxtHiring::class, $securityTxt->addHiring(...));
 			$this->addSecurityTxtUriField($values, 'policy', SecurityTxtPolicy::class, $securityTxt->addPolicy(...));
 			$this->addSecurityTxtUriField($values, 'encryption', SecurityTxtEncryption::class, $securityTxt->addEncryption(...));
+			$this->addSecurityTxtUriField($values, 'csaf', SecurityTxtCsaf::class, $securityTxt->addCsaf(...), true);
 		} catch (SecurityTxtError | SecurityTxtWarning $e) {
 			throw new SecurityTxtCannotParseJsonException($e->getMessage(), $e);
 		}
@@ -176,12 +187,17 @@ final readonly class SecurityTxtJson
 	/**
 	 * @template T of SecurityTxtUriField
 	 * @param array<array-key, mixed> $values
-	 * @param callable(T): void $addField
+	 * @param string $field
 	 * @param class-string<T> $class
+	 * @param callable(T): void $addField
+	 * @param bool $optional True for backwards compatibility with older stored or cached JSON without the field marked as optional
 	 * @throws SecurityTxtCannotParseJsonException
 	 */
-	private function addSecurityTxtUriField(array $values, string $field, string $class, callable $addField): void
+	private function addSecurityTxtUriField(array $values, string $field, string $class, callable $addField, bool $optional = false): void
 	{
+		if ($optional && !array_key_exists($field, $values)) {
+			return;
+		}
 		if (!isset($values[$field]) || !is_array($values[$field])) {
 			throw new SecurityTxtCannotParseJsonException("Field {$field} is missing or not an array");
 		}

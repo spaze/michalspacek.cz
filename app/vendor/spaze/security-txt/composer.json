@@ -8,8 +8,10 @@
 			"homepage": "https://www.michalspacek.com/"
 		}
 	],
+	"require": {
+		"php": "^8.3"
+	},
 	"require-dev": {
-		"php": "^8.3",
 		"nette/tester": "^2.5",
 		"php-parallel-lint/php-console-highlighter": "^1.0",
 		"php-parallel-lint/php-parallel-lint": "^1.3",

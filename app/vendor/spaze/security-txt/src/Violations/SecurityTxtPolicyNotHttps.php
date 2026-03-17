@@ -10,7 +10,7 @@ final class SecurityTxtPolicyNotHttps extends SecurityTxtFieldUriNotHttps
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Policy, $uri, '2.5.7');
+		parent::__construct(func_get_args(), SecurityTxtField::Policy, $uri, '2.5.7');
 	}
 
 }

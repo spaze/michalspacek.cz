@@ -8,8 +8,10 @@ use Override;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
 use Spaze\SecurityTxt\Fields\SecurityTxtAcknowledgments;
+use Spaze\SecurityTxt\Fields\SecurityTxtBugBounty;
 use Spaze\SecurityTxt\Fields\SecurityTxtCanonical;
 use Spaze\SecurityTxt\Fields\SecurityTxtContact;
+use Spaze\SecurityTxt\Fields\SecurityTxtCsaf;
 use Spaze\SecurityTxt\Fields\SecurityTxtEncryption;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
 use Spaze\SecurityTxt\Fields\SecurityTxtFieldValue;
@@ -23,6 +25,9 @@ use Spaze\SecurityTxt\Violations\SecurityTxtCanonicalNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtCanonicalNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtContactNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtContactNotUri;
+use Spaze\SecurityTxt\Violations\SecurityTxtCsafNotHttps;
+use Spaze\SecurityTxt\Violations\SecurityTxtCsafNotUri;
+use Spaze\SecurityTxt\Violations\SecurityTxtCsafWrongFile;
 use Spaze\SecurityTxt\Violations\SecurityTxtEncryptionNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtEncryptionNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtExpired;
@@ -44,6 +49,7 @@ final class SecurityTxt implements JsonSerializable
 	private ?SecurityTxtExpires $expires = null;
 	private ?SecurityTxtSignatureVerifyResult $signatureVerifyResult = null;
 	private ?SecurityTxtPreferredLanguages $preferredLanguages = null;
+	private ?SecurityTxtBugBounty $bugBounty = null;
 
 	/**
 	 * @var list<SecurityTxtCanonical>
@@ -74,6 +80,11 @@ final class SecurityTxt implements JsonSerializable
 	 * @var list<SecurityTxtEncryption>
 	 */
 	private array $encryption = [];
+
+	/**
+	 * @var list<SecurityTxtCsaf>
+	 */
+	private array $csaf = [];
 
 	/**
 	 * @var list<SecurityTxtFieldValue>
@@ -345,6 +356,53 @@ final class SecurityTxt implements JsonSerializable
 
 
 	/**
+	 * @throws SecurityTxtError
+	 */
+	public function addCsaf(SecurityTxtCsaf $csaf): void
+	{
+		$this->setFieldValue(
+			function () use ($csaf): SecurityTxtCsaf {
+				return $this->csaf[] = $csaf;
+			},
+			function () use ($csaf): void {
+				$this->checkUri($csaf->getUri(), SecurityTxtCsafNotUri::class, SecurityTxtCsafNotHttps::class);
+				$path = parse_url($csaf->getUri(), PHP_URL_PATH);
+				if (!is_string($path) || !str_ends_with($path, '/' . SecurityTxtCsaf::METADATA_FILENAME)) {
+					throw new SecurityTxtError(new SecurityTxtCsafWrongFile($csaf->getUri()));
+				}
+			},
+		);
+	}
+
+
+	/**
+	 * @return list<SecurityTxtCsaf>
+	 */
+	public function getCsaf(): array
+	{
+		return $this->csaf;
+	}
+
+
+	public function setBugBounty(SecurityTxtBugBounty $bugBounty): void
+	{
+		$this->setFieldValue(
+			function () use ($bugBounty): SecurityTxtBugBounty {
+				return $this->bugBounty = $bugBounty;
+			},
+			function (): void {
+			},
+		);
+	}
+
+
+	public function getBugBounty(): ?SecurityTxtBugBounty
+	{
+		return $this->bugBounty;
+	}
+
+
+	/**
 	 * @param callable(): void $setValue
 	 * @param callable(): void $validator
 	 * @return void
@@ -386,8 +444,8 @@ final class SecurityTxt implements JsonSerializable
 
 
 	/**
-	 * @param class-string<SecurityTxtAcknowledgmentsNotUri|SecurityTxtCanonicalNotUri|SecurityTxtContactNotUri|SecurityTxtEncryptionNotUri|SecurityTxtHiringNotUri|SecurityTxtPolicyNotUri|SecurityTxtFileLocationNotUri> $notUriError
-	 * @param class-string<SecurityTxtAcknowledgmentsNotHttps|SecurityTxtCanonicalNotHttps|SecurityTxtContactNotHttps|SecurityTxtEncryptionNotHttps|SecurityTxtHiringNotHttps|SecurityTxtPolicyNotHttps|SecurityTxtFileLocationNotHttps> $notHttpsError
+	 * @param class-string<SecurityTxtAcknowledgmentsNotUri|SecurityTxtCanonicalNotUri|SecurityTxtContactNotUri|SecurityTxtCsafNotUri|SecurityTxtEncryptionNotUri|SecurityTxtHiringNotUri|SecurityTxtPolicyNotUri|SecurityTxtFileLocationNotUri> $notUriError
+	 * @param class-string<SecurityTxtAcknowledgmentsNotHttps|SecurityTxtCanonicalNotHttps|SecurityTxtContactNotHttps|SecurityTxtCsafNotHttps|SecurityTxtEncryptionNotHttps|SecurityTxtHiringNotHttps|SecurityTxtPolicyNotHttps|SecurityTxtFileLocationNotHttps> $notHttpsError
 	 * @throws SecurityTxtError
 	 */
 	private function checkUri(string $uri, string $notUriError, string $notHttpsError): void
@@ -428,6 +486,8 @@ final class SecurityTxt implements JsonSerializable
 			'hiring' => $this->getHiring(),
 			'policy' => $this->getPolicy(),
 			'encryption' => $this->getEncryption(),
+			'csaf' => $this->getCsaf(),
+			'bugBounty' => $this->getBugBounty(),
 		];
 	}
 

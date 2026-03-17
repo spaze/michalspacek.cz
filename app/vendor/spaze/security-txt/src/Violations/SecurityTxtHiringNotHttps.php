@@ -10,7 +10,7 @@ final class SecurityTxtHiringNotHttps extends SecurityTxtFieldUriNotHttps
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Hiring, $uri, '2.5.6');
+		parent::__construct(func_get_args(), SecurityTxtField::Hiring, $uri, '2.5.6');
 	}
 
 }
