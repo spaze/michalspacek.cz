@@ -8,7 +8,17 @@ use Spaze\SecurityTxt\Fields\SecurityTxtField;
 abstract class SecurityTxtFieldNotUri extends SecurityTxtSpecViolation
 {
 
+	/**
+	 * @param list<mixed> $constructorParams
+	 * @param SecurityTxtField $field
+	 * @param string $uri
+	 * @param string $since
+	 * @param string|null $correctValue
+	 * @param string|null $howToFix
+	 * @param string|null $specSection
+	 */
 	public function __construct(
+		array $constructorParams,
 		SecurityTxtField $field,
 		string $uri,
 		string $since,
@@ -17,7 +27,7 @@ abstract class SecurityTxtFieldNotUri extends SecurityTxtSpecViolation
 		?string $specSection,
 	) {
 		parent::__construct(
-			func_get_args(),
+			$constructorParams,
 			"The %s value (%s) doesn't follow the URI syntax described in RFC 3986, the scheme is missing",
 			[$field->value, $uri],
 			$since,

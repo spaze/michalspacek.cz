@@ -10,7 +10,7 @@ final class SecurityTxtHiringNotUri extends SecurityTxtFieldNotUri
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Hiring, $uri, 'draft-foudil-securitytxt-03', null, null, '2.5.6');
+		parent::__construct(func_get_args(), SecurityTxtField::Hiring, $uri, 'draft-foudil-securitytxt-03', null, null, '2.5.6');
 	}
 
 }

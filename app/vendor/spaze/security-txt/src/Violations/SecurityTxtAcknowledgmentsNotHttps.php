@@ -10,7 +10,7 @@ final class SecurityTxtAcknowledgmentsNotHttps extends SecurityTxtFieldUriNotHtt
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Acknowledgments, $uri, '2.5.1');
+		parent::__construct(func_get_args(), SecurityTxtField::Acknowledgments, $uri, '2.5.1');
 	}
 
 }

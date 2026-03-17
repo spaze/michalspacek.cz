@@ -10,7 +10,7 @@ final class SecurityTxtEncryptionNotHttps extends SecurityTxtFieldUriNotHttps
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Encryption, $uri, '2.5.4');
+		parent::__construct(func_get_args(), SecurityTxtField::Encryption, $uri, '2.5.4');
 	}
 
 }

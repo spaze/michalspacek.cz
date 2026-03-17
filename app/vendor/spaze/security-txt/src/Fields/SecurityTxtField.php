@@ -7,8 +7,10 @@ enum SecurityTxtField: string
 {
 
 	case Acknowledgments = 'Acknowledgments';
+	case BugBounty = 'Bug-Bounty';
 	case Canonical = 'Canonical';
 	case Contact = 'Contact';
+	case Csaf = 'CSAF'; // Common Security Advisory Framework provider metadata location
 	case Encryption = 'Encryption';
 	case Expires = 'Expires';
 	case Hiring = 'Hiring';

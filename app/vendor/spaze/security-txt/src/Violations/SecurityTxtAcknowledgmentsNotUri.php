@@ -10,7 +10,7 @@ final class SecurityTxtAcknowledgmentsNotUri extends SecurityTxtFieldNotUri
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Acknowledgments, $uri, 'draft-foudil-securitytxt-03', null, null, '2.5.1');
+		parent::__construct(func_get_args(), SecurityTxtField::Acknowledgments, $uri, 'draft-foudil-securitytxt-03', null, null, '2.5.1');
 	}
 
 }

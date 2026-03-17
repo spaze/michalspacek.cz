@@ -25,6 +25,7 @@ abstract class SecurityTxtSpecViolation implements JsonSerializable
 		private readonly array $howToFixValues,
 		private readonly ?string $specSection,
 		private readonly array $seeAlsoSections = [],
+		private readonly ?string $specUrl = null,
 	) {
 	}
 
@@ -98,6 +99,12 @@ abstract class SecurityTxtSpecViolation implements JsonSerializable
 	}
 
 
+	public function getSpecUrl(): ?string
+	{
+		return $this->specUrl;
+	}
+
+
 	/**
 	 * @return array<string, mixed>
 	 */
@@ -117,6 +124,7 @@ abstract class SecurityTxtSpecViolation implements JsonSerializable
 			'howToFixValues' => $this->getHowToFixValues(),
 			'specSection' => $this->getSpecSection(),
 			'seeAlsoSections' => $this->getSeeAlsoSections(),
+			'specUrl' => $this->getSpecUrl(),
 		];
 	}
 

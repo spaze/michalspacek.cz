@@ -20,7 +20,7 @@ final class SecurityTxtContactNotUri extends SecurityTxtFieldNotUri
 			$correctValue = "https://{$uri}";
 			$howToFix = 'The value looks like a hostname, add the "https" schema';
 		}
-		parent::__construct(SecurityTxtField::Contact, $uri, 'draft-foudil-securitytxt-03', $correctValue, $howToFix, '2.5.3');
+		parent::__construct(func_get_args(), SecurityTxtField::Contact, $uri, 'draft-foudil-securitytxt-03', $correctValue, $howToFix, '2.5.3');
 	}
 
 }

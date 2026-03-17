@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a5611c52f941b8e5dbbc48d03f62be2f315f761f',
+        'reference' => 'a2be68feee5bc0efee22319013ae523875d78ca5',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -365,9 +365,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.1.40',
-            'version' => '2.1.40.0',
-            'reference' => '9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b',
+            'pretty_version' => '2.1.42',
+            'version' => '2.1.42.0',
+            'reference' => '1279e1ce86ba768f0780c9d889852b4e02ff40d0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -401,9 +401,9 @@
             'dev_requirement' => true,
         ),
         'psalm/phar' => array(
-            'pretty_version' => '6.15.1',
-            'version' => '6.15.1.0',
-            'reference' => '636e7017196934b4e2a0da6f7a3eff8faf84c9ce',
+            'pretty_version' => '6.16.0',
+            'version' => '6.16.0.0',
+            'reference' => 'b1c5f376a4bf4099dd348f59c09374815bffd785',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psalm/phar',
             'aliases' => array(),
@@ -457,7 +457,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '68e4c6721ef8cd2c366bd5e2290baf007d3f0e6d',
+            'reference' => '115725b8a164450a2b24e0dee71bd5f0c5329fb4',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a5611c52f941b8e5dbbc48d03f62be2f315f761f',
+            'reference' => 'a2be68feee5bc0efee22319013ae523875d78ca5',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -565,9 +565,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v4.8.0',
-            'version' => '4.8.0.0',
-            'reference' => 'ebbf057755ea0acfbf227d113cac5e3f80aab83a',
+            'pretty_version' => 'v4.9.0',
+            'version' => '4.9.0.0',
+            'reference' => 'e80372a55bdad13d22a62fdf2116a67a5438c34b',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '90833ae42eb9a65bd101eca7c2b038cf270d88e7',
+            'reference' => 'f4d65b91cd18a04f73b4837383083277a833f730',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(

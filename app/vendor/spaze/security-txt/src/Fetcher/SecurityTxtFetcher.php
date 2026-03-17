@@ -164,29 +164,10 @@ final class SecurityTxtFetcher
 	private function getResult(SecurityTxtFetcherFetchHostResult $wellKnown, SecurityTxtFetcherFetchHostResult $topLevel, bool $requireTopLevelLocation): SecurityTxtFetchResult
 	{
 		$errors = $warnings = [];
-		$isRegularHtmlPageWellKnown = $this->isRegularHtmlPage($wellKnown);
-		$isRegularHtmlPageTopLevel = $this->isRegularHtmlPage($topLevel);
-		$wellKnownContents = $isRegularHtmlPageWellKnown ? null : $wellKnown->getContents();
-		$topLevelContents = $isRegularHtmlPageTopLevel ? null : $topLevel->getContents();
+		$wellKnownContents = $wellKnown->isRegularHtmlPage() || $wellKnown->isTruncated() ? null : $wellKnown->getContents();
+		$topLevelContents = $topLevel->isRegularHtmlPage() || $topLevel->isTruncated() ? null : $topLevel->getContents();
 		if ($wellKnownContents === null && $topLevelContents === null) {
-			throw new SecurityTxtNotFoundException(
-				[
-					$wellKnown->getUrl() => [
-						$wellKnown->getIpAddress(),
-						$wellKnown->getIpAddressType(),
-						$wellKnown->getHttpCode(),
-						$this->redirects[$wellKnown->getUrl()] ?? [],
-						$isRegularHtmlPageWellKnown,
-					],
-					$topLevel->getUrl() => [
-						$topLevel->getIpAddress(),
-						$topLevel->getIpAddressType(),
-						$topLevel->getHttpCode(),
-						$this->redirects[$topLevel->getUrl()] ?? [],
-						$isRegularHtmlPageTopLevel,
-					],
-				],
-			);
+			throw new SecurityTxtNotFoundException([$wellKnown, $topLevel], $this->redirects);
 		} elseif ($wellKnownContents !== null && $topLevelContents === null) {
 			if ($requireTopLevelLocation) {
 				$warnings[] = new SecurityTxtWellKnownPathOnly();
@@ -308,15 +289,6 @@ final class SecurityTxtFetcher
 			}
 			return $this->getResponse($location, $urlTemplate, $host, false, $finalUrl);
 		}
-	}
-
-
-	private function isRegularHtmlPage(SecurityTxtFetcherFetchHostResult $result): bool
-	{
-		return $result->getHttpCode() === 200
-			&& $result->getContentType()?->getLowercaseContentType() === 'text/html'
-			&& $result->getContents() !== null
-			&& str_contains(strtolower($result->getContents()), '<body');
 	}
 
 }

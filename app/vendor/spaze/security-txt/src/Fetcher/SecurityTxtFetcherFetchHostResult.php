@@ -15,6 +15,8 @@ final readonly class SecurityTxtFetcherFetchHostResult
 
 	private bool $isTruncated;
 
+	private bool $isRegularHtmlPage;
+
 
 	/**
 	 * @phpstan-param 1|134217728 $ipAddressType DNS_A or DNS_AAAA
@@ -36,6 +38,10 @@ final readonly class SecurityTxtFetcherFetchHostResult
 		}
 		$this->contents = $response?->getContents();
 		$this->isTruncated = $response !== null && $response->isTruncated();
+		$this->isRegularHtmlPage = $this->httpCode === 200
+			&& $this->contentType?->getLowercaseContentType() === 'text/html'
+			&& $this->contents !== null
+			&& str_contains(strtolower($this->contents), '<body');
 	}
 
 
@@ -87,6 +93,12 @@ final readonly class SecurityTxtFetcherFetchHostResult
 	public function getHttpCode(): int
 	{
 		return $this->httpCode;
+	}
+
+
+	public function isRegularHtmlPage(): bool
+	{
+		return $this->isRegularHtmlPage;
 	}
 
 }

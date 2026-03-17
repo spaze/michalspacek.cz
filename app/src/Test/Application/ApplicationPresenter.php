@@ -25,7 +25,7 @@ final readonly class ApplicationPresenter
 
 
 	/**
-	 * @param null|Closure(string, list<mixed>): string $buildLink
+	 * @param null|Closure(string, list<string>): string $buildLink
 	 * @throws ReflectionException
 	 */
 	public function setLinkCallback(Application $application, ?Closure $buildLink): void
@@ -33,7 +33,7 @@ final readonly class ApplicationPresenter
 		PrivateProperty::setValue($application, 'presenter', new class ($buildLink) extends Presenter {
 
 			/**
-			 * @param null|Closure(string, list<mixed>): string $buildLink
+			 * @param null|Closure(string, list<string>): string $buildLink
 			 * @noinspection PhpMissingParentConstructorInspection
 			 * @phpstan-ignore constructor.missingParentCall
 			 */
@@ -49,10 +49,15 @@ final readonly class ApplicationPresenter
 			#[Override]
 			public function link(string $destination, $args = []): string
 			{
-				$args = func_num_args() < 3 && is_array($args)
-					? $args
-					: array_slice(func_get_args(), 1);
-				return $this->buildLink === null ? '' : ($this->buildLink)($destination, array_values($args));
+				$args = func_num_args() < 3 && is_array($args) ? $args : array_slice(func_get_args(), 1);
+				$typedArgs = [];
+				foreach ($args as $arg) {
+					if (!is_string($arg)) {
+						throw new ShouldNotHappenException('Argument must be string, ' . gettype($arg) . ' given.');
+					}
+					$typedArgs[] = $arg;
+				}
+				return $this->buildLink === null ? '' : ($this->buildLink)($destination, $typedArgs);
 			}
 
 		});

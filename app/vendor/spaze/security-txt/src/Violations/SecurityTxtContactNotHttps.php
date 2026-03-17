@@ -10,7 +10,7 @@ final class SecurityTxtContactNotHttps extends SecurityTxtFieldUriNotHttps
 
 	public function __construct(string $uri)
 	{
-		parent::__construct(SecurityTxtField::Contact, $uri, '2.5.3');
+		parent::__construct(func_get_args(), SecurityTxtField::Contact, $uri, '2.5.3');
 	}
 
 }
