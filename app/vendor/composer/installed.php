@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a2be68feee5bc0efee22319013ae523875d78ca5',
+        'reference' => '65e07d189179a04481664da3cb3c109d41459006',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -92,9 +92,9 @@
             'dev_requirement' => true,
         ),
         'latte/latte' => array(
-            'pretty_version' => 'v3.1.2',
-            'version' => '3.1.2.0',
-            'reference' => '734ab908c17b28bd75b9331debd1901bec2f23ef',
+            'pretty_version' => 'v3.1.3',
+            'version' => '3.1.3.0',
+            'reference' => 'd9f96802ef103705f8a389cd66cbf830d470b537',
             'type' => 'library',
             'install_path' => __DIR__ . '/../latte/latte',
             'aliases' => array(),
@@ -401,9 +401,9 @@
             'dev_requirement' => true,
         ),
         'psalm/phar' => array(
-            'pretty_version' => '6.16.0',
-            'version' => '6.16.0.0',
-            'reference' => 'b1c5f376a4bf4099dd348f59c09374815bffd785',
+            'pretty_version' => '6.16.1',
+            'version' => '6.16.1.0',
+            'reference' => '11c6b55449667837fc07bb2a456c45a137c05ecd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psalm/phar',
             'aliases' => array(),
@@ -457,7 +457,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '115725b8a164450a2b24e0dee71bd5f0c5329fb4',
+            'reference' => 'e19b0f27b204991af95a5fefad00630bc3e376ae',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -475,9 +475,9 @@
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
-            'pretty_version' => '8.28.0',
-            'version' => '8.28.0.0',
-            'reference' => '0cd4b30cc1037eca54091c188d260d570e61770c',
+            'pretty_version' => '8.28.1',
+            'version' => '8.28.1.0',
+            'reference' => '66151cfbd25b50e8becd9f809fb704f01fd4d6f2',
             'type' => 'phpcodesniffer-standard',
             'install_path' => __DIR__ . '/../slevomat/coding-standard',
             'aliases' => array(),
@@ -522,7 +522,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a2be68feee5bc0efee22319013ae523875d78ca5',
+            'reference' => '65e07d189179a04481664da3cb3c109d41459006',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -585,7 +585,7 @@
         'spaze/security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'f4d65b91cd18a04f73b4837383083277a833f730',
+            'reference' => 'd3d5b463566aee1d742c6d48b86c185774ce240c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
             'aliases' => array(

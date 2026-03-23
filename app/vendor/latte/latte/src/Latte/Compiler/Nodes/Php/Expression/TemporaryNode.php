@@ -9,7 +9,6 @@ namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\Php\ListNode;
-use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 
 
@@ -21,7 +20,6 @@ class TemporaryNode extends ExpressionNode
 {
 	public function __construct(
 		public ?ListNode $value,
-		public ?Position $position = null,
 	) {
 	}
 

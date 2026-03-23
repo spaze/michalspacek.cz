@@ -3,15 +3,20 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Check;
 
+use Closure;
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 
 final readonly class SecurityTxtCheckHostCli
 {
 
+	/**
+	 * @param Closure(int): void $exit
+	 */
 	public function __construct(
 		private ConsolePrinter $consolePrinter,
 		private SecurityTxtCheckHost $checkHost,
+		private Closure $exit,
 	) {
 	}
 
@@ -24,7 +29,7 @@ final readonly class SecurityTxtCheckHostCli
 		bool $requireTopLevelLocation,
 		bool $noIpv6,
 		string $usageHelp,
-	): never {
+	): void {
 		$this->checkHost->addOnUrl(
 			function (string $url): void {
 				$this->consolePrinter->info('Loading security.txt from ' . $this->consolePrinter->colorBold($url));
@@ -103,32 +108,32 @@ final readonly class SecurityTxtCheckHostCli
 		if ($url === null) {
 			$this->consolePrinter->info($usageHelp);
 			$this->exit(CheckExitStatus::NoFile);
-		}
-
-		try {
-			$checkResult = $this->checkHost->check(
-				$url,
-				$expiresWarningThreshold,
-				$strictMode,
-				$requireTopLevelLocation,
-				$noIpv6,
-			);
-			if (!$checkResult->isValid()) {
-				$this->consolePrinter->error($this->consolePrinter->colorRed('Please update the file!'));
-				$this->exit(CheckExitStatus::Error);
-			} else {
-				$this->exit(CheckExitStatus::Ok);
+		} else {
+			try {
+				$checkResult = $this->checkHost->check(
+					$url,
+					$expiresWarningThreshold,
+					$strictMode,
+					$requireTopLevelLocation,
+					$noIpv6,
+				);
+				if (!$checkResult->isValid()) {
+					$this->consolePrinter->error($this->consolePrinter->colorRed('Please update the file!'));
+					$this->exit(CheckExitStatus::Error);
+				} else {
+					$this->exit(CheckExitStatus::Ok);
+				}
+			} catch (SecurityTxtFetcherException $e) {
+				$this->consolePrinter->error($e->getMessage());
+				$this->exit(CheckExitStatus::FileError);
 			}
-		} catch (SecurityTxtFetcherException $e) {
-			$this->consolePrinter->error($e->getMessage());
-			$this->exit(CheckExitStatus::FileError);
 		}
 	}
 
 
-	private function exit(CheckExitStatus $exitStatus): never
+	private function exit(CheckExitStatus $exitStatus): void
 	{
-		exit($exitStatus->value);
+		($this->exit)($exitStatus->value);
 	}
 
 }

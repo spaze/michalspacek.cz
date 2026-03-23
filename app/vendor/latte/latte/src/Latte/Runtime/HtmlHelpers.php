@@ -147,7 +147,7 @@ final class HtmlHelpers
 
 
 	/**
-	 * Converts HTML attribute to HTML text. The < > chars need to be escaped.
+	 * Converts an HTML attribute value back to HTML text with re-encoded special characters.
 	 */
 	public static function convertAttrToHtml(string $s): string
 	{
@@ -165,6 +165,9 @@ final class HtmlHelpers
 	}
 
 
+	/**
+	 * Returns the type category of an HTML attribute: 'bool', 'list', 'data', 'aria', 'style', or ''.
+	 */
 	public static function classifyAttributeType(string $name): string
 	{
 		$name = strtolower($name);
@@ -194,7 +197,7 @@ final class HtmlHelpers
 		return match (true) {
 			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart . '="' . self::escapeAttr($value) . '"',
 			$value === null => '',
-			default => self::triggerInvalidValue(trim($namePart), $value),
+			default => self::triggerInvalidValue(trim($namePart), $value) ?? '',
 		};
 	}
 
@@ -280,15 +283,20 @@ final class HtmlHelpers
 	}
 
 
-	public static function triggerInvalidValue(string $name, mixed $value): string
+	/**
+	 * Triggers an E_USER_WARNING for an invalid attribute value type.
+	 */
+	public static function triggerInvalidValue(string $name, mixed $value): void
 	{
 		$source = Latte\Helpers::guessTemplatePosition();
 		$type = get_debug_type($value);
 		trigger_error("Invalid value for attribute '$name': $type is not allowed" . ($source ? " ($source)" : '.'), E_USER_WARNING);
-		return '';
 	}
 
 
+	/**
+	 * Triggers an E_USER_WARNING about a behavior change in attribute rendering.
+	 */
 	public static function triggerMigrationWarning(string $name, mixed $value): void
 	{
 		$source = Latte\Helpers::guessTemplatePosition();
@@ -362,6 +370,9 @@ final class HtmlHelpers
 	}
 
 
+	/**
+	 * Validates that the HTML attribute name contains only allowed characters.
+	 */
 	public static function validateAttributeName(mixed $name): void
 	{
 		if (!is_string($name)) {

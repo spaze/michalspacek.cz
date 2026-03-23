@@ -18,6 +18,7 @@ use Spaze\SecurityTxt\Fields\SecurityTxtContact;
 use Spaze\SecurityTxt\Fields\SecurityTxtCsaf;
 use Spaze\SecurityTxt\Fields\SecurityTxtEncryption;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
 use Spaze\SecurityTxt\Fields\SecurityTxtHiring;
 use Spaze\SecurityTxt\Fields\SecurityTxtPolicy;
 use Spaze\SecurityTxt\Fields\SecurityTxtPreferredLanguages;
@@ -73,7 +74,7 @@ final readonly class SecurityTxtJson
 		$redirects = [];
 		foreach ($values as $url => $urlRedirects) {
 			if (!is_string($url)) {
-				throw new SecurityTxtCannotParseJsonException(sprintf('redirects key is a %s not a string', get_debug_type($url)));
+				throw new SecurityTxtCannotParseJsonException(sprintf('redirects key is of type %s, not a string', get_debug_type($url)));
 			}
 			if (!is_array($urlRedirects)) {
 				throw new SecurityTxtCannotParseJsonException("redirects > {$url} is not an array");
@@ -90,7 +91,7 @@ final readonly class SecurityTxtJson
 
 
 	/**
-	 * @param array<string, mixed> $values
+	 * @param array<array-key, mixed> $values
 	 * @return SecurityTxt
 	 * @throws SecurityTxtCannotParseJsonException
 	 */
@@ -104,24 +105,79 @@ final readonly class SecurityTxtJson
 				}
 				$securityTxt->setFileLocation($values['fileLocation']);
 			}
-			if (isset($values['expires'])) {
-				if (!is_array($values['expires'])) {
-					throw new SecurityTxtCannotParseJsonException('expires is not an array');
-				} elseif (!isset($values['expires']['dateTime']) || !is_string($values['expires']['dateTime'])) {
-					throw new SecurityTxtCannotParseJsonException('expires > dateTime is missing or not a string');
+			if (isset($values['fields'])) {
+				if (!is_array($values['fields'])) {
+					throw new SecurityTxtCannotParseJsonException('fields is not an array');
 				}
-				try {
-					$dateTime = new DateTimeImmutable($values['expires']['dateTime']);
-				} catch (DateMalformedStringException $e) {
-					throw new SecurityTxtCannotParseJsonException('expires > dateTime is wrong format', $e);
+				foreach ($values['fields'] as $key => $field) {
+					if (!is_array($field)) {
+						throw new SecurityTxtCannotParseJsonException('fields is not an array of arrays');
+					}
+					if (count($field) !== 1) {
+						throw new SecurityTxtCannotParseJsonException("fields > {$key} must be a single-entry map");
+					}
+					foreach ($field as $name => $value) {
+						if (!is_string($name)) {
+							throw new SecurityTxtCannotParseJsonException('field name is not a string');
+						}
+						if (SecurityTxtField::tryFrom($name) === null) {
+							throw new SecurityTxtCannotParseJsonException("fields > {$name} is an unsupported field");
+						}
+						if ($name === SecurityTxtField::Acknowledgments->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtAcknowledgments::class, $securityTxt->addAcknowledgments(...));
+						} elseif ($name === SecurityTxtField::BugBounty->value) {
+							if (!is_array($value)) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} is not an array");
+							}
+							if (!isset($value['rewards']) || !is_bool($value['rewards'])) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} > rewards is missing or not a bool");
+							}
+							$securityTxt->setBugBounty(new SecurityTxtBugBounty($value['rewards']));
+						} elseif ($name === SecurityTxtField::Canonical->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtCanonical::class, $securityTxt->addCanonical(...));
+						} elseif ($name === SecurityTxtField::Contact->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtContact::class, $securityTxt->addContact(...));
+						} elseif ($name === SecurityTxtField::Csaf->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtCsaf::class, $securityTxt->addCsaf(...));
+						} elseif ($name === SecurityTxtField::Encryption->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtEncryption::class, $securityTxt->addEncryption(...));
+						} elseif ($name === SecurityTxtField::Expires->value) {
+							if (!is_array($value)) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} is not an array");
+							} elseif (!isset($value['dateTime']) || !is_string($value['dateTime'])) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} > dateTime is missing or not a string");
+							} elseif (!isset($value['isExpired']) || !is_bool($value['isExpired'])) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} > isExpired is missing or not a bool");
+							} elseif (!isset($value['inDays']) || !is_int($value['inDays'])) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} > inDays is missing or not an int");
+							}
+							try {
+								$dateTime = new DateTimeImmutable($value['dateTime']);
+							} catch (DateMalformedStringException $e) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} > dateTime is wrong format", $e);
+							}
+							$securityTxt->setExpires(new SecurityTxtExpires($dateTime, $value['isExpired'], $value['inDays']));
+						} elseif ($name === SecurityTxtField::Hiring->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtHiring::class, $securityTxt->addHiring(...));
+						} elseif ($name === SecurityTxtField::Policy->value) {
+							$this->addSecurityTxtUriField($name, $value, SecurityTxtPolicy::class, $securityTxt->addPolicy(...));
+						} elseif ($name === SecurityTxtField::PreferredLanguages->value) {
+							if (!is_array($value)) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} is not an array");
+							} elseif (!isset($value['languages']) || !is_array($value['languages'])) {
+								throw new SecurityTxtCannotParseJsonException("fields > {$name} > languages is missing or not an array");
+							}
+							$languages = [];
+							foreach ($value['languages'] as $language) {
+								if (!is_string($language)) {
+									throw new SecurityTxtCannotParseJsonException("fields > {$name} > languages contains an item which is not a string");
+								}
+								$languages[] = $language;
+							}
+							$securityTxt->setPreferredLanguages(new SecurityTxtPreferredLanguages($languages));
+						}
+					}
 				}
-				if (!is_bool($values['expires']['isExpired'])) {
-					throw new SecurityTxtCannotParseJsonException('expires > isExpired is not a bool');
-				}
-				if (!is_int($values['expires']['inDays'])) {
-					throw new SecurityTxtCannotParseJsonException('expires > inDays is not an int');
-				}
-				$securityTxt->setExpires(new SecurityTxtExpires($dateTime, $values['expires']['isExpired'], $values['expires']['inDays']));
 			}
 			if (isset($values['signatureVerifyResult'])) {
 				if (!is_array($values['signatureVerifyResult'])) {
@@ -144,39 +200,6 @@ final readonly class SecurityTxtJson
 				}
 				$securityTxt = $securityTxt->withSignatureVerifyResult(new SecurityTxtSignatureVerifyResult($values['signatureVerifyResult']['keyFingerprint'], $dateTime));
 			}
-			if (isset($values['preferredLanguages'])) {
-				if (!is_array($values['preferredLanguages'])) {
-					throw new SecurityTxtCannotParseJsonException('preferredLanguages is not an array');
-				} elseif (
-					!isset($values['preferredLanguages']['languages'])
-					|| !is_array($values['preferredLanguages']['languages'])
-				) {
-					throw new SecurityTxtCannotParseJsonException('preferredLanguages > languages is missing or not an array');
-				}
-				$languages = [];
-				foreach ($values['preferredLanguages']['languages'] as $language) {
-					if (!is_string($language)) {
-						throw new SecurityTxtCannotParseJsonException('preferredLanguages > languages contains an item which is not a string');
-					}
-					$languages[] = $language;
-				}
-				$securityTxt->setPreferredLanguages(new SecurityTxtPreferredLanguages($languages));
-			}
-			if (isset($values['bugBounty'])) {
-				if (!is_array($values['bugBounty'])) {
-					throw new SecurityTxtCannotParseJsonException('bugBounty is not an array');
-				} elseif (!isset($values['bugBounty']['rewards']) || !is_bool($values['bugBounty']['rewards'])) {
-					throw new SecurityTxtCannotParseJsonException('bugBounty > rewards is missing or not a bool');
-				}
-				$securityTxt->setBugBounty(new SecurityTxtBugBounty($values['bugBounty']['rewards']));
-			}
-			$this->addSecurityTxtUriField($values, 'canonical', SecurityTxtCanonical::class, $securityTxt->addCanonical(...));
-			$this->addSecurityTxtUriField($values, 'contact', SecurityTxtContact::class, $securityTxt->addContact(...));
-			$this->addSecurityTxtUriField($values, 'acknowledgments', SecurityTxtAcknowledgments::class, $securityTxt->addAcknowledgments(...));
-			$this->addSecurityTxtUriField($values, 'hiring', SecurityTxtHiring::class, $securityTxt->addHiring(...));
-			$this->addSecurityTxtUriField($values, 'policy', SecurityTxtPolicy::class, $securityTxt->addPolicy(...));
-			$this->addSecurityTxtUriField($values, 'encryption', SecurityTxtEncryption::class, $securityTxt->addEncryption(...));
-			$this->addSecurityTxtUriField($values, 'csaf', SecurityTxtCsaf::class, $securityTxt->addCsaf(...), true);
 		} catch (SecurityTxtError | SecurityTxtWarning $e) {
 			throw new SecurityTxtCannotParseJsonException($e->getMessage(), $e);
 		}
@@ -186,29 +209,21 @@ final readonly class SecurityTxtJson
 
 	/**
 	 * @template T of SecurityTxtUriField
-	 * @param array<array-key, mixed> $values
 	 * @param string $field
+	 * @param mixed $value
 	 * @param class-string<T> $class
 	 * @param callable(T): void $addField
-	 * @param bool $optional True for backwards compatibility with older stored or cached JSON without the field marked as optional
 	 * @throws SecurityTxtCannotParseJsonException
 	 */
-	private function addSecurityTxtUriField(array $values, string $field, string $class, callable $addField, bool $optional = false): void
+	private function addSecurityTxtUriField(string $field, mixed $value, string $class, callable $addField): void
 	{
-		if ($optional && !array_key_exists($field, $values)) {
-			return;
+		if (!is_array($value)) {
+			throw new SecurityTxtCannotParseJsonException("fields > {$field} is not an array");
 		}
-		if (!isset($values[$field]) || !is_array($values[$field])) {
-			throw new SecurityTxtCannotParseJsonException("Field {$field} is missing or not an array");
+		if (!isset($value['uri']) || !is_string($value['uri'])) {
+			throw new SecurityTxtCannotParseJsonException("fields > {$field} > uri is missing or not a string");
 		}
-		foreach ($values[$field] as $value) {
-			if (!is_array($value)) {
-				throw new SecurityTxtCannotParseJsonException("{$field} is not an array");
-			} elseif (!isset($value['uri']) || !is_string($value['uri'])) {
-				throw new SecurityTxtCannotParseJsonException("{$field} > uri is missing or not a string");
-			}
-			$addField(new $class($value['uri']));
-		}
+		$addField(new $class($value['uri']));
 	}
 
 
@@ -218,26 +233,26 @@ final readonly class SecurityTxtJson
 	 */
 	public function createCheckHostResultFromJsonValues(array $values): SecurityTxtCheckHostResult
 	{
-		if (!is_string($values['class'])) {
-			throw new SecurityTxtCannotParseJsonException('class is not a string');
+		if (!isset($values['class']) || !is_string($values['class'])) {
+			throw new SecurityTxtCannotParseJsonException('class is not set or not a string');
 		}
 		if ($values['class'] !== SecurityTxtCheckHostResult::class) {
 			throw new SecurityTxtCannotParseJsonException('class is not ' . SecurityTxtCheckHostResult::class);
 		}
-		if (!is_string($values['host'])) {
-			throw new SecurityTxtCannotParseJsonException('host is not a string');
+		if (!isset($values['host']) || !is_string($values['host'])) {
+			throw new SecurityTxtCannotParseJsonException('host is not set or not a string');
 		}
-		if (!is_array($values['fetchResult'])) {
-			throw new SecurityTxtCannotParseJsonException('fetchResult is not an array');
+		if (!isset($values['fetchResult']) || !is_array($values['fetchResult'])) {
+			throw new SecurityTxtCannotParseJsonException('fetchResult is not set or not an array');
 		}
-		if (!is_array($values['fetchErrors'])) {
-			throw new SecurityTxtCannotParseJsonException('fetchErrors is not an array');
+		if (!isset($values['fetchErrors']) || !is_array($values['fetchErrors'])) {
+			throw new SecurityTxtCannotParseJsonException('fetchErrors is not set or not an array');
 		}
-		if (!is_array($values['fetchWarnings'])) {
-			throw new SecurityTxtCannotParseJsonException('fetchWarnings is not an array');
+		if (!isset($values['fetchWarnings']) || !is_array($values['fetchWarnings'])) {
+			throw new SecurityTxtCannotParseJsonException('fetchWarnings is not set or not an array');
 		}
-		if (!is_array($values['lineErrors'])) {
-			throw new SecurityTxtCannotParseJsonException('lineErrors is not an array');
+		if (!isset($values['lineErrors']) || !is_array($values['lineErrors'])) {
+			throw new SecurityTxtCannotParseJsonException('lineErrors is not set or not an array');
 		}
 		$lineErrors = [];
 		foreach ($values['lineErrors'] as $line => $violations) {
@@ -245,15 +260,15 @@ final readonly class SecurityTxtJson
 				throw new SecurityTxtCannotParseJsonException("lineErrors > {$line} key is not an int");
 			}
 			if ($line < 1) {
-				throw new SecurityTxtCannotParseJsonException("lineErrors > {$line} is less than 1");
+				throw new SecurityTxtCannotParseJsonException("lineErrors > {$line} key is less than 1");
 			}
 			if (!is_array($violations)) {
 				throw new SecurityTxtCannotParseJsonException("lineErrors > {$line} is not an array");
 			}
 			$lineErrors[$line] = $this->createViolationsFromJsonValues(array_values($violations));
 		}
-		if (!is_array($values['lineWarnings'])) {
-			throw new SecurityTxtCannotParseJsonException('lineWarnings is not an array');
+		if (!isset($values['lineWarnings']) || !is_array($values['lineWarnings'])) {
+			throw new SecurityTxtCannotParseJsonException('lineWarnings is not set or not an array');
 		}
 		$lineWarnings = [];
 		foreach ($values['lineWarnings'] as $line => $violations) {
@@ -268,39 +283,38 @@ final readonly class SecurityTxtJson
 			}
 			$lineWarnings[$line] = $this->createViolationsFromJsonValues(array_values($violations));
 		}
-		if (!is_array($values['fileErrors'])) {
-			throw new SecurityTxtCannotParseJsonException('fileErrors is not an array');
+		if (!isset($values['fileErrors']) || !is_array($values['fileErrors'])) {
+			throw new SecurityTxtCannotParseJsonException('fileErrors is not set or not an array');
 		}
-		if (!is_array($values['fileWarnings'])) {
-			throw new SecurityTxtCannotParseJsonException('fileWarnings is not an array');
+		if (!isset($values['fileWarnings']) || !is_array($values['fileWarnings'])) {
+			throw new SecurityTxtCannotParseJsonException('fileWarnings is not set or not an array');
 		}
-		if (!is_array($values['securityTxt'])) {
-			throw new SecurityTxtCannotParseJsonException('securityTxt is not an array');
+		if (!isset($values['securityTxt']) || !is_array($values['securityTxt'])) {
+			throw new SecurityTxtCannotParseJsonException('securityTxt is not set or not an array');
 		}
-		$securityTxtFields = [];
-		foreach ($values['securityTxt'] as $field => $fieldValues) {
-			if (!is_string($field)) {
-				throw new SecurityTxtCannotParseJsonException("securityTxt > {$field} key is not a string");
+		if (isset($values['expired'])) {
+			if (!is_bool($values['expired'])) {
+				throw new SecurityTxtCannotParseJsonException('expired is not a bool');
 			}
-			if ($fieldValues !== null && !is_array($fieldValues)) {
-				throw new SecurityTxtCannotParseJsonException("securityTxt > {$field} is not an array");
+			$expired = $values['expired'];
+		}
+		if (isset($values['expiryDays'])) {
+			if (!is_int($values['expiryDays'])) {
+				throw new SecurityTxtCannotParseJsonException('expiryDays is not an int');
 			}
-			$securityTxtFields[$field] = $fieldValues;
+			$expiryDays = $values['expiryDays'];
 		}
-		if ($values['expired'] !== null && !is_bool($values['expired'])) {
-			throw new SecurityTxtCannotParseJsonException('expired is not an int');
+		if (!isset($values['valid']) || !is_bool($values['valid'])) {
+			throw new SecurityTxtCannotParseJsonException('valid is not set or not a bool');
 		}
-		if ($values['expiryDays'] !== null && !is_int($values['expiryDays'])) {
-			throw new SecurityTxtCannotParseJsonException('expiryDays is not an int');
+		if (!isset($values['strictMode']) || !is_bool($values['strictMode'])) {
+			throw new SecurityTxtCannotParseJsonException('strictMode is not set or not a bool');
 		}
-		if (!is_bool($values['valid'])) {
-			throw new SecurityTxtCannotParseJsonException('valid is not a bool');
-		}
-		if (!is_bool($values['strictMode'])) {
-			throw new SecurityTxtCannotParseJsonException('strictMode is not a bool');
-		}
-		if ($values['expiresWarningThreshold'] !== null && !is_int($values['expiresWarningThreshold'])) {
-			throw new SecurityTxtCannotParseJsonException('expiresWarningThreshold is not an int');
+		if (isset($values['expiresWarningThreshold'])) {
+			if (!is_int($values['expiresWarningThreshold'])) {
+				throw new SecurityTxtCannotParseJsonException('expiresWarningThreshold is not an int');
+			}
+			$expiresWarningThreshold = $values['expiresWarningThreshold'];
 		}
 		return new SecurityTxtCheckHostResult(
 			$values['host'],
@@ -311,12 +325,12 @@ final readonly class SecurityTxtJson
 			$lineWarnings,
 			$this->createViolationsFromJsonValues(array_values($values['fileErrors'])),
 			$this->createViolationsFromJsonValues(array_values($values['fileWarnings'])),
-			$this->createSecurityTxtFromJsonValues($securityTxtFields),
-			$values['expired'],
-			$values['expiryDays'],
+			$this->createSecurityTxtFromJsonValues($values['securityTxt']),
+			$expired ?? null,
+			$expiryDays ?? null,
 			$values['valid'],
 			$values['strictMode'],
-			$values['expiresWarningThreshold'],
+			$expiresWarningThreshold ?? null,
 		);
 	}
 

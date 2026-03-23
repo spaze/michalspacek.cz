@@ -123,6 +123,8 @@ final class CoreExtension extends Latte\Extension
 			'ceil' => $this->filters->ceil(...),
 			'checkUrl' => $this->filters->checkUrl(...),
 			'clamp' => $this->filters->clamp(...),
+			'column' => $this->filters->column(...),
+			'commas' => $this->filters->commas(...),
 			'dataStream' => $this->filters->dataStream(...),
 			'datastream' => $this->filters->dataStream(...),
 			'date' => $this->filters->date(...),
@@ -150,6 +152,7 @@ final class CoreExtension extends Latte\Extension
 			'join' => $this->filters->implode(...),
 			'last' => $this->filters->last(...),
 			'length' => $this->filters->length(...),
+			'limit' => fn(iterable $value, int $length, int $offset = 0) => Filters::slice($value, $offset, $length, preserveKeys: true),
 			'localDate' => $this->filters->localDate(...),
 			'lower' => extension_loaded('mbstring')
 				? $this->filters->lower(...)
@@ -210,7 +213,11 @@ final class CoreExtension extends Latte\Extension
 		return [
 			'internalVariables' => $passes->forbiddenVariablesPass(...),
 			'checkUrls' => $passes->checkUrlsPass(...),
-			'overwrittenVariables' => Nodes\ForeachNode::overwrittenVariablesPass(...),
+			'overwrittenVariables' => function (Latte\Compiler\Nodes\TemplateNode $node): void {
+				if (!$this->engine->hasFeature(Latte\Feature::ScopedLoopVariables)) {
+					Nodes\ForeachNode::overwrittenVariablesPass($node);
+				}
+			},
 			'customFunctions' => $passes->customFunctionsPass(...),
 			'moveTemplatePrintToHead' => Nodes\TemplatePrintNode::moveToHeadPass(...),
 			'nElse' => Nodes\NElseNode::processPass(...),

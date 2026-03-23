@@ -146,6 +146,21 @@ final class Filters
 
 
 	/**
+	 * Join array elements with a comma and space.
+	 * @param  string[]  $arr
+	 */
+	public static function commas(array $arr, ?string $lastGlue = null): string
+	{
+		if ($lastGlue === null || count($arr) < 2) {
+			return implode(', ', $arr);
+		}
+
+		$last = array_pop($arr);
+		return implode(', ', $arr) . $lastGlue . $last;
+	}
+
+
+	/**
 	 * Splits a string by a string.
 	 * @return list<string>
 	 */
@@ -477,7 +492,7 @@ final class Filters
 	/**
 	 * Pad a string to a certain length with another string.
 	 */
-	public static function padLeft(string|Stringable|null $s, int $length, string $append = ' '): string
+	public static function padLeft(string|Stringable|int|float|null $s, int $length, string $append = ' '): string
 	{
 		$s = (string) $s;
 		$length = max(0, $length - self::strLength($s));
@@ -489,7 +504,7 @@ final class Filters
 	/**
 	 * Pad a string to a certain length with another string.
 	 */
-	public static function padRight(string|Stringable|null $s, int $length, string $append = ' '): string
+	public static function padRight(string|Stringable|int|float|null $s, int $length, string $append = ' '): string
 	{
 		$s = (string) $s;
 		$length = max(0, $length - self::strLength($s));
@@ -510,6 +525,17 @@ final class Filters
 		return is_string($val)
 			? (string) iconv('UTF-32LE', 'UTF-8', strrev((string) iconv('UTF-8', 'UTF-32BE', $val)))
 			: array_reverse(iterator_to_array($val), $preserveKeys);
+	}
+
+
+	/**
+	 * Returns the values from a single column in the input array.
+	 * @param  iterable<mixed>  $data
+	 * @return mixed[]
+	 */
+	public static function column(iterable $data, string|int|null $columnKey, string|int|null $indexKey = null): array
+	{
+		return array_column(iterator_to_array($data), $columnKey, $indexKey);
 	}
 
 
@@ -733,20 +759,41 @@ final class Filters
 
 
 	/**
-	 * Extracts a slice of an array or string.
-	 * @param  string|array<mixed>  $value
-	 * @return ($value is string ? string : array<mixed>)
+	 * Extracts a slice of an array, string or iterator.
+	 * @param  string|iterable<mixed>  $value
+	 * @return ($value is string ? string : ($value is array ? array<mixed> : \Generator))
 	 */
 	public static function slice(
-		string|array $value,
+		string|iterable $value,
 		int $start,
 		?int $length = null,
 		bool $preserveKeys = false,
-	): string|array
+	): string|array|\Generator
 	{
-		return is_array($value)
-			? array_slice($value, $start, $length, $preserveKeys)
-			: self::substring($value, $start, $length);
+		if (is_string($value)) {
+			return self::substring($value, $start, $length);
+		} elseif (is_array($value)) {
+			return array_slice($value, $start, $length, $preserveKeys);
+		}
+
+		return (function () use ($value, $start, $length, $preserveKeys) {
+			$i = 0;
+			$count = 0;
+			foreach ($value as $key => $val) {
+				if ($i++ < $start) {
+					continue;
+				}
+				if ($length !== null && $count >= $length) {
+					break;
+				}
+				if ($preserveKeys) {
+					yield $key => $val;
+				} else {
+					yield $val;
+				}
+				$count++;
+			}
+		})();
 	}
 
 

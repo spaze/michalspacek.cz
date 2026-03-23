@@ -34,7 +34,7 @@ final readonly class SecurityTxtFetcherFetchHostResult
 			$this->contentType = null;
 		} else {
 			$parts = explode(';', $header, 2);
-			$this->contentType = new SecurityTxtFetchHostContentType($parts[0], $parts[1] ?? null);
+			$this->contentType = new SecurityTxtFetchHostContentType(trim($parts[0]), isset($parts[1]) ? trim($parts[1]) : null);
 		}
 		$this->contents = $response?->getContents();
 		$this->isTruncated = $response !== null && $response->isTruncated();
