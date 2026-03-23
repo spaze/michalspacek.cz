@@ -21,8 +21,8 @@ final readonly class SecurityTxtFetchHostContentType
 		private string $contentType,
 		private ?string $charsetParameter,
 	) {
-		$this->lowercaseContentType = strtolower(trim($this->contentType));
-		$this->lowercaseCharsetParameter = $this->charsetParameter !== null ? strtolower(trim($this->charsetParameter)) : null;
+		$this->lowercaseContentType = strtolower($this->contentType);
+		$this->lowercaseCharsetParameter = $this->charsetParameter !== null ? strtolower($this->charsetParameter) : null;
 	}
 
 

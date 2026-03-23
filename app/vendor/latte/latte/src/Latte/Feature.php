@@ -21,4 +21,10 @@ enum Feature
 
 	/** Shows warnings for deprecated Latte 3.0 syntax */
 	case MigrationWarnings;
+
+	/** Variables from {foreach} exist only within the loop */
+	case ScopedLoopVariables;
+
+	/** Removes structural indentation from paired tag content */
+	case Dedent;
 }

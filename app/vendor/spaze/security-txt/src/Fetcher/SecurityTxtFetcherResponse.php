@@ -7,7 +7,7 @@ final readonly class SecurityTxtFetcherResponse
 {
 
 	/**
-	 * @param array<string, string> $headers lowercase name => value
+	 * @param array<lowercase-string, string> $headers lowercase name => value
 	 */
 	public function __construct(
 		private int $httpCode,

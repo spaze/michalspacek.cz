@@ -44,35 +44,43 @@ final class SecurityTxtUrlParser
 		if ($redirectParts === false) {
 			return $redirect;
 		}
-		if (!isset($redirectParts['host'])) {
-			$currentParts = parse_url($current);
-			if ($currentParts === false) {
+		if (isset($redirectParts['scheme'])) {
+			return $redirect;
+		}
+
+		$currentParts = parse_url($current);
+		if (isset($redirectParts['host'])) {
+			if ($currentParts === false || !isset($currentParts['scheme'])) {
 				return $redirect;
 			}
-			if (!isset($redirectParts['path'])) {
-				$redirectParts['path'] = $currentParts['path'] ?? '/';
-			}
-			if (!isset($currentParts['path'])) {
-				$currentParts['path'] = '/';
-			}
-			if ($redirectParts['path'][0] === '/') {
-				$currentParts['path'] = $redirectParts['path'];
-			} else {
-				$currentParts['path'] = sprintf('%s/%s', rtrim(dirname($currentParts['path']), '/'), $redirectParts['path']);
-			}
-			if (isset($redirectParts['query'])) {
-				$currentParts['query'] = $redirectParts['query'];
-			} else {
-				unset($currentParts['query']);
-			}
-			if (isset($redirectParts['fragment'])) {
-				$currentParts['fragment'] = $redirectParts['fragment'];
-			} else {
-				unset($currentParts['fragment']);
-			}
-			$redirect = $this->getUrl($currentParts);
+			return "{$currentParts['scheme']}:{$redirect}";
 		}
-		return $redirect;
+
+		if ($currentParts === false) {
+			return $redirect;
+		}
+		if (!isset($redirectParts['path'])) {
+			$redirectParts['path'] = $currentParts['path'] ?? '/';
+		}
+		if (!isset($currentParts['path'])) {
+			$currentParts['path'] = '/';
+		}
+		if ($redirectParts['path'][0] === '/') {
+			$currentParts['path'] = $redirectParts['path'];
+		} else {
+			$currentParts['path'] = sprintf('%s/%s', rtrim(dirname($currentParts['path']), '/'), $redirectParts['path']);
+		}
+		if (isset($redirectParts['query'])) {
+			$currentParts['query'] = $redirectParts['query'];
+		} else {
+			unset($currentParts['query']);
+		}
+		if (isset($redirectParts['fragment'])) {
+			$currentParts['fragment'] = $redirectParts['fragment'];
+		} else {
+			unset($currentParts['fragment']);
+		}
+		return $this->getUrl($currentParts);
 	}
 
 

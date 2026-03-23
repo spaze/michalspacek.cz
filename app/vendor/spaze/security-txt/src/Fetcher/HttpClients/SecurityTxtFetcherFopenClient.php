@@ -13,10 +13,11 @@ final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcher
 {
 
 	private const int MAX_RESPONSE_LENGTH = 10_000;
+	private const string DEFAULT_USER_AGENT = 'Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)';
 
 
 	public function __construct(
-		private string $userAgent,
+		private string $userAgent = self::DEFAULT_USER_AGENT,
 	) {
 	}
 
@@ -55,8 +56,8 @@ final readonly class SecurityTxtFetcherFopenClient implements SecurityTxtFetcher
 		$metadata = stream_get_meta_data($fp);
 		fclose($fp);
 		/** @var list<string> $wrapperData */
-		$wrapperData = $metadata['wrapper_data'];
-		if (preg_match('~^HTTP/[\d.]+ (\d+)~', $wrapperData[0], $matches) === 1) {
+		$wrapperData = $metadata['wrapper_data'] ?? [''];
+		if (preg_match('~^HTTP/[\d.]+ (\d+)~', $wrapperData[0] ?? '', $matches) === 1) {
 			$code = (int)$matches[1];
 		} else {
 			throw new SecurityTxtNoHttpCodeException($url->getUrl(), $url->getRedirects());

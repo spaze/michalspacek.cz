@@ -7,18 +7,24 @@ use LogicException;
 use Override;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
 use Spaze\SecurityTxt\Fields\SecurityTxtPreferredLanguages;
+use Spaze\SecurityTxt\Parser\SplitProviders\SecurityTxtSplitProvider;
 use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesSeparatorNotComma;
 
-final class PreferredLanguagesSetFieldValue implements FieldProcessor
+final readonly class PreferredLanguagesSetFieldValue implements FieldProcessor
 {
+
+	public function __construct(private SecurityTxtSplitProvider $splitProvider)
+	{
+	}
+
 
 	#[Override]
 	public function process(string $value, SecurityTxt $securityTxt): void
 	{
 		$regexp = '/\s*([,.;:])\s*/';
 		$separators = preg_match_all($regexp, $value, $matches);
-		$languages = @preg_split($regexp, $value); // intentionally @, converted to exception
+		$languages = $this->splitProvider->split($regexp, $value);
 		if ($languages === false) {
 			throw new LogicException('This should not happen');
 		}

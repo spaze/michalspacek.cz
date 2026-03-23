@@ -49,6 +49,6 @@
 			"@tester",
 			"@psalm"
 		],
-		"tester": "vendor/bin/tester -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage tests/temp/coverage.html --coverage-src src/ tests/"
+		"tester": "vendor/bin/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage tests/temp/coverage.html --coverage-src src/ tests/"
 	}
 }

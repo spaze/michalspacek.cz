@@ -67,6 +67,9 @@ final class XmlHelpers
 	}
 
 
+	/**
+	 * Formats an XML attribute.
+	 */
 	public static function formatAttribute(string $namePart, mixed $value, bool $migrationWarnings = false): string
 	{
 		if ($migrationWarnings && $value === null) {
@@ -75,7 +78,7 @@ final class XmlHelpers
 		return match (true) {
 			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart . '="' . self::escapeAttr($value) . '"',
 			$value === null => '',
-			default => HtmlHelpers::triggerInvalidValue(trim($namePart), $value),
+			default => HtmlHelpers::triggerInvalidValue(trim($namePart), $value) ?? '',
 		};
 	}
 
@@ -96,6 +99,9 @@ final class XmlHelpers
 	}
 
 
+	/**
+	 * Validates that the XML attribute name is a valid XML Name.
+	 */
 	public static function validateAttributeName(mixed $name): void
 	{
 		if (!is_string($name)) {

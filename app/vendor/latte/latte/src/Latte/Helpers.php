@@ -7,7 +7,7 @@
 
 namespace Latte;
 
-use function array_filter, array_keys, array_search, array_slice, array_unique, count, is_array, is_object, is_string, levenshtein, max, min, strlen, strpos;
+use function array_filter, array_keys, array_unique, count, in_array, is_array, is_object, is_string, levenshtein, strlen, strpos;
 use const PHP_VERSION_ID;
 
 
@@ -36,7 +36,10 @@ class Helpers
 	}
 
 
-	/** intentionally without callable typehint, because it generates bad error messages */
+	/**
+	 * Returns a reflection object for the given callable.
+	 * Intentionally without callable type hint to avoid unhelpful error messages.
+	 */
 	public static function toReflection(mixed $callable): \ReflectionFunctionAbstract
 	{
 		if (is_string($callable) && strpos($callable, '::')) {
@@ -54,49 +57,93 @@ class Helpers
 
 
 	/**
+	 * Sorts items by before/after ordering constraints defined as \stdClass objects.
 	 * @param  array<string, mixed|\stdClass>  $list
 	 * @return array<string, mixed|\stdClass>
 	 */
 	public static function sortBeforeAfter(array $list): array
 	{
+		$names = array_keys($list);
+
+		// Build adjacency list and in-degree count
+		// Edge A → B means "A must come before B"
+		$graph = array_fill_keys($names, []);
+		$inDegree = array_fill_keys($names, 0);
+
 		foreach ($list as $name => $info) {
-			if (!$info instanceof \stdClass || !($info->before ?? $info->after ?? null)) {
+			if (!$info instanceof \stdClass) {
 				continue;
 			}
 
-			unset($list[$name]);
-			$names = array_keys($list);
-			$best = null;
-
-			foreach ((array) $info->before as $target) {
+			// "before: X" means this node → X (this comes before X)
+			foreach ((array) ($info->before ?? []) as $target) {
 				if ($target === '*') {
-					$best = 0;
-				} elseif (isset($list[$target])) {
-					$pos = (int) array_search($target, $names, strict: true);
-					$best = min($pos, $best ?? $pos);
+					foreach ($names as $other) {
+						if ($other !== $name && !in_array($other, $graph[$name], true)) {
+							$graph[$name][] = $other;
+							$inDegree[$other]++;
+						}
+					}
+				} elseif (isset($list[$target]) && $target !== $name) {
+					if (!in_array($target, $graph[$name], true)) {
+						$graph[$name][] = $target;
+						$inDegree[$target]++;
+					}
 				}
 			}
 
-			foreach ((array) ($info->after ?? null) as $target) {
+			// "after: X" means X → this node (X comes before this)
+			foreach ((array) ($info->after ?? []) as $target) {
 				if ($target === '*') {
-					$best = count($names);
-				} elseif (isset($list[$target])) {
-					$pos = (int) array_search($target, $names, strict: true);
-					$best = max($pos + 1, $best);
+					foreach ($names as $other) {
+						if ($other !== $name && !in_array($name, $graph[$other], true)) {
+							$graph[$other][] = $name;
+							$inDegree[$name]++;
+						}
+					}
+				} elseif (isset($list[$target]) && $target !== $name) {
+					if (!in_array($name, $graph[$target], true)) {
+						$graph[$target][] = $name;
+						$inDegree[$name]++;
+					}
 				}
 			}
-
-			$best ??= count($names);
-			$list = array_slice($list, 0, $best, preserve_keys: true)
-				+ [$name => $info]
-				+ array_slice($list, $best, null, preserve_keys: true);
 		}
 
-		return $list;
+		// Kahn's algorithm
+		$queue = [];
+		foreach ($names as $name) {
+			if ($inDegree[$name] === 0) {
+				$queue[] = $name;
+			}
+		}
+
+		$result = [];
+		while ($queue) {
+			$node = array_shift($queue);
+			$result[$node] = $list[$node];
+
+			foreach ($graph[$node] as $neighbor) {
+				$inDegree[$neighbor]--;
+				if ($inDegree[$neighbor] === 0) {
+					$queue[] = $neighbor;
+				}
+			}
+		}
+
+		if (count($result) !== count($list)) {
+			$cycle = array_diff($names, array_keys($result));
+			throw new \LogicException('Circular dependency detected among: ' . implode(', ', $cycle));
+		}
+
+		return $result;
 	}
 
 
-	/** @param  mixed[]  $items */
+	/**
+	 * Removes null values from the array and re-indexes it.
+	 * @param  mixed[]  $items
+	 */
 	public static function removeNulls(array &$items): void
 	{
 		$items = array_values(array_filter($items, fn($item) => $item !== null));
@@ -126,7 +173,8 @@ class Helpers
 
 
 	/**
-	 * Tries to guess the position in the template from the backtrace
+	 * Tries to guess the template position from the backtrace. Returns a human-readable string like
+	 * "in 'path/to/template.latte' on line 42", or null if the position cannot be determined.
 	 */
 	public static function guessTemplatePosition(): ?string
 	{
@@ -144,5 +192,43 @@ class Helpers
 			}
 		}
 		return null;
+	}
+
+
+	/**
+	 * Resolves template parameters from an object, its public properties are extracted as variables
+	 * and annotated methods are registered as filters/functions.
+	 * @param  object|mixed[]  $params
+	 * @return array<string, mixed>
+	 */
+	public static function resolveParams(Engine $engine, object|array $params): array
+	{
+		if (is_array($params)) {
+			return $params;
+		}
+
+		$rc = new \ReflectionClass($params);
+		$methods = $rc->getMethods(\ReflectionMethod::IS_PUBLIC);
+		foreach ($methods as $method) {
+			if ($method->getAttributes(Attributes\TemplateFilter::class)) {
+				$engine->addFilter($method->name, $method->getClosure($params));
+			}
+
+			if ($method->getAttributes(Attributes\TemplateFunction::class)) {
+				$engine->addFunction($method->name, $method->getClosure($params));
+			}
+		}
+
+		$res = get_object_vars($params);
+		if (PHP_VERSION_ID >= 80400) {
+			foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+				if ($property->isVirtual() && $property->hasHook(\PropertyHookType::Get)) {
+					$name = $property->getName();
+					$res[$name] = $params->$name;
+				}
+			}
+		}
+
+		return $res;
 	}
 }

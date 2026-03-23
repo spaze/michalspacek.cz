@@ -24,6 +24,7 @@ use Spaze\SecurityTxt\Parser\FieldProcessors\HiringAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\PolicyAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\PreferredLanguagesCheckMultipleFields;
 use Spaze\SecurityTxt\Parser\FieldProcessors\PreferredLanguagesSetFieldValue;
+use Spaze\SecurityTxt\Parser\SplitProviders\SecurityTxtSplitProvider;
 use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\SecurityTxtValidationLevel;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignature;
@@ -55,6 +56,7 @@ final class SecurityTxtParser
 		private readonly SecurityTxtSignature $signature,
 		private readonly SecurityTxtExpiresFactory $expiresFactory,
 		private readonly SecurityTxtSplitLines $splitLines,
+		private readonly SecurityTxtSplitProvider $splitProvider,
 	) {
 	}
 
@@ -97,7 +99,7 @@ final class SecurityTxtParser
 		];
 		$this->fieldProcessors[SecurityTxtField::PreferredLanguages->value] = [
 			new PreferredLanguagesCheckMultipleFields(),
-			new PreferredLanguagesSetFieldValue(),
+			new PreferredLanguagesSetFieldValue($this->splitProvider),
 		];
 	}
 
