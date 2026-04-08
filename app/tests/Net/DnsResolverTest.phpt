@@ -23,10 +23,20 @@ final class DnsResolverTest extends TestCase
 	public function testGetRecords(): void
 	{
 		TestCaseRunner::needsInternet();
-		$records = $this->dnsResolver->getRecords('one.one.one.one', DNS_A);
-		$ips = array_map(fn(DnsRecord $dnsRecord): ?string => $dnsRecord->getIp(), $records);
-		sort($ips);
-		Assert::same(['1.0.0.1', '1.1.1.1'], $ips);
+		$records = $this->dnsResolver->getRecords('one.one.one.one', DNS_A | DNS_AAAA);
+		$ips = $ipv6s = [];
+		foreach ($records as $record) {
+			if ($record->getType() === 'A') {
+				$ips[] = $record->getIp();
+			}
+			if ($record->getType() === 'AAAA') {
+				$ipv6s[] = $record->getIpv6();
+			}
+		}
+		Assert::contains('1.0.0.1', $ips);
+		Assert::contains('1.1.1.1', $ips);
+		Assert::contains('2606:4700:4700::1001', $ipv6s);
+		Assert::contains('2606:4700:4700::1111', $ipv6s);
 	}
 
 }

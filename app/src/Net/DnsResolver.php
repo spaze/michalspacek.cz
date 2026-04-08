@@ -23,12 +23,15 @@ final class DnsResolver
 		}
 		$result = [];
 		foreach ($records as $record) {
+			$ip = $record['ip'] ?? null;
+			$ipv6 = $record['ipv6'] ?? null;
 			assert(is_string($record['host']));
 			assert(is_string($record['class']));
 			assert(is_int($record['ttl']));
 			assert(is_string($record['type']));
-			assert(is_string($record['ip']));
-			$result[] = new DnsRecord($record['host'], $record['class'], $record['ttl'], $record['type'], $record['ip']);
+			assert($ip === null || is_string($ip));
+			assert($ipv6 === null || is_string($ipv6));
+			$result[] = new DnsRecord($record['host'], $record['class'], $record['ttl'], $record['type'], $ip, $ipv6);
 		}
 		return $result;
 	}
