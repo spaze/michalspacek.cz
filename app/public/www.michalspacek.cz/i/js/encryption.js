@@ -16,8 +16,6 @@ App.ready(document, function () {
 			return;
 		}
 		openpgp.readKey({armoredKey: document.querySelector('#pubkey').innerText}).then(function (key) {
-			openpgp.config.commentString = location.href;
-			openpgp.config.showComment = true;
 			openpgp.createMessage({text: area.value}).then(function (message) {
 				openpgp.encrypt({message, encryptionKeys: key}).then(function (ciphertext) {
 					encrypted = true;
