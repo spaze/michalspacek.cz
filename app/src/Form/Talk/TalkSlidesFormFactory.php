@@ -162,7 +162,7 @@ final readonly class TalkSlidesFormFactory
 			->setHtmlAttribute('class', 'slide-filename');
 		$ruleTexyTalkSlides = $this->talkSlidesTexyRuleFactory->create();
 		$container->addTextArea('speakerNotes', 'Poznámky:')
-			->addRule($ruleTexyTalkSlides->getRule(), $ruleTexyTalkSlides->getMessage())
+			->addRule($ruleTexyTalkSlides->getRule())
 			->setRequired('Zadejte prosím poznámky');
 	}
 

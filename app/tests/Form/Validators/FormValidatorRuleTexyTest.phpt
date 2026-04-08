@@ -49,14 +49,12 @@ final class FormValidatorRuleTexyTest extends TestCase
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo-bar]';
 		$rule = $this->rule;
 		Assert::true($rule->getRule()($textArea));
-		Assert::same('', (string)$rule);
-		Assert::same((string)$rule, (string)$rule->getMessage());
+		Assert::same([], $textArea->getErrors());
 
 		$textArea = new TextArea();
 		$textArea->value = 808;
 		Assert::true($rule->getRule()($textArea));
-		Assert::same('', (string)$rule);
-		Assert::same((string)$rule, (string)$rule->getMessage());
+		Assert::same([], $textArea->getErrors());
 	}
 
 
@@ -66,9 +64,8 @@ final class FormValidatorRuleTexyTest extends TestCase
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
 		$rule = $this->rule;
-		Assert::false($rule->getRule()($textArea));
-		Assert::same(ShouldNotHappenException::class . ': wuh', (string)$rule);
-		Assert::same((string)$rule, (string)$rule->getMessage());
+		Assert::true($rule->getRule()($textArea));
+		Assert::same([ShouldNotHappenException::class . ': wuh'], $textArea->getErrors());
 	}
 
 
@@ -78,9 +75,8 @@ final class FormValidatorRuleTexyTest extends TestCase
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
 		$rule = $this->rule;
-		Assert::false($rule->getRule()($textArea));
-		Assert::same('Invalid link: oops/bar', (string)$rule);
-		Assert::same((string)$rule, (string)$rule->getMessage());
+		Assert::true($rule->getRule()($textArea));
+		Assert::same(['Invalid link: oops/bar'], $textArea->getErrors());
 	}
 
 }
