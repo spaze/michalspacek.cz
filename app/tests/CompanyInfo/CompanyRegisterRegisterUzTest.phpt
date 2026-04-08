@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -25,6 +26,26 @@ final class CompanyRegisterRegisterUzTest extends TestCase
 	) {
 		// Need a real HttpClient, not the mock one used in other tests
 		$this->registerUz = new CompanyRegisterRegisterUz($schemaProcessor, new HttpClient());
+	}
+
+
+	public function testGetDetailsWrongIds(): void
+	{
+		Assert::exception(function (): void {
+			$this->registerUz->getDetails('');
+		}, CompanyInfoException::class, 'Company Id is empty');
+		Assert::exception(function (): void {
+			$this->registerUz->getDetails('foo_bar');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
+		Assert::exception(function (): void {
+			$this->registerUz->getDetails('foo?bar=baz');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
+		Assert::exception(function (): void {
+			$this->registerUz->getDetails('foo&bar=baz');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
+		Assert::exception(function (): void {
+			$this->registerUz->getDetails('foo#bar');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
 	}
 
 

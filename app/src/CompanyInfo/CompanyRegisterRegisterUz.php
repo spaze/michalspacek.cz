@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use Composer\Pcre\Regex;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
 use MichalSpacekCz\Http\Client\HttpClient;
@@ -54,6 +55,9 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 	{
 		if ($companyId === '') {
 			throw new CompanyInfoException('Company Id is empty');
+		}
+		if (!Regex::isMatch('~\A[a-zA-Z0-9]+\z~', $companyId)) {
+			throw new CompanyInfoException('Company Id is not alphanumeric');
 		}
 		$units = $this->call('uctovne-jednotky', ['zmenene-od' => self::DAY_ONE, 'ico' => $companyId]);
 		if ($units->id === []) {

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use Composer\Pcre\Regex;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
 use MichalSpacekCz\Http\Client\HttpClient;
@@ -48,6 +49,9 @@ final readonly class CompanyRegisterAres implements CompanyRegister
 	{
 		if ($companyId === '') {
 			throw new CompanyInfoException('Company Id is empty');
+		}
+		if (!Regex::isMatch('~\A[a-zA-Z0-9]+\z~', $companyId)) {
+			throw new CompanyInfoException('Company Id is not alphanumeric');
 		}
 		$content = $this->fetch($companyId);
 		try {
@@ -97,7 +101,7 @@ final readonly class CompanyRegisterAres implements CompanyRegister
 	 */
 	private function fetch(string $companyId): string
 	{
-		$url = "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/{$companyId}";
+		$url = 'https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/' . rawurlencode($companyId);
 		try {
 			return $this->httpClient->get(new HttpClientRequest($url))->getBody();
 		} catch (HttpClientRequestException $e) {
