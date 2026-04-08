@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Test\Http\Client\HttpClientMock;
@@ -26,6 +27,26 @@ final class CompanyRegisterAresTest extends TestCase
 		private readonly HttpClientMock $httpClientMock,
 	) {
 		$this->ares = new CompanyRegisterAres(new Processor(), new HttpClient());
+	}
+
+
+	public function testGetDetailsWrongIds(): void
+	{
+		Assert::exception(function (): void {
+			$this->ares->getDetails('');
+		}, CompanyInfoException::class, 'Company Id is empty');
+		Assert::exception(function (): void {
+			$this->ares->getDetails('foo_bar');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
+		Assert::exception(function (): void {
+			$this->ares->getDetails('foo?bar=baz');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
+		Assert::exception(function (): void {
+			$this->ares->getDetails('foo&bar=baz');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
+		Assert::exception(function (): void {
+			$this->ares->getDetails('foo#bar');
+		}, CompanyInfoException::class, 'Company Id is not alphanumeric');
 	}
 
 
