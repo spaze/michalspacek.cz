@@ -55,12 +55,12 @@ final readonly class TalkFormFactory
 		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
-			->addRule($ruleTexy->getRule(), $ruleTexy->getMessage())
+			->addRule($ruleTexy->getRule())
 			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
 		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false)
-			->addRule($ruleTexy->getRule(), $ruleTexy->getMessage())
+			->addRule($ruleTexy->getRule())
 			->addRule(Form::MaxLength, 'Maximální délka popisu je %d znaků', 65535);
 		$this->trainingControlsFactory->addDate(
 			$form->addText('date', 'Datum:'),
@@ -86,7 +86,7 @@ final readonly class TalkFormFactory
 		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('slidesNote', 'Poznámka ke slajdům:')
 			->setRequired(false)
-			->addRule($ruleTexy->getRule(), $ruleTexy->getMessage())
+			->addRule($ruleTexy->getRule())
 			->addRule(Form::MaxLength, 'Maximální délka poznámek je %d znaků', 65535);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
@@ -98,7 +98,7 @@ final readonly class TalkFormFactory
 		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addText('event', 'Událost:')
 			->setRequired('Zadejte prosím událost')
-			->addRule($ruleTexy->getRule(), $ruleTexy->getMessage())
+			->addRule($ruleTexy->getRule())
 			->addRule(Form::MaxLength, 'Maximální délka události je %d znaků', 200);
 		$form->addText('eventHref', 'Odkaz na událost:')
 			->setRequired(false)
@@ -109,7 +109,7 @@ final readonly class TalkFormFactory
 		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('transcript', 'Přepis:')
 			->setRequired(false)
-			->addRule($ruleTexy->getRule(), $ruleTexy->getMessage())
+			->addRule($ruleTexy->getRule())
 			->addRule(Form::MaxLength, 'Maximální délka přepisu je %d znaků', 65535);
 		$form->addTextArea('favorite', 'Popis pro oblíbené:')
 			->setRequired(false)

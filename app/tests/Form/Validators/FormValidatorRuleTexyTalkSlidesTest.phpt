@@ -73,12 +73,11 @@ final class FormValidatorRuleTexyTalkSlidesTest extends TestCase
 		$textArea = new TextArea();
 		$textArea->value = $input;
 		$rule = $this->rule;
+		Assert::true($rule->getRule()($textArea));
 		if ($endTag !== null) {
-			Assert::false($rule->getRule()($textArea));
-			Assert::same("Text ends with $endTag, but it should end with a paragraph, otherwise the slide number will be on a separate line", (string)$rule);
+			Assert::same(["Text ends with $endTag, but it should end with a paragraph, otherwise the slide number will be on a separate line"], $textArea->getErrors());
 		} else {
-			Assert::true($rule->getRule()($textArea));
-			Assert::same('', (string)$rule);
+			Assert::same([], $textArea->getErrors());
 		}
 	}
 
@@ -89,9 +88,8 @@ final class FormValidatorRuleTexyTalkSlidesTest extends TestCase
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
 		$rule = $this->rule;
-		Assert::false($rule->getRule()($textArea));
-		Assert::same('Invalid link: oops/bar', (string)$rule);
-		Assert::same((string)$rule, (string)$rule->getMessage());
+		Assert::true($rule->getRule()($textArea));
+		Assert::same(['Invalid link: oops/bar'], $textArea->getErrors());
 	}
 
 }
