@@ -22,7 +22,6 @@ final class RouterFactoryTest extends TestCase
 
 	public function testCreateRouter(): void
 	{
-
 		$localeRouter = $this->routerFactory->createRouter();
 		Assert::same(['cs_CZ', 'en_US'], array_keys($this->routerFactory->getLocaleRouters()));
 		Assert::same($this->routerFactory->getLocaleRouters(), $localeRouter->getLocaleRouters());
