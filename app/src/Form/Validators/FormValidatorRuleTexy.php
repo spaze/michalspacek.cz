@@ -19,11 +19,11 @@ final class FormValidatorRuleTexy
 
 
 	/**
-	 * @return callable(TextBase): bool
+	 * @return callable(TextBase): true
 	 */
 	public function getRule(): callable
 	{
-		return function (TextBase $input): bool {
+		return function (TextBase $input): true {
 			try {
 				$this->formValidatorTexyFormatter->format($input->value);
 			} catch (FormValidatorTexyFormatterErrorException $e) {
