@@ -27,7 +27,8 @@ lint-latte:
 	bin/latte-lint.php src/
 
 lint-neon:
-	vendor/nette/neon/bin/neon-lint src/
+	# Dirs like vendor and node_modules are excluded by neon-lint
+	vendor/nette/neon/bin/neon-lint .
 
 lint-xml:
 	bin/xmllint.sh
