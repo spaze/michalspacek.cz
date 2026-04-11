@@ -509,6 +509,7 @@ return array(
     'Nette\\Loaders\\RobotLoader' => $vendorDir . '/nette/robot-loader/src/RobotLoader/RobotLoader.php',
     'Nette\\Localization\\ITranslator' => $vendorDir . '/nette/utils/src/compatibility.php',
     'Nette\\Localization\\Translator' => $vendorDir . '/nette/utils/src/Translator.php',
+    'Nette\\Mail\\CssInliner' => $vendorDir . '/nette/mail/src/Mail/CssInliner.php',
     'Nette\\Mail\\DkimSigner' => $vendorDir . '/nette/mail/src/Mail/DkimSigner.php',
     'Nette\\Mail\\FallbackMailer' => $vendorDir . '/nette/mail/src/Mail/FallbackMailer.php',
     'Nette\\Mail\\FallbackMailerException' => $vendorDir . '/nette/mail/src/Mail/exceptions.php',

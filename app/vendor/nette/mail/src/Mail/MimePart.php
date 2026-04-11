@@ -1,17 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Mail;
 
 use Nette;
 use Nette\Utils\Strings;
-use function addcslashes, base64_encode, chunk_split, iconv_mime_encode, is_array, ltrim, preg_match, preg_replace, quoted_printable_encode, rtrim, str_ends_with, str_repeat, str_replace, stripslashes, strlen, strrpos, strspn, substr;
+use function addcslashes, base64_encode, chunk_split, iconv_mime_encode, is_array, is_string, ltrim, preg_match, preg_replace, quoted_printable_encode, rtrim, str_ends_with, str_repeat, str_replace, stripslashes, strlen, strrpos, strspn, substr;
 
 
 /**
@@ -23,7 +21,7 @@ class MimePart
 {
 	use Nette\SmartObject;
 
-	/** encoding */
+	/** Content-Transfer-Encoding values */
 	public const
 		EncodingBase64 = 'base64',
 		Encoding7Bit = '7bit',
@@ -40,14 +38,17 @@ class MimePart
 		SequenceValue = 1,
 		SequenceWord = 2;
 
+	/** @var array<string, string|array<string, ?string>> */
 	private array $headers = [];
+
+	/** @var list<MimePart> */
 	private array $parts = [];
 	private string $body = '';
 
 
 	/**
 	 * Sets a header.
-	 * @param  string|array|null  $value  value or pair email => name
+	 * @param  string|array<string, ?string>|null  $value  value or pair email => name
 	 */
 	public function setHeader(string $name, string|array|null $value, bool $append = false): static
 	{
@@ -91,17 +92,15 @@ class MimePart
 
 
 	/**
-	 * Returns a header.
+	 * Returns the header value, or null if not set.
+	 * @return string|array<string, ?string>|null
 	 */
-	public function getHeader(string $name): mixed
+	public function getHeader(string $name): string|array|null
 	{
 		return $this->headers[$name] ?? null;
 	}
 
 
-	/**
-	 * Removes a header.
-	 */
 	public function clearHeader(string $name): static
 	{
 		unset($this->headers[$name]);
@@ -144,6 +143,7 @@ class MimePart
 
 	/**
 	 * Returns all headers.
+	 * @return array<string, string|array<string, ?string>>
 	 */
 	public function getHeaders(): array
 	{
@@ -151,9 +151,6 @@ class MimePart
 	}
 
 
-	/**
-	 * Sets Content-Type header.
-	 */
 	public function setContentType(string $contentType, ?string $charset = null): static
 	{
 		$this->setHeader('Content-Type', $contentType . ($charset ? "; charset=$charset" : ''));
@@ -161,9 +158,6 @@ class MimePart
 	}
 
 
-	/**
-	 * Sets Content-Transfer-Encoding header.
-	 */
 	public function setEncoding(string $encoding): static
 	{
 		$this->setHeader('Content-Transfer-Encoding', $encoding);
@@ -171,12 +165,10 @@ class MimePart
 	}
 
 
-	/**
-	 * Returns Content-Transfer-Encoding header.
-	 */
 	public function getEncoding(): string
 	{
-		return $this->getHeader('Content-Transfer-Encoding');
+		$encoding = $this->getHeader('Content-Transfer-Encoding');
+		return is_string($encoding) ? $encoding : '';
 	}
 
 
@@ -189,9 +181,6 @@ class MimePart
 	}
 
 
-	/**
-	 * Sets textual body.
-	 */
 	public function setBody(string $body): static
 	{
 		$this->body = $body;
@@ -199,9 +188,6 @@ class MimePart
 	}
 
 
-	/**
-	 * Gets textual body.
-	 */
 	public function getBody(): string
 	{
 		return $this->body;
@@ -276,7 +262,7 @@ class MimePart
 
 
 	/**
-	 * Converts a 8 bit header to a string.
+	 * MIME-encodes a string for use in a header, handling line length and folding.
 	 */
 	private static function encodeSequence(string $s, int &$offset = 0, ?int $type = null): string
 	{
@@ -301,7 +287,7 @@ class MimePart
 			'scheme' => 'B', // Q is broken
 			'input-charset' => 'UTF-8',
 			'output-charset' => 'UTF-8',
-		]);
+		]) ?: '';
 
 		$offset = strlen($s) - strrpos($s, "\n");
 		$s = substr($s, $old + 2); // adds ': '

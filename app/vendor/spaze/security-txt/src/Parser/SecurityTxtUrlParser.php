@@ -4,109 +4,49 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Parser;
 
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
+use Uri\WhatWg\Url;
+use Uri\WhatWg\UrlValidationError;
+use Uri\WhatWg\UrlValidationErrorType;
 
 final class SecurityTxtUrlParser
 {
 
 	/**
-	 * @return non-empty-lowercase-string
 	 * @throws SecurityTxtCannotParseHostnameException
 	 */
-	public function getHostFromUrl(string $url): string
+	public function getUrl(string $url): Url
 	{
-		// $url = https://example.com or https://example.com/foo
-		$components = parse_url($url);
-		if ($components !== false && isset($components['host']) && $components['host'] !== '') {
-			return strtolower($components['host']);
-		}
-
-		// $url = https:/example.com or https:/example.com/foo
-		if ($components !== false && isset($components['scheme'], $components['path']) && !isset($components['host'])) {
-			$host = parse_url("{$components['scheme']}:/{$components['path']}", PHP_URL_HOST);
-			if ($host !== false && $host !== null && $host !== '') {
-				return strtolower($host);
+		// $url = https://example.com or https://example.com/foo or https:/example.com or https:/example.com/foo
+		$parsed = Url::parse($url, null, $errors);
+		if ($parsed !== null) {
+			if ($parsed->getUnicodeHost() === null) {
+				throw new SecurityTxtCannotParseHostnameException($url);
 			}
+			return $parsed;
 		}
 
-		// $url = example.com or example.com/foo
-		$host = parse_url("//$url", PHP_URL_HOST);
-		if ($host !== false && $host !== null && $host !== '') {
-			return strtolower($host);
+		// $url = example.com or example.com/foo or /example.com or //example.com and so on
+		if (
+			is_array($errors)
+			&& array_any($errors, fn($error): bool => $error instanceof UrlValidationError && $error->type === UrlValidationErrorType::MissingSchemeNonRelativeUrl)
+		) {
+			return $this->getUrl("https://{$url}");
 		}
 
 		throw new SecurityTxtCannotParseHostnameException($url);
 	}
 
 
-	public function getRedirectUrl(string $redirect, string $current): string
-	{
-		$redirectParts = parse_url($redirect);
-		if ($redirectParts === false) {
-			return $redirect;
-		}
-		if (isset($redirectParts['scheme'])) {
-			return $redirect;
-		}
-
-		$currentParts = parse_url($current);
-		if (isset($redirectParts['host'])) {
-			if ($currentParts === false || !isset($currentParts['scheme'])) {
-				return $redirect;
-			}
-			return "{$currentParts['scheme']}:{$redirect}";
-		}
-
-		if ($currentParts === false) {
-			return $redirect;
-		}
-		if (!isset($redirectParts['path'])) {
-			$redirectParts['path'] = $currentParts['path'] ?? '/';
-		}
-		if (!isset($currentParts['path'])) {
-			$currentParts['path'] = '/';
-		}
-		if ($redirectParts['path'][0] === '/') {
-			$currentParts['path'] = $redirectParts['path'];
-		} else {
-			$currentParts['path'] = sprintf('%s/%s', rtrim(dirname($currentParts['path']), '/'), $redirectParts['path']);
-		}
-		if (isset($redirectParts['query'])) {
-			$currentParts['query'] = $redirectParts['query'];
-		} else {
-			unset($currentParts['query']);
-		}
-		if (isset($redirectParts['fragment'])) {
-			$currentParts['fragment'] = $redirectParts['fragment'];
-		} else {
-			unset($currentParts['fragment']);
-		}
-		return $this->getUrl($currentParts);
-	}
-
-
 	/**
-	 * @param array{scheme?:string, user?:string, pass?:string, host?:string, port?:int, path:string, query?:string, fragment?:string} $parts
+	 * @throws SecurityTxtCannotParseHostnameException
 	 */
-	private function getUrl(array $parts): string
+	public function getRedirectUrl(string $redirect, Url $currentUrl): Url
 	{
-		$url = '';
-		if (isset($parts['scheme'])) {
-			$url .= "{$parts['scheme']}://";
+		$redirectUrl = Url::parse($redirect, $currentUrl);
+		if ($redirectUrl === null) {
+			throw new SecurityTxtCannotParseHostnameException($redirect);
 		}
-		if (isset($parts['host'])) {
-			$url .= $parts['host'];
-		}
-		if (isset($parts['port'])) {
-			$url .= ":{$parts['port']}";
-		}
-		$url .= $parts['path'];
-		if (isset($parts['query'])) {
-			$url .= "?{$parts['query']}";
-		}
-		if (isset($parts['fragment'])) {
-			$url .= "#{$parts['fragment']}";
-		}
-		return $url;
+		return $redirectUrl;
 	}
 
 }

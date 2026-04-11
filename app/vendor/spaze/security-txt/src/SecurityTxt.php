@@ -41,6 +41,7 @@ use Spaze\SecurityTxt\Violations\SecurityTxtPolicyNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesCommonMistake;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesEmpty;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesWrongLanguageTags;
+use Uri\WhatWg\Url;
 
 final class SecurityTxt implements JsonSerializable
 {
@@ -371,8 +372,8 @@ final class SecurityTxt implements JsonSerializable
 			},
 			function () use ($csaf): void {
 				$this->checkUri($csaf->getUri(), SecurityTxtCsafNotUri::class, SecurityTxtCsafNotHttps::class);
-				$path = parse_url($csaf->getUri(), PHP_URL_PATH);
-				if (!is_string($path) || !str_ends_with($path, '/' . SecurityTxtCsaf::METADATA_FILENAME)) {
+				$url = Url::parse($csaf->getUri());
+				if ($url === null || !str_ends_with($url->getPath(), '/' . SecurityTxtCsaf::METADATA_FILENAME)) {
 					throw new SecurityTxtError(new SecurityTxtCsafWrongFile($csaf->getUri()));
 				}
 			},
@@ -458,11 +459,11 @@ final class SecurityTxt implements JsonSerializable
 	 */
 	private function checkUri(string $uri, string $notUriError, string $notHttpsError): void
 	{
-		$scheme = parse_url($uri, PHP_URL_SCHEME);
-		if ($scheme === false || $scheme === null) {
+		$url = Url::parse($uri);
+		if ($url === null) {
 			throw new SecurityTxtError(new $notUriError($uri));
 		}
-		if (strtolower($scheme) === 'http') {
+		if ($url->getScheme() === 'http') {
 			throw new SecurityTxtError(new $notHttpsError($uri));
 		}
 	}

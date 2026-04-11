@@ -5,6 +5,9 @@ namespace Spaze\SecurityTxt\Violations;
 
 use Spaze\SecurityTxt\Fields\SecurityTxtField;
 
+/**
+ * The "Possibel" typo in the class name is an intentional Easter egg.
+ */
 final class SecurityTxtPossibelFieldTypo extends SecurityTxtSpecViolation
 {
 

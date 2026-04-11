@@ -4,31 +4,33 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Fetcher\DnsLookup;
 
 use Override;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidTypeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtPhpDnsProvider implements SecurityTxtDnsProvider
 {
 
 	/**
 	 * @throws SecurityTxtHostNotFoundException
-	 * @throws SecurityTxtHostIpAddressInvalidTypeException
 	 */
 	#[Override]
-	public function getRecords(string $url, string $host): SecurityTxtDnsRecords
+	public function getRecords(Url $url, string $host): SecurityTxtDnsRecords
 	{
 		$records = @dns_get_record($host, DNS_A | DNS_AAAA); // intentionally silenced, converted to exception
 		if ($records === false) {
-			throw new SecurityTxtHostNotFoundException($url, $host);
+			throw new SecurityTxtHostNotFoundException($url->toUnicodeString(), $host);
 		}
-		$records = array_merge(...$records);
-		$ipRecord = $records['ip'] ?? null;
-		$ipv6Record = $records['ipv6'] ?? null;
-		if ($ipRecord !== null && !is_string($ipRecord)) {
-			throw new SecurityTxtHostIpAddressInvalidTypeException($host, get_debug_type($ipRecord), $url);
-		}
-		if ($ipv6Record !== null && !is_string($ipv6Record)) {
-			throw new SecurityTxtHostIpAddressInvalidTypeException($host, get_debug_type($ipv6Record), $url);
+		$ipRecord = $ipv6Record = null;
+		foreach ($records as $record) {
+			if ($ipRecord === null && isset($record['ip']) && is_string($record['ip'])) {
+				$ipRecord = $record['ip'];
+			}
+			if ($ipv6Record === null && isset($record['ipv6']) && is_string($record['ipv6'])) {
+				$ipv6Record = $record['ipv6'];
+			}
+			if ($ipRecord !== null && $ipv6Record !== null) {
+				break;
+			}
 		}
 		return new SecurityTxtDnsRecords($ipRecord, $ipv6Record);
 	}

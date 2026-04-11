@@ -3,7 +3,15 @@ declare(strict_types = 1);
 
 namespace Spaze\PhpInfo;
 
-class PhpInfo
+use function ob_get_clean;
+use function ob_start;
+use function phpinfo;
+use function preg_replace;
+use function sprintf;
+use function str_replace;
+use const INFO_ALL;
+
+final class PhpInfo
 {
 
 	private SensitiveValueSanitizer $sanitizer;
@@ -15,25 +23,34 @@ class PhpInfo
 	}
 
 
-	public function getHtml(): string
+	public function getHtml(int $flags = INFO_ALL): string
 	{
-		$error = 'Cannot get phpinfo() output';
+		$error = '<div id="phpinfo">Cannot get phpinfo() output</div>';
 		ob_start();
-		phpinfo();
-		$info = preg_replace('~^.*?(<table[^>]*>.*</table>).*$~s', '$1', ob_get_clean() ?: $error) ?? $error;
-		// Convert inline styles to classes defined in admin/info.css so we can drop CSP style-src 'unsafe-inline'
+		phpinfo($flags);
+		$info = ob_get_clean();
+		if ($info === false || $info === '') {
+			return $error;
+		}
+		$info = preg_replace('~^.*?(<table[^>]*>.*</table>).*$~s', '$1', $info);
+		if ($info === null) {
+			return $error;
+		}
+		// Convert inline styles to classes defined in src/assets/info.css so we can drop CSP style-src 'unsafe-inline'
 		$info = str_replace('style="color: #', 'class="color-', $info);
 		$info = $this->sanitizer->sanitize($info);
 		return sprintf('<div id="phpinfo">%s</div>', $info);
 	}
 
 
-	public function getFullPageHtml(): string
+	public function getFullPageHtml(int $flags = INFO_ALL): string
 	{
-		$error = 'Cannot get phpinfo() output';
 		ob_start();
-		phpinfo();
-		$info = ob_get_clean() ?: $error;
+		phpinfo($flags);
+		$info = ob_get_clean();
+		if ($info === false || $info === '') {
+			return 'Cannot get phpinfo() output';
+		}
 		return $this->sanitizer->sanitize($info);
 	}
 

@@ -5,21 +5,24 @@ namespace Spaze\SecurityTxt\Check;
 
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidTypeException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtConnectedToWrongIpAddressException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotPublicException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNoSchemeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlUnsupportedSchemeException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
-use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtCheckHost
 {
@@ -69,7 +72,6 @@ final class SecurityTxtCheckHost
 
 	public function __construct(
 		private readonly SecurityTxtParser $parser,
-		private readonly SecurityTxtUrlParser $urlParser,
 		private readonly SecurityTxtFetcher $fetcher,
 		private readonly SecurityTxtCheckHostResultFactory $resultFactory,
 	) {
@@ -77,26 +79,34 @@ final class SecurityTxtCheckHost
 
 
 	/**
+	 * @param Url $url Only the host and port parts of the URL will be used
+	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtHostNotFoundException
 	 * @throws SecurityTxtCannotParseHostnameException
+	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtCannotOpenUrlException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
-	 * @throws SecurityTxtHostIpAddressInvalidTypeException
+	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
-	 * @throws SecurityTxtUrlNoSchemeException
 	 * @throws SecurityTxtUrlUnsupportedSchemeException
+	 * @throws SecurityTxtConnectedToWrongIpAddressException
+	 * @throws SecurityTxtHostIpAddressInvalidException
+	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	public function check(string $url, ?int $expiresWarningThreshold = null, bool $strictMode = false, bool $requireTopLevelLocation = false, bool $noIpv6 = false): SecurityTxtCheckHostResult
+	public function check(Url $url, ?int $expiresWarningThreshold = null, bool $strictMode = false, bool $requireTopLevelLocation = false, bool $noIpv6 = false, ?int $maxAllowedRedirects = null): SecurityTxtCheckHostResult
 	{
 		$this->initFetcherCallbacks();
 
-		$host = $this->urlParser->getHostFromUrl($url);
+		$host = $url->getUnicodeHost();
+		if ($host === null) {
+			throw new SecurityTxtCannotParseHostnameException($url->toUnicodeString());
+		}
 		$this->callOnCallback($this->onHost, $host);
-		$fetchResult = $this->fetcher->fetchHost($host, $requireTopLevelLocation, $noIpv6);
+		$fetchResult = $this->fetcher->fetch($url, $requireTopLevelLocation, $noIpv6, $maxAllowedRedirects);
 		$parseResult = $this->parser->parseFetchResult($fetchResult, $expiresWarningThreshold, $strictMode);
 
 		foreach ($parseResult->getFetchErrors() as $error) {
