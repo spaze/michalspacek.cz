@@ -3,23 +3,35 @@ declare(strict_types = 1);
 
 namespace Spaze\PhpInfo;
 
-class SensitiveValueSanitizer
+use function is_string;
+use function session_id;
+use function session_name;
+use function strtr;
+use function urlencode;
+
+final class SensitiveValueSanitizer
 {
 
 	private bool $sanitizeSessionId = true;
-
-	private string $sanitizeWith = '[***]';
 
 	/** @var array<string, string> */
 	private array $sanitize = [];
 
 
+	public function __construct(private string $sanitizeWith = '[***]')
+	{
+	}
+
+
 	public function sanitize(string $info): string
 	{
 		$sanitize = [];
-		if ($this->sanitizeSessionId && $this->getSessionId() !== null) {
-			$sanitize[$this->getSessionId()] = $this->sanitizeWith;
-			$sanitize[urlencode($this->getSessionId())] = $this->sanitizeWith;
+		if ($this->sanitizeSessionId) {
+			$sessionId = $this->getSessionId();
+			if ($sessionId !== null) {
+				$sanitize[$sessionId] = $this->sanitizeWith;
+				$sanitize[urlencode($sessionId)] = $this->sanitizeWith;
+			}
 		}
 		return strtr($info, $this->sanitize + $sanitize);
 	}
@@ -28,12 +40,16 @@ class SensitiveValueSanitizer
 	private function getSessionId(): ?string
 	{
 		$sessionId = session_id();
-		if ($sessionId) {
+		if ($sessionId !== false && $sessionId !== '') {
 			return $sessionId;
-		} else {
-			$sessionId = $_COOKIE[session_name()] ?? null;
-			return is_string($sessionId) ? $sessionId : null;
 		}
+		$sessionName = session_name();
+		if ($sessionName === false) {
+			$sessionId = null;
+		} else {
+			$sessionId = $_COOKIE[$sessionName] ?? null;
+		}
+		return is_string($sessionId) && $sessionId !== '' ? $sessionId : null;
 	}
 
 
@@ -50,6 +66,9 @@ class SensitiveValueSanitizer
 
 	public function addSanitization(string $sanitize, ?string $with = null): self
 	{
+		if ($sanitize === '') {
+			return $this;
+		}
 		$this->sanitize[$sanitize] = $this->sanitize[urlencode($sanitize)] = $with ?? $this->sanitizeWith;
 		return $this;
 	}

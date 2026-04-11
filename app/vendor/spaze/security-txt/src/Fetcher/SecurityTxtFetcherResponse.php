@@ -14,6 +14,8 @@ final readonly class SecurityTxtFetcherResponse
 		private array $headers,
 		private string $contents,
 		private bool $isTruncated,
+		private string $ipAddress,
+		private SecurityTxtIpAddressType $ipAddressType,
 	) {
 	}
 
@@ -39,6 +41,18 @@ final readonly class SecurityTxtFetcherResponse
 	public function isTruncated(): bool
 	{
 		return $this->isTruncated;
+	}
+
+
+	public function getIpAddress(): string
+	{
+		return $this->ipAddress;
+	}
+
+
+	public function getIpAddressType(): SecurityTxtIpAddressType
+	{
+		return $this->ipAddressType;
 	}
 
 }

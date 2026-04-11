@@ -28,6 +28,7 @@ use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\SecurityTxtValidationLevel;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignatureVerifyResult;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
+use Throwable;
 
 final readonly class SecurityTxtJson
 {
@@ -54,9 +55,14 @@ final readonly class SecurityTxtJson
 			if (!isset($violation['params']) || !is_array($violation['params'])) {
 				throw new SecurityTxtCannotParseJsonException('params is missing or not an array');
 			}
-			$object = new $violation['class'](...$violation['params']);
-			if (!$object instanceof SecurityTxtSpecViolation) {
-				throw new SecurityTxtCannotParseJsonException(sprintf("class %s doesn't extend %s", $violation['class'], SecurityTxtSpecViolation::class));
+			$class = $violation['class'];
+			if (!is_subclass_of($class, SecurityTxtSpecViolation::class)) {
+				throw new SecurityTxtCannotParseJsonException(sprintf("class %s doesn't extend %s", $class, SecurityTxtSpecViolation::class));
+			}
+			try {
+				$object = new $class(...$violation['params']);
+			} catch (Throwable $e) {
+				throw new SecurityTxtCannotParseJsonException("Cannot create an object of class {$class}", previous: $e);
 			}
 			$objects[] = $object;
 		}
@@ -400,9 +406,14 @@ final readonly class SecurityTxtJson
 		if (!isset($values['error']['params']) || !is_array($values['error']['params'])) {
 			throw new SecurityTxtCannotParseJsonException('error > params is missing or not an array');
 		}
-		$exception = new $values['error']['class'](...$values['error']['params']);
-		if (!$exception instanceof SecurityTxtFetcherException) {
-			throw new SecurityTxtCannotParseJsonException(sprintf('The exception is %s, not %s', $exception::class, SecurityTxtFetcherException::class));
+		$class = $values['error']['class'];
+		if (!is_subclass_of($class, SecurityTxtFetcherException::class)) {
+			throw new SecurityTxtCannotParseJsonException(sprintf('The exception class %s is not a subclass of %s', $class, SecurityTxtFetcherException::class));
+		}
+		try {
+			$exception = new $class(...$values['error']['params']);
+		} catch (Throwable $e) {
+			throw new SecurityTxtCannotParseJsonException("Cannot create an object of class {$class}", previous: $e);
 		}
 		return $exception;
 	}

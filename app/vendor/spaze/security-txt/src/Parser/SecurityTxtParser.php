@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Parser;
 
+use LogicException;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
@@ -28,7 +29,9 @@ use Spaze\SecurityTxt\Parser\SplitProviders\SecurityTxtSplitProvider;
 use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\SecurityTxtValidationLevel;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignature;
+use Spaze\SecurityTxt\Validator\SecurityTxtValidateResult;
 use Spaze\SecurityTxt\Validator\SecurityTxtValidator;
+use Spaze\SecurityTxt\Violations\SecurityTxtContentNotUtf8;
 use Spaze\SecurityTxt\Violations\SecurityTxtLineNoEol;
 use Spaze\SecurityTxt\Violations\SecurityTxtPossibelFieldTypo;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
@@ -126,6 +129,25 @@ final class SecurityTxtParser
 		$this->expiresWarningThreshold = $expiresWarningThreshold;
 		$this->initFieldProcessors();
 		$this->lineErrors = $this->lineWarnings = [];
+		$securityTxt = new SecurityTxt(SecurityTxtValidationLevel::AllowInvalidValues);
+		if ($fileLocation !== null) {
+			$securityTxt->setFileLocation($fileLocation);
+		}
+		if (@preg_match('//u', $contents) === false) { // Intentionally silenced
+			$pregError = preg_last_error();
+			if ($pregError !== PREG_BAD_UTF8_ERROR) {
+				throw new LogicException('preg_match() failed with PCRE error code ' . $pregError);
+			}
+			return new SecurityTxtParseStringResult(
+				$securityTxt,
+				false,
+				$strictMode,
+				$this->expiresWarningThreshold,
+				$this->lineErrors,
+				$this->lineWarnings,
+				new SecurityTxtValidateResult([new SecurityTxtContentNotUtf8()], []),
+			);
+		}
 		$lines = $this->splitLines->splitLines($contents);
 		$securityTxtFields = array_combine(
 			array_map(function (SecurityTxtField $securityTxtField): string {
@@ -133,10 +155,6 @@ final class SecurityTxtParser
 			}, SecurityTxtField::cases()),
 			SecurityTxtField::cases(),
 		);
-		$securityTxt = new SecurityTxt(SecurityTxtValidationLevel::AllowInvalidValues);
-		if ($fileLocation !== null) {
-			$securityTxt->setFileLocation($fileLocation);
-		}
 		for ($lineNumber = 1; $lineNumber <= count($lines); $lineNumber++) {
 			$line = trim($lines[$lineNumber - 1]);
 			if (!str_ends_with($lines[$lineNumber - 1], "\n")) {

@@ -6,15 +6,19 @@ namespace Spaze\SecurityTxt\Fetcher;
 use LogicException;
 use Spaze\SecurityTxt\Fetcher\DnsLookup\SecurityTxtDnsProvider;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidTypeException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtConnectedToWrongIpAddressException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotPublicException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNoSchemeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlUnsupportedSchemeException;
 use Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherHttpClient;
@@ -26,6 +30,8 @@ use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeWrongCharset;
 use Spaze\SecurityTxt\Violations\SecurityTxtTopLevelDiffers;
 use Spaze\SecurityTxt\Violations\SecurityTxtTopLevelPathOnly;
 use Spaze\SecurityTxt\Violations\SecurityTxtWellKnownPathOnly;
+use Uri\WhatWg\InvalidUrlException;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtFetcher
 {
@@ -46,6 +52,9 @@ final class SecurityTxtFetcher
 	private array $onUrlNotFound = [];
 
 
+	/**
+	 * @param non-negative-int $maxAllowedRedirects
+	 */
 	public function __construct(
 		private readonly SecurityTxtFetcherHttpClient $httpClient,
 		private readonly SecurityTxtUrlParser $urlParser,
@@ -53,79 +62,93 @@ final class SecurityTxtFetcher
 		private readonly SecurityTxtDnsProvider $dnsLookupProvider,
 		private readonly int $maxAllowedRedirects = 5,
 	) {
-		if ($this->maxAllowedRedirects < 0) {
-			throw new LogicException('maxAllowedRedirects must be greater than or equal to 0 (0 means no redirects allowed)');
-		}
+		$this->validateMaxAllowedRedirects($this->maxAllowedRedirects);
 	}
 
 
 	/**
+	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtHostNotFoundException
+	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
-	 * @throws SecurityTxtHostIpAddressInvalidTypeException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
-	 * @throws SecurityTxtUrlNoSchemeException
 	 * @throws SecurityTxtUrlUnsupportedSchemeException
+	 * @throws SecurityTxtCannotParseHostnameException
+	 * @throws SecurityTxtConnectedToWrongIpAddressException
+	 * @throws SecurityTxtHostIpAddressInvalidException
+	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	public function fetchHost(string $host, bool $requireTopLevelLocation = false, bool $noIpv6 = false): SecurityTxtFetchResult
+	public function fetch(Url $url, bool $requireTopLevelLocation = false, bool $noIpv6 = false, ?int $maxAllowedRedirects = null): SecurityTxtFetchResult
 	{
-		$wellKnown = $this->fetchUrl('https://%s/.well-known/security.txt', $host, $noIpv6);
-		$topLevel = $this->fetchUrl('https://%s/security.txt', $host, $noIpv6);
+		$this->redirects = [];
+		if ($maxAllowedRedirects !== null) {
+			$this->validateMaxAllowedRedirects($maxAllowedRedirects);
+		}
+		$host = $url->getUnicodeHost();
+		if ($host === null) {
+			throw new SecurityTxtCannotParseHostnameException($url->toUnicodeString());
+		}
+		try {
+			$baseUrl = $url
+				->withUsername(null)
+				->withPassword(null)
+				->withScheme('https')
+				->withQuery(null)
+				->withFragment(null);
+			$wellKnownUrl = $baseUrl->withPath('/.well-known/security.txt');
+			$topLevelUrl = $baseUrl->withPath('/security.txt');
+		} catch (InvalidUrlException $e) {
+			throw new LogicException("Can't set URL components: {$e->getMessage()}", previous: $e);
+		}
+		$wellKnown = $this->fetchUrl($wellKnownUrl, $host, $noIpv6, $maxAllowedRedirects);
+		$topLevel = $this->fetchUrl($topLevelUrl, $host, $noIpv6, $maxAllowedRedirects);
 		return $this->getResult($wellKnown, $topLevel, $requireTopLevelLocation);
 	}
 
 
 	/**
+	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtHostNotFoundException
+	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
-	 * @throws SecurityTxtHostIpAddressInvalidTypeException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
-	 * @throws SecurityTxtUrlNoSchemeException
 	 * @throws SecurityTxtUrlUnsupportedSchemeException
+	 * @throws SecurityTxtCannotParseHostnameException
+	 * @throws SecurityTxtConnectedToWrongIpAddressException
+	 * @throws SecurityTxtHostIpAddressInvalidException
+	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	private function fetchUrl(string $urlTemplate, string $host, bool $noIpv6): SecurityTxtFetcherFetchHostResult
+	private function fetchUrl(Url $url, string $host, bool $noIpv6, ?int $maxAllowedRedirects): SecurityTxtFetcherFetchHostResult
 	{
-		$url = $this->buildUrl($urlTemplate, $host);
-		$finalUrl = $url;
-		$this->callOnCallback($this->onUrl, $url);
-		$dnsRecords = $this->dnsLookupProvider->getRecords($url, $host);
-		$ipRecord = $dnsRecords->getIpRecord();
-		$ipv6Record = $dnsRecords->getIpv6Record();
-		if ($noIpv6 && $ipv6Record !== null && $ipRecord === null) {
-			throw new SecurityTxtOnlyIpv6HostButIpv6DisabledException($host, $ipv6Record, $url);
-		}
-		if (!$noIpv6 && $ipv6Record !== null) {
-			$ipAddressUrl = "[{$ipv6Record}]";
-			$ipAddress = $ipv6Record;
-			$type = DNS_AAAA;
-		} elseif ($ipRecord !== null) {
-			$ipAddressUrl = $ipAddress = $ipRecord;
-			$type = DNS_A;
-		}
-		if (!isset($ipAddressUrl) || !isset($ipAddress) || !isset($type)) {
-			throw new SecurityTxtHostIpAddressNotFoundException($url, $host);
-		}
+		$finalUrl = $url->toUnicodeString();
+		$this->callOnCallback($this->onUrl, $url->toUnicodeString());
 		try {
-			$response = $this->getResponse($this->buildUrl($urlTemplate, $ipAddressUrl), $urlTemplate, $host, true, $finalUrl);
+			$response = $this->getResponse(new SecurityTxtFetcherUrl($url, $this->getRedirects($url)), $host, $url, $finalUrl, $noIpv6, $maxAllowedRedirects);
+			$ipAddress = $response->getIpAddress();
+			$ipAddressType = $response->getIpAddressType();
 		} catch (SecurityTxtUrlNotFoundException $e) {
 			$this->callOnCallback($this->onUrlNotFound, $e->getUrl());
 			$response = null;
+			$ipAddress = $e->getIpAddress();
+			$ipAddressType = SecurityTxtIpAddressType::from($e->getIpAddressType());
 		}
 		return new SecurityTxtFetcherFetchHostResult(
-			$url,
+			$url->toUnicodeString(),
 			$finalUrl,
 			$ipAddress,
-			$type,
+			$ipAddressType,
 			isset($e) ? $e->getCode() : 200,
 			$response,
 		);
@@ -133,30 +156,81 @@ final class SecurityTxtFetcher
 
 
 	/**
+	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtUrlNotFoundException
+	 * @throws SecurityTxtHostIpAddressNotFoundException
+	 * @throws SecurityTxtHostNotFoundException
+	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
+	 * @throws SecurityTxtHostIpAddressNotPublicException
+	 * @throws SecurityTxtCannotParseHostnameException
+	 * @throws SecurityTxtHostIpAddressInvalidException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
-	 * @throws SecurityTxtUrlNoSchemeException
 	 * @throws SecurityTxtUrlUnsupportedSchemeException
+	 * @throws SecurityTxtConnectedToWrongIpAddressException
+	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	private function getResponse(string $url, string $urlTemplate, string $host, bool $useHostForContextHost, string &$finalUrl): SecurityTxtFetcherResponse
+	private function getResponse(SecurityTxtFetcherUrl $url, string $host, Url $originalUrl, string &$finalUrl, bool $noIpv6, ?int $maxAllowedRedirects): SecurityTxtFetcherResponse
 	{
-		$builtUrl = $this->buildUrl($urlTemplate, $host);
-		$redirects = $this->redirects[$builtUrl] ?? [];
-		if ($redirects !== []) {
-			array_unshift($redirects, $builtUrl);
+		$ipRecord = $ipv6Record = null;
+		if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+			$ipRecord = $host;
+		} else {
+			if (preg_match('/^\[(.*)]$/', $host, $matches) === 1) {
+				$hostIpv6 = $matches[1];
+				if (filter_var($hostIpv6, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+					$ipv6Record = $hostIpv6;
+				}
+			}
 		}
-		$response = $this->httpClient->getResponse(new SecurityTxtFetcherUrl($url, $redirects), $useHostForContextHost ? $host : null);
+		if ($ipRecord === null && $ipv6Record === null) {
+			$dnsRecords = $this->dnsLookupProvider->getRecords($url->getUrl(), $host);
+			$ipRecord = $dnsRecords->getIpRecord();
+			$ipv6Record = $dnsRecords->getIpv6Record();
+		}
+		if ($noIpv6 && $ipv6Record !== null && $ipRecord === null) {
+			throw new SecurityTxtOnlyIpv6HostButIpv6DisabledException($host, $ipv6Record, $url->getUrl()->toUnicodeString());
+		}
+		if (!$noIpv6 && $ipv6Record !== null) {
+			$ipAddress = $ipv6Record;
+			$ipAddressType = SecurityTxtIpAddressType::V6;
+		} elseif ($ipRecord !== null) {
+			$ipAddress = $ipRecord;
+			$ipAddressType = SecurityTxtIpAddressType::V4;
+		}
+		if (!isset($ipAddress) || !isset($ipAddressType)) {
+			throw new SecurityTxtHostIpAddressNotFoundException($url->getUrl()->toUnicodeString(), $host);
+		}
+		$this->validateIpAddress($ipAddress, $ipAddressType, $host, $url);
+
+		$response = $this->httpClient->getResponse($url, $host, $ipAddress, $ipAddressType);
 		if ($response->getHttpCode() >= 400) {
-			throw new SecurityTxtUrlNotFoundException($url, $response->getHttpCode());
+			throw new SecurityTxtUrlNotFoundException($url->getUrl()->toUnicodeString(), $response->getHttpCode(), $ipAddress, $ipAddressType->value);
 		}
 		if ($response->getHttpCode() >= 300) {
-			return $this->redirect($url, $response, $urlTemplate, $host, $finalUrl);
+			return $this->redirect($url->getUrl(), $originalUrl, $response, $finalUrl, $noIpv6, $maxAllowedRedirects);
 		}
 		return $response;
+	}
+
+
+	/**
+	 * @throws SecurityTxtHostIpAddressInvalidException
+	 * @throws SecurityTxtHostIpAddressNotPublicException
+	 */
+	private function validateIpAddress(string $ipAddress, SecurityTxtIpAddressType $type, string $host, SecurityTxtFetcherUrl $url): void
+	{
+		$flag = $type === SecurityTxtIpAddressType::V4 ? FILTER_FLAG_IPV4 : FILTER_FLAG_IPV6;
+		if (filter_var($ipAddress, FILTER_VALIDATE_IP, $flag) === false) {
+			throw new SecurityTxtHostIpAddressInvalidException($host, $ipAddress, $type->value, $url->getUrl()->toUnicodeString());
+		}
+		if (filter_var($ipAddress, FILTER_VALIDATE_IP, $flag | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_GLOBAL_RANGE) === false) {
+			throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url->getUrl()->toUnicodeString());
+		}
 	}
 
 
@@ -169,7 +243,27 @@ final class SecurityTxtFetcher
 		$wellKnownContents = $wellKnown->isRegularHtmlPage() || $wellKnown->isTruncated() ? null : $wellKnown->getContents();
 		$topLevelContents = $topLevel->isRegularHtmlPage() || $topLevel->isTruncated() ? null : $topLevel->getContents();
 		if ($wellKnownContents === null && $topLevelContents === null) {
-			throw new SecurityTxtNotFoundException([$wellKnown, $topLevel], $this->redirects);
+			throw new SecurityTxtNotFoundException(
+				[
+					$wellKnown->getUrl() => [
+						'ip' => $wellKnown->getIpAddress(),
+						'type' => $wellKnown->getIpAddressType()->value,
+						'code' => $wellKnown->getHttpCode(),
+						'redirects' => $this->redirects[$wellKnown->getUrl()] ?? [],
+						'html' => $wellKnown->isRegularHtmlPage(),
+						'truncated' => $wellKnown->isTruncated(),
+					],
+					$topLevel->getUrl() => [
+						'ip' => $topLevel->getIpAddress(),
+						'type' => $topLevel->getIpAddressType()->value,
+						'code' => $topLevel->getHttpCode(),
+						'redirects' => $this->redirects[$topLevel->getUrl()] ?? [],
+						'html' => $topLevel->isRegularHtmlPage(),
+						'truncated' => $topLevel->isTruncated(),
+					],
+				],
+				$wellKnown->getUrl(),
+			);
 		} elseif ($wellKnownContents !== null && $topLevelContents === null) {
 			if ($requireTopLevelLocation) {
 				$warnings[] = new SecurityTxtWellKnownPathOnly();
@@ -225,12 +319,6 @@ final class SecurityTxtFetcher
 	}
 
 
-	private function buildUrl(string $urlTemplate, string $host): string
-	{
-		return sprintf($urlTemplate, $host);
-	}
-
-
 	/**
 	 * @param callable(string): void $onUrl
 	 */
@@ -268,30 +356,69 @@ final class SecurityTxtFetcher
 
 
 	/**
+	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
+	 * @throws SecurityTxtConnectedToWrongIpAddressException
+	 * @throws SecurityTxtHostIpAddressInvalidException
+	 * @throws SecurityTxtHostIpAddressNotPublicException
+	 * @throws SecurityTxtHostIpAddressNotFoundException
+	 * @throws SecurityTxtHostNotFoundException
+	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtTooManyRedirectsException
 	 * @throws SecurityTxtUrlNotFoundException
-	 * @throws SecurityTxtUrlNoSchemeException
 	 * @throws SecurityTxtUrlUnsupportedSchemeException
+	 * @throws SecurityTxtCannotParseHostnameException
+	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	private function redirect(string $url, SecurityTxtFetcherResponse $response, string $urlTemplate, string $host, string &$finalUrl): SecurityTxtFetcherResponse
+	private function redirect(Url $url, Url $originalUrl, SecurityTxtFetcherResponse $response, string &$finalUrl, bool $noIpv6, ?int $maxAllowedRedirects): SecurityTxtFetcherResponse
 	{
+		if ($maxAllowedRedirects === null) {
+			$maxAllowedRedirects = $this->maxAllowedRedirects;
+		}
 		$location = $response->getHeader('Location');
 		if ($location === null) {
-			throw new SecurityTxtNoLocationHeaderException($url, $response->getHttpCode());
+			throw new SecurityTxtNoLocationHeaderException($url->toUnicodeString(), $response->getHttpCode());
 		} else {
-			$originalUrl = $this->buildUrl($urlTemplate, $host);
-			$previousUrl = isset($this->redirects[$originalUrl]) && $this->redirects[$originalUrl] !== [] ? $this->redirects[$originalUrl][array_key_last($this->redirects[$originalUrl])] : $originalUrl;
+			$originalUrlString = $originalUrl->toUnicodeString();
+			$previousUrl = isset($this->redirects[$originalUrlString]) && $this->redirects[$originalUrlString] !== [] ? $this->redirects[$originalUrlString][array_key_last($this->redirects[$originalUrlString])] : $originalUrlString;
 			$this->callOnCallback($this->onRedirect, $previousUrl, $location);
-			$this->redirects[$originalUrl][] = $location;
-			$finalUrl = $location = $this->urlParser->getRedirectUrl($location, $url);
-			if (count($this->redirects[$originalUrl]) > $this->maxAllowedRedirects) {
-				throw new SecurityTxtTooManyRedirectsException($url, $this->redirects[$originalUrl], $this->maxAllowedRedirects);
+			$this->redirects[$originalUrlString][] = $location;
+			$locationUrl = $this->urlParser->getRedirectUrl($location, $url);
+			$finalUrl = $locationUrl->toUnicodeString();
+			if (count($this->redirects[$originalUrlString]) > $maxAllowedRedirects) {
+				throw new SecurityTxtTooManyRedirectsException($url->toUnicodeString(), $this->redirects[$originalUrlString], $maxAllowedRedirects);
 			}
-			return $this->getResponse($location, $urlTemplate, $host, false, $finalUrl);
+			$locationHost = $locationUrl->getUnicodeHost();
+			if ($locationHost === null) {
+				throw new SecurityTxtCannotParseHostnameException($locationUrl->toUnicodeString());
+			}
+			return $this->getResponse(new SecurityTxtFetcherUrl($locationUrl, $this->getRedirects($originalUrl)), $locationHost, $originalUrl, $finalUrl, $noIpv6, $maxAllowedRedirects);
+		}
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	private function getRedirects(Url $url): array
+	{
+		$urlString = $url->toUnicodeString();
+		$redirects = $this->redirects[$urlString] ?? [];
+		if ($redirects !== []) {
+			array_unshift($redirects, $urlString);
+		}
+		return $redirects;
+	}
+
+
+	private function validateMaxAllowedRedirects(int $maxAllowedRedirects): void
+	{
+		if ($maxAllowedRedirects < 0) {
+			throw new LogicException('maxAllowedRedirects must be greater than or equal to 0 (0 means no redirects allowed)');
 		}
 	}
 

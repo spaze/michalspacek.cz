@@ -17,26 +17,35 @@ Install the package with Composer:
 composer require spaze/security-txt
 ```
 
+# Requirements and supported versions
+
+| Version | Requirements                                                                                                                   | Notes                  |
+|---------|--------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| 1.x     | PHP 8.3, 8.4, 8.5<br/>+ optional curl extension to fetch from remote hosts<br/>+ optional gnupg extension to verify signatures | Current stable release |
+| 2.x     | PHP 8.5<br/>+ optional curl extension to fetch from remote hosts<br/>+ optional gnupg extension to verify signatures           | Unreleased             |
+
 # As a validator
 
 ## How does the validation work
 This package can validate `security.txt` file either by providing
 - the file contents as a string by calling `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseString()`
-- a hostname like `example.com` to `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseHost()`
-- a URL like `https://example.com/` to `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()`
+- a fetch result object of class `Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult` into `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseFetchResult()`
+  - the result object would possibly be stored or cached, or sent from a serverless service like AWS Lambda doing the fetch
+- a `Uri\WhatWg\Url` object to `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()`
+  - you can create the object with e.g. `new Uri\WhatWg\Url('https://example.com/')`
+  - only the host part (`example.com` in this case) and the port, if specified, will be used, the scheme, path etc. will be ignored
+  - `Uri\WhatWg\Url` is from the `Uri` extension, which is always available starting with PHP 8.5
 
 Each of the options above will call preceding method and add more validations which are only possible in that particular case.
 
-There's also a command line script in `bin` which uses `Spaze\SecurityTxt\Check\SecurityTxtCheckHostCli::check()` mostly just to add command line output to `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()`.
-
-If you want to decouple fetching the `security.txt` file and parsing it, there's also a possibility to pass a `SecurityTxtFetchResult` object to `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseFetchResult()`.
+There's also a command line script in `bin` which uses `Spaze\SecurityTxt\Check\SecurityTxtCheckHostCli::check()` mostly just to add command line output to `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()`, see "Command line usage" below.
 
 ## How to use the validator
 `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()` is probably what you'd want to use as it provides the most comprehensive checks, can pass a URL, not just a hostname, and also supports callbacks. It accepts these parameters:
 
-`string $url`
+`Uri\WhatWg\Url $url`
 
-A URL where the file will be looked for, you can pass just for example `https://example.com`, no need to use the full path to the `security.txt` file, because only the hostname of the URL will be used for further checks
+A URL where the file will be looked for, you can pass just `https://example.com`, no need to use the full path to the `security.txt` file as only the hostname and port, if specified, of the URL will be used for further checks
 
 `?int $expiresWarningThreshold = null`
 
@@ -53,6 +62,10 @@ When specified, the top-level `/security.txt` location must also exist (or be re
 `bool $noIpv6 = false`
 
 Because some environments do not support IPv6, looking at you GitHub Actions
+
+`?int $maxAllowedRedirects = null`
+
+Maximum number of redirects to follow when fetching `security.txt`. Set to `0` to disable redirects, `null` to use the default (`5`).
 
 `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()` returns a `Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult` object with some obvious and less obvious properties.
 The less obvious ones can be obtained with the following methods. All of them return an array of `SecurityTxtSpecViolation` descendants.
@@ -87,15 +100,40 @@ Returns `list<SecurityTxtSpecViolation>`, the list contains file-level warnings 
 ## Callbacks
 `SecurityTxtCheckHost::check()` supports callbacks that can be set with `SecurityTxtCheckHost::addOn*()` methods. You can use them to get the parsing information in "real time", and are used for example by the `bin/checksecuritytxt.php` script via the `\Spaze\SecurityTxt\Check\SecurityTxtCheckHostCli` class to print information as soon as it is available.
 
+## User agent
+When fetching the `security.txt` file, the library uses a default `User-Agent` HTTP header. The default value contains a link back to the GitHub repository, but it is recommended you use a custom `User-Agent` header.
+You can set it in `SecurityTxtFetcherCurlClient` constructor (the `$userAgent` parameter), and then pass the client object to `SecurityTxtFetcher` constructor as one of its arguments.
+
+## Maximum file size
+The size of the file is limited when fetching the contents from remote hosts. By default, the limit is 10 000 bytes, but you can change it in `SecurityTxtFetcherCurlClient` constructor (the `$maxResponseLength` parameter). Then, when creating `SecurityTxtFetcher`, pass that customized client as its HTTP client argument together with the other constructor arguments required by `SecurityTxtFetcher`.
+
+## DNS lookups
+DNS resolution is handled by `SecurityTxtPhpDnsProvider`, which uses PHP's built-in `dns_get_record()`. This function has no timeout parameter, the system DNS timeout applies.
+If you need explicit DNS timeout control, or would like to use for example DNS-over-HTTPS, you can add a custom provider, which implements the `SecurityTxtDnsProvider` interface,
+and then pass it to `SecurityTxtFetcher` in the `$dnsLookupProvider` parameter.
+
+## Signature verification
+This library verifies that the signature is a valid OpenPGP cleartext signature, but cannot verify whether the signing key is trustworthy, for example when the key is not in local keyring etc. As the [`security.txt` RFC](https://www.rfc-editor.org/rfc/rfc9116#name-digital-signature) puts it:
+"it is always the security researcher's responsibility to make sure the key being used is indeed one they trust." Verify the key fingerprint or key id out-of-band, for example by checking it against the company's website or other trusted sources.
+
 ## JSON
 The `Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult` object can be encoded to JSON with `json_encode()`,
-and decoded back with `Spaze\SecurityTxt\Check\SecurityTxtJson::createCheckHostResultFromJsonValues()`.
+and decoded back with `Spaze\SecurityTxt\Json\SecurityTxtJson::createCheckHostResultFromJsonValues()`.
 
-Exceptions can be recreated with `Spaze\SecurityTxt\Check\SecurityTxtJson::createFetcherExceptionFromJsonValues()`.
+The primary use case for JSON-encoded objects is a result cache. But JSON can also be used when you want to fetch `security.txt` using serverless services like AWS Lambda,
+and then process the fetch result yourself.
+
+If that's the case, then you may want to encode the `Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult` object created by `Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher::fetch()`.
+`Spaze\SecurityTxt\Json\SecurityTxtJson::createFetchResultFromJsonValues()` then decodes it back from JSON.
+
+Fetch exceptions can be recreated with `Spaze\SecurityTxt\Json\SecurityTxtJson::createFetcherExceptionFromJsonValues()`.
+
+JSON is not versioned. Newer versions of this library will make a best effort to decode JSON created by previous versions, but compatibility cannot be guaranteed across refactors or format changes.
 
 ## The other methods
-Both `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseString()` and `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseHost()` return a `Spaze\SecurityTxt\Parser\SecurityTxtParseResult` object with similar methods as what's described above for `SecurityTxtCheckHostResult`.
-The result returned from `parseHost()` also contains `Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult` object.
+The `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseString()` method returns a `Spaze\SecurityTxt\Parser\SecurityTxtParseStringResult` object.
+`Spaze\SecurityTxt\Parser\SecurityTxtParser::parseFetchResult()` returns a `Spaze\SecurityTxt\Parser\SecurityTxtParseHostResult` object, which also contains a `Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult` object.
+All the result objects have similar methods as what's described above for `SecurityTxtCheckHostResult`.
 
 # As a writer
 You can create a `security.txt` file programmatically:
@@ -200,7 +238,7 @@ checksecuritytxt.php <URL or hostname> [days] [--colors] [--strict] [--require-t
 ```
 
 Parameters:
-- `URL or hostname`: A hostname or a domain you want to check (e.g. `example.com`). If you provide a URL (e.g., `https://example.com/foo`), the script will extract and use only the hostname part anyway.
+- `URL or hostname`: A URL, a hostname or a domain you want to check. If you provide just a hostname or a domain (e.g. `example.com`) then it cannot contain a port. If you provide a full URL (e.g., `https://example.com:4433/foo`), the script will extract and use only the hostname part and port if specified.
 - `days`: If the file expires in less than *`days`* days, the script will print a warning.
 - `--colors`: Enables colored output using red, green, and other colors for better readability.
 - `--strict`: Upgrades all warnings to errors, enforcing stricter validation.
@@ -224,8 +262,10 @@ In general, you’ll need to follow these steps:
 2. Install this package using Composer.
 3. Run the `checksecuritytxt.php` script.
 
-GitHub Actions' `ubuntu-24.04` runner (also as `ubuntu-latest` at the time of writing) has PHP 8.3 preinstalled, so you can use `checksecuritytxt.php` without installing anything else, this lib can be used with PHP 8.3.
-But unfortunately the `gnupg` PHP extension is not available on GitHub runners so you won't be able to verify the file signatures.
+GitHub Actions' `ubuntu-24.04` runner (also as `ubuntu-latest` at the time of writing) has PHP 8.3 preinstalled, so you can use `checksecuritytxt.php` without installing anything else, the version 1.x of this lib can be used with PHP 8.3.
+Version 2.x requires PHP 8.5 or newer, and would require `ubuntu-26.04` which comes with PHP 8.5. You can also use [the `setup-php` GitHub action](https://github.com/marketplace/actions/setup-php-action) to install the required PHP version.
+
+But unfortunately the `gnupg` PHP extension is not available on GitHub runners by default so you won't be able to verify the file signatures with just the GitHub-provided PHP.
 If you want to verify signatures you'll need to use [the `setup-php` GitHub action](https://github.com/marketplace/actions/setup-php-action) which can also set up the extension.
 
 You can use my own checks as a template or for inspiration; see [the `securitytxt.yml` file](https://github.com/spaze/michalspacek.cz/blob/main/.github/workflows/securitytxt.yml) in my repository.

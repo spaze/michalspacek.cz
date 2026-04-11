@@ -57,7 +57,7 @@ final class HomepagePresenter extends BasePresenter
 
 		$this->template->ssid = $this->ssid;
 		$this->template->error = $error;
-		$this->template->keys = $keys !== [] && $error === null ? $keys : null;
+		$this->template->keys = $keys !== [] ? $keys : null;
 		switch ($format) {
 			case 'text':
 				$this->httpResponse->setContentType('text/plain');

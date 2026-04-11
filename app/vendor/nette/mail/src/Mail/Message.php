@@ -1,22 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Mail;
 
 use Nette;
 use Nette\Utils\Strings;
-use function addcslashes, array_map, array_reverse, basename, date, explode, finfo_buffer, finfo_open, implode, is_numeric, ltrim, php_uname, preg_match, preg_replace, rtrim, str_replace, strcasecmp, stripslashes, strlen, substr, substr_replace, trim, urldecode;
-use const FILEINFO_MIME_TYPE;
+use function addcslashes, array_map, array_reverse, basename, date, explode, finfo_buffer, finfo_open, implode, is_array, is_numeric, is_string, ltrim, php_uname, preg_match, preg_replace, rtrim, str_replace, strcasecmp, stripslashes, strlen, substr, substr_replace, trim, urldecode;
 
 
 /**
- * Mail provides functionality to compose and send both text and MIME-compliant multipart email messages.
+ * Represents an email message with support for HTML body, attachments, and embedded files.
  *
  * @property-deprecated   string $subject
  * @property-deprecated   string $htmlBody
@@ -38,12 +35,16 @@ class Message extends MimePart
 	#[\Deprecated('use Message::Low')]
 	public const LOW = self::Low;
 
+	/** @var array<string, string> */
 	public static array $defaultHeaders = [
 		'MIME-Version' => '1.0',
 		'X-Mailer' => 'Nette Framework',
 	];
 
+	/** @var list<MimePart> */
 	private array $attachments = [];
+
+	/** @var array<MimePart> */
 	private array $inlines = [];
 	private string $htmlBody = '';
 
@@ -70,10 +71,12 @@ class Message extends MimePart
 
 	/**
 	 * Returns the sender of the message.
+	 * @return ?array<string, ?string>
 	 */
 	public function getFrom(): ?array
 	{
-		return $this->getHeader('From');
+		$value = $this->getHeader('From');
+		return is_array($value) ? $value : null;
 	}
 
 
@@ -87,9 +90,6 @@ class Message extends MimePart
 	}
 
 
-	/**
-	 * Sets the subject of the message.
-	 */
 	public function setSubject(string $subject): static
 	{
 		$this->setHeader('Subject', $subject);
@@ -97,12 +97,10 @@ class Message extends MimePart
 	}
 
 
-	/**
-	 * Returns the subject of the message.
-	 */
 	public function getSubject(): ?string
 	{
-		return $this->getHeader('Subject');
+		$value = $this->getHeader('Subject');
+		return is_string($value) ? $value : null;
 	}
 
 
@@ -138,6 +136,7 @@ class Message extends MimePart
 
 	/**
 	 * Formats recipient email.
+	 * @return array<string, ?string>
 	 */
 	private function formatEmail(string $email, ?string $name = null): array
 	{
@@ -154,9 +153,6 @@ class Message extends MimePart
 	}
 
 
-	/**
-	 * Sets the Return-Path header of the message.
-	 */
 	public function setReturnPath(string $email): static
 	{
 		$this->setHeader('Return-Path', $email);
@@ -164,18 +160,13 @@ class Message extends MimePart
 	}
 
 
-	/**
-	 * Returns the Return-Path header.
-	 */
 	public function getReturnPath(): ?string
 	{
-		return $this->getHeader('Return-Path');
+		$value = $this->getHeader('Return-Path');
+		return is_string($value) ? $value : null;
 	}
 
 
-	/**
-	 * Sets email priority.
-	 */
 	public function setPriority(int $priority): static
 	{
 		$this->setHeader('X-Priority', (string) $priority);
@@ -183,9 +174,6 @@ class Message extends MimePart
 	}
 
 
-	/**
-	 * Returns email priority.
-	 */
 	public function getPriority(): ?int
 	{
 		$priority = $this->getHeader('X-Priority');
@@ -194,7 +182,9 @@ class Message extends MimePart
 
 
 	/**
-	 * Sets HTML body.
+	 * Sets HTML body. If $basePath is provided, local images referenced in the HTML
+	 * are automatically embedded as inline attachments with their src rewritten to cid: URIs.
+	 * Also sets the subject from the HTML <title> if not already set, and auto-generates a plain-text alternative.
 	 */
 	public function setHtmlBody(string $html, ?string $basePath = null): static
 	{
@@ -215,7 +205,8 @@ class Message extends MimePart
 			foreach (array_reverse($matches) as $m) {
 				$file = rtrim($basePath, '/\\') . '/' . (isset($m[4]) ? $m[4][0] : urldecode($m[3][0]));
 				if (!isset($cids[$file])) {
-					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader('Content-ID'), 1, -1);
+					$contentId = $this->addEmbeddedFile($file)->getHeader('Content-ID');
+					$cids[$file] = is_string($contentId) ? substr($contentId, 1, -1) : '';
 				}
 
 				$html = substr_replace(
@@ -243,9 +234,6 @@ class Message extends MimePart
 	}
 
 
-	/**
-	 * Gets HTML body.
-	 */
 	public function getHtmlBody(): string
 	{
 		return $this->htmlBody;
@@ -253,7 +241,8 @@ class Message extends MimePart
 
 
 	/**
-	 * Adds embedded file.
+	 * Adds an embedded (inline) file. If $content is null, the file is read from disk.
+	 * In that case $file is the path; otherwise $file is used as the filename.
 	 */
 	public function addEmbeddedFile(string $file, ?string $content = null, ?string $contentType = null): MimePart
 	{
@@ -263,7 +252,7 @@ class Message extends MimePart
 
 
 	/**
-	 * Adds inlined Mime Part.
+	 * Adds a pre-built MIME part as an inline (embedded) attachment.
 	 */
 	public function addInlinePart(MimePart $part): static
 	{
@@ -273,7 +262,8 @@ class Message extends MimePart
 
 
 	/**
-	 * Adds attachment.
+	 * Adds an attachment. If $content is null, the file is read from disk.
+	 * In that case $file is the path; otherwise $file is used as the filename.
 	 */
 	public function addAttachment(string $file, ?string $content = null, ?string $contentType = null): MimePart
 	{
@@ -282,8 +272,7 @@ class Message extends MimePart
 
 
 	/**
-	 * Gets all email attachments.
-	 * @return MimePart[]
+	 * @return list<MimePart>
 	 */
 	public function getAttachments(): array
 	{
@@ -308,7 +297,9 @@ class Message extends MimePart
 		}
 
 		if (!$contentType) {
-			$contentType = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $content);
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$contentType = $finfo ? finfo_buffer($finfo, $content) : false;
+			$contentType = $contentType ?: 'application/octet-stream';
 		}
 
 		if (!strcasecmp($contentType, 'message/rfc822')) { // not allowed for attached files
@@ -386,7 +377,7 @@ class Message extends MimePart
 
 
 	/**
-	 * Builds text content.
+	 * Generates a plain-text alternative from HTML.
 	 */
 	protected function buildText(string $html): string
 	{

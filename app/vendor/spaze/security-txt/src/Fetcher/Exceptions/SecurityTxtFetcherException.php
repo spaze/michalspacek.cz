@@ -15,6 +15,7 @@ abstract class SecurityTxtFetcherException extends Exception implements JsonSeri
 	 * @param list<scalar|array<array-key, scalar|array<array-key, scalar|list<string>>>> $constructorParams
 	 * @param list<string> $messageValues
 	 * @param list<string> $redirects
+	 * @throws Throwable
 	 */
 	public function __construct(
 		private readonly array $constructorParams,

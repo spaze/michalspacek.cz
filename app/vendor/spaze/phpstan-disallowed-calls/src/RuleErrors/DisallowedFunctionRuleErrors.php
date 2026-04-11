@@ -80,13 +80,21 @@ class DisallowedFunctionRuleErrors
 	 */
 	private function getErrors(Name $name, Scope $scope, ?FuncCall $node, ?Name $displayName, array $disallowedCalls): array
 	{
-		if ($this->reflectionProvider->hasFunction($name, $scope)) {
-			$functionReflection = $this->reflectionProvider->getFunction($name, $scope);
-			$definedIn = $functionReflection->isBuiltin() ? null : $functionReflection->getFileName();
-		} else {
-			$definedIn = null;
+		if (!$this->reflectionProvider->hasFunction($name, $scope)) {
+			return [];
 		}
-		return $this->disallowedCallsRuleErrors->get($node, $scope, (string)$name, (string)($displayName ?? $name), $definedIn, $disallowedCalls, ErrorIdentifiers::DISALLOWED_FUNCTION);
+
+		$functionReflection = $this->reflectionProvider->getFunction($name, $scope);
+		return $this->disallowedCallsRuleErrors->get(
+			$node,
+			$scope,
+			(string)$name,
+			(string)($displayName ?? $name),
+			$functionReflection->getFileName(),
+			$functionReflection->isBuiltin(),
+			$disallowedCalls,
+			ErrorIdentifiers::DISALLOWED_FUNCTION,
+		);
 	}
 
 }

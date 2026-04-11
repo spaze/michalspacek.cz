@@ -18,14 +18,11 @@ final readonly class SecurityTxtFetcherFetchHostResult
 	private bool $isRegularHtmlPage;
 
 
-	/**
-	 * @phpstan-param 1|134217728 $ipAddressType DNS_A or DNS_AAAA
-	 */
 	public function __construct(
 		private string $url,
 		private string $finalUrl,
 		private string $ipAddress,
-		private int $ipAddressType,
+		private SecurityTxtIpAddressType $ipAddressType,
 		private int $httpCode,
 		?SecurityTxtFetcherResponse $response,
 	) {
@@ -63,10 +60,7 @@ final readonly class SecurityTxtFetcherFetchHostResult
 	}
 
 
-	/**
-	 * @phpstan-return 1|134217728 DNS_A or DNS_AAAA
-	 */
-	public function getIpAddressType(): int
+	public function getIpAddressType(): SecurityTxtIpAddressType
 	{
 		return $this->ipAddressType;
 	}
