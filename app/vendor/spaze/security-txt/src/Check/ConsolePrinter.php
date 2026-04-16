@@ -18,6 +18,12 @@ final class ConsolePrinter
 	}
 
 
+	public function ok(string $message): void
+	{
+		$this->print($this->colorGreen('[OK]'), $message);
+	}
+
+
 	public function info(string $message): void
 	{
 		$this->print($this->colorDarkGray('[Info]'), $message);

@@ -50,10 +50,7 @@ $fetcher = new SecurityTxtFetcher($curlClient, $urlParser, $splitLines, $dnsProv
 $consolePrinter = new ConsolePrinter();
 $checkHostResultFactory = new SecurityTxtCheckHostResultFactory();
 $checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory);
-$exit = function (int $status): void {
-	exit($status);
-};
-$checkHostCli = new SecurityTxtCheckHostCli($consolePrinter, $checkHost, $exit);
+$checkHostCli = new SecurityTxtCheckHostCli($consolePrinter, $checkHost, exit(...));
 
 /** @var list<string> $args */
 $args = is_array($_SERVER['argv']) ? $_SERVER['argv'] : [];
@@ -66,12 +63,14 @@ $checkHostCli->check(
 	$url,
 	isset($args[2]) && $args[2] !== '' ? (int)$args[2] : null,
 	in_array('--colors', $args, true),
+	in_array('--verbose', $args, true),
 	in_array('--strict', $args, true),
 	in_array('--require-top-level-location', $args, true),
 	in_array('--no-ipv6', $args, true),
 	in_array('--help', $args, true) || in_array('-h', $args, true),
-	'Usage: ' . basename(__FILE__) . " <URL or hostname> [days] [--colors] [--strict] [--require-top-level-location] [--no-ipv6] [-h|--help]\n"
+	'Usage: ' . basename(__FILE__) . " <URL or hostname> [days] [--colors] [--verbose] [--strict] [--require-top-level-location] [--no-ipv6] [-h|--help]\n"
 		. "If <days> is specified, and if the file expires in less than <days>, the script will print a warning.\n"
+		. "When --verbose is specified, additional details such as loaded URLs and redirects are printed.\n"
 		. "When --require-top-level-location is specified, the /security.txt location must also exist or be redirected, otherwise a warning will be issued.\n"
 		. "The check will return 1 instead of 0 if any of the following conditions are true: the file has expired, has errors, or has warnings when using --strict.",
 );

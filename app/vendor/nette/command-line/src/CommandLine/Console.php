@@ -28,6 +28,13 @@ class Console
 	}
 
 
+	/**
+	 * Wraps string in ANSI color codes, or returns plain string when colors are disabled.
+	 * Color format: 'foreground' or 'foreground/background' (e.g. 'red', 'white/blue').
+	 * When $s is null, emits the escape code without a reset sequence.
+	 * Available colors: black, gray, silver, white, navy, blue, green, lime,
+	 * teal, aqua, maroon, red, purple, fuchsia, olive, yellow.
+	 */
 	public function color(?string $color, ?string $s = null): string
 	{
 		$colors = [
@@ -50,14 +57,27 @@ class Console
 	}
 
 
+	/**
+	 * Detects whether the terminal supports ANSI colors.
+	 * Returns false when NO_COLOR is set, or when not running in a CLI TTY.
+	 * FORCE_COLOR overrides the TTY check.
+	 */
 	public static function detectColors(): bool
 	{
 		return (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg')
 			&& getenv('NO_COLOR') === false // https://no-color.org
-			&& (getenv('FORCE_COLOR')
-				|| (function_exists('sapi_windows_vt100_support')
-					? sapi_windows_vt100_support(STDOUT)
-					: @stream_isatty(STDOUT)) // @ may trigger error 'cannot cast a filtered stream on this system'
-			);
+			&& (getenv('FORCE_COLOR') || self::detectTerminal());
+	}
+
+
+	/**
+	 * Detects whether the output is an interactive terminal.
+	 * Useful for auto-disabling features that only make sense in a TTY
+	 * (progress indicators, line-rewriting output, interactive prompts).
+	 */
+	public static function detectTerminal(): bool
+	{
+		return (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg')
+			&& @stream_isatty(STDOUT); // @ may trigger error 'cannot cast a filtered stream on this system'
 	}
 }

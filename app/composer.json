@@ -41,7 +41,7 @@
 		"spaze/mysql-session-handler": "^3.2",
 		"spaze/nonce-generator": "^4.0",
 		"spaze/phpinfo": "^2.0.1",
-		"spaze/security-txt": "dev-main",
+		"spaze/security-txt": "^2.0",
 		"spaze/sri-macros": "^2.0",
 		"spaze/svg-icons-latte": "^1.0",
 		"symfony/cache": "^8.0",

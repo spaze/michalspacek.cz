@@ -75,6 +75,7 @@ final class SecurityTxtCheckHost
 		private readonly SecurityTxtFetcher $fetcher,
 		private readonly SecurityTxtCheckHostResultFactory $resultFactory,
 	) {
+		$this->initFetcherCallbacks();
 	}
 
 
@@ -99,8 +100,6 @@ final class SecurityTxtCheckHost
 	 */
 	public function check(Url $url, ?int $expiresWarningThreshold = null, bool $strictMode = false, bool $requireTopLevelLocation = false, bool $noIpv6 = false, ?int $maxAllowedRedirects = null): SecurityTxtCheckHostResult
 	{
-		$this->initFetcherCallbacks();
-
 		$host = $url->getUnicodeHost();
 		if ($host === null) {
 			throw new SecurityTxtCannotParseHostnameException($url->toUnicodeString());
