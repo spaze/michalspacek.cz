@@ -355,7 +355,7 @@ return array(
     'Nette\\CommandLine\\Console' => $vendorDir . '/nette/command-line/src/CommandLine/Console.php',
     'Nette\\CommandLine\\Option' => $vendorDir . '/nette/command-line/src/CommandLine/Option.php',
     'Nette\\CommandLine\\Parser' => $vendorDir . '/nette/command-line/src/CommandLine/Parser.php',
-    'Nette\\CommandLine\\ValueType' => $vendorDir . '/nette/command-line/src/CommandLine/ValueType.php',
+    'Nette\\CommandLine\\ValueType' => $vendorDir . '/nette/command-line/src/CommandLine/enums.php',
     'Nette\\ComponentModel\\ArrayAccess' => $vendorDir . '/nette/component-model/src/ComponentModel/ArrayAccess.php',
     'Nette\\ComponentModel\\Component' => $vendorDir . '/nette/component-model/src/ComponentModel/Component.php',
     'Nette\\ComponentModel\\Container' => $vendorDir . '/nette/component-model/src/ComponentModel/Container.php',

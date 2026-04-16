@@ -642,7 +642,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\CommandLine\\Console' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Console.php',
         'Nette\\CommandLine\\Option' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Option.php',
         'Nette\\CommandLine\\Parser' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parser.php',
-        'Nette\\CommandLine\\ValueType' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/ValueType.php',
+        'Nette\\CommandLine\\ValueType' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/enums.php',
         'Nette\\ComponentModel\\ArrayAccess' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/ArrayAccess.php',
         'Nette\\ComponentModel\\Component' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/Component.php',
         'Nette\\ComponentModel\\Container' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/Container.php',

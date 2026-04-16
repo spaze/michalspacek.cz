@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'spaze/michalspacek.cz',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '9d74619cbeb44f300609e740713387144da415cf',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -137,9 +137,9 @@
             'dev_requirement' => false,
         ),
         'nette/command-line' => array(
-            'pretty_version' => 'v1.9.1',
-            'version' => '1.9.1.0',
-            'reference' => '026b1005a64f5bf3c7f67a7566c3a78a05919a7a',
+            'pretty_version' => 'v1.9.2',
+            'version' => '1.9.2.0',
+            'reference' => '42a6ea85f8b203ca1bd793327c526009c2525cc7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/command-line',
             'aliases' => array(),
@@ -365,9 +365,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '2.1.46',
-            'version' => '2.1.46.0',
-            'reference' => 'a193923fc2d6325ef4e741cf3af8c3e8f54dbf25',
+            'pretty_version' => '2.1.48',
+            'version' => '2.1.48.0',
+            'reference' => '231397213efb7c0a066ee024b5c3c87f2d3adfa0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -457,7 +457,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'd830a949e5c180e97c2245221daf8b589552cc2c',
+            'reference' => 'add96a0632d5d1b3c56a98f27844ba945aae7360',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -520,9 +520,9 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '9d74619cbeb44f300609e740713387144da415cf',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -583,14 +583,12 @@
             'dev_requirement' => true,
         ),
         'spaze/security-txt' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'c0f9bcafd1d23aa0d6c7f07de4e5410a08edaeab',
+            'pretty_version' => 'v2.0.0',
+            'version' => '2.0.0.0',
+            'reference' => '499b8e9578b86a43eeff38eed485ae6fc0d4a5b3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/security-txt',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'spaze/sri-macros' => array(

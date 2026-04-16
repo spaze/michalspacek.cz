@@ -60,6 +60,10 @@ All errors and warnings are `SecurityTxtSpecViolation` subclasses in `src/Violat
 
 Tests use [Nette Tester](https://tester.nette.org/) (`.phpt` files). Each test file is a standalone PHP script ending with `(new FooTest())->run()`. The `tests/bootstrap.php` sets up the autoloader and provides a `needsInternet()` helper that skips network-dependent tests unless `TEST_CASE_RUNNER_INCLUDE_SKIPPED=1`.
 
+When an assertion fails, Tester writes the full actual and expected values to `tests/*/output/FooTest.actual` and `tests/*/output/FooTest.expected` and prints a `diff` command to compare them — use that instead of reading the truncated terminal output. These files are regenerated on every run; do not edit them.
+
+Inline heredoc expected strings in `.phpt` files contain **raw ANSI escape characters** (not `\033[` literals). Text editors and the Edit tool show them as plain `[1;32m` etc., but the bytes are real ESC (0x1b) sequences. Replacing them requires handling the actual bytes — use Python with `ESC = '\033'` and string concatenation rather than text substitution.
+
 ### Constraints
 
 - `parse_url()` is banned — use `Uri\WhatWg\Url` (PHP 8.5 built-in, WhatWG URL standard). Enforced by PHPStan via `phpstan.neon`.
