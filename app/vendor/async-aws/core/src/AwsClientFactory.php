@@ -24,11 +24,13 @@ use AsyncAws\Core\Exception\InvalidArgument;
 use AsyncAws\Core\Exception\MissingDependency;
 use AsyncAws\Core\Sts\StsClient;
 use AsyncAws\DynamoDb\DynamoDbClient;
+use AsyncAws\Ec2\Ec2Client;
 use AsyncAws\Ecr\EcrClient;
 use AsyncAws\ElastiCache\ElastiCacheClient;
 use AsyncAws\EventBridge\EventBridgeClient;
 use AsyncAws\Firehose\FirehoseClient;
 use AsyncAws\Iam\IamClient;
+use AsyncAws\ImageBuilder\ImageBuilderClient;
 use AsyncAws\Iot\IotClient;
 use AsyncAws\IotData\IotDataClient;
 use AsyncAws\Kinesis\KinesisClient;
@@ -264,6 +266,19 @@ class AwsClientFactory
         return $this->serviceCache[__METHOD__];
     }
 
+    public function ec2(): Ec2Client
+    {
+        if (!class_exists(Ec2Client::class)) {
+            throw MissingDependency::create('async-aws/ec2', 'EC2');
+        }
+
+        if (!isset($this->serviceCache[__METHOD__])) {
+            $this->serviceCache[__METHOD__] = new Ec2Client($this->configuration, $this->credentialProvider, $this->httpClient, $this->logger);
+        }
+
+        return $this->serviceCache[__METHOD__];
+    }
+
     public function ecr(): EcrClient
     {
         if (!class_exists(EcrClient::class)) {
@@ -324,6 +339,19 @@ class AwsClientFactory
 
         if (!isset($this->serviceCache[__METHOD__])) {
             $this->serviceCache[__METHOD__] = new IamClient($this->configuration, $this->credentialProvider, $this->httpClient, $this->logger);
+        }
+
+        return $this->serviceCache[__METHOD__];
+    }
+
+    public function imageBuilder(): ImageBuilderClient
+    {
+        if (!class_exists(ImageBuilderClient::class)) {
+            throw MissingDependency::create('async-aws/image-builder', 'ImageBuilder');
+        }
+
+        if (!isset($this->serviceCache[__METHOD__])) {
+            $this->serviceCache[__METHOD__] = new ImageBuilderClient($this->configuration, $this->credentialProvider, $this->httpClient, $this->logger);
         }
 
         return $this->serviceCache[__METHOD__];
