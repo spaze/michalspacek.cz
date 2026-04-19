@@ -100,8 +100,8 @@ parameters:
 			errorTip: 'The WHATWG URL Living Standard is followed by web browsers, unlike RFC 3986 which is used by Uri\Rfc3986\Url'
 
 includes:
-	- vendor/spaze/phpstan-disallowed-calls/extension.neon
-	- vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
-	- vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
-	- vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
-	- vendor/spaze/phpstan-disallowed-calls-nette/disallowed-dangerous-calls.neon
+	- vendor-dev/vendor/spaze/phpstan-disallowed-calls/extension.neon
+	- vendor-dev/vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+	- vendor-dev/vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+	- vendor-dev/vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
+	- vendor-dev/vendor/spaze/phpstan-disallowed-calls-nette/disallowed-dangerous-calls.neon

@@ -8,7 +8,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'd507e002f7fce7f0c6dbf1f22edcb902' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/functions.php',
     );
@@ -18,7 +17,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'Tracy\\' => 6,
             'Texy\\' => 5,
-            'Tester\\' => 7,
         ),
         'S' => 
         array (
@@ -36,15 +34,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\SecurityTxt\\' => 18,
             'Spaze\\PhpInfo\\' => 14,
-            'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
-            'Spaze\\PHPCSPhar\\' => 16,
             'Spaze\\NonceGenerator\\' => 21,
             'Spaze\\Exports\\' => 14,
             'Spaze\\Encryption\\' => 17,
             'Spaze\\ContentSecurityPolicy\\' => 28,
-            'Spaze\\CodingStandard\\' => 21,
-            'SlevomatCodingStandard\\' => 23,
-            'ShipMonk\\ComposerDependencyAnalyser\\' => 36,
         ),
         'P' => 
         array (
@@ -54,10 +47,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
-            'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => 40,
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
-            'PHPStan\\PhpDocParser\\' => 21,
-            'PHPStan\\' => 8,
         ),
         'N' => 
         array (
@@ -70,10 +60,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'L' => 
         array (
             'Latte\\' => 6,
-        ),
-        'J' => 
-        array (
-            'JetBrains\\PhpStorm\\' => 19,
         ),
         'I' => 
         array (
@@ -99,10 +85,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Texy\\' => 
         array (
             0 => __DIR__ . '/..' . '/texy/texy/src/Texy',
-        ),
-        'Tester\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/nette/tester/src',
         ),
         'Symfony\\Contracts\\Translation\\' => 
         array (
@@ -160,14 +142,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/spaze/phpinfo/src',
         ),
-        'Spaze\\PHPStan\\Rules\\Disallowed\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spaze/phpstan-disallowed-calls/src',
-        ),
-        'Spaze\\PHPCSPhar\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spaze/phpcs-phar/src',
-        ),
         'Spaze\\NonceGenerator\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/nonce-generator/src',
@@ -183,18 +157,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\ContentSecurityPolicy\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
-        ),
-        'Spaze\\CodingStandard\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spaze/coding-standard/src',
-        ),
-        'SlevomatCodingStandard\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/slevomat/coding-standard/SlevomatCodingStandard',
-        ),
-        'ShipMonk\\ComposerDependencyAnalyser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/shipmonk/composer-dependency-analyser/src',
         ),
         'Psr\\Log\\' => 
         array (
@@ -220,23 +182,9 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-highlighter/src',
-        ),
         'PHP_Parallel_Lint\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
-        ),
-        'PHPStan\\PhpDocParser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
-        ),
-        'PHPStan\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpstan/phpstan-strict-rules/src',
-            1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
-            2 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
         ),
         'Nette\\' => 
         array (
@@ -266,10 +214,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/latte/latte/src/Latte',
         ),
-        'JetBrains\\PhpStorm\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/jetbrains/phpstorm-attributes/src',
-        ),
         'IPLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/mlocati/ip-lib/src',
@@ -294,42 +238,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'JakubOnderka\\PhpParallelLint\\Application' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Application.php',
-        'JakubOnderka\\PhpParallelLint\\ArrayIterator' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Settings.php',
-        'JakubOnderka\\PhpParallelLint\\Blame' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Error.php',
-        'JakubOnderka\\PhpParallelLint\\CheckstyleOutput' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\ConsoleWriter' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\Contracts\\SyntaxErrorCallback' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Contracts/SyntaxErrorCallback.php',
-        'JakubOnderka\\PhpParallelLint\\Error' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Error.php',
-        'JakubOnderka\\PhpParallelLint\\ErrorFormatter' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/ErrorFormatter.php',
-        'JakubOnderka\\PhpParallelLint\\Exception' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
-        'JakubOnderka\\PhpParallelLint\\FileWriter' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\GitLabOutput' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\IWriter' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\InvalidArgumentException' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
-        'JakubOnderka\\PhpParallelLint\\JsonOutput' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\Manager' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Manager.php',
-        'JakubOnderka\\PhpParallelLint\\MultipleWriter' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\NotExistsClassException' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
-        'JakubOnderka\\PhpParallelLint\\NotExistsPathException' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
-        'JakubOnderka\\PhpParallelLint\\NotImplementCallbackException' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
-        'JakubOnderka\\PhpParallelLint\\NullWriter' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\Output' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\ParallelLint' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/ParallelLint.php',
-        'JakubOnderka\\PhpParallelLint\\Process\\GitBlameProcess' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Process/GitBlameProcess.php',
-        'JakubOnderka\\PhpParallelLint\\Process\\LintProcess' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Process/LintProcess.php',
-        'JakubOnderka\\PhpParallelLint\\Process\\PhpExecutable' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Process/PhpExecutable.php',
-        'JakubOnderka\\PhpParallelLint\\Process\\PhpProcess' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Process/PhpProcess.php',
-        'JakubOnderka\\PhpParallelLint\\Process\\Process' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Process/Process.php',
-        'JakubOnderka\\PhpParallelLint\\Process\\SkipLintProcess' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Process/SkipLintProcess.php',
-        'JakubOnderka\\PhpParallelLint\\RecursiveDirectoryFilterIterator' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Manager.php',
-        'JakubOnderka\\PhpParallelLint\\Result' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Result.php',
-        'JakubOnderka\\PhpParallelLint\\RunTimeException' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
-        'JakubOnderka\\PhpParallelLint\\Settings' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Settings.php',
-        'JakubOnderka\\PhpParallelLint\\SyntaxError' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Error.php',
-        'JakubOnderka\\PhpParallelLint\\TextOutput' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JakubOnderka\\PhpParallelLint\\TextOutputColored' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Output.php',
-        'JsonSerializable' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/polyfill.php',
         'Latte\\Attributes\\TemplateFilter' => __DIR__ . '/..' . '/latte/latte/src/Latte/attributes.php',
         'Latte\\Attributes\\TemplateFunction' => __DIR__ . '/..' . '/latte/latte/src/Latte/attributes.php',
         'Latte\\Bridges\\Tracy\\BlueScreenPanel' => __DIR__ . '/..' . '/latte/latte/src/Bridges/Tracy/BlueScreenPanel.php',
@@ -945,39 +853,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\Session\\DI\\MysqlSessionHandlerExtension' => __DIR__ . '/..' . '/spaze/mysql-session-handler/src/DI/MysqlSessionHandlerExtension.php',
         'Spaze\\Session\\Exceptions\\SessionColumnUnexpectedTypeException' => __DIR__ . '/..' . '/spaze/mysql-session-handler/src/Exceptions/SessionColumnUnexpectedTypeException.php',
         'Spaze\\Session\\MysqlSessionHandler' => __DIR__ . '/..' . '/spaze/mysql-session-handler/src/MysqlSessionHandler.php',
-        'Tester\\Ansi' => __DIR__ . '/..' . '/nette/tester/src/Framework/Ansi.php',
-        'Tester\\Assert' => __DIR__ . '/..' . '/nette/tester/src/Framework/Assert.php',
-        'Tester\\AssertException' => __DIR__ . '/..' . '/nette/tester/src/Framework/AssertException.php',
-        'Tester\\CodeCoverage\\Collector' => __DIR__ . '/..' . '/nette/tester/src/CodeCoverage/Collector.php',
-        'Tester\\CodeCoverage\\Generators\\AbstractGenerator' => __DIR__ . '/..' . '/nette/tester/src/CodeCoverage/Generators/AbstractGenerator.php',
-        'Tester\\CodeCoverage\\Generators\\CloverXMLGenerator' => __DIR__ . '/..' . '/nette/tester/src/CodeCoverage/Generators/CloverXMLGenerator.php',
-        'Tester\\CodeCoverage\\Generators\\HtmlGenerator' => __DIR__ . '/..' . '/nette/tester/src/CodeCoverage/Generators/HtmlGenerator.php',
-        'Tester\\CodeCoverage\\PhpParser' => __DIR__ . '/..' . '/nette/tester/src/CodeCoverage/PhpParser.php',
-        'Tester\\DataProvider' => __DIR__ . '/..' . '/nette/tester/src/Framework/DataProvider.php',
-        'Tester\\DomQuery' => __DIR__ . '/..' . '/nette/tester/src/Framework/DomQuery.php',
-        'Tester\\Dumper' => __DIR__ . '/..' . '/nette/tester/src/Framework/Dumper.php',
-        'Tester\\Environment' => __DIR__ . '/..' . '/nette/tester/src/Framework/Environment.php',
-        'Tester\\Expect' => __DIR__ . '/..' . '/nette/tester/src/Framework/Expect.php',
-        'Tester\\FileMock' => __DIR__ . '/..' . '/nette/tester/src/Framework/FileMock.php',
-        'Tester\\FileMutator' => __DIR__ . '/..' . '/nette/tester/src/Framework/FileMutator.php',
-        'Tester\\Helpers' => __DIR__ . '/..' . '/nette/tester/src/Framework/Helpers.php',
-        'Tester\\HttpAssert' => __DIR__ . '/..' . '/nette/tester/src/Framework/HttpAssert.php',
-        'Tester\\Runner\\CliTester' => __DIR__ . '/..' . '/nette/tester/src/Runner/CliTester.php',
-        'Tester\\Runner\\CommandLine' => __DIR__ . '/..' . '/nette/tester/src/Runner/CommandLine.php',
-        'Tester\\Runner\\InterruptException' => __DIR__ . '/..' . '/nette/tester/src/Runner/exceptions.php',
-        'Tester\\Runner\\Job' => __DIR__ . '/..' . '/nette/tester/src/Runner/Job.php',
-        'Tester\\Runner\\OutputHandler' => __DIR__ . '/..' . '/nette/tester/src/Runner/OutputHandler.php',
-        'Tester\\Runner\\Output\\ConsolePrinter' => __DIR__ . '/..' . '/nette/tester/src/Runner/Output/ConsolePrinter.php',
-        'Tester\\Runner\\Output\\JUnitPrinter' => __DIR__ . '/..' . '/nette/tester/src/Runner/Output/JUnitPrinter.php',
-        'Tester\\Runner\\Output\\Logger' => __DIR__ . '/..' . '/nette/tester/src/Runner/Output/Logger.php',
-        'Tester\\Runner\\Output\\TapPrinter' => __DIR__ . '/..' . '/nette/tester/src/Runner/Output/TapPrinter.php',
-        'Tester\\Runner\\PhpInterpreter' => __DIR__ . '/..' . '/nette/tester/src/Runner/PhpInterpreter.php',
-        'Tester\\Runner\\Runner' => __DIR__ . '/..' . '/nette/tester/src/Runner/Runner.php',
-        'Tester\\Runner\\Test' => __DIR__ . '/..' . '/nette/tester/src/Runner/Test.php',
-        'Tester\\Runner\\TestHandler' => __DIR__ . '/..' . '/nette/tester/src/Runner/TestHandler.php',
-        'Tester\\TestCase' => __DIR__ . '/..' . '/nette/tester/src/Framework/TestCase.php',
-        'Tester\\TestCaseException' => __DIR__ . '/..' . '/nette/tester/src/Framework/TestCase.php',
-        'Tester\\TestCaseSkippedException' => __DIR__ . '/..' . '/nette/tester/src/Framework/TestCase.php',
         'Texy' => __DIR__ . '/..' . '/texy/texy/src/Texy.php',
         'Texy\\BlockParser' => __DIR__ . '/..' . '/texy/texy/src/Texy/BlockParser.php',
         'Texy\\Bridges\\Latte\\TexyExtension' => __DIR__ . '/..' . '/texy/texy/src/Bridges/Latte/TexyExtension.php',
