@@ -1,8 +1,0 @@
-<?php
-
-namespace Nette\ComponentModel;
-
-abstract class Component implements IComponent
-{
-
-}

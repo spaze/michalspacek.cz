@@ -10,6 +10,8 @@ parameters:
 		- phpt
 	level: max
 	checkMissingOverrideMethodAttribute: true
+	bootstrapFiles:
+		- vendor-dev/vendor/autoload.php
 	ignoreErrors:
 		- # The getId() and getData() methods are called on a SimpleIdentity object, but are defined in a deprecated Identity class
 			identifier: method.deprecatedClass
@@ -26,9 +28,9 @@ parameters:
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
-	- vendor/phpstan/phpstan-nette/extension.neon
-	- vendor/phpstan/phpstan-nette/rules.neon
+	- vendor-dev/vendor/phpstan/phpstan-nette/extension.neon
+	- vendor-dev/vendor/phpstan/phpstan-nette/rules.neon
 	- disallowed-calls.neon
-	- vendor/phpstan/phpstan-deprecation-rules/rules.neon
+	- vendor-dev/vendor/phpstan/phpstan-deprecation-rules/rules.neon
 	- vendor/composer/pcre/extension.neon
-	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor-dev/vendor/phpstan/phpstan-strict-rules/rules.neon

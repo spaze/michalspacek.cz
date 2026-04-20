@@ -29,14 +29,9 @@ jobs:
 
   composer-validate:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version:
-          - "8.5"
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-    - name: Validate composer.json and composer.lock
-      run: composer --working-dir=app validate
+    - run: make --directory=app composer-validate
 
   check-file-patterns:
     runs-on: ubuntu-latest
@@ -76,6 +71,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
+    - run: composer --working-dir=app/vendor-dev install
     - run: make --directory=app lint-php
 
   lint-latte:
@@ -110,6 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - run: composer --working-dir=app/vendor-dev install
     - run: make --directory=app lint-xml-auto-install
 
   phpcs:
@@ -131,6 +128,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
+    - run: composer --working-dir=app/vendor-dev install
     - run: make --directory=app phpcs
 
   phpstan:
@@ -152,6 +150,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
+    - run: composer --working-dir=app/vendor-dev install
     - run: make --directory=app phpstan
 
   phpstan-vendor:
@@ -173,6 +172,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
+    - run: composer --working-dir=app/vendor-dev install
     - run: make --directory=app phpstan-vendor
 
   tester:
@@ -191,6 +191,7 @@ jobs:
       run: |
         sudo mkdir --parents /srv/www
         sudo ln --symbolic $GITHUB_WORKSPACE /srv/www
+    - run: composer --working-dir=app/vendor-dev install
     - run: make --directory=app tester
     - name: Failed test output, if any
       if: failure()
@@ -215,6 +216,7 @@ jobs:
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
+      - run: composer --working-dir=app/vendor-dev install
       - run: make --directory=app psalm
 
   composer-dependency-analyser:
@@ -229,4 +231,5 @@ jobs:
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
+      - run: composer --working-dir=app/vendor-dev install
       - run: make --directory=app composer-dependency-analyser
