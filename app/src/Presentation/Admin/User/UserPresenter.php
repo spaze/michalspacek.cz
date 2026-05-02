@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\User;
 
 use MichalSpacekCz\Form\UiForm;
-use MichalSpacekCz\Form\User\ChangePasswordFormFactory;
 use MichalSpacekCz\Form\User\RegenerateTokensFormFactory;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use Nette\Utils\Html;
@@ -14,25 +13,8 @@ final class UserPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly RegenerateTokensFormFactory $regenerateTokensFormFactory,
-		private readonly ChangePasswordFormFactory $changePasswordFormFactory,
 	) {
 		parent::__construct();
-	}
-
-
-	public function actionChangePassword(): void
-	{
-		$this->template->pageTitle = 'Změnit heslo';
-	}
-
-
-	protected function createComponentChangePassword(): UiForm
-	{
-		return $this->changePasswordFormFactory->create(
-			function (): never {
-				$this->redirect('Homepage:');
-			},
-		);
 	}
 
 

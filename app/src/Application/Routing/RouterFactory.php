@@ -115,7 +115,6 @@ final class RouterFactory
 		$this->securityTxtResponse->addRoute($router);
 
 		$this->initRouterLists($router, self::MODULE_ADMIN, [
-			new RouterFactoryRoute('.well-known[/<action>]', 'WellKnown', 'default'),
 			new RouterFactoryRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default'),
 		]);
 

@@ -14,6 +14,8 @@ final class NullUserStorage implements UserStorage
 	private bool $authenticated = false;
 	private ?IIdentity $identity = null;
 	private ?int $reason = null;
+	private(set) ?string $expire = null;
+	private(set) bool $clearIdentity = false;
 
 
 	#[Override]
@@ -45,6 +47,8 @@ final class NullUserStorage implements UserStorage
 	#[Override]
 	public function setExpiration(?string $expire, bool $clearIdentity): void
 	{
+		$this->expire = $expire;
+		$this->clearIdentity = $clearIdentity;
 	}
 
 }

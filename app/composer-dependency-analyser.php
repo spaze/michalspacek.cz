@@ -30,6 +30,8 @@ return (new Configuration())
 		'jetbrains/phpstorm-attributes',
 		'nette/component-model',
 		'nette/tester',
+		'spomky-labs/cbor-php',
+		'symfony/uid',
 	], [ErrorType::SHADOW_DEPENDENCY])
 	->ignoreErrorsOnExtensions([
 		'ext-simplexml',

@@ -71,6 +71,7 @@ subresourceIntegrity:
 	resources:
 		netteForms: ../../vendor/nette/forms/src/assets/netteForms.min.js
 		app: /i/js/app.js
+		app-passkey: /i/js/app-passkey.js
 		scripts: /i/js/scripts.js
 		encryption: /i/js/encryption.js
 		admin: /i/js/admin.js
@@ -78,6 +79,9 @@ subresourceIntegrity:
 		openpgp: ../../node_modules/openpgp/dist/openpgp.min.js
 		pulse: /i/js/pulse.js
 		remove-fbclid: /i/js/remove-fbclid.js
+		passkey-authenticate: /i/js/passkey-authenticate.js
+		passkey-register: /i/js/passkey-register.js
+		passkey-reset: /i/js/passkey-reset.js
 		rating: /i/css/rating.css
 		screen-main: /i/css/screen.css
 		screen-main-dark: /i/css/screen-dark.css

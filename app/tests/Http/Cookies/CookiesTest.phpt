@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http\Cookies;
 
 use MichalSpacekCz\Test\Http\Request;
-use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
@@ -28,8 +27,6 @@ final class CookiesTest extends TestCase
 		Assert::null($this->cookies->getString(CookieName::Theme));
 		$this->request->setCookie(CookieName::Theme->value, 'bar');
 		Assert::same('bar', $this->cookies->getString(CookieName::Theme));
-		PrivateProperty::setValue($this->request, 'cookies', [CookieName::ReturningUser->value => ['quux' => 'foobar']]);
-		Assert::null($this->cookies->getString(CookieName::ReturningUser));
 	}
 
 }

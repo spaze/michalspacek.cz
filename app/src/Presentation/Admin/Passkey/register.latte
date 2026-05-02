@@ -1,0 +1,11 @@
+{define #scripts}
+	{script app-passkey + passkey-register async, defer}
+{/define}
+{define #content}
+{form passkeyRegister id => passkeyRegister}
+	<p>{_messages.passkeys.enterPasskeyName}</p>
+	{label name /} {input name}
+	{input credential}
+	{input register}
+{/form}
+{/define}

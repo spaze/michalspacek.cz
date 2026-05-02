@@ -54,6 +54,10 @@ contentSecurityPolicy:
 			@extends: www.*.*
 			img-src:
 				- 'data:'
+		admin.sign.passkeyreset:
+			@extends: admin.*.*
+			connect-src:
+				- "'self'"
 		admin.talks.slides:
 			@extends: www.*.*
 			img-src:

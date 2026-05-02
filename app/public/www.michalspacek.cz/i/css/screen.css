@@ -115,7 +115,7 @@ pre {
 	border-radius: 3px;
 }
 .button, #statuses td[data-date], #statusesShow, #statusesHide { cursor: pointer; }
-button:disabled { cursor: not-allowed; }
+button:disabled, input:disabled { cursor: not-allowed; }
 .container {
 	max-width: 820px;
 	margin: 0 auto;

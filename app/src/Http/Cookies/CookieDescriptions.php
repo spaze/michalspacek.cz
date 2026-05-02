@@ -41,12 +41,6 @@ final readonly class CookieDescriptions
 				$this->dateTimeParser->getDaysFromString($this->authenticator->getPermanentLoginCookieLifetime()),
 			),
 			new CookieDescription(
-				CookieName::ReturningUser->value,
-				true,
-				$this->texyFormatter->translate('messages.cookies.cookie.returningUser'),
-				$this->dateTimeParser->getDaysFromString($this->authenticator->getReturningUserCookieLifetime()),
-			),
-			new CookieDescription(
 				CookieName::Theme->value,
 				false,
 				$this->texyFormatter->translate('messages.cookies.cookie.theme'),

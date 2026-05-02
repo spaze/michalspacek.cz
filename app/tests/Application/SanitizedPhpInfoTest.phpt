@@ -29,13 +29,11 @@ final class SanitizedPhpInfoTest extends TestCase
 	{
 		$sessionId = 'foo31337';
 		$sessionName = 'PHPSESSID';
-		$returningUserValue = 'yolo';
 		$permanentLoginValue = 'zomg';
 
 		$this->session->setId($sessionId);
 		$cookie = [
 			$sessionName => $sessionId,
-			CookieName::ReturningUser->value => $returningUserValue,
 			CookieName::PermanentLogin->value => $permanentLoginValue,
 		];
 
@@ -46,14 +44,12 @@ final class SanitizedPhpInfoTest extends TestCase
 		ServerEnv::setString('HTTP_COOKIE', $httpCookie);
 		$_COOKIE = $cookie;
 
-		$this->httpRequest->setCookie(CookieName::ReturningUser->value, $returningUserValue);
 		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, $permanentLoginValue);
 
 		$html = $this->sanitizedPhpInfo->getHtml();
 		Assert::contains('phpinfo', $html);
 		Assert::notContains($sessionId, $html);
 		Assert::contains(PhpInfoCookieSanitization::SESSION_ID, $html);
-		Assert::notContains($returningUserValue, $html);
 		Assert::notContains($permanentLoginValue, $html);
 		Assert::contains(PhpInfoCookieSanitization::COOKIE_VALUE, $html);
 	}

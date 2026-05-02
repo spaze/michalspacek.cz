@@ -55,3 +55,20 @@ App.nextElementSiblings = function (element, selector) {
 	}
 	return elements;
 }
+App.base64urlToBuffer = function (base64url) {
+	const base64 = base64url.replaceAll('-', '+').replaceAll('_', '/');
+	const binary = atob(base64);
+	const bytes = new Uint8Array(binary.length);
+	for (let i = 0; i < binary.length; i++) {
+		bytes[i] = binary.charCodeAt(i);
+	}
+	return bytes.buffer;
+}
+App.bufferToBase64url = function (buffer) {
+	const bytes = new Uint8Array(buffer);
+	let binary = '';
+	for (const byte of bytes) {
+		binary += String.fromCharCode(byte);
+	}
+	return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+}
