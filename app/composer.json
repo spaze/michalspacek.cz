@@ -45,11 +45,11 @@
 		"spaze/svg-icons-latte": "^1.0",
 		"symfony/cache": "^8.0",
 		"symfony/cache-contracts": "^3.4",
-		"symfony/serializer": "^7.4",
+		"symfony/serializer": "^8.0",
 		"texy/texy": "^3.1.7",
 		"tracy/tracy": "^2.9.4",
 		"web-auth/cose-lib": "^4.5",
-		"web-auth/webauthn-lib": "^5.2"
+		"web-auth/webauthn-lib": "^5.3"
 	},
 	"replace": {
 		"nette/finder": "3.0",

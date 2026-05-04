@@ -46,14 +46,12 @@ class AttributeLoader implements LoaderInterface
     ];
 
     /**
-     * @param bool|null                           $allowAnyClass Null is allowed for BC with Symfony <= 6
      * @param array<class-string, class-string[]> $mappedClasses
      */
     public function __construct(
-        private ?bool $allowAnyClass = true,
+        private bool $allowAnyClass = true,
         private array $mappedClasses = [],
     ) {
-        $this->allowAnyClass ??= true;
     }
 
     /**
