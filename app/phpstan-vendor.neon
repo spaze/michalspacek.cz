@@ -26,10 +26,12 @@ parameters:
 			- vendor/tracy/tracy/src/Bridges/Psr/*  # psr/log not installed, Psr\Log\LogLevel constants missing intentionally
 			# Throws "No error to ignore is reported on line", which can't be ignored, probably because only custom ruleset is used
 			- vendor/async-aws/core/src/Signer/SignerV4.php
+			- vendor/brick/math/src/*.php
 			- vendor/composer/pcre/src/PHPStan/PregMatchTypeSpecifyingExtension.php
 			- vendor/composer/pcre/src/Regex.php
 			- vendor/contributte/translation/src/DI/TranslationExtension.php
 			- vendor/contributte/translation/src/Latte/Macros.php
+			- vendor/phpstan/phpdoc-parser/src/Lexer/Lexer.php
 
 	disallowedFunctionCalls:
 		# local disallowed-calls.neon
@@ -107,6 +109,7 @@ parameters:
 				- vendor/nette/database/src/Database/*.php
 				- vendor/nette/di/src/DI/*.php
 				- vendor/symfony/config/Resource/DirectoryResource.php
+				- vendor/symfony/uid/Uuid.php
 				- vendor/tracy/tracy/src/Tracy/Logger/Logger.php
 		-
 			function: 'sha1()'
@@ -114,6 +117,8 @@ parameters:
 			allowIn:
 				- vendor/async-aws/core/src/Credentials/*.php
 				- vendor/nette/forms/src/Forms/Controls/CsrfProtection.php
+				- vendor/spomky-labs/pki-framework/src/CryptoTypes/Asymmetric/PublicKeyInfo.php
+				- vendor/symfony/uid/Uuid.php
 		-
 			function: 'hash()'
 			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
@@ -215,6 +220,7 @@ parameters:
 			superglobal: '$_SERVER'
 			allowIn:
 				- vendor/async-aws/core/src/EnvVar.php
+				- vendor/doctrine/deprecations/src/Deprecation.php
 				- vendor/nette/*.php
 				- vendor/spaze/security-txt/bin/checksecuritytxt.php
 				- vendor/symfony/*.php

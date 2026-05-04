@@ -8,11 +8,22 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'd507e002f7fce7f0c6dbf1f22edcb902' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'p' => 
+        array (
+            'phpDocumentor\\Reflection\\' => 25,
+        ),
+        'W' => 
+        array (
+            'Webmozart\\Assert\\' => 17,
+            'Webauthn\\' => 9,
+        ),
         'T' => 
         array (
             'Tracy\\' => 6,
@@ -25,11 +36,19 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Symfony\\Contracts\\HttpClient\\' => 29,
             'Symfony\\Contracts\\Cache\\' => 24,
             'Symfony\\Component\\VarExporter\\' => 30,
+            'Symfony\\Component\\Uid\\' => 22,
+            'Symfony\\Component\\TypeInfo\\' => 27,
             'Symfony\\Component\\Translation\\' => 30,
+            'Symfony\\Component\\String\\' => 25,
+            'Symfony\\Component\\Serializer\\' => 29,
+            'Symfony\\Component\\PropertyInfo\\' => 31,
+            'Symfony\\Component\\PropertyAccess\\' => 33,
             'Symfony\\Component\\HttpClient\\' => 29,
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Config\\' => 25,
+            'Symfony\\Component\\Clock\\' => 24,
             'Symfony\\Component\\Cache\\' => 24,
+            'SpomkyLabs\\Pki\\' => 15,
             'Spaze\\SvgIcons\\' => 15,
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\SecurityTxt\\' => 18,
@@ -42,12 +61,15 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\EventDispatcher\\' => 20,
             'Psr\\Container\\' => 14,
+            'Psr\\Clock\\' => 10,
             'Psr\\Cache\\' => 10,
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
+            'PHPStan\\PhpDocParser\\' => 21,
         ),
         'N' => 
         array (
@@ -65,10 +87,20 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'IPLib\\' => 6,
         ),
+        'D' => 
+        array (
+            'Doctrine\\Deprecations\\' => 22,
+        ),
         'C' => 
         array (
+            'Cose\\' => 5,
             'Contributte\\Translation\\' => 24,
             'Composer\\Pcre\\' => 14,
+            'CBOR\\' => 5,
+        ),
+        'B' => 
+        array (
+            'Brick\\Math\\' => 11,
         ),
         'A' => 
         array (
@@ -78,6 +110,20 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
+        'phpDocumentor\\Reflection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+        ),
+        'Webmozart\\Assert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Webauthn\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-auth/webauthn-lib/src',
+        ),
         'Tracy\\' => 
         array (
             0 => __DIR__ . '/..' . '/tracy/tracy/src',
@@ -106,9 +152,33 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/symfony/var-exporter',
         ),
+        'Symfony\\Component\\Uid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/uid',
+        ),
+        'Symfony\\Component\\TypeInfo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/type-info',
+        ),
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
+        'Symfony\\Component\\String\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/string',
+        ),
+        'Symfony\\Component\\Serializer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/serializer',
+        ),
+        'Symfony\\Component\\PropertyInfo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/property-info',
+        ),
+        'Symfony\\Component\\PropertyAccess\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/property-access',
         ),
         'Symfony\\Component\\HttpClient\\' => 
         array (
@@ -122,9 +192,17 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/symfony/config',
         ),
+        'Symfony\\Component\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/clock',
+        ),
         'Symfony\\Component\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
+        ),
+        'SpomkyLabs\\Pki\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/pki-framework/src',
         ),
         'Spaze\\SvgIcons\\' => 
         array (
@@ -162,9 +240,17 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
+        'Psr\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
+        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
         'Psr\\Cache\\' => 
         array (
@@ -185,6 +271,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'PHP_Parallel_Lint\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
+        ),
+        'PHPStan\\PhpDocParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
         'Nette\\' => 
         array (
@@ -218,6 +308,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/mlocati/ip-lib/src',
         ),
+        'Doctrine\\Deprecations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/deprecations/src',
+        ),
+        'Cose\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-auth/cose-lib/src',
+        ),
         'Contributte\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/contributte/translation/src',
@@ -225,6 +323,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Composer\\Pcre\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
+        ),
+        'CBOR\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/cbor-php/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
         ),
         'AsyncAws\\Lambda\\' => 
         array (
