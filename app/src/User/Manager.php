@@ -182,9 +182,14 @@ final readonly class Manager
 	{
 		$userId = $this->getUserId($user); // Fail before starting a transaction, if you're going to fail
 		$this->database->beginTransaction();
-		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $userId, UserAuthTokenType::PermanentLogin->value);
-		$this->storePermanentLogin($user);
-		$this->database->commit();
+		try {
+			$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $userId, UserAuthTokenType::PermanentLogin->value);
+			$this->storePermanentLogin($user);
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
+		}
 	}
 
 
@@ -252,6 +257,7 @@ final readonly class Manager
 
 	/**
 	 * @throws PasskeyResetDisabledException
+	 * @throws Exception
 	 */
 	public function createPasskeyResetToken(int $userId): string
 	{
@@ -259,9 +265,14 @@ final readonly class Manager
 			throw new PasskeyResetDisabledException();
 		}
 		$this->database->beginTransaction();
-		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $userId, UserAuthTokenType::PasskeyReset->value);
-		$token = $this->insertToken($userId, UserAuthTokenType::PasskeyReset);
-		$this->database->commit();
+		try {
+			$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $userId, UserAuthTokenType::PasskeyReset->value);
+			$token = $this->insertToken($userId, UserAuthTokenType::PasskeyReset);
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
+		}
 		return $token;
 	}
 
