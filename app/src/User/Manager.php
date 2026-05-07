@@ -139,17 +139,26 @@ final readonly class Manager
 
 
 	/**
+	 * @throws IdentityIdNotIntException
+	 */
+	private function getUserId(User $user): int
+	{
+		$userId = $user->getId();
+		if (!is_int($userId)) {
+			throw new IdentityIdNotIntException(get_debug_type($userId));
+		}
+		return $userId;
+	}
+
+
+	/**
 	 * Store permanent login token in database and send a cookie to the browser.
 	 *
 	 * @throws Exception
 	 */
 	public function storePermanentLogin(User $user): void
 	{
-		$userId = $user->getId();
-		if (!is_int($userId)) {
-			throw new IdentityIdNotIntException(get_debug_type($userId));
-		}
-		$value = $this->insertToken($userId, UserAuthTokenType::PermanentLogin);
+		$value = $this->insertToken($this->getUserId($user), UserAuthTokenType::PermanentLogin);
 		$this->cookies->set(CookieName::PermanentLogin, $value, $this->permanentLoginInterval, $this->authCookiesPath, sameSite: 'Strict');
 	}
 
@@ -159,7 +168,7 @@ final readonly class Manager
 	 */
 	public function clearPermanentLogin(User $user): void
 	{
-		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), UserAuthTokenType::PermanentLogin->value);
+		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $this->getUserId($user), UserAuthTokenType::PermanentLogin->value);
 		$this->cookies->delete(CookieName::PermanentLogin, $this->authCookiesPath);
 	}
 
@@ -171,8 +180,9 @@ final readonly class Manager
 	 */
 	public function regeneratePermanentLogin(User $user): void
 	{
+		$userId = $this->getUserId($user); // Fail before starting a transaction, if you're going to fail
 		$this->database->beginTransaction();
-		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), UserAuthTokenType::PermanentLogin->value);
+		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $userId, UserAuthTokenType::PermanentLogin->value);
 		$this->storePermanentLogin($user);
 		$this->database->commit();
 	}
