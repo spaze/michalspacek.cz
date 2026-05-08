@@ -33,7 +33,7 @@ final class SecurityHeadersTest extends TestCase
 		'x-content-type-options' => 'nosniff',
 		'x-frame-options' => 'DENY',
 		'referrer-policy' => 'no-referrer, strict-origin-when-cross-origin',
-		'permissions-policy' => 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()',
+		'permissions-policy' => 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-create=(), publickey-credentials-get=(), usb=()',
 		'integrity-policy' => 'foo=(bar)',
 		'report-to' => '{"group":"default","max_age":31536000,"endpoints":[{"url":"https://plz.report-uri.com/a/d/g"}],"include_subdomains":true}',
 		'nel' => '{"report_to":"default","max_age":31536000,"include_subdomains":true}',

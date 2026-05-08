@@ -14,6 +14,8 @@ enum PermissionsPolicyDirective: string
 	case Microphone = 'microphone';
 	case Midi = 'midi';
 	case Payment = 'payment';
+	case PublicKeyCredentialsCreate = 'publickey-credentials-create';
+	case PublicKeyCredentialsGet = 'publickey-credentials-get';
 	case Usb = 'usb';
 
 }
