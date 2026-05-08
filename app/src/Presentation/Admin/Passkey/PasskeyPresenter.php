@@ -6,6 +6,8 @@ namespace MichalSpacekCz\Presentation\Admin\Passkey;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\User\PasskeyRegisterFormFactory;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
@@ -30,6 +32,7 @@ final class PasskeyPresenter extends BasePresenter
 
 	public function actionRegister(): void
 	{
+		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsCreate, PermissionsPolicyOrigin::Self);
 		$this->template->pageTitle = $this->translator->translate('messages.passkeys.registerPasskey');
 	}
 

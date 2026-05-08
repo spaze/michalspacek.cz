@@ -5,9 +5,7 @@ namespace MichalSpacekCz\Http\SecurityHeaders;
 
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicy;
-use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
-use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
-use MichalSpacekCz\Http\StructuredHeaders;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicy;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IResponse;
@@ -21,7 +19,7 @@ final readonly class SecurityHeaders
 		private IResponse $httpResponse,
 		private Application $application,
 		private CspConfig $contentSecurityPolicy,
-		private StructuredHeaders $structuredHeaders,
+		private PermissionsPolicy $permissionsPolicy,
 		private IntegrityPolicy $integrityPolicy,
 		private string $reportingApiUrl,
 	) {
@@ -39,7 +37,7 @@ final readonly class SecurityHeaders
 		$this->httpResponse->setHeader('X-Frame-Options', 'DENY');
 		$this->httpResponse->setHeader('Referrer-Policy', 'no-referrer, strict-origin-when-cross-origin');
 		$this->sendContentSecurityPolicyHeaders($cspValues);
-		$this->httpResponse->setHeader('Permissions-Policy', $this->buildPermissionsPolicy());
+		$this->permissionsPolicy->set();
 		$this->integrityPolicy->set();
 		$this->httpResponse->setHeader('Report-To', Json::encode([
 			'group' => ReportingApiEndpointName::Default->value,
@@ -52,16 +50,6 @@ final readonly class SecurityHeaders
 			'max_age' => 31536000,
 			'include_subdomains' => true,
 		]));
-	}
-
-
-	private function buildPermissionsPolicy(): string
-	{
-		$policy = [];
-		foreach (PermissionsPolicyDirective::cases() as $directive) {
-			$policy[$directive->value] = PermissionsPolicyOrigin::None;
-		}
-		return $this->structuredHeaders->get($policy);
 	}
 
 
