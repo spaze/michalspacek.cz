@@ -11,6 +11,8 @@ use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use MichalSpacekCz\Form\ThemeFormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\Request;
@@ -25,6 +27,9 @@ use Override;
  */
 abstract class BasePresenter extends Presenter
 {
+
+	/** @var array<value-of<PermissionsPolicyDirective>, list<PermissionsPolicyOrigin|string>> */
+	private array $permissionsPolicy = [];
 
 	private Manager $authenticator;
 
@@ -180,6 +185,21 @@ abstract class BasePresenter extends Presenter
 	{
 		$this->getHttpResponse()->setContentType('application/json');
 		$this->sendResponse(new TextResponse($json));
+	}
+
+
+	protected function addPermissionsPolicy(PermissionsPolicyDirective $directive, PermissionsPolicyOrigin|string $origin): void
+	{
+		$this->permissionsPolicy[$directive->value][] = $origin;
+	}
+
+
+	/**
+	 * @return array<value-of<PermissionsPolicyDirective>, list<PermissionsPolicyOrigin|string>>
+	 */
+	public function getPermissionsPolicy(): array
+	{
+		return $this->permissionsPolicy;
 	}
 
 

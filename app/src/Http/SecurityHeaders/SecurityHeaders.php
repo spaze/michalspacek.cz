@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Http\SecurityHeaders;
 
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicy;
-use MichalSpacekCz\Http\StructuredHeaders;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicy;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IResponse;
@@ -19,7 +19,7 @@ final readonly class SecurityHeaders
 		private IResponse $httpResponse,
 		private Application $application,
 		private CspConfig $contentSecurityPolicy,
-		private StructuredHeaders $structuredHeaders,
+		private PermissionsPolicy $permissionsPolicy,
 		private IntegrityPolicy $integrityPolicy,
 		private string $reportingApiUrl,
 	) {
@@ -37,17 +37,7 @@ final readonly class SecurityHeaders
 		$this->httpResponse->setHeader('X-Frame-Options', 'DENY');
 		$this->httpResponse->setHeader('Referrer-Policy', 'no-referrer, strict-origin-when-cross-origin');
 		$this->sendContentSecurityPolicyHeaders($cspValues);
-		$this->httpResponse->setHeader('Permissions-Policy', $this->structuredHeaders->get([
-			'accelerometer' => PermissionsPolicyOrigin::None,
-			'camera' => PermissionsPolicyOrigin::None,
-			'geolocation' => PermissionsPolicyOrigin::None,
-			'gyroscope' => PermissionsPolicyOrigin::None,
-			'magnetometer' => PermissionsPolicyOrigin::None,
-			'microphone' => PermissionsPolicyOrigin::None,
-			'midi' => PermissionsPolicyOrigin::None,
-			'payment' => PermissionsPolicyOrigin::None,
-			'usb' => PermissionsPolicyOrigin::None,
-		]));
+		$this->permissionsPolicy->set();
 		$this->integrityPolicy->set();
 		$this->httpResponse->setHeader('Report-To', Json::encode([
 			'group' => ReportingApiEndpointName::Default->value,

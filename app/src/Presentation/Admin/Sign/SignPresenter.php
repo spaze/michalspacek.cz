@@ -9,6 +9,8 @@ use MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory;
 use MichalSpacekCz\Form\User\PasskeyResetFormFactory;
 use MichalSpacekCz\Form\User\SignInHoneypotFormFactory;
 use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetException;
@@ -53,6 +55,7 @@ final class SignPresenter extends BasePresenter
 
 	public function actionIn(): void
 	{
+		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsGet, PermissionsPolicyOrigin::Self);
 		$this->sessionHandler->start();
 		$token = $this->authenticator->verifyPermanentLogin();
 		if ($token !== null) {
@@ -103,6 +106,7 @@ final class SignPresenter extends BasePresenter
 
 	public function actionPasskeyReset(): void
 	{
+		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsCreate, PermissionsPolicyOrigin::Self);
 		$this->template->pageTitle = $this->translator->translate('messages.passkeys.registration');
 	}
 

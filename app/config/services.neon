@@ -104,6 +104,7 @@ services:
 	- MichalSpacekCz\Http\SecurityHeaders\CrossOriginResourceSharing
 	integrityPolicy: MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyDefault
 	- MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders(reportingApiUrl: %reporting.reportingApi%)
+	- MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicy
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollector
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusFactory
 	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusMessageFactory
