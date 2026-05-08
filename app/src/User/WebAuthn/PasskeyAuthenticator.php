@@ -23,8 +23,7 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialRecordS
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCrossOriginRegistrationException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidTypeException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
+use Nette\Security\User;
 use Override;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -46,19 +45,17 @@ use Webauthn\PublicKeyCredentialUserEntity;
 final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 {
 
-	private const string SESSION_AUTH_CHALLENGE = 'authChallenge';
-	private const string SESSION_REG_CHALLENGE = 'regChallenge';
-
-
 	public function __construct(
 		private AuthenticatorAttestationResponseValidator $attestationResponseValidator,
 		private AuthenticatorAssertionResponseValidator $assertionResponseValidator,
 		private SerializerInterface $serializer,
-		private PasskeyCredentials $credentials,
-		private Session $session,
+		private PasskeyStorage $passkeyStorage,
+		private PasskeySessionSection $passkeySessionSection,
 		private string $rpId,
 		private string $rpName,
+		User $user,
 	) {
+		$user->onLoggedOut[] = $this->passkeySessionSection->removeSignedInCredentialId(...);
 	}
 
 
@@ -70,18 +67,20 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	public function generateRegistrationOptions(int $userId, string $username): string
 	{
 		$rp = PublicKeyCredentialRpEntity::create($this->rpName, $this->rpId);
-		$userHandle = $this->credentials->getUserHandle($userId);
+		$userHandle = $this->passkeyStorage->getUserHandleByUserId($userId);
 		$user = PublicKeyCredentialUserEntity::create($username, $userHandle, $username);
+		$challenge = random_bytes(32);
+		$this->passkeySessionSection->setRegChallenge($challenge);
 		$options = PublicKeyCredentialCreationOptions::create(
 			$rp,
 			$user,
-			$this->createChallenge(self::SESSION_REG_CHALLENGE),
+			$challenge,
 			$this->getPubKeyCredParams(),
 			AuthenticatorSelectionCriteria::create(
 				userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
 				residentKey: AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
 			),
-			excludeCredentials: $this->credentials->getDescriptorsByUserId($userId),
+			excludeCredentials: $this->passkeyStorage->getDescriptorsByUserId($userId),
 		);
 		try {
 			return $this->serializer->serialize($options, 'json');
@@ -102,9 +101,9 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	 * @throws PasskeyRegistrationInvalidTypeException
 	 */
 	#[Override]
-	public function verifyRegistration(string $json, string $name, int $userId, string $userHandle): void
+	public function verifyRegistration(string $json, string $name, int $userId): void
 	{
-		$challenge = $this->getRemoveChallenge(self::SESSION_REG_CHALLENGE);
+		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveRegChallenge());
 		try {
 			$credential = $this->serializer->deserialize($json, PublicKeyCredential::class, 'json');
 		} catch (ExceptionInterface $e) {
@@ -125,12 +124,13 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 			throw new PasskeyRegistrationCredentialIdTooShortException();
 		}
 
+		$userHandle = $this->passkeyStorage->getUserHandleByUserId($userId);
 		$options = PublicKeyCredentialCreationOptions::create(
 			PublicKeyCredentialRpEntity::create($this->rpName, $this->rpId),
 			PublicKeyCredentialUserEntity::create('', $userHandle, ''),
 			$challenge,
 			$this->getPubKeyCredParams(),
-			excludeCredentials: $this->credentials->getDescriptorsByUserId($userId),
+			excludeCredentials: $this->passkeyStorage->getDescriptorsByUserId($userId),
 		);
 
 		try {
@@ -144,7 +144,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 			throw new PasskeyRegistrationCredentialRecordSerializationException(previous: $e);
 		}
 
-		$this->credentials->saveCredential($credentialRecord->publicKeyCredentialId, $credentialRecordJson, $name, $userId);
+		$this->passkeyStorage->saveCredential($credentialRecord->publicKeyCredentialId, $credentialRecordJson, $name, $userId);
 	}
 
 
@@ -155,8 +155,10 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	#[Override]
 	public function generateAuthenticationOptions(): string
 	{
+		$challenge = random_bytes(32);
+		$this->passkeySessionSection->setAuthChallenge($challenge);
 		$options = PublicKeyCredentialRequestOptions::create(
-			$this->createChallenge(self::SESSION_AUTH_CHALLENGE),
+			$challenge,
 			$this->rpId,
 			userVerification: PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_REQUIRED,
 		);
@@ -183,7 +185,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	#[Override]
 	public function verifyAuthentication(string $json): PasskeyAuthenticationResult
 	{
-		$challenge = $this->getRemoveChallenge(self::SESSION_AUTH_CHALLENGE);
+		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveAuthChallenge());
 		try {
 			$credential = $this->serializer->deserialize($json, PublicKeyCredential::class, 'json');
 		} catch (ExceptionInterface $e) {
@@ -204,7 +206,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 			throw new PasskeyAuthenticationCredentialIdTooShortException();
 		}
 
-		$credentialRecordJson = $this->credentials->findCredentialRecordJsonByCredentialId($credentialId);
+		$credentialRecordJson = $this->passkeyStorage->findCredentialRecordJsonByCredentialId($credentialId);
 		if ($credentialRecordJson === null) {
 			throw new PasskeyAuthenticationUnknownCredentialException($credentialId);
 		}
@@ -227,7 +229,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 			throw new PasskeyAuthenticationAssertionResponseValidatorException(previous: $e);
 		}
 
-		$user = $this->credentials->getUserByCredentialId($credentialId);
+		$user = $this->passkeyStorage->getUserByCredentialId($credentialId);
 		if ($user === null) {
 			throw new PasskeyAuthenticationUserNotFoundException();
 		}
@@ -237,38 +239,19 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		} catch (ExceptionInterface $e) {
 			throw new PasskeyAuthenticationCredentialRecordSerializationException(previous: $e);
 		}
-		$this->credentials->updateCredentialAfterAuthentication($credentialId, $updatedCredentialRecordJson);
+		$this->passkeyStorage->updateCredentialAfterAuthentication($credentialId, $updatedCredentialRecordJson);
+		$this->passkeySessionSection->setSignedInCredentialId($credentialId);
 
 		return new PasskeyAuthenticationResult($user->id, $user->username);
 	}
 
 
-	private function getSession(): SessionSection
-	{
-		return $this->session->getSection('passkey');
-	}
-
-
-	/**
-	 * @phpstan-impure
-	 */
-	private function createChallenge(string $sessionKey): string
-	{
-		$challenge = random_bytes(32);
-		$this->getSession()->set($sessionKey, $challenge);
-		return $challenge;
-	}
-
-
 	/**
 	 * @throws PasskeyChallengeInvalidException
-	 * @phpstan-impure
 	 */
-	private function getRemoveChallenge(string $sessionKey): string
+	private function getValidChallenge(?string $challenge): string
 	{
-		$challenge = $this->getSession()->get($sessionKey);
-		$this->getSession()->remove($sessionKey);
-		if (!is_string($challenge) || $challenge === '') {
+		if ($challenge === null || $challenge === '') {
 			throw new PasskeyChallengeInvalidException();
 		}
 		return $challenge;

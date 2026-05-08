@@ -35,7 +35,8 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidTypeExcept
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
 use MichalSpacekCz\Utils\Base64;
 use Nette\Database\UniqueConstraintViolationException;
-use Nette\Http\Session;
+use Nette\Security\SimpleIdentity;
+use Nette\Security\User;
 use Nette\Utils\Json;
 use Override;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
@@ -61,21 +62,23 @@ final class PasskeyAuthenticatorTest extends TestCase
 
 
 	public function __construct(
-		private readonly Session $session,
+		private readonly PasskeySessionSection $passkeySessionSection,
 		private readonly Database $database,
 		AuthenticatorAttestationResponseValidator $attestationResponseValidator,
 		AuthenticatorAssertionResponseValidator $assertionResponseValidator,
 		private readonly SerializerInterface $serializer,
-		private readonly PasskeyCredentials $credentials,
+		private readonly PasskeyStorage $passkeyStorage,
+		private readonly User $user,
 	) {
 		$this->passkeyAuthenticator = new PasskeyAuthenticator(
 			$attestationResponseValidator,
 			$assertionResponseValidator,
 			$serializer,
-			$credentials,
-			$session,
+			$passkeyStorage,
+			$passkeySessionSection,
 			'test.example',
 			'Test App',
+			$user,
 		);
 	}
 
@@ -83,7 +86,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 	#[Override]
 	protected function tearDown(): void
 	{
-		$this->session->getSection('passkey')->remove();
+		$this->passkeySessionSection->removeAll();
 		$this->database->reset();
 	}
 
@@ -123,7 +126,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$serializerMock,
 		);
-		$this->session->getSection('passkey')->set('authChallenge', random_bytes(32));
+		$this->passkeySessionSection->setAuthChallenge(random_bytes(32));
 		Assert::exception(function () use ($passkeyAuthenticator): void {
 			$passkeyAuthenticator->verifyAuthentication('not-valid-json');
 		}, PasskeyAuthenticationCredentialDeserializationException::class);
@@ -170,7 +173,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$serializerMock,
 		);
-		$this->session->getSection('passkey')->set('authChallenge', random_bytes(32));
+		$this->passkeySessionSection->setAuthChallenge(random_bytes(32));
 		$this->database->setFetchFieldDefaultResult('serialized-credential');
 		Assert::exception(function () use ($passkeyAuthenticator, $assertionJson): void {
 			$passkeyAuthenticator->verifyAuthentication($assertionJson);
@@ -181,7 +184,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 	public function testVerifyRegistrationThrowsWhenNoChallengeInSession(): void
 	{
 		Assert::exception(function (): void {
-			$this->passkeyAuthenticator->verifyRegistration('{}', 'foo key', 1, 'handle');
+			$this->passkeyAuthenticator->verifyRegistration('{}', 'foo key', 1);
 		}, PasskeyChallengeInvalidException::class);
 	}
 
@@ -196,27 +199,27 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$serializerMock,
 		);
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
 		Assert::exception(function () use ($passkeyAuthenticator): void {
-			$passkeyAuthenticator->verifyRegistration('not-valid-json', 'foo key', 1, 'handle');
+			$passkeyAuthenticator->verifyRegistration('not-valid-json', 'foo key', 1);
 		}, PasskeyRegistrationCredentialDeserializationException::class);
 	}
 
 
 	public function testVerifyRegistrationThrowsCrossOrigin(): void
 	{
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
 		Assert::exception(function (): void {
-			$this->passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(crossOrigin: true), 'key', 1, 'handle');
+			$this->passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(crossOrigin: true), 'key', 1);
 		}, PasskeyRegistrationCrossOriginRegistrationException::class);
 	}
 
 
 	public function testVerifyRegistrationThrowsCredentialIdTooShort(): void
 	{
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
 		Assert::exception(function (): void {
-			$this->passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(rawIdBytes: 15), 'key', 1, 'handle');
+			$this->passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(rawIdBytes: 15), 'key', 1);
 		}, PasskeyRegistrationCredentialIdTooShortException::class);
 	}
 
@@ -283,11 +286,21 @@ final class PasskeyAuthenticatorTest extends TestCase
 	}
 
 
+	public function testLogoutClearsSignedInCredentialId(): void
+	{
+		$this->user->login(new SimpleIdentity(1));
+		$this->passkeySessionSection->setSignedInCredentialId('some-credential-id');
+		Assert::same('some-credential-id', $this->passkeySessionSection->getSignedInCredentialId());
+		$this->user->logout();
+		Assert::null($this->passkeySessionSection->getSignedInCredentialId());
+	}
+
+
 	public function testVerifyRegistrationThrowsInvalidType(): void
 	{
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
 		Assert::exception(function (): void {
-			$this->passkeyAuthenticator->verifyRegistration($this->buildAssertionCredentialJson(), 'key', 1, 'handle');
+			$this->passkeyAuthenticator->verifyRegistration($this->buildAssertionCredentialJson(), 'key', 1);
 		}, PasskeyRegistrationInvalidTypeException::class);
 	}
 
@@ -302,9 +315,10 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$this->serializer,
 		);
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$this->database->addFetchFieldResult('handle');
 		Assert::exception(function () use ($passkeyAuthenticator): void {
-			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 1, 'handle');
+			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 1);
 		}, PasskeyRegistrationAttestationResponseValidatorException::class);
 	}
 
@@ -317,10 +331,12 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$this->serializer,
 		);
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$this->database->addFetchFieldResult('handle');
+		$this->database->setFetchFieldDefaultResult(1); // For PasskeyStorage::saveCredential() to throw PasskeyCredentialAlreadyRegisteredException
 		$this->database->willThrow(new UniqueConstraintViolationException());
 		Assert::exception(function () use ($passkeyAuthenticator): void {
-			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 42, 'handle');
+			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 42);
 		}, PasskeyCredentialAlreadyRegisteredException::class);
 	}
 
@@ -372,7 +388,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$serializerMock,
 		);
-		$this->session->getSection('passkey')->set('authChallenge', random_bytes(32));
+		$this->passkeySessionSection->setAuthChallenge(random_bytes(32));
 		$this->database->setFetchFieldDefaultResult('serialized-credential');
 		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
 		Assert::exception(function () use ($passkeyAuthenticator, $assertionJson): void {
@@ -394,9 +410,10 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$serializerMock,
 		);
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$this->database->addFetchFieldResult('handle');
 		Assert::exception(function () use ($passkeyAuthenticator, $attestationJson): void {
-			$passkeyAuthenticator->verifyRegistration($attestationJson, 'key', 42, 'handle');
+			$passkeyAuthenticator->verifyRegistration($attestationJson, 'key', 42);
 		}, PasskeyRegistrationCredentialRecordSerializationException::class);
 	}
 
@@ -409,9 +426,10 @@ final class PasskeyAuthenticatorTest extends TestCase
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
 			$this->serializer,
 		);
-		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$this->database->addFetchFieldResult('user-handle');
 
-		$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42, 'user-handle');
+		$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42);
 
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name ?');
 		Assert::count(1, $params);
@@ -445,10 +463,11 @@ final class PasskeyAuthenticatorTest extends TestCase
 			$attestationMock,
 			$assertionMock,
 			$serializer,
-			$this->credentials,
-			$this->session,
+			$this->passkeyStorage,
+			$this->passkeySessionSection,
 			'test.example',
 			'Test App',
+			$this->user,
 		);
 	}
 

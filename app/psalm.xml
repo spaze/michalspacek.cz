@@ -96,6 +96,9 @@
 				<file name="src/Presentation/Pulse/PasswordsStorages/PasswordsStoragesDefaultTemplateParameters.php" /> <!-- Properties used in templates -->
 				<file name="src/Presentation/Admin/Interviews/InterviewsDefaultTemplateParameters.php" /> <!-- Properties used in templates -->
 				<file name="src/Presentation/Admin/Interviews/InterviewsInterviewTemplateParameters.php" /> <!-- Properties used in templates -->
+				<file name="src/Presentation/Admin/Passkeys/PasskeysDefaultTemplateParameters.php" />
+				<file name="src/Presentation/Admin/Passkeys/PasskeysDeleteTemplateParameters.php" />
+				<file name="src/Presentation/Admin/Passkeys/PasskeysRenameTemplateParameters.php" />
 			</errorLevel>
 		</PossiblyUnusedProperty>
 		<PropertyNotSetInConstructor>
@@ -112,6 +115,7 @@
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
 				<referencedClass name="MichalSpacekCz\Application\Routing\RouterFactory" /> <!-- Used in services.neon -->
+				<referencedClass name="MichalSpacekCz\User\WebAuthn\PasskeySessionSectionFactory" /> <!-- Used in services.neon -->
 				<referencedClass name="MichalSpacekCz\Formatter\Placeholders\*" /> <!-- An array of these is passed to MichalSpacekCz\Formatter\TexyFormatter::__construct() by the DIC -->
 				<referencedClass name="MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut*" /> <!-- An array of these is passed to MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandler::__construct() by the DIC -->
 				<referencedClass name="MichalSpacekCz\Templating\LatteLinter" /> <!-- Used in bin/latte-lint.php -->

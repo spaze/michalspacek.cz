@@ -419,3 +419,27 @@ passkeys:
 	loadingOptions: "Nahrávám, prosím čekejte"
 	optionsFetchFailed: "Nepodařilo se načíst parametry passkey"
 	optionsFetchTryAgain: "Zkuste to znovu"
+	manage:
+		yourPasskeys: "Vaše passkeys"
+		managePasskeys: "Spravovat passkeys"
+		created: "Vytvořen"
+		lastUsed: "Naposledy použit"
+		never: "nikdy"
+		noPasskeys: "Žádné passkeys"
+		usedToday: "dnes"
+		usedYesterday: "včera"
+		usedDaysAgo: "před %count% dnem|před %count% dny|před %count% dny"
+		signedInWith: "přihlášen tímto"
+		notFound: "Passkey nebyl nalezen"
+	rename:
+		rename: "Přejmenovat"
+		renamePasskey: "Přejmenovat passkey"
+		renamed: "Passkey byl přejmenován"
+	delete:
+		delete: "Smazat"
+		deletePasskey: "Smazat passkey"
+		deleted: "Passkey //%s// byl smazán"
+		deleteConfirm: "Smazat passkey //%s//?"
+		cannotDeleteSignedInWith: "Passkey, kterým jste se přihlásili, nelze smazat"
+	general:
+		cancel: "Zrušit"

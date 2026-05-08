@@ -31,7 +31,6 @@ return (new Configuration())
 		'nette/component-model',
 		'nette/tester',
 		'spomky-labs/cbor-php',
-		'symfony/uid',
 	], [ErrorType::SHADOW_DEPENDENCY])
 	->ignoreErrorsOnExtensions([
 		'ext-simplexml',

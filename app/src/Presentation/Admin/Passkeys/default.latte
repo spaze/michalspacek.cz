@@ -1,0 +1,47 @@
+{templateType MichalSpacekCz\Presentation\Admin\Passkeys\PasskeysDefaultTemplateParameters}
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<p><a n:href="register">{_messages.passkeys.registerPasskey}</a></p>
+{if $passkeys}
+<ul class="passkeys">
+	{foreach $passkeys as $passkey}
+	<li>
+		<p class="passkey-header">
+			{icon fingerprint}
+			<strong>{$passkey->getName()}</strong>
+			<small n:if="$passkey->isSignedInWith()" class="label">{_messages.passkeys.manage.signedInWith}</small>
+		</p>
+		<dl class="passkey-meta">
+			<dt>{_messages.passkeys.manage.created}</dt>
+			<dd>{$passkey->getCreatedAt()|localeDay} <small>{$passkey->getCreatedAt()|date:'H:i'}</small></dd>
+			<dt>{_messages.passkeys.manage.lastUsed}</dt>
+			<dd>
+				{if $passkey->getLastUsedAt() !== null}
+					{$passkey->getLastUsedAt()|localeDay}
+					<small>
+						{$passkey->getLastUsedAt()|date:'H:i'}
+						&mdash;
+						{if $passkey->getLastUsedDaysAgo() === 0}
+							{_messages.passkeys.manage.usedToday}
+						{elseif $passkey->getLastUsedDaysAgo() === 1}
+							{_messages.passkeys.manage.usedYesterday}
+						{else}
+							{_messages.passkeys.manage.usedDaysAgo, $passkey->getLastUsedDaysAgo()}
+						{/if}
+					</small>
+				{else}
+					<small>{_messages.passkeys.manage.never}</small>
+				{/if}
+			</dd>
+		</dl>
+		<p class="passkey-actions">
+			<a n:href="rename, $passkey->getId()">{icon pencil class => space-after}{_messages.passkeys.rename.rename}</a>
+			<a n:if="!$passkey->isSignedInWith()" n:href="delete, $passkey->getId()">{icon trash class => space-after}{_messages.passkeys.delete.delete}</a>
+		</p>
+	</li>
+	{/foreach}
+</ul>
+{else}
+<p>{_messages.passkeys.manage.noPasskeys}</p>
+{/if}
+{/define}
