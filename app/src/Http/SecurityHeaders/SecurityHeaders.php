@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Http\SecurityHeaders;
 
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicy;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Http\StructuredHeaders;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
@@ -37,17 +39,7 @@ final readonly class SecurityHeaders
 		$this->httpResponse->setHeader('X-Frame-Options', 'DENY');
 		$this->httpResponse->setHeader('Referrer-Policy', 'no-referrer, strict-origin-when-cross-origin');
 		$this->sendContentSecurityPolicyHeaders($cspValues);
-		$this->httpResponse->setHeader('Permissions-Policy', $this->structuredHeaders->get([
-			'accelerometer' => PermissionsPolicyOrigin::None,
-			'camera' => PermissionsPolicyOrigin::None,
-			'geolocation' => PermissionsPolicyOrigin::None,
-			'gyroscope' => PermissionsPolicyOrigin::None,
-			'magnetometer' => PermissionsPolicyOrigin::None,
-			'microphone' => PermissionsPolicyOrigin::None,
-			'midi' => PermissionsPolicyOrigin::None,
-			'payment' => PermissionsPolicyOrigin::None,
-			'usb' => PermissionsPolicyOrigin::None,
-		]));
+		$this->httpResponse->setHeader('Permissions-Policy', $this->buildPermissionsPolicy());
 		$this->integrityPolicy->set();
 		$this->httpResponse->setHeader('Report-To', Json::encode([
 			'group' => ReportingApiEndpointName::Default->value,
@@ -60,6 +52,16 @@ final readonly class SecurityHeaders
 			'max_age' => 31536000,
 			'include_subdomains' => true,
 		]));
+	}
+
+
+	private function buildPermissionsPolicy(): string
+	{
+		$policy = [];
+		foreach (PermissionsPolicyDirective::cases() as $directive) {
+			$policy[$directive->value] = PermissionsPolicyOrigin::None;
+		}
+		return $this->structuredHeaders->get($policy);
 	}
 
 

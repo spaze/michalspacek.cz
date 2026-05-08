@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
-use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicyOrigin;
+use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
