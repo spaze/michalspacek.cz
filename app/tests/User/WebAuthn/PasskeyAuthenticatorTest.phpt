@@ -1,0 +1,503 @@
+<?php
+/** @noinspection PhpUnhandledExceptionInspection */
+declare(strict_types = 1);
+
+namespace MichalSpacekCz\User\WebAuthn;
+
+use CBOR\ByteStringObject;
+use CBOR\MapItem;
+use CBOR\MapObject;
+use CBOR\TextStringObject;
+use Exception;
+use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Serializer\SerializerMock;
+use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Test\User\WebAuthn\PasskeyAssertionResponseValidatorMock;
+use MichalSpacekCz\Test\User\WebAuthn\PasskeyAttestationResponseValidatorMock;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationAssertionResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialIdTooShortException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialRecordDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialRecordSerializationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCrossOriginAuthenticationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationInvalidTypeException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationUnknownCredentialException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationUserNotFoundException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyChallengeInvalidException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialAlreadyRegisteredException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialIdTooShortException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialRecordSerializationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCrossOriginRegistrationException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidTypeException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\Utils\Base64;
+use Nette\Database\UniqueConstraintViolationException;
+use Nette\Http\Session;
+use Nette\Utils\Json;
+use Override;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Uid\Uuid;
+use Tester\Assert;
+use Tester\TestCase;
+use Webauthn\AuthenticatorAssertionResponseValidator;
+use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\CredentialRecord;
+use Webauthn\Exception\AuthenticatorResponseVerificationException;
+use Webauthn\PublicKeyCredential;
+use Webauthn\PublicKeyCredentialDescriptor;
+use Webauthn\TrustPath\EmptyTrustPath;
+
+require __DIR__ . '/../../bootstrap.php';
+
+/** @testCase */
+final class PasskeyAuthenticatorTest extends TestCase
+{
+
+	private PasskeyAuthenticator $passkeyAuthenticator;
+
+
+	public function __construct(
+		private readonly Session $session,
+		private readonly Database $database,
+		AuthenticatorAttestationResponseValidator $attestationResponseValidator,
+		AuthenticatorAssertionResponseValidator $assertionResponseValidator,
+		private readonly SerializerInterface $serializer,
+		private readonly PasskeyCredentials $credentials,
+	) {
+		$this->passkeyAuthenticator = new PasskeyAuthenticator(
+			$attestationResponseValidator,
+			$assertionResponseValidator,
+			$serializer,
+			$credentials,
+			$session,
+			'test.example',
+			'Test App',
+		);
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->session->getSection('passkey')->remove();
+		$this->database->reset();
+	}
+
+
+	public function testGenerateAuthenticationOptionsGeneratesFreshChallenge(): void
+	{
+		$options1 = $this->passkeyAuthenticator->generateAuthenticationOptions();
+		$options2 = $this->passkeyAuthenticator->generateAuthenticationOptions();
+		Assert::notSame($options1, $options2);
+	}
+
+
+	public function testGenerateRegistrationOptionsGeneratesFreshChallenge(): void
+	{
+		$this->database->setFetchFieldDefaultResult('handle');
+		$options1 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+		$options2 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+		Assert::notSame($options1, $options2);
+	}
+
+
+	public function testVerifyAuthenticationThrowsWhenNoChallengeInSession(): void
+	{
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyAuthentication('{}');
+		}, PasskeyChallengeInvalidException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsOnInvalidCredentialJson(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		$this->session->getSection('passkey')->set('authChallenge', random_bytes(32));
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyAuthentication('not-valid-json');
+		}, PasskeyAuthenticationCredentialDeserializationException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsCrossOrigin(): void
+	{
+		$this->passkeyAuthenticator->generateAuthenticationOptions();
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson(crossOrigin: true));
+		}, PasskeyAuthenticationCrossOriginAuthenticationException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsCredentialIdTooShort(): void
+	{
+		$this->passkeyAuthenticator->generateAuthenticationOptions();
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson(rawIdBytes: 15));
+		}, PasskeyAuthenticationCredentialIdTooShortException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsUnknownCredential(): void
+	{
+		$this->passkeyAuthenticator->generateAuthenticationOptions();
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
+		}, PasskeyAuthenticationUnknownCredentialException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsCredentialRecordDeserializationException(): void
+	{
+		$assertionJson = $this->buildAssertionCredentialJson();
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([
+			PublicKeyCredential::class => $this->serializer->deserialize($assertionJson, PublicKeyCredential::class, 'json'),
+		]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		$this->session->getSection('passkey')->set('authChallenge', random_bytes(32));
+		$this->database->setFetchFieldDefaultResult('serialized-credential');
+		Assert::exception(function () use ($passkeyAuthenticator, $assertionJson): void {
+			$passkeyAuthenticator->verifyAuthentication($assertionJson);
+		}, PasskeyAuthenticationCredentialRecordDeserializationException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsWhenNoChallengeInSession(): void
+	{
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyRegistration('{}', 'foo key', 1, 'handle');
+		}, PasskeyChallengeInvalidException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsOnInvalidCredentialJson(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyRegistration('not-valid-json', 'foo key', 1, 'handle');
+		}, PasskeyRegistrationCredentialDeserializationException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsCrossOrigin(): void
+	{
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(crossOrigin: true), 'key', 1, 'handle');
+		}, PasskeyRegistrationCrossOriginRegistrationException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsCredentialIdTooShort(): void
+	{
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(rawIdBytes: 15), 'key', 1, 'handle');
+		}, PasskeyRegistrationCredentialIdTooShortException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsInvalidType(): void
+	{
+		$this->passkeyAuthenticator->generateAuthenticationOptions();
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyAuthentication($this->buildAttestationCredentialJson());
+		}, PasskeyAuthenticationInvalidTypeException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsAssertionResponseValidatorException(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$assertionMock = new PasskeyAssertionResponseValidatorMock($credentialRecord);
+		$assertionMock->willThrow(AuthenticatorResponseVerificationException::create(''));
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			$assertionMock,
+			$this->serializer,
+		);
+		$passkeyAuthenticator->generateAuthenticationOptions();
+		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
+		}, PasskeyAuthenticationAssertionResponseValidatorException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsUserNotFoundException(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$passkeyAuthenticator->generateAuthenticationOptions();
+		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
+		}, PasskeyAuthenticationUserNotFoundException::class);
+	}
+
+
+	public function testVerifyAuthenticationReturnsResult(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$passkeyAuthenticator->generateAuthenticationOptions();
+
+		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
+
+		$result = $passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
+		Assert::same(42, $result->userId);
+		Assert::same('test-user', $result->username);
+	}
+
+
+	public function testVerifyRegistrationThrowsInvalidType(): void
+	{
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyRegistration($this->buildAssertionCredentialJson(), 'key', 1, 'handle');
+		}, PasskeyRegistrationInvalidTypeException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsAttestationResponseValidatorException(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$attestationMock = new PasskeyAttestationResponseValidatorMock($credentialRecord);
+		$attestationMock->willThrow(new Exception('test'));
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			$attestationMock,
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 1, 'handle');
+		}, PasskeyRegistrationAttestationResponseValidatorException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsCredentialAlreadyRegistered(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		$this->database->willThrow(new UniqueConstraintViolationException());
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 42, 'handle');
+		}, PasskeyCredentialAlreadyRegisteredException::class);
+	}
+
+
+	public function testGenerateAuthenticationOptionsThrowsSerializationException(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->generateAuthenticationOptions();
+		}, PasskeyAuthenticationOptionsSerializationException::class);
+	}
+
+
+	public function testGenerateRegistrationOptionsThrowsSerializationException(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		$this->database->setFetchFieldDefaultResult('handle');
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+		}, PasskeyRegistrationOptionsSerializationException::class);
+	}
+
+
+	public function testVerifyAuthenticationThrowsCredentialRecordSerializationException(): void
+	{
+		$assertionJson = $this->buildAssertionCredentialJson();
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([
+			PublicKeyCredential::class => $this->serializer->deserialize($assertionJson, PublicKeyCredential::class, 'json'),
+			CredentialRecord::class => $credentialRecord,
+		]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		$this->session->getSection('passkey')->set('authChallenge', random_bytes(32));
+		$this->database->setFetchFieldDefaultResult('serialized-credential');
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
+		Assert::exception(function () use ($passkeyAuthenticator, $assertionJson): void {
+			$passkeyAuthenticator->verifyAuthentication($assertionJson);
+		}, PasskeyAuthenticationCredentialRecordSerializationException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsCredentialRecordSerializationException(): void
+	{
+		$attestationJson = $this->buildAttestationCredentialJson();
+		$credentialRecord = $this->buildCredentialRecord();
+		$serializerMock = new SerializerMock([
+			PublicKeyCredential::class => $this->serializer->deserialize($attestationJson, PublicKeyCredential::class, 'json'),
+		]);
+		$serializerMock->willThrow(new NotEncodableValueException());
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$serializerMock,
+		);
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+		Assert::exception(function () use ($passkeyAuthenticator, $attestationJson): void {
+			$passkeyAuthenticator->verifyRegistration($attestationJson, 'key', 42, 'handle');
+		}, PasskeyRegistrationCredentialRecordSerializationException::class);
+	}
+
+
+	public function testVerifyRegistrationSavesCredential(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$this->session->getSection('passkey')->set('regChallenge', random_bytes(32));
+
+		$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42, 'user-handle');
+
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name ?');
+		Assert::count(1, $params);
+		Assert::same(42, $params[0]['key_user']);
+		Assert::same('My Key', $params[0]['name']);
+	}
+
+
+	private function buildCredentialRecord(): CredentialRecord
+	{
+		return CredentialRecord::create(
+			publicKeyCredentialId: str_repeat("\x00", 16),
+			type: PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
+			transports: [],
+			attestationType: 'none',
+			trustPath: EmptyTrustPath::create(),
+			aaguid: Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+			credentialPublicKey: "\x00",
+			userHandle: "\x00",
+			counter: 0,
+		);
+	}
+
+
+	private function createPasskeyAuthenticator(
+		PasskeyAttestationResponseValidatorMock $attestationMock,
+		PasskeyAssertionResponseValidatorMock $assertionMock,
+		SerializerInterface $serializer,
+	): PasskeyAuthenticator {
+		return new PasskeyAuthenticator(
+			$attestationMock,
+			$assertionMock,
+			$serializer,
+			$this->credentials,
+			$this->session,
+			'test.example',
+			'Test App',
+		);
+	}
+
+
+	private function buildAssertionCredentialJson(bool $crossOrigin = false, int $rawIdBytes = 16): string
+	{
+		$idBase64Url = Base64::urlEncode(str_repeat("\x00", $rawIdBytes));
+		$clientData = ['type' => 'webauthn.get', 'challenge' => 'AAAA', 'origin' => 'https://test.example'];
+		if ($crossOrigin) {
+			$clientData['crossOrigin'] = true;
+		}
+		$clientDataBase64Url = Base64::urlEncode(Json::encode($clientData));
+		return Json::encode([
+			'id' => $idBase64Url,
+			'rawId' => $idBase64Url,
+			'type' => 'public-key',
+			'response' => [
+				'clientDataJSON' => $clientDataBase64Url,
+				'authenticatorData' => Base64::urlEncode(str_repeat("\x00", 37)),
+				'signature' => 'AAAA',
+			],
+		]);
+	}
+
+
+	private function buildAttestationCredentialJson(bool $crossOrigin = false, int $rawIdBytes = 16): string
+	{
+		$idBase64Url = Base64::urlEncode(str_repeat("\x00", $rawIdBytes));
+		$clientData = ['type' => 'webauthn.create', 'challenge' => 'AAAA', 'origin' => 'https://test.example'];
+		if ($crossOrigin) {
+			$clientData['crossOrigin'] = true;
+		}
+		$clientDataBase64Url = Base64::urlEncode(Json::encode($clientData));
+		$cbor = (string) MapObject::create([
+			MapItem::create(TextStringObject::create('fmt'), TextStringObject::create('none')),
+			MapItem::create(TextStringObject::create('attStmt'), MapObject::create()),
+			MapItem::create(TextStringObject::create('authData'), ByteStringObject::create(str_repeat("\x00", 37))),
+		]);
+		return Json::encode([
+			'id' => $idBase64Url,
+			'rawId' => $idBase64Url,
+			'type' => 'public-key',
+			'response' => [
+				'clientDataJSON' => $clientDataBase64Url,
+				'attestationObject' => Base64::urlEncode($cbor),
+			],
+		]);
+	}
+
+}
+
+TestCaseRunner::run(PasskeyAuthenticatorTest::class);

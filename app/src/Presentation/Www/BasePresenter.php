@@ -14,6 +14,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\Request;
+use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IResponse;
@@ -169,6 +170,16 @@ abstract class BasePresenter extends Presenter
 		parent::lastModified($lastModified, $etag, $expire);
 		// If the response was HTTP 304 then the following line won't be reached and 304s won't be compressed
 		ini_set('zlib.output_compression', $compression);
+	}
+
+
+	/**
+	 * Like sendJson() but accepts an already-serialized JSON string, avoiding a decode/re-encode round-trip
+	 */
+	protected function sendJsonString(string $json): never
+	{
+		$this->getHttpResponse()->setContentType('application/json');
+		$this->sendResponse(new TextResponse($json));
 	}
 
 

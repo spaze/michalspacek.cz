@@ -1,0 +1,17 @@
+{define #scripts}
+	{script app-passkey + passkey-reset async, defer}
+{/define}
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{form passkeyReset id => passkeyReset}
+	<p>{_messages.passkeys.enterPasskeyName}</p>
+	{label name /} {input name}
+	{input credential}
+	{input token}
+	{input register}
+	<p id="passkeyOptionsError" hidden>
+		{_messages.passkeys.optionsFetchFailed}
+		<button type="button" id="passkeyRetry">{_messages.passkeys.optionsFetchTryAgain}</button>
+	</p>
+{/form}
+{/define}

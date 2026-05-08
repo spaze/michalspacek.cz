@@ -65,9 +65,11 @@ services:
 	- MichalSpacekCz\Form\Training\TrainingInvoiceFormFactory
 	- MichalSpacekCz\Form\Training\TrainingMailsOutboxFormFactory
 	- MichalSpacekCz\Form\Training\TrainingReviewFormFactory
-	- MichalSpacekCz\Form\User\ChangePasswordFormFactory
+	- MichalSpacekCz\Form\Controls\PasskeyFormControls
+	- MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory
+	- MichalSpacekCz\Form\User\PasskeyRegisterFormFactory
+	- MichalSpacekCz\Form\User\PasskeyResetFormFactory
 	- MichalSpacekCz\Form\User\RegenerateTokensFormFactory
-	- MichalSpacekCz\Form\User\SignInFormFactory
 	- MichalSpacekCz\Form\User\SignInHoneypotFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
@@ -189,7 +191,11 @@ services:
 	- MichalSpacekCz\UpcKeys\Ubee(@typedDatabase.upcKeys)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\UpcKeys\UpcKeysStorageConversions
-	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
+	- MichalSpacekCz\User\Manager(permanentLoginInterval: %permanentLogin.interval%, resetEnabled: %authentication.passkeys.resetEnabled%, usersTableName: %authentication.tables.users%)
+	passkeyCredentials: MichalSpacekCz\User\WebAuthn\PasskeyCredentials(passkeyCredentialsTableName: %authentication.tables.passkeyCredentials%, usersTableName: %authentication.tables.users%)
+	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
+	- MichalSpacekCz\User\WebAuthn\PasskeyReset
+	- MichalSpacekCz\User\WebAuthn\PasskeyResetUrl
 	- MichalSpacekCz\User\UserSessionAdditionalData
 	sleep: MichalSpacekCz\Utils\Sleep
 	- MichalSpacekCz\Utils\Strings
@@ -204,3 +210,12 @@ services:
 	sessionEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.session%, %encryption.activeKeyIds.session%, %encryption.keyPrefixes.session%)
 	- Spaze\PhpInfo\PhpInfo
 	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\PhpFilesAdapter(namespace: 'TexyFormatter', directory: '%tempDir%/cache', appendOnly: true)
+	- Webauthn\AttestationStatement\AttestationStatementSupportManager
+	webauthnCeremonyStepManagerFactory:
+		create: Webauthn\CeremonyStep\CeremonyStepManagerFactory
+		setup:
+			- setAllowedOrigins([%authentication.passkeys.origin%])
+	webauthnSerializerFactory: Webauthn\Denormalizer\WebauthnSerializerFactory
+	- @webauthnSerializerFactory::create()
+	- Webauthn\AuthenticatorAttestationResponseValidator(@webauthnCeremonyStepManagerFactory::creationCeremony())
+	- Webauthn\AuthenticatorAssertionResponseValidator(@webauthnCeremonyStepManagerFactory::requestCeremony())

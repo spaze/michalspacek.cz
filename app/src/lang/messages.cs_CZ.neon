@@ -396,7 +396,6 @@ cookies:
 	expiresEndOfSession: "Expiruje na konci sezení."
 	cookie:
 		permanentLogin: "Obsahuje identifikátor pro permanentní přihlášení."
-		returningUser: "Identifikátor pro správné zobrazení přihlašovacího formuláře, bez něj se nezobrazí."
 		theme: "Hodnota určuje barevný režim, ve kterém se stránky zobrazí."
 		netteSession: "Cookie představuje identifikátor sezení, //session id//."
 		netteSameSiteCheck: "Používá se pro detekci \"//same-site//\":[blog:co-znamena-origin-site-etld-etld-plus-1-public-suffix-a-psl#same-site] požadavků."
@@ -405,3 +404,18 @@ httpHeaders:
 forms:
 	validateSlugParamsError: "%label musí odpovídat formátu %d"
 	validateSlugParamsEasterEgg: "%label nemůže být '%value', protože to spustí Easter egg"
+passkeys:
+	authenticationCanceled: "Přihlášení pomocí passkey bylo zrušeno"
+	authenticationFailed: "Přihlášení pomocí passkey selhalo"
+	notSupported: "Passkeys nejsou podporovány"
+	registerPasskey: "Registrovat passkey"
+	registration: "Registrace passkey"
+	registrationCanceled: "Registrace passkey byla zrušena"
+	registrationFailed: "Registrace passkey selhala, zkuste to prosím znovu"
+	registered: "Passkey byl zaregistrován"
+	passkeyName: "Název passkey:"
+	passkeyNameExample: "např. Nokia 3310"
+	enterPasskeyName: "Zadejte název tohoto passkey (např. název zařízení) a klikněte na tlačítko."
+	loadingOptions: "Nahrávám, prosím čekejte"
+	optionsFetchFailed: "Nepodařilo se načíst parametry passkey"
+	optionsFetchTryAgain: "Zkuste to znovu"

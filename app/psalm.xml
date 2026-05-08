@@ -30,6 +30,7 @@
 	<universalObjectCrates>
 		<class name="MichalSpacekCz\Templating\DefaultTemplate"/>
 		<class name="Nette\Database\Row"/>
+		<class name="Nette\Database\Table\ActiveRow"/>
 		<class name="Nette\Utils\ArrayHash"/>
 	</universalObjectCrates>
 	<stubs>

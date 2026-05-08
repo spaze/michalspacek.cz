@@ -396,7 +396,6 @@ cookies:
 	expiresEndOfSession: "Expires at the end of the session."
 	cookie:
 		permanentLogin: "Contains a permanent login identifier."
-		returningUser: "An identifier which, if correct, will allow the login form to be displayed correctly."
 		theme: "The value specifies the color mode in which the pages are displayed."
 		netteSession: "The cookie holds the session identifier."
 		netteSameSiteCheck: "Used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
@@ -405,3 +404,18 @@ httpHeaders:
 forms:
 	validateSlugParamsError: "%label must match %d"
 	validateSlugParamsEasterEgg: "%label can't be '%value', because that's used by an Easter egg"
+passkeys:
+	authenticationCanceled: "Passkey authentication canceled"
+	authenticationFailed: "Passkey authentication failed"
+	notSupported: "Passkeys not supported"
+	registerPasskey: "Register a passkey"
+	registration: "Passkey registration"
+	registrationCanceled: "Passkey registration canceled"
+	registrationFailed: "Passkey registration failed, please try again"
+	registered: "Passkey has been registered"
+	passkeyName: "Passkey name:"
+	passkeyNameExample: "e.g. Nokia 3310"
+	enterPasskeyName: "Enter a name for this passkey (e.g. device name) and click the button."
+	loadingOptions: "Loading, please wait"
+	optionsFetchFailed: "Failed to load passkey options"
+	optionsFetchTryAgain: "Try again"

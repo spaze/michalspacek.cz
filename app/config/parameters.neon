@@ -41,6 +41,15 @@ parameters:
 	loadCompanyDataVisible: true
 	permanentLogin:
 		interval: 14 days
+	authentication:
+		tables:
+			passkeyCredentials: passkey_credentials
+			users: users
+		passkeys:
+			rpId:
+			rpName:
+			origin:
+			resetEnabled: false
 	certificatesApi:
 		hideExpiredAfter: 10
 		users:  # Added in local.neon

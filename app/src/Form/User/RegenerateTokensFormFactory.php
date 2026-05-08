@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\User;
 
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
@@ -17,7 +16,6 @@ final readonly class RegenerateTokensFormFactory
 	public function __construct(
 		private FormFactory $factory,
 		private Session $sessionHandler,
-		private LinkGenerator $linkGenerator,
 		private Manager $authenticator,
 		private User $user,
 	) {
@@ -32,7 +30,6 @@ final readonly class RegenerateTokensFormFactory
 		$form = $this->factory->create();
 		$form->addCheckbox('session', 'Session id')->setDefaultValue(true);
 		$form->addCheckbox('permanent', 'Permanent login token')->setDefaultValue(true);
-		$form->addCheckbox('returning', 'Returning user token')->setDefaultValue(true);
 		$form->addSubmit('regenerate', 'Přegenerovat');
 
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
@@ -43,14 +40,7 @@ final readonly class RegenerateTokensFormFactory
 			if ($values->permanent) {
 				$this->authenticator->regeneratePermanentLogin($this->user);
 			}
-			if ($values->returning) {
-				$selectorToken = $this->authenticator->regenerateReturningUser($this->user);
-			}
-			$message = Html::el()->setText('Tokeny přegenerovány ');
-			if (isset($selectorToken)) {
-				$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Admin:Sign:knockKnock', [$selectorToken]))->setText('Odkaz na přihlášení'));
-			}
-			$onSuccess($message);
+			$onSuccess('Tokeny přegenerovány');
 		};
 		return $form;
 	}

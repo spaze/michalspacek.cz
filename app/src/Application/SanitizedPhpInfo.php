@@ -25,9 +25,8 @@ final readonly class SanitizedPhpInfo
 		// Session id is sanitized by default but let's be explicit here
 		$this->phpInfo->addSanitization($this->sessionHandler->getId(), PhpInfoCookieSanitization::SESSION_ID);
 
-		// Sanitize these as well even though they're sent to sign-in URL only
+		// Sanitize permanent login cookie even though it's sent to sign-in URL only
 		$cookieNames = [
-			CookieName::ReturningUser,
 			CookieName::PermanentLogin,
 		];
 		foreach ($cookieNames as $cookieName) {

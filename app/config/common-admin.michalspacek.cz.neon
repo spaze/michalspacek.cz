@@ -9,3 +9,8 @@ parameters:
 	domain:
 		fqdn: admin.%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%
+	authentication:
+		passkeys:
+			rpId: admin.%domain.root%
+			rpName: Michal Špaček admin
+			origin: https://admin.%domain.root%

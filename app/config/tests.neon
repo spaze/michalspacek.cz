@@ -47,6 +47,7 @@ services:
 	texyFormatter: MichalSpacekCz\Test\Formatter\TexyFormatterMock(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	httpClient: MichalSpacekCz\Test\Http\Client\HttpClientMock
 	- MichalSpacekCz\Test\Form\FormComponents
+	passkeyAuthentication: MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
@@ -65,3 +66,7 @@ services:
 		autowired: self
 	- Nette\Http\SessionSection(name: test)
 	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\ArrayAdapter
+	webauthnCeremonyStepManagerFactory:
+		create: Webauthn\CeremonyStep\CeremonyStepManagerFactory
+		setup:
+			- setAllowedOrigins([https://test.example])

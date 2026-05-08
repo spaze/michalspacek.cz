@@ -66,6 +66,8 @@ public static function getPositionalArgs(): array // positional args, using Nett
 
 `bootCli()` automatically adds `--debug` and `--colors` to every script's arg list on top of whatever the provider declares. It parses `$argv` against these definitions and registers the result as a `CliArgs` instance in the DI container, available for injection into any service. `CliArgs` provides `getFlag(string $arg): bool`, `getArg(string $arg): string`, and `getError(): ?string`. `getError()` is non-null when `$argv` parsing failed (e.g. an unknown flag was passed); services should check it before using the args. Scripts that accept no arguments pass `NoCliArgs` (returns empty arrays from both methods).
 
+`exit()` belongs in the script file, not in the service class. Services return values or throw exceptions; the script file handles output and exit codes.
+
 ### Config loading order
 
 `Bootstrap::boot()` loads these in sequence (later files win):
@@ -114,6 +116,17 @@ parameters:
 
 An empty mask (like `Homepage`) means the presenter handles the domain root. Routes for other domains (Admin, Api, Pulse, UpcKeys, etc.) are hardcoded in `RouterFactory::createRouter()` and do not use `routes.neon`.
 
+### Naming conventions
+
+Interfaces have no prefix (`I`) and no suffix (`Interface`, `Contract`). The name describes the role; the namespace provides context. The concrete class gets the more specific name:
+
+```
+MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator  ← interface
+MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator   ← implementation
+```
+
+The exception is Nette's auto-implemented DI factory interfaces, which follow the `*Factory` convention by framework requirement (see below).
+
 ### DI factory interfaces
 
 Nette auto-implements factory interfaces. Any interface named `*Factory` with a single `create()` method, when registered in `app/config/services.neon`, gets a generated implementation — inject via constructor, no manual `new`:
@@ -140,6 +153,25 @@ interface FormValidatorRuleTexyFactory
 - `default` — main application data (talks, training, etc.)
 - `pulse` — password storage security ratings (companies, algorithms, disclosures)
 - `upcKeys` — WiFi router default key data (Technicolor, Ubee)
+
+### Database transactions
+
+`beginTransaction()` goes before the try block — if it throws, there is nothing to roll back. The try block covers only the work done inside the transaction:
+
+```php
+$this->database->beginTransaction();
+try {
+    // ... queries ...
+    $this->database->commit();
+} catch (Exception $e) {
+    $this->database->rollBack();
+    throw $e;
+}
+```
+
+### Null checks
+
+Use explicit `if ($x === null)` guards rather than the null coalescing throw (`?? throw`) pattern.
 
 ### Testing
 
@@ -173,3 +205,38 @@ PHPStan at level max with strict rules. Project-specific restrictions:
 ### Translations
 
 Translation strings live in `app/src/lang/` as `.neon` files, loaded via `Contributte\Translation`. Two locales are used: `cs_CZ` and `en_US`. The `www` domain serves both (`cs_CZ` at michalspacek.cz, `en_US` at michalspacek.com); other domains serve a single locale each, defined in `app/config/parameters.neon` under `locales.supported`.
+
+Keys are accessed as `$this->translator->translate('messages.section.keyName')`. Sections and key names are camelCase. CLI script messages stay in English (no translation); web UI messages are always translated.
+
+When touching a component that has user-facing strings, translate all strings in that component for consistency. Don't reach into unrelated components to translate their strings in the same change.
+
+### HTTP errors from presenters
+
+Use `throw new BadRequestException($message, $httpCode)` to abort with an HTTP error. Do not use `$this->error()` — it is just a wrapper around `BadRequestException` and the rest of the codebase throws directly.
+
+The `$message` is never sent to the client — it goes to the access log only. The HTTP response uses the translated `messages.error.{code}` string. Developer-readable messages in `BadRequestException` are fine.
+
+### JSON responses from presenters
+
+`$this->sendJson($data)` serializes `$data` to JSON and sends it. If the data is already serialized JSON (e.g. coming from a service that returns a JSON string), use `$this->sendJsonString($json)` from `Www\BasePresenter` instead — it sets the content type and sends a `TextResponse`, avoiding a decode/re-encode round-trip.
+
+### Subresource Integrity
+
+Every JS or CSS file referenced via `{script ...}` or `{style ...}` in a Latte template must also be listed under `subresourceIntegrity.resources` in `app/config/common.neon`.  An unknown resource name is silently treated as a literal string and embedded as-is in the output instead of resolving to the actual file or failing loudly.
+
+### Content Security Policy
+
+CSP policies live in `app/config/contentsecuritypolicy.neon`. When a page needs `fetch()` or other connectivity (e.g. WebAuthn options endpoints), add a `connect-src` entry for that page. The config key is the Nette action name — module, presenter, and action all lowercased with dots, not the URL slug:
+
+```neon
+admin.sign.passkeyreset:   # Nette: Admin:Sign:passkeyReset → lowercased, dotted
+    @extends: admin.*.*
+    connect-src:
+        - "'self'"
+```
+
+### Error and UI messages
+
+Do not end error or UI messages with a full stop (`.`). This applies to short status and error strings (e.g. "Passkey registration failed") — full instructional sentences that are grammatically complete may keep their period.
+
+Use American English spelling: `Canceled` (one L), not `Cancelled`.

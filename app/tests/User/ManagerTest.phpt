@@ -6,23 +6,21 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
+use MichalSpacekCz\Application\LinkGenerator;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Cookies\CookieName;
+use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
 use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
-use Nette\DI\Container;
-use Nette\Security\AuthenticationException;
-use Nette\Security\Passwords;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
-use PDOException;
-use Spaze\Encryption\SymmetricKeyEncryption;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -32,20 +30,14 @@ require __DIR__ . '/../bootstrap.php';
 final class ManagerTest extends TestCase
 {
 
-	private readonly SymmetricKeyEncryption $passwordEncryption;
-
-
 	public function __construct(
-		private readonly Manager $authenticator,
 		private readonly User $user,
 		private readonly Database $database,
-		private readonly Passwords $passwords,
-		private readonly Request $request,
-		Container $container,
+		private readonly TypedDatabase $typedDatabase,
+		private readonly Request $httpRequest,
+		private readonly Cookies $cookies,
+		private readonly LinkGenerator $linkGenerator,
 	) {
-		$service = $container->getService('passwordEncryption');
-		assert($service instanceof SymmetricKeyEncryption);
-		$this->passwordEncryption = $service;
 	}
 
 
@@ -61,7 +53,7 @@ final class ManagerTest extends TestCase
 	{
 		$id = 1337;
 		$username = 'pizza';
-		$identity = $this->authenticator->getIdentity($id, $username);
+		$identity = $this->getAuthenticator(false)->getIdentity($id, $username);
 		Assert::type(SimpleIdentity::class, $identity);
 		Assert::same($id, $identity->id);
 		Assert::same($id, $identity->getId());
@@ -77,7 +69,7 @@ final class ManagerTest extends TestCase
 	public function testGetIdentityUsernameByUserNoIdentity(): void
 	{
 		Assert::exception(function (): void {
-			$this->authenticator->getIdentityUsernameByUser($this->user);
+			$this->getAuthenticator(false)->getIdentityUsernameByUser($this->user);
 		}, IdentityNotSimpleIdentityException::class, 'Identity is of class <null> but should be Nette\Security\SimpleIdentity');
 	}
 
@@ -87,7 +79,7 @@ final class ManagerTest extends TestCase
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337));
 		Assert::exception(function (): void {
-			$this->authenticator->getIdentityUsernameByUser($this->user);
+			$this->getAuthenticator(false)->getIdentityUsernameByUser($this->user);
 		}, IdentityWithoutUsernameException::class);
 	}
 
@@ -97,7 +89,7 @@ final class ManagerTest extends TestCase
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337, [], ['username' => 303]));
 		Assert::exception(function (): void {
-			$this->authenticator->getIdentityUsernameByUser($this->user);
+			$this->getAuthenticator(false)->getIdentityUsernameByUser($this->user);
 		}, IdentityUsernameNotStringException::class, 'Identity username is of type int, not a string');
 	}
 
@@ -106,57 +98,42 @@ final class ManagerTest extends TestCase
 	{
 		$id = 1337;
 		$username = 'pizza';
-		$identity = $this->authenticator->getIdentity($id, $username);
+		$authenticator = $this->getAuthenticator(false);
+		$identity = $authenticator->getIdentity($id, $username);
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', $identity);
-		Assert::same($username, $this->authenticator->getIdentityUsernameByUser($this->user));
+		Assert::same($username, $authenticator->getIdentityUsernameByUser($this->user));
 	}
 
 
-	public function testChangePassword(): void
+	public function testIsResetEnabled(): void
 	{
-		$oldPassword = 'hunter2';
-		$newPassword = 'hunter3';
-		PrivateProperty::setValue($this->user, 'authenticated', true);
-		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337, [], ['username' => '303']));
-		$this->database->setFetchDefaultResult([
-			'userId' => 1337,
-			'username' => '303',
-			'password' => $this->passwordEncryption->encrypt($this->passwords->hash($oldPassword)),
-		]);
-		Assert::noError(function () use ($oldPassword, $newPassword): void {
-			$this->authenticator->changePassword($this->user, $oldPassword, $newPassword);
-		});
-		$encryptedHash = $this->database->getParamsForQuery('UPDATE users SET password = ? WHERE id_user = ?')[0];
-		if (is_string($encryptedHash)) {
-			Assert::true($this->passwords->verify($newPassword, $this->passwordEncryption->decrypt($encryptedHash)));
-		} else {
-			Assert::fail('Encrypted hash should be a string but is ' . get_debug_type($encryptedHash));
-		}
+		Assert::false($this->getAuthenticator(false)->isPasskeyResetEnabled());
+		Assert::true($this->getAuthenticator(true)->isPasskeyResetEnabled());
+		Assert::false($this->getAuthenticator(false)->isPasskeyResetEnabled());
 	}
 
 
-	public function testChangePasswordUserIdNotInt(): void
+	public function testCreateResetTokenThrowsWhenDisabled(): void
 	{
-		PrivateProperty::setValue($this->user, 'authenticated', true);
-		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity('e1337', [], ['username' => '303']));
-		$oldPassword = 'hunter2';
-		$newPassword = 'hunter3';
-		$e = Assert::exception(function () use ($oldPassword, $newPassword): void {
-			$this->authenticator->changePassword($this->user, $oldPassword, $newPassword);
-		}, IdentityIdNotIntException::class, 'Identity id is of type string, not an integer');
-		if (!$e instanceof IdentityIdNotIntException) {
-			Assert::fail('Exception is of a wrong type ' . get_debug_type($e));
-		} else {
-			Assert::notContains($oldPassword, $e->getTraceAsString());
-			Assert::notContains($newPassword, $e->getTraceAsString());
-		}
+		Assert::exception(function (): void {
+			$this->getAuthenticator(false)->createPasskeyResetToken(1337);
+		}, PasskeyResetDisabledException::class);
+	}
+
+
+	public function testVerifyResetTokenThrowsWhenDisabled(): void
+	{
+		Assert::exception(function (): void {
+			$this->getAuthenticator(false)->verifyPasskeyResetToken('some token');
+		}, PasskeyResetDisabledException::class);
 	}
 
 
 	public function testVerifyPermanentLogin(): void
 	{
-		Assert::null($this->authenticator->verifyPermanentLogin());
+		$authenticator = $this->getAuthenticator(false);
+		Assert::null($authenticator->verifyPermanentLogin());
 
 		$tokenId = 1337;
 		$token = 'bar';
@@ -169,8 +146,8 @@ final class ManagerTest extends TestCase
 			'userId' => $userId,
 			'username' => $username,
 		]);
-		$this->request->setCookie(CookieName::PermanentLogin->value, "foo:{$token}");
-		$authToken = $this->authenticator->verifyPermanentLogin();
+		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "foo:{$token}");
+		$authToken = $authenticator->verifyPermanentLogin();
 		if (!$authToken instanceof UserAuthToken) {
 			Assert::fail('Token is of a wrong type ' . get_debug_type($authToken));
 		} else {
@@ -180,102 +157,23 @@ final class ManagerTest extends TestCase
 			Assert::same($username, $authToken->getUsername());
 		}
 
-		$this->request->setCookie(CookieName::PermanentLogin->value, "foo:not{$token}");
-		Assert::null($this->authenticator->verifyPermanentLogin());
+		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "foo:not{$token}");
+		Assert::null($authenticator->verifyPermanentLogin());
 	}
 
 
-	public function testVerifyReturningUser(): void
+	private function getAuthenticator(bool $resetEnabled): Manager
 	{
-		Assert::null($this->authenticator->verifyReturningUser('foo'));
-
-		$tokenId = 1337;
-		$token = 'baz';
-		$hash = hash('sha512', $token);
-		$userId = 1338;
-		$username = '🍕🍕🍕';
-		$this->database->setFetchDefaultResult([
-			'id' => $tokenId,
-			'token' => $hash,
-			'userId' => $userId,
-			'username' => $username,
-		]);
-		$authToken = $this->authenticator->verifyReturningUser("foo:{$token}");
-		if (!$authToken instanceof UserAuthToken) {
-			Assert::fail('Token is of a wrong type ' . get_debug_type($authToken));
-		} else {
-			Assert::same($tokenId, $authToken->getId());
-			Assert::same($hash, $authToken->getToken());
-			Assert::same($userId, $authToken->getUserId());
-			Assert::same($username, $authToken->getUsername());
-		}
-
-		Assert::null($this->authenticator->verifyReturningUser("foo:not{$token}"));
-	}
-
-
-	public function testAuthenticate(): void
-	{
-		$userId = 1337;
-		$username = '303';
-		$password = 'hunter42';
-		Assert::exception(function (): void {
-			$this->authenticator->authenticate('foo', 'bar');
-		}, AuthenticationException::class, 'The username is incorrect.');
-		$this->database->setFetchDefaultResult([
-			'userId' => $userId,
-			'username' => $username,
-			'password' => $this->passwordEncryption->encrypt($this->passwords->hash($password)),
-		]);
-		Assert::exception(function () use ($username): void {
-			$this->authenticator->authenticate($username, 'bar');
-		}, AuthenticationException::class, 'The password is incorrect.');
-		$identity = $this->authenticator->authenticate($username, $password);
-		Assert::same($userId, $identity->getId());
-		Assert::same($username, $identity->getData()['username']);
-	}
-
-
-	public function testAuthenticateRehashPasswords(): void
-	{
-		$userId = 1337;
-		$username = 'foo';
-		$password = 'bar';
-		$hash = password_hash($password, PASSWORD_DEFAULT);
-		$this->database->setFetchDefaultResult([
-			'userId' => $userId,
-			'username' => $username,
-			'password' => $this->passwordEncryption->encrypt($hash),
-		]);
-		Assert::noError(function () use ($username, $password): void {
-			$this->authenticator->authenticate($username, $password);
-		});
-		$params = $this->database->getParamsForQuery('UPDATE users SET password = ? WHERE id_user = ?');
-		if (!is_string($params[0])) {
-			Assert::fail('Encrypted data is of a wrong type ' . get_debug_type($params[0]));
-		} else {
-			Assert::notSame($hash, $this->passwordEncryption->decrypt($params[0]));
-		}
-		if (!is_int($params[1])) {
-			Assert::fail('User id is of a wrong type ' . get_debug_type($params[0]));
-		} else {
-			Assert::same($userId, $params[1]);
-		}
-	}
-
-
-	public function testAuthenticateException(): void
-	{
-		$password = 'hunter2';
-		$this->database->willThrow(new PDOException());
-		$e = Assert::exception(function () use ($password): void {
-			$this->authenticator->authenticate('foo', $password);
-		}, AuthenticationException::class);
-		if (!$e instanceof AuthenticationException) {
-			Assert::fail('Exception is of a wrong type ' . get_debug_type($e));
-		} else {
-			Assert::notContains($password, $e->getTraceAsString());
-		}
+		return new Manager(
+			$this->database,
+			$this->typedDatabase,
+			$this->httpRequest,
+			$this->cookies,
+			$this->linkGenerator,
+			'14 days',
+			$resetEnabled,
+			'users',
+		);
 	}
 
 }
