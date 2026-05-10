@@ -7,11 +7,21 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\WillThrow;
 use Nette\Utils\Html;
 use Override;
+use Texy\Texy;
 
 final class TexyFormatterMock extends TexyFormatter
 {
 
 	use WillThrow;
+
+
+	#[Override]
+	public function createTexy(): Texy
+	{
+		$texy = parent::createTexy();
+		$texy->allowed['longwords'] = false;
+		return $texy;
+	}
 
 
 	#[Override]

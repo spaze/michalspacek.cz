@@ -60,9 +60,6 @@ parameters:
 				form: [action, method, target]
 				button: []
 				input: [type, name, value]
-	texyFormatter:
-		allowed:
-			longWords: true
 
 	# Added/changed in local.neon
 	contact:

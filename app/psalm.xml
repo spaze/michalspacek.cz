@@ -81,6 +81,7 @@
 				<referencedMethod name="MichalSpacekCz\Application\Routing\RouterFactory::createRouter" /> <!-- Used in services.neon -->
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
+				<referencedMethod name="MichalSpacekCz\Formatter\TexyFormatter::translateText" /> <!-- Used in the passkeys UI, separate PR #737 -->
 			</errorLevel>
 		</PossiblyUnusedMethod>
 		<PossiblyUnusedReturnValue>

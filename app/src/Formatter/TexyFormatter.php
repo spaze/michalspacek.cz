@@ -22,6 +22,8 @@ class TexyFormatter
 
 	private ?Texy $texy = null;
 
+	private ?Texy $texyNoLongWords = null;
+
 	private bool $cacheResult = true;
 
 	/**
@@ -53,7 +55,6 @@ class TexyFormatter
 		private readonly Translator $translator,
 		private readonly TexyPhraseHandler $phraseHandler,
 		private readonly array $placeholders,
-		private readonly bool $allowedLongWords,
 		string $staticRoot,
 		string $imagesRoot,
 		string $locationRoot,
@@ -94,29 +95,46 @@ class TexyFormatter
 		if ($this->texy !== null) {
 			$this->texy->headingModule->top = $this->topHeading;
 		}
+		if ($this->texyNoLongWords !== null) {
+			$this->texyNoLongWords->headingModule->top = $this->topHeading;
+		}
 		return $this;
 	}
 
 
-	/**
-	 * Create Texy object.
-	 *
-	 * @return Texy
-	 */
+	public function createTexy(): Texy
+	{
+		$texy = new Texy();
+		$texy->allowedTags = Texy::NONE;
+		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
+		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
+		$texy->figureModule->widthDelta = false; // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
+		$texy->headingModule->generateID = true;
+		$texy->headingModule->idPrefix = '';
+		$texy->headingModule->top = $this->topHeading;
+		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
+		$texy->allowed['phrase/del'] = true;
+		$texy->allowed['longwords'] = true;
+		$texy->addHandler('phrase', $this->phraseHandler->solve(...));
+		return $texy;
+	}
+
+
+	private function getTexyNoLongWords(): Texy
+	{
+		if ($this->texyNoLongWords === null) {
+			$this->texyNoLongWords = $this->createTexy();
+			$this->texyNoLongWords->allowed['longwords'] = false;
+		}
+		return $this->texyNoLongWords;
+	}
+
+
 	public function getTexy(): Texy
 	{
-		$this->texy = new Texy();
-		$this->texy->allowedTags = Texy::NONE;
-		$this->texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
-		$this->texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
-		$this->texy->figureModule->widthDelta = false; // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
-		$this->texy->headingModule->generateID = true;
-		$this->texy->headingModule->idPrefix = '';
-		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
-		$this->texy->allowed['phrase/del'] = true;
-		$this->texy->allowed['longwords'] = $this->allowedLongWords;
-		$this->texy->addHandler('phrase', $this->phraseHandler->solve(...));
-		$this->setTopHeading($this->topHeading);
+		if ($this->texy === null) {
+			$this->texy = $this->createTexy();
+		}
 		return $this->texy;
 	}
 
@@ -134,6 +152,30 @@ class TexyFormatter
 
 
 	/**
+	 * Like substitute() but treats each arg as literal text - args are HTML-escaped and never interpreted as Texy markup.
+	 * Use this whenever any arg may be user-controlled.
+	 *
+	 * @param list<string|Stringable|int> $args
+	 */
+	public function substituteText(string|Stringable $format, array $args): Html
+	{
+		$formatString = (string)$format;
+		// Texy::protect() can't be used: Texy::process() clears $this->marks
+		// No : in prefix to avoid matching format placeholders (KEY:value)
+		$markerPrefix = 'TEXY_FORMAT_ARG_' . Hash::nonCryptographic($formatString);
+		$markers = [];
+		$replacements = [];
+		foreach ($args as $i => $arg) {
+			$marker = $markerPrefix . '#' . $i;
+			$markers[] = $marker;
+			$replacements[$marker] = htmlspecialchars((string)$arg);
+		}
+		$html = (string)$this->withTexy($this->getTexyNoLongWords())->format(vsprintf($formatString, $markers));
+		return Html::el()->setHtml(strtr($html, $replacements));
+	}
+
+
+	/**
 	 * @param list<string> $replacements
 	 * @throws InvalidArgument
 	 */
@@ -144,13 +186,25 @@ class TexyFormatter
 
 
 	/**
+	 * Like translate() but treats each replacement as literal text - replacements are HTML-escaped and never interpreted as Texy markup.
+	 * Use this whenever any replacement may be user-controlled.
+	 *
+	 * @param list<string> $replacements
+	 */
+	public function translateText(string $message, array $replacements = []): Html
+	{
+		return $this->substituteText($this->translator->translate($message), $replacements);
+	}
+
+
+	/**
 	 * Format string and strip surrounding P element.
 	 *
 	 * Suitable for "inline" strings like headers.
 	 */
 	public function format(string $text): Html
 	{
-		$texy = $this->texy ?? $this->getTexy();
+		$texy = $this->getTexy();
 		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
 			return Regex::replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', $texy->process($text))->result;
 		});
@@ -162,7 +216,7 @@ class TexyFormatter
 	 */
 	public function formatBlock(string $text): Html
 	{
-		$texy = $this->texy ?? $this->getTexy();
+		$texy = $this->getTexy();
 		return $this->replace($text . self::CACHE_KEY_DELIMITER . __FUNCTION__, $texy, function () use ($texy, $text): string {
 			return $texy->process($text);
 		});
@@ -203,7 +257,7 @@ class TexyFormatter
 
 	public function getCacheKey(string $text, Texy $texy): string
 	{
-		$key = "{$text}|" . serialize($texy->allowedTags);
+		$key = "{$text}|" . serialize($texy->allowedTags) . '|' . serialize($texy->allowed);
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
 		// Don't hash the locale to make it visible inside cache files
 		return Hash::nonCryptographic($key) . '.' . $this->translator->getDefaultLocale();
