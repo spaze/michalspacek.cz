@@ -29,7 +29,7 @@ final readonly class FormValidatorTexyFormatter
 		try {
 			// Use a fresh Texy instance to avoid stale internal status throwing "Processing is in progress" exception on next Texy render.
 			// It's ok to format the same input multiple times, because TexyFormatter caches the output and uses the cache when needed.
-			$texyFormatter = $this->texyFormatter->withTexy($this->texyFormatter->getTexy());
+			$texyFormatter = $this->texyFormatter->withTexy($this->texyFormatter->createTexy());
 			return $texyFormatter->format($value);
 		} catch (Exception $e) {
 			$prefix = $e instanceof InvalidLinkException ? 'Invalid link' : $e::class;

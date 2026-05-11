@@ -235,6 +235,19 @@ admin.sign.passkeyreset:   # Nette: Admin:Sign:passkeyReset → lowercased, dott
         - "'self'"
 ```
 
+### Texy format filters
+
+Two Latte filters and their `TexyFormatter` PHP equivalents exist for formatting translated strings with substituted arguments:
+
+| Latte filter | PHP method | Use when |
+|---|---|---|
+| `\|formatText` | `TexyFormatter::substituteText()` / `translateText()` | Any arg may be user-controlled — args are HTML-escaped and never interpreted as Texy markup |
+| `\|formatPossiblyUnsafeHtml` | `TexyFormatter::substitute()` / `translate()` | Args are developer/admin-controlled Texy content (`link:Www:Foo:`, URLs, emails) |
+
+`|format` is a legacy alias for `|formatPossiblyUnsafeHtml` — do not use in new code.
+
+When reviewing templates: flag any `|formatPossiblyUnsafeHtml:$variable` or `|format:$variable` where the variable may be user-controlled. Use `|formatText` instead.
+
 ### Error and UI messages
 
 Do not end error or UI messages with a full stop (`.`). This applies to short status and error strings (e.g. "Passkey registration failed") — full instructional sentences that are grammatically complete may keep their period.

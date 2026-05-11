@@ -55,6 +55,20 @@ final class FiltersTest extends TestCase
 		Assert::same('<strong>foo</strong>', $this->filters->format("**%s**", $html)->render());
 	}
 
+
+	public function testFormatText(): void
+	{
+		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->filters->formatText('%s', '<b>bold</b>')->render());
+		Assert::same('**bold**', $this->filters->formatText('%s', '**bold**')->render());
+		Assert::same('<em>foo</em>', $this->filters->formatText('//%s//', 'foo')->render());
+	}
+
+
+	public function testFormatPossiblyUnsafeHtml(): void
+	{
+		Assert::same('<strong>foo</strong>', $this->filters->formatPossiblyUnsafeHtml('**%s**', 'foo')->render());
+	}
+
 }
 
 TestCaseRunner::run(FiltersTest::class);
