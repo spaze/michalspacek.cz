@@ -125,7 +125,7 @@ final class PasskeysPresenter extends BasePresenter
 		return $this->passkeyRegisterFormFactory->create(
 			function (): void {
 				$this->flashMessage($this->translator->translate('messages.passkeys.registered'));
-				$this->redirect('this');
+				$this->redirect('Passkeys:');
 			},
 			$this->user,
 			$this->link('register-error'),
