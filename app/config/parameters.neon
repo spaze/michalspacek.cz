@@ -43,7 +43,7 @@ parameters:
 		interval: 14 days
 	authentication:
 		tables:
-			passkeyCredentials: passkey_credentials
+			passkeys: passkeys
 			users: users
 		passkeys:
 			rpId:

@@ -20,7 +20,7 @@ interface WebAuthnAuthenticator
 	/**
 	 * @throws PasskeyRegistrationException
 	 */
-	public function verifyRegistration(string $json, string $name, int $userId, string $userHandle): void;
+	public function verifyRegistration(string $json, string $name, int $userId): void;
 
 
 	/**

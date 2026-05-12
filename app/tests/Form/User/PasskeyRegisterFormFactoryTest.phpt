@@ -75,7 +75,7 @@ final class PasskeyRegisterFormFactoryTest extends TestCase
 		$identity = $this->authenticator->getIdentity(1337, 'foo');
 		$this->userStorage->saveAuthentication($identity);
 		$user = new User($this->userStorage);
-		$form = $this->formFactory->createRegisterForm(
+		$form = $this->formFactory->create(
 			function (): void {
 				$this->onSuccessCalled = true;
 			},

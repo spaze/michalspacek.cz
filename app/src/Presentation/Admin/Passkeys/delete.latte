@@ -1,0 +1,14 @@
+{templateType MichalSpacekCz\Presentation\Admin\Passkeys\PasskeysDeleteTemplateParameters}
+{define #menu}
+	&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+	&raquo; <a n:href="Homepage:">Administrace</a>
+	&raquo; <a n:href="Passkeys:">{_messages.passkeys.manage.managePasskeys}</a>
+{/define}
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<p>{_messages.passkeys.delete.deleteConfirm|formatText:$name}</p>
+{form passkeyDelete}
+	<a n:href="default">{_messages.passkeys.general.cancel}</a>
+	{input delete}
+{/form}
+{/define}

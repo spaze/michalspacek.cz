@@ -480,6 +480,30 @@ div.notice {
 #theme-light { display: none !important; }
 .humbleicons.space-after { margin-right: 0.25em; }
 #footer .humbleicons { opacity: inherit; }
+.passkeys {
+	list-style: none;
+	padding: 0;
+	max-width: 600px;
+}
+.passkeys > li { margin-bottom: 1em; }
+.passkey-header {
+	padding: 6px 0;
+	margin: 0;
+}
+.passkey-header .label { margin: 0; }
+.passkey-meta {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 4px 16px;
+	margin: 0;
+}
+.passkey-meta dt {
+	color: #777;
+	font-size: 0.875em;
+	padding-top: 2px;
+}
+.passkey-meta dd { margin: 0; }
+.passkey-actions { margin: 6px 0 0 0; }
 @media print {
 	body {
 		color: #222 !important;

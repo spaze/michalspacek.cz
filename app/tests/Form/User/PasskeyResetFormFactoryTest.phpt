@@ -18,7 +18,6 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
-use MichalSpacekCz\User\WebAuthn\PasskeyCredentials;
 use MichalSpacekCz\User\WebAuthn\PasskeyReset;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
@@ -41,7 +40,6 @@ final class PasskeyResetFormFactoryTest extends TestCase
 		private readonly Database $database,
 		private readonly TypedDatabase $typedDatabase,
 		private readonly FormFactory $factory,
-		private readonly PasskeyCredentials $passkeyCredentials,
 		private readonly PasskeyFormControls $passkeyFormControls,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
@@ -65,7 +63,6 @@ final class PasskeyResetFormFactoryTest extends TestCase
 	public function testOnSuccess(): void
 	{
 		$tokenString = $this->setUpTokenInDb(42, 1337, 'foo');
-		$this->database->setFetchFieldDefaultResult('0xPasskeysUserHandle');
 		$form = $this->getForm($tokenString);
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::true($this->onSuccessCalled);
@@ -76,7 +73,6 @@ final class PasskeyResetFormFactoryTest extends TestCase
 	public function testOnError(): void
 	{
 		$tokenString = $this->setUpTokenInDb(42, 1337, 'foo');
-		$this->database->setFetchFieldDefaultResult('0xPasskeysUserHandle');
 		$this->passkeyAuthenticator->willThrow(new PasskeyRegistrationAttestationResponseValidatorException());
 		$form = $this->getForm($tokenString);
 		Arrays::invoke($form->onSuccess, $form);
@@ -122,7 +118,6 @@ final class PasskeyResetFormFactoryTest extends TestCase
 		return new PasskeyResetFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,
-			$this->passkeyCredentials,
 			new PasskeyReset($manager, $this->passkeyAuthenticator),
 			$this->passkeyFormControls,
 			$this->httpRequest,

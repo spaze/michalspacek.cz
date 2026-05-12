@@ -1,3 +1,8 @@
+{define #menu}
+	&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+	&raquo; <a n:href="Homepage:">Administrace</a>
+	&raquo; <a n:href="Passkeys:">{_messages.passkeys.manage.managePasskeys}</a>
+{/define}
 {define #scripts}
 	{script app-passkey + passkey-register async, defer}
 {/define}
@@ -7,5 +12,6 @@
 	{label name /} {input name}
 	{input credential}
 	{input register}
+	<p><a n:href="default">{_messages.passkeys.general.cancel}</a></p>
 {/form}
 {/define}

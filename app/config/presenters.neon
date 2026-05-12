@@ -34,7 +34,7 @@ services:
 	- MichalSpacekCz\Presentation\Admin\Emails\EmailsPresenter
 	- MichalSpacekCz\Presentation\Admin\Homepage\HomepagePresenter
 	- MichalSpacekCz\Presentation\Admin\Info\InfoPresenter
-	- MichalSpacekCz\Presentation\Admin\Passkey\PasskeyPresenter
+	- MichalSpacekCz\Presentation\Admin\Passkeys\PasskeysPresenter
 	- MichalSpacekCz\Presentation\Admin\Interviews\InterviewsPresenter
 	- MichalSpacekCz\Presentation\Admin\Invoices\InvoicesPresenter
 	- MichalSpacekCz\Presentation\Admin\Pulse\PulsePresenter

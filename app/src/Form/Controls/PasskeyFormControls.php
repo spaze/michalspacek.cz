@@ -15,12 +15,19 @@ final readonly class PasskeyFormControls
 	}
 
 
-	public function addRegistrationFields(Container $container, ?string $loadingText = null): void
+	public function addNameField(Container $container, ?string $currentName = null): void
 	{
 		$container->addText('name', $this->translator->translate('messages.passkeys.passkeyName'))
 			->setRequired()
 			->setMaxLength(200)
+			->setDefaultValue($currentName)
 			->setHtmlAttribute('placeholder', $this->translator->translate('messages.passkeys.passkeyNameExample'));
+	}
+
+
+	public function addRegistrationFields(Container $container, ?string $loadingText = null): void
+	{
+		$this->addNameField($container);
 		$container->addHidden('credential')
 			->setRequired()
 			->setHtmlAttribute('id', 'passkeyCredential');

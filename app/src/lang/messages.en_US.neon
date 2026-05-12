@@ -419,3 +419,27 @@ passkeys:
 	loadingOptions: "Loading, please wait"
 	optionsFetchFailed: "Failed to load passkey options"
 	optionsFetchTryAgain: "Try again"
+	manage:
+		yourPasskeys: "Your passkeys"
+		managePasskeys: "Manage passkeys"
+		created: "Created"
+		lastUsed: "Last used"
+		never: "never"
+		noPasskeys: "No passkeys"
+		usedToday: "today"
+		usedYesterday: "yesterday"
+		usedDaysAgo: "%count% day ago|%count% days ago"
+		signedInWith: "signed in with this"
+		notFound: "Passkey not found"
+	rename:
+		rename: "Rename"
+		renamePasskey: "Rename passkey"
+		renamed: "Passkey has been renamed"
+	delete:
+		delete: "Delete"
+		deletePasskey: "Delete passkey"
+		deleted: "Passkey //%s// has been deleted"
+		deleteConfirm: "Delete passkey //%s//?"
+		cannotDeleteSignedInWith: "Cannot delete the passkey you signed in with"
+	general:
+		cancel: "Cancel"

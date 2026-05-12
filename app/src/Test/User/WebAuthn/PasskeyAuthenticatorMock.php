@@ -50,7 +50,7 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 
 	#[Override]
-	public function verifyRegistration(string $json, string $name, int $userId, string $userHandle): void
+	public function verifyRegistration(string $json, string $name, int $userId): void
 	{
 		$this->maybeThrow();
 	}

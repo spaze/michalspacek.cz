@@ -78,3 +78,4 @@ img.nobgcolor { background-color: inherit; }
 .crossref { background-color: #202530; }
 .crossref::before { color: #00D700; }
 .humbleicons { opacity: 0.5; }
+.passkey-meta dt { color: #999; }
