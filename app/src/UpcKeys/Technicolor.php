@@ -5,7 +5,6 @@ namespace MichalSpacekCz\UpcKeys;
 
 use Composer\Pcre\Regex;
 use DateTime;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
@@ -28,7 +27,6 @@ final readonly class Technicolor implements UpcWiFiRouter
 
 	public function __construct(
 		private Explorer $database,
-		private TypedDatabase $typedDatabase,
 		private HttpClient $httpClient,
 		private UpcKeysStorageConversions $conversions,
 		private string $apiUrl,
@@ -118,7 +116,7 @@ final readonly class Technicolor implements UpcWiFiRouter
 	 */
 	private function fetchKeys(string $ssid): array
 	{
-		$rows = $this->typedDatabase->fetchAll(
+		$rows = $this->database->fetchAll(
 			'SELECT
 				k.prefix_id AS prefixId,
 				k.serial,

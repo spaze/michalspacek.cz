@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Interviews;
 
 use DateTime;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
@@ -17,7 +16,6 @@ final readonly class Interviews
 
 	public function __construct(
 		private Explorer $database,
-		private TypedDatabase $typedDatabase,
 		private VideoFactory $videoFactory,
 		private TexyFormatter $texyFormatter,
 	) {
@@ -48,7 +46,7 @@ final readonly class Interviews
 			ORDER BY date DESC
 			LIMIT ?';
 
-		$result = $this->typedDatabase->fetchAll($query, $limit ?? PHP_INT_MAX);
+		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
 		$interviews = [];
 		foreach ($result as $row) {
 			$interviews[] = $this->createFromDatabaseRow($row);

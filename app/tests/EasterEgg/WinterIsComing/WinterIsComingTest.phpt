@@ -201,7 +201,7 @@ final class WinterIsComingTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			($this->ruleEmail)((new TextInput())->setDefaultValue('winter@example.com'));
-		}, InvalidStateException::class, "Component of type 'Nette\Forms\Controls\TextInput' is not attached to 'Nette\Forms\Form'.");
+		}, InvalidStateException::class, "Component type of 'Nette\Forms\Controls\TextInput' is not attached to 'Nette\Forms\Form'.");
 	}
 
 

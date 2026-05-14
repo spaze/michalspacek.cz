@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
@@ -30,7 +29,6 @@ final class Certificates
 	 */
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly TypedDatabase $typedDatabase,
 		private readonly CertificateFactory $certificateFactory,
 		private readonly array $users,
 		private readonly int $hideExpiredAfter,
@@ -84,7 +82,7 @@ final class Certificates
 			)
 			ORDER BY cr.certificate_name, cr.certificate_name_ext';
 		$this->newestCertificates = [];
-		foreach ($this->typedDatabase->fetchAll($query) as $data) {
+		foreach ($this->database->fetchAll($query) as $data) {
 			$certificate = $this->certificateFactory->fromDatabaseRow($data);
 			if ($certificate->isExpired() && $certificate->getExpiryDays() > $this->hideExpiredAfter) {
 				continue;

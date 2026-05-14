@@ -27,7 +27,7 @@ final readonly class TrainingFiles
 
 	public function getFiles(TrainingApplication $application): TrainingFilesCollection
 	{
-		$rows = $this->typedDatabase->fetchAll(
+		$rows = $this->database->fetchAll(
 			'SELECT
 				f.added,
 				f.id_file AS fileId,

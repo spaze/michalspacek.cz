@@ -5,16 +5,16 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 use MichalSpacekCz\Articles\ArticleEdit;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use Nette\Database\Explorer;
 
 final readonly class BlogPostEdits
 {
 
 	public function __construct(
-		private TypedDatabase $typedDatabase,
+		private Explorer $database,
 		private DateTimeZoneFactory $dateTimeZoneFactory,
 		private TexyFormatter $texyFormatter,
 	) {
@@ -35,7 +35,7 @@ final readonly class BlogPostEdits
 			WHERE key_blog_post = ?
 			ORDER BY edited_at DESC';
 		$edits = [];
-		foreach ($this->typedDatabase->fetchAll($sql, $postId) as $row) {
+		foreach ($this->database->fetchAll($sql, $postId) as $row) {
 			assert($row->editedAt instanceof DateTime);
 			assert(is_string($row->editedAtTimezone));
 			assert(is_string($row->summaryTexy));

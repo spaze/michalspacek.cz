@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Reviews;
 
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingReviewNotFoundException;
@@ -16,7 +15,6 @@ final readonly class TrainingReviews
 
 	public function __construct(
 		private Explorer $database,
-		private TypedDatabase $typedDatabase,
 		private TexyFormatter $texyFormatter,
 		private DateTimeFactory $dateTimeFactory,
 	) {
@@ -53,7 +51,7 @@ final readonly class TrainingReviews
 			LIMIT ?';
 
 		$reviews = [];
-		foreach ($this->typedDatabase->fetchAll($query, $id, $id, $limit ?? PHP_INT_MAX) as $row) {
+		foreach ($this->database->fetchAll($query, $id, $id, $limit ?? PHP_INT_MAX) as $row) {
 			$reviews[] = $this->createFromDatabaseRow($row);
 		}
 		return $reviews;
@@ -89,7 +87,7 @@ final readonly class TrainingReviews
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
 		$reviews = [];
-		foreach ($this->typedDatabase->fetchAll($query, $id, $id) as $row) {
+		foreach ($this->database->fetchAll($query, $id, $id) as $row) {
 			$reviews[] = $this->createFromDatabaseRow($row);
 		}
 		return $reviews;
@@ -153,7 +151,7 @@ final readonly class TrainingReviews
 				r.key_date = ?';
 
 		$reviews = [];
-		foreach ($this->typedDatabase->fetchAll($query, $dateId) as $row) {
+		foreach ($this->database->fetchAll($query, $dateId) as $row) {
 			$reviews[] = $this->createFromDatabaseRow($row);
 		}
 		return $reviews;

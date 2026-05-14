@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Database;
 use JetBrains\PhpStorm\Language;
 use MichalSpacekCz\Database\Exceptions\TypedDatabaseTypeException;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Utils\DateTime;
 
 final readonly class TypedDatabase
@@ -163,25 +162,6 @@ final readonly class TypedDatabase
 			throw new TypedDatabaseTypeException(DateTime::class . '|null', $field);
 		}
 		return $field;
-	}
-
-
-	/**
-	 * @param literal-string $sql
-	 * @param array<array-key, mixed> $params
-	 * @return array<array-key, Row>
-	 */
-	public function fetchAll(#[Language('SQL')] string $sql, #[Language('GenericSQL')] ...$params): array
-	{
-		$rows = $this->database->fetchAll($sql, ...$params);
-		$result = [];
-		foreach ($rows as $row) {
-			if (!$row instanceof Row) {
-				throw new TypedDatabaseTypeException(Row::class, $row);
-			}
-			$result[] = $row;
-		}
-		return $result;
 	}
 
 }
