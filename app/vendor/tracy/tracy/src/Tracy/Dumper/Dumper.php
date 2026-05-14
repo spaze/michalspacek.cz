@@ -91,6 +91,9 @@ class Dumper
 		Dom\TokenList::class => [Exposer::class, 'exposeDOMNodeList'],
 		Dom\HTMLCollection::class => [Exposer::class, 'exposeDOMNodeList'],
 		Ds\Collection::class => [Exposer::class, 'exposeDsCollection'],
+		Ds\Seq::class => [Exposer::class, 'exposeDsCollection'],
+		Ds\Set::class => [Exposer::class, 'exposeDsCollection'],
+		Ds\Heap::class => [Exposer::class, 'exposeDsCollection'],
 		Ds\Map::class => [Exposer::class, 'exposeDsMap'],
 		\WeakMap::class => [Exposer::class, 'exposeWeakMap'],
 	];
@@ -140,17 +143,17 @@ class Dumper
 
 
 	/**
-	 * Dumps variable to plain text.
+	 * Returns variable dump as plain text.
 	 * @param  array<string, mixed>  $options
 	 */
-	public static function toText(mixed $var, array $options = []): string
+	public static function toText(mixed $var, array $options = [], mixed $key = null): string
 	{
-		return (new self($options))->asTerminal($var);
+		return (new self($options))->asTerminal($var, [], $key);
 	}
 
 
 	/**
-	 * Dumps variable to x-terminal.
+	 * Returns variable dump as ANSI-colored terminal output.
 	 * @param  array<string, mixed>  $options
 	 */
 	public static function toTerminal(mixed $var, array $options = []): string
@@ -171,7 +174,7 @@ class Dumper
 
 		$sent = true;
 
-		$nonceAttr = ($nonce = Helpers::getNonce()) ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
+		$nonceAttr = Helpers::getNonce(attr: true);
 		$s = (Debugger::$showBar ? '' : file_get_contents(__DIR__ . '/../assets/reset.css'))
 			. file_get_contents(__DIR__ . '/../assets/toggle.css')
 			. file_get_contents(__DIR__ . '/assets/dumper-light.css')
@@ -251,9 +254,15 @@ class Dumper
 	 * Dumps variable to x-terminal.
 	 * @param  array<string, string>  $colors
 	 */
-	private function asTerminal(mixed $var, array $colors = []): string
+	private function asTerminal(mixed $var, array $colors = [], mixed $key = null): string
 	{
-		$model = $this->describer->describe($var);
+		if ($key === null) {
+			$model = $this->describer->describe($var);
+		} else {
+			$model = $this->describer->describe([$key => $var]);
+			$model->value = $model->value[0][1];
+		}
+
 		return $this->renderer->renderAsText($model, $colors);
 	}
 
@@ -261,7 +270,7 @@ class Dumper
 	/** @param  array{0?: Dumper\Value[], 1?: mixed[]}  $snapshot */
 	public static function formatSnapshotAttribute(array &$snapshot): string
 	{
-		$res = "'" . Renderer::jsonEncode($snapshot[0] ?? []) . "'";
+		$res = "'" . Helpers::jsonEncode($snapshot[0] ?? []) . "'";
 		$snapshot = [];
 		return $res;
 	}

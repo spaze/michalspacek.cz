@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -51,9 +49,13 @@ final class InjectExtension extends DI\CompilerExtension
 	private function updateDefinition(Definitions\ServiceDefinition $def): void
 	{
 		$resolvedType = (new DI\Resolver($this->getContainerBuilder()))->resolveEntityType($def->getCreator());
-		$class = is_subclass_of($resolvedType, $def->getType())
+		$class = $resolvedType && $def->getType() && is_subclass_of($resolvedType, $def->getType())
 			? $resolvedType
 			: $def->getType();
+		if (!$class) {
+			return;
+		}
+
 		$setups = $def->getSetup();
 
 		foreach (self::getInjectProperties($class) as $property => $type) {
@@ -90,7 +92,8 @@ final class InjectExtension extends DI\CompilerExtension
 
 
 	/**
-	 * Generates list of inject methods.
+	 * Returns list of inject method names, ordered from parent to child class.
+	 * @return string[]
 	 * @internal
 	 */
 	public static function getInjectMethods(string $class): array
@@ -111,7 +114,8 @@ final class InjectExtension extends DI\CompilerExtension
 
 
 	/**
-	 * Generates list of properties with annotation @inject.
+	 * Returns list of injectable properties with their types.
+	 * @return array<string, class-string>
 	 * @internal
 	 */
 	public static function getInjectProperties(string $class): array
@@ -140,7 +144,7 @@ final class InjectExtension extends DI\CompilerExtension
 
 
 	/**
-	 * Calls all methods starting with "inject" using autowiring.
+	 * Calls inject methods and fills inject properties on the given service.
 	 */
 	public static function callInjects(DI\Container $container, object $service): void
 	{

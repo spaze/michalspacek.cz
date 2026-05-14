@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -16,21 +14,24 @@ use function array_diff_key, array_fill_keys, array_keys, array_walk_recursive, 
 
 
 /**
- * Parameters.
+ * Processes container parameters and injects them into the generated container.
  */
 final class ParametersExtension extends Nette\DI\CompilerExtension
 {
 	/** @var string[] */
 	public array $dynamicParams = [];
 
-	/** @var string[][] */
+	/** @var list<array{DynamicParameter, string, list<int|string>}> */
 	public array $dynamicValidators = [];
-	private array $compilerConfig;
+
+	/** @var array<string, mixed> */
+	protected $config = [];
 
 
-	public function __construct(array &$compilerConfig)
-	{
-		$this->compilerConfig = &$compilerConfig;
+	public function __construct(
+		/** @var array<string, array<mixed[]>> */
+		private array &$compilerConfig,
+	) {
 	}
 
 
@@ -39,7 +40,7 @@ final class ParametersExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$params = $this->config;
 		foreach ($this->dynamicParams as $key) {
-			$params[$key] = new DynamicParameter('$this->getParameter(' . var_export($key, true) . ')');
+			$params[$key] = new DynamicParameter('$this->getParameter(' . var_export($key, return: true) . ')');
 		}
 
 		$builder->parameters = Helpers::expand($params, $params, recursive: true);
@@ -85,7 +86,7 @@ final class ParametersExtension extends Nette\DI\CompilerExtension
 		}
 		$method->addBody("\tdefault => parent::getDynamicParameter(\$key),\n};");
 
-		if ($preload = array_keys($dynamicParams, true, true)) {
+		if ($preload = array_keys($dynamicParams, filter_value: true, strict: true)) {
 			$method = $manipulator->inheritMethod('getParameters');
 			$method->addBody('array_map($this->getParameter(...), ?);', [$preload]);
 			$method->addBody('return parent::getParameters();');

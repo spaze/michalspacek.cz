@@ -9,18 +9,19 @@ namespace Tracy;
 
 
 /**
- * Custom output for Debugger.
+ * Tracy Bar panel providing a tab label and optional panel content.
+ * @method ?string getAgentInfo() Returns markdown summary for AI agents.
  */
 interface IBarPanel
 {
 	/**
-	 * Renders HTML code for custom tab.
+	 * Returns HTML for the tab label shown in the Bar.
 	 * @return ?string
 	 */
 	function getTab();
 
 	/**
-	 * Renders HTML code for custom panel.
+	 * Returns HTML for the panel popup content, or null to render tab-only.
 	 * @return ?string
 	 */
 	function getPanel();

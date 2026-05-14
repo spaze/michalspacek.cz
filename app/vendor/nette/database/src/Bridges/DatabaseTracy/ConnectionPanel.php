@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\DatabaseTracy;
 
@@ -17,7 +15,7 @@ use function is_string;
 
 
 /**
- * Debug panel for Nette\Database.
+ * Tracy Bar panel showing executed SQL queries with timing and EXPLAIN support.
  */
 class ConnectionPanel implements Tracy\IBarPanel
 {
@@ -28,10 +26,15 @@ class ConnectionPanel implements Tracy\IBarPanel
 	public float $performanceScale = 0.25;
 	private float $totalTime = 0;
 	private int $count = 0;
+
+	/** @var list<array{Connection, string, ?array<mixed>, list<array<string, mixed>>, ?float, ?int, ?string}> */
 	private array $queries = [];
 	private Tracy\BlueScreen $blueScreen;
 
 
+	/**
+	 * Registers the panel with Tracy. Optionally adds it to the Tracy Bar.
+	 */
 	public static function initialize(
 		Connection $connection,
 		bool $addBarPanel = false,
@@ -63,7 +66,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 	}
 
 
-	private function logQuery(Connection $connection, $result): void
+	private function logQuery(Connection $connection, Nette\Database\ResultSet|\PDOException $result): void
 	{
 		if ($this->disabled) {
 			return;
@@ -76,9 +79,14 @@ class ConnectionPanel implements Tracy\IBarPanel
 			: debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
 		foreach ($trace as $row) {
-			if (preg_match('~\.(php.?|phtml)$~', $row['file'] ?? '') && !$this->blueScreen->isCollapsed($row['file'])) {
+			$file = $row['file'] ?? null;
+			if (is_string($file)
+				&& preg_match('~\.(php.?|phtml)$~', $file)
+				&& !$this->blueScreen->isCollapsed($file)
+			) {
 				break;
 			}
+
 			array_shift($trace);
 		}
 
@@ -93,6 +101,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 	}
 
 
+	/** @return array{tab: string, panel: string}|null */
 	public static function renderException(?\Throwable $e): ?array
 	{
 		if (!$e instanceof \PDOException) {
@@ -102,7 +111,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 		if (isset($e->queryString)) {
 			$sql = $e->queryString;
 
-		} elseif ($item = Tracy\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
+		} elseif (($item = Tracy\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) && isset($item['args'][0])) {
 			$sql = $item['args'][0];
 		}
 
@@ -131,6 +140,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 		}
 
 		$queries = [];
+		$connection = null;
 		foreach ($this->queries as $query) {
 			[$connection, $sql, $params, , , , $error] = $query;
 			$explain = null;
@@ -142,7 +152,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 					$cmd = is_string($this->explain)
 						? $this->explain
 						: 'EXPLAIN';
-					$explain = (new Nette\Database\ResultSet($connection, "$cmd $sql", $params))->fetchAll();
+					$explain = (new Nette\Database\ResultSet($connection, "$cmd $sql", $params ?? []))->fetchAll();
 				} catch (\PDOException) {
 				}
 			}

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Drivers;
 
@@ -46,6 +44,9 @@ class OciDriver implements Nette\Database\Driver
 
 		} elseif (in_array($code, [2266, 2291, 2292], strict: true)) {
 			return Nette\Database\ForeignKeyConstraintViolationException::from($e);
+
+		} elseif ($code === 60) {
+			return Nette\Database\DeadlockException::from($e);
 
 		} else {
 			return Nette\Database\DriverException::from($e);
@@ -108,7 +109,7 @@ class OciDriver implements Nette\Database\Driver
 		while ($row = $rows->fetch()) {
 			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
 				$tables[] = [
-					'name' => $row[0],
+					'name' => (string) $row[0],
 					'view' => $row[1] === 'VIEW',
 					'comment' => null,
 				];

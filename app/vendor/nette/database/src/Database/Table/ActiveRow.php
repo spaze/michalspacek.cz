@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Table;
 
@@ -16,6 +14,7 @@ use function array_intersect_key, array_key_exists, array_keys, implode, is_arra
 /**
  * Represents database row with support for relations.
  * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * @implements \IteratorAggregate<string, mixed>
  */
 class ActiveRow implements \IteratorAggregate, IRow
 {
@@ -23,32 +22,47 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 
 	public function __construct(
+		/** @var array<string, mixed> */
 		private array $data,
+		/** @var Selection<ActiveRow> */
 		private Selection $table,
 	) {
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @param Selection<ActiveRow> $table
+	 */
 	public function setTable(Selection $table): void
 	{
 		$this->table = $table;
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @return Selection<ActiveRow>
+	 */
 	public function getTable(): Selection
 	{
 		return $this->table;
 	}
 
 
-	public function __toString()
+	public function getExplorer(): Nette\Database\Explorer
+	{
+		return $this->table->getExplorer();
+	}
+
+
+	public function __toString(): string
 	{
 		return (string) $this->getPrimary();
 	}
 
 
+	/** @return array<string, mixed> */
 	public function toArray(): array
 	{
 		$this->accessColumn(null);
@@ -57,8 +71,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 
 	/**
-	 * Returns primary key value.
-	 * @return mixed possible int, string, array, object (Nette\Utils\DateTime)
+	 * Returns primary key value, or an array of values for composite primary keys.
 	 */
 	public function getPrimary(bool $throw = true): mixed
 	{
@@ -103,8 +116,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 
 	/**
-	 * Returns referenced row.
-	 * @return self|null if the row does not exist
+	 * Returns referenced row, or null if the row does not exist.
 	 */
 	public function ref(string $key, ?string $throughColumn = null): ?self
 	{
@@ -119,6 +131,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 	/**
 	 * Returns referencing rows collection.
+	 * @return GroupedSelection<ActiveRow>
 	 */
 	public function related(string $key, ?string $throughColumn = null): GroupedSelection
 	{
@@ -132,7 +145,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 
 	/**
-	 * Updates row data.
+	 * Updates row data and refreshes the instance from database. Returns true if the row was changed.
+	 * @param  iterable<string, mixed>  $data
 	 */
 	public function update(iterable $data): bool
 	{
@@ -168,8 +182,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 
 	/**
-	 * Deletes row from database.
-	 * @return int number of affected rows
+	 * Deletes the row from database.
+	 * @return int  number of affected rows
 	 */
 	public function delete(): int
 	{
@@ -177,7 +191,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 			->wherePrimary($this->getPrimary())
 			->delete();
 
-		if ($res > 0 && ($signature = $this->getSignature(false))) {
+		if ($res > 0 && ($signature = $this->getSignature(throw: false))) {
 			unset($this->table[$signature]);
 		}
 
@@ -188,6 +202,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	/********************* interface IteratorAggregate ****************d*g**/
 
 
+	/** @return \ArrayIterator<string, mixed> */
 	public function getIterator(): \Iterator
 	{
 		$this->accessColumn(null);
@@ -229,8 +244,9 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 
 	/**
+	 * Returns column value, or a referenced row if the key matches a relationship.
 	 * @return ActiveRow|mixed
-	 * @throws Nette\MemberAccessException
+	 * @throws Nette\MemberAccessException  if the column does not exist and no relationship is found
 	 */
 	public function &__get(string $key): mixed
 	{

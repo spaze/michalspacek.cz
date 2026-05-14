@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Drivers;
 
@@ -35,6 +33,14 @@ class SqlsrvDriver implements Nette\Database\Driver
 
 	public function convertException(\PDOException $e): Nette\Database\DriverException
 	{
+		$code = $e->errorInfo[1] ?? null;
+		if ($code === 1205) {
+			return Nette\Database\DeadlockException::from($e);
+
+		} elseif ($code === 1222) {
+			return Nette\Database\LockTimeoutException::from($e);
+		}
+
 		return Nette\Database\DriverException::from($e);
 	}
 
@@ -109,9 +115,9 @@ class SqlsrvDriver implements Nette\Database\Driver
 
 		while ($row = $rows->fetch()) {
 			$tables[] = [
-				'name' => $row['name'],
+				'name' => (string) $row['name'],
 				'view' => (bool) $row['view'],
-				'comment' => $row['comment'] ?? '',
+				'comment' => (string) ($row['comment'] ?? ''),
 			];
 		}
 
@@ -156,14 +162,18 @@ class SqlsrvDriver implements Nette\Database\Driver
 			X, $table);
 
 		while ($row = $rows->fetch()) {
-			$row = (array) $row;
-			$row['vendor'] = $row;
-			$row['nullable'] = (bool) $row['nullable'];
-			$row['autoincrement'] = (bool) $row['autoincrement'];
-			$row['primary'] = (bool) $row['primary'];
-			$row['comment'] ??= '';
-
-			$columns[] = $row;
+			$columns[] = [
+				'name' => (string) $row['name'],
+				'table' => (string) $row['table'],
+				'nativetype' => (string) $row['nativetype'],
+				'size' => $row['size'] !== null ? (int) $row['size'] : null,
+				'nullable' => (bool) $row['nullable'],
+				'default' => $row['default'],
+				'autoincrement' => (bool) $row['autoincrement'],
+				'primary' => (bool) $row['primary'],
+				'comment' => (string) ($row['comment'] ?? ''),
+				'vendor' => (array) $row,
+			];
 		}
 
 		return $columns;
@@ -195,11 +205,14 @@ class SqlsrvDriver implements Nette\Database\Driver
 			X, $table);
 
 		while ($row = $rows->fetch()) {
-			$id = $row['name'];
-			$indexes[$id]['name'] = $id;
-			$indexes[$id]['unique'] = (bool) $row['unique'];
-			$indexes[$id]['primary'] = (bool) $row['primary'];
-			$indexes[$id]['columns'][] = $row['column'];
+			$id = (string) $row['name'];
+			$indexes[$id] ??= [
+				'name' => $id,
+				'unique' => (bool) $row['unique'],
+				'primary' => (bool) $row['primary'],
+				'columns' => [],
+			];
+			$indexes[$id]['columns'][] = (string) $row['column'];
 		}
 
 		return array_values($indexes);
@@ -208,7 +221,6 @@ class SqlsrvDriver implements Nette\Database\Driver
 
 	public function getForeignKeys(string $table): array
 	{
-		// Does't work with multicolumn foreign keys
 		$keys = [];
 		$rows = $this->connection->query(<<<'X'
 			SELECT
@@ -225,13 +237,20 @@ class SqlsrvDriver implements Nette\Database\Driver
 				JOIN sys.columns cf ON fkc.referenced_object_id = cf.object_id AND fkc.referenced_column_id = cf.column_id
 			WHERE
 				tl.name = ?
+			ORDER BY
+				fk.name, fkc.constraint_column_id
 			X, $table);
 
 		while ($row = $rows->fetch()) {
-			$keys[$row['name']] = (array) $row;
+			$keys[] = [
+				'name' => (string) $row['name'],
+				'local' => (string) $row['local'],
+				'table' => (string) $row['table'],
+				'foreign' => (string) $row['foreign'],
+			];
 		}
 
-		return array_values($keys);
+		return $keys;
 	}
 
 

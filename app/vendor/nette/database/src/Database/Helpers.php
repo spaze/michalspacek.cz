@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database;
 
@@ -13,7 +11,6 @@ use Nette;
 use Nette\Bridges\DatabaseTracy\ConnectionPanel;
 use Tracy;
 use function array_filter, array_keys, array_unique, count, fclose, fgets, fopen, fstat, get_resource_type, htmlspecialchars, implode, is_bool, is_float, is_resource, is_string, preg_last_error, preg_match, preg_replace, preg_replace_callback, reset, rtrim, set_time_limit, str_ends_with, str_starts_with, stream_get_meta_data, strlen, strncasecmp, substr, trim, wordwrap;
-use const ENT_IGNORE, ENT_NOQUOTES, PREG_UNMATCHED_AS_NULL;
 
 
 /**
@@ -26,6 +23,7 @@ class Helpers
 	/** maximum SQL length */
 	public static int $maxLength = 100;
 
+	/** @var array<string, string> */
 	public static array $typePatterns = [
 		'^_' => IStructure::FIELD_TEXT, // PostgreSQL arrays
 		'(TINY|SMALL|SHORT|MEDIUM|BIG|LONG)(INT)?|INT(EGER|\d+| IDENTITY| UNSIGNED)?|(SMALL|BIG|)SERIAL\d*|COUNTER|YEAR|BYTE|LONGLONG|UNSIGNED BIG INT' => IStructure::FIELD_INTEGER,
@@ -87,7 +85,8 @@ class Helpers
 
 
 	/**
-	 * Returns syntax highlighted SQL command.
+	 * Returns syntax-highlighted SQL query as an HTML string.
+	 * @param ?array<mixed> $params
 	 */
 	public static function dumpSql(string $sql, ?array $params = null, ?Connection $connection = null): string
 	{
@@ -166,7 +165,8 @@ class Helpers
 
 
 	/**
-	 * Returns column types from result set.
+	 * Detects column types from a PDO statement using column metadata.
+	 * @return array<string, string>  column name => IStructure::FIELD_* type
 	 */
 	public static function detectTypes(\PDOStatement $statement): array
 	{
@@ -184,7 +184,7 @@ class Helpers
 
 
 	/**
-	 * Detects column type from native type.
+	 * Maps a native column type string to an IStructure::FIELD_* constant.
 	 * @internal
 	 */
 	public static function detectType(string $type): string
@@ -203,11 +203,17 @@ class Helpers
 	}
 
 
-	/** @internal */
+	/**
+	 * Converts raw column values to PHP types based on column type metadata.
+	 * @internal
+	 * @param  array<mixed>  $row
+	 * @param  class-string<\DateTime|\DateTimeImmutable>  $dateTimeClass
+	 * @return array<mixed>
+	 */
 	public static function normalizeRow(
 		array $row,
 		ResultSet $resultSet,
-		$dateTimeClass = Nette\Utils\DateTime::class,
+		string $dateTimeClass = Nette\Utils\DateTime::class,
 	): array
 	{
 		foreach ($resultSet->getColumnTypes() as $key => $type) {
@@ -248,7 +254,7 @@ class Helpers
 
 	/**
 	 * Imports SQL dump from file.
-	 * @param  ?array<callable(int, ?float): void>  $onProgress  Called after each query
+	 * @param  ?(callable(int, ?float): void)  $onProgress  Called after each query
 	 * @return int  Number of executed commands
 	 * @throws Nette\FileNotFoundException
 	 */
@@ -325,7 +331,11 @@ class Helpers
 
 
 	/**
-	 * Converts rows to key-value pairs.
+	 * Transforms rows into an associative array using the specified key and value columns.
+	 * @template TRow of Row|Table\ActiveRow|array<string, mixed>
+	 * @param  array<TRow>  $rows
+	 * @param  string|int|(\Closure(TRow): array{0: mixed, 1?: mixed})|null  $key
+	 * @return array<mixed, mixed>
 	 */
 	public static function toPairs(array $rows, string|int|\Closure|null $key, string|int|null $value): array
 	{
@@ -360,7 +370,7 @@ class Helpers
 			}
 		} else {
 			foreach ($rows as $row) {
-				$return[(string) $row[$key]] = ($value === null ? $row : $row[$value]);
+				$return[(string) $row[$key]] = $value === null ? $row : $row[$value];
 			}
 		}
 
@@ -369,13 +379,17 @@ class Helpers
 
 
 	/**
-	 * Returns duplicate columns from result set.
+	 * Returns a human-readable string listing duplicate column names in the result set.
 	 */
 	public static function findDuplicates(\PDOStatement $statement): string
 	{
 		$cols = [];
 		for ($i = 0; $i < $statement->columnCount(); $i++) {
 			$meta = $statement->getColumnMeta($i);
+			if ($meta === false) {
+				continue;
+			}
+
 			$cols[$meta['name']][] = $meta['table'] ?? '';
 		}
 
@@ -391,7 +405,10 @@ class Helpers
 	}
 
 
-	/** @return array{type: ?string, length: ?null, scale: ?null, parameters: ?string} */
+	/**
+	 * Parses a SQL column type string into its components.
+	 * @return array{type: ?string, length: ?int, scale: ?int, parameters: ?string}
+	 */
 	public static function parseColumnType(string $type): array
 	{
 		preg_match('/^([^(]+)(?:\((?:(\d+)(?:,(\d+))?|([^)]+))\))?/', $type, $m, PREG_UNMATCHED_AS_NULL);

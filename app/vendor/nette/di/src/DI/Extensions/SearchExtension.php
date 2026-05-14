@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -13,7 +11,7 @@ use Nette;
 use Nette\Loaders\RobotLoader;
 use Nette\Schema\Expect;
 use Nette\Utils\Arrays;
-use function array_filter, array_keys, array_merge, array_unique, class_exists, count, implode, in_array, interface_exists, is_dir, is_string, method_exists, preg_match, preg_quote, sprintf, str_contains, str_replace, trait_exists;
+use function count, in_array, is_string, sprintf;
 
 
 /**
@@ -21,13 +19,16 @@ use function array_filter, array_keys, array_merge, array_unique, class_exists, 
  */
 final class SearchExtension extends Nette\DI\CompilerExtension
 {
+	/** @var array<string, object{in: string, files: list<string>, classes: list<string>, extends: list<string>, implements: list<string>, exclude: object{files: list<string>, classes: list<string>, extends: list<string>, implements: list<string>}, tags: array<string, mixed>}> */
+	protected $config = [];
+
+	/** @var array<string, array<string, mixed>> */
 	private array $classes = [];
-	private string $tempDir;
 
 
-	public function __construct(string $tempDir)
-	{
-		$this->tempDir = $tempDir;
+	public function __construct(
+		private readonly string $tempDir,
+	) {
 	}
 
 
@@ -73,6 +74,10 @@ final class SearchExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/**
+	 * Finds classes matching the given search configuration batch.
+	 * @return string[]
+	 */
 	public function findClasses(\stdClass $config): array
 	{
 		$exclude = $config->exclude;
@@ -80,7 +85,7 @@ final class SearchExtension extends Nette\DI\CompilerExtension
 		$robot->setTempDirectory($this->tempDir);
 		$robot->addDirectory($config->in);
 		$robot->acceptFiles = $config->files ?: ['*.php'];
-		$robot->ignoreDirs = array_merge($robot->ignoreDirs, $exclude->files);
+		$robot->ignoreDirs = array_values(array_merge($robot->ignoreDirs, $exclude->files));
 		$robot->reportParseErrors(false);
 		$robot->refresh();
 		$classes = array_unique(array_keys($robot->getIndexedClasses()));
@@ -105,7 +110,7 @@ final class SearchExtension extends Nette\DI\CompilerExtension
 					||
 					($rc->isInterface()
 					&& count($methods = $rc->getMethods()) === 1
-					&& in_array($methods[0]->name, ['get', 'create'], true))
+					&& in_array($methods[0]->name, ['get', 'create'], strict: true))
 				)
 				&& (!$acceptRE || preg_match($acceptRE, $rc->name))
 				&& (!$rejectRE || !preg_match($rejectRE, $rc->name))
@@ -143,6 +148,7 @@ final class SearchExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/** @param  string[]  $masks */
 	private static function buildNameRegexp(array $masks): ?string
 	{
 		$res = [];

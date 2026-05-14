@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI;
 
@@ -18,27 +16,26 @@ use Nette\Utils\Arrays;
 use Nette\Utils\Callback;
 use Nette\Utils\Reflection;
 use Nette\Utils\Validators;
-use function array_filter, array_key_exists, array_map, array_merge, array_values, array_walk_recursive, assert, class_exists, count, ctype_digit, explode, function_exists, gettype, implode, in_array, interface_exists, is_a, is_array, is_int, is_scalar, is_string, iterator_to_array, ltrim, preg_match, preg_replace, sprintf, str_contains, str_ends_with, str_replace, str_starts_with, strlen, substr;
+use function array_filter, array_key_exists, array_map, array_merge, array_values, array_walk_recursive, class_exists, count, ctype_digit, explode, function_exists, gettype, implode, in_array, interface_exists, is_a, is_array, is_int, is_scalar, is_string, iterator_to_array, ltrim, preg_match, preg_replace, sprintf, str_contains, str_ends_with, str_replace, str_starts_with, strlen, substr;
 
 
 /**
- * Services resolver
+ * Resolves and completes service definitions, including autowiring of arguments.
  * @internal
  */
 class Resolver
 {
-	private ContainerBuilder $builder;
 	private ?Definition $currentService = null;
 	private ?string $currentServiceType = null;
 	private bool $currentServiceAllowed = false;
 
-	/** circular reference detector */
+	/** @var \SplObjectStorage<Definition, true> circular reference detector */
 	private \SplObjectStorage $recursive;
 
 
-	public function __construct(ContainerBuilder $builder)
-	{
-		$this->builder = $builder;
+	public function __construct(
+		private readonly ContainerBuilder $builder,
+	) {
 		$this->recursive = new \SplObjectStorage;
 	}
 
@@ -49,6 +46,9 @@ class Resolver
 	}
 
 
+	/**
+	 * Resolves the service type for the given definition.
+	 */
 	public function resolveDefinition(Definition $def): void
 	{
 		if (isset($this->recursive[$def])) {
@@ -73,6 +73,9 @@ class Resolver
 	}
 
 
+	/**
+	 * Returns the class name that the given reference points to, or null if not resolvable.
+	 */
 	public function resolveReferenceType(Reference $ref): ?string
 	{
 		if ($ref->isSelf()) {
@@ -90,6 +93,9 @@ class Resolver
 	}
 
 
+	/**
+	 * Returns the class name produced by the given statement's entity, or null if not resolvable.
+	 */
 	public function resolveEntityType(Statement $statement): ?string
 	{
 		$entity = $this->normalizeEntity($statement);
@@ -107,7 +113,6 @@ class Resolver
 
 			try {
 				$reflection = Callback::toReflection($entity[0] === '' ? $entity[1] : $entity);
-				assert($reflection instanceof \ReflectionMethod || $reflection instanceof \ReflectionFunction);
 				$refClass = $reflection instanceof \ReflectionMethod
 					? $reflection->getDeclaringClass()
 					: null;
@@ -115,10 +120,12 @@ class Resolver
 				$refClass = $reflection = null;
 			}
 
-			if (isset($e) || ($refClass && (!$reflection->isPublic()
+			if (isset($e)) {
+				throw new ServiceCreationException(sprintf('Method %s() is not callable.', Callback::toString($entity)), 0, $e);
+			} elseif ($reflection instanceof \ReflectionMethod && $refClass && (!$reflection->isPublic()
 				|| ($refClass->isTrait() && !$reflection->isStatic())
-			))) {
-				throw new ServiceCreationException(sprintf('Method %s() is not callable.', Callback::toString($entity)), 0, $e ?? null);
+			)) {
+				throw new ServiceCreationException(sprintf('Method %s() is not callable.', Callback::toString($entity)));
 			}
 
 			$this->addDependency($reflection);
@@ -158,6 +165,9 @@ class Resolver
 	}
 
 
+	/**
+	 * Completes the service definition by resolving and autowiring all its arguments.
+	 */
 	public function completeDefinition(Definition $def): void
 	{
 		$this->currentService = in_array($def, $this->builder->getDefinitions(), strict: true)
@@ -169,7 +179,9 @@ class Resolver
 		try {
 			$def->complete($this);
 
-			$this->addDependency(new \ReflectionClass($def->getType()));
+			if ($type = $def->getType()) {
+				$this->addDependency(new \ReflectionClass($type));
+			}
 
 		} catch (\Throwable $e) {
 			throw $this->completeException($e, $def);
@@ -180,6 +192,9 @@ class Resolver
 	}
 
 
+	/**
+	 * Resolves and autowires a statement's entity and arguments into a completed Statement.
+	 */
 	public function completeStatement(Statement $statement, bool $currentServiceAllowed = false): Statement
 	{
 		$this->currentServiceAllowed = $currentServiceAllowed;
@@ -312,6 +327,10 @@ class Resolver
 	}
 
 
+	/**
+	 * @param  array<mixed>  $arguments
+	 * @return array<mixed>
+	 */
 	public function completeArguments(array $arguments): array
 	{
 		array_walk_recursive($arguments, function (&$val): void {
@@ -340,7 +359,10 @@ class Resolver
 	}
 
 
-	/** Returns literal, Class, Reference, [Class, member], [, globalFunc], [Reference, member], [Statement, member] */
+	/**
+	 * Returns literal, Class, Reference, [Class, member], [, globalFunc], [Reference, member], [Statement, member]
+	 * @return string|array{string|Reference|Statement, string}|Reference|null
+	 */
 	private function normalizeEntity(Statement $statement): string|array|Reference|null
 	{
 		$entity = $statement->getEntity();
@@ -392,24 +414,32 @@ class Resolver
 	}
 
 
+	/**
+	 * Returns the definition that the reference points to.
+	 */
 	public function resolveReference(Reference $ref): Definition
 	{
-		return $ref->isSelf()
-			? $this->currentService
-			: $this->builder->getDefinition($ref->getValue());
+		if ($ref->isSelf()) {
+			assert($this->currentService !== null);
+			return $this->currentService;
+		}
+		return $this->builder->getDefinition($ref->getValue());
 	}
 
 
 	/**
 	 * Returns named reference to service resolved by type (or 'self' reference for local-autowiring).
+	 * @param class-string  $type
 	 * @throws ServiceCreationException when multiple found
 	 * @throws MissingServiceException when not found
+	 * @throws NotAllowedDuringResolvingException
 	 */
 	public function getByType(string $type): Reference
 	{
 		if (
 			$this->currentService
 			&& $this->currentServiceAllowed
+			&& $this->currentServiceType !== null
 			&& is_a($this->currentServiceType, $type, allow_string: true)
 		) {
 			return new Reference(Reference::Self);
@@ -429,6 +459,7 @@ class Resolver
 
 	/**
 	 * Adds item to the list of dependencies.
+	 * @param  \ReflectionClass<object>|\ReflectionFunctionAbstract|string  $dep
 	 */
 	public function addDependency(\ReflectionClass|\ReflectionFunctionAbstract|string $dep): static
 	{
@@ -437,10 +468,16 @@ class Resolver
 	}
 
 
-	private function completeException(\Throwable $e, Definition $def): ServiceCreationException
+	private function completeException(\Throwable $e, ?Definition $def): ServiceCreationException
 	{
 		if ($e instanceof ServiceCreationException && str_starts_with($e->getMessage(), "Service '")) {
 			return $e;
+		}
+
+		if (!$def) {
+			return $e instanceof ServiceCreationException
+				? $e
+				: new ServiceCreationException($e->getMessage(), 0, $e);
 		}
 
 		$name = $def->getName();
@@ -465,6 +502,7 @@ class Resolver
 	}
 
 
+	/** @param  mixed  $entity */
 	private function entityToString($entity): string
 	{
 		$referenceToText = fn(Reference $ref): string => $ref->isSelf() && $this->currentService
@@ -492,6 +530,10 @@ class Resolver
 	}
 
 
+	/**
+	 * @param  array<mixed>  $arguments
+	 * @return array<mixed>
+	 */
 	private function convertReferences(array $arguments): array
 	{
 		array_walk_recursive($arguments, function (&$val): void {
@@ -514,7 +556,9 @@ class Resolver
 
 	/**
 	 * Add missing arguments using autowiring.
+	 * @param  array<mixed>  $arguments
 	 * @param  (callable(string, bool): (object|object[]|null))  $getter
+	 * @return array<mixed>
 	 * @throws ServiceCreationException
 	 */
 	public static function autowireArguments(
@@ -655,7 +699,11 @@ class Resolver
 	}
 
 
-	/** @internal */
+	/**
+	 * Returns the sentinel value used to mark first-class callable syntax (...).
+	 * @return list<mixed>
+	 * @internal
+	 */
 	public static function getFirstClassCallable(): array
 	{
 		static $x = [new Nette\PhpGenerator\Literal('...')];

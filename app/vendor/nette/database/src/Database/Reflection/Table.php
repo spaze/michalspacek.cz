@@ -1,20 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database\Reflection;
 
 use Nette\Database\Reflection;
-use function array_filter, array_map, array_values, is_string;
+use function array_filter, array_map, array_values;
 
 
 /**
- * Database table structure.
+ * Database table metadata including columns, indexes, and foreign keys.
  */
 final class Table
 {
@@ -68,7 +66,7 @@ final class Table
 				array_map(fn($name) => $this->getColumn($name), $row['columns']),
 				$row['unique'],
 				$row['primary'],
-				is_string($row['name']) ? $row['name'] : null,
+				$row['name'],
 			),
 			$this->reflection->getDriver()->getIndexes($this->name),
 		);
@@ -81,7 +79,7 @@ final class Table
 			$this->columns,
 			fn($row) => $row->primary,
 		);
-		$this->primaryKey = $res ? new Index(array_values($res), true, true) : null;
+		$this->primaryKey = $res ? new Index(array_values($res), unique: true, primary: true) : null;
 	}
 
 
@@ -94,13 +92,13 @@ final class Table
 			$tmp[$id][0] = $foreignTable;
 			$tmp[$id][1][] = $this->getColumn($row['local']);
 			$tmp[$id][2][] = $foreignTable->getColumn($row['foreign']);
-			$tmp[$id][3] = is_string($id) ? $id : null;
+			$tmp[$id][3] = $id;
 		}
 		$this->foreignKeys = array_map(fn($row) => new ForeignKey(...$row), array_values($tmp));
 	}
 
 
-	public function __get($name): mixed
+	public function __get(string $name): mixed
 	{
 		match ($name) {
 			'columns' => $this->initColumns(),

@@ -17,7 +17,7 @@ use const PHP_VERSION;
  */
 class Debugger
 {
-	public const Version = '2.11.3';
+	public const Version = '2.12.0';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -139,6 +139,9 @@ class Debugger
 	/** @var string[] */
 	public static array $customJsFiles = [];
 
+	/** @var string[] path prefixes of "transparent" packages whose frames are skipped when locating user code and collapsed in stack traces */
+	public static array $transparentPaths = [];
+
 	/** @var array<\Closure(string, int): ?array{file: string, label: string, line?: int, column?: int, active?: bool}> */
 	private static array $sourceMappers = [];
 
@@ -245,6 +248,10 @@ class Debugger
 	}
 
 
+	/**
+	 * Dispatches deferred Bar/BlueScreen assets for AJAX requests or redirect queues.
+	 * Must be called after session_start() when using NativeSession.
+	 */
 	public static function dispatch(): void
 	{
 		self::getStrategy()->dispatch();
@@ -267,7 +274,7 @@ class Debugger
 
 
 	/**
-	 * Shutdown handler to catch fatal errors and execute of the planned activities.
+	 * Shutdown handler to catch fatal errors and render the Bar.
 	 * @internal
 	 */
 	public static function shutdownHandler(): void
@@ -298,7 +305,7 @@ class Debugger
 
 
 	/**
-	 * Handler to catch uncaught exception.
+	 * Handles an uncaught exception by rendering or logging it.
 	 * @internal
 	 */
 	public static function exceptionHandler(\Throwable $exception): void
@@ -324,7 +331,7 @@ class Debugger
 
 
 	/**
-	 * Handler to catch warnings and notices.
+	 * Handles PHP warnings and notices; converts recoverable errors to exceptions.
 	 * @throws ErrorException
 	 * @internal
 	 */
@@ -498,6 +505,13 @@ class Debugger
 				Dumper::KEYS_TO_HIDE => self::$keysToHide,
 			]);
 			echo $html ? '</tracy-div>' : '';
+
+			if ($html && Helpers::isAgent()) {
+				Helpers::consoleLog(Dumper::toText($var, [
+					Dumper::DEPTH => 3,
+					Dumper::KEYS_TO_HIDE => self::$keysToHide,
+				]));
+			}
 		}
 
 		return $var;
@@ -542,7 +556,10 @@ class Debugger
 				Dumper::LOCATION => self::$showLocation ?: Dumper::LOCATION_CLASS | Dumper::LOCATION_SOURCE,
 				Dumper::LAZY => true,
 				Dumper::KEYS_TO_HIDE => self::$keysToHide,
-			])];
+			]), 'text' => Helpers::isAgent() ? Dumper::toText($var, [
+				Dumper::DEPTH => 3,
+				Dumper::KEYS_TO_HIDE => self::$keysToHide,
+			]) : null];
 		}
 
 		return $var;
@@ -613,4 +630,19 @@ class Debugger
 
 		return in_array($addr, $list, strict: true) || in_array("$secret@$addr", $list, strict: true);
 	}
+
+
+	/**
+	 * @return string[]
+	 * @internal
+	 */
+	public static function detectTransparentPaths(): array
+	{
+		return preg_match('#(.+/vendor)/tracy/tracy/src/Tracy/Debugger$#', strtr(__DIR__, '\\', '/'), $m)
+			? [$m[1] . '/tracy', $m[1] . '/nette', $m[1] . '/latte']
+			: [dirname(__DIR__)];
+	}
 }
+
+
+Debugger::$transparentPaths = Debugger::detectTransparentPaths();

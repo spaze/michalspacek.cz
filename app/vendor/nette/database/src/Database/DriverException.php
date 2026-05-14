@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database;
 
@@ -18,9 +16,14 @@ use function array_slice;
 class DriverException extends \PDOException
 {
 	public ?string $queryString = null;
+
+	/** @var array<mixed>|null */
 	public ?array $params = null;
 
 
+	/**
+	 * Creates a DriverException from a PDOException, preserving error info and stack trace location.
+	 */
 	public static function from(\PDOException $src): static
 	{
 		$e = new static($src->message, 0, $src);
@@ -40,12 +43,18 @@ class DriverException extends \PDOException
 	}
 
 
+	/**
+	 * Returns the driver-specific error code, or null if not available.
+	 */
 	public function getDriverCode(): int|string|null
 	{
 		return $this->errorInfo[1] ?? null;
 	}
 
 
+	/**
+	 * Returns the SQLSTATE error code, or null if not available.
+	 */
 	public function getSqlState(): ?string
 	{
 		return $this->errorInfo[0] ?? null;
@@ -58,6 +67,7 @@ class DriverException extends \PDOException
 	}
 
 
+	/** @return array<mixed>|null */
 	public function getParameters(): ?array
 	{
 		return $this->params;

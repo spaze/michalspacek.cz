@@ -1,18 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI\Config;
 
 use Nette;
 use Nette\Utils\Validators;
-use function array_unique, dirname, is_file, is_object, is_readable, pathinfo, preg_match, sprintf, strtolower;
-use const PATHINFO_EXTENSION;
+use function array_unique, dirname, is_file, is_readable, pathinfo, preg_match, sprintf, strtolower;
 
 
 /**
@@ -22,17 +19,25 @@ class Loader
 {
 	private const IncludesKey = 'includes';
 
+	/** @var array<string, class-string<Adapter>|Adapter> */
 	private array $adapters = [
 		'php' => Adapters\PhpAdapter::class,
 		'neon' => Adapters\NeonAdapter::class,
 	];
+
+	/** @var string[] */
 	private array $dependencies = [];
+
+	/** @var array<string, true> */
 	private array $loadedFiles = [];
+
+	/** @var array<string, mixed> */
 	private array $parameters = [];
 
 
 	/**
 	 * Reads configuration from file.
+	 * @return array<string, mixed>
 	 */
 	public function load(string $file, ?bool $merge = true): array
 	{
@@ -73,6 +78,7 @@ class Loader
 
 	/**
 	 * Returns configuration files.
+	 * @return string[]
 	 */
 	public function getDependencies(): array
 	{
@@ -93,6 +99,7 @@ class Loader
 
 	/**
 	 * Registers adapter for given file extension.
+	 * @param  class-string<Adapter>|Adapter  $adapter
 	 */
 	public function addAdapter(string $extension, string|Adapter $adapter): static
 	{
@@ -108,12 +115,12 @@ class Loader
 			throw new Nette\InvalidArgumentException(sprintf("Unknown file extension '%s'.", $file));
 		}
 
-		return is_object($this->adapters[$extension])
-			? $this->adapters[$extension]
-			: new $this->adapters[$extension];
+		$adapter = $this->adapters[$extension];
+		return $adapter instanceof Adapter ? $adapter : new $adapter;
 	}
 
 
+	/** @param  array<string, mixed>  $params */
 	public function setParameters(array $params): static
 	{
 		$this->parameters = $params;

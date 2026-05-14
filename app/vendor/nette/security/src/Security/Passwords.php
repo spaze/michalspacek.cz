@@ -1,36 +1,33 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 use Nette;
-use const PASSWORD_DEFAULT;
 
 
 /**
- * Password Hashing.
+ * Password hashing and verification.
  */
 class Passwords
 {
 	/**
-	 * Chooses which secure algorithm is used for hashing and how to configure it.
-	 * @see https://php.net/manual/en/password.constants.php
+	 * Configures the hashing algorithm and its options.
 	 */
 	public function __construct(
-		private string $algo = PASSWORD_DEFAULT,
-		private array $options = [],
+		private readonly string $algo = PASSWORD_DEFAULT,
+		/** @var array<string, mixed>  algorithm-specific options, see https://php.net/manual/en/password.constants.php */
+		private readonly array $options = [],
 	) {
 	}
 
 
 	/**
-	 * Computes password´s hash. The result contains the algorithm ID and its settings, cryptographical salt and the hash itself.
+	 * Computes a password hash containing the algorithm ID, settings, salt, and the hash itself.
 	 */
 	public function hash(
 		#[\SensitiveParameter]
@@ -43,7 +40,7 @@ class Passwords
 
 		$hash = @password_hash($password, $this->algo, $this->options); // @ is escalated to exception
 		if (!$hash) {
-			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
+			throw new Nette\InvalidStateException('Computed hash is invalid. ' . (error_get_last()['message'] ?? ''));
 		}
 
 		return $hash;
@@ -51,7 +48,7 @@ class Passwords
 
 
 	/**
-	 * Finds out, whether the given password matches the given hash.
+	 * Checks whether the password matches the given hash.
 	 */
 	public function verify(
 		#[\SensitiveParameter]
@@ -64,7 +61,7 @@ class Passwords
 
 
 	/**
-	 * Finds out if the hash matches the options given in constructor.
+	 * Checks whether the hash needs to be rehashed with the current algorithm and options.
 	 */
 	public function needsRehash(string $hash): bool
 	{

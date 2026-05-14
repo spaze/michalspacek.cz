@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database;
 
 use Nette;
-use function array_key_exists, array_keys, array_map, array_merge, array_values, count, explode, get_debug_type, implode, in_array, is_array, is_bool, is_float, is_int, is_resource, is_scalar, is_string, iterator_to_array, ltrim, number_format, rtrim, str_contains, str_ends_with, stream_get_contents, strtoupper, substr;
+use function array_key_exists, array_keys, array_map, array_values, count, explode, get_debug_type, implode, in_array, is_array, is_bool, is_float, is_int, is_resource, is_scalar, is_string, iterator_to_array, ltrim, number_format, rtrim, str_contains, str_ends_with, stream_get_contents, strtoupper, substr;
 
 
 /**
@@ -50,7 +48,11 @@ class SqlPreprocessor
 
 	private readonly Connection $connection;
 	private readonly Driver $driver;
+
+	/** @var list<mixed> */
 	private array $params;
+
+	/** @var list<mixed> */
 	private array $remaining;
 	private int $counter;
 	private bool $useParams;
@@ -68,7 +70,9 @@ class SqlPreprocessor
 
 	/**
 	 * Processes SQL query with parameter substitution.
-	 * @return array{string, array}
+	 * @param  list<mixed>  $params
+	 * @param  bool  $useParams  when true, scalar values are kept as bound parameters instead of being inlined
+	 * @return array{string, list<mixed>}
 	 */
 	public function process(array $params, bool $useParams = false): array
 	{
@@ -115,12 +119,14 @@ class SqlPreprocessor
 
 
 	/**
-	 * Handles SQL placeholders and skips string literals and comments.
+	 * Processes a regex match from the SQL scan: skips string literals and comments,
+	 * detects SQL command keywords to set array mode, and replaces ? placeholders.
+	 * @param  string[]  $match
 	 */
 	private function parsePart(array $match): string
 	{
 		$match = $match[0];
-		if (in_array($match[0], ["'", '"', '/', '-'], true)) { // string or comment
+		if (in_array($match[0], ["'", '"', '/', '-'], strict: true)) { // string or comment
 			return $match;
 
 		} elseif (!str_contains($match, '?')) { // command
@@ -143,8 +149,8 @@ class SqlPreprocessor
 
 
 	/**
-	 * Formats a value for use in SQL query where ? placeholder is used.
-	 * For arrays, the formatting is determined by $mode or last SQL keyword before the placeholder
+	 * Formats a value for use in SQL at a ? placeholder.
+	 * For arrays, the mode is taken from $mode or detected from the last SQL keyword before the placeholder.
 	 */
 	private function formatParameter(mixed $value, ?string $mode = null): string
 	{
@@ -193,7 +199,7 @@ class SqlPreprocessor
 			$value instanceof Table\ActiveRow => $this->formatValue($value->getPrimary()),
 			$value instanceof \DateTimeInterface => $this->driver->formatDateTime($value),
 			$value instanceof \DateInterval => $this->driver->formatDateInterval($value),
-			$value instanceof \BackedEnum && is_scalar($value->value) => $this->formatValue($value->value),
+			$value instanceof \BackedEnum => $this->formatValue($value->value),
 			$value instanceof \Stringable => $this->formatValue((string) $value),
 			default => throw new Nette\InvalidArgumentException('Unexpected type of parameter: ' . get_debug_type($value))
 		};
@@ -202,6 +208,7 @@ class SqlPreprocessor
 
 	/**
 	 * Output: value, value, ... | (tuple), (tuple), ...
+	 * @param  mixed[]  $values
 	 */
 	private function formatList(array $values): string
 	{
@@ -220,6 +227,7 @@ class SqlPreprocessor
 
 	/**
 	 * Output format: (key, key, ...) VALUES (value, value, ...)
+	 * @param  array<string, mixed>  $items
 	 */
 	private function formatInsert(array $items): string
 	{
@@ -235,6 +243,7 @@ class SqlPreprocessor
 
 	/**
 	 * Output format: (key, key, ...) VALUES (value, value, ...), (value, value, ...), ...
+	 * @param  list<array<string, mixed>|Row>  $groups
 	 */
 	private function formatMultiInsert(array $groups): string
 	{
@@ -263,6 +272,7 @@ class SqlPreprocessor
 
 	/**
 	 * Output format: key=value, key=value, ...
+	 * @param  mixed[]  $items
 	 */
 	private function formatSet(array $items): string
 	{
@@ -284,6 +294,7 @@ class SqlPreprocessor
 
 	/**
 	 * Output format: (key [operator] value) AND/OR ...
+	 * @param  mixed[]  $items
 	 */
 	private function formatWhere(array $items, string $mode): string
 	{
@@ -324,6 +335,7 @@ class SqlPreprocessor
 
 	/**
 	 * Output format: key, key DESC, ...
+	 * @param  array<string, int>  $items  column => direction (positive = ASC, negative = DESC)
 	 */
 	private function formatOrderBy(array $items): string
 	{
@@ -341,8 +353,8 @@ class SqlPreprocessor
 	 */
 	private function formatLiteral(SqlLiteral $value): string
 	{
-		[$res, $params] = (clone $this)->process([$value->getSql(), ...$value->getParameters()], $this->useParams);
-		$this->remaining = array_merge($this->remaining, $params);
+		[$res, $params] = (clone $this)->process([$value->getSql(), ...array_values($value->getParameters())], $this->useParams);
+		$this->remaining = [...$this->remaining, ...$params];
 		return $res;
 	}
 

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\ComponentModel;
 
@@ -17,7 +15,7 @@ use function func_num_args, in_array, substr;
  * Base class for all components. Components have a parent, name, and can be monitored by ancestors.
  *
  * @property-read string $name
- * @property-read IContainer|null $parent
+ * @property-read ?IContainer $parent
  */
 abstract class Component implements IComponent
 {
@@ -26,49 +24,55 @@ abstract class Component implements IComponent
 	private ?IContainer $parent = null;
 	private ?string $name = null;
 
-	/** @var array<string, array{?IComponent, ?int, ?string, array<int, array{?callable, ?callable}>}> means [type => [obj, depth, path, [attached, detached]]] */
+	/**
+	 * Monitors: tracks monitored ancestors and registered callbacks.
+	 * Combines cached lookup results with callback registrations for each monitored type.
+	 * Depth is used to detect when monitored ancestor becomes unreachable during detachment.
+	 * Structure: [type => [found object, depth to object, path to object, [[attached, ...], [detached, ...]]]]
+	 * @var array<''|class-string<Nette\ComponentModel\IComponent>, array{?IComponent, ?int, ?string, ?array{list<\Closure(IComponent): void>, list<\Closure(IComponent): void>}}>
+	 */
 	private array $monitors = [];
+
+	/** Prevents nested listener execution during refreshMonitors */
+	private bool $callingListeners = false;
 
 
 	/**
 	 * Finds the closest ancestor of specified type.
-	 * @param  bool  $throw   throw exception if component doesn't exist?
-	 * @return ($throw is true ? IComponent : ?IComponent)
+	 * @template T of IComponent
+	 * @param ?class-string<T>  $type
+	 * @param bool  $throw  throw exception if component doesn't exist?
+	 * @return ($type is null ? ($throw is true ? IComponent : ?IComponent) : ($throw is true ? T : ?T))
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
 		$type ??= '';
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
-			$obj = $this->parent;
+			$ancestor = $this->parent;
 			$path = self::NameSeparator . $this->name;
 			$depth = 1;
-			while ($obj !== null) {
-				$parent = $obj->getParent();
-				if ($type ? $obj instanceof $type : $parent === null) {
+			while ($ancestor !== null) {
+				$parent = $ancestor->getParent();
+				if ($type ? $ancestor instanceof $type : $parent === null) {
 					break;
 				}
 
-				$path = self::NameSeparator . $obj->getName() . $path;
+				$path = self::NameSeparator . $ancestor->getName() . $path;
 				$depth++;
-				$obj = $parent; // IComponent::getParent()
-				if ($obj === $this) {
-					$obj = null; // prevent cycling
+				$ancestor = $parent; // IComponent::getParent()
+				if ($ancestor === $this) {
+					$ancestor = null; // prevent cycling
 				}
 			}
 
-			if ($obj) {
-				$this->monitors[$type] = [$obj, $depth, substr($path, 1), []];
-
-			} else {
-				$this->monitors[$type] = [null, null, null, []]; // not found
-			}
+			$this->monitors[$type] = $ancestor
+				? [$ancestor, $depth, substr($path, 1), null]
+				: [null, null, null, null]; // not found
 		}
 
 		if ($throw && $this->monitors[$type][0] === null) {
-			$message = $this->name !== null
-				? "Component '$this->name' is not attached to '$type'."
-				: "Component of type '" . static::class . "' is not attached to '$type'.";
-			throw new Nette\InvalidStateException($message);
+			$desc = $this->name === null ? "type of '" . static::class . "'" : "'$this->name'";
+			throw new Nette\InvalidStateException("Component $desc is not attached to '$type'.");
 		}
 
 		return $this->monitors[$type][0];
@@ -77,7 +81,9 @@ abstract class Component implements IComponent
 
 	/**
 	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
-	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
+	 * A path is the concatenation of component names separated by self::NameSeparator.
+	 * @param ?class-string<IComponent>  $type
+	 * @param bool  $throw  throw exception if component doesn't exist?
 	 * @return ($throw is true ? string : ?string)
 	 */
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
@@ -89,28 +95,37 @@ abstract class Component implements IComponent
 
 	/**
 	 * Starts monitoring ancestors for attach/detach events.
+	 * @template T of IComponent
+	 * @param class-string<T>  $type
+	 * @param ?(callable(T): void)  $attached  called when attached to a monitored ancestor
+	 * @param ?(callable(T): void)  $detached  called before detaching from a monitored ancestor
 	 */
 	final public function monitor(string $type, ?callable $attached = null, ?callable $detached = null): void
 	{
 		if (func_num_args() === 1) {
-			$attached = [$this, 'attached'];
-			$detached = [$this, 'detached'];
+			$attached = $this->attached(...);
+			$detached = $this->detached(...);
 		}
 
-		if (
-			($obj = $this->lookup($type, throw: false))
-			&& $attached
-			&& !in_array([$attached, $detached], $this->monitors[$type][3], strict: true)
-		) {
-			$attached($obj);
+		$ancestor = $this->lookup($type, throw: false);
+		$this->monitors[$type][3] ??= [[], []];
+
+		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0], strict: false)) {
+			$this->monitors[$type][3][0][] = $attached(...);
+			if ($ancestor) {
+				$attached($ancestor);
+			}
 		}
 
-		$this->monitors[$type][3][] = [$attached, $detached]; // mark as monitored
+		if ($detached) {
+			$this->monitors[$type][3][1][] = $detached(...);
+		}
 	}
 
 
 	/**
 	 * Stops monitoring ancestors of specified type.
+	 * @param class-string<IComponent>  $type
 	 */
 	final public function unmonitor(string $type): void
 	{
@@ -177,7 +192,7 @@ abstract class Component implements IComponent
 			throw new Nette\InvalidStateException("Component '$this->name' already has a parent.");
 		}
 
-		// remove from parent?
+		// remove from parent
 		if ($parent === null) {
 			$this->refreshMonitors(0);
 			$this->parent = null;
@@ -208,9 +223,9 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Refreshes monitors.
-	 * @param  array<string,true>|null  $missing  (array = attaching, null = detaching)
-	 * @param  array<int,array{callable,IComponent}>  $listeners
+	 * Refreshes monitors when attaching/detaching from component tree.
+	 * @param  ?array<string, true>  $missing  null = detaching, array = attaching
+	 * @param  array<int, array{\Closure(IComponent): void, IComponent}>  $listeners
 	 */
 	private function refreshMonitors(int $depth, ?array &$missing = null, array &$listeners = []): void
 	{
@@ -223,51 +238,58 @@ abstract class Component implements IComponent
 		}
 
 		if ($missing === null) { // detaching
-			foreach ($this->monitors as $type => $rec) {
-				if (isset($rec[1]) && $rec[1] > $depth) {
-					if ($rec[3]) { // monitored
-						$this->monitors[$type] = [null, null, null, $rec[3]];
-						foreach ($rec[3] as $pair) {
-							$listeners[] = [$pair[1], $rec[0]];
+			foreach ($this->monitors as $type => [$ancestor, $inDepth, , $callbacks]) {
+				if (isset($inDepth) && $inDepth > $depth) { // only process if ancestor was deeper than current detachment point
+					assert($ancestor !== null);
+					if ($callbacks) {
+						$this->monitors[$type] = [null, null, null, $callbacks]; // clear cached object, keep listener registrations
+						foreach ($callbacks[1] as $detached) {
+							$listeners[] = [$detached, $ancestor];
 						}
-					} else { // not monitored, just randomly cached
+					} else { // no listeners, just cached lookup result - clear it
 						unset($this->monitors[$type]);
 					}
 				}
 			}
 		} else { // attaching
-			foreach ($this->monitors as $type => $rec) {
-				if (isset($rec[0])) { // is in cache yet
+			foreach ($this->monitors as $type => [$ancestor, , , $callbacks]) {
+				if (isset($ancestor)) { // already cached and valid - skip
 					continue;
 
-				} elseif (!$rec[3]) { // not monitored, just randomly cached
+				} elseif (!$callbacks) { // no listeners, just old cached lookup - clear it
 					unset($this->monitors[$type]);
 
-				} elseif (isset($missing[$type])) { // known from previous lookup
-					$this->monitors[$type] = [null, null, null, $rec[3]];
+				} elseif (isset($missing[$type])) { // already checked during this attach operation - ancestor not found
+					$this->monitors[$type] = [null, null, null, $callbacks]; // keep listener registrations but clear cache
 
-				} else {
-					unset($this->monitors[$type]); // forces re-lookup
-					if ($obj = $this->lookup($type, throw: false)) {
-						foreach ($rec[3] as $pair) {
-							$listeners[] = [$pair[0], $obj];
+				} else { // need to check if ancestor exists
+					unset($this->monitors[$type]); // force fresh lookup
+					assert($type !== '');
+					if ($ancestor = $this->lookup($type, throw: false)) {
+						foreach ($callbacks[0] as $attached) {
+							$listeners[] = [$attached, $ancestor];
 						}
 					} else {
-						$missing[$type] = true;
+						$missing[$type] = true; // ancestor not found - remember so we don't check again
 					}
 
-					$this->monitors[$type][3] = $rec[3]; // mark as monitored
+					$this->monitors[$type][3] = $callbacks; // restore listener (lookup() cached result in $this->monitors[$type])
 				}
 			}
 		}
 
-		if ($depth === 0) { // call listeners
-			$prev = [];
-			foreach ($listeners as $item) {
-				if ($item[0] && !in_array($item, $prev, strict: true)) {
-					$item[0]($item[1]);
-					$prev[] = $item;
+		if ($depth === 0 && !$this->callingListeners) { // call listeners
+			$this->callingListeners = true;
+			try {
+				$called = [];
+				foreach ($listeners as [$callback, $component]) {
+					if (!in_array($key = [$callback, $component], $called, strict: false)) { // deduplicate: same callback + same object = call once
+						$callback($component);
+						$called[] = $key;
+					}
 				}
+			} finally {
+				$this->callingListeners = false;
 			}
 		}
 	}

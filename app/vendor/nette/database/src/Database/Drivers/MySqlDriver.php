@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Drivers;
 
@@ -67,6 +65,18 @@ class MySqlDriver implements Nette\Database\Driver
 
 		} elseif (in_array($code, [1062, 1557, 1569, 1586], strict: true)) {
 			return Nette\Database\UniqueConstraintViolationException::from($e);
+
+		} elseif ($code === 3819) {
+			return Nette\Database\CheckConstraintViolationException::from($e);
+
+		} elseif ($code === 1213) {
+			return Nette\Database\DeadlockException::from($e);
+
+		} elseif ($code === 1205) {
+			return Nette\Database\LockTimeoutException::from($e);
+
+		} elseif ($code === 2006 || $code === 2013) {
+			return Nette\Database\ConnectionLostException::from($e);
 
 		} elseif ($code >= 2001 && $code <= 2028) {
 			return Nette\Database\ConnectionException::from($e);
@@ -137,9 +147,9 @@ class MySqlDriver implements Nette\Database\Driver
 
 		while ($row = $query->fetch()) {
 			$tables[] = [
-				'name' => $row['TABLE_NAME'],
+				'name' => (string) $row['TABLE_NAME'],
 				'view' => $row['TABLE_TYPE'] === 'VIEW',
-				'comment' => $row['TABLE_COMMENT'],
+				'comment' => (string) $row['TABLE_COMMENT'],
 			];
 		}
 
@@ -150,14 +160,14 @@ class MySqlDriver implements Nette\Database\Driver
 	public function getColumns(string $table): array
 	{
 		$columns = [];
-		$rows = $this->connection->query('SHOW FULL COLUMNS FROM ' . $this->delimite($table));
+		$rows = $this->connection->query('SHOW FULL COLUMNS FROM ?name', $table);
 		while ($row = $rows->fetch()) {
 			$row = array_change_key_case((array) $row);
 			$typeInfo = Nette\Database\Helpers::parseColumnType($row['type']);
 			$columns[] = [
 				'name' => $row['field'],
 				'table' => $table,
-				'nativetype' => strtoupper($typeInfo['type']),
+				'nativetype' => strtoupper($typeInfo['type'] ?? ''),
 				'size' => $typeInfo['length'],
 				'nullable' => $row['null'] === 'YES',
 				'default' => $row['default'],
@@ -175,13 +185,21 @@ class MySqlDriver implements Nette\Database\Driver
 	public function getIndexes(string $table): array
 	{
 		$indexes = [];
-		$rows = $this->connection->query('SHOW INDEX FROM ' . $this->delimite($table));
+		$rows = $this->connection->query('SHOW INDEX FROM ?name', $table);
 		while ($row = $rows->fetch()) {
-			$id = $row['Key_name'];
-			$indexes[$id]['name'] = $id;
-			$indexes[$id]['unique'] = !$row['Non_unique'];
-			$indexes[$id]['primary'] = $row['Key_name'] === 'PRIMARY';
-			$indexes[$id]['columns'][$row['Seq_in_index'] - 1] = $row['Column_name'];
+			$id = (string) $row['Key_name'];
+			$indexes[$id] ??= [
+				'name' => $id,
+				'unique' => !$row['Non_unique'],
+				'primary' => $id === 'PRIMARY',
+				'columns' => [],
+			];
+			$indexes[$id]['columns'][(int) $row['Seq_in_index'] - 1] = (string) $row['Column_name'];
+		}
+
+		foreach ($indexes as &$index) {
+			ksort($index['columns']);
+			$index['columns'] = array_values($index['columns']);
 		}
 
 		return array_values($indexes);
@@ -199,15 +217,16 @@ class MySqlDriver implements Nette\Database\Driver
 			  AND TABLE_NAME = ?
 			X, $table);
 
-		$id = 0;
 		while ($row = $rows->fetch()) {
-			$keys[$id]['name'] = $row['CONSTRAINT_NAME'];
-			$keys[$id]['local'] = $row['COLUMN_NAME'];
-			$keys[$id]['table'] = $row['REFERENCED_TABLE_NAME'];
-			$keys[$id++]['foreign'] = $row['REFERENCED_COLUMN_NAME'];
+			$keys[] = [
+				'name' => (string) $row['CONSTRAINT_NAME'],
+				'local' => (string) $row['COLUMN_NAME'],
+				'table' => (string) $row['REFERENCED_TABLE_NAME'],
+				'foreign' => (string) $row['REFERENCED_COLUMN_NAME'],
+			];
 		}
 
-		return array_values($keys);
+		return $keys;
 	}
 
 

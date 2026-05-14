@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -35,6 +33,7 @@ final class ServicesExtension extends Nette\DI\CompilerExtension
 
 	/**
 	 * Loads list of service definitions.
+	 * @param  mixed[]  $config
 	 */
 	public function loadDefinitions(array $config): void
 	{
@@ -235,7 +234,7 @@ final class ServicesExtension extends Nette\DI\CompilerExtension
 	}
 
 
-	private function convertKeyToName($key): ?string
+	private function convertKeyToName(int|string $key): ?string
 	{
 		if (is_int($key)) {
 			return null;

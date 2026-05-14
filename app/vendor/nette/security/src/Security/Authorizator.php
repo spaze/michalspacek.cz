@@ -1,18 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 
 /**
- * Authorizator checks if a given role has authorization
- * to access a given resource.
+ * Checks whether a given role has access to a given resource.
  */
 interface Authorizator
 {

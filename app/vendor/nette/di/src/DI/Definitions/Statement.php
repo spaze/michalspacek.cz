@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Definitions;
 
@@ -16,18 +14,17 @@ use function array_keys, class_exists, explode, is_array, is_string, str_contain
 /**
  * Assignment or calling statement.
  *
- * @property string|array|Definition|Reference|null $entity
+ * @property string|array{string|Reference|Statement,string}|Definition|Reference|null $entity
  */
 final class Statement implements Nette\Schema\DynamicParameter
 {
 	use Nette\SmartObject;
 
-	public array $arguments;
-	private string|array|Definition|Reference|null $entity;
-
-
-	public function __construct(string|array|Definition|Reference|null $entity, array $arguments = [])
-	{
+	public function __construct(
+		private string|array|Definition|Reference|null $entity,
+		/** @var array<mixed> */
+		public array $arguments = [],
+	) {
 		if (
 			$entity !== null
 			&& !is_string($entity) // Class, @service, not, tags, types, PHP literal, entity::member
@@ -55,10 +52,10 @@ final class Statement implements Nette\Schema\DynamicParameter
 		}
 
 		$this->entity = $entity;
-		$this->arguments = $arguments;
 	}
 
 
+	/** @return string|array{string|Reference|Statement, string}|Definition|Reference|null */
 	public function getEntity(): string|array|Definition|Reference|null
 	{
 		return $this->entity;

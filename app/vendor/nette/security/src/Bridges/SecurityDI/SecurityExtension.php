@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\SecurityDI;
 
@@ -20,12 +18,9 @@ use function is_array;
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
-	private bool $debugMode;
-
-
-	public function __construct(bool $debugMode = false)
-	{
-		$this->debugMode = $debugMode;
+	public function __construct(
+		private readonly bool $debugMode = false,
+	) {
 	}
 
 
@@ -58,7 +53,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		/** @var object{debugger: bool, users: array, roles: array, resources: array, authentication: \stdClass} $config */
+		/** @var object{debugger: bool, users: array<string, string|array{password: string, roles?: string|list<string>, data?: array<string, mixed>}>, roles: array<string, string|list<string>|null>, resources: array<string, string|null>, authentication: \stdClass} $config */
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
 
@@ -139,7 +134,9 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$this->debugMode &&
 			($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
 		) {
-			$builder->getDefinition($this->prefix('user'))->addSetup('@Tracy\Bar::addPanel', [
+			$definition = $builder->getDefinition($this->prefix('user'));
+			assert($definition instanceof Nette\DI\Definitions\ServiceDefinition);
+			$definition->addSetup('@Tracy\Bar::addPanel', [
 				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
 			]);
 		}

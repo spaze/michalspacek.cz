@@ -7,15 +7,15 @@ use DOMDocument;
 use Latte\CompileException;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
 use Latte\Compiler\Tag;
-use Nette\IOException;
-use Nette\Utils\FileSystem;
 use Spaze\SvgIcons\Exceptions\IconTagException;
+use Spaze\SvgIcons\Exceptions\SvgIconException;
+use Spaze\SvgIcons\SvgIcons;
 
 class IconNodeFactory
 {
 
 	public function __construct(
-		private readonly string $iconsDir,
+		private readonly SvgIcons $svgIcons,
 		private readonly ?string $cssClass,
 	) {
 	}
@@ -52,9 +52,9 @@ class IconNodeFactory
 			throw new IconTagException('Modifiers are not allowed', $tag, $resource);
 		}
 		try {
-			$svg = FileSystem::read("{$this->iconsDir}/{$resource->value}.svg");
-		} catch (IOException $e) {
-			throw new IconTagException("Icon '{$resource->value}' not found in '{$this->iconsDir}'", $tag, $resource, previous: $e);
+			$svg = $this->svgIcons->getSvg($resource->value);
+		} catch (SvgIconException $e) {
+			throw new IconTagException($e->getMessage(), $tag, $resource, previous: $e);
 		}
 		return $cssClasses ? new IconNode($this->addClasses($svg, $cssClasses, $tag, $resource)) : new IconNode($svg);
 	}

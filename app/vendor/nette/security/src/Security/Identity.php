@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Security;
 
@@ -15,17 +13,25 @@ use function in_array, is_float, is_numeric, iterator_to_array;
 /**
  * @deprecated  use Nette\Security\SimpleIdentity
  * @property   string|int $id
- * @property   array $roles
- * @property   array $data
+ * @property   list<string> $roles
+ * @property   array<string,mixed> $data
  */
 class Identity implements IIdentity
 {
 	private string|int $id;
+
+	/** @var list<string> */
 	private array $roles;
+
+	/** @var array<string, mixed> */
 	private array $data;
 
 
-	public function __construct($id, $roles = null, ?iterable $data = null)
+	/**
+	 * @param  string|list<string>|null  $roles
+	 * @param  ?iterable<string, mixed>  $data
+	 */
+	public function __construct(string|int $id, string|array|null $roles = null, ?iterable $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);
@@ -56,6 +62,7 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets a list of roles that the user is a member of.
+	 * @param  list<string>  $roles
 	 */
 	public function setRoles(array $roles): static
 	{
@@ -66,6 +73,7 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns a list of roles that the user is a member of.
+	 * @return list<string>
 	 */
 	public function getRoles(): array
 	{
@@ -74,7 +82,8 @@ class Identity implements IIdentity
 
 
 	/**
-	 * Returns a user data.
+	 * Returns user data.
+	 * @return array<string, mixed>
 	 */
 	public function getData(): array
 	{
@@ -85,14 +94,14 @@ class Identity implements IIdentity
 	/**
 	 * Sets user data value.
 	 */
-	public function __set(string $key, $value): void
+	public function __set(string $key, mixed $value): void
 	{
-		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
-			$this->{"set$key"}($value);
-
-		} else {
-			$this->data[$key] = $value;
-		}
+		match ($key) {
+			'id' => $this->setId($value),
+			'roles' => $this->setRoles($value),
+			'data' => $this->data = $value,
+			default => $this->data[$key] = $value,
+		};
 	}
 
 
@@ -102,7 +111,7 @@ class Identity implements IIdentity
 	public function &__get(string $key): mixed
 	{
 		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
-			$res = $this->{"get$key"}();
+			$res = $this->{'get' . ucfirst($key)}();
 			return $res;
 
 		} else {

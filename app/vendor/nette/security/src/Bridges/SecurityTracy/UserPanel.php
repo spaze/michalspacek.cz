@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\SecurityTracy;
 
@@ -19,12 +17,9 @@ use const PHP_SESSION_ACTIVE;
  */
 class UserPanel implements Tracy\IBarPanel
 {
-	private Nette\Security\User $user;
-
-
-	public function __construct(Nette\Security\User $user)
-	{
-		$this->user = $user;
+	public function __construct(
+		private readonly Nette\Security\User $user,
+	) {
 	}
 
 

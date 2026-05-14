@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database;
 
@@ -29,7 +27,7 @@ final class Reflection
 	}
 
 
-	/** @return Table[] */
+	/** @return list<Table> */
 	public function getTables(): array
 	{
 		return array_values($this->tables);
@@ -91,7 +89,7 @@ final class Reflection
 	}
 
 
-	public function __get($name): mixed
+	public function __get(string $name): mixed
 	{
 		match ($name) {
 			'tables' => $this->initTables(),

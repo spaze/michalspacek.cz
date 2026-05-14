@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Definitions;
 
@@ -14,11 +12,11 @@ use function array_map, interface_exists, lcfirst, preg_match, sprintf, str_star
 
 
 /**
- * Multi accessor/factory definition.
+ * Definition of a locator service backed by a generated implementation of a user-defined interface with multiple get*()/create*() methods.
  */
 final class LocatorDefinition extends Definition
 {
-	/** @var Reference[] */
+	/** @var array<string, Reference> */
 	private array $references = [];
 	private ?string $tagged = null;
 
@@ -66,20 +64,23 @@ final class LocatorDefinition extends Definition
 	}
 
 
+	/** @param  array<string, Reference|string>  $references */
 	public function setReferences(array $references): static
 	{
 		$this->references = [];
 		foreach ($references as $name => $ref) {
-			$this->references[$name] = str_starts_with($ref, '@')
-				? new Reference(substr($ref, 1))
-				: Reference::fromType($ref);
+			$this->references[$name] = match (true) {
+				$ref instanceof Reference => $ref,
+				str_starts_with($ref, '@') => new Reference(substr($ref, 1)),
+				default => Reference::fromType($ref),
+			};
 		}
 
 		return $this;
 	}
 
 
-	/** @return Reference[] */
+	/** @return array<string, Reference> */
 	public function getReferences(): array
 	{
 		return $this->references;
@@ -130,18 +131,23 @@ final class LocatorDefinition extends Definition
 
 	public function generateMethod(Nette\PhpGenerator\Method $method, Nette\DI\PhpGenerator $generator): void
 	{
+		$type = $this->getType();
+		assert($type !== null);
+
 		$class = (new Nette\PhpGenerator\ClassType)
-			->addImplement($this->getType());
+			->addImplement($type);
 
 		$class->addMethod('__construct')
 			->addPromotedParameter('container')
 				->setPrivate()
 				->setType($generator->getClassName());
 
-		foreach ((new \ReflectionClass($this->getType()))->getMethods() as $rm) {
-			preg_match('#^(get|create)(.*)#', $rm->name, $m);
+		foreach ((new \ReflectionClass($type))->getMethods() as $rm) {
+			if (!preg_match('#^(get|create)(.*)#', $rm->name, $m)) {
+				continue;
+			}
 			$name = lcfirst($m[2]);
-			$nullable = $rm->getReturnType()->allowsNull();
+			$nullable = $rm->getReturnType()?->allowsNull() ?? false;
 
 			$methodInner = $class->addMethod($rm->name)
 				->setReturnType((string) Nette\Utils\Type::fromReflection($rm));
