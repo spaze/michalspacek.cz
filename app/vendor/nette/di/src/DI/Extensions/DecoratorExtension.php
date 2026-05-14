@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -20,6 +18,10 @@ use function array_filter, array_values, class_exists, interface_exists, is_a, i
  */
 final class DecoratorExtension extends Nette\DI\CompilerExtension
 {
+	/** @var array<class-string, object{setup: list<mixed>, tags: array<string, mixed>, inject: ?bool}> */
+	protected $config = [];
+
+
 	public function getConfigSchema(): Nette\Schema\Schema
 	{
 		return Expect::arrayOf(
@@ -50,6 +52,10 @@ final class DecoratorExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/**
+	 * @param  class-string  $type
+	 * @param  array<Definitions\Statement|array<mixed>>  $setups
+	 */
 	public function addSetups(string $type, array $setups): void
 	{
 		foreach ($this->findByType($type) as $def) {
@@ -57,9 +63,13 @@ final class DecoratorExtension extends Nette\DI\CompilerExtension
 				$def = $def->getResultDefinition();
 			}
 
+			if (!$def instanceof Definitions\ServiceDefinition) {
+				continue;
+			}
+
 			foreach ($setups as $setup) {
 				if (is_array($setup)) {
-					$setup = new Definitions\Statement(key($setup), array_values($setup));
+					$setup = new Definitions\Statement((string) key($setup), array_values($setup));
 				}
 
 				$def->addSetup($setup);
@@ -68,6 +78,10 @@ final class DecoratorExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/**
+	 * @param  class-string  $type
+	 * @param  array<string, mixed>  $tags
+	 */
 	public function addTags(string $type, array $tags): void
 	{
 		$tags = Nette\Utils\Arrays::normalize($tags, filling: true);
@@ -77,12 +91,16 @@ final class DecoratorExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/**
+	 * @param  class-string  $type
+	 * @return array<string, Definitions\Definition>
+	 */
 	private function findByType(string $type): array
 	{
 		return array_filter(
 			$this->getContainerBuilder()->getDefinitions(),
-			fn(Definitions\Definition $def): bool => is_a($def->getType(), $type, true)
-				|| ($def instanceof Definitions\FactoryDefinition && is_a($def->getResultType(), $type, allow_string: true)),
+			fn(Definitions\Definition $def): bool => ($def->getType() !== null && is_a($def->getType(), $type, allow_string: true))
+				|| ($def instanceof Definitions\FactoryDefinition && $def->getResultType() !== null && is_a($def->getResultType(), $type, allow_string: true)),
 		);
 	}
 }

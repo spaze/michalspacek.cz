@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -16,7 +14,7 @@ use Nette\DI\Definitions\Statement;
 use Nette\Schema\Context;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use function array_keys, end, get_class, interface_exists, is_array, is_string, method_exists, preg_match, substr;
+use function array_keys, end, interface_exists, is_array, is_string, method_exists, preg_match, substr;
 
 
 /**
@@ -24,16 +22,13 @@ use function array_keys, end, get_class, interface_exists, is_array, is_string, 
  */
 class DefinitionSchema implements Schema
 {
-	private Nette\DI\ContainerBuilder $builder;
-
-
-	public function __construct(Nette\DI\ContainerBuilder $builder)
-	{
-		$this->builder = $builder;
+	public function __construct(
+		private readonly Nette\DI\ContainerBuilder $builder,
+	) {
 	}
 
 
-	public function complete($def, Context $context)
+	public function complete(mixed $def, Context $context): mixed
 	{
 		if ($def === [false]) {
 			return (object) $def;
@@ -50,7 +45,7 @@ class DefinitionSchema implements Schema
 		}
 
 		$type = $this->sniffType(end($context->path), $def);
-		$def = $this->getSchema($type)->complete($def, $context);
+		$def = self::getSchema($type)->complete($def, $context);
 		if ($def) {
 			$def->defType = $type;
 		}
@@ -59,7 +54,7 @@ class DefinitionSchema implements Schema
 	}
 
 
-	public function merge($def, $base)
+	public function merge(mixed $def, mixed $base): mixed
 	{
 		if (!empty($def['alteration'])) {
 			unset($def['alteration']);
@@ -72,7 +67,7 @@ class DefinitionSchema implements Schema
 	/**
 	 * Normalizes configuration of service definitions.
 	 */
-	public function normalize($def, Context $context)
+	public function normalize(mixed $def, Context $context): mixed
 	{
 		if ($def === null || $def === false) {
 			return (array) $def;
@@ -111,11 +106,16 @@ class DefinitionSchema implements Schema
 	}
 
 
-	public function completeDefault(Context $context)
+	public function completeDefault(Context $context): mixed
 	{
+		return null;
 	}
 
 
+	/**
+	 * @param  string|int  $key
+	 * @param  array<string, mixed>  $def
+	 */
 	private function sniffType($key, array $def): string
 	{
 		if (is_string($key)) {
@@ -124,7 +124,7 @@ class DefinitionSchema implements Schema
 				: $key;
 
 			if ($name && $this->builder->hasDefinition($name)) {
-				return get_class($this->builder->getDefinition($name));
+				return $this->builder->getDefinition($name)::class;
 			}
 		}
 
@@ -151,7 +151,7 @@ class DefinitionSchema implements Schema
 	private static function getSchema(string $type): Schema
 	{
 		static $cache;
-		$cache = $cache ?: [
+		$cache ??= [
 			Definitions\ServiceDefinition::class => self::getServiceSchema(),
 			Definitions\AccessorDefinition::class => self::getAccessorSchema(),
 			Definitions\FactoryDefinition::class => self::getFactorySchema(),

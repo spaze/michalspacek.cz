@@ -1,17 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI;
 
 use Nette;
 use function class_exists, file_get_contents, file_put_contents, flock, fopen, function_exists, hash, is_file, rename, serialize, sprintf, strlen, substr, unlink, unserialize;
-use const LOCK_EX, LOCK_UN;
 
 
 /**
@@ -27,26 +24,33 @@ class ContainerLoader
 
 
 	/**
-	 * @param  callable  $generator  function (Nette\DI\Compiler $compiler): string|null
+	 * Loads the container class, generating it if not already cached. Returns the class name.
+	 * @param  callable(Compiler): ?string  $generator
+	 * @return class-string<Container>
 	 */
 	public function load(callable $generator, mixed $key = null): string
 	{
 		$class = $this->getClassName($key);
 		if (!class_exists($class, autoload: false)) {
-			$this->loadFile($class, $generator);
+			$this->loadFile($class, $generator(...));
 		}
 
 		return $class;
 	}
 
 
+	/**
+	 * Returns the container class name derived from the given key.
+	 * @return class-string<Container>
+	 */
 	public function getClassName(mixed $key): string
 	{
 		return 'Container_' . substr(hash('xxh128', serialize($key)), 0, 10);
 	}
 
 
-	private function loadFile(string $class, callable $generator): void
+	/** @param  (\Closure(Compiler): ?string)  $generator */
+	private function loadFile(string $class, \Closure $generator): void
 	{
 		$file = "$this->tempDirectory/$class.php";
 		if (!$this->isExpired($file) && (@include $file) !== false) { // @ file may not exist
@@ -100,12 +104,15 @@ class ContainerLoader
 	}
 
 
-	/** @return array of (code, file[]) */
+	/**
+	 * @param  callable(Compiler): ?string  $generator
+	 * @return array{string, string} code, file
+	 */
 	protected function generate(string $class, callable $generator): array
 	{
 		$compiler = new Compiler;
 		$compiler->setClassName($class);
-		$code = $generator(...[&$compiler]) ?: $compiler->compile();
+		$code = $generator(...[&$compiler]) ?? $compiler->compile();
 		return [
 			"<?php\n$code",
 			serialize($compiler->exportDependencies()),

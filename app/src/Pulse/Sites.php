@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use Nette\Database\Explorer;
 
@@ -15,7 +14,6 @@ final readonly class Sites
 
 	public function __construct(
 		private Explorer $database,
-		private TypedDatabase $typedDatabase,
 		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
@@ -26,7 +24,7 @@ final readonly class Sites
 	 */
 	public function getAll(): array
 	{
-		$rows = $this->typedDatabase->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
+		$rows = $this->database->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
 		$sites = [];
 		foreach ($rows as $row) {
 			assert(is_int($row->id));

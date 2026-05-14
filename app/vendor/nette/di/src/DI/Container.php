@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI;
 
@@ -27,10 +25,10 @@ class Container
 	/** @var string[]  alias => service name */
 	protected array $aliases = [];
 
-	/** @var array[]  tag name => service name => tag value */
+	/** @var array<string, array<string, mixed>>  tag name => (service name => tag value) */
 	protected array $tags = [];
 
-	/** @var array[]  type => (high, low, no) => services */
+	/** @var array<class-string, array<int, list<string>>>  type => (high/low/no => service names) */
 	protected array $wiring = [];
 
 	/** @var object[]  service name => instance */
@@ -42,10 +40,11 @@ class Container
 	/** @var array<string, int> */
 	private array $methods;
 
-	/** @var array<string, \Closure>  service name => \Closure */
+	/** @var array<string, \Closure(): object>  service name => factory */
 	private array $factories = [];
 
 
+	/** @param  mixed[]  $params */
 	public function __construct(array $params = [])
 	{
 		$this->parameters = $params + $this->getStaticParameters();
@@ -53,12 +52,16 @@ class Container
 	}
 
 
+	/** @return mixed[] */
 	public function getParameters(): array
 	{
 		return $this->parameters;
 	}
 
 
+	/**
+	 * Returns a parameter value, loading it dynamically if not yet initialized.
+	 */
 	public function getParameter(string|int $key): mixed
 	{
 		if (!array_key_exists($key, $this->parameters)) {
@@ -68,6 +71,7 @@ class Container
 	}
 
 
+	/** @return mixed[] */
 	protected function getStaticParameters(): array
 	{
 		return [];
@@ -161,6 +165,7 @@ class Container
 
 	/**
 	 * Returns type of the service.
+	 * @return class-string
 	 * @throws MissingServiceException
 	 */
 	public function getServiceType(string $name): string
@@ -182,7 +187,7 @@ class Container
 
 
 	/**
-	 * Does the service exist?
+	 * Checks whether the service exists in the container.
 	 */
 	public function hasService(string $name): bool
 	{
@@ -266,7 +271,8 @@ class Container
 
 	/**
 	 * Returns the names of autowired services of the given type.
-	 * @return string[]
+	 * @param  class-string  $type
+	 * @return list<string>
 	 * @internal
 	 */
 	public function findAutowired(string $type): array
@@ -278,7 +284,8 @@ class Container
 
 	/**
 	 * Returns the names of all services of the given type.
-	 * @return string[]
+	 * @param  class-string  $type
+	 * @return list<string>
 	 */
 	public function findByType(string $type): array
 	{
@@ -291,7 +298,7 @@ class Container
 
 	/**
 	 * Returns the names of services with the given tag.
-	 * @return array of [service name => tag attributes]
+	 * @return array<string, mixed>  service name => tag value
 	 */
 	public function findByTag(string $tag): array
 	{
@@ -300,7 +307,8 @@ class Container
 
 
 	/**
-	 * Prevents circular references during service creation by checking if the service is already being created.
+	 * Detects circular references and invokes the callback.
+	 * @param  \Closure(): mixed  $callback
 	 */
 	private function preventDeadLock(string $key, \Closure $callback): mixed
 	{
@@ -323,6 +331,7 @@ class Container
 	 * Creates an instance of the class and passes dependencies to the constructor using autowiring.
 	 * @template T of object
 	 * @param  class-string<T>  $class
+	 * @param  array<mixed>  $args
 	 * @return T
 	 */
 	public function createInstance(string $class, array $args = []): object
@@ -353,6 +362,7 @@ class Container
 
 	/**
 	 * Calls the method and passes dependencies to it via autowiring.
+	 * @param  array<mixed>  $args
 	 */
 	public function callMethod(callable $function, array $args = []): mixed
 	{
@@ -360,6 +370,10 @@ class Container
 	}
 
 
+	/**
+	 * @param  array<mixed>  $args
+	 * @return array<mixed>
+	 */
 	private function autowireArguments(\ReflectionFunctionAbstract $function, array $args = []): array
 	{
 		return Resolver::autowireArguments($function, $args, fn(string $type, bool $single) => $single

@@ -4,15 +4,15 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Tags\Tags;
+use Nette\Database\Explorer;
 use Nette\Utils\JsonException;
 
 final readonly class BlogPostLocaleUrls
 {
 
 	public function __construct(
-		private TypedDatabase $typedDatabase,
+		private Explorer $database,
 		private Tags $tags,
 	) {
 	}
@@ -40,7 +40,7 @@ final readonly class BlogPostLocaleUrls
 			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)
 				OR bp.slug = ?
 			ORDER BY l.id_locale';
-		foreach ($this->typedDatabase->fetchAll($sql, $slug, $slug) as $row) {
+		foreach ($this->database->fetchAll($sql, $slug, $slug) as $row) {
 			assert(is_string($row->locale));
 			assert(is_string($row->slug));
 			assert($row->published instanceof DateTime || $row->published === null);

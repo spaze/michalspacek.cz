@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 use Nette;
-use function array_keys, array_pop, count, is_array;
+use function array_keys, array_pop, count, is_array, is_string;
 
 
 /**
@@ -20,10 +18,13 @@ use function array_keys, array_pop, count, is_array;
  */
 class Permission implements Authorizator
 {
+	/** @var array<string, array{parents: array<string, true>, children: array<string, true>}> */
 	private array $roles = [];
+
+	/** @var array<string, array{parent: ?string, children: array<string, true>}> */
 	private array $resources = [];
 
-	/** Access Control List rules; whitelist (deny everything to all) by default */
+	/** @var array<string, mixed> Access Control List rules; whitelist (deny everything to all) by default */
 	private array $rules = [
 		'allResources' => [
 			'allRoles' => [
@@ -48,6 +49,7 @@ class Permission implements Authorizator
 	/**
 	 * Adds a Role to the list. The most recently added parent
 	 * takes precedence over parents that were previously added.
+	 * @param  string|list<string>|null  $parents
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
 	 */
@@ -82,7 +84,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns true if the Role exists in the list.
+	 * Checks whether the Role exists in the list.
 	 */
 	public function hasRole(string $role): bool
 	{
@@ -108,6 +110,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Roles.
+	 * @return list<string>
 	 */
 	public function getRoles(): array
 	{
@@ -117,6 +120,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns existing Role's parents ordered by ascending priority.
+	 * @return list<string>
 	 */
 	public function getRoleParents(string $role): array
 	{
@@ -215,7 +219,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Adds a Resource having an identifier unique to the list.
+	 * Adds a Resource to the list.
 	 *
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
@@ -243,7 +247,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns true if the Resource exists in the list.
+	 * Checks whether the Resource exists in the list.
 	 */
 	public function hasResource(string $resource): bool
 	{
@@ -269,6 +273,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Resources.
+	 * @return list<string>
 	 */
 	public function getResources(): array
 	{
@@ -367,6 +372,10 @@ class Permission implements Authorizator
 	/**
 	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
+	 * @param  string|list<string>|null  $roles
+	 * @param  string|list<string>|null  $resources
+	 * @param  string|list<string>|null  $privileges
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 */
 	public function allow(
 		string|array|null $roles = self::All,
@@ -383,6 +392,10 @@ class Permission implements Authorizator
 	/**
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
+	 * @param  string|list<string>|null  $roles
+	 * @param  string|list<string>|null  $resources
+	 * @param  string|list<string>|null  $privileges
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 */
 	public function deny(
 		string|array|null $roles = self::All,
@@ -398,6 +411,9 @@ class Permission implements Authorizator
 
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
+	 * @param  string|list<string>|null  $roles
+	 * @param  string|list<string>|null  $resources
+	 * @param  string|list<string>|null  $privileges
 	 */
 	public function removeAllow(
 		string|array|null $roles = self::All,
@@ -412,6 +428,9 @@ class Permission implements Authorizator
 
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
+	 * @param  string|list<string>|null  $roles
+	 * @param  string|list<string>|null  $resources
+	 * @param  string|list<string>|null  $privileges
 	 */
 	public function removeDeny(
 		string|array|null $roles = self::All,
@@ -426,6 +445,10 @@ class Permission implements Authorizator
 
 	/**
 	 * Performs operations on Access Control List rules.
+	 * @param  string|list<string>|null  $roles
+	 * @param  string|list<string>|null  $resources
+	 * @param  string|list<string>|null  $privileges
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 * @throws Nette\InvalidStateException
 	 */
 	protected function setRule(
@@ -596,16 +619,17 @@ class Permission implements Authorizator
 				break;
 			}
 
+			assert(is_string($resource));
 			$resource = $this->resources[$resource]['parent']; // try next Resource
 		} while (true);
 
 		$this->queriedRole = $this->queriedResource = null;
-		return $result ?? false;
+		return $result;
 	}
 
 
 	/**
-	 * Returns real currently queried Role. Use by assertion.
+	 * Returns the role currently being queried. Used by assertion callbacks.
 	 */
 	public function getQueriedRole(): string|Role|null
 	{
@@ -614,7 +638,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns real currently queried Resource. Use by assertion.
+	 * Returns the resource currently being queried. Used by assertion callbacks.
 	 */
 	public function getQueriedResource(): string|Resource|null
 	{
@@ -713,6 +737,7 @@ class Permission implements Authorizator
 	/**
 	 * Returns the rules associated with a Resource and a Role, or null if no such rules exist.
 	 * If the $create parameter is true, then a rule set is first created and then returned to the caller.
+	 * @return array<string, mixed>|null
 	 */
 	private function &getRules(?string $resource, ?string $role, bool $create = false): ?array
 	{

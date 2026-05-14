@@ -25,7 +25,7 @@ final readonly class PasswordHashingDisclosures
 	 */
 	public function getDisclosureTypes(): array
 	{
-		$rows = $this->typedDatabase->fetchAll('SELECT id, alias, type FROM password_disclosure_types ORDER BY type');
+		$rows = $this->database->fetchAll('SELECT id, alias, type FROM password_disclosure_types ORDER BY type');
 		$types = [];
 		foreach ($rows as $row) {
 			assert(is_int($row->id));

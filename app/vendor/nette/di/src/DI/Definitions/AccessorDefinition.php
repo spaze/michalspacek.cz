@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Definitions;
 
@@ -16,7 +14,7 @@ use function count, interface_exists, sprintf, str_starts_with, substr;
 
 
 /**
- * Accessor definition.
+ * Definition of an accessor service backed by a generated implementation of a user-defined interface with a single get() method.
  */
 final class AccessorDefinition extends Definition
 {
@@ -96,30 +94,37 @@ final class AccessorDefinition extends Definition
 	public function complete(Nette\DI\Resolver $resolver): void
 	{
 		if (!$this->reference) {
-			if (!$this->getType()) {
+			$type = $this->getType();
+			if (!$type) {
 				throw new Nette\DI\ServiceCreationException('Type is missing in definition of service.');
 			}
 
-			$method = new \ReflectionMethod($this->getType(), self::MethodGet);
-			$this->setReference(Type::fromReflection($method)->getSingleName());
+			$method = new \ReflectionMethod($type, self::MethodGet);
+			$name = Helpers::ensureClassType(Type::fromReflection($method), "return type of $type::" . self::MethodGet . '()');
+			$this->setReference($name);
 		}
 
+		assert($this->reference !== null); // setReference() above or pre-existing
 		$this->reference = $resolver->normalizeReference($this->reference);
 	}
 
 
 	public function generateMethod(Nette\PhpGenerator\Method $method, Nette\DI\PhpGenerator $generator): void
 	{
+		$type = $this->getType();
+		assert($type !== null);
+
 		$class = (new Nette\PhpGenerator\ClassType)
-			->addImplement($this->getType());
+			->addImplement($type);
 
 		$class->addMethod('__construct')
 			->addPromotedParameter('container')
 				->setPrivate()
 				->setType($generator->getClassName());
 
-		$rm = new \ReflectionMethod($this->getType(), self::MethodGet);
+		$rm = new \ReflectionMethod($type, self::MethodGet);
 
+		assert($this->reference !== null);
 		$class->addMethod(self::MethodGet)
 			->setBody('return $this->container->getService(?);', [$this->reference->getValue()])
 			->setReturnType((string) Type::fromReflection($rm));

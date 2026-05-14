@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\DatabaseDI;
 
@@ -16,16 +14,13 @@ use function is_array, is_string;
 
 
 /**
- * Nette Framework Database services.
+ * Registers database Connection, Structure, and Explorer services in the DI container.
  */
 class DatabaseExtension extends Nette\DI\CompilerExtension
 {
-	private bool $debugMode;
-
-
-	public function __construct(bool $debugMode = false)
-	{
-		$this->debugMode = $debugMode;
+	public function __construct(
+		private readonly bool $debugMode = false,
+	) {
 	}
 
 
@@ -67,6 +62,7 @@ class DatabaseExtension extends Nette\DI\CompilerExtension
 		foreach ($this->config as $name => $config) {
 			if ($config->debugger ?? $builder->getByType(Tracy\BlueScreen::class)) {
 				$connection = $builder->getDefinition($this->prefix("$name.connection"));
+				assert($connection instanceof Nette\DI\Definitions\ServiceDefinition);
 				$connection->addSetup(
 					[Nette\Bridges\DatabaseTracy\ConnectionPanel::class, 'initialize'],
 					[$connection, $this->debugMode, $name, !empty($config->explain)],

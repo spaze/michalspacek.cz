@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Articles\Blog;
 use Exception;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostWithoutIdException;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tags\Tags;
@@ -25,7 +24,6 @@ final readonly class BlogPosts
 
 	public function __construct(
 		private Explorer $database,
-		private TypedDatabase $typedDatabase,
 		private BlogPostLoader $loader,
 		private BlogPostFactory $factory,
 		private Cache $exportsCache,
@@ -147,7 +145,7 @@ final readonly class BlogPosts
 				ON l.id_locale = bp.key_locale
 			ORDER BY
 				published, slug';
-		foreach ($this->typedDatabase->fetchAll($sql) as $row) {
+		foreach ($this->database->fetchAll($sql) as $row) {
 			$posts[] = $this->factory->createFromDatabaseRow($row);
 		}
 		return $posts;

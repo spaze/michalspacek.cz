@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Training\Dates;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
@@ -24,7 +23,6 @@ final class TrainingDates
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly TypedDatabase $typedDatabase,
 		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly Translator $translator,
@@ -96,7 +94,7 @@ final class TrainingDates
 	 */
 	public function getWithUnpaid(): array
 	{
-		$result = $this->typedDatabase->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -254,7 +252,7 @@ final class TrainingDates
 	 */
 	public function getAllTrainings(): array
 	{
-		$result = $this->typedDatabase->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -312,7 +310,7 @@ final class TrainingDates
 	 */
 	public function getAllTrainingsInterval(string $from, string $to = ''): array
 	{
-		$result = $this->typedDatabase->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -377,7 +375,7 @@ final class TrainingDates
 			return $this->pastWithPersonalData;
 		}
 
-		$result = $this->typedDatabase->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT DISTINCT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
@@ -452,7 +450,7 @@ final class TrainingDates
 	 */
 	public function getDates(int $trainingId): array
 	{
-		$result = $this->typedDatabase->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,

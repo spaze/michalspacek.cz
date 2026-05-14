@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Preliminary;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationFactory;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -18,7 +18,7 @@ final readonly class PreliminaryTrainings
 {
 
 	public function __construct(
-		private TypedDatabase $typedDatabase,
+		private Explorer $explorer,
 		private UpcomingTrainingDates $upcomingTrainingDates,
 		private TrainingApplicationFactory $trainingApplicationFactory,
 		private Translator $translator,
@@ -34,7 +34,7 @@ final readonly class PreliminaryTrainings
 	public function getPreliminary(): array
 	{
 		$trainings = [];
-		$result = $this->typedDatabase->fetchAll(
+		$result = $this->explorer->fetchAll(
 			'SELECT
 				t.id_training AS idTraining,
 				ua.action,
@@ -56,7 +56,7 @@ final readonly class PreliminaryTrainings
 			$trainings[$this->createFromDatabaseRow($row)->getId()] = $this->createFromDatabaseRow($row);
 		}
 
-		$applications = $this->typedDatabase->fetchAll(
+		$applications = $this->explorer->fetchAll(
 			'SELECT
 				a.id_application AS id,
 				a.name,

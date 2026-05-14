@@ -4,15 +4,15 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http\SessionGarbageCollector;
 
 use DateTime;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
+use Nette\Database\Explorer;
 
 final readonly class SessionGarbageCollectorStatusFactory
 {
 
 	public function __construct(
-		private TypedDatabase $typedDatabase,
+		private Explorer $database,
 		private DateTimeFactory $dateTimeFactory,
 		private DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
@@ -21,7 +21,7 @@ final readonly class SessionGarbageCollectorStatusFactory
 
 	public function createStatus(): SessionGarbageCollectorStatus
 	{
-		$rows = $this->typedDatabase->fetchAll(
+		$rows = $this->database->fetchAll(
 			'SELECT
 				gc_time AS gcTime,
 				gc_time_timezone AS gcTimeTimezone,

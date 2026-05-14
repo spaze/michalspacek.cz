@@ -103,8 +103,8 @@ class Articles
 			ORDER BY published DESC
 			LIMIT ?';
 
-		$articles = $this->typedDatabase->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
-		return $this->enrichArticles(array_values($articles));
+		$articles = $this->database->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
+		return $this->enrichArticles($articles);
 	}
 
 
@@ -152,8 +152,8 @@ class Articles
 			ORDER BY bp.published DESC
 			LIMIT ?';
 
-		$articles = $this->typedDatabase->fetchAll($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
-		return $this->enrichArticles(array_values($articles));
+		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
+		return $this->enrichArticles($articles);
 	}
 
 
@@ -178,7 +178,7 @@ class Articles
 			ORDER BY bp.published DESC';
 
 		$result = [];
-		$rows = $this->typedDatabase->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale());
+		$rows = $this->database->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale());
 		foreach ($rows as $row) {
 			assert(is_string($row->tags));
 			assert(is_string($row->slugTags));

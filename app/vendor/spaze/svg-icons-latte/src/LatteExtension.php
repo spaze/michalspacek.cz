@@ -5,6 +5,7 @@ namespace Spaze\SvgIcons;
 
 use Latte\Compiler\Tag;
 use Latte\Extension;
+use Spaze\SvgIcons\Nodes\IconNode;
 use Spaze\SvgIcons\Nodes\IconNodeFactory;
 
 class LatteExtension extends Extension
@@ -16,6 +17,9 @@ class LatteExtension extends Extension
 	}
 
 
+	/**
+	 * @return array<string, callable(Tag): IconNode>
+	 */
 	public function getTags(): array
 	{
 		return [

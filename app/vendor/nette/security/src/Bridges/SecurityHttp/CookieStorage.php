@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\SecurityHttp;
 
@@ -21,9 +19,6 @@ use function is_string, strlen;
 final class CookieStorage implements Nette\Security\UserStorage
 {
 	private const MinLength = 13;
-
-	private Http\IRequest $request;
-	private Http\IResponse $response;
 	private ?string $uid = null;
 	private string $cookieName = 'userid';
 	private ?string $cookieDomain = null;
@@ -31,10 +26,10 @@ final class CookieStorage implements Nette\Security\UserStorage
 	private ?string $cookieExpiration = null;
 
 
-	public function __construct(Http\IRequest $request, Http\IResponse $response)
-	{
-		$this->response = $response;
-		$this->request = $request;
+	public function __construct(
+		private readonly Http\IRequest $request,
+		private readonly Http\IResponse $response,
+	) {
 	}
 
 
@@ -89,11 +84,13 @@ final class CookieStorage implements Nette\Security\UserStorage
 	}
 
 
+	/** @param  'Lax'|'Strict'|'None'|null  $sameSite */
 	public function setCookieParameters(
 		?string $name = null,
 		?string $domain = null,
 		?string $sameSite = null,
-	) {
+	): void
+	{
 		$this->cookieName = $name ?? $this->cookieName;
 		$this->cookieDomain = $domain ?? $this->cookieDomain;
 		$this->cookieSameSite = $sameSite ?? $this->cookieSameSite;

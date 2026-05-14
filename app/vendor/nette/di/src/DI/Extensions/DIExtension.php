@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Extensions;
 
@@ -21,8 +19,14 @@ use const PHP_VERSION_ID;
  */
 final class DIExtension extends Nette\DI\CompilerExtension
 {
+	/** @var array<string, true> */
 	public array $exportedTags = [];
+
+	/** @var array<string, true> */
 	public array $exportedTypes = [];
+
+	/** @var object{debugger: ?bool, excluded: list<class-string>, parentClass: ?string, export: object{parameters: bool, tags: list<string>|bool|null, types: list<string>|bool|null}, lazy: bool} */
+	protected $config = [];
 	private bool $debugMode;
 	private float $time;
 
@@ -30,7 +34,7 @@ final class DIExtension extends Nette\DI\CompilerExtension
 	public function __construct(bool $debugMode = false)
 	{
 		$this->debugMode = $debugMode;
-		$this->time = microtime(true);
+		$this->time = microtime(as_float: true);
 
 		$this->config = new class {
 			public ?bool $debugger = null;

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Conventions;
 
@@ -19,7 +17,6 @@ use function preg_match, preg_quote, sprintf, str_replace;
 class StaticConventions implements Conventions
 {
 	/**
-	 * Create static conventional structure.
 	 * @param  string  $primary  %s stands for table name
 	 * @param  string  $foreign  %1$s stands for key used after ->, %2$s for table name
 	 * @param  string  $table  %1$s stands for key used after ->, %2$s for table name

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-use MichalSpacekCz\Database\TypedDatabase;
+use Nette\Database\Explorer;
 use Override;
 
 final readonly class Ubee implements UpcWiFiRouter
@@ -14,7 +14,7 @@ final readonly class Ubee implements UpcWiFiRouter
 
 
 	public function __construct(
-		private TypedDatabase $typedDatabase,
+		private Explorer $database,
 		private UpcKeysStorageConversions $conversions,
 	) {
 	}
@@ -36,7 +36,7 @@ final readonly class Ubee implements UpcWiFiRouter
 	#[Override]
 	public function getKeys(string $ssid): array
 	{
-		$rows = $this->typedDatabase->fetchAll('SELECT mac, `key` FROM keys_ubee WHERE ssid = ?', substr($ssid, 3));
+		$rows = $this->database->fetchAll('SELECT mac, `key` FROM keys_ubee WHERE ssid = ?', substr($ssid, 3));
 		$result = [];
 		foreach ($rows as $row) {
 			assert(is_int($row->mac));

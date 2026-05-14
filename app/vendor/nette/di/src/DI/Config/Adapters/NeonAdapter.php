@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Config\Adapters;
 
@@ -15,7 +13,7 @@ use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\Statement;
 use Nette\Neon;
 use Nette\Neon\Node;
-use function array_walk_recursive, constant, count, defined, implode, is_array, is_string, ltrim, preg_match, preg_replace, sprintf, str_contains, str_ends_with, str_starts_with, substr;
+use function array_values, array_walk_recursive, constant, count, defined, implode, is_array, is_string, ltrim, preg_match, preg_replace, sprintf, str_contains, str_ends_with, str_starts_with, substr;
 
 
 /**
@@ -29,11 +27,12 @@ final class NeonAdapter implements Nette\DI\Config\Adapter
 
 	/**
 	 * Reads configuration from NEON file.
+	 * @return array<string, mixed>
 	 */
 	public function load(string $file): array
 	{
 		$input = Nette\Utils\FileSystem::read($file);
-		if (substr($input, 0, 3) === "\u{FEFF}") { // BOM
+		if (str_starts_with($input, "\u{FEFF}")) { // BOM
 			$input = substr($input, 3);
 		}
 
@@ -50,7 +49,11 @@ final class NeonAdapter implements Nette\DI\Config\Adapter
 	}
 
 
-	/** @throws Nette\InvalidStateException */
+	/**
+	 * @param  array<mixed>  $arr
+	 * @return array<mixed>
+	 * @throws Nette\InvalidStateException
+	 */
 	public function process(array $arr): array
 	{
 		$res = [];
@@ -101,6 +104,7 @@ final class NeonAdapter implements Nette\DI\Config\Adapter
 
 	/**
 	 * Generates configuration in NEON format.
+	 * @param  array<string, mixed>  $data
 	 */
 	public function dump(array $data): string
 	{
@@ -189,6 +193,8 @@ final class NeonAdapter implements Nette\DI\Config\Adapter
 				$index = true;
 			}
 		}
+
+		$node->attributes = array_values($node->attributes);
 	}
 
 

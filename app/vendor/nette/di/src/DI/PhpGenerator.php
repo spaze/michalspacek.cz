@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI;
 
@@ -21,13 +19,12 @@ use function array_walk_recursive, is_array, is_object, is_string, ksort, sprint
  */
 class PhpGenerator
 {
-	private ContainerBuilder $builder;
 	private ?string $className = null;
 
 
-	public function __construct(ContainerBuilder $builder)
-	{
-		$this->builder = $builder;
+	public function __construct(
+		private readonly ContainerBuilder $builder,
+	) {
 	}
 
 
@@ -91,6 +88,7 @@ class PhpGenerator
 	public function generateMethod(Definitions\Definition $def): Php\Method
 	{
 		$name = $def->getName();
+		assert($name !== null);
 		try {
 			$method = new Php\Method(Container::getMethodName($name));
 			$method->setPublic();
@@ -161,6 +159,7 @@ class PhpGenerator
 
 	/**
 	 * Formats PHP statement.
+	 * @param  array<mixed>  $args
 	 * @internal
 	 */
 	public function formatPhp(string $statement, array $args): string
@@ -169,6 +168,10 @@ class PhpGenerator
 	}
 
 
+	/**
+	 * @param  array<mixed>  $args
+	 * @return array<mixed>
+	 */
 	public function convertArguments(array $args): array
 	{
 		array_walk_recursive($args, function (&$val): void {

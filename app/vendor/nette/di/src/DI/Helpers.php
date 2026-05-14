@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI;
 
@@ -14,8 +12,7 @@ use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\Statement;
 use Nette\Utils\Reflection;
 use Nette\Utils\Type;
-use function array_key_exists, array_keys, array_shift, class_exists, explode, get_debug_type, implode, interface_exists, is_array, is_scalar, is_string, preg_match, preg_quote, preg_replace, preg_split, settype, sprintf, str_replace, strlen, strncmp, substr, trim, ucfirst, var_export;
-use const PREG_SPLIT_DELIM_CAPTURE;
+use function array_key_exists, array_keys, array_shift, class_exists, explode, get_debug_type, implode, interface_exists, is_array, is_scalar, is_string, preg_match, preg_quote, preg_replace, preg_split, sprintf, str_replace, strlen, strncmp, substr, trim, ucfirst, var_export;
 
 
 /**
@@ -28,6 +25,8 @@ final class Helpers
 
 	/**
 	 * Expands %placeholders%.
+	 * @param  array<string, mixed>  $params
+	 * @param  bool|array<string, int>  $recursive
 	 * @throws Nette\InvalidArgumentException
 	 */
 	public static function expand(mixed $var, array $params, bool|array $recursive = false): mixed
@@ -63,6 +62,8 @@ final class Helpers
 
 	/**
 	 * Expands %placeholders% in string
+	 * @param  array<string, mixed>  $params
+	 * @param  ?array<string, int>  $recursive
 	 * @throws Nette\InvalidArgumentException
 	 */
 	private static function expandString(
@@ -98,6 +99,10 @@ final class Helpers
 	}
 
 
+	/**
+	 * @param  array<string, mixed>  $params
+	 * @param  ?array<string, int>  $recursive
+	 */
 	private static function expandParameter(
 		string $parameter,
 		array $params,
@@ -119,10 +124,10 @@ final class Helpers
 					}
 					$val = $fullExpand
 						? self::expand($val, $params, $recursive + [$pathStr => 1])
-						: self::expandString($val, $params, $recursive + [$pathStr => 1], true);
+						: self::expandString($val, $params, $recursive + [$pathStr => 1], onlyString: true);
 				}
 			} elseif ($val instanceof DynamicParameter) {
-				$val = new DynamicParameter($val . '[' . var_export($key, true) . ']');
+				$val = new DynamicParameter($val . '[' . var_export($key, return: true) . ']');
 			} elseif ($val instanceof Statement) {
 				$val = new Statement('(?)[?]', [$val, $key]);
 			} else {
@@ -155,7 +160,9 @@ final class Helpers
 
 
 	/**
-	 * Process constants recursively.
+	 * Converts @service strings to Reference objects recursively.
+	 * @param  array<mixed>  $args
+	 * @return array<mixed>
 	 */
 	public static function filterArguments(array $args): array
 	{
@@ -204,8 +211,12 @@ final class Helpers
 
 	/**
 	 * Returns an annotation value.
+	 * @param  \ReflectionClass<object>|\ReflectionFunctionAbstract|\ReflectionProperty  $ref
 	 */
-	public static function parseAnnotation(\Reflector $ref, string $name): ?string
+	public static function parseAnnotation(
+		\ReflectionFunctionAbstract|\ReflectionProperty|\ReflectionClass $ref,
+		string $name,
+	): ?string
 	{
 		if (!Reflection::areCommentsAvailable()) {
 			throw new Nette\InvalidStateException('You have to enable phpDoc comments in opcode cache.');
@@ -220,6 +231,9 @@ final class Helpers
 	}
 
 
+	/**
+	 * Returns return type from @return annotation, or null if not found or not a class type.
+	 */
 	public static function getReturnTypeAnnotation(\ReflectionFunctionAbstract $func): ?Type
 	{
 		$type = preg_replace('#[|\s].*#', '', (string) self::parseAnnotation($func, 'return'));
@@ -234,6 +248,11 @@ final class Helpers
 	}
 
 
+	/**
+	 * Validates that the type is a non-nullable class type and returns the class name.
+	 * @return class-string
+	 * @throws ServiceCreationException
+	 */
 	public static function ensureClassType(?Type $type, string $hint, bool $allowNullable = false): string
 	{
 		if (!$type) {
@@ -243,7 +262,9 @@ final class Helpers
 		}
 
 		$class = $type->getSingleName();
-		if (!class_exists($class) && !interface_exists($class)) {
+		if ($class === null) {
+			throw new ServiceCreationException(sprintf('%s is not declared.', ucfirst($hint)));
+		} elseif (!class_exists($class) && !interface_exists($class)) {
 			throw new ServiceCreationException(sprintf("Class '%s' not found.\nCheck the %s.", $class, $hint));
 		}
 
@@ -251,6 +272,10 @@ final class Helpers
 	}
 
 
+	/**
+	 * Normalizes class name to its canonical form using reflection.
+	 * @return class-string
+	 */
 	public static function normalizeClass(string $type): string
 	{
 		return class_exists($type) || interface_exists($type)
@@ -271,10 +296,15 @@ final class Helpers
 				$norm = preg_replace('#\.0*$#D', '', $norm);
 			}
 
-			$orig = $norm;
-			settype($norm, $type);
-			if ($orig === ($norm === false ? '0' : (string) $norm)) {
-				return $norm;
+			$converted = match ($type) {
+				'bool' => (bool) $norm,
+				'int' => (int) $norm,
+				'float' => (float) $norm,
+				'string' => $norm,
+				default => null,
+			};
+			if ($converted !== null && $norm === ($converted === false ? '0' : (string) $converted)) {
+				return $converted;
 			}
 		}
 

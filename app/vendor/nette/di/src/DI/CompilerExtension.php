@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI;
 
@@ -14,19 +12,20 @@ use function array_diff_key, array_keys, func_num_args, implode, is_object, is_s
 
 
 /**
- * Configurator compiling extension.
+ * Base class for compiler extensions that hook into the DI container compilation process.
  */
 abstract class CompilerExtension
 {
 	protected Compiler $compiler;
 	protected string $name;
 
-	/** @var array|object */
+	/** @var array<string, mixed>|object */
 	protected $config = [];
 
 	protected Nette\PhpGenerator\Closure $initialization;
 
 
+	/** @internal */
 	public function setCompiler(Compiler $compiler, string $name): static
 	{
 		$this->initialization = new Nette\PhpGenerator\Closure;
@@ -36,6 +35,10 @@ abstract class CompilerExtension
 	}
 
 
+	/**
+	 * Sets the validated configuration for this extension.
+	 * @param  array<string, mixed>|object  $config
+	 */
 	public function setConfig(array|object $config): static
 	{
 		$this->config = $config;
@@ -45,6 +48,7 @@ abstract class CompilerExtension
 
 	/**
 	 * Returns extension configuration.
+	 * @return array<string, mixed>|object
 	 */
 	public function getConfig(): array|object
 	{
@@ -65,13 +69,17 @@ abstract class CompilerExtension
 
 	/**
 	 * Checks whether $config contains only $expected items and returns combined array.
+	 * @param  array<string, mixed>  $expected
+	 * @param  ?array<string, mixed>  $config
+	 * @return array<string, mixed>
 	 * @throws Nette\InvalidStateException
 	 * @deprecated  use getConfigSchema()
 	 */
 	public function validateConfig(array $expected, ?array $config = null, ?string $name = null): array
 	{
 		if (func_num_args() === 1) {
-			return $this->config = $this->validateConfig($expected, $this->config);
+			$current = is_array($this->config) ? $this->config : (array) $this->config;
+			return $this->config = $this->validateConfig($expected, $current);
 		}
 
 		if ($extra = array_diff_key((array) $config, $expected)) {
@@ -96,6 +104,7 @@ abstract class CompilerExtension
 
 	/**
 	 * Reads configuration from file.
+	 * @return array<string, mixed>
 	 */
 	public function loadFromFile(string $file): array
 	{
@@ -109,6 +118,7 @@ abstract class CompilerExtension
 	/**
 	 * Loads list of service definitions from configuration.
 	 * Prefixes its names and replaces @extension with name in definition.
+	 * @param  array<mixed>  $configList
 	 */
 	public function loadDefinitionsFromConfig(array $configList): void
 	{
@@ -128,6 +138,9 @@ abstract class CompilerExtension
 	}
 
 
+	/**
+	 * Returns the closure whose body is emitted inside the container's initialize() method.
+	 */
 	public function getInitialization(): Nette\PhpGenerator\Closure
 	{
 		return $this->initialization;
@@ -144,7 +157,7 @@ abstract class CompilerExtension
 
 
 	/**
-	 * Processes configuration data. Intended to be overridden by descendant.
+	 * Processes extension configuration and registers services. Override in subclasses.
 	 * @return void
 	 */
 	public function loadConfiguration()
@@ -153,7 +166,7 @@ abstract class CompilerExtension
 
 
 	/**
-	 * Adjusts DI container before is compiled to PHP class. Intended to be overridden by descendant.
+	 * Adjusts the container before compilation. Override in subclasses.
 	 * @return void
 	 */
 	public function beforeCompile()
@@ -162,7 +175,7 @@ abstract class CompilerExtension
 
 
 	/**
-	 * Adjusts DI container compiled to PHP class. Intended to be overridden by descendant.
+	 * Adjusts the generated container class. Override in subclasses.
 	 * @return void
 	 */
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)

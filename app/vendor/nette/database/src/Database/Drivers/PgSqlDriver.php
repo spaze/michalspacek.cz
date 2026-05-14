@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Drivers;
 
@@ -48,8 +46,21 @@ class PgSqlDriver implements Nette\Database\Driver
 		} elseif ($code === '23505') {
 			return Nette\Database\UniqueConstraintViolationException::from($e);
 
-		} elseif ($code === '08006') {
-			return Nette\Database\ConnectionException::from($e);
+		} elseif ($code === '23514') {
+			return Nette\Database\CheckConstraintViolationException::from($e);
+
+		} elseif ($code === '40001' || $code === '40P01') {
+			return Nette\Database\DeadlockException::from($e);
+
+		} elseif ($code === '55P03') {
+			return Nette\Database\LockTimeoutException::from($e);
+
+		} elseif (
+			$code === '08003'
+			|| $code === '08006'
+			|| ($code === 'HY000' && str_contains($e->getMessage(), 'server closed the connection unexpectedly'))
+		) {
+			return Nette\Database\ConnectionLostException::from($e);
 
 		} else {
 			return Nette\Database\DriverException::from($e);
@@ -128,7 +139,12 @@ class PgSqlDriver implements Nette\Database\Driver
 			X);
 
 		while ($row = $rows->fetch()) {
-			$tables[] = (array) $row;
+			$tables[] = [
+				'name' => (string) $row['name'],
+				'view' => (bool) $row['view'],
+				'fullName' => (string) $row['fullName'],
+				'comment' => (string) $row['comment'],
+			];
 		}
 
 		return $tables;
@@ -173,11 +189,19 @@ class PgSqlDriver implements Nette\Database\Driver
 			X, $this->delimiteFQN($table));
 
 		while ($row = $rows->fetch()) {
-			$column = (array) $row;
-			$column['vendor'] = $column;
-			unset($column['sequence']);
-
-			$columns[] = $column;
+			$vendor = (array) $row;
+			$columns[] = [
+				'name' => (string) $row['name'],
+				'table' => (string) $row['table'],
+				'nativetype' => (string) $row['nativetype'],
+				'size' => $row['size'] !== null ? (int) $row['size'] : null,
+				'nullable' => (bool) $row['nullable'],
+				'default' => $row['default'],
+				'autoincrement' => (bool) $row['autoincrement'],
+				'primary' => (bool) $row['primary'],
+				'comment' => (string) $row['comment'],
+				'vendor' => $vendor,
+			];
 		}
 
 		return $columns;
@@ -204,11 +228,14 @@ class PgSqlDriver implements Nette\Database\Driver
 			X, $this->delimiteFQN($table));
 
 		while ($row = $rows->fetch()) {
-			$id = $row['name'];
-			$indexes[$id]['name'] = $id;
-			$indexes[$id]['unique'] = $row['unique'];
-			$indexes[$id]['primary'] = $row['primary'];
-			$indexes[$id]['columns'][] = $row['column'];
+			$id = (string) $row['name'];
+			$indexes[$id] ??= [
+				'name' => $id,
+				'unique' => (bool) $row['unique'],
+				'primary' => (bool) $row['primary'],
+				'columns' => [],
+			];
+			$indexes[$id]['columns'][] = (string) $row['column'];
 		}
 
 		return array_values($indexes);
@@ -239,8 +266,14 @@ class PgSqlDriver implements Nette\Database\Driver
 			X, $this->delimiteFQN($table));
 
 		while ($row = $rows->fetch()) {
-			$keys[] = (array) $row;
+			$keys[] = [
+				'name' => (string) $row['name'],
+				'local' => (string) $row['local'],
+				'table' => (string) $row['table'],
+				'foreign' => (string) $row['foreign'],
+			];
 		}
+
 		return $keys;
 	}
 
@@ -259,6 +292,6 @@ class PgSqlDriver implements Nette\Database\Driver
 	 */
 	private function delimiteFQN(string $name): string
 	{
-		return implode('.', array_map([$this, 'delimite'], explode('.', $name)));
+		return implode('.', array_map($this->delimite(...), explode('.', $name)));
 	}
 }

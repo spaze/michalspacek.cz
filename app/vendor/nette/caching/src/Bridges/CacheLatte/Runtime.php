@@ -88,6 +88,9 @@ class Runtime
 	}
 
 
+	/**
+	 * Discards the buffered output without saving to the cache.
+	 */
 	public function rollback(): void
 	{
 		$helper = array_pop($this->stack);

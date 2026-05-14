@@ -1,20 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI\Extensions;
 
 use Nette;
-use function is_a, is_int, sprintf;
 
 
 /**
- * Enables registration of other extensions in $config file
+ * Enables registration of additional compiler extensions via configuration.
  */
 class ExtensionsExtension extends Nette\DI\CompilerExtension
 {
@@ -26,7 +23,7 @@ class ExtensionsExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		foreach ($this->getConfig() as $name => $class) {
+		foreach ((array) $this->getConfig() as $name => $class) {
 			if (is_int($name)) {
 				$name = null;
 			}
@@ -36,10 +33,10 @@ class ExtensionsExtension extends Nette\DI\CompilerExtension
 				[$class, $args] = [$class->getEntity(), $class->arguments];
 			}
 
-			if (!is_a($class, Nette\DI\CompilerExtension::class, allow_string: true)) {
+			if (!is_string($class) || !is_a($class, Nette\DI\CompilerExtension::class, allow_string: true)) {
 				throw new Nette\DI\InvalidConfigurationException(sprintf(
 					"Extension '%s' not found or is not Nette\\DI\\CompilerExtension descendant.",
-					$class,
+					is_string($class) ? $class : get_debug_type($class),
 				));
 			}
 

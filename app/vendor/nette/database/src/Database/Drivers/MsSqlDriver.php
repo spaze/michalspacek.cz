@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Drivers;
 
@@ -35,6 +33,14 @@ class MsSqlDriver implements Nette\Database\Driver
 
 	public function convertException(\PDOException $e): Nette\Database\DriverException
 	{
+		$code = $e->errorInfo[1] ?? null;
+		if ($code === 1205) {
+			return Nette\Database\DeadlockException::from($e);
+
+		} elseif ($code === 1222) {
+			return Nette\Database\LockTimeoutException::from($e);
+		}
+
 		return Nette\Database\DriverException::from($e);
 	}
 
@@ -109,7 +115,7 @@ class MsSqlDriver implements Nette\Database\Driver
 			$tables[] = [
 				'name' => $row['TABLE_SCHEMA'] . '.' . $row['TABLE_NAME'],
 				'view' => ($row['TABLE_TYPE'] ?? null) === 'VIEW',
-				'comment' => $row['comment'] ?? '',
+				'comment' => (string) ($row['comment'] ?? ''),
 			];
 		}
 
@@ -170,28 +176,30 @@ class MsSqlDriver implements Nette\Database\Driver
 
 		$rows = $this->connection->query(<<<'X'
 			SELECT
-				 name_index = ind.name,
-				 id_column = ic.index_column_id,
-				 name_column = col.name,
-				 ind.is_unique,
-				 ind.is_primary_key
+				ind.name AS name,
+				col.name AS [column],
+				ind.is_unique,
+				ind.is_primary_key
 			FROM
 				sys.indexes ind
-				INNER JOIN sys.index_columns ic ON  ind.object_id = ic.object_id and ind.index_id = ic.index_id
-				INNER JOIN sys.columns col ON ic.object_id = col.object_id and ic.column_id = col.column_id
+				INNER JOIN sys.index_columns ic ON ind.object_id = ic.object_id AND ind.index_id = ic.index_id
+				INNER JOIN sys.columns col ON ic.object_id = col.object_id AND ic.column_id = col.column_id
 				INNER JOIN sys.tables t ON ind.object_id = t.object_id
 			WHERE
-				 t.name = ?
+				t.name = ?
 			ORDER BY
-				 t.name, ind.name, ind.index_id, ic.index_column_id
+				ind.name, ic.index_column_id
 			X, $table_name);
 
 		while ($row = $rows->fetch()) {
-			$id = $row['name_index'];
-			$indexes[$id]['name'] = $id;
-			$indexes[$id]['unique'] = $row['is_unique'] !== 'False';
-			$indexes[$id]['primary'] = $row['is_primary_key'] !== 'False';
-			$indexes[$id]['columns'][$row['id_column'] - 1] = $row['name_column'];
+			$id = (string) $row['name'];
+			$indexes[$id] ??= [
+				'name' => $id,
+				'unique' => $row['is_unique'] !== 'False',
+				'primary' => $row['is_primary_key'] !== 'False',
+				'columns' => [],
+			];
+			$indexes[$id]['columns'][] = (string) $row['column'];
 		}
 
 		return array_values($indexes);
@@ -205,10 +213,10 @@ class MsSqlDriver implements Nette\Database\Driver
 
 		$rows = $this->connection->query(<<<'X'
 			SELECT
-				obj.name AS [fk_name],
-				col1.name AS [column],
-				tab2.name AS [referenced_table],
-				col2.name AS [referenced_column]
+				obj.name AS name,
+				col1.name AS local,
+				tab2.name AS [table],
+				col2.name AS [foreign]
 			FROM
 				sys.foreign_key_columns fkc
 				INNER JOIN sys.objects obj
@@ -222,20 +230,21 @@ class MsSqlDriver implements Nette\Database\Driver
 				INNER JOIN sys.tables tab2
 					ON tab2.object_id = fkc.referenced_object_id
 				INNER JOIN sys.columns col2
-				ON col2.column_id = referenced_column_id AND col2.object_id = tab2.object_id
+					ON col2.column_id = referenced_column_id AND col2.object_id = tab2.object_id
 			WHERE
 				tab1.name = ?
 			X, $table_name);
 
-		$id = 0;
 		while ($row = $rows->fetch()) {
-			$keys[$id]['name'] = $row['fk_name'];
-			$keys[$id]['local'] = $row['column'];
-			$keys[$id]['table'] = $table_schema . '.' . $row['referenced_table'];
-			$keys[$id++]['foreign'] = $row['referenced_column'];
+			$keys[] = [
+				'name' => (string) $row['name'],
+				'local' => (string) $row['local'],
+				'table' => $table_schema . '.' . $row['table'],
+				'foreign' => (string) $row['foreign'],
+			];
 		}
 
-		return array_values($keys);
+		return $keys;
 	}
 
 

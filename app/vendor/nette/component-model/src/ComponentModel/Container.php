@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\ComponentModel;
 
 use Nette;
-use function array_filter, array_keys, array_map, array_merge, assert, explode, func_get_args, get_class_methods, method_exists, preg_filter, preg_match, reset, ucfirst;
+use function array_filter, array_keys, array_map, array_merge, assert, explode, func_get_args, get_class_methods, method_exists, preg_filter, preg_match, reset, strval, ucfirst;
 
 
 /**
@@ -46,9 +44,8 @@ class Container extends Component implements IContainer
 
 		if (!preg_match(self::NameRegexp, $name)) {
 			throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
-		}
 
-		if (isset($this->components[$name])) {
+		} elseif (isset($this->components[$name])) {
 			throw new Nette\InvalidStateException("Component with name '$name' already exists.");
 		}
 
@@ -58,9 +55,7 @@ class Container extends Component implements IContainer
 			if ($obj === $component) {
 				throw new Nette\InvalidStateException("Circular reference detected while adding component '$name'.");
 			}
-
-			$obj = $obj->getParent();
-		} while ($obj !== null);
+		} while (($obj = $obj->getParent()) !== null);
 
 		// user checking
 		$this->validateChildComponent($component);
@@ -97,7 +92,7 @@ class Container extends Component implements IContainer
 	public function removeComponent(IComponent $component): void
 	{
 		$name = $component->getName();
-		if (($this->components[$name] ?? null) !== $component) {
+		if ($name === null || ($this->components[$name] ?? null) !== $component) {
 			throw new Nette\InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
@@ -117,11 +112,9 @@ class Container extends Component implements IContainer
 
 		if (!isset($this->components[$name])) {
 			if (!preg_match(self::NameRegexp, $name)) {
-				if ($throw) {
-					throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
-				}
-
-				return null;
+				return $throw
+					? throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.")
+					: null;
 			}
 
 			$component = $this->createComponent($name);
@@ -143,8 +136,8 @@ class Container extends Component implements IContainer
 			}
 		} elseif ($throw) {
 			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
-				array_map('strval', array_keys($this->components)),
-				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
+				array_map(strval(...), array_keys($this->components)),
+				array_map(lcfirst(...), preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
 			), $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
@@ -180,7 +173,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns all immediate child components.
-	 * @return array<int|string,IComponent>
+	 * @return array<int|string, IComponent>
 	 */
 	final public function getComponents(): iterable
 	{

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database\Reflection;
 
@@ -18,17 +16,17 @@ final class ForeignKey
 	/** @internal */
 	public function __construct(
 		public readonly Table $foreignTable,
-		/** @var Column[] */
+		/** @var list<Column> */
 		public readonly array $localColumns,
-		/** @var Column[] */
+		/** @var list<Column> */
 		public readonly array $foreignColumns,
-		public readonly ?string $name = null,
+		public readonly string $name,
 	) {
 	}
 
 
 	public function __toString(): string
 	{
-		return (string) $this->name;
+		return $this->name;
 	}
 }

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database;
 
@@ -17,30 +15,31 @@ use function array_values, count, gettype, is_int, iterator_to_array, microtime,
 
 /**
  * Represents a database result set.
+ * @implements \Iterator<int, Row>
  */
 class ResultSet implements \Iterator, IRowContainer
 {
 	private ?\PDOStatement $pdoStatement = null;
-
-	/** @var callable(array, ResultSet): array */
-	private readonly mixed $normalizer;
 	private Row|false|null $lastRow = null;
 	private int $lastRowKey = -1;
 
-	/** @var Row[] */
+	/** @var list<Row> */
 	private array $rows;
 	private float $time;
+
+	/** @var array<string, string> column name => type */
 	private array $types;
 
 
 	public function __construct(
 		private readonly Connection $connection,
 		private readonly string $queryString,
+		/** @var  mixed[] */
 		private readonly array $params,
-		?callable $normalizer = null,
+		/** @var ?\Closure(array<string, mixed>, self): array<string, mixed> */
+		private readonly ?\Closure $normalizer = null,
 	) {
 		$time = microtime(true);
-		$this->normalizer = $normalizer;
 		$types = ['boolean' => PDO::PARAM_BOOL, 'integer' => PDO::PARAM_INT, 'resource' => PDO::PARAM_LOB, 'NULL' => PDO::PARAM_NULL];
 
 		try {
@@ -63,7 +62,7 @@ class ResultSet implements \Iterator, IRowContainer
 			throw $e;
 		}
 
-		$this->time = microtime(true) - $time;
+		$this->time = microtime(as_float: true) - $time;
 	}
 
 
@@ -87,6 +86,7 @@ class ResultSet implements \Iterator, IRowContainer
 	}
 
 
+	/** @return mixed[] */
 	public function getParameters(): array
 	{
 		return $this->params;
@@ -105,8 +105,13 @@ class ResultSet implements \Iterator, IRowContainer
 	}
 
 
+	/** @return array<string, string> */
 	public function getColumnTypes(): array
 	{
+		if ($this->pdoStatement === null) {
+			return [];
+		}
+
 		$this->types ??= $this->connection->getDriver()->getColumnTypes($this->pdoStatement);
 		return $this->types;
 	}
@@ -118,7 +123,11 @@ class ResultSet implements \Iterator, IRowContainer
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @param array<mixed> $row
+	 * @return array<mixed>
+	 */
 	public function normalizeRow(array $row): array
 	{
 		return $this->normalizer
@@ -182,7 +191,9 @@ class ResultSet implements \Iterator, IRowContainer
 
 
 	/**
-	 * Returns the next row as an associative array or null if there are no more rows.
+	 * Returns the next row as an associative array, or null if there are no more rows.
+	 * When $path is given, fetches all rows and restructures them using Arrays::associate().
+	 * @return ?array<mixed>
 	 */
 	public function fetchAssoc(?string $path = null): ?array
 	{
@@ -192,7 +203,7 @@ class ResultSet implements \Iterator, IRowContainer
 
 		$data = $this->pdoStatement ? $this->pdoStatement->fetch() : null;
 		if (!$data) {
-			$this->pdoStatement->closeCursor();
+			$this->pdoStatement?->closeCursor();
 			return null;
 
 		} elseif ($this->lastRow === null && count($data) !== $this->pdoStatement->columnCount()) {
@@ -231,6 +242,7 @@ class ResultSet implements \Iterator, IRowContainer
 
 	/**
 	 * Returns the next row as indexed array or null if there are no more rows.
+	 * @return ?list<mixed>
 	 */
 	public function fetchList(): ?array
 	{
@@ -241,6 +253,7 @@ class ResultSet implements \Iterator, IRowContainer
 
 	/**
 	 * Alias for fetchList().
+	 * @return ?list<mixed>
 	 */
 	public function fetchFields(): ?array
 	{
@@ -252,6 +265,8 @@ class ResultSet implements \Iterator, IRowContainer
 	 * Returns all rows as associative array, where first argument specifies key column and second value column.
 	 * For duplicate keys, the last value is used. When using null as key, array is indexed from zero.
 	 * Alternatively accepts callback returning value or key-value pairs.
+	 * @param  string|int|(\Closure(Row): array{0: mixed, 1?: mixed})|null  $keyOrCallback
+	 * @return array<mixed, mixed>
 	 */
 	public function fetchPairs(string|int|\Closure|null $keyOrCallback = null, string|int|null $value = null): array
 	{
@@ -261,11 +276,11 @@ class ResultSet implements \Iterator, IRowContainer
 
 	/**
 	 * Returns all remaining rows as array of Row objects.
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function fetchAll(): array
 	{
-		$this->rows ??= iterator_to_array($this);
+		$this->rows ??= iterator_to_array($this, preserve_keys: false);
 		return $this->rows;
 	}
 }

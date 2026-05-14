@@ -86,11 +86,13 @@ parameters:
 		-
 			function: 'exec()'
 			allowInMethods:
+				- 'Nette\Utils\Process::terminate' # Executes taskkill on Windows
 				- 'Tracy\DevelopmentStrategy::renderExceptionCli'  # can run a browser if configured
 		-
 			function: 'proc_open()'
-			allowIn:
-				- vendor/latte/latte/src/Latte/Compiler/PhpHelpers.php
+			allowInMethods:
+				- 'Nette\Utils\Process::__construct' # Executes a process
+				- 'Latte\Compiler\PhpHelpers::checkCode' # Uses php -l to lint generated code
 		-
 			function: 'shell_exec()'
 			allowIn:

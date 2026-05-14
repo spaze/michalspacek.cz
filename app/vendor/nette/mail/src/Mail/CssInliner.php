@@ -21,8 +21,8 @@ class CssInliner
 	private const Patterns = [
 		self::T_Comment => '/\*[^*]*\*+(?:[^/*][^*]*\*+)*/',
 		self::T_Whitespace => '[\s]+',
-		self::T_String => '"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\'',
-		self::T_Url => 'url\(\s*(?:"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\'|[^)]*?)\s*\)',
+		self::T_String => '"(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\]++|\\\.)*+\'',
+		self::T_Url => 'url\(\s*(?:"(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\]++|\\\.)*+\'|[^)"\']*?)\s*\)',
 		self::T_Escape => '\x5c[^\n\r\f]',
 		self::T_AtIdent => '@-?[a-zA-Z_][\w-]*',
 		self::T_Hash => '\#[\w-]+',
@@ -96,7 +96,12 @@ class CssInliner
 		$allRules = array_merge($styleRules, $this->rules);
 
 		foreach ($allRules as [$selector, $declarations]) {
-			foreach ($doc->querySelectorAll($selector) as $element) {
+			try {
+				$matched = $doc->querySelectorAll($selector);
+			} catch (\DOMException) {
+				continue;
+			}
+			foreach ($matched as $element) {
 				$id = spl_object_id($element);
 				$elements[$id] = $element;
 				$collectedStyles[$id] = array_merge($collectedStyles[$id] ?? [], $declarations);

@@ -31,7 +31,9 @@ class NetteExtension extends CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('iconNodeFactory'))
-			->setFactory(IconNodeFactory::class, [$this->config->iconsDir, $this->config->cssClass]);
+			->setFactory(IconNodeFactory::class, ['cssClass' => $this->config->cssClass]);
+		$builder->addDefinition($this->prefix('svgIcons'))
+			->setFactory(SvgIcons::class, ['dir' => $this->config->iconsDir]);
 	}
 
 

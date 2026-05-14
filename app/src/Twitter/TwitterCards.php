@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Twitter;
 
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -13,7 +12,6 @@ final readonly class TwitterCards
 
 	public function __construct(
 		private Explorer $database,
-		private TypedDatabase $typedDatabase,
 	) {
 	}
 
@@ -24,7 +22,7 @@ final readonly class TwitterCards
 	public function getAll(): array
 	{
 		$cards = [];
-		$rows = $this->typedDatabase->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card');
+		$rows = $this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card');
 		foreach ($rows as $row) {
 			$cards[] = $this->createFromDatabaseRow($row);
 		}

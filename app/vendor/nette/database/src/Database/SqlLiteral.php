@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Database;
 
@@ -17,6 +15,7 @@ class SqlLiteral
 {
 	public function __construct(
 		private readonly string $value,
+		/** @var  mixed[] */
 		private readonly array $parameters = [],
 	) {
 	}
@@ -28,6 +27,7 @@ class SqlLiteral
 	}
 
 
+	/** @return mixed[] */
 	public function getParameters(): array
 	{
 		return $this->parameters;

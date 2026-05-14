@@ -33,7 +33,7 @@ final readonly class UserPasskeys
 	public function getPasskeys(): array
 	{
 		$currentCredentialId = $this->passkeySessionSection->getSignedInCredentialId();
-		$rows = $this->typedDatabase->fetchAll(
+		$rows = $this->database->fetchAll(
 			'SELECT
 				id_passkey AS id,
 				credential_id AS credentialId,

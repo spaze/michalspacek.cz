@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Definitions;
 
@@ -18,7 +16,7 @@ use function array_keys, array_map, count, implode, interface_exists, is_string,
 
 
 /**
- * Definition of standard service.
+ * Definition of a factory service backed by a generated implementation of a user-defined interface.
  */
 final class FactoryDefinition extends Definition
 {
@@ -86,12 +84,13 @@ final class FactoryDefinition extends Definition
 
 	public function resolveType(Nette\DI\Resolver $resolver): void
 	{
-		if (!$this->getType()) {
+		$implement = $this->getType();
+		if (!$implement) {
 			throw new ServiceCreationException('Type is missing in definition of service.');
 		}
 
-		$type = Type::fromReflection(new \ReflectionMethod($this->getType(), self::MethodCreate));
-
+		$type = Type::fromReflection(new \ReflectionMethod($implement, self::MethodCreate));
+		assert($type !== null);
 		$resultDef = $this->resultDefinition;
 		try {
 			$resolver->resolveDefinition($resultDef);
@@ -100,11 +99,11 @@ final class FactoryDefinition extends Definition
 				throw $e;
 			}
 
-			$resultDef->setType($type->getSingleName());
+			$resultDef->setType(Helpers::ensureClassType($type, "return type of $implement::" . self::MethodCreate . '()'));
 			$resolver->resolveDefinition($resultDef);
 		}
 
-		if (!$type->allows($resultDef->getType())) {
+		if ($resultDef->getType() && !$type->allows($resultDef->getType())) {
 			throw new ServiceCreationException(sprintf(
 				'Factory for %s cannot create incompatible %s type.',
 				$type,
@@ -139,14 +138,14 @@ final class FactoryDefinition extends Definition
 
 	private function completeParameters(Nette\DI\Resolver $resolver): void
 	{
+		assert($this->resultDefinition instanceof ServiceDefinition);
 		$interface = $this->getType();
+		assert($interface !== null);
 		$method = new \ReflectionMethod($interface, self::MethodCreate);
 
 		$ctorParams = [];
-		if (
-			($class = $resolver->resolveEntityType($this->resultDefinition->getCreator()))
-			&& ($ctor = (new \ReflectionClass($class))->getConstructor())
-		) {
+		$class = $resolver->resolveEntityType($this->resultDefinition->getCreator());
+		if ($class !== null && class_exists($class) && ($ctor = (new \ReflectionClass($class))->getConstructor())) {
 			foreach ($ctor->getParameters() as $param) {
 				$ctorParams[$param->name] = $param;
 			}
@@ -187,6 +186,7 @@ final class FactoryDefinition extends Definition
 	}
 
 
+	/** @param  array<mixed>  $args */
 	public function convertArguments(array &$args): void
 	{
 		foreach ($args as &$v) {
@@ -199,8 +199,11 @@ final class FactoryDefinition extends Definition
 
 	public function generateMethod(Php\Method $method, Nette\DI\PhpGenerator $generator): void
 	{
+		$implement = $this->getType();
+		assert($implement !== null);
+
 		$class = (new Php\ClassType)
-			->addImplement($this->getType());
+			->addImplement($implement);
 
 		$class->addMethod('__construct')
 			->addPromotedParameter('container')
@@ -213,7 +216,7 @@ final class FactoryDefinition extends Definition
 		$body = str_replace('$this', '$this->container', $body);
 		$body = str_replace('$this->container->container', '$this->container', $body);
 
-		$rm = new \ReflectionMethod($this->getType(), self::MethodCreate);
+		$rm = new \ReflectionMethod($implement, self::MethodCreate);
 		$methodCreate
 			->setParameters(array_map((new Php\Factory)->fromParameterReflection(...), $rm->getParameters()))
 			->setReturnType((string) Type::fromReflection($rm))

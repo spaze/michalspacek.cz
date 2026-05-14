@@ -70,7 +70,7 @@ final readonly class Talks
 			LIMIT ?';
 
 		$talks = [];
-		foreach ($this->typedDatabase->fetchAll($query, $limit ?? PHP_INT_MAX) as $row) {
+		foreach ($this->database->fetchAll($query, $limit ?? PHP_INT_MAX) as $row) {
 			$talks[] = $this->talkFactory->createFromDatabaseRow($row);
 		}
 		return $talks;
@@ -130,7 +130,7 @@ final readonly class Talks
 			ORDER BY t.date';
 
 		$talks = [];
-		foreach ($this->typedDatabase->fetchAll($query) as $row) {
+		foreach ($this->database->fetchAll($query) as $row) {
 			$talks[] = $this->talkFactory->createFromDatabaseRow($row);
 		}
 		return $talks;
@@ -297,7 +297,7 @@ final readonly class Talks
 			ORDER BY date DESC';
 
 		$result = [];
-		foreach ($this->typedDatabase->fetchAll($query) as $row) {
+		foreach ($this->database->fetchAll($query) as $row) {
 			assert(is_string($row->action));
 			assert(is_string($row->title));
 			assert(is_string($row->favorite));

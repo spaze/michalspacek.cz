@@ -3,15 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Discontinued;
 
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Templating\DefaultTemplate;
+use Nette\Database\Explorer;
 use Nette\Http\IResponse;
 
 final readonly class DiscontinuedTrainings
 {
 
 	public function __construct(
-		private TypedDatabase $typedDatabase,
+		private Explorer $database,
 		private IResponse $httpResponse,
 	) {
 	}
@@ -24,7 +24,7 @@ final readonly class DiscontinuedTrainings
 	 */
 	public function getAllDiscontinued(): array
 	{
-		$query = $this->typedDatabase->fetchAll(
+		$query = $this->database->fetchAll(
 			'SELECT
 				td.id_trainings_discontinued AS id,
 				td.description,
@@ -64,7 +64,7 @@ final readonly class DiscontinuedTrainings
 			return;
 		}
 
-		$query = $this->typedDatabase->fetchAll(
+		$query = $this->database->fetchAll(
 			'SELECT
 			td.description,
 			t.name AS training,

@@ -1,17 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database\Conventions;
 
 use Nette\Database\Conventions;
 use Nette\Database\IStructure;
-use function count, preg_replace, strcmp, stripos, strtolower;
 
 
 /**
@@ -31,10 +28,14 @@ class DiscoveredConventions implements Conventions
 	}
 
 
+	/**
+	 * Finds the referencing table and column for a has-many relationship by searching structure metadata.
+	 * Triggers structure rebuild if needed. Throws on ambiguous match.
+	 */
 	public function getHasManyReference(string $nsTable, string $key): ?array
 	{
 		$candidates = $columnCandidates = [];
-		$targets = $this->structure->getHasManyReference($nsTable);
+		$targets = $this->structure->getHasManyReference($nsTable) ?? [];
 		$table = preg_replace('#^(.*\.)?(.*)$#', '$2', $nsTable);
 
 		foreach ($targets as $targetNsTable => $targetColumns) {
@@ -80,9 +81,13 @@ class DiscoveredConventions implements Conventions
 	}
 
 
+	/**
+	 * Finds the referenced table and local foreign key column for a belongs-to relationship.
+	 * Triggers structure rebuild if needed.
+	 */
 	public function getBelongsToReference(string $table, string $key): ?array
 	{
-		$tableColumns = $this->structure->getBelongsToReference($table);
+		$tableColumns = $this->structure->getBelongsToReference($table) ?? [];
 
 		foreach ($tableColumns as $column => $targetTable) {
 			if (stripos($column, $key) !== false) {

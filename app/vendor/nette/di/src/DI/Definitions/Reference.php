@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\DI\Definitions;
 
@@ -20,9 +18,10 @@ final class Reference
 	/** @deprecated use Reference::Self */
 	public const SELF = self::Self;
 
-	private string $value;
 
-
+	/**
+	 * Creates a type-based reference (resolved by class name rather than service name).
+	 */
 	public static function fromType(string $value): static
 	{
 		if (!str_contains($value, '\\')) {
@@ -33,9 +32,9 @@ final class Reference
 	}
 
 
-	public function __construct(string $value)
-	{
-		$this->value = $value;
+	public function __construct(
+		private readonly string $value,
+	) {
 	}
 
 
