@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form\User;
 
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
-use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;
@@ -16,7 +16,7 @@ final readonly class RegenerateTokensFormFactory
 	public function __construct(
 		private FormFactory $factory,
 		private Session $sessionHandler,
-		private Manager $authenticator,
+		private PermanentLogin $permanentLogin,
 		private User $user,
 	) {
 	}
@@ -38,7 +38,7 @@ final readonly class RegenerateTokensFormFactory
 				$this->sessionHandler->regenerateId();
 			}
 			if ($values->permanent) {
-				$this->authenticator->regeneratePermanentLogin($this->user);
+				$this->permanentLogin->regenerate($this->user);
 			}
 			$onSuccess('Tokeny přegenerovány');
 		};

@@ -4,16 +4,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
-use MichalSpacekCz\Application\LinkGenerator;
-use MichalSpacekCz\Database\TypedDatabase;
-use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\Test\Database\Database;
-use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
-use MichalSpacekCz\User\Manager;
-use MichalSpacekCz\User\UserAuthToken;
-use MichalSpacekCz\User\UserAuthTokenType;
+use MichalSpacekCz\User\AuthTokens\UserAuthToken;
+use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
+use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetInvalidOrExpiredTokenException;
 use Override;
 use Tester\Assert;
@@ -27,11 +23,7 @@ final class PasskeyResetTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly TypedDatabase $typedDatabase,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
-		private readonly Request $httpRequest,
-		private readonly LinkGenerator $linkGenerator,
-		private readonly Cookies $cookies,
 	) {
 	}
 
@@ -90,7 +82,7 @@ final class PasskeyResetTest extends TestCase
 		$tokenId = 42;
 		$this->createPasskeyReset()->cleanupToken(new UserAuthToken($tokenId, 'hash', 1337, 'foo'));
 		Assert::same(
-			[$tokenId, UserAuthTokenType::PasskeyReset->value],
+			[$tokenId, UserAuthTokenType::AdminPasskeyReset->value],
 			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),
 		);
 	}
@@ -98,17 +90,9 @@ final class PasskeyResetTest extends TestCase
 
 	private function createPasskeyReset(): PasskeyReset
 	{
-		$manager = new Manager(
-			$this->database,
-			$this->typedDatabase,
-			$this->httpRequest,
-			$this->cookies,
-			$this->linkGenerator,
-			'14 days',
-			true,
-			'users',
-		);
-		return new PasskeyReset($manager, $this->passkeyAuthenticator);
+		$tokens = new UserAuthTokens($this->database, 'users');
+		$resetTokens = new PasskeyResetTokens($tokens, true);
+		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator);
 	}
 
 }

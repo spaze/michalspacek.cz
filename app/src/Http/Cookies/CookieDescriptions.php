@@ -7,14 +7,14 @@ use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\DateTime\DateTimeParser;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use Nette\Http\Session;
 
 final readonly class CookieDescriptions
 {
 
 	public function __construct(
-		private Manager $authenticator,
+		private PermanentLogin $permanentLogin,
 		private Theme $theme,
 		private Session $sessionHandler,
 		private TexyFormatter $texyFormatter,
@@ -38,7 +38,7 @@ final readonly class CookieDescriptions
 				CookieName::PermanentLogin->value,
 				true,
 				$this->texyFormatter->translate('messages.cookies.cookie.permanentLogin'),
-				$this->dateTimeParser->getDaysFromString($this->authenticator->getPermanentLoginCookieLifetime()),
+				$this->dateTimeParser->getDaysFromString($this->permanentLogin->getCookieLifetime()),
 			),
 			new CookieDescription(
 				CookieName::Theme->value,

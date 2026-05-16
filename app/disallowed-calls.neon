@@ -74,6 +74,16 @@ parameters:
 				- 'Nette\Forms\Container::getValues()'
 				- 'Nette\Forms\Container::getUntrustedValues()'
 			message: 'use methods from MichalSpacekCz\Form\UiForm instead'
+		-
+			method: 'MichalSpacekCz\User\AuthTokens\UserAuthTokens::*'
+			message: 'instead use a class that implements the UserAuthTokenLifetime interface'
+			errorTip: 'Each token type has its own rules (TTL, whether it is enabled, etc.) checked by the classes that implement UserAuthTokenLifetime, calling these methods directly skips those checks'
+			allowIn:
+				- tests/*.phpt
+			allowInMethods:
+				- 'MichalSpacekCz\User\AuthTokens\UserAuthTokens::*' # internal calls, e.g. replaceForUser() -> insert()
+				- 'MichalSpacekCz\User\PermanentLogin\PermanentLogin::*'
+				- 'MichalSpacekCz\User\WebAuthn\PasskeyResetTokens::*'
 
 	disallowedConstants:
 		-

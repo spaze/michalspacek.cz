@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\User;
+namespace MichalSpacekCz\User\AuthTokens;
 
 final readonly class UserAuthToken
 {
