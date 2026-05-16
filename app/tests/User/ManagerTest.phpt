@@ -6,10 +6,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
-use MichalSpacekCz\Http\Cookies\CookieName;
-use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -17,7 +14,6 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
 use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
@@ -35,8 +31,6 @@ final class ManagerTest extends TestCase
 		private readonly Database $database,
 		private readonly TypedDatabase $typedDatabase,
 		private readonly Request $httpRequest,
-		private readonly Cookies $cookies,
-		private readonly LinkGenerator $linkGenerator,
 	) {
 	}
 
@@ -53,7 +47,7 @@ final class ManagerTest extends TestCase
 	{
 		$id = 1337;
 		$username = 'pizza';
-		$identity = $this->getAuthenticator(false)->getIdentity($id, $username);
+		$identity = $this->getManager()->getIdentity($id, $username);
 		Assert::type(SimpleIdentity::class, $identity);
 		Assert::same($id, $identity->id);
 		Assert::same($id, $identity->getId());
@@ -69,7 +63,7 @@ final class ManagerTest extends TestCase
 	public function testGetIdentityUsernameByUserNoIdentity(): void
 	{
 		Assert::exception(function (): void {
-			$this->getAuthenticator(false)->getIdentityUsernameByUser($this->user);
+			$this->getManager()->getIdentityUsernameByUser($this->user);
 		}, IdentityNotSimpleIdentityException::class, 'Identity is of class <null> but should be Nette\Security\SimpleIdentity');
 	}
 
@@ -79,7 +73,7 @@ final class ManagerTest extends TestCase
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337));
 		Assert::exception(function (): void {
-			$this->getAuthenticator(false)->getIdentityUsernameByUser($this->user);
+			$this->getManager()->getIdentityUsernameByUser($this->user);
 		}, IdentityWithoutUsernameException::class);
 	}
 
@@ -89,7 +83,7 @@ final class ManagerTest extends TestCase
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337, [], ['username' => 303]));
 		Assert::exception(function (): void {
-			$this->getAuthenticator(false)->getIdentityUsernameByUser($this->user);
+			$this->getManager()->getIdentityUsernameByUser($this->user);
 		}, IdentityUsernameNotStringException::class, 'Identity username is of type int, not a string');
 	}
 
@@ -98,80 +92,19 @@ final class ManagerTest extends TestCase
 	{
 		$id = 1337;
 		$username = 'pizza';
-		$authenticator = $this->getAuthenticator(false);
-		$identity = $authenticator->getIdentity($id, $username);
+		$manager = $this->getManager();
+		$identity = $manager->getIdentity($id, $username);
 		PrivateProperty::setValue($this->user, 'authenticated', true);
 		PrivateProperty::setValue($this->user, 'identity', $identity);
-		Assert::same($username, $authenticator->getIdentityUsernameByUser($this->user));
+		Assert::same($username, $manager->getIdentityUsernameByUser($this->user));
 	}
 
 
-	public function testIsResetEnabled(): void
-	{
-		Assert::false($this->getAuthenticator(false)->isPasskeyResetEnabled());
-		Assert::true($this->getAuthenticator(true)->isPasskeyResetEnabled());
-		Assert::false($this->getAuthenticator(false)->isPasskeyResetEnabled());
-	}
-
-
-	public function testCreateResetTokenThrowsWhenDisabled(): void
-	{
-		Assert::exception(function (): void {
-			$this->getAuthenticator(false)->createPasskeyResetToken(1337);
-		}, PasskeyResetDisabledException::class);
-	}
-
-
-	public function testVerifyResetTokenThrowsWhenDisabled(): void
-	{
-		Assert::exception(function (): void {
-			$this->getAuthenticator(false)->verifyPasskeyResetToken('some token');
-		}, PasskeyResetDisabledException::class);
-	}
-
-
-	public function testVerifyPermanentLogin(): void
-	{
-		$authenticator = $this->getAuthenticator(false);
-		Assert::null($authenticator->verifyPermanentLogin());
-
-		$tokenId = 1337;
-		$token = 'bar';
-		$hash = hash('sha512', $token);
-		$userId = 1338;
-		$username = '🍪🍪🍪';
-		$this->database->setFetchDefaultResult([
-			'id' => $tokenId,
-			'token' => $hash,
-			'userId' => $userId,
-			'username' => $username,
-		]);
-		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "foo:{$token}");
-		$authToken = $authenticator->verifyPermanentLogin();
-		if (!$authToken instanceof UserAuthToken) {
-			Assert::fail('Token is of a wrong type ' . get_debug_type($authToken));
-		} else {
-			Assert::same($tokenId, $authToken->getId());
-			Assert::same($hash, $authToken->getToken());
-			Assert::same($userId, $authToken->getUserId());
-			Assert::same($username, $authToken->getUsername());
-		}
-
-		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "foo:not{$token}");
-		Assert::null($authenticator->verifyPermanentLogin());
-	}
-
-
-	private function getAuthenticator(bool $resetEnabled): Manager
+	private function getManager(): Manager
 	{
 		return new Manager(
-			$this->database,
 			$this->typedDatabase,
 			$this->httpRequest,
-			$this->cookies,
-			$this->linkGenerator,
-			'14 days',
-			$resetEnabled,
 			'users',
 		);
 	}

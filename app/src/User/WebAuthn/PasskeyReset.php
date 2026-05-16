@@ -3,8 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
-use MichalSpacekCz\User\Manager;
-use MichalSpacekCz\User\UserAuthToken;
+use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetInvalidOrExpiredTokenException;
 
@@ -12,7 +11,7 @@ final readonly class PasskeyReset
 {
 
 	public function __construct(
-		private Manager $authenticator,
+		private PasskeyResetTokens $resetTokens,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 	) {
 	}
@@ -24,7 +23,7 @@ final readonly class PasskeyReset
 	 */
 	public function getUserAuthToken(string $token): UserAuthToken
 	{
-		$userAuthToken = $this->authenticator->verifyPasskeyResetToken($token);
+		$userAuthToken = $this->resetTokens->verify($token);
 		if ($userAuthToken === null) {
 			throw new PasskeyResetInvalidOrExpiredTokenException();
 		}
@@ -48,7 +47,7 @@ final readonly class PasskeyReset
 
 	public function cleanupToken(UserAuthToken $userAuthToken): void
 	{
-		$this->authenticator->deletePasskeyResetToken($userAuthToken->getId());
+		$this->resetTokens->deleteById($userAuthToken->getId());
 	}
 
 }

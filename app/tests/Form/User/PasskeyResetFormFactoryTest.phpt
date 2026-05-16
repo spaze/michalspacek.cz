@@ -5,20 +5,18 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LinkGenerator;
-use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
-use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
-use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
 use MichalSpacekCz\User\WebAuthn\PasskeyReset;
+use MichalSpacekCz\User\WebAuthn\PasskeyResetTokens;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
@@ -38,14 +36,11 @@ final class PasskeyResetFormFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly TypedDatabase $typedDatabase,
 		private readonly FormFactory $factory,
 		private readonly PasskeyFormControls $passkeyFormControls,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly Request $httpRequest,
-		private readonly LinkGenerator $linkGenerator,
-		private readonly Cookies $cookies,
 		private readonly Translator $translator,
 	) {
 	}
@@ -105,20 +100,11 @@ final class PasskeyResetFormFactoryTest extends TestCase
 
 	private function createFormFactory(): PasskeyResetFormFactory
 	{
-		$manager = new Manager(
-			$this->database,
-			$this->typedDatabase,
-			$this->httpRequest,
-			$this->cookies,
-			$this->linkGenerator,
-			'14 days',
-			true,
-			'users',
-		);
+		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), true);
 		return new PasskeyResetFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,
-			new PasskeyReset($manager, $this->passkeyAuthenticator),
+			new PasskeyReset($resetTokens, $this->passkeyAuthenticator),
 			$this->passkeyFormControls,
 			$this->httpRequest,
 			$this->translator,

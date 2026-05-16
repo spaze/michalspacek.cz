@@ -1,0 +1,91 @@
+<?php
+/** @noinspection PhpUnhandledExceptionInspection */
+declare(strict_types = 1);
+
+namespace MichalSpacekCz\User\PermanentLogin;
+
+use MichalSpacekCz\Application\LinkGenerator;
+use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\Http\Cookies\CookieName;
+use MichalSpacekCz\Http\Cookies\Cookies;
+use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Http\Request;
+use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\User\AuthTokens\UserAuthToken;
+use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
+use MichalSpacekCz\User\Manager;
+use Override;
+use Tester\Assert;
+use Tester\TestCase;
+
+require __DIR__ . '/../../bootstrap.php';
+
+/** @testCase */
+final class PermanentLoginTest extends TestCase
+{
+
+	public function __construct(
+		private readonly Database $database,
+		private readonly TypedDatabase $typedDatabase,
+		private readonly Request $httpRequest,
+		private readonly Cookies $cookies,
+		private readonly LinkGenerator $linkGenerator,
+	) {
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
+	}
+
+
+	public function testVerify(): void
+	{
+		$permanentLogin = $this->getPermanentLogin();
+		Assert::null($permanentLogin->verify());
+
+		$tokenId = 1337;
+		$token = 'bar';
+		$hash = hash('sha512', $token);
+		$userId = 1338;
+		$username = '🍪🍪🍪';
+		$this->database->setFetchDefaultResult([
+			'id' => $tokenId,
+			'token' => $hash,
+			'userId' => $userId,
+			'username' => $username,
+		]);
+		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "foo:{$token}");
+		$authToken = $permanentLogin->verify();
+		if (!$authToken instanceof UserAuthToken) {
+			Assert::fail('Token is of a wrong type ' . get_debug_type($authToken));
+		} else {
+			Assert::same($tokenId, $authToken->getId());
+			Assert::same($hash, $authToken->getToken());
+			Assert::same($userId, $authToken->getUserId());
+			Assert::same($username, $authToken->getUsername());
+		}
+
+		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "foo:not{$token}");
+		Assert::null($permanentLogin->verify());
+	}
+
+
+	public function testGetCookieLifetime(): void
+	{
+		Assert::same('14 days', $this->getPermanentLogin()->getCookieLifetime());
+	}
+
+
+	private function getPermanentLogin(): PermanentLogin
+	{
+		$manager = new Manager($this->typedDatabase, $this->httpRequest, 'users');
+		$tokens = new UserAuthTokens($this->database, 'users');
+		return new PermanentLogin($tokens, $this->cookies, $manager, $this->linkGenerator, '14 days');
+	}
+
+}
+
+TestCaseRunner::run(PermanentLoginTest::class);

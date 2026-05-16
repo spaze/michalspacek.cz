@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Http\IRequest;
@@ -20,6 +21,7 @@ final readonly class PasskeyAuthenticateFormFactory
 		private FormFactory $factory,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private Manager $authenticator,
+		private PermanentLogin $permanentLogin,
 		private User $user,
 		private IRequest $httpRequest,
 		private Translator $translator,
@@ -49,7 +51,7 @@ final readonly class PasskeyAuthenticateFormFactory
 				$result = $this->passkeyAuthenticator->verifyAuthentication($values->credential);
 				$this->user->setExpiration('30 minutes', true);
 				$this->user->login($this->authenticator->getIdentity($result->userId, $result->username));
-				$this->authenticator->regeneratePermanentLogin($this->user);
+				$this->permanentLogin->regenerate($this->user);
 				Debugger::log("Successful passkey sign-in ({$result->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
 				$onSuccess();
 			} catch (PasskeyException $e) {

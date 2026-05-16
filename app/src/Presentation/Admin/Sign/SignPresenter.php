@@ -13,6 +13,7 @@ use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirec
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetException;
 use MichalSpacekCz\User\WebAuthn\PasskeyReset;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
@@ -33,6 +34,7 @@ final class SignPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Manager $authenticator,
+		private readonly PermanentLogin $permanentLogin,
 		private readonly SignInHoneypotFormFactory $signInHoneypotFormFactory,
 		private readonly PasskeyAuthenticateFormFactory $passkeyAuthenticateFormFactory,
 		private readonly PasskeyResetFormFactory $passkeyResetFormFactory,
@@ -57,10 +59,10 @@ final class SignPresenter extends BasePresenter
 	{
 		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsGet, PermissionsPolicyOrigin::Self);
 		$this->sessionHandler->start();
-		$token = $this->authenticator->verifyPermanentLogin();
+		$token = $this->permanentLogin->verify();
 		if ($token !== null) {
 			$this->user->login($this->authenticator->getIdentity($token->getUserId(), $token->getUsername()));
-			$this->authenticator->regeneratePermanentLogin($this->user);
+			$this->permanentLogin->regenerate($this->user);
 			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
 		}
@@ -138,7 +140,7 @@ final class SignPresenter extends BasePresenter
 
 	public function actionOut(): never
 	{
-		$this->authenticator->clearPermanentLogin($this->user);
+		$this->permanentLogin->clear($this->user);
 		$this->user->logout();
 		$this->flashMessage('Byli jste odhlášeni');
 		$this->redirect('in');

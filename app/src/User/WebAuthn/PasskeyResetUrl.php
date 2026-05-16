@@ -21,6 +21,7 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 
 	public function __construct(
 		private Manager $authenticator,
+		private PasskeyResetTokens $resetTokens,
 		private LinkGenerator $linkGenerator,
 		private CliArgs $cliArgs,
 	) {
@@ -39,7 +40,7 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 			throw new PasskeyResetArgsException($error);
 		}
 
-		if (!$this->authenticator->isPasskeyResetEnabled()) {
+		if (!$this->resetTokens->isEnabled()) {
 			throw new PasskeyResetDisabledException();
 		}
 
@@ -49,7 +50,7 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 			throw new PasskeyResetUserNotFoundException($username);
 		}
 
-		$selectorToken = $this->authenticator->createPasskeyResetToken($userId);
+		$selectorToken = $this->resetTokens->create($userId);
 		return $this->linkGenerator->link('Admin:Sign:passkeyReset#' . $selectorToken);
 	}
 
