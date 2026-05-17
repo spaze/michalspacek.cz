@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
@@ -42,6 +43,7 @@ final class PasskeyResetFormFactoryTest extends TestCase
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly Request $httpRequest,
 		private readonly Translator $translator,
+		private readonly DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -100,7 +102,7 @@ final class PasskeyResetFormFactoryTest extends TestCase
 
 	private function createFormFactory(): PasskeyResetFormFactory
 	{
-		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), true);
+		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true);
 		return new PasskeyResetFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,

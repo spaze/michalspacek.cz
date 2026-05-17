@@ -2,9 +2,12 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Http\SessionGarbageCollector;
+namespace MichalSpacekCz\Http\Session;
 
 use DateTimeImmutable;
+use MichalSpacekCz\GarbageCollector\GarbageCollectorLogger;
+use MichalSpacekCz\GarbageCollector\GarbageCollectorReturnCode;
+use MichalSpacekCz\GarbageCollector\GarbageCollectorType;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -40,57 +43,57 @@ final class SessionGarbageCollectorTest extends TestCase
 	}
 
 
-	public function testCleanSessionsFailure(): void
+	public function testCleanFailure(): void
 	{
-		Assert::same(SessionGarbageCollectorReturnCode::GcFailure, $this->createSessionGarbageCollector(false, null)->cleanSessions());
-		$expected = [
-			'id_sessions_gc_log' => 1,
-			'gc_time' => self::LOG_TIME,
-			'gc_time_timezone' => self::LOG_TIMEZONE,
-			'deleted' => null,
-			'return_code' => SessionGarbageCollectorReturnCode::GcFailure,
-			'message' => null,
-		];
-		Assert::same([$expected, $expected], $this->database->getParamsArrayForQuery('INSERT INTO sessions_gc_log'));
+		Assert::same(GarbageCollectorReturnCode::Failure, $this->createSessionGarbageCollector(false, null)->clean());
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO gc_log');
+		Assert::same(GarbageCollectorType::Sessions->value, $params[0]['gc_type']);
+		Assert::same(self::LOG_TIME, $params[0]['gc_time']);
+		Assert::same(self::LOG_TIMEZONE, $params[0]['gc_time_timezone']);
+		Assert::same(null, $params[0]['deleted']);
+		Assert::same(GarbageCollectorReturnCode::Failure->value, $params[0]['return_code']);
+		assert(is_string($params[0]['message']));
+		Assert::match('~::gc\(\) returned false$~', $params[0]['message']);
+		Assert::same($params[0], $params[1]);
 	}
 
 
-	public function testCleanSessionsOk(): void
+	public function testCleanOk(): void
 	{
-		Assert::same(SessionGarbageCollectorReturnCode::Ok, $this->createSessionGarbageCollector(0, null)->cleanSessions());
-		Assert::same(SessionGarbageCollectorReturnCode::Ok, $this->createSessionGarbageCollector(303, null)->cleanSessions());
+		Assert::same(GarbageCollectorReturnCode::Ok, $this->createSessionGarbageCollector(0, null)->clean());
+		Assert::same(GarbageCollectorReturnCode::Ok, $this->createSessionGarbageCollector(303, null)->clean());
 		$expected0 = [
-			'id_sessions_gc_log' => 1,
+			'gc_type' => GarbageCollectorType::Sessions->value,
 			'gc_time' => self::LOG_TIME,
 			'gc_time_timezone' => self::LOG_TIMEZONE,
 			'deleted' => 0,
-			'return_code' => SessionGarbageCollectorReturnCode::Ok,
+			'return_code' => GarbageCollectorReturnCode::Ok->value,
 			'message' => null,
 		];
 		$expected303 = [
-			'id_sessions_gc_log' => 1,
+			'gc_type' => GarbageCollectorType::Sessions->value,
 			'gc_time' => self::LOG_TIME,
 			'gc_time_timezone' => self::LOG_TIMEZONE,
 			'deleted' => 303,
-			'return_code' => SessionGarbageCollectorReturnCode::Ok,
+			'return_code' => GarbageCollectorReturnCode::Ok->value,
 			'message' => null,
 		];
-		Assert::same([$expected0, $expected0, $expected303, $expected303], $this->database->getParamsArrayForQuery('INSERT INTO sessions_gc_log'));
+		Assert::same([$expected0, $expected0, $expected303, $expected303], $this->database->getParamsArrayForQuery('INSERT INTO gc_log'));
 	}
 
 
-	public function testCleanSessionsException(): void
+	public function testCleanException(): void
 	{
-		Assert::same(SessionGarbageCollectorReturnCode::Exception, $this->createSessionGarbageCollector(808, new RuntimeException("Trust me I'm engineer"))->cleanSessions());
+		Assert::same(GarbageCollectorReturnCode::Failure, $this->createSessionGarbageCollector(808, new RuntimeException("Trust me I'm engineer"))->clean());
 		$expected = [
-			'id_sessions_gc_log' => 1,
+			'gc_type' => GarbageCollectorType::Sessions->value,
 			'gc_time' => self::LOG_TIME,
 			'gc_time_timezone' => self::LOG_TIMEZONE,
 			'deleted' => null,
-			'return_code' => SessionGarbageCollectorReturnCode::Exception,
+			'return_code' => GarbageCollectorReturnCode::Failure->value,
 			'message' => "Trust me I'm engineer",
 		];
-		Assert::same([$expected, $expected], $this->database->getParamsArrayForQuery('INSERT INTO sessions_gc_log'));
+		Assert::same([$expected, $expected], $this->database->getParamsArrayForQuery('INSERT INTO gc_log'));
 	}
 
 
@@ -117,7 +120,7 @@ final class SessionGarbageCollectorTest extends TestCase
 			}
 
 		};
-		return new SessionGarbageCollector($sessionHandler, $this->database, $this->dateTimeFactory);
+		return new SessionGarbageCollector($sessionHandler, new GarbageCollectorLogger($this->database, $this->dateTimeFactory));
 	}
 
 }

@@ -443,3 +443,7 @@ passkeys:
 		cannotDeleteSignedInWith: "Cannot delete the passkey you signed in with"
 	general:
 		cancel: "Cancel"
+garbageCollector:
+	title: "garbage collector"
+	noStatus: "No status yet"
+	tooOld: "Status is too old (last run %s), garbage collector may not be running"

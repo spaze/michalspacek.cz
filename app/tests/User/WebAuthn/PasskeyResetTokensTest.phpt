@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
@@ -21,6 +23,7 @@ final class PasskeyResetTokensTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
+		private readonly DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -66,9 +69,21 @@ final class PasskeyResetTokensTest extends TestCase
 	}
 
 
+	public function testDeleteExpiredQueriesAdminResetType(): void
+	{
+		$this->database->setResultSet(new ResultSet(2));
+		$deleted = $this->getTokens(true)->deleteExpired();
+
+		Assert::same(2, $deleted);
+		$params = $this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE type = ? AND created <= ?');
+		Assert::same(UserAuthTokenType::AdminPasskeyReset->value, $params[0]);
+		Assert::type('string', $params[1]); // DateTime formatted by Database mock
+	}
+
+
 	private function getTokens(bool $enabled): PasskeyResetTokens
 	{
-		return new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $enabled);
+		return new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $enabled);
 	}
 
 }

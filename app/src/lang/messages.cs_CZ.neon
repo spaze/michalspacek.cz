@@ -443,3 +443,7 @@ passkeys:
 		cannotDeleteSignedInWith: "Passkey, kterým jste se přihlásili, nelze smazat"
 	general:
 		cancel: "Zrušit"
+garbageCollector:
+	title: "garbage collector"
+	noStatus: "Zatím žádný status"
+	tooOld: "Status je příliš starý (naposledy spuštěno %s), garbage collector možná neběží"
