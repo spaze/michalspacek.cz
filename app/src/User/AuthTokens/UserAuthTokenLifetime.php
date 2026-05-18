@@ -14,4 +14,10 @@ interface UserAuthTokenLifetime
 	 */
 	public function getTtl(): string;
 
+
+	/**
+	 * @return int Number of expired tokens of this type that were deleted
+	 */
+	public function deleteExpired(): int;
+
 }

@@ -7,6 +7,7 @@ namespace MichalSpacekCz\User\WebAuthn;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
@@ -31,6 +32,7 @@ final class PasskeyResetUrlTest extends TestCase
 		private readonly TypedDatabase $typedDatabase,
 		private readonly IRequest $httpRequest,
 		private readonly LinkGenerator $linkGenerator,
+		private readonly DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -45,7 +47,7 @@ final class PasskeyResetUrlTest extends TestCase
 	private function getPasskeyResetUrl(CliArgs $cliArgs, bool $passkeyResetEnabled): PasskeyResetUrl
 	{
 		$manager = new Manager($this->typedDatabase, $this->httpRequest, 'users');
-		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $passkeyResetEnabled);
+		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $passkeyResetEnabled);
 		return new PasskeyResetUrl($manager, $resetTokens, $this->linkGenerator, $cliArgs);
 	}
 

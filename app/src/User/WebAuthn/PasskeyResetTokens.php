@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
-use DateTimeImmutable;
 use Exception;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
@@ -17,6 +17,7 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime
 
 	public function __construct(
 		private UserAuthTokens $tokens,
+		private DateTimeFactory $dateTimeFactory,
 		private bool $resetEnabled,
 	) {
 	}
@@ -33,6 +34,13 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime
 	public function getTtl(): string
 	{
 		return '5 minutes';
+	}
+
+
+	#[Override]
+	public function deleteExpired(): int
+	{
+		return $this->tokens->deleteExpiredByType($this->getTokenType(), $this->dateTimeFactory->create('-' . $this->getTtl()));
 	}
 
 
@@ -63,7 +71,7 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime
 		if (!$this->resetEnabled) {
 			throw new PasskeyResetDisabledException();
 		}
-		return $this->tokens->verify($value, new DateTimeImmutable('-' . $this->getTtl()), $this->getTokenType());
+		return $this->tokens->verify($value, $this->dateTimeFactory->create('-' . $this->getTtl()), $this->getTokenType());
 	}
 
 

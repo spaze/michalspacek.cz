@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
@@ -24,6 +25,7 @@ final class PasskeyResetTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
+		private readonly DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -91,7 +93,7 @@ final class PasskeyResetTest extends TestCase
 	private function createPasskeyReset(): PasskeyReset
 	{
 		$tokens = new UserAuthTokens($this->database, 'users');
-		$resetTokens = new PasskeyResetTokens($tokens, true);
+		$resetTokens = new PasskeyResetTokens($tokens, $this->dateTimeFactory, true);
 		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator);
 	}
 

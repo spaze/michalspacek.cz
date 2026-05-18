@@ -127,6 +127,12 @@ final readonly class UserAuthTokens
 	}
 
 
+	public function deleteExpiredByType(UserAuthTokenType $type, DateTimeImmutable $before): int
+	{
+		return $this->database->query('DELETE FROM auth_tokens WHERE type = ? AND created <= ?', $type->value, $before)->getRowCount() ?? 0;
+	}
+
+
 	/**
 	 * @return non-empty-string SHA-512 hash of the token
 	 */

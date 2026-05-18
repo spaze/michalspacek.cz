@@ -4,8 +4,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\AuthTokens;
 
+use DateTimeImmutable;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Database\DatabaseTransactionStatus;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Override;
 use Tester\Assert;
@@ -53,6 +55,21 @@ final class UserAuthTokensTest extends TestCase
 		[$selector, $token] = explode(':', $value);
 		Assert::same($inserts[0]['selector'], $selector);
 		Assert::same($inserts[0]['token'], hash('sha512', $token));
+	}
+
+
+	public function testDeleteExpiredByType(): void
+	{
+		$this->database->setResultSet(new ResultSet(7));
+		$before = new DateTimeImmutable('2026-05-10 00:00:00');
+		$deleted = (new UserAuthTokens($this->database, 'users'))
+			->deleteExpiredByType(UserAuthTokenType::PermanentLogin, $before);
+
+		Assert::same(7, $deleted);
+		Assert::same(
+			[UserAuthTokenType::PermanentLogin->value, $before->format('Y-m-d H:i:s')],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE type = ? AND created <= ?'),
+		);
 	}
 
 }

@@ -95,6 +95,11 @@ services:
 	- MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandler(shortcuts: typed(MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut))
 	- MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandlerInvocation
 	- MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandlerLinks
+	- MichalSpacekCz\GarbageCollector\GarbageCollectorLogger
+	- MichalSpacekCz\GarbageCollector\GarbageCollectors(instances: typed(MichalSpacekCz\GarbageCollector\GarbageCollector))
+	garbageCollectorRunner: MichalSpacekCz\GarbageCollector\GarbageCollectorRunner(lockFilePath: %tempDir%/garbageCollectorRunner.lock)
+	- MichalSpacekCz\GarbageCollector\Status\GarbageCollectorStatusFactory
+	- MichalSpacekCz\GarbageCollector\Status\GarbageCollectorStatusMessagesFactory
 	httpClient: MichalSpacekCz\Http\Client\HttpClient
 	- MichalSpacekCz\Http\Cookies\CookieDescriptions
 	- MichalSpacekCz\Http\Cookies\Cookies
@@ -107,9 +112,7 @@ services:
 	integrityPolicy: MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyDefault
 	- MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders(reportingApiUrl: %reporting.reportingApi%)
 	- MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicy
-	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollector
-	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusFactory
-	- MichalSpacekCz\Http\SessionGarbageCollector\SessionGarbageCollectorStatusMessageFactory
+	- MichalSpacekCz\Http\Session\SessionGarbageCollector
 	- MichalSpacekCz\Http\StructuredHeaders
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
@@ -194,6 +197,7 @@ services:
 	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.explorer)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\UpcKeys\UpcKeysStorageConversions
+	- MichalSpacekCz\User\AuthTokenGarbageCollector\AuthTokenGarbageCollector(lifetimes: typed(MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime))
 	- MichalSpacekCz\User\AuthTokens\UserAuthTokens(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\Manager(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\PermanentLogin\PermanentLogin(interval: %permanentLogin.interval%)

@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\PermanentLogin;
 
-use DateTimeImmutable;
 use Exception;
 use MichalSpacekCz\Application\LinkGenerator;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
@@ -27,6 +27,7 @@ final readonly class PermanentLogin implements UserAuthTokenLifetime
 		private UserAuthTokens $tokens,
 		private Cookies $cookies,
 		private Manager $manager,
+		private DateTimeFactory $dateTimeFactory,
 		LinkGenerator $linkGenerator,
 		private string $interval,
 	) {
@@ -45,6 +46,13 @@ final readonly class PermanentLogin implements UserAuthTokenLifetime
 	public function getTtl(): string
 	{
 		return $this->interval;
+	}
+
+
+	#[Override]
+	public function deleteExpired(): int
+	{
+		return $this->tokens->deleteExpiredByType($this->getTokenType(), $this->dateTimeFactory->create('-' . $this->getTtl()));
 	}
 
 
@@ -68,7 +76,7 @@ final readonly class PermanentLogin implements UserAuthTokenLifetime
 	public function verify(): ?UserAuthToken
 	{
 		$cookie = $this->cookies->getString(CookieName::PermanentLogin) ?? '';
-		return $this->tokens->verify($cookie, new DateTimeImmutable('-' . $this->getTtl()), $this->getTokenType());
+		return $this->tokens->verify($cookie, $this->dateTimeFactory->create('-' . $this->getTtl()), $this->getTokenType());
 	}
 
 

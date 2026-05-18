@@ -6,13 +6,16 @@ namespace MichalSpacekCz\User\PermanentLogin;
 
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
+use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\Manager;
 use Override;
 use Tester\Assert;
@@ -29,6 +32,7 @@ final class PermanentLoginTest extends TestCase
 		private readonly TypedDatabase $typedDatabase,
 		private readonly Request $httpRequest,
 		private readonly Cookies $cookies,
+		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly LinkGenerator $linkGenerator,
 	) {
 	}
@@ -79,11 +83,23 @@ final class PermanentLoginTest extends TestCase
 	}
 
 
+	public function testDeleteExpiredQueriesPermanentLoginType(): void
+	{
+		$this->database->setResultSet(new ResultSet(3));
+		$deleted = $this->getPermanentLogin()->deleteExpired();
+
+		Assert::same(3, $deleted);
+		$params = $this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE type = ? AND created <= ?');
+		Assert::same(UserAuthTokenType::PermanentLogin->value, $params[0]);
+		Assert::type('string', $params[1]); // DateTime formatted by Database mock
+	}
+
+
 	private function getPermanentLogin(): PermanentLogin
 	{
 		$manager = new Manager($this->typedDatabase, $this->httpRequest, 'users');
 		$tokens = new UserAuthTokens($this->database, 'users');
-		return new PermanentLogin($tokens, $this->cookies, $manager, $this->linkGenerator, '14 days');
+		return new PermanentLogin($tokens, $this->cookies, $manager, $this->dateTimeFactory, $this->linkGenerator, '14 days');
 	}
 
 }
