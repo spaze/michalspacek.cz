@@ -10,6 +10,7 @@ use MichalSpacekCz\GarbageCollector\GarbageCollectorReturnCode;
 use MichalSpacekCz\GarbageCollector\GarbageCollectorType;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
+use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Explorer;
 use Override;
@@ -31,6 +32,7 @@ final class SessionGarbageCollectorTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly DateTimeMachineFactory $dateTimeFactory,
+		private readonly NullSession $session,
 	) {
 		$this->dateTimeFactory->setDateTime(new DateTimeImmutable(self::LOG_TIME . ' ' . self::LOG_TIMEZONE));
 	}
@@ -120,7 +122,7 @@ final class SessionGarbageCollectorTest extends TestCase
 			}
 
 		};
-		return new SessionGarbageCollector($sessionHandler, new GarbageCollectorLogger($this->database, $this->dateTimeFactory));
+		return new SessionGarbageCollector($sessionHandler, new GarbageCollectorLogger($this->database, $this->dateTimeFactory), $this->session);
 	}
 
 }

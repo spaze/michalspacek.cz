@@ -7,6 +7,7 @@ use MichalSpacekCz\GarbageCollector\GarbageCollector;
 use MichalSpacekCz\GarbageCollector\GarbageCollectorLogger;
 use MichalSpacekCz\GarbageCollector\GarbageCollectorReturnCode;
 use MichalSpacekCz\GarbageCollector\GarbageCollectorType;
+use Nette\Http\Session;
 use Override;
 use Spaze\Session\MysqlSessionHandler;
 use Throwable;
@@ -18,6 +19,7 @@ final readonly class SessionGarbageCollector implements GarbageCollector
 	public function __construct(
 		private MysqlSessionHandler $sessionHandler,
 		private GarbageCollectorLogger $logger,
+		private Session $session,
 	) {
 	}
 
@@ -40,7 +42,9 @@ final readonly class SessionGarbageCollector implements GarbageCollector
 	public function clean(): GarbageCollectorReturnCode
 	{
 		try {
-			$rows = $this->sessionHandler->gc($this->getIntervalSeconds());
+			$maxLifetime = $this->session->getOptions()['gc_maxlifetime'];
+			assert(is_int($maxLifetime));
+			$rows = $this->sessionHandler->gc($maxLifetime);
 			if ($rows === false) {
 				$message = sprintf('%s::gc() returned false', $this->sessionHandler::class);
 				Debugger::log($message, Debugger::ERROR);
