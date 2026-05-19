@@ -21,8 +21,8 @@
 	</div>
 	<p>
 		{capture $link}Www:Trainings:training#{_html.id.application}{/capture}
-		{_messages.trainings.jointhem|format:"link:$link $name", $title, "link:Www:Trainings:training $name"}<br>
-		{_messages.trainings.companytraining|format:"link:Www:CompanyTrainings:training $name"}
+		{_messages.trainings.jointhem|formatPossiblyUnsafeHtml:"link:$link $name", $title, "link:Www:Trainings:training $name"}<br>
+		{_messages.trainings.companytraining|formatPossiblyUnsafeHtml:"link:Www:CompanyTrainings:training $name"}
 	</p>
 {/if}
 {/define}

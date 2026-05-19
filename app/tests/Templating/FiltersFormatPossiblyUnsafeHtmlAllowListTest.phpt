@@ -117,8 +117,39 @@ final class FiltersFormatPossiblyUnsafeHtmlAllowListTest extends TestCase
 	private function allowList(): array
 	{
 		return [
-			// Populated when templates are migrated. Empty initially - there are zero
-			// |formatPossiblyUnsafeHtml usages with a `$` inside the tag yet.
+			'Presentation/Pulse/PasswordsStorages/default.latte' => [
+				'{$algo->getNote()|formatPossiblyUnsafeHtml}' => 'admin-edited algorithm note (Texy) - format string itself is the $var, no args',
+				'{$disclosure->getNote()|formatPossiblyUnsafeHtml}' => 'admin-edited disclosure note (Texy)',
+				'{$site->getRecommendation()|formatPossiblyUnsafeHtml}' => 'admin-edited site recommendation (Texy)',
+			],
+			'Presentation/Www/CompanyTrainings/training.latte' => [
+				'|formatPossiblyUnsafeHtml:"link:Www:Trainings:reviews {$training->getAction()}"' => 'admin-edited slug from trainings.action',
+			],
+			'Presentation/Www/Post/default.latte' => [
+				'{=$item->getText()|formatPossiblyUnsafeHtml:$item->getUrl()}' => 'admin-edited blog "recommended reading" item (Texy text + URL)',
+			],
+			'Presentation/Www/Talks/talk.latte' => [
+				'|formatPossiblyUnsafeHtml:"link:Www:Talks:talk {$talk->getAction()}"' => 'admin-edited slug from talks.action',
+				'|formatPossiblyUnsafeHtml:$talk->getSupersededByTitle(),"link:Www:Talks:talk {$talk->getSupersededByAction()}"' => 'admin-edited talks.title (raw Texy ?string) + talks.action slug',
+			],
+			'Presentation/Www/Trainings/common/discontinued.latte' => [
+				'{_$training->getDescription()|formatPossiblyUnsafeHtml:(string)$names, $training->getNewHref()}' => 'format string is admin-edited discontinued-training description (Texy); $names is a captured Texy fragment of bold training names; $newHref is admin URL',
+			],
+			'Presentation/Www/Trainings/files.latte' => [
+				'|formatPossiblyUnsafeHtml:$trainingTitle, (string)$date' => '$trainingTitle is admin-edited training name (Html), $date is captured formatted date range',
+				'"messages.trainings.moretrainings.$familiar"|formatPossiblyUnsafeHtml' => 'the $ is in the translation key ($familiar selects formal/informal), not in args; args are a literal Texy directive',
+			],
+			'Presentation/Www/Trainings/reviews.latte' => [
+				'|formatPossiblyUnsafeHtml:"link:$link $name", $title, "link:Www:Trainings:training $name"' => '$link is a captured route prefix, $name is admin-edited trainings.action slug, $title is admin-edited trainings.name',
+				'|formatPossiblyUnsafeHtml:"link:Www:CompanyTrainings:training $name"' => 'admin-edited trainings.action slug',
+			],
+			'Presentation/Www/Trainings/training.latte' => [
+				'|formatPossiblyUnsafeHtml:$training->getName()' => 'admin-edited trainings.name (Html), passed through to render bold training name in date entry',
+				'|formatPossiblyUnsafeHtml:"link:Www:CompanyTrainings:training {$training->getAction()}"' => 'admin-edited slug from trainings.action - same snippet appears twice in this file',
+			],
+			'Presentation/Www/Who/default.latte' => [
+				"|formatPossiblyUnsafeHtml:\$talksApproxCount, 'https://www.webexpo.net', 'https://passwordscon.org/'" => '$talksApproxCount is an int from DB (talks count); URLs need Texy auto-linking so the whole call must use formatPossiblyUnsafeHtml',
+			],
 		];
 	}
 
