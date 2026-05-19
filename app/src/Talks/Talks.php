@@ -437,7 +437,7 @@ final readonly class Talks
 	 */
 	public function pageTitle(string $translationKey, Talk $talk): Html
 	{
-		return $this->texyFormatter->translate($translationKey, [strip_tags($talk->getTitle()->render()), strip_tags($talk->getEvent()->render())]);
+		return $this->texyFormatter->translateText($translationKey, [strip_tags($talk->getTitle()->render()), strip_tags($talk->getEvent()->render())]);
 	}
 
 
