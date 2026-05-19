@@ -209,6 +209,41 @@ final class TexyFormatterTest extends TestCase
 
 
 	/**
+	 * Tests Texy's LinkModule::solve() behavior: when the link target matches the email
+	 * pattern, it prepends 'mailto:' and returns BEFORE running checkURL(). Several
+	 * |formatPossiblyUnsafeHtml call sites (Pgp, Talks, Homepage, CompanyTrainings) pass
+	 * a bare 'mail@michalspacek.cz' as a `[%s]` arg and rely on this branch to auto-mailto
+	 * the email regardless of urlSchemeFilters. If a future Texy release ever swaps the
+	 * order so checkURL runs first, bare-email args would start being blocked by any
+	 * anchor-scheme allow-list that omits mailto: - this test catches that.
+	 */
+	public function testEmailDetectionBypassesUrlSchemeFilter(): void
+	{
+		$texy = $this->texyFormatter->createTexy();
+
+		// Bare email: email branch matches first, prepends mailto:, never reaches checkURL.
+		// (Texy obfuscates the @ in the rendered href as &#64; by default.)
+		Assert::contains(
+			'href="mailto:foo&#64;example.com"',
+			$texy->process('"label":[foo@example.com]'),
+			"Texy no longer auto-mailto's a bare email before checkURL runs."
+				. " Call sites passing a bare 'mail@host' as a |formatPossiblyUnsafeHtml arg into a Texy ':[...]' URL slot (e.g. Pgp/default.latte)"
+				. " lose their mailto: links under the https?:-only anchor filter. Fix it by rendering those links directly in Latte instead of"
+				. " routing them through Texy, or by adding mailto: to \$texy->urlSchemeFilters[Texy::FILTER_ANCHOR]",
+		);
+
+		// Explicit mailto: falls through to checkURL and gets rejected by the https?: filter.
+		// Texy emits an <a> element with no href set (Latte renders it as <a>...</a>).
+		Assert::notContains(
+			'href="mailto:',
+			$texy->process('"label":[mailto:foo@example.com]'),
+			"Texy is letting an explicit mailto: URL through despite the https?:-only anchor scheme filter."
+				. " The allow-list isn't being enforced, investigate why checkURL no longer rejects it",
+		);
+	}
+
+
+	/**
 	 * @param list<string> $args
 	 */
 	private function buildUrl(string $destination, array $args): string
