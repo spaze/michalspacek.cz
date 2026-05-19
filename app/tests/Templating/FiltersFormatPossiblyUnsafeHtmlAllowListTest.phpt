@@ -14,13 +14,13 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /*
- * Companion to app/disallowed-calls.neon's ban on TexyFormatter::substitute() / translate():
+ * Companion to app/disallowed-calls.neon's ban on TexyFormatter::substitutePossiblyUnsafeHtml() / translatePossiblyUnsafeHtml():
  * same concern (Texy processing of args that may be user-controlled), different surface.
  * CLAUDE.md describes the review rule - flag any Filters::formatPossiblyUnsafeHtml() arg in
  * a template (the |formatPossiblyUnsafeHtml filter) where the variable may be user-controlled.
  *
  * Covers: .latte templates under app/src/.
- * Does not cover: PHP call sites of TexyFormatter::substitute() / translate() (see
+ * Does not cover: PHP call sites of TexyFormatter::substitutePossiblyUnsafeHtml() / translatePossiblyUnsafeHtml() (see
  * disallowed-calls.neon's allowInMethods enforcement), Texy content stored in the DB,
  * and multi-line Latte tags (the scan is line-based; current call sites all fit on one line).
  */

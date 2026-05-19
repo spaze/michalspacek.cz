@@ -146,9 +146,12 @@ class TexyFormatter
 
 
 	/**
+	 * Passes args through Texy, so `link:`/URLs/emails in args turn into <a> tags.
+	 * Only safe when args are developer- or admin-controlled. For user-controlled args use substitute().
+	 *
 	 * @param list<string|Stringable|int> $args
 	 */
-	public function substitute(string|Stringable $format, array $args): Html
+	public function substitutePossiblyUnsafeHtml(string|Stringable $format, array $args): Html
 	{
 		array_walk($args, function (string|Stringable|int $value): string {
 			return (string)$value;
@@ -158,12 +161,12 @@ class TexyFormatter
 
 
 	/**
-	 * Like substitute() but treats each arg as literal text - args are HTML-escaped and never interpreted as Texy markup.
-	 * Use this whenever any arg may be user-controlled.
+	 * Treats each arg as literal text - args are HTML-escaped and never interpreted as Texy markup.
+	 * Safe for user-controlled args. For developer/admin-controlled Texy markup use substitutePossiblyUnsafeHtml().
 	 *
 	 * @param list<string|Stringable|int> $args
 	 */
-	public function substituteText(string|Stringable $format, array $args): Html
+	public function substitute(string|Stringable $format, array $args): Html
 	{
 		$formatString = (string)$format;
 		// Texy::protect() can't be used: Texy::process() clears $this->marks
@@ -182,24 +185,27 @@ class TexyFormatter
 
 
 	/**
-	 * @param list<string> $replacements
+	 * Passes replacements through Texy, so `link:`/URLs/emails turn into <a> tags.
+	 * Only safe when replacements are developer- or admin-controlled. For user-controlled replacements use translate().
+	 *
+	 * @param list<string|Stringable|int> $replacements
 	 * @throws InvalidArgument
 	 */
-	public function translate(string $message, array $replacements = []): Html
+	public function translatePossiblyUnsafeHtml(string $message, array $replacements = []): Html
 	{
-		return $this->substitute($this->translator->translate($message), $replacements);
+		return $this->substitutePossiblyUnsafeHtml($this->translator->translate($message), $replacements);
 	}
 
 
 	/**
-	 * Like translate() but treats each replacement as literal text - replacements are HTML-escaped and never interpreted as Texy markup.
-	 * Use this whenever any replacement may be user-controlled.
+	 * Treats each replacement as literal text - replacements are HTML-escaped and never interpreted as Texy markup.
+	 * Safe for user-controlled replacements. For developer/admin-controlled Texy markup use translatePossiblyUnsafeHtml().
 	 *
-	 * @param list<string> $replacements
+	 * @param list<string|Stringable|int> $replacements
 	 */
-	public function translateText(string $message, array $replacements = []): Html
+	public function translate(string $message, array $replacements = []): Html
 	{
-		return $this->substituteText($this->translator->translate($message), $replacements);
+		return $this->substitute($this->translator->translate($message), $replacements);
 	}
 
 

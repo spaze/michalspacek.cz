@@ -301,7 +301,7 @@ final readonly class Talks
 			assert(is_string($row->action));
 			assert(is_string($row->title));
 			assert(is_string($row->favorite));
-			$result[] = $this->texyFormatter->substitute($row->favorite, [$row->title, $row->action]);
+			$result[] = $this->texyFormatter->substitutePossiblyUnsafeHtml($row->favorite, [$row->title, $row->action]);
 		}
 
 		return $result;
@@ -437,7 +437,7 @@ final readonly class Talks
 	 */
 	public function pageTitle(string $translationKey, Talk $talk): Html
 	{
-		return $this->texyFormatter->translate($translationKey, [strip_tags($talk->getTitle()->render()), strip_tags($talk->getEvent()->render())]);
+		return $this->texyFormatter->translatePossiblyUnsafeHtml($translationKey, [strip_tags($talk->getTitle()->render()), strip_tags($talk->getEvent()->render())]);
 	}
 
 

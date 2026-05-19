@@ -41,7 +41,7 @@ final class InterviewsPresenter extends BasePresenter
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->getTitle()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.title.interview', [$interview->getTitle()]);
 		$this->template->pageHeader = $interview->getTitle();
 		$this->template->description = $interview->getDescription();
 		$this->template->href = $interview->getHref();

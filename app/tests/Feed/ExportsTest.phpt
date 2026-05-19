@@ -52,7 +52,7 @@ final class ExportsTest extends TestCase
 
 
 			#[Override]
-			public function translateText(string $message, array $replacements = []): Html
+			public function translatePossiblyUnsafeHtml(string $message, array $replacements = []): Html
 			{
 				return Html::el()->setHtml($message);
 			}

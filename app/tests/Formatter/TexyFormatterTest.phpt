@@ -151,9 +151,9 @@ final class TexyFormatterTest extends TestCase
 	}
 
 
-	public function testSubstitute(): void
+	public function testSubstitutePossiblyUnsafeHtml(): void
 	{
-		Assert::same('<em>foo</em> bar 303', $this->texyFormatter->substitute('*foo* %s %d', ['bar', 303])->render());
+		Assert::same('<em>foo</em> bar 303', $this->texyFormatter->substitutePossiblyUnsafeHtml('*foo* %s %d', ['bar', 303])->render());
 
 		$toString = new class () implements Stringable {
 
@@ -174,37 +174,37 @@ final class TexyFormatterTest extends TestCase
 
 		};
 		$html = Html::fromText('foo');
-		Assert::same('__toString', $this->texyFormatter->substitute($toString, [])->render());
-		Assert::same('<code>__toString</code>', $this->texyFormatter->substitute("`%s`", [$toString])->render());
-		Assert::same('__toString', $this->texyFormatter->substitute($toStringNoInterface, [])->render());
-		Assert::same('<code>__toString</code>', $this->texyFormatter->substitute("`%s`", [$toStringNoInterface])->render());
+		Assert::same('__toString', $this->texyFormatter->substitutePossiblyUnsafeHtml($toString, [])->render());
+		Assert::same('<code>__toString</code>', $this->texyFormatter->substitutePossiblyUnsafeHtml("`%s`", [$toString])->render());
+		Assert::same('__toString', $this->texyFormatter->substitutePossiblyUnsafeHtml($toStringNoInterface, [])->render());
+		Assert::same('<code>__toString</code>', $this->texyFormatter->substitutePossiblyUnsafeHtml("`%s`", [$toStringNoInterface])->render());
 
-		Assert::same('foo', $this->texyFormatter->substitute($html, [])->render());
-		Assert::same('<strong>foo</strong>', $this->texyFormatter->substitute("**%s**", [$html])->render());
+		Assert::same('foo', $this->texyFormatter->substitutePossiblyUnsafeHtml($html, [])->render());
+		Assert::same('<strong>foo</strong>', $this->texyFormatter->substitutePossiblyUnsafeHtml("**%s**", [$html])->render());
 	}
 
 
 	public function testSetTopHeadingUpdatesNoLongWordsTexy(): void
 	{
-		$this->texyFormatter->substituteText('%s', ['init']); // Initialize $texyNoLongWords
+		$this->texyFormatter->substitute('%s', ['init']); // Initialize $texyNoLongWords
 		$this->texyFormatter->setTopHeading(2);
-		Assert::same("<h2 id=\"title\">Title</h2>\n\n<p>`foo`</p>\n", $this->texyFormatter->substituteText("Title\n#####\n%s", ['`foo`'])->render());
+		Assert::same("<h2 id=\"title\">Title</h2>\n\n<p>`foo`</p>\n", $this->texyFormatter->substitute("Title\n#####\n%s", ['`foo`'])->render());
 	}
 
 
-	public function testSubstituteText(): void
+	public function testSubstitute(): void
 	{
-		Assert::same('foo', $this->texyFormatter->substituteText('%s', ['foo'])->render());
-		Assert::same('42', $this->texyFormatter->substituteText('%s', [42])->render());
-		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->texyFormatter->substituteText('%s', ['<b>bold</b>'])->render());
-		Assert::same('a &amp; b', $this->texyFormatter->substituteText('%s', ['a & b'])->render());
-		Assert::same('&quot;quoted&quot;', $this->texyFormatter->substituteText('%s', ['"quoted"'])->render());
-		Assert::same('&#039;single-quoted&#039;', $this->texyFormatter->substituteText('%s', ["'single-quoted'"])->render());
-		Assert::same('**bold**', $this->texyFormatter->substituteText('%s', ['**bold**'])->render());
-		Assert::same('<em>foo</em>', $this->texyFormatter->substituteText('//%s//', ['foo'])->render());
-		Assert::same('<em>&lt;script&gt;alert(1)&lt;/script&gt;</em>', $this->texyFormatter->substituteText('//%s//', ['<script>alert(1)</script>'])->render());
-		Assert::same('foo,bar', $this->texyFormatter->substituteText('%s,%s', ['foo', 'bar'])->render());
-		Assert::same('foo `bar` baz', $this->texyFormatter->substituteText('%s', ['foo `bar` baz'])->render());
+		Assert::same('foo', $this->texyFormatter->substitute('%s', ['foo'])->render());
+		Assert::same('42', $this->texyFormatter->substitute('%s', [42])->render());
+		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->texyFormatter->substitute('%s', ['<b>bold</b>'])->render());
+		Assert::same('a &amp; b', $this->texyFormatter->substitute('%s', ['a & b'])->render());
+		Assert::same('&quot;quoted&quot;', $this->texyFormatter->substitute('%s', ['"quoted"'])->render());
+		Assert::same('&#039;single-quoted&#039;', $this->texyFormatter->substitute('%s', ["'single-quoted'"])->render());
+		Assert::same('**bold**', $this->texyFormatter->substitute('%s', ['**bold**'])->render());
+		Assert::same('<em>foo</em>', $this->texyFormatter->substitute('//%s//', ['foo'])->render());
+		Assert::same('<em>&lt;script&gt;alert(1)&lt;/script&gt;</em>', $this->texyFormatter->substitute('//%s//', ['<script>alert(1)</script>'])->render());
+		Assert::same('foo,bar', $this->texyFormatter->substitute('%s,%s', ['foo', 'bar'])->render());
+		Assert::same('foo `bar` baz', $this->texyFormatter->substitute('%s', ['foo `bar` baz'])->render());
 	}
 
 

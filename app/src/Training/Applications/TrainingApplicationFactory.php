@@ -102,7 +102,7 @@ final readonly class TrainingApplicationFactory
 			$row->dateId,
 			$row->trainingId,
 			$row->trainingAction,
-			$this->texyFormatter->translate($row->trainingName),
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->trainingName),
 			$row->trainingStart,
 			$row->trainingEnd,
 			(bool)$row->publicDate,

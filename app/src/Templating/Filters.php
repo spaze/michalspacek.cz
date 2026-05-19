@@ -50,13 +50,13 @@ final readonly class Filters
 
 	public function formatText(string|Stringable $message, string|Stringable|int ...$args): Html
 	{
-		return $this->texyFormatter->substituteText($message, array_values($args));
+		return $this->texyFormatter->substitute($message, array_values($args));
 	}
 
 
 	public function formatPossiblyUnsafeHtml(string|Stringable $message, string|Stringable|int ...$args): Html
 	{
-		return $this->texyFormatter->substitute($message, array_values($args));
+		return $this->texyFormatter->substitutePossiblyUnsafeHtml($message, array_values($args));
 	}
 
 }

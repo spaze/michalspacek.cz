@@ -25,7 +25,7 @@ final class PhotoPresenter extends BasePresenter
 			new Photo(
 				$this->translator->translate('messages.photo.trademark.header'),
 				'michalspacek-trademark-400x268.jpg',
-				$this->texyFormatter->translate('messages.photo.trademark.desc', ['https://twitter.com/spazef0rze', 'https://www.facebook.com/spaze', 'https://about.me/lukashudecek']),
+				$this->texyFormatter->translatePossiblyUnsafeHtml('messages.photo.trademark.desc', ['https://twitter.com/spazef0rze', 'https://www.facebook.com/spaze', 'https://about.me/lukashudecek']),
 				[
 					'400×268' => 'michalspacek-trademark-400x268.jpg',
 					'800×536' => 'michalspacek-trademark-800x536.jpg',
@@ -35,7 +35,7 @@ final class PhotoPresenter extends BasePresenter
 			new Photo(
 				$this->translator->translate('messages.photo.lecturer.header'),
 				'michalspacek-codecamp2015-400x268.jpg',
-				$this->texyFormatter->translate('messages.photo.lecturer.desc', ['https://galerie.fotohavlin.cz/']),
+				$this->texyFormatter->translatePossiblyUnsafeHtml('messages.photo.lecturer.desc', ['https://galerie.fotohavlin.cz/']),
 				[
 					'400×268' => 'michalspacek-codecamp2015-400x268.jpg',
 					'800×536' => 'michalspacek-codecamp2015-800x536.jpg',
@@ -54,7 +54,7 @@ final class PhotoPresenter extends BasePresenter
 			new Photo(
 				$this->translator->translate('messages.photo.talk.header'),
 				'michalspacek-webtop100-400x268.jpg',
-				$this->texyFormatter->translate('messages.photo.talk.desc', ['link:Www:Talks:talk technicke-chyby-vas-pripravi-o-penize-webtop100']),
+				$this->texyFormatter->translatePossiblyUnsafeHtml('messages.photo.talk.desc', ['link:Www:Talks:talk technicke-chyby-vas-pripravi-o-penize-webtop100']),
 				[
 					'400×268' => 'michalspacek-webtop100-400x268.jpg',
 					'720×480' => 'michalspacek-webtop100-720x480.jpg',

@@ -36,7 +36,7 @@ final class VenuesPresenter extends BasePresenter
 		}
 		$this->upcomingTrainingDatesList = $this->upcomingTrainingDatesListFactory->createForVenue($venue->getId());
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->getName()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.title.venue', [$venue->getName()]);
 		$this->template->venue = $venue;
 		$this->template->hasUpcomingTrainings = count($this->upcomingTrainingDatesList) > 0;
 	}

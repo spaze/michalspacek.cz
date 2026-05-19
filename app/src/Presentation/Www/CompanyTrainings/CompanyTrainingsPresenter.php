@@ -59,7 +59,7 @@ final class CompanyTrainingsPresenter extends BasePresenter
 		}
 
 		$price = $training->getPrice();
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->getName()->render()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.title.companytraining', [$training->getName()->render()]);
 		$this->template->training = $training;
 		$this->template->price = $this->prices->resolvePriceVat($price);
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId(), 3);

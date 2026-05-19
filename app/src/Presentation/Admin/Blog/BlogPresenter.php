@@ -57,11 +57,11 @@ final class BlogPresenter extends BasePresenter
 	{
 		return $this->blogPostFormFactory->create(
 			function (BlogPost $post): never {
-				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
+				$this->flashMessage($this->texyFormatter->translatePossiblyUnsafeHtml('messages.blog.admin.postadded', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
 				$this->redirect('Blog:');
 			},
 			function (BlogPost $post): never {
-				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
+				$this->flashMessage($this->texyFormatter->translatePossiblyUnsafeHtml('messages.blog.admin.postupdated', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
 				$this->redirect('Blog:');
 			},
 			$this->template,

@@ -74,17 +74,17 @@ final readonly class TalkSlidesFormFactory
 				assert($values->new instanceof ArrayHash);
 				assert(is_bool($values->deleteReplaced));
 				$this->talkSlides->saveSlides($talkId, $slides, $values->slides, $values->new, $values->deleteReplaced);
-				$message = $this->texyFormatter->translateText('messages.talks.admin.slideadded');
+				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {
-				$message = $this->texyFormatter->translateText('messages.talks.admin.duplicatealias', [(string)$e->getLastUniqueNumber()]);
+				$message = $this->texyFormatter->translate('messages.talks.admin.duplicatealias', [(string)$e->getLastUniqueNumber()]);
 				$type = 'error';
 			}
 			$onSuccess($message, $type, $talkId);
 		};
 		$form->onValidate[] = function (UiForm $form) use ($request): void {
 			if (!$this->hasSlideNo1($form)) {
-				$form->addError($this->texyFormatter->translateText('messages.talks.admin.slideNumber1Missing'));
+				$form->addError($this->texyFormatter->translate('messages.talks.admin.slideNumber1Missing'));
 			}
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
@@ -96,7 +96,7 @@ final readonly class TalkSlidesFormFactory
 			});
 			$maxSlideUploads = $this->getMaxSlideUploads();
 			if ($uploaded > $maxSlideUploads) {
-				$form->addError($this->texyFormatter->translateText('messages.talks.admin.maxslideuploadsexceeded', [(string)$maxSlideUploads]));
+				$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$maxSlideUploads]));
 			}
 		};
 

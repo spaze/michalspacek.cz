@@ -48,7 +48,7 @@ final readonly class Exports
 			$nearest = $filter !== null ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate();
 			$dependencies[Cache::Expire] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
-			$title = $filter !== null ? $this->texyFormatter->translateText('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translateText('messages.label.allarticles');
+			$title = $filter !== null ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles');
 			$feed = new AtomFeed($self, "Michal Špaček: {$title}");
 			$feed->setLinkSelf($self);
 			$feed->setAuthor(new AtomPerson('Michal Špaček'));
@@ -87,7 +87,7 @@ final readonly class Exports
 				if ($article instanceof ArticleWithTextAndEdits) {
 					$content = Html::el();
 					if ($article->getEdits() !== []) {
-						$content->addHtml(Html::el('h3')->setText($this->texyFormatter->translateText('messages.blog.post.edits')));
+						$content->addHtml(Html::el('h3')->setText($this->texyFormatter->translate('messages.blog.post.edits')));
 						$edits = Html::el('ul');
 						foreach ($article->getEdits() as $edit) {
 							$edits->create('li')

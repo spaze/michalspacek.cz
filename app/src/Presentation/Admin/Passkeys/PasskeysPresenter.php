@@ -164,7 +164,7 @@ final class PasskeysPresenter extends BasePresenter
 		}
 		return $this->passkeyDeleteFormFactory->create(
 			function () use ($passkeyCurrentName): void {
-				$this->flashMessage($this->textFormatter->translateText('messages.passkeys.delete.deleted', [$passkeyCurrentName]));
+				$this->flashMessage($this->textFormatter->translate('messages.passkeys.delete.deleted', [$passkeyCurrentName]));
 				$this->redirect('Passkeys:');
 			},
 			function (): void {
