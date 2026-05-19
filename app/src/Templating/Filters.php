@@ -26,7 +26,6 @@ final readonly class Filters
 		return [
 			'staticUrl' => $this->staticUrl(...),
 			'staticImageUrl' => $this->staticImageUrl(...),
-			'format' => $this->format(...),
 			'formatText' => $this->formatText(...),
 			'formatPossiblyUnsafeHtml' => $this->formatPossiblyUnsafeHtml(...),
 			'localeDay' => $this->dateTimeFormatter->localeDay(...),
@@ -46,12 +45,6 @@ final readonly class Filters
 	public function staticImageUrl(string $filename): string
 	{
 		return $this->texyFormatter->getImagesRoot($filename);
-	}
-
-
-	public function format(string|Stringable $message, string|Stringable|int ...$args): Html
-	{
-		return $this->formatPossiblyUnsafeHtml($message, ...$args);
 	}
 
 
