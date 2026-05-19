@@ -129,14 +129,14 @@
 		<small n:if="$date->getLabel()" class="label">{$date->getLabel()}</small>
 		<small>(<a href="#{_html.id.application}" data-id="{$date->getId()}" class="url">{_messages.label.signup}</a> {_messages.trainings.signupforpreposition} <span class="description">{_messages.trainings.training|formatPossiblyUnsafeHtml:$training->getName()}</span>)</small>
 		{if $date->isTentative()}
-			<br><small>{_messages.trainings.tentativedate|formatText}</small>
+			<br><small>{_messages.trainings.tentativedate|format}</small>
 		{else}
 			<br><small>{_messages.trainings.extendedtime}</small>
 		{/if}
 		{if $date->getCooperationDescription()}<br><small>{$date->getCooperationDescription()}</small>{/if}
 	</p>
 	<div class="indent">
-	<p n:if="$date->getPrice()">{icon coins} {_messages.trainings.price|formatText:$date->getPrice()->getPriceWithCurrency(), $date->getPrice()->getPriceVatWithCurrency()}{if $date->getStudentDiscount()}, {_messages.trainings.studentdiscount|formatText:$date->getStudentDiscount()}{/if}</p>
+	<p n:if="$date->getPrice()">{icon coins} {_messages.trainings.price|format:$date->getPrice()->getPriceWithCurrency(), $date->getPrice()->getPriceVatWithCurrency()}{if $date->getStudentDiscount()}, {_messages.trainings.studentdiscount|format:$date->getStudentDiscount()}{/if}</p>
 	{if $date->isRemote()}
 		<p>{icon bulb-off} {_messages.trainings.remoteindividualqa}</p>
 		<p>
@@ -154,7 +154,7 @@
 </div>
 <p n:if="!$dates">
 	{capture $anchor}#{_html.id.application}{/capture}
-	{_messages.trainings.nodateyet.long|formatText:(string)$anchor}
+	{_messages.trainings.nodateyet.long|format:(string)$anchor}
 	{_messages.trainings.companythistraining|formatPossiblyUnsafeHtml:"link:Www:CompanyTrainings:training {$training->getAction()}"}
 </p>
 <p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
@@ -163,7 +163,7 @@
 
 {if $training->getCapacity()}
 <h2 id="{_html.id.capacity}">{_messages.label.trainingcapacity}</h2>
-<p>{_messages.trainings.capacity|formatText:$training->getCapacity()}</p>
+<p>{_messages.trainings.capacity|format:$training->getCapacity()}</p>
 <hr>
 {/if}
 
@@ -189,7 +189,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {include #form}
 <p><small>{_messages.trainings.datausage}</small></p>
-<p><small>{_messages.trainings.dataretention|formatText:$dataRetention}</small></p>
+<p><small>{_messages.trainings.dataretention|format:$dataRetention}</small></p>
 <p><small>{_messages.trainings.conditions}</small></p>
 {else}
 <h2 id="{_html.id.application}">{_messages.label.preliminaryapplication}</h2>

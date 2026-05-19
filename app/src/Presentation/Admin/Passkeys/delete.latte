@@ -6,7 +6,7 @@
 {/define}
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-<p>{_messages.passkeys.delete.deleteConfirm|formatText:$name}</p>
+<p>{_messages.passkeys.delete.deleteConfirm|format:$name}</p>
 {form passkeyDelete}
 	<a n:href="default">{_messages.passkeys.general.cancel}</a>
 	{input delete}

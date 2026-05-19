@@ -41,7 +41,7 @@
 {if $price}
 <h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
 <p>
-	{_messages.companytrainings.price|formatText:$price->getPriceWithCurrency(), $price->getPriceVatWithCurrency()}<br>
+	{_messages.companytrainings.price|format:$price->getPriceWithCurrency(), $price->getPriceVatWithCurrency()}<br>
 	<small>{$training->getAlternativeDurationPriceText()}</small>
 </p>
 <hr>

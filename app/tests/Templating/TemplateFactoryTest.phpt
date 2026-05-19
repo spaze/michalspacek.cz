@@ -26,7 +26,7 @@ final class TemplateFactoryTest extends TestCase
 
 	public function testCreateTemplate(): void
 	{
-		$file = FileMock::create('{="/foo.png"|staticUrl}, {="/bar.png"|staticImageUrl}, {="**baz**"|formatText}, {$start|localeDay}, {$start|localeMonth}, {$start|localeIntervalDay:$end}, {$start|localeIntervalMonth:$end}');
+		$file = FileMock::create('{="/foo.png"|staticUrl}, {="/bar.png"|staticImageUrl}, {="**baz**"|format}, {$start|localeDay}, {$start|localeMonth}, {$start|localeIntervalDay:$end}, {$start|localeIntervalMonth:$end}');
 		$template = $this->templateFactory->createTemplate();
 		$template->start = new DateTimeImmutable('2023-08-23');
 		$template->end = new DateTimeImmutable('2023-09-03');
