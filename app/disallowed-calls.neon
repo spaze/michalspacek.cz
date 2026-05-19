@@ -84,6 +84,29 @@ parameters:
 				- 'MichalSpacekCz\User\AuthTokens\UserAuthTokens::*' # internal calls, e.g. replaceForUser() -> insert()
 				- 'MichalSpacekCz\User\PermanentLogin\PermanentLogin::*'
 				- 'MichalSpacekCz\User\WebAuthn\PasskeyResetTokens::*'
+		-
+			method:
+				- 'MichalSpacekCz\Formatter\TexyFormatter::substitute()'
+				- 'MichalSpacekCz\Formatter\TexyFormatter::translate()'
+			message: 'use substituteText()/translateText() unless args are admin-controlled Texy markup'
+			errorTip: 'The template-side equivalent (|formatPossiblyUnsafeHtml with $variable args) is checked by FiltersFormatPossiblyUnsafeHtmlAllowListTest'
+			allowIn:
+				- tests/*.phpt
+			allowInMethods:
+				- 'MichalSpacekCz\Templating\Filters::formatPossiblyUnsafeHtml'
+				- 'MichalSpacekCz\Formatter\TexyFormatter::translate' # internal: translate() delegates to substitute()
+				- 'MichalSpacekCz\Talks\Talks::*' # admin DB content
+				- 'MichalSpacekCz\Training\Company\CompanyTrainings::*' # admin-edited training catalog
+				- 'MichalSpacekCz\Training\Trainings\TrainingFactory::*' # admin-edited training fields
+				- 'MichalSpacekCz\Training\Applications\TrainingApplicationFactory::*' # admin-edited training name
+				- 'MichalSpacekCz\Presentation\Admin\Blog\BlogPresenter::*' # admin-edited blog post + admin-only flash
+				- 'MichalSpacekCz\Presentation\Admin\Interviews\InterviewsPresenter::*' # admin-edited interview title
+				- 'MichalSpacekCz\Presentation\Www\CompanyTrainings\CompanyTrainingsPresenter::*' # admin-edited training name in page title
+				- 'MichalSpacekCz\Presentation\Www\Interviews\InterviewsPresenter::*' # admin-edited interview title in page title
+				- 'MichalSpacekCz\Presentation\Www\Photo\PhotoPresenter::*' # admin-edited captions with URLs/link:
+				- 'MichalSpacekCz\Presentation\Www\Tags\TagsPresenter::*' # admin-edited tag label in page title
+				- 'MichalSpacekCz\Presentation\Www\Trainings\TrainingsPresenter::*' # admin-edited training name in page titles
+				- 'MichalSpacekCz\Presentation\Www\Venues\VenuesPresenter::*' # admin-edited venue name in page title
 
 	disallowedConstants:
 		-

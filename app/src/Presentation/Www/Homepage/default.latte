@@ -7,7 +7,7 @@
 <p>{_messages.homepage.trainings}:</p>
 {control upcomingDatesList}
 <h3>{_messages.label.companytrainings}</h3>
-<p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
+<p>{_messages.trainings.companyextratraining|formatPossiblyUnsafeHtml:'link:Www:CompanyTrainings:'}</p>
 {include "../Trainings/common/company.latte"}
 <p>{include "../Trainings/common/discontinued.latte"}</p>
 <hr>
@@ -27,9 +27,9 @@
 <h3>{_messages.label.upcomingtalks}</h3>
 {if $upcomingTalks}
 	{control talksList $upcomingTalks}
-	<p>{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+	<p>{_messages.talks.atyourevent.upcoming|formatPossiblyUnsafeHtml:'mail@michalspacek.cz'}</p>
 {else}
-	<p>{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+	<p>{_messages.talks.atyourevent.noupcoming|formatPossiblyUnsafeHtml:'mail@michalspacek.cz'}</p>
 {/if}
 <h3>{_messages.label.pasttalks}</h3>
 {control talksList $talks}

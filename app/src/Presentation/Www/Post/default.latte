@@ -19,7 +19,7 @@
 		<hr>
 		<h3>{_messages.blog.post.recommendedreading}</h3>
 		<ul n:inner-foreach="$post->getRecommended() as $item">
-			<li>{=$item->getText()|format:$item->getUrl()}</li>
+			<li>{=$item->getText()|formatPossiblyUnsafeHtml:$item->getUrl()}</li>
 		</ul>
 	{/if}
 </div>
