@@ -32,12 +32,12 @@
 	{if $algo->getDisclosures()}
 		<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->isAlgorithmDisclosureUrlMatch($algo) ? search-result">Details</a></div>
 		<div n:class="expandable, !$isDetail ? hidden">
-			<p n:if="$algo->getNote()">Note: {$algo->getNote()|format}</p>
+			<p n:if="$algo->getNote()">Note: {$algo->getNote()|formatPossiblyUnsafeHtml}</p>
 			<p n:if="$algo->getParams()">Params: {foreach $algo->getParams() as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 			<p n:if="$algo->getFullAlgo()">Full algorithm: <code>{$algo->getFullAlgo()}</code></p>
 			<p>Disclosures:</p>
 			<ul n:inner-foreach="$algo->getDisclosures() as $disclosure">
-				<li><small title="{$disclosure->getPublished()|date:'Y-m-d H:i'}">{$disclosure->getPublished()|date:'Y-m-d'}</small> <a href="{$disclosure->getUrl()}" n:attr="rel => $noFollow" n:class="$storage->getSearchResult()->isDisclosureUrlMatch($disclosure) ? search-result">{$disclosure->getType()}</a>{if $disclosure->getArchive()} <sup><a href="{$disclosure->getArchive()}" title="archived">arch</a></sup>{/if}{if $disclosure->getNote()}<small> ({$disclosure->getNote()|format})</small>{/if}</li>
+				<li><small title="{$disclosure->getPublished()|date:'Y-m-d H:i'}">{$disclosure->getPublished()|date:'Y-m-d'}</small> <a href="{$disclosure->getUrl()}" n:attr="rel => $noFollow" n:class="$storage->getSearchResult()->isDisclosureUrlMatch($disclosure) ? search-result">{$disclosure->getType()}</a>{if $disclosure->getArchive()} <sup><a href="{$disclosure->getArchive()}" title="archived">arch</a></sup>{/if}{if $disclosure->getNote()}<small> ({$disclosure->getNote()|formatPossiblyUnsafeHtml})</small>{/if}</li>
 			</ul>
 		</div>
 	{/if}
@@ -101,7 +101,7 @@
 			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$site->getRating()->name}&quot;?</a></div>
 			<div n:class="expandable, !$isDetail ? hidden">
 				<p>{$ratingGuide[$site->getRating()->name]}</p>
-				<p n:if="$site->getRecommendation()"><small><strong>Recommended change</strong>: {$site->getRecommendation()|format}</small></p>
+				<p n:if="$site->getRecommendation()"><small><strong>Recommended change</strong>: {$site->getRecommendation()|formatPossiblyUnsafeHtml}</small></p>
 			</div>
 		</div>
 		</div>

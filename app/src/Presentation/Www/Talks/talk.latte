@@ -22,8 +22,8 @@
 {/define}
 
 {define #talkContent}
-<p class="print"><strong>{_messages.talks.onlineversion|format:"link:Www:Talks:talk {$talk->getAction()}"}</strong></p>
-<div n:if="$talk->getSupersededByAction() && $talk->getSupersededByTitle()" class="flash info"><strong>{_messages.talks.supersededby|format:$talk->getSupersededByTitle(),"link:Www:Talks:talk {$talk->getSupersededByAction()}"}</strong></div>
+<p class="print"><strong>{_messages.talks.onlineversion|formatPossiblyUnsafeHtml:"link:Www:Talks:talk {$talk->getAction()}"}</strong></p>
+<div n:if="$talk->getSupersededByAction() && $talk->getSupersededByTitle()" class="flash info"><strong>{_messages.talks.supersededby|formatPossiblyUnsafeHtml:$talk->getSupersededByTitle(),"link:Www:Talks:talk {$talk->getSupersededByAction()}"}</strong></div>
 
 <h2 n:if="$talk->getDescription() || $talk->getHref()" id="{_html.id.detail}">{_messages.talks.detail}</h2>
 {if $talk->getDescription()}{$talk->getDescription()}{/if}
@@ -32,7 +32,7 @@
 <h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
 <p>
 	<span class="date">{$talk->getDate()|localeDay}</span>, <a href="{$talk->getEventHref()}" n:tag-if="$talk->getEventHref()">{$talk->getEvent()}</a>
-	<small n:if="$talk->getDuration() || $slides || $talk->getVideo()->getVideoHref()">({if $talk->getDuration()}{_messages.talks.duration|format:$talk->getDuration()}{if $slides || $talk->getVideo()->getVideoHref()}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $talk->getVideo()->getVideoHref()}, {/if}{/if}{if $talk->getVideo()->getVideoHref()}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
+	<small n:if="$talk->getDuration() || $slides || $talk->getVideo()->getVideoHref()">({if $talk->getDuration()}{_messages.talks.duration|formatText:$talk->getDuration()}{if $slides || $talk->getVideo()->getVideoHref()}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $talk->getVideo()->getVideoHref()}, {/if}{/if}{if $talk->getVideo()->getVideoHref()}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
 </p>
 
 <h2 n:if="$talk->hasSlides() || $talk->getSlidesNote()" id="{_html.id.slides}">{_messages.label.slides}</h2>
