@@ -8,11 +8,11 @@
 <p>{_messages.trainings.welcome}</p>
 {control upcomingDatesList}
 <h3>{_messages.label.companytrainings}</h3>
-<p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
+<p>{_messages.trainings.companyextratraining|formatPossiblyUnsafeHtml:'link:Www:CompanyTrainings:'}</p>
 {include "common/company.latte"}
 <p>{include "common/discontinued.latte"}</p>
 <hr>
 <h4>{_messages.label.partnertrainings}</h4>
-<p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
+<p><small>{_messages.trainings.partnertrainings.intro|formatText}</small></p>
 {include "common/partnerTrainings.latte"}
 {/define}

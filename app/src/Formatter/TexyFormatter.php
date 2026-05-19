@@ -115,6 +115,12 @@ class TexyFormatter
 		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
 		$texy->allowed['phrase/del'] = true;
 		$texy->allowed['longwords'] = true;
+		// Anchor and image URL schemes restricted to http(s), case-insensitive. Bare emails
+		// still produce mailto: links because LinkModule prepends 'mailto:' before checkURL
+		// - tested by testEmailDetectionBypassesUrlSchemeFilter().
+		// Not Configurator::safeMode() because that also forces rel=nofollow and strips allowed tags.
+		$texy->urlSchemeFilters[Texy::FILTER_ANCHOR] = '#https?:#Ai';
+		$texy->urlSchemeFilters[Texy::FILTER_IMAGE] = '#https?:#Ai';
 		$texy->addHandler('phrase', $this->phraseHandler->solve(...));
 		return $texy;
 	}
@@ -257,7 +263,9 @@ class TexyFormatter
 
 	public function getCacheKey(string $text, Texy $texy): string
 	{
-		$key = "{$text}|" . serialize($texy->allowedTags) . '|' . serialize($texy->allowed);
+		// urlSchemeFilters is in the key so a future withTexy() variant with a different
+		// filter set lands in its own slot rather than reading a sibling's cached output.
+		$key = "{$text}|" . serialize($texy->allowedTags) . '|' . serialize($texy->allowed) . '|' . serialize($texy->urlSchemeFilters);
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
 		// Don't hash the locale to make it visible inside cache files
 		return Hash::nonCryptographic($key) . '.' . $this->translator->getDefaultLocale();

@@ -37,25 +37,25 @@ final readonly class CookieDescriptions
 			new CookieDescription(
 				CookieName::PermanentLogin->value,
 				true,
-				$this->texyFormatter->translate('messages.cookies.cookie.permanentLogin'),
+				$this->texyFormatter->translateText('messages.cookies.cookie.permanentLogin'),
 				$this->dateTimeParser->getDaysFromString($this->permanentLogin->getCookieLifetime()),
 			),
 			new CookieDescription(
 				CookieName::Theme->value,
 				false,
-				$this->texyFormatter->translate('messages.cookies.cookie.theme'),
+				$this->texyFormatter->translateText('messages.cookies.cookie.theme'),
 				$this->dateTimeParser->getDaysFromString($this->theme->getCookieLifetime()),
 			),
 			new CookieDescription(
 				$this->sessionHandler->getName(),
 				false,
-				$this->texyFormatter->translate('messages.cookies.cookie.netteSession'),
+				$this->texyFormatter->translateText('messages.cookies.cookie.netteSession'),
 				$this->dateTimeParser->getDaysFromString($cookieLifetime . ' seconds'),
 			),
 			new CookieDescription(
 				'_nss', // Same as in Nette\Http\Helpers::StrictCookieName, the name is tested in CookieDescriptionsTest
 				false,
-				$this->texyFormatter->translate('messages.cookies.cookie.netteSameSiteCheck'),
+				$this->texyFormatter->translateText('messages.cookies.cookie.netteSameSiteCheck'),
 				null,
 			),
 		];

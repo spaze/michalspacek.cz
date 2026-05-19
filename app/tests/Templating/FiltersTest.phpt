@@ -23,9 +23,18 @@ final class FiltersTest extends TestCase
 	}
 
 
-	public function testFormat(): void
+	public function testFormatText(): void
 	{
-		Assert::same('<em>foo</em> bar 303', $this->filters->format('*foo* %s %d', 'bar', 303)->render());
+		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->filters->formatText('%s', '<b>bold</b>')->render());
+		Assert::same('**bold**', $this->filters->formatText('%s', '**bold**')->render());
+		Assert::same('<em>foo</em>', $this->filters->formatText('//%s//', 'foo')->render());
+	}
+
+
+	public function testFormatPossiblyUnsafeHtml(): void
+	{
+		Assert::same('<em>foo</em> bar 303', $this->filters->formatPossiblyUnsafeHtml('*foo* %s %d', 'bar', 303)->render());
+		Assert::same('<strong>foo</strong>', $this->filters->formatPossiblyUnsafeHtml('**%s**', 'foo')->render());
 
 		$toString = new class () implements Stringable {
 
@@ -46,27 +55,13 @@ final class FiltersTest extends TestCase
 
 		};
 		$html = Html::fromText('foo');
-		Assert::same('__toString', $this->filters->format($toString)->render());
-		Assert::same('<code>__toString</code>', $this->filters->format("`%s`", $toString)->render());
-		Assert::same('__toString', $this->filters->format($toStringNoInterface)->render());
-		Assert::same('<code>__toString</code>', $this->filters->format("`%s`", $toStringNoInterface)->render());
+		Assert::same('__toString', $this->filters->formatPossiblyUnsafeHtml($toString)->render());
+		Assert::same('<code>__toString</code>', $this->filters->formatPossiblyUnsafeHtml('`%s`', $toString)->render());
+		Assert::same('__toString', $this->filters->formatPossiblyUnsafeHtml($toStringNoInterface)->render());
+		Assert::same('<code>__toString</code>', $this->filters->formatPossiblyUnsafeHtml('`%s`', $toStringNoInterface)->render());
 
-		Assert::same('foo', $this->filters->format($html)->render());
-		Assert::same('<strong>foo</strong>', $this->filters->format("**%s**", $html)->render());
-	}
-
-
-	public function testFormatText(): void
-	{
-		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->filters->formatText('%s', '<b>bold</b>')->render());
-		Assert::same('**bold**', $this->filters->formatText('%s', '**bold**')->render());
-		Assert::same('<em>foo</em>', $this->filters->formatText('//%s//', 'foo')->render());
-	}
-
-
-	public function testFormatPossiblyUnsafeHtml(): void
-	{
-		Assert::same('<strong>foo</strong>', $this->filters->formatPossiblyUnsafeHtml('**%s**', 'foo')->render());
+		Assert::same('foo', $this->filters->formatPossiblyUnsafeHtml($html)->render());
+		Assert::same('<strong>foo</strong>', $this->filters->formatPossiblyUnsafeHtml('**%s**', $html)->render());
 	}
 
 }

@@ -50,6 +50,13 @@ final class ExportsTest extends TestCase
 				return Html::el()->setHtml($message);
 			}
 
+
+			#[Override]
+			public function translateText(string $message, array $replacements = []): Html
+			{
+				return Html::el()->setHtml($message);
+			}
+
 		};
 		$this->exports = new Exports($this->articles, $texyFormatter, $translator, $cacheStorage);
 	}
