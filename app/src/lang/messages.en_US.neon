@@ -180,7 +180,7 @@ who:
 		5: "My mission is to do it like I've always done, be transparent and don't require passwords to be changed every 91.5 days."
 		6: "Yes, we've already rolled out \"1Password\":[%s] company-wide, why are you asking?"
 	speaker:
-		1: "I've been speaking at more than %d conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
+		1: "I've been speaking at more than %s conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."
 	webtop100juror:
 		1: "I was a juror (2011-2018) and later also a guarantor (2014-2018) for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
@@ -401,6 +401,7 @@ cookies:
 		netteSameSiteCheck: "Used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
 httpHeaders:
 	headerNotSent: "header not sent"
+# Reserved for Nette form validation; %label, %d, %value are Nette's, not vsprintf
 forms:
 	validateSlugParamsError: "%label must match %d"
 	validateSlugParamsEasterEgg: "%label can't be '%value', because that's used by an Easter egg"
