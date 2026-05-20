@@ -153,8 +153,8 @@ class TexyFormatter
 	 */
 	public function substitutePossiblyUnsafeHtml(string|Stringable $format, array $args): Html
 	{
-		array_walk($args, function (string|Stringable|int $value): string {
-			return (string)$value;
+		array_walk($args, function (string|Stringable|int &$value): void {
+			$value = (string)$value;
 		});
 		return $this->format(vsprintf((string)$format, $args));
 	}

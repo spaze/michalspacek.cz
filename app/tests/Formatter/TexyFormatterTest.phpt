@@ -184,6 +184,29 @@ final class TexyFormatterTest extends TestCase
 	}
 
 
+	/**
+	 * Stringable args must be cast to string BEFORE vsprintf consumes them, otherwise
+	 * vsprintf's type-specific specifiers (e.g. %d) see the raw object and fall back
+	 * to PHP's legacy (int)$object = 1 conversion plus a deprecation warning. This
+	 * test catches a regression to the original array_walk no-op (a callback missing
+	 * the &$value reference would walk $args, compute (string)$value per element,
+	 * and discard the result, leaving Stringable objects untouched).
+	 */
+	public function testSubstitutePossiblyUnsafeHtmlNormalizesStringableArgsBeforeVsprintf(): void
+	{
+		$stringable42 = new class () implements Stringable {
+
+			#[Override]
+			public function __toString(): string
+			{
+				return '42';
+			}
+
+		};
+		Assert::same('42', $this->texyFormatter->substitutePossiblyUnsafeHtml('%d', [$stringable42])->render());
+	}
+
+
 	public function testSetTopHeadingUpdatesNoLongWordsTexy(): void
 	{
 		$this->texyFormatter->substitute('%s', ['init']); // Initialize $texyNoLongWords
