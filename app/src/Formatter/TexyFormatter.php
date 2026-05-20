@@ -20,6 +20,8 @@ class TexyFormatter
 
 	private const string CACHE_KEY_DELIMITER = '|';
 
+	public const array ALLOWED_URL_SCHEMES = ['http', 'https'];
+
 	private ?Texy $texy = null;
 
 	private ?Texy $texyNoLongWords = null;
@@ -115,12 +117,11 @@ class TexyFormatter
 		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
 		$texy->allowed['phrase/del'] = true;
 		$texy->allowed['longwords'] = true;
-		// Anchor and image URL schemes restricted to http(s), case-insensitive. Bare emails
-		// still produce mailto: links because LinkModule prepends 'mailto:' before checkURL
-		// - tested by testEmailDetectionBypassesUrlSchemeFilter().
-		// Not Configurator::safeMode() because that also forces rel=nofollow and strips allowed tags.
-		$texy->urlSchemeFilters[Texy::FILTER_ANCHOR] = '#https?:#Ai';
-		$texy->urlSchemeFilters[Texy::FILTER_IMAGE] = '#https?:#Ai';
+		// Not Configurator::safeMode() as that also forces rel=nofollow and strips allowed tags
+		$quoted = array_map(static fn (string $s): string => preg_quote($s, '#'), self::ALLOWED_URL_SCHEMES);
+		$schemePattern = '#(?:' . implode('|', $quoted) . '):#Ai';
+		$texy->urlSchemeFilters[Texy::FILTER_ANCHOR] = $schemePattern;
+		$texy->urlSchemeFilters[Texy::FILTER_IMAGE] = $schemePattern;
 		$texy->addHandler('phrase', $this->phraseHandler->solve(...));
 		return $texy;
 	}
