@@ -9,16 +9,41 @@ namespace Nette\Bridges\MailDI;
 
 use Nette;
 use Nette\Schema\Expect;
+use Tracy;
 
 
 /**
  * Mail extension for Nette DI.
+ *
+ * @property object{
+ *     debugger: bool|null,
+ *     smtp: bool,
+ *     host: string|null,
+ *     port: int|null,
+ *     username: string,
+ *     password: string,
+ *     secure: 'ssl'|'tls'|null,
+ *     encryption: 'ssl'|'tls'|null,
+ *     timeout: int,
+ *     context: array<string, array<mixed>>,
+ *     clientHost: string|null,
+ *     persistent: bool,
+ *     dkim: array{domain: string, selector: string, privateKey: string, passPhrase?: string}|null,
+ *     redirect: array{to: string, subjectPrefix: string}|null,
+ * } $config
  */
 class MailExtension extends Nette\DI\CompilerExtension
 {
+	public function __construct(
+		private readonly bool $debugMode = false,
+	) {
+	}
+
+
 	public function getConfigSchema(): Nette\Schema\Schema
 	{
 		return Expect::structure([
+			'debugger' => Expect::bool()->nullable(),
 			'smtp' => Expect::bool(false),
 			'host' => Expect::string()->dynamic(),
 			'port' => Expect::int()->dynamic(),
@@ -39,6 +64,14 @@ class MailExtension extends Nette\DI\CompilerExtension
 					'passPhrase' => Expect::string()->dynamic(),
 				])->castTo('array'),
 			),
+			'redirect' => Expect::anyOf(
+				Expect::null(),
+				Expect::type('email')->transform(fn($v) => ['to' => $v]),
+				Expect::structure([
+					'to' => Expect::type('email')->required()->dynamic(),
+					'subjectPrefix' => Expect::string('')->dynamic(),
+				])->castTo('array'),
+			),
 		]);
 	}
 
@@ -46,11 +79,13 @@ class MailExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration(): void
 	{
 		$config = $this->config;
-		\assert($config instanceof \stdClass);
 		$builder = $this->getContainerBuilder();
 
-		$mailer = $builder->addDefinition($this->prefix('mailer'))
-			->setType(Nette\Mail\Mailer::class);
+		$useInterceptor = $config->redirect || $config->debugger === true;
+
+		$mailer = $builder->addDefinition($this->prefix($useInterceptor ? 'innerMailer' : 'mailer'))
+			->setType(Nette\Mail\Mailer::class)
+			->setAutowired(!$useInterceptor);
 
 		if ($config->dkim) {
 			$dkim = $config->dkim;
@@ -81,8 +116,41 @@ class MailExtension extends Nette\DI\CompilerExtension
 			$mailer->setFactory(Nette\Mail\SendmailMailer::class);
 		}
 
+		if ($useInterceptor) {
+			$builder->addDefinition($this->prefix('mailer'))
+				->setType(Nette\Mail\Mailer::class)
+				->setFactory(Nette\Mail\Interceptor::class, [
+					'mailer' => $mailer,
+					'redirectTo' => $config->redirect['to'] ?? null,
+					'subjectPrefix' => $config->redirect['subjectPrefix'] ?? '',
+				]);
+		}
+
 		if ($this->name === 'mail') {
 			$builder->addAlias('nette.mailer', $this->prefix('mailer'));
 		}
+	}
+
+
+	public function beforeCompile(): void
+	{
+		if (!$this->debugMode) {
+			return;
+		}
+
+		$builder = $this->getContainerBuilder();
+		$useDebugger = $this->config->debugger || ($this->config->redirect && $this->config->debugger !== false);
+
+		if (!$useDebugger || !$builder->getByType(Tracy\Bar::class)) {
+			return;
+		}
+
+		$panel = $builder->addDefinition($this->prefix('panel'))
+			->setFactory(Nette\Bridges\MailTracy\MailPanel::class)
+			->addSetup('@' . Tracy\Bar::class . '::addPanel', ['@self']);
+
+		$mailer = $builder->getDefinition($this->prefix('mailer'));
+		\assert($mailer instanceof Nette\DI\Definitions\ServiceDefinition);
+		$mailer->addSetup('$onSent[]', [[$panel, 'recordSent']]);
 	}
 }

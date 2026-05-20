@@ -1291,16 +1291,16 @@
         },
         {
             "name": "nette/mail",
-            "version": "v4.1.1",
+            "version": "v4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/mail.git",
-                "reference": "e4b4c6eee1feabfe4a8f5a9239b06c700cb2d7b5"
+                "reference": "c4ffac25187b1212fb9014341ecf96ed2fd8c4fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/mail/zipball/e4b4c6eee1feabfe4a8f5a9239b06c700cb2d7b5",
-                "reference": "e4b4c6eee1feabfe4a8f5a9239b06c700cb2d7b5",
+                "url": "https://api.github.com/repos/nette/mail/zipball/c4ffac25187b1212fb9014341ecf96ed2fd8c4fc",
+                "reference": "c4ffac25187b1212fb9014341ecf96ed2fd8c4fc",
                 "shasum": ""
             },
             "require": {
@@ -1362,9 +1362,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/mail/issues",
-                "source": "https://github.com/nette/mail/tree/v4.1.1"
+                "source": "https://github.com/nette/mail/tree/v4.1.2"
             },
-            "time": "2026-04-23T22:27:58+00:00"
+            "time": "2026-05-19T18:23:42+00:00"
         },
         {
             "name": "nette/neon",
@@ -3271,16 +3271,16 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v8.0.10",
+            "version": "v8.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "8ff96cde73684bfa32b702f5cff1eb83b1fac429"
+                "reference": "11dc0681506ff07ca80bfb4cbf84c601c3cf04f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/8ff96cde73684bfa32b702f5cff1eb83b1fac429",
-                "reference": "8ff96cde73684bfa32b702f5cff1eb83b1fac429",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/11dc0681506ff07ca80bfb4cbf84c601c3cf04f7",
+                "reference": "11dc0681506ff07ca80bfb4cbf84c601c3cf04f7",
                 "shasum": ""
             },
             "require": {
@@ -3346,7 +3346,7 @@
                 "psr6"
             ],
             "support": {
-                "source": "https://github.com/symfony/cache/tree/v8.0.10"
+                "source": "https://github.com/symfony/cache/tree/v8.0.12"
             },
             "funding": [
                 {
@@ -3366,7 +3366,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-05T08:24:00+00:00"
+            "time": "2026-05-20T07:22:03+00:00"
         },
         {
             "name": "symfony/cache-contracts",
@@ -5006,16 +5006,16 @@
         },
         {
             "name": "web-auth/webauthn-lib",
-            "version": "5.3.2",
+            "version": "5.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-lib.git",
-                "reference": "a272f254c056fb3d6c80a4801d3c7c5fedc6a08d"
+                "reference": "e6f656d6c6b29fa305382fe6a0a3be8177d177df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/a272f254c056fb3d6c80a4801d3c7c5fedc6a08d",
-                "reference": "a272f254c056fb3d6c80a4801d3c7c5fedc6a08d",
+                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/e6f656d6c6b29fa305382fe6a0a3be8177d177df",
+                "reference": "e6f656d6c6b29fa305382fe6a0a3be8177d177df",
                 "shasum": ""
             },
             "require": {
@@ -5076,7 +5076,7 @@
                 "webauthn"
             ],
             "support": {
-                "source": "https://github.com/web-auth/webauthn-lib/tree/5.3.2"
+                "source": "https://github.com/web-auth/webauthn-lib/tree/5.3.3"
             },
             "funding": [
                 {
@@ -5088,20 +5088,20 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-05-01T12:14:37+00:00"
+            "time": "2026-05-17T19:04:30+00:00"
         },
         {
             "name": "webmozart/assert",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "eb0d790f735ba6cff25c683a85a1da0eadeff9e4"
+                "reference": "9007ea6f45ecf352a9422b36644e4bfc039b9155"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/eb0d790f735ba6cff25c683a85a1da0eadeff9e4",
-                "reference": "eb0d790f735ba6cff25c683a85a1da0eadeff9e4",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9007ea6f45ecf352a9422b36644e4bfc039b9155",
+                "reference": "9007ea6f45ecf352a9422b36644e4bfc039b9155",
                 "shasum": ""
             },
             "require": {
@@ -5117,7 +5117,11 @@
             },
             "type": "library",
             "extra": {
+                "psalm": {
+                    "pluginClass": "Webmozart\\Assert\\PsalmPlugin"
+                },
                 "branch-alias": {
+                    "dev-master": "2.0-dev",
                     "dev-feature/2-0": "2.0-dev"
                 }
             },
@@ -5148,9 +5152,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/2.3.0"
+                "source": "https://github.com/webmozarts/assert/tree/2.4.0"
             },
-            "time": "2026-04-11T10:33:05+00:00"
+            "time": "2026-05-20T13:07:01+00:00"
         }
     ],
     "packages-dev": [],
