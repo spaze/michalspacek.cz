@@ -15,7 +15,7 @@
 {/define}
 
 {define #content}
-{_messages.cookies.theseAreUsed|formatText}
+{_messages.cookies.theseAreUsed|format}
 <h3>{_messages.cookies.public}</h3>
 <ol>
 	<li n:foreach="$publicCookies as $cookie">{include #cookies $cookie}</li>

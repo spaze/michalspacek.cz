@@ -168,7 +168,7 @@ final readonly class BlogPostFormFactory
 			} catch (UniqueConstraintViolationException) {
 				$slug = $form->getComponent('slug');
 				assert($slug instanceof TextInput);
-				$slug->addError($this->texyFormatter->translateText('messages.blog.admin.duplicateslug'));
+				$slug->addError($this->texyFormatter->translate('messages.blog.admin.duplicateslug'));
 			}
 		};
 		if ($post !== null) {

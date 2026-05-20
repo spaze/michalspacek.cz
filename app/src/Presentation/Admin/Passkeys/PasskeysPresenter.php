@@ -39,7 +39,7 @@ final class PasskeysPresenter extends BasePresenter
 		private readonly WebAuthnAuthenticator $passkeyAuthenticator,
 		private readonly UserPasskeys $userPasskeys,
 		private readonly Translator $translator,
-		private readonly TexyFormatter $textFormatter,
+		private readonly TexyFormatter $texyFormatter,
 	) {
 		parent::__construct();
 	}
@@ -164,7 +164,7 @@ final class PasskeysPresenter extends BasePresenter
 		}
 		return $this->passkeyDeleteFormFactory->create(
 			function () use ($passkeyCurrentName): void {
-				$this->flashMessage($this->textFormatter->translateText('messages.passkeys.delete.deleted', [$passkeyCurrentName]));
+				$this->flashMessage($this->texyFormatter->translate('messages.passkeys.delete.deleted', [$passkeyCurrentName]));
 				$this->redirect('Passkeys:');
 			},
 			function (): void {

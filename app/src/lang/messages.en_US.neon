@@ -180,7 +180,7 @@ who:
 		5: "My mission is to do it like I've always done, be transparent and don't require passwords to be changed every 91.5 days."
 		6: "Yes, we've already rolled out \"1Password\":[%s] company-wide, why are you asking?"
 	speaker:
-		1: "I've been speaking at more than %d conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
+		1: "I've been speaking at more than %s conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."
 	webtop100juror:
 		1: "I was a juror (2011-2018) and later also a guarantor (2014-2018) for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
@@ -251,7 +251,7 @@ talks:
 	admin:
 		slideadded: "Slide added"
 		duplicatealias: "Alias for slide %s already exists"
-		maxslideuploadsexceeded: "Maximum number of simultaneously uploaded slide images (%d) exceeded"
+		maxslideuploadsexceeded: "Maximum number of simultaneously uploaded slide images (%s) exceeded"
 		slideNumber1Missing: "Slide number 1 is missing"
 trainings:
 	spammyapplication: "The application looks like spam and wasn't stored."
@@ -311,7 +311,7 @@ trainings:
 	studentdiscount: "%s%% discount for students"
 	allreviews: "All reviews"
 	datausage: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
-	dataretention: "Uložené údaje budou smazány %d dní po skončení školení. Pokud napíšete hodnocení, vaše jméno a příp. název firmy smazány nebudou. Fakturační údaje budou i nadále vedeny v účetním systému."
+	dataretention: "Uložené údaje budou smazány %s dní po skončení školení. Pokud napíšete hodnocení, vaše jméno a příp. název firmy smazány nebudou. Fakturační údaje budou i nadále vedeny v účetním systému."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
 	sendinginvite: "Na zadanou e-mailovou adresu zašlu pozvánku, jakmile termín tohoto školení vypíšu. Na nic jiného nebude použita."
 	companythistraining: "This training can also be organized \"in-house\":[%s]."
@@ -401,6 +401,7 @@ cookies:
 		netteSameSiteCheck: "Used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
 httpHeaders:
 	headerNotSent: "header not sent"
+# Reserved for Nette form validation; %label, %d, %value are Nette's, not vsprintf
 forms:
 	validateSlugParamsError: "%label must match %d"
 	validateSlugParamsEasterEgg: "%label can't be '%value', because that's used by an Easter egg"

@@ -101,7 +101,7 @@ final readonly class CompanyTrainings
 			assert(is_string($training->name));
 
 			if (!isset($public[$training->action])) {
-				$trainings[$training->action] = $this->texyFormatter->translate($training->name);
+				$trainings[$training->action] = $this->texyFormatter->translatePossiblyUnsafeHtml($training->name);
 			}
 		}
 
@@ -132,27 +132,27 @@ final readonly class CompanyTrainings
 		assert($row->discontinuedId === null || is_int($row->discontinuedId));
 
 		$price = $this->prices->resolvePriceVat($row->alternativeDurationPrice);
-		$alternativeDurationPriceText = $this->texyFormatter->translate($row->alternativeDurationPriceText, [
+		$alternativeDurationPriceText = $this->texyFormatter->translatePossiblyUnsafeHtml($row->alternativeDurationPriceText, [
 			$price->getPriceWithCurrency(),
 			$price->getPriceVatWithCurrency(),
 		]);
 		return new CompanyTraining(
 			$row->id,
 			$row->action,
-			$this->texyFormatter->translate($row->name),
-			$this->texyFormatter->translate($row->description),
-			$this->texyFormatter->translate($row->content),
-			$this->texyFormatter->translate($row->upsell),
-			$row->prerequisites !== null ? $this->texyFormatter->translate($row->prerequisites) : null,
-			$row->audience !== null ? $this->texyFormatter->translate($row->audience) : null,
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->name),
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->description),
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->content),
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->upsell),
+			$row->prerequisites !== null ? $this->texyFormatter->translatePossiblyUnsafeHtml($row->prerequisites) : null,
+			$row->audience !== null ? $this->texyFormatter->translatePossiblyUnsafeHtml($row->audience) : null,
 			$row->capacity,
 			$row->price,
 			$row->alternativeDurationPrice,
 			$row->studentDiscount,
-			$row->materials !== null ? $this->texyFormatter->translate($row->materials) : null,
+			$row->materials !== null ? $this->texyFormatter->translatePossiblyUnsafeHtml($row->materials) : null,
 			(bool)$row->custom,
-			$this->texyFormatter->translate($row->duration),
-			$this->texyFormatter->translate($row->alternativeDuration),
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->duration),
+			$this->texyFormatter->translatePossiblyUnsafeHtml($row->alternativeDuration),
 			$alternativeDurationPriceText,
 			$row->successorId,
 			$row->discontinuedId,

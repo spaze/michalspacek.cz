@@ -7,10 +7,10 @@
 <ol>
 	<li>{_messages.certificates.admin.certbotHook|formatPossiblyUnsafeHtml:'https://github.com/spaze/certmonitor-certbot-deploy-hook'}</li>
 	<li>
-		{_messages.certificates.admin.certbotHookNewCert|formatText}
+		{_messages.certificates.admin.certbotHookNewCert|format}
 		<pre>RENEWED_LINEAGE=/etc/letsencrypt/live/example.com ~/.local/share/certmonitor-certbot-deploy-hook/certbot_deploy_hook</pre>
 	</li>
-	<li>{_messages.certificates.admin.certmonitor|formatText}</li>
+	<li>{_messages.certificates.admin.certmonitor|format}</li>
 	<li>{_messages.certificates.admin.certmonitorPeriodic|formatPossiblyUnsafeHtml:'https://github.com/spaze/michalspacek.cz/actions/workflows/certmonitor.yml'}</li>
 </ol>
 {/define}

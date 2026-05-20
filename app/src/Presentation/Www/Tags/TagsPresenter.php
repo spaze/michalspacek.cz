@@ -54,7 +54,7 @@ final class TagsPresenter extends BasePresenter
 		$articles = $this->articles->getAllByTags([$tag]);
 		$this->localeLinkParams = $this->tags->findLocaleLinkParams($articles, $tag);
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.label.articlesbytag', [$label]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.label.articlesbytag', [$label]);
 		$this->template->articles = $articles;
 	}
 

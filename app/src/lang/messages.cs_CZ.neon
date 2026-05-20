@@ -180,7 +180,7 @@ who:
 		5: "Mým cílem je to dělat podobně jako dříve, transparentně a bez nucené změny hesel každých 91,5 dní."
 		6: "Ano, \"1Password\":[%s] v celé firmě jsme už zavedli, proč se ptáte?"
 	speaker:
-		1: "Přednášel jsem na více než %d konferencích a akcích, včetně konference \"WebExpo\":[%s] v Praze a konference \"Passwords\":[%s] v Las Vegas, USA, na obou opakovaně."
+		1: "Přednášel jsem na více než %s konferencích a akcích, včetně konference \"WebExpo\":[%s] v Praze a konference \"Passwords\":[%s] v Las Vegas, USA, na obou opakovaně."
 		2: "Podívejte se na seznam všech mých \"přednášek\":[%s]."
 	webtop100juror:
 		1: "Osm let počínaje rokem 2011 jsem byl porotcem a od roku 2014 i odborným garantem pro oblast technické řešení a bezpečnost ve \"WebTop100\":[%s], největší soutěži firemních webů a digitálních řešení v ČR."
@@ -251,7 +251,7 @@ talks:
 	admin:
 		slideadded: "Slajd přidán"
 		duplicatealias: "Pro slajd %s již existuje alias"
-		maxslideuploadsexceeded: "Překročen maximální počet současně nahraných obrázků slajdů (%d)"
+		maxslideuploadsexceeded: "Překročen maximální počet současně nahraných obrázků slajdů (%s)"
 		slideNumber1Missing: "Chybí slajd s číslem 1"
 trainings:
 	spammyapplication: "Přihláška vypadá jako spam a nebyla uložena."
@@ -311,7 +311,7 @@ trainings:
 	studentdiscount: "%s%% sleva pro studenty"
 	allreviews: "Všechny ohlasy"
 	datausage: "Zadané údaje budou použity pro zaslání potvrzení, vystavení a zaslání faktury, připomínky termínu a materiálů po školení, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
-	dataretention: "Uložené údaje budou smazány %d dní po skončení školení. Pokud napíšete hodnocení, vaše jméno a příp. název firmy smazány nebudou. Fakturační údaje budou i nadále vedeny v účetním systému."
+	dataretention: "Uložené údaje budou smazány %s dní po skončení školení. Pokud napíšete hodnocení, vaše jméno a příp. název firmy smazány nebudou. Fakturační údaje budou i nadále vedeny v účetním systému."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
 	sendinginvite: "Na zadanou e-mailovou adresu zašlu pozvánku, jakmile termín tohoto školení vypíšu. Na nic jiného nebude použita."
 	companythistraining: "Školení v tomto rozsahu je možné \"uspořádat i ve vaší firmě\":[%s]."
@@ -401,6 +401,7 @@ cookies:
 		netteSameSiteCheck: "Používá se pro detekci \"//same-site//\":[blog:co-znamena-origin-site-etld-etld-plus-1-public-suffix-a-psl#same-site] požadavků."
 httpHeaders:
 	headerNotSent: "hlavička neposlána"
+# Reserved for Nette form validation; %label, %d, %value are Nette's, not vsprintf
 forms:
 	validateSlugParamsError: "%label musí odpovídat formátu %d"
 	validateSlugParamsEasterEgg: "%label nemůže být '%value', protože to spustí Easter egg"

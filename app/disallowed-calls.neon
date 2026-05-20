@@ -86,15 +86,15 @@ parameters:
 				- 'MichalSpacekCz\User\WebAuthn\PasskeyResetTokens::*'
 		-
 			method:
-				- 'MichalSpacekCz\Formatter\TexyFormatter::substitute()'
-				- 'MichalSpacekCz\Formatter\TexyFormatter::translate()'
-			message: 'use substituteText()/translateText() unless args are admin-controlled Texy markup'
+				- 'MichalSpacekCz\Formatter\TexyFormatter::substitutePossiblyUnsafeHtml()'
+				- 'MichalSpacekCz\Formatter\TexyFormatter::translatePossiblyUnsafeHtml()'
+			message: 'use substitute()/translate() unless args are admin-controlled Texy markup'
 			errorTip: 'The template-side equivalent (|formatPossiblyUnsafeHtml with $variable args) is checked by FiltersFormatPossiblyUnsafeHtmlAllowListTest'
 			allowIn:
 				- tests/*.phpt
 			allowInMethods:
 				- 'MichalSpacekCz\Templating\Filters::formatPossiblyUnsafeHtml'
-				- 'MichalSpacekCz\Formatter\TexyFormatter::translate' # internal: translate() delegates to substitute()
+				- 'MichalSpacekCz\Formatter\TexyFormatter::translatePossiblyUnsafeHtml' # internal: translatePossiblyUnsafeHtml() delegates to substitutePossiblyUnsafeHtml()
 				- 'MichalSpacekCz\Talks\Talks::*' # admin DB content
 				- 'MichalSpacekCz\Training\Company\CompanyTrainings::*' # admin-edited training catalog
 				- 'MichalSpacekCz\Training\Trainings\TrainingFactory::*' # admin-edited training fields

@@ -23,11 +23,11 @@ final class FiltersTest extends TestCase
 	}
 
 
-	public function testFormatText(): void
+	public function testFormat(): void
 	{
-		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->filters->formatText('%s', '<b>bold</b>')->render());
-		Assert::same('**bold**', $this->filters->formatText('%s', '**bold**')->render());
-		Assert::same('<em>foo</em>', $this->filters->formatText('//%s//', 'foo')->render());
+		Assert::same('&lt;b&gt;bold&lt;/b&gt;', $this->filters->format('%s', '<b>bold</b>')->render());
+		Assert::same('**bold**', $this->filters->format('%s', '**bold**')->render());
+		Assert::same('<em>foo</em>', $this->filters->format('//%s//', 'foo')->render());
 	}
 
 

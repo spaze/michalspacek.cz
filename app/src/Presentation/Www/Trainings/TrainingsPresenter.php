@@ -103,7 +103,7 @@ final class TrainingsPresenter extends BasePresenter
 
 		$this->sessionHandler->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$training->getName()->render()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.title.training', [$training->getName()->render()]);
 		$this->template->training = $training;
 		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates = $this->dates;
@@ -197,7 +197,7 @@ final class TrainingsPresenter extends BasePresenter
 		$this->redirectToSuccessor($training->getSuccessorId());
 
 		$this->template->name = $training->getAction();
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->getName()->render()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.title.trainingreviews', [$training->getName()->render()]);
 		$this->template->title = $training->getName();
 		$this->template->description = $training->getDescription();
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId());
@@ -242,7 +242,7 @@ final class TrainingsPresenter extends BasePresenter
 		$remote = $application->isRemote() && !$application->isAttended();
 		$this->template->remote = $remote;
 
-		$this->template->pageTitle = $this->texyFormatter->translate(($remote ? 'messages.title.trainingmaterials.remote' : 'messages.title.trainingmaterials.regular'), [$training->getName()->render()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml(($remote ? 'messages.title.trainingmaterials.remote' : 'messages.title.trainingmaterials.regular'), [$training->getName()->render()]);
 		$this->template->files = $application->getFiles();
 	}
 
@@ -284,7 +284,7 @@ final class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->template->name = $this->training->getAction();
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->getName()->render()]);
+		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.title.trainingapplication', [$this->training->getName()->render()]);
 		$this->template->title = $this->training->getName();
 		$this->template->description = $this->training->getDescription();
 		$this->template->start = $date->getStart();
