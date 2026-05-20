@@ -164,6 +164,11 @@ class TexyFormatter
 	 * Treats each arg as literal text - args are HTML-escaped and never interpreted as Texy markup.
 	 * Safe for user-controlled args. For developer/admin-controlled Texy markup use substitutePossiblyUnsafeHtml().
 	 *
+	 * Format string must use %s placeholders only. The marker scheme replaces %s slots with opaque
+	 * marker strings before vsprintf runs; type-specific specifiers (%d, %f, etc.) would coerce
+	 * the marker (yielding 0 / 0.0) and strtr would no longer find the marker to restore the real
+	 * value, silently dropping the arg. Use (string)$arg at the call site and %s in the translation.
+	 *
 	 * @param list<string|Stringable|int> $args
 	 */
 	public function substitute(string|Stringable $format, array $args): Html
