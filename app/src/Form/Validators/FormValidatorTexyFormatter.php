@@ -31,14 +31,27 @@ final readonly class FormValidatorTexyFormatter
 		if (!is_string($value)) {
 			return null;
 		}
-		// Catch at input what createTexy() would silently drop at render. Boundaries match
-		// Texy URL contexts: `[URL]`, `"label":URL`, `[ref]: URL` ref-defs at line start,
-		// `[* URL *]` image source, `[* image *]:URL` image anchor (Texy allows `*`, `>`, `<`
-		// as image-close modifier), and bare ftp://x text (the only auto-detected non-http(s)
-		// scheme).
+		// Catch at input what createTexy() would silently drop at render
 		$allowedSchemes = [...TexyFormatter::ALLOWED_URL_SCHEMES, ...self::CUSTOM_URL_SCHEMES];
 		$quoted = array_map(static fn (string $s): string => preg_quote($s, '~'), $allowedSchemes);
-		$pattern = '~(?:\[\*\s*|\[|":|^\[[^\]\n]{1,100}\]:\ +|\b(?=ftp://)|[*<>]\]:)\s*(?!(?:' . implode('|', $quoted) . '):)([a-z][a-z0-9+.-]*):~im';
+		$pattern = '~
+			(?:
+				\[ \* \s*                          # [* URL ...   (inline image source)
+				|
+				\[                                 # [URL] / [ref]   (link URL slot or reference use)
+				|
+				":                                 # "label":URL   (labeled link)
+				|
+				^ \[ [^\]\n]{1,100} \]: \ +        # [ref]: URL   (link or image ref-def at line start)
+				|
+				\b (?= ftp:// )                    # bare ftp://x text   (only auto-detected non-http(s) scheme)
+				|
+				[*<>] \]:                          # *]:URL, >]:URL, <]:URL   (inline image anchor; Texy allows *, >, < close modifiers)
+			)
+			\s*
+			(?! (?: ' . implode('|', $quoted) . ' ): )
+			( [a-z] [a-z0-9+.-]* ) :
+		~imx';
 		$schemeMatch = Regex::match($pattern, $value);
 		if ($schemeMatch->matched && isset($schemeMatch->matches[1])) {
 			throw new FormValidatorTexyFormatterErrorException(
