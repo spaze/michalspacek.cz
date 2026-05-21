@@ -76,7 +76,7 @@ services:
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Form\Validators\FormValidators
-	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexyFactory
+	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexy
 	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexyTalkSlidesFactory
 	- MichalSpacekCz\Form\Validators\FormValidatorTexyFormatter(shortcuts: typed(MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut))
 	- MichalSpacekCz\Formatter\Placeholders\TrainingDateTexyFormatterPlaceholder

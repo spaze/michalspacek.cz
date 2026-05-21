@@ -14,7 +14,7 @@ use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Articles\Blog\BlogPostTranslation;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\Validators\FormValidatorRuleTexyFactory;
+use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
@@ -40,7 +40,7 @@ final readonly class BlogPostFormFactory
 	public function __construct(
 		private FormFactory $factory,
 		private FormValidators $validators,
-		private FormValidatorRuleTexyFactory $texyRuleFactory,
+		private FormValidatorRuleTexy $ruleTexy,
 		private Translator $translator,
 		private BlogPosts $blogPosts,
 		private BlogPostFactory $blogPostFactory,
@@ -66,10 +66,10 @@ final readonly class BlogPostFormFactory
 		$form->addSelect('locale', 'Jazyk:', $this->locales->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
-		$ruleTexy = $this->texyRuleFactory->create();
+		$ruleTexy = $this->ruleTexy->getRule();
 		$form->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
-			->addRule($ruleTexy->getRule())
+			->addRule($ruleTexy)
 			->addRule(Form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
 		$slugInput = $form->addText('slug', 'Slug:')
 			->addRule(Form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
@@ -80,19 +80,16 @@ final readonly class BlogPostFormFactory
 			->setRequired(false)
 			->setDefaultValue(Random::generate(9, '0-9a-zA-Z'))
 			->addRule(Form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('lead', 'Perex:')
-			->addRule($ruleTexy->getRule())
+			->addRule($ruleTexy)
 			->addCondition(Form::Filled)
 			->addRule(Form::MinLength, 'Perex musí mít alespoň %d znaky', 3);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('text', 'Text:')
 			->setRequired('Zadejte prosím text')
-			->addRule($ruleTexy->getRule())
+			->addRule($ruleTexy)
 			->addRule(Form::MinLength, 'Text musí mít alespoň %d znaky', 3);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('originally', 'Původně vydáno:')
-			->addRule($ruleTexy->getRule())
+			->addRule($ruleTexy)
 			->addCondition(Form::Filled)
 			->addRule(Form::MinLength, 'Původně vydáno musí mít alespoň %d znaky', 3);
 		$form->addText('ogImage', 'Odkaz na obrázek:')
