@@ -15,7 +15,7 @@ use Texy\Modifier;
 final readonly class TexyShortcutLink implements TexyShortcut
 {
 
-	public const string SCHEME = 'link';
+	private const string PREFIX = 'link:';
 
 
 	public function __construct(
@@ -28,7 +28,7 @@ final readonly class TexyShortcutLink implements TexyShortcut
 	#[Override]
 	public function canResolve(string $url): bool
 	{
-		return str_starts_with($url, self::SCHEME . ':');
+		return str_starts_with($url, self::PREFIX);
 	}
 
 
@@ -40,8 +40,7 @@ final readonly class TexyShortcutLink implements TexyShortcut
 	public function resolve(string $url, HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, Link $link): null
 	{
 		// "title":[link:Module:Presenter:action params]
-		$prefix = self::SCHEME . ':';
-		$link->URL = $this->handlerLinks->getLink($prefix, substr($url, strlen($prefix)), $this->translator->getDefaultLocale());
+		$link->URL = $this->handlerLinks->getLink(self::PREFIX, substr($url, strlen(self::PREFIX)), $this->translator->getDefaultLocale());
 		return null;
 	}
 

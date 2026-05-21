@@ -21,18 +21,21 @@ require __DIR__ . '/../../bootstrap.php';
 final class FormValidatorRuleTexyTest extends TestCase
 {
 
-	private FormValidatorRuleTexy $rule;
-
-
 	public function __construct(
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
-		FormValidatorRuleTexyFactory $texyRuleFactory,
+		private readonly FormValidatorTexyFormatter $validator,
+		private readonly FormValidatorRuleTexy $ruleTexy,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
 	) {
 		$applicationPresenter->setLinkCallback($application, null);
-		$this->localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://com.example/']);
-		$this->rule = $texyRuleFactory->create();
+	}
+
+
+	#[Override]
+	protected function setUp(): void
+	{
+		$this->localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://com.example/', 'en_US' => 'https://com.example/en/']);
 	}
 
 
@@ -47,13 +50,13 @@ final class FormValidatorRuleTexyTest extends TestCase
 	{
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo-bar]';
-		$rule = $this->rule;
-		Assert::true($rule->getRule()($textArea));
+		$ruleTexy = $this->ruleTexy->getRule();
+		Assert::true($ruleTexy($textArea));
 		Assert::same([], $textArea->getErrors());
 
 		$textArea = new TextArea();
 		$textArea->value = 808;
-		Assert::true($rule->getRule()($textArea));
+		Assert::true($ruleTexy($textArea));
 		Assert::same([], $textArea->getErrors());
 	}
 
@@ -63,8 +66,7 @@ final class FormValidatorRuleTexyTest extends TestCase
 		$this->localeLinkGenerator->willThrow(new ShouldNotHappenException('wuh'));
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
-		$rule = $this->rule;
-		Assert::true($rule->getRule()($textArea));
+		Assert::true($this->ruleTexy->getRule()($textArea));
 		Assert::same([ShouldNotHappenException::class . ': wuh'], $textArea->getErrors());
 	}
 
@@ -74,8 +76,7 @@ final class FormValidatorRuleTexyTest extends TestCase
 		$this->localeLinkGenerator->willThrow(new InvalidLinkException('oops/bar'));
 		$textArea = new TextArea();
 		$textArea->value = 'Le Bar "foo":[link:Www:Talks:talk foo/bar]';
-		$rule = $this->rule;
-		Assert::true($rule->getRule()($textArea));
+		Assert::true($this->ruleTexy->getRule()($textArea));
 		Assert::same(['Invalid link: oops/bar'], $textArea->getErrors());
 	}
 
@@ -112,9 +113,9 @@ final class FormValidatorRuleTexyTest extends TestCase
 	{
 		$textArea = new TextArea();
 		$textArea->value = $value;
-		Assert::true(($this->rule->getRule())($textArea));
+		Assert::true(($this->ruleTexy->getRule())($textArea));
 		Assert::same(
-			["URL scheme '{$scheme}' is not allowed in Texy links; allowed: http, https, link"],
+			["URL scheme '{$scheme}' is not allowed in Texy URLs, links, or images"],
 			$textArea->getErrors(),
 		);
 	}
@@ -140,6 +141,8 @@ final class FormValidatorRuleTexyTest extends TestCase
 			'image source, https' => ['[* https://example.com/foo.jpg *]'],
 			'image anchor, https (*] close)' => ['[* image.jpg *]:https://example.com'],
 			'image anchor, https (>] close)' => ['[* image.jpg >]:https://example.com'],
+			'link: shortcut' => ['"talk":[link:Www:Talks:talk foo-bar]'],
+			'link-en_US: locale shortcut' => ['"talk":[link-en_US:Www:Talks:talk foo-bar]'],
 		];
 	}
 
@@ -149,8 +152,43 @@ final class FormValidatorRuleTexyTest extends TestCase
 	{
 		$textArea = new TextArea();
 		$textArea->value = $value;
-		Assert::true(($this->rule->getRule())($textArea));
+		Assert::true(($this->ruleTexy->getRule())($textArea));
 		Assert::same([], $textArea->getErrors());
+	}
+
+
+	/**
+	 * @return array<string, array{string, bool}>
+	 */
+	public function getSchemes(): array
+	{
+		return [
+			'http (static allowlist)' => ['http', true],
+			'https (static allowlist)' => ['https', true],
+			'link (TexyShortcutLink)' => ['link', true],
+			'link-en_US (TexyShortcutLinkWithLocale, real locale)' => ['link-en_US', true],
+			'link-xx_YY (TexyShortcutLinkWithLocale, fake locale - prefix-only match)' => ['link-xx_YY', true],
+			'blog (TexyShortcutBlog)' => ['blog', true],
+			'blog-cs_CZ (TexyShortcutBlogWithLocale, real locale)' => ['blog-cs_CZ', true],
+			'blog-xx_YY (TexyShortcutBlogWithLocale, fake locale - prefix-only match)' => ['blog-xx_YY', true],
+			'talk (TexyShortcutTalk)' => ['talk', true],
+			'training (TexyShortcutTraining)' => ['training', true],
+			'inhouse-training (TexyShortcutInhouseTraining)' => ['inhouse-training', true],
+			'mailto (disallowed)' => ['mailto', false],
+			'tel (disallowed)' => ['tel', false],
+			'javascript (disallowed)' => ['javascript', false],
+			'chrome (disallowed)' => ['chrome', false],
+			'about (disallowed)' => ['about', false],
+			'ftp (disallowed)' => ['ftp', false],
+			'data (disallowed)' => ['data', false],
+		];
+	}
+
+
+	/** @dataProvider getSchemes */
+	public function testIsAllowedScheme(string $scheme, bool $expected): void
+	{
+		Assert::same($expected, $this->validator->isAllowedScheme($scheme));
 	}
 
 }
