@@ -97,6 +97,10 @@ final class FormValidatorRuleTexyTest extends TestCase
 			'ref-def after newline' => ["Some intro.\n[ref]: javascript:alert(1)", 'javascript'],
 			'bare ftp:// after space' => ['Get the file from ftp://example.com today', 'ftp'],
 			'bare ftp:// at start' => ['ftp://example.com is the canonical URL', 'ftp'],
+			'image source with mailto:' => ['[* mailto:foo *]', 'mailto'],
+			'image source with javascript:' => ['[* javascript:alert(1) *]', 'javascript'],
+			'image anchor with mailto: (*] close)' => ['[* image.jpg *]:mailto:foo@example.com', 'mailto'],
+			'image anchor with tel: (>] close)' => ['[* image.jpg >]:tel:+1234567890', 'tel'],
 		];
 	}
 
@@ -130,6 +134,10 @@ final class FormValidatorRuleTexyTest extends TestCase
 			'numeric time' => ['Starts at 14:30, ends at 15:00'],
 			'ref-def with http' => ["[ref]: http://example.com"],
 			'[ref]: not at line start' => ['Inline [ref]: mailto:foo, mid-prose, not a ref-def'],
+			'image source, no scheme' => ['[* /i/foo.jpg *]'],
+			'image source, https' => ['[* https://example.com/foo.jpg *]'],
+			'image anchor, https (*] close)' => ['[* image.jpg *]:https://example.com'],
+			'image anchor, https (>] close)' => ['[* image.jpg >]:https://example.com'],
 		];
 	}
 
