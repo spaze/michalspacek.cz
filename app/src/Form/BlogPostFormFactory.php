@@ -157,7 +157,7 @@ final readonly class BlogPostFormFactory
 
 		$form->onValidate[] = function (UiForm $form) use ($previewButton, $post, $previewKeyInput): void {
 			if ($form->isSubmitted() !== $previewButton) {
-				$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
+				$newPost = $this->buildPost($form->getUntrustedFormValues(), $post?->getId());
 				if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
 					$previewKeyInput->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
 				}
