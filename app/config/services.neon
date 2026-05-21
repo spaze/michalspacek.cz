@@ -76,9 +76,9 @@ services:
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Form\Validators\FormValidators
-	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexyFactory
+	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexy
 	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexyTalkSlidesFactory
-	- MichalSpacekCz\Form\Validators\FormValidatorTexyFormatter
+	- MichalSpacekCz\Form\Validators\FormValidatorTexyFormatter(shortcuts: typed(MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut))
 	- MichalSpacekCz\Formatter\Placeholders\TrainingDateTexyFormatterPlaceholder
 	- MichalSpacekCz\Formatter\Placeholders\FetchMetadataTexyFormatterPlaceholder
 	texyFormatter: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)

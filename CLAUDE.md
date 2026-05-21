@@ -132,15 +132,15 @@ The exception is Nette's auto-implemented DI factory interfaces, which follow th
 Nette auto-implements factory interfaces. Any interface named `*Factory` with a single `create()` method, when registered in `app/config/services.neon`, gets a generated implementation — inject via constructor, no manual `new`:
 
 ```php
-interface FormValidatorRuleTexyFactory
+interface ArticleHeaderIconsFactory
 {
-    public function create(): FormValidatorRuleTexy;
+    public function create(): ArticleHeaderIcons;
 }
 ```
 
 ```neon
 # app/config/services.neon
-- MichalSpacekCz\Form\Validators\FormValidatorRuleTexyFactory
+- MichalSpacekCz\Articles\ArticleHeaderIconsFactory
 ```
 
 ### Forms

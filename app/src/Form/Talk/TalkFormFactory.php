@@ -8,7 +8,7 @@ use MichalSpacekCz\Application\Locale\Locales;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
-use MichalSpacekCz\Form\Validators\FormValidatorRuleTexyFactory;
+use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
@@ -25,7 +25,7 @@ final readonly class TalkFormFactory
 	public function __construct(
 		private FormFactory $factory,
 		private FormValidators $validators,
-		private FormValidatorRuleTexyFactory $texyRuleFactory,
+		private FormValidatorRuleTexy $ruleTexy,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Talks $talks,
 		private LinkGenerator $linkGenerator,
@@ -52,15 +52,14 @@ final readonly class TalkFormFactory
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka akce je %d znaků', 200);
 		$this->validators->addValidateSlugRules($actionInput);
-		$ruleTexy = $this->texyRuleFactory->create();
+		$texyRule = $this->ruleTexy->getRule();
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
-			->addRule($ruleTexy->getRule())
+			->addRule($texyRule)
 			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false)
-			->addRule($ruleTexy->getRule())
+			->addRule($texyRule)
 			->addRule(Form::MaxLength, 'Maximální délka popisu je %d znaků', 65535);
 		$this->trainingControlsFactory->addDate(
 			$form->addText('date', 'Datum:'),
@@ -83,10 +82,9 @@ final readonly class TalkFormFactory
 		$form->addText('slidesEmbed', 'Embed odkaz na slajdy:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('slidesNote', 'Poznámka ke slajdům:')
 			->setRequired(false)
-			->addRule($ruleTexy->getRule())
+			->addRule($texyRule)
 			->addRule(Form::MaxLength, 'Maximální délka poznámek je %d znaků', 65535);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
@@ -95,10 +93,9 @@ final readonly class TalkFormFactory
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addText('event', 'Událost:')
 			->setRequired('Zadejte prosím událost')
-			->addRule($ruleTexy->getRule())
+			->addRule($texyRule)
 			->addRule(Form::MaxLength, 'Maximální délka události je %d znaků', 200);
 		$form->addText('eventHref', 'Odkaz na událost:')
 			->setRequired(false)
@@ -106,10 +103,9 @@ final readonly class TalkFormFactory
 		$form->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
-		$ruleTexy = $this->texyRuleFactory->create();
 		$form->addTextArea('transcript', 'Přepis:')
 			->setRequired(false)
-			->addRule($ruleTexy->getRule())
+			->addRule($texyRule)
 			->addRule(Form::MaxLength, 'Maximální délka přepisu je %d znaků', 65535);
 		$form->addTextArea('favorite', 'Popis pro oblíbené:')
 			->setRequired(false)
