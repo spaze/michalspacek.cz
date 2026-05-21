@@ -101,6 +101,8 @@ final class FormValidatorRuleTexyTest extends TestCase
 			'image source with javascript:' => ['[* javascript:alert(1) *]', 'javascript'],
 			'image anchor with mailto: (*] close)' => ['[* image.jpg *]:mailto:foo@example.com', 'mailto'],
 			'image anchor with tel: (>] close)' => ['[* image.jpg >]:tel:+1234567890', 'tel'],
+			'chrome:// labelled link' => ['Try "`chrome://flags`":chrome://flags for experimental settings', 'chrome'],
+			'about: labelled link' => ['Open "`about:config`":about:config to tweak preferences', 'about'],
 		];
 	}
 
