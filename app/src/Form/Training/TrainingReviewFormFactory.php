@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form\Training;
 
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
@@ -17,6 +18,7 @@ final readonly class TrainingReviewFormFactory
 
 	public function __construct(
 		private FormFactory $factory,
+		private FormValidatorRuleTexy $ruleTexy,
 		private TrainingApplications $trainingApplications,
 		private TrainingReviews $trainingReviews,
 	) {
@@ -47,6 +49,7 @@ final readonly class TrainingReviewFormFactory
 			->addRule(Form::MaxLength, 'Maximální délka pozice je %d znaků', 200);
 		$form->addTextArea('review', 'Ohlas:')
 			->setRequired('Zadejte prosím ohlas')
+			->addRule($this->ruleTexy->getRule())
 			->addRule(Form::MinLength, 'Minimální délka ohlasu je %d znaky', 3)
 			->addRule(Form::MaxLength, 'Maximální délka ohlasu je %d znaků', 2000);
 		$form->addText('href', 'Odkaz:')

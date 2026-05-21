@@ -10,6 +10,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
+use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Override;
@@ -112,6 +113,23 @@ final class TrainingReviewFormFactoryTest extends TestCase
 				'note' => 'No tea',
 			],
 		], $this->database->getParamsArrayForQuery('UPDATE training_reviews SET ? WHERE id_review = ?'));
+	}
+
+
+	public function testCreateRejectsDisallowedTexyScheme(): void
+	{
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+			self::DATE_ID,
+			null,
+		);
+		$this->applicationPresenter->anchorForm($form);
+		$form->setDefaults(['review' => 'Mail me "here":[mailto:foo@example.com]']);
+		$review = $form->getComponent('review');
+		assert($review instanceof TextArea);
+		$review->validate();
+		Assert::same(["URL scheme 'mailto' is not allowed in Texy URLs, links, or images"], $review->getErrors());
 	}
 
 }

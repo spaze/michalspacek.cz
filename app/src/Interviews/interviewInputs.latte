@@ -1,4 +1,3 @@
-{varType string $form}
 {varType MichalSpacekCz\Interviews\Interview|null $interview}
 {varType int $videoThumbnailWidth}
 {varType int $videoThumbnailHeight}
@@ -11,7 +10,11 @@
 			<th>{label title /}</th><td>{input title}<br><small><a n:if="$interview?->getAction()" href="{plink :Www:Interviews:interview $interview->getAction()}">zobrazit rozhovor</a></small></td>
 		</tr>
 		<tr>
-			<th class="align-top">{label description /}</th><td>{input description}</td>
+			<th class="align-top">{label description /}</th>
+			<td n:class="$form['description']->hasErrors() ? inputError">
+				{input description}
+				<div class="inputErrorMessage" n:if="$form['description']->hasErrors()"><strong>{inputError description}</strong></div>
+			</td>
 		</tr>
 		<tr>
 			<th>{label date /}</th><td>{input date}</td>
