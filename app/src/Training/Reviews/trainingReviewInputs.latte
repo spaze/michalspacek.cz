@@ -13,7 +13,11 @@
 			<th>{label jobTitle /}</th><td>{input jobTitle}</td>
 		</tr>
 		<tr>
-			<th class="align-top">{label review /}</th><td>{input review, class => wide}</td>
+			<th class="align-top">{label review /}</th>
+			<td n:class="$form['review']->hasErrors() ? inputError">
+				{input review, class => wide}
+				<div class="inputErrorMessage" n:if="$form['review']->hasErrors()"><strong>{inputError review}</strong></div>
+			</td>
 		</tr>
 		<tr>
 			<th>{label href /}</th><td>{input href}</td>

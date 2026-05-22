@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
@@ -16,6 +17,7 @@ final readonly class InterviewFormFactory
 
 	public function __construct(
 		private FormFactory $factory,
+		private FormValidatorRuleTexy $ruleTexy,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Interviews $interviews,
 		private VideoThumbnails $videoThumbnails,
@@ -36,7 +38,8 @@ final readonly class InterviewFormFactory
 			->setRequired('Zadejte prosím název')
 			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
 		$form->addTextArea('description', 'Popis:')
-			->setRequired(false);
+			->setRequired(false)
+			->addRule($this->ruleTexy->getRule());
 		$this->trainingControlsFactory->addDate(
 			$form->addText('date', 'Datum:'),
 			true,

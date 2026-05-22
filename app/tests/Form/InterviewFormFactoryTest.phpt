@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Arrays;
 use Tester\Assert;
 use Tester\TestCase;
@@ -60,6 +61,22 @@ final class InterviewFormFactoryTest extends TestCase
 				'source_href' => '',
 			],
 		], $this->database->getParamsArrayForQuery('INSERT INTO interviews'));
+	}
+
+
+	public function testCreateRejectsDisallowedTexyScheme(): void
+	{
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+			null,
+		);
+		$this->applicationPresenter->anchorForm($form);
+		$form->setDefaults(['description' => 'Try "this":[javascript:alert(1)]']);
+		$description = $form->getComponent('description');
+		assert($description instanceof TextArea);
+		$description->validate();
+		Assert::same(["URL scheme 'javascript' is not allowed in Texy URLs, links, or images"], $description->getErrors());
 	}
 
 }
