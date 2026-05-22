@@ -275,9 +275,17 @@ class TexyFormatter
 
 	public function getCacheKey(string $text, Texy $texy): string
 	{
-		// urlSchemeFilters is in the key so a future withTexy() variant with a different
-		// filter set lands in its own slot rather than reading a sibling's cached output.
-		$key = "{$text}|" . serialize($texy->allowedTags) . '|' . serialize($texy->allowed) . '|' . serialize($texy->urlSchemeFilters);
+		// Anything that varies per render and influences the output goes in the key
+		$key = serialize([
+			$text,
+			$texy->allowedTags,
+			$texy->allowed,
+			$texy->urlSchemeFilters,
+			$texy->headingModule->top,
+			$texy->obfuscateEmail,
+			$texy->imageModule->root,
+			$texy->imageModule->fileRoot,
+		]);
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
 		// Don't hash the locale to make it visible inside cache files
 		return Hash::nonCryptographic($key) . '.' . $this->translator->getDefaultLocale();

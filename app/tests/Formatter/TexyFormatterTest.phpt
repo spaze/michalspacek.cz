@@ -151,6 +151,58 @@ final class TexyFormatterTest extends TestCase
 	}
 
 
+	public function testCacheKeyVariesWithTopHeading(): void
+	{
+		$texyH1 = $this->texyFormatter->createTexy();
+		$texyH1->headingModule->top = 1;
+		$texyH2 = $this->texyFormatter->createTexy();
+		$texyH2->headingModule->top = 2;
+		Assert::notSame(
+			$this->texyFormatter->getCacheKey('text', $texyH1),
+			$this->texyFormatter->getCacheKey('text', $texyH2),
+		);
+	}
+
+
+	public function testCacheKeyVariesWithObfuscateEmail(): void
+	{
+		$texyOn = $this->texyFormatter->createTexy();
+		$texyOn->obfuscateEmail = true;
+		$texyOff = $this->texyFormatter->createTexy();
+		$texyOff->obfuscateEmail = false;
+		Assert::notSame(
+			$this->texyFormatter->getCacheKey('text', $texyOn),
+			$this->texyFormatter->getCacheKey('text', $texyOff),
+		);
+	}
+
+
+	public function testCacheKeyVariesWithImageRoot(): void
+	{
+		$texyA = $this->texyFormatter->createTexy();
+		$texyA->imageModule->root = 'https://a.example/img/';
+		$texyB = $this->texyFormatter->createTexy();
+		$texyB->imageModule->root = 'https://b.example/img/';
+		Assert::notSame(
+			$this->texyFormatter->getCacheKey('text', $texyA),
+			$this->texyFormatter->getCacheKey('text', $texyB),
+		);
+	}
+
+
+	public function testCacheKeyVariesWithImageFileRoot(): void
+	{
+		$texyA = $this->texyFormatter->createTexy();
+		$texyA->imageModule->fileRoot = '/var/www/a/img';
+		$texyB = $this->texyFormatter->createTexy();
+		$texyB->imageModule->fileRoot = '/var/www/b/img';
+		Assert::notSame(
+			$this->texyFormatter->getCacheKey('text', $texyA),
+			$this->texyFormatter->getCacheKey('text', $texyB),
+		);
+	}
+
+
 	public function testSubstitutePossiblyUnsafeHtml(): void
 	{
 		Assert::same('<em>foo</em> bar 303', $this->texyFormatter->substitutePossiblyUnsafeHtml('*foo* %s %d', ['bar', 303])->render());
