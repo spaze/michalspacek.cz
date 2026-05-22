@@ -547,7 +547,7 @@ final class PasswordsTest extends TestCase
 				'url' => 'https://di.example/',
 				'archive' => 'https://ar.di.example/',
 				'note' => 'note',
-				'published' => '2020-01-01 12:34:56',
+				'published' => '2020-11-22 00:00:00',
 				'added' => '2020-01-01 12:34:56',
 			]],
 			$this->database->getParamsArrayForQuery('INSERT INTO password_disclosures'),
