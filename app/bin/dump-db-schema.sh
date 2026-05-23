@@ -115,7 +115,7 @@ for DB in "${DBS[@]}"; do
             --single-transaction \
             "$DB" "${LOOKUP_ARR[@]}" >> "$TMP"
     else
-        echo -e "\n# No data\n" >> "$TMP"
+        echo -e "\n# No data" >> "$TMP"
     fi
 
     mv "$TMP" "$OUT"
