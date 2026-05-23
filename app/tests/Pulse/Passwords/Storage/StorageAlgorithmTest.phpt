@@ -72,6 +72,20 @@ final class StorageAlgorithmTest extends TestCase
 		Assert::same($expected, $algorithm->getFullAlgo());
 	}
 
+
+	public function testGetters(): void
+	{
+		$from = new DateTime('2024-01-01');
+		$disclosure = new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', 'docs');
+		$attributes = new StorageAlgorithmAttributes(null, null, ['cost' => 12]);
+		$algorithm = new StorageAlgorithm('algo-1', new PasswordHashingAlgorithm(21, self::ALGO, self::ALGO, true, true), $from, true, $attributes, 'a note', $disclosure);
+		Assert::same($from, $algorithm->getFrom());
+		Assert::true($algorithm->isFromConfirmed());
+		Assert::same($attributes, $algorithm->getAttributes());
+		Assert::same(['cost' => 12], $algorithm->getParams());
+		Assert::same('a note', $algorithm->getNote());
+	}
+
 }
 
 TestCaseRunner::run(StorageAlgorithmTest::class);

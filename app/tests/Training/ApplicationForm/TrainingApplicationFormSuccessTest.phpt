@@ -20,6 +20,7 @@ use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\SelectBox;
+use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 use Override;
 use ReflectionClass;
@@ -87,6 +88,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 			'country' => self::COUNTRY,
 		]);
 		$this->sessionSection = $session->getSection('section', TrainingApplicationSessionSection::class);
+		/** @var ReflectionClass<SessionSection>|false $parentClass */
 		$parentClass = (new ReflectionClass($this->sessionSection))->getParentClass();
 		assert($parentClass instanceof ReflectionClass);
 		$this->sessionSectionParentGet = $parentClass->getMethod('get');

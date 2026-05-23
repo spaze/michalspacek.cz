@@ -57,7 +57,7 @@
 {foreach $data->getStorages() as $storage}
 	<div class="inner-container">
 	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="!$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span></h2>
-	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))">{$data->getCompany($storage->getCompanyId())->getTradeName()}</span> <small>(<span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span>)</small></h2>
+	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isTradeNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getTradeName()}</span> <small>(<span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span>)</small></h2>
 	{foreach $storage->getSites() as $site}
 		{var $noFollow = ($site->isSecureStorage() ? null : 'nofollow')}
 		{if $site instanceof \MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite}

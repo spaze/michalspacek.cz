@@ -85,6 +85,14 @@ final class RegisteredPasskeyTest extends TestCase
 		Assert::true($passkey->isSignedInWith());
 	}
 
+
+	public function testGetCreatedAt(): void
+	{
+		$createdAt = new DateTimeImmutable('2026-01-01 12:00:00');
+		$passkey = new RegisteredPasskey('019e08b4-8b1e-77b7-bb24-3c8e4aee3444', 'key', $createdAt, null, new DateTimeImmutable());
+		Assert::same($createdAt, $passkey->getCreatedAt());
+	}
+
 }
 
 TestCaseRunner::run(RegisteredPasskeyTest::class);

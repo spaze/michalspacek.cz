@@ -40,7 +40,7 @@ final readonly class VideoThumbnails
 	}
 
 
-	public function addFormFields(UiForm $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFileUploads
+	public function addFormFields(UiForm $form, bool $hasVideoThumbnail, bool $hasAlternativeVideoThumbnail): void
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
@@ -52,7 +52,7 @@ final readonly class VideoThumbnails
 			->addRule(Form::MimeType, "%label musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Vyberte alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
-		if ($hasMainVideoThumbnail) {
+		if ($hasVideoThumbnail) {
 			$form->addCheckbox('removeVideoThumbnail', 'Odstranit')
 				->addCondition(Form::Filled, true)
 				->toggle('#videoThumbnailFormField', false)
@@ -77,7 +77,6 @@ final readonly class VideoThumbnails
 			$this->validateUpload($values->videoThumbnail, $videoThumbnail);
 			$this->validateUpload($values->videoThumbnailAlternative, $videoThumbnailAlternative);
 		};
-		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative, $hasMainVideoThumbnail, $hasAlternativeVideoThumbnail);
 	}
 
 

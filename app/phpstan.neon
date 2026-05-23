@@ -34,3 +34,4 @@ includes:
 	- vendor-dev/vendor/phpstan/phpstan-deprecation-rules/rules.neon
 	- vendor/composer/pcre/extension.neon
 	- vendor-dev/vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor-dev/vendor/shipmonk/dead-code-detector/rules.neon

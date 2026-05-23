@@ -58,7 +58,9 @@ final readonly class InterviewFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
-		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->getVideo()->getThumbnailFilename() !== null, $interview?->getVideo()->getThumbnailAlternativeFilename() !== null);
+		$hasVideoThumbnail = $interview?->getVideo()->getThumbnailFilename() !== null;
+		$hasAlternativeVideoThumbnail = $interview?->getVideo()->getThumbnailAlternativeFilename() !== null;
+		$this->videoThumbnails->addFormFields($form, $hasVideoThumbnail, $hasAlternativeVideoThumbnail);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -73,7 +75,7 @@ final readonly class InterviewFormFactory
 			$this->setInterview($form, $interview, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess, $videoThumbnailFormFields): void {
+		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess, $hasVideoThumbnail, $hasAlternativeVideoThumbnail): void {
 			$values = $form->getFormValues();
 			assert($values->videoThumbnail instanceof FileUpload);
 			assert($values->videoThumbnailAlternative instanceof FileUpload);
@@ -91,8 +93,8 @@ final readonly class InterviewFormFactory
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
 			if ($interview !== null) {
-				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
-				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
+				$removeVideoThumbnail = $hasVideoThumbnail && $values->removeVideoThumbnail;
+				$removeVideoThumbnailAlternative = $hasAlternativeVideoThumbnail && $values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $interview->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $interview->getVideo()->getThumbnailAlternativeFilename();
 				$this->interviews->update(

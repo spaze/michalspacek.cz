@@ -89,7 +89,9 @@ final readonly class TalkFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
-		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $talk?->getVideo()->getThumbnailFilename() !== null, $talk?->getVideo()->getThumbnailAlternativeContentType() !== null);
+		$hasVideoThumbnail = $talk?->getVideo()->getThumbnailFilename() !== null;
+		$hasAlternativeVideoThumbnail = $talk?->getVideo()->getThumbnailAlternativeContentType() !== null;
+		$this->videoThumbnails->addFormFields($form, $hasVideoThumbnail, $hasAlternativeVideoThumbnail);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule(Form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -119,7 +121,7 @@ final readonly class TalkFormFactory
 			$this->setTalk($form, $talk, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess, $videoThumbnailFormFields): void {
+		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess, $hasVideoThumbnail, $hasAlternativeVideoThumbnail): void {
 			$values = $form->getFormValues();
 			assert($values->videoThumbnail instanceof FileUpload);
 			assert($values->videoThumbnailAlternative instanceof FileUpload);
@@ -148,8 +150,8 @@ final readonly class TalkFormFactory
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
 			if ($talk !== null) {
-				$removeVideoThumbnail = $videoThumbnailFormFields->hasVideoThumbnail() && $values->removeVideoThumbnail;
-				$removeVideoThumbnailAlternative = $videoThumbnailFormFields->hasAlternativeVideoThumbnail() && $values->removeVideoThumbnailAlternative;
+				$removeVideoThumbnail = $hasVideoThumbnail && $values->removeVideoThumbnail;
+				$removeVideoThumbnailAlternative = $hasAlternativeVideoThumbnail && $values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $talk->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $talk->getVideo()->getThumbnailAlternativeFilename();
 				$this->talks->update(
