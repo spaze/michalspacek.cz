@@ -26,6 +26,9 @@ final class DnsResolverTest extends TestCase
 		$records = $this->dnsResolver->getRecords('one.one.one.one', DNS_A | DNS_AAAA);
 		$ips = $ipv6s = [];
 		foreach ($records as $record) {
+			Assert::same('one.one.one.one', $record->getHost());
+			Assert::same('IN', $record->getClass());
+			Assert::true($record->getTtl() > 0);
 			if ($record->getType() === 'A') {
 				$ips[] = $record->getIp();
 			}
