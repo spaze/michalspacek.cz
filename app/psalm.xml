@@ -85,16 +85,6 @@
 				<file name="src/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
 			</errorLevel>
 		</PossiblyUnusedReturnValue>
-		<PossiblyUnusedProperty>
-			<errorLevel type="suppress">
-				<file name="src/Presentation/Pulse/PasswordsStorages/PasswordsStoragesDefaultTemplateParameters.php" /> <!-- Properties used in templates -->
-				<file name="src/Presentation/Admin/Interviews/InterviewsDefaultTemplateParameters.php" /> <!-- Properties used in templates -->
-				<file name="src/Presentation/Admin/Interviews/InterviewsInterviewTemplateParameters.php" /> <!-- Properties used in templates -->
-				<file name="src/Presentation/Admin/Passkeys/PasskeysDefaultTemplateParameters.php" />
-				<file name="src/Presentation/Admin/Passkeys/PasskeysDeleteTemplateParameters.php" />
-				<file name="src/Presentation/Admin/Passkeys/PasskeysRenameTemplateParameters.php" />
-			</errorLevel>
-		</PossiblyUnusedProperty>
 		<PropertyNotSetInConstructor>
 			<errorLevel type="suppress">
 				<referencedProperty name="Nette\Forms\Form::$httpRequest" /> <!-- Marked as @internal -->
