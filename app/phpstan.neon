@@ -35,3 +35,14 @@ includes:
 	- vendor/composer/pcre/extension.neon
 	- vendor-dev/vendor/phpstan/phpstan-strict-rules/rules.neon
 	- vendor-dev/vendor/shipmonk/dead-code-detector/rules.neon
+
+services:
+	-
+		class: MichalSpacekCz\PhpStan\DeadCode\NetteServicesUsageProvider
+		arguments:
+			paths:
+				- config/services.neon
+				- config/presenters.neon
+				- config/tests.neon
+		tags:
+			- shipmonk.deadCode.memberUsageProvider

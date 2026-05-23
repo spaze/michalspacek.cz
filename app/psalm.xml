@@ -18,6 +18,7 @@
 			<directory name="temp" />
 			<directory name="vendor" />
 			<directory name="vendor-dev" />
+			<file name="src/PhpStan/DeadCode/NetteServicesUsageProvider.php" /> <!-- References PHPStan-phar-bundled classes (PhpParser\Node, PHPStan\Node\InClassNode) Composer's autoloader cannot resolve -->
 		</ignoreFiles>
 	</projectFiles>
 	<fileExtensions>
