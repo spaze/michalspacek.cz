@@ -1,4 +1,4 @@
-.PHONY: test composer-audit composer-update composer-validate composer-outdated npm-audit cs-fix check-file-patterns check-makefile check-sri-macros-concat lint-php lint-latte lint-neon lint-xml lint-xml-auto-install-download-xsd phpcs phpstan phpstan-vendor psalm psalm-clear-cache tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt
+.PHONY: test composer-audit composer-update composer-validate composer-outdated npm-audit cs-fix check-file-patterns check-makefile check-sri-macros-concat lint-php lint-latte lint-neon lint-xml lint-xml-auto-install-download-xsd phpcs phpstan phpstan-vendor psalm psalm-clear-cache tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt dump-db-schema
 
 test: composer-audit composer-validate npm-audit check-file-patterns check-makefile check-sri-macros-concat lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
 
@@ -79,3 +79,6 @@ composer-dependency-analyser:
 
 update-security-txt:
 	bin/update-security.txt.sh
+
+dump-db-schema:
+	bin/dump-db-schema.sh

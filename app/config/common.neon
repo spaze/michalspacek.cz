@@ -31,7 +31,7 @@ latte:
 
 database:
 	default:
-		dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
+		dsn: 'mysql:host=localhost;dbname=michalspacek_cz'
 		user: ...
 		password: ...
 		options:

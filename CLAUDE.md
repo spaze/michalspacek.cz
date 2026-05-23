@@ -150,9 +150,11 @@ interface ArticleHeaderIconsFactory
 ### Database
 
 `TypedDatabase` wraps Nette Database Explorer with methods that return typed values (`fetchFieldString()`, `fetchPairsStringString()`, etc.) and throw on type mismatches. Three databases, each with its own `TypedDatabase` service instance:
-- `default` — main application data (talks, training, etc.)
-- `pulse` — password storage security ratings (companies, algorithms, disclosures)
-- `upcKeys` — WiFi router default key data (Technicolor, Ubee)
+- `default`: database `michalspacek_cz`, dump name `default.sql` — main application data (talks, training, etc.)
+- `pulse`: database `michalspacek_cz_pulse`, dump name `pulse.sql` — password storage security ratings (companies, algorithms, disclosures)
+- `upcKeys`: database `michalspacek_cz_upckeys`, dump name `upckeys.sql` — WiFi router default key data (Technicolor, Ubee)
+
+Schema dumps (and a small allow-list of lookup-table data) live in `app/db/*.sql`, refreshed by `make dump-db-schema` (which runs `app/bin/dump-db-schema.sh`). Read these instead of guessing — they're the source of truth for column names, types, constraints, and FKs. The dump scrubs `AUTO_INCREMENT=N` and `DEFINER=` clauses so commits don't leak row counts or operator accounts; data is included only for fixed enumerations (`auth_token_types`, `*_status`, `*_status_flow`, `twitter_card_types`, `languages`, `locales`) — tables with admin CRUD stay schema-only even when they look lookup-shaped (e.g. `url_actions`, `article_sources`).
 
 ### Database transactions
 
