@@ -74,8 +74,10 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 			$schema = Expect::structure([
 				'id' => $expectArray->otherItems()->required(),
 			])->otherItems();
-			/** @var object{id:array{0:int}} $data */
 			$data = $this->schemaProcessor->process($schema, $units);
+			assert($data instanceof stdClass);
+			assert(is_array($data->id));
+			assert(is_int($data->id[0]));
 		} catch (ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
 		}
@@ -89,8 +91,14 @@ final readonly class CompanyRegisterRegisterUz implements CompanyRegister
 				'mesto' => Expect::string()->required(),
 				'psc' => Expect::string()->required(),
 			])->otherItems();
-			/** @var object{ico:string, dic:string|null, nazovUJ:string, ulica:string, mesto:string, psc:string} $data */
 			$data = $this->schemaProcessor->process($schema, $unit);
+			assert($data instanceof stdClass);
+			assert(is_string($data->ico));
+			assert(is_string($data->dic) || $data->dic === null);
+			assert(is_string($data->nazovUJ));
+			assert(is_string($data->ulica));
+			assert(is_string($data->mesto));
+			assert(is_string($data->psc));
 		} catch (ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
 		}

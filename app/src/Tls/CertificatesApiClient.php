@@ -17,6 +17,7 @@ use Nette\Schema\ValidationException;
 use Nette\Utils\Helpers;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use stdClass;
 
 final readonly class CertificatesApiClient
 {
@@ -70,8 +71,9 @@ final readonly class CertificatesApiClient
 			),
 		]);
 		try {
-			/** @var object{status:string, certificates:list<object{certificateName:string, certificateNameExt:string|null, cn:string|null, san:list<string>|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, serialNumber:string|null, now:string, nowTz:string}>} $data */
 			$data = $this->schemaProcessor->process($schema, $decoded);
+			assert($data instanceof stdClass);
+			assert(is_array($data->certificates) && array_is_list($data->certificates));
 		} catch (ValidationException $e) {
 			throw new CertificatesApiException(sprintf('Cannot validate response from %s (`%s`): %s', $request->getUrl(), $json, implode(', ', $e->getMessages())), previous: $e);
 		}
@@ -79,11 +81,25 @@ final readonly class CertificatesApiClient
 			throw new CertificatesApiException(sprintf('Response from %s (`%s`) not ok', $request->getUrl(), $json));
 		}
 		foreach ($data->certificates as $details) {
+			assert($details instanceof stdClass);
+			assert(is_string($details->certificateName));
+			assert(is_string($details->certificateNameExt) || $details->certificateNameExt === null);
+			assert(is_string($details->cn) || $details->cn === null);
+			assert(is_array($details->san) && array_is_list($details->san) || $details->san === null);
+			/** @var list<string>|null $san */
+			$san = $details->san;
+			assert(is_string($details->notBefore));
+			assert(is_string($details->notBeforeTz));
+			assert(is_string($details->notAfter));
+			assert(is_string($details->notAfterTz));
+			assert(is_string($details->serialNumber) || $details->serialNumber === null);
+			assert(is_string($details->now));
+			assert(is_string($details->nowTz));
 			$certificates[] = $this->certificateFactory->get(
 				$details->certificateName,
 				$details->certificateNameExt,
 				$details->cn,
-				$details->san,
+				$san,
 				$details->notBefore,
 				$details->notBeforeTz,
 				$details->notAfter,

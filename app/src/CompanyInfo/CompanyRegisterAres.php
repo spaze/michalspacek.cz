@@ -16,6 +16,7 @@ use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Override;
+use stdClass;
 
 /**
  * ARES service.
@@ -69,12 +70,22 @@ final readonly class CompanyRegisterAres implements CompanyRegister
 					'kodStatu' => Expect::string(),
 				])->otherItems(),
 			])->otherItems();
-			/** @var object{ico:string, dic:string|null, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:string, cisloOrientacni:string, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
 			$data = $this->schemaProcessor->process($schema, Json::decode($content));
+			assert($data instanceof stdClass);
+			assert(is_string($data->ico));
+			assert(is_string($data->dic) || $data->dic === null);
+			assert(is_string($data->obchodniJmeno));
+			assert($data->sidlo instanceof stdClass);
+			assert(is_string($data->sidlo->nazevObce));
+			assert(is_string($data->sidlo->nazevUlice) || $data->sidlo->nazevUlice === null);
+			assert(is_string($data->sidlo->cisloDomovni));
+			assert(is_string($data->sidlo->cisloOrientacni) || $data->sidlo->cisloOrientacni === null);
+			assert(is_string($data->sidlo->cisloOrientacniPismeno) || $data->sidlo->cisloOrientacniPismeno === null);
+			assert(is_int($data->sidlo->psc));
+			assert(is_string($data->sidlo->kodStatu));
 		} catch (JsonException | ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
 		}
-
 		$streetAndNumber = $this->formatStreet(
 			$data->sidlo->nazevObce,
 			$data->sidlo->nazevUlice,
