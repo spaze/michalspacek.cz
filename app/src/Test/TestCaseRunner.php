@@ -6,8 +6,7 @@ namespace MichalSpacekCz\Test;
 use LogicException;
 use MichalSpacekCz\Application\Bootstrap;
 use Nette\Utils\Type;
-use ReflectionException;
-use ReflectionMethod;
+use ReflectionClass;
 use Tester\Environment;
 use Tester\TestCase;
 
@@ -19,17 +18,18 @@ final class TestCaseRunner
 
 
 	/**
-	 * @param class-string $test
+	 * @param class-string<TestCase> $test
 	 * @return void
 	 */
 	public static function run(string $test): void
 	{
+		$reflection = new ReflectionClass($test);
+		$constructor = $reflection->getConstructor();
 		$params = [];
-		try {
-			$method = new ReflectionMethod($test, '__construct');
+		if ($constructor !== null) {
 			$container = Bootstrap::bootTest();
 			Environment::setup();
-			foreach ($method->getParameters() as $parameter) {
+			foreach ($constructor->getParameters() as $parameter) {
 				$type = Type::fromReflection($parameter);
 				$paramIdent = "Parameter #{$parameter->getPosition()} \${$parameter->getName()}";
 				if ($type === null) {
@@ -50,14 +50,8 @@ final class TestCaseRunner
 				}
 				$params[] = $container->getByType($singleName);
 			}
-		} catch (ReflectionException) {
-			// pass, __construct() does not exist
 		}
-		$testCase = new $test(...$params);
-		if (!$testCase instanceof TestCase) {
-			throw new LogicException(sprintf("%s() can only be used to run tests that extend %s", __METHOD__, TestCase::class));
-		}
-		$testCase->run();
+		$reflection->newInstanceArgs($params)->run();
 	}
 
 
