@@ -100,6 +100,21 @@ final class ManagerTest extends TestCase
 	}
 
 
+	public function testIsForbiddenMatch(): void
+	{
+		$this->httpRequest->setRemoteAddress('203.0.113.7');
+		$this->database->setFetchFieldDefaultResult(1);
+		Assert::true($this->getManager()->isForbidden());
+	}
+
+
+	public function testIsForbiddenNoMatch(): void
+	{
+		$this->httpRequest->setRemoteAddress('203.0.113.7');
+		Assert::false($this->getManager()->isForbidden());
+	}
+
+
 	private function getManager(): Manager
 	{
 		return new Manager(
