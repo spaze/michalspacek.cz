@@ -1,0 +1,19 @@
+parameters:
+	shipmonkDeadCode:
+		usageExcluders:
+			usageOverMixed:
+				enabled: true
+
+includes:
+	- vendor-dev/vendor/shipmonk/dead-code-detector/rules.neon
+
+services:
+	-
+		class: MichalSpacekCz\PhpStan\DeadCode\NetteServicesUsageProvider
+		arguments:
+			paths:
+				- config/services.neon
+				- config/presenters.neon
+				- config/tests.neon
+		tags:
+			- shipmonk.deadCode.memberUsageProvider
