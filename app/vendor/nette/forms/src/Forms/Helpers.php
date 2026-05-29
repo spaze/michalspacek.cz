@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms;
 
@@ -14,7 +12,6 @@ use Nette\Utils\Html;
 use Nette\Utils\Image;
 use Nette\Utils\Strings;
 use function array_fill_keys, array_map, array_values, explode, html_entity_decode, htmlspecialchars, in_array, ini_get, is_a, is_array, is_numeric, is_scalar, is_string, str_ends_with, str_replace, strip_tags, strpos, strtolower, strtr, substr, substr_replace;
-use const ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES;
 
 
 /**
@@ -32,7 +29,9 @@ final class Helpers
 
 	/**
 	 * Extracts and sanitizes submitted form data for single control.
+	 * @param  mixed[]  $data
 	 * @param  int  $type  type Form::DataText, DataLine, DataFile, DataKeys
+	 * @return string|mixed[]|Nette\Http\FileUpload|null
 	 * @internal
 	 */
 	public static function extractHttpData(
@@ -68,7 +67,7 @@ final class Helpers
 	}
 
 
-	private static function sanitize(int $type, $value): string|array|Nette\Http\FileUpload|null
+	private static function sanitize(int $type, mixed $value): string|Nette\Http\FileUpload|null
 	{
 		if ($type === Form::DataText) {
 			return is_scalar($value)
@@ -90,13 +89,15 @@ final class Helpers
 
 
 	/**
-	 * Converts control name to HTML name.
+	 * Converts a component path (e.g. 'form-person-name') to the HTML name attribute format (e.g. 'person[name]').
 	 */
 	public static function generateHtmlName(string $id): string
 	{
-		$name = str_replace(Nette\ComponentModel\IComponent::NAME_SEPARATOR, '][', $id, $count);
+		$name = str_replace(Nette\ComponentModel\IComponent::NameSeparator, '][', $id, $count);
 		if ($count) {
-			$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
+			$pos = strpos($name, ']');
+			assert($pos !== false);
+			$name = substr_replace($name, '', $pos, 1) . ']';
 		}
 
 		if (is_numeric($name) || in_array($name, self::UnsafeNames, strict: true)) {
@@ -107,6 +108,10 @@ final class Helpers
 	}
 
 
+	/**
+	 * Exports validation rules into a JSON-serializable structure for the data-nette-rules attribute.
+	 * @return list<array<string, mixed>>
+	 */
 	public static function exportRules(Rules $rules): array
 	{
 		$payload = [];
@@ -172,11 +177,17 @@ final class Helpers
 	}
 
 
+	/**
+	 * Generates an HTML list of labeled inputs (radio buttons or checkboxes).
+	 * @param  mixed[]  $items  value => label pairs
+	 * @param  ?array<string, mixed>  $inputAttrs
+	 * @param  ?array<string, mixed>  $labelAttrs
+	 */
 	public static function createInputList(
 		array $items,
 		?array $inputAttrs = null,
 		?array $labelAttrs = null,
-		$wrapper = null,
+		Html|string|null $wrapper = null,
 	): string
 	{
 		[$inputAttrs, $inputTag] = self::prepareAttrs($inputAttrs, 'input');
@@ -208,7 +219,12 @@ final class Helpers
 	}
 
 
-	public static function createSelectBox(array $items, ?array $optionAttrs = null, $selected = null): Html
+	/**
+	 * Generates a <select> HTML element from the items array.
+	 * @param  mixed[]  $items
+	 * @param  ?array<string, mixed>  $optionAttrs
+	 */
+	public static function createSelectBox(array $items, ?array $optionAttrs = null, mixed $selected = null): Html
 	{
 		if ($selected !== null) {
 			$optionAttrs['selected?'] = $selected;
@@ -253,6 +269,10 @@ final class Helpers
 	}
 
 
+	/**
+	 * @param  ?array<string, mixed>  $attrs
+	 * @return array{array<string, mixed>, string}
+	 */
 	private static function prepareAttrs(?array $attrs, string $name): array
 	{
 		$dynamic = [];
@@ -278,6 +298,10 @@ final class Helpers
 	public static function iniGetSize(string $name): int
 	{
 		$value = ini_get($name);
+		if ($value === false) {
+			return 0;
+		}
+
 		$units = ['k' => 10, 'm' => 20, 'g' => 30];
 		return isset($units[$ch = strtolower(substr($value, -1))])
 			? (int) $value << $units[$ch]
@@ -285,8 +309,11 @@ final class Helpers
 	}
 
 
-	/** @internal */
-	public static function getSingleType($reflection): ?string
+	/**
+	 * Returns the single type name from reflection, or null if no type is defined.
+	 * @internal
+	 */
+	public static function getSingleType(\ReflectionParameter|\ReflectionProperty $reflection): ?string
 	{
 		$type = Nette\Utils\Type::fromReflection($reflection);
 		if (!$type) {
@@ -302,7 +329,10 @@ final class Helpers
 
 
 	/** @internal */
-	public static function tryEnumConversion(mixed $value, $reflection): mixed
+	public static function tryEnumConversion(
+		mixed $value,
+		\ReflectionParameter|\ReflectionProperty|null $reflection,
+	): mixed
 	{
 		if ($value !== null
 			&& $reflection
@@ -316,9 +346,12 @@ final class Helpers
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @return list<string>
+	 */
 	public static function getSupportedImages(): array
 	{
-		return array_values(array_map(fn($type) => Image::typeToMimeType($type), Image::getSupportedTypes()));
+		return array_values(array_map(Image::typeToMimeType(...), Image::getSupportedTypes()));
 	}
 }

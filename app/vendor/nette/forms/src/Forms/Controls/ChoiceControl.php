@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -16,16 +14,20 @@ use function array_combine, array_fill_keys, array_key_exists, array_keys, array
 /**
  * Choice control that allows single item selection.
  *
- * @property   array $items
+ * @property   mixed[] $items
+ * @property   bool|array<bool> $disabled
  * @property-read mixed $selectedItem
  */
 abstract class ChoiceControl extends BaseControl
 {
 	private bool $checkDefaultValue = true;
+
+	/** @var mixed[] */
 	private array $items = [];
 
 
-	public function __construct($label = null, ?array $items = null)
+	/** @param ?mixed[]  $items */
+	public function __construct(string|\Stringable|null $label = null, ?array $items = null)
 	{
 		parent::__construct($label);
 		if ($items !== null) {
@@ -64,7 +66,7 @@ abstract class ChoiceControl extends BaseControl
 
 
 	/**
-	 * Returns selected key.
+	 * Returns the selected key, or null if no valid item is selected or the selection is disabled.
 	 * @return string|int|null
 	 */
 	public function getValue(): mixed
@@ -78,7 +80,7 @@ abstract class ChoiceControl extends BaseControl
 
 
 	/**
-	 * Returns selected key (not checked).
+	 * Returns the raw submitted key without validation against the available items.
 	 */
 	public function getRawValue(): string|int|null
 	{
@@ -96,7 +98,8 @@ abstract class ChoiceControl extends BaseControl
 
 
 	/**
-	 * Sets items from which to choose.
+	 * Sets items from which to choose. When $useKeys is false, values are used as keys too.
+	 * @param mixed[]  $items
 	 * @return static
 	 */
 	public function setItems(array $items, bool $useKeys = true)
@@ -108,6 +111,7 @@ abstract class ChoiceControl extends BaseControl
 
 	/**
 	 * Returns items from which to choose.
+	 * @return mixed[]
 	 */
 	public function getItems(): array
 	{
@@ -127,6 +131,7 @@ abstract class ChoiceControl extends BaseControl
 
 	/**
 	 * Disables or enables control or items.
+	 * @param bool|array<int|string>  $value
 	 */
 	public function setDisabled(bool|array $value = true): static
 	{
@@ -140,6 +145,9 @@ abstract class ChoiceControl extends BaseControl
 	}
 
 
+	/**
+	 * Enables or disables validation that the set value exists in the items list.
+	 */
 	public function checkDefaultValue(bool $value = true): static
 	{
 		$this->checkDefaultValue = $value;

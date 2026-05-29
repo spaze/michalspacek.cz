@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -17,7 +15,7 @@ use function get_debug_type, is_array, is_scalar, min, sprintf;
 
 
 /**
- * Implements the basic functionality common to text input controls.
+ * Base for text-based controls (TextInput, TextArea) with nullable and empty-value support.
  */
 abstract class TextBase extends BaseControl
 {
@@ -27,7 +25,6 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Sets control's value.
 	 * @return static
 	 * @internal
 	 */
@@ -46,7 +43,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Returns control's value.
+	 * Returns the value, substituting empty string when it matches the empty value. Returns null when nullable is set and value is empty.
 	 * @return mixed
 	 */
 	public function getValue(): mixed
@@ -126,7 +123,10 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	/** @return static */
+	/**
+	 * @param  (callable(Nette\Forms\Control): bool)|string  $validator
+	 * @return static
+	 */
 	public function addRule(
 		callable|string $validator,
 		string|Stringable|null $errorMessage = null,

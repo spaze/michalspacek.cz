@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\FormsLatte\Nodes;
 
@@ -28,6 +26,7 @@ final class FormNNameNode extends StatementNode
 	public AreaNode $content;
 
 
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$tag->expectArguments();
@@ -60,6 +59,7 @@ final class FormNNameNode extends StatementNode
 	private function init(Tag $tag): void
 	{
 		$el = $tag->htmlElement;
+		assert($el !== null);
 
 		$tag->replaceNAttribute(new AuxiliaryNode(fn(PrintContext $context) => $context->format(
 			'echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin(end($this->global->formsStack), %dump, false) %line;',
@@ -67,6 +67,7 @@ final class FormNNameNode extends StatementNode
 			$this->position,
 		)));
 
+		assert($el->content !== null);
 		$el->content = new Latte\Compiler\Nodes\FragmentNode([
 			$el->content,
 			new AuxiliaryNode(fn(PrintContext $context) => $context->format(

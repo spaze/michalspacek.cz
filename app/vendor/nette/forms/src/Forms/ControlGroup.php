@@ -1,24 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Forms;
 
-use Nette;
 use function func_num_args;
 
 
 /**
- * A user group of form controls.
+ * Named group of form controls, typically rendered as a fieldset.
  */
 class ControlGroup
 {
+	/** @var \WeakMap<Control, null> */
 	protected \WeakMap $controls;
+
+	/** @var array<string, mixed> */
 	private array $options = [];
 
 
@@ -28,7 +28,8 @@ class ControlGroup
 	}
 
 
-	public function add(...$items): static
+	/** @param Control|Container|iterable<Control|Container> ...$items */
+	public function add(Control|Container|iterable ...$items): static
 	{
 		foreach ($items as $item) {
 			if ($item instanceof Control) {
@@ -36,14 +37,12 @@ class ControlGroup
 
 			} elseif ($item instanceof Container) {
 				foreach ($item->getComponents() as $component) {
-					$this->add($component);
+					if ($component instanceof Control || $component instanceof Container) {
+						$this->add($component);
+					}
 				}
-			} elseif (is_iterable($item)) {
-				$this->add(...$item);
-
 			} else {
-				$type = get_debug_type($item);
-				throw new Nette\InvalidArgumentException("Control or Container items expected, $type given.");
+				$this->add(...$item);
 			}
 		}
 
@@ -57,6 +56,9 @@ class ControlGroup
 	}
 
 
+	/**
+	 * Removes controls that are no longer attached to a form.
+	 */
 	public function removeOrphans(): void
 	{
 		foreach ($this->controls as $control => $foo) {
@@ -67,7 +69,10 @@ class ControlGroup
 	}
 
 
-	/** @return Control[] */
+	/**
+	 * Returns all controls in this group.
+	 * @return list<Control>
+	 */
 	public function getControls(): array
 	{
 		$res = [];
@@ -79,13 +84,12 @@ class ControlGroup
 
 
 	/**
-	 * Sets user-specific option.
-	 * Options recognized by DefaultFormRenderer
-	 * - 'label' - textual or Nette\HtmlStringable object label
-	 * - 'visual' - indicates visual group
-	 * - 'container' - container as Html object
-	 * - 'description' - textual or Nette\HtmlStringable object description
-	 * - 'embedNext' - describes how render next group
+	 * Sets a rendering option. Options recognized by DefaultFormRenderer:
+	 * - 'label' - group label (string or HtmlStringable)
+	 * - 'visual' - whether the group is rendered as a visual fieldset
+	 * - 'container' - custom container Html element
+	 * - 'description' - group description (string or HtmlStringable)
+	 * - 'embedNext' - whether to embed the next group inside this group's container
 	 */
 	public function setOption(string $key, mixed $value): static
 	{
@@ -101,7 +105,7 @@ class ControlGroup
 
 
 	/**
-	 * Returns user-specific option.
+	 * Returns a rendering option value.
 	 */
 	public function getOption(string $key): mixed
 	{
@@ -114,7 +118,8 @@ class ControlGroup
 
 
 	/**
-	 * Returns user-specific options.
+	 * Returns all rendering options.
+	 * @return array<string, mixed>
 	 */
 	public function getOptions(): array
 	{

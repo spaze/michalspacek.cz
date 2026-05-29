@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -16,7 +14,7 @@ use function get_debug_type, is_numeric, is_scalar, is_string;
 
 
 /**
- * Selects date or time or date & time.
+ * Date, time, or date-time input returning DateTimeImmutable (or string/timestamp based on format).
  */
 class DateTimeControl extends BaseControl
 {
@@ -28,19 +26,17 @@ class DateTimeControl extends BaseControl
 	public const
 		FormatObject = 'object',
 		FormatTimestamp = 'timestamp';
-
-	private int $type;
-	private bool $withSeconds;
 	private string $format = self::FormatObject;
 
 
+	/**
+	 * @param  self::TypeDate|self::TypeTime|self::TypeDateTime  $type
+	 */
 	public function __construct(
 		string|Stringable|null $label = null,
-		int $type = self::TypeDate,
-		bool $withSeconds = false,
+		private readonly int $type = self::TypeDate,
+		private readonly bool $withSeconds = false,
 	) {
-		$this->type = $type;
-		$this->withSeconds = $withSeconds;
 		parent::__construct($label);
 		$this->control->step = $withSeconds ? 1 : null;
 		$this->setOption('type', 'datetime');
@@ -58,7 +54,7 @@ class DateTimeControl extends BaseControl
 
 
 	/**
-	 * @param \DateTimeInterface|string|int|null $value
+	 * @param \DateTimeInterface|string|int|null  $value
 	 */
 	public function setValue($value): static
 	{
@@ -80,7 +76,7 @@ class DateTimeControl extends BaseControl
 
 
 	/**
-	 * @param \DateTimeInterface|string|int $value
+	 * @param \DateTimeInterface|string|int  $value
 	 */
 	private function normalizeValue(mixed $value): \DateTimeImmutable
 	{
@@ -148,6 +144,7 @@ class DateTimeControl extends BaseControl
 	}
 
 
+	/** @return array<string, ?string> */
 	private function getAttributesFromRules(): array
 	{
 		$attrs = [];
@@ -171,6 +168,10 @@ class DateTimeControl extends BaseControl
 	}
 
 
+	/**
+	 * Checks whether the control's value falls within the given date/time range.
+	 * For TypeTime, wraps around midnight (e.g. 22:00–02:00) if min > max.
+	 */
 	public function validateMinMax(mixed $min, mixed $max): bool
 	{
 		$value = $this->normalizeValue($this->value);

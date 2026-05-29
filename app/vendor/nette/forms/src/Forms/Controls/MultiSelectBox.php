@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -18,12 +16,15 @@ use function is_array;
  */
 class MultiSelectBox extends MultiChoiceControl
 {
-	/** of option / optgroup */
+	/** @var mixed[]  option / optgroup */
 	private array $options = [];
+
+	/** @var array<string, mixed> */
 	private array $optionAttributes = [];
 
 
-	public function __construct($label = null, ?array $items = null)
+	/** @param  ?mixed[]  $items */
+	public function __construct(string|\Stringable|null $label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
 		$this->setOption('type', 'select');
@@ -32,6 +33,7 @@ class MultiSelectBox extends MultiChoiceControl
 
 	/**
 	 * Sets options and option groups from which to choose.
+	 * @param  mixed[]  $items
 	 * @return static
 	 */
 	public function setItems(array $items, bool $useKeys = true)
@@ -74,7 +76,10 @@ class MultiSelectBox extends MultiChoiceControl
 	}
 
 
-	/** @deprecated use setOptionAttribute() */
+	/**
+	 * @param  array<string, mixed>  $attributes
+	 * @deprecated use setOptionAttribute()
+	 */
 	public function addOptionAttributes(array $attributes): static
 	{
 		$this->optionAttributes = $attributes + $this->optionAttributes;
@@ -82,6 +87,9 @@ class MultiSelectBox extends MultiChoiceControl
 	}
 
 
+	/**
+	 * Sets an attribute on all <option> elements. Use trailing ':' for per-item values or '?' for boolean attributes.
+	 */
 	public function setOptionAttribute(string $name, mixed $value = true): static
 	{
 		$this->optionAttributes[$name] = $value;
@@ -89,6 +97,10 @@ class MultiSelectBox extends MultiChoiceControl
 	}
 
 
+	/**
+	 * Returns all option attributes.
+	 * @return array<string, mixed>
+	 */
 	public function getOptionAttributes(): array
 	{
 		return $this->optionAttributes;

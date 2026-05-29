@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\FormsLatte\Nodes;
 
@@ -21,8 +19,9 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {form name} ... {/form}
- * {formContext ...}
+ * {form name [, attributes]} ... {/form}
+ * {formContext name} ... {/formContext}
+ * Renders form tags and initializes form context.
  */
 class FormNode extends StatementNode
 {
@@ -33,7 +32,7 @@ class FormNode extends StatementNode
 	public ?Position $endLine;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static|AreaNode> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		if ($tag->isNAttribute()) {

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\FormsLatte\Nodes;
 
@@ -17,7 +15,8 @@ use Latte\Compiler\Tag;
 
 
 /**
- * {formContainer ...}
+ * {formContainer name} ... {/formContainer}
+ * Enters form container context for nested controls.
  */
 class FormContainerNode extends StatementNode
 {
@@ -25,7 +24,7 @@ class FormContainerNode extends StatementNode
 	public AreaNode $content;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static|AreaNode> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$tag->outputMode = $tag::OutputRemoveIndentation;

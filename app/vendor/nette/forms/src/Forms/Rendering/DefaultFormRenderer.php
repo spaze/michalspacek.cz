@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Rendering;
 
@@ -13,11 +11,11 @@ use Nette;
 use Nette\HtmlStringable;
 use Nette\Utils\Html;
 use function array_merge, count, explode, implode, parse_url, preg_split, str_replace, strtolower, urldecode;
-use const PHP_URL_QUERY, PREG_SPLIT_NO_EMPTY;
+use const PHP_URL_QUERY;
 
 
 /**
- * Converts a Form into the HTML output.
+ * Converts a form into HTML output using a table-based layout configurable via the $wrappers array.
  */
 class DefaultFormRenderer implements Nette\Forms\FormRenderer
 {
@@ -56,6 +54,7 @@ class DefaultFormRenderer implements Nette\Forms\FormRenderer
 	 *      \---
 	 *    \---
 	 *  \--
+	 * @var array<string, array<string, Html|string|null>>
 	 */
 	public array $wrappers = [
 		'form' => [
@@ -220,6 +219,7 @@ class DefaultFormRenderer implements Nette\Forms\FormRenderer
 	}
 
 
+	/** @param  list<string|\Stringable>  $errors */
 	private function doRenderErrors(array $errors, bool $control): string
 	{
 		if (!$errors) {
@@ -384,10 +384,6 @@ class DefaultFormRenderer implements Nette\Forms\FormRenderer
 	{
 		$s = [];
 		foreach ($controls as $control) {
-			if (!$control instanceof Nette\Forms\Control) {
-				throw new Nette\InvalidArgumentException('Argument must be array of Nette\Forms\Control instances.');
-			}
-
 			$description = $control->getOption('description');
 			if ($description instanceof HtmlStringable) {
 				$description = ' ' . $description;
@@ -514,6 +510,9 @@ class DefaultFormRenderer implements Nette\Forms\FormRenderer
 	}
 
 
+	/**
+	 * Returns a clone of the wrapper element specified by 'section key' (e.g. 'control errorcontainer').
+	 */
 	public function getWrapper(string $name): Html
 	{
 		$data = $this->getValue($name);

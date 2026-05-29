@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\FormsLatte;
 
@@ -13,17 +11,20 @@ use Nette;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use function end, explode, is_object, parse_url, preg_replace, preg_split, urldecode;
-use const PHP_URL_QUERY, PREG_SPLIT_NO_EMPTY;
+use const PHP_URL_QUERY;
 
 
 /**
- * Runtime helpers for Latte v2 & v3.
+ * Runtime rendering helpers used by Latte v2 & v3.
  * @internal
  */
 class Runtime
 {
 	use Nette\StaticClass;
 
+	/**
+	 * Fires render events and resets the 'rendered' option on all controls.
+	 */
 	public static function initializeForm(Form $form): void
 	{
 		$form->fireRenderEvents();
@@ -35,6 +36,7 @@ class Runtime
 
 	/**
 	 * Renders form begin.
+	 * @param array<string, mixed>  $attrs
 	 */
 	public static function renderFormBegin(Form $form, array $attrs, bool $withTags = true): string
 	{
@@ -42,7 +44,7 @@ class Runtime
 		$el->action = (string) $el->action;
 		$el = clone $el;
 		if ($form->isMethod('get')) {
-			$el->action = preg_replace('~\?[^#]*~', '', $el->action, 1);
+			$el->action = preg_replace('~\?[^#]*~', '', (string) $el->action, 1);
 		}
 
 		$el->addAttributes($attrs);
@@ -57,7 +59,7 @@ class Runtime
 	{
 		$s = '';
 		if ($form->isMethod('get')) {
-			foreach (preg_split('#[;&]#', (string) parse_url($form->getElementPrototype()->action, PHP_URL_QUERY), -1, PREG_SPLIT_NO_EMPTY) as $param) {
+			foreach (preg_split('#[;&]#', (string) parse_url((string) $form->getElementPrototype()->action, PHP_URL_QUERY), -1, PREG_SPLIT_NO_EMPTY) as $param) {
 				$parts = explode('=', $param, 2);
 				$name = urldecode($parts[0]);
 				$prefix = explode('[', $name, 2)[0];
@@ -77,7 +79,11 @@ class Runtime
 	}
 
 
-	public static function item($item, $global): object
+	/**
+	 * Resolves a control or container from the current form on the stack.
+	 * @param object{formsStack: Form[]}  $global
+	 */
+	public static function item(object|string|int $item, object $global): object
 	{
 		if (is_object($item)) {
 			return $item;

@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\FormsLatte\Nodes;
 
@@ -33,6 +31,7 @@ final class FieldNNameNode extends StatementNode
 	public AreaNode $content;
 
 
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag): \Generator
 	{
 		$tag->expectArguments();
@@ -61,6 +60,7 @@ final class FieldNNameNode extends StatementNode
 	private function init(Tag $tag): void
 	{
 		$el = $tag->htmlElement;
+		assert($el !== null);
 		$usedAttributes = self::findUsedAttributes($el);
 		$elName = strtolower($el->name);
 
@@ -85,7 +85,7 @@ final class FieldNNameNode extends StatementNode
 		} elseif ($elName === 'button') {
 			if ($el->content instanceof NopNode) {
 				$el->content = new AuxiliaryNode(fn(PrintContext $context) => $context->format(
-					'echo %escape($ʟ_elem->value) %line;',
+					'echo %escape($ʟ_elem->getValue()) %line;',
 					$this->position,
 				));
 			}
@@ -98,7 +98,10 @@ final class FieldNNameNode extends StatementNode
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @return string[]
+	 */
 	public static function findUsedAttributes(ElementNode $el): array
 	{
 		$res = [];
