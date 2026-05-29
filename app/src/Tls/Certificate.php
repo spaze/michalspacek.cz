@@ -79,9 +79,7 @@ final class Certificate implements JsonSerializable
 	public function getValidityPeriodDays(): int
 	{
 		if ($this->validityPeriodDays === null) {
-			$validityPeriodDays = $this->getExpiredAfter()->diff($this->notBefore)->days;
-			assert(is_int($validityPeriodDays));
-			$this->validityPeriodDays = $validityPeriodDays;
+			$this->validityPeriodDays = $this->getExpiredAfter()->diff($this->notBefore)->days;
 		}
 		return $this->validityPeriodDays;
 	}
@@ -99,9 +97,7 @@ final class Certificate implements JsonSerializable
 	public function getExpiryDays(): int
 	{
 		if ($this->expiryDays === null) {
-			$expiryDays = $this->getExpiredAfter()->diff($this->now)->days;
-			assert(is_int($expiryDays));
-			$this->expiryDays = $expiryDays;
+			$this->expiryDays = $this->getExpiredAfter()->diff($this->now)->days;
 		}
 		return $this->expiryDays;
 	}

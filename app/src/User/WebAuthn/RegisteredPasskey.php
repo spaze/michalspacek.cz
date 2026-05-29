@@ -21,9 +21,7 @@ final readonly class RegisteredPasskey
 	) {
 		if ($lastUsedAt !== null) {
 			$timezone = $lastUsedAt->getTimezone();
-			$days = $lastUsedAt->setTime(0, 0)->diff($now->setTimezone($timezone)->setTime(0, 0))->days;
-			assert(is_int($days));
-			$this->lastUsedDaysAgo = $days;
+			$this->lastUsedDaysAgo = $lastUsedAt->setTime(0, 0)->diff($now->setTimezone($timezone)->setTime(0, 0))->days;
 		} else {
 			$this->lastUsedDaysAgo = null;
 		}
