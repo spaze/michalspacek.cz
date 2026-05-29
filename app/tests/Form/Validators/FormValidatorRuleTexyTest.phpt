@@ -10,6 +10,7 @@ use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\TextArea;
 use Override;
 use Tester\Assert;
@@ -58,6 +59,49 @@ final class FormValidatorRuleTexyTest extends TestCase
 		$textArea->value = 808;
 		Assert::true($ruleTexy($textArea));
 		Assert::same([], $textArea->getErrors());
+	}
+
+
+	public function testGetRuleNotBaseControl(): void
+	{
+		$control = new class implements Control {
+
+			#[Override]
+			public function setValue(mixed $value): self
+			{
+				return $this;
+			}
+
+
+			#[Override]
+			public function getValue(): mixed
+			{
+				return null;
+			}
+
+
+			#[Override]
+			public function validate(): void
+			{
+			}
+
+
+			#[Override]
+			public function getErrors(): array
+			{
+				return [];
+			}
+
+
+			#[Override]
+			public function isOmitted(): bool
+			{
+				return false;
+			}
+
+		};
+		$ruleTexy = $this->ruleTexy->getRule();
+		Assert::true($ruleTexy($control));
 	}
 
 
