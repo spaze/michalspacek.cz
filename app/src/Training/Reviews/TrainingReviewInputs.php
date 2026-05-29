@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Reviews;
 
 use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\Training\TrainingReviewFormFactory;
-use MichalSpacekCz\Form\UiForm;
+use Nette\Forms\Form;
 
 final class TrainingReviewInputs extends UiControl
 {
@@ -26,7 +26,7 @@ final class TrainingReviewInputs extends UiControl
 	}
 
 
-	protected function createComponentTrainingReview(): UiForm
+	protected function createComponentTrainingReview(): Form
 	{
 		return $this->trainingReviewFormFactory->create(
 			function (int $dateId): never {

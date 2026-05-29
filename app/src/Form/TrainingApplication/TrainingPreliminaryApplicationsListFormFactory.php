@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTraining;
 use MichalSpacekCz\Utils\Arrays;
 use Nette\Database\Explorer;
+use Nette\Forms\Form;
 use PDOException;
 use Tracy\Debugger;
 
@@ -29,7 +29,7 @@ final readonly class TrainingPreliminaryApplicationsListFormFactory
 	 * @param list<PreliminaryTraining> $trainings
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(array $trainings, callable $onSuccess): UiForm
+	public function create(array $trainings, callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$container = $form->addContainer('applications');
@@ -40,7 +40,7 @@ final readonly class TrainingPreliminaryApplicationsListFormFactory
 		}
 		$form->addSubmit('delete', 'Delete');
 		$form->onSuccess[] = function () use ($form, $onSuccess): void {
-			$selected = array_keys(Arrays::filterEmpty((array)$form->getFormValues()->applications));
+			$selected = array_keys(Arrays::filterEmpty((array)$form->getValues()->applications));
 			if ($selected !== []) {
 				$this->database->beginTransaction();
 				try {

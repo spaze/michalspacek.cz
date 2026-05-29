@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialSignedInWithException;
 use MichalSpacekCz\User\WebAuthn\UserPasskeys;
+use Nette\Forms\Form;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class PasskeyDeleteFormFactory
@@ -27,7 +27,7 @@ final readonly class PasskeyDeleteFormFactory
 	 * @param callable(): void $onSignedInWith
 	 * @param callable(): void $onNotFound
 	 */
-	public function create(callable $onSuccess, callable $onSignedInWith, callable $onNotFound, Uuid $id): UiForm
+	public function create(callable $onSuccess, callable $onSignedInWith, callable $onNotFound, Uuid $id): Form
 	{
 		$form = $this->factory->create();
 		$form->addSubmit('delete', $this->translator->translate('messages.passkeys.delete.delete'));

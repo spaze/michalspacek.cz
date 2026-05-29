@@ -5,12 +5,12 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 final readonly class TrainingMultipleApplicationsFormFactory
@@ -29,7 +29,7 @@ final readonly class TrainingMultipleApplicationsFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, TrainingDate $trainingDate): UiForm
+	public function create(callable $onSuccess, TrainingDate $trainingDate): Form
 	{
 		$form = $this->factory->create();
 		$applicationsContainer = $form->addContainer('applications');
@@ -57,8 +57,8 @@ final readonly class TrainingMultipleApplicationsFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 
-		$form->onSuccess[] = function (UiForm $form) use ($trainingDate, $onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($trainingDate, $onSuccess): void {
+			$values = $form->getValues();
 			assert($values->applications instanceof ArrayHash);
 			assert(is_string($values->country));
 			assert(is_string($values->status));

@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Presentation\Admin\Passkeys;
 
 use Contributte\Translation\Translator;
 use InvalidArgumentException;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\User\PasskeyDeleteFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRegisterFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRenameFormFactory;
@@ -19,6 +18,7 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\UserPasskeys;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Form;
 use Nette\Security\User;
 use Symfony\Component\Uid\Uuid;
 
@@ -120,7 +120,7 @@ final class PasskeysPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentPasskeyRegister(): UiForm
+	protected function createComponentPasskeyRegister(): Form
 	{
 		return $this->passkeyRegisterFormFactory->create(
 			function (): void {
@@ -136,7 +136,7 @@ final class PasskeysPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentPasskeyRename(): UiForm
+	protected function createComponentPasskeyRename(): Form
 	{
 		if ($this->passkeyId === null || $this->passkeyCurrentName === null) {
 			throw new ShouldNotHappenException('actionRename() will be called first');
@@ -156,7 +156,7 @@ final class PasskeysPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentPasskeyDelete(): UiForm
+	protected function createComponentPasskeyDelete(): Form
 	{
 		$passkeyCurrentName = $this->passkeyCurrentName;
 		if ($this->passkeyId === null || $passkeyCurrentName === null) {

@@ -4,13 +4,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\User;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Form\FormComponents;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Override;
-use Stringable;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -20,7 +19,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class SignInHoneypotFormFactoryTest extends TestCase
 {
 
-	private UiForm $form;
+	private Form $form;
 
 
 	public function __construct(
@@ -60,9 +59,7 @@ final class SignInHoneypotFormFactoryTest extends TestCase
 		$this->formComponents->setValue($this->form, 'username', $username);
 		$this->formComponents->setValue($this->form, 'password', $password);
 		Arrays::invoke($this->form->onSuccess, $this->form);
-		$formError = $this->form->getErrors()[0];
-		assert(is_string($formError) || $formError instanceof Stringable);
-		Assert::same($error, (string)$formError);
+		Assert::same($error, (string)$this->form->getErrors()[0]);
 	}
 
 }

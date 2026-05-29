@@ -70,11 +70,6 @@ parameters:
 			allowInMethods:
 				- 'MichalSpacekCz\DateTime\DateTimeZoneFactory::get()'
 		-
-			method:
-				- 'Nette\Forms\Container::getValues()'
-				- 'Nette\Forms\Container::getUntrustedValues()'
-			message: 'use methods from MichalSpacekCz\Form\UiForm instead'
-		-
 			method: 'MichalSpacekCz\User\AuthTokens\UserAuthTokens::*'
 			message: 'instead use a class that implements the UserAuthTokenLifetime interface'
 			errorTip: 'Each token type has its own rules (TTL, whether it is enabled, etc.) checked by the classes that implement UserAuthTokenLifetime, calling these methods directly skips those checks'

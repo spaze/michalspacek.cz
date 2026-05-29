@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
@@ -36,7 +35,7 @@ final readonly class TrainingMailsOutboxFormFactory
 	 * @param callable(int): void $onSuccess
 	 * @param array<int, TrainingApplication> $applications
 	 */
-	public function create(callable $onSuccess, array $applications): UiForm
+	public function create(callable $onSuccess, array $applications): Form
 	{
 		$form = $this->factory->create();
 
@@ -146,8 +145,8 @@ final readonly class TrainingMailsOutboxFormFactory
 			}
 		}
 		$form->addSubmit('submit', 'Odeslat');
-		$form->onSuccess[] = function (UiForm $form) use ($applications, $onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($applications, $onSuccess): void {
+			$values = $form->getValues();
 			assert($values->applications instanceof ArrayHash);
 			$sent = 0;
 			foreach ($values->applications as $id => $data) {

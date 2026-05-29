@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Talk;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexyTalkSlidesFactory;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -38,7 +37,7 @@ final readonly class TalkSlidesFormFactory
 	/**
 	 * @param callable(Html, string, int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $talkId, TalkSlideCollection $slides, int $newCount, Request $request): UiForm
+	public function create(callable $onSuccess, int $talkId, TalkSlideCollection $slides, int $newCount, Request $request): Form
 	{
 		$form = $this->factory->create();
 		$slidesContainer = $form->addContainer('slides');
@@ -68,9 +67,9 @@ final readonly class TalkSlidesFormFactory
 		$form->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
 		$form->addSubmit('submit', 'Upravit');
 
-		$form->onSuccess[] = function (UiForm $form) use ($slides, $onSuccess, $talkId): void {
+		$form->onSuccess[] = function (Form $form) use ($slides, $onSuccess, $talkId): void {
 			try {
-				$values = $form->getFormValues();
+				$values = $form->getValues();
 				assert($values->slides instanceof ArrayHash);
 				assert($values->new instanceof ArrayHash);
 				assert(is_bool($values->deleteReplaced));
@@ -83,7 +82,7 @@ final readonly class TalkSlidesFormFactory
 			}
 			$onSuccess($message, $type, $talkId);
 		};
-		$form->onValidate[] = function (UiForm $form) use ($request): void {
+		$form->onValidate[] = function (Form $form) use ($request): void {
 			if (!$this->hasSlideNo1($form)) {
 				$form->addError($this->texyFormatter->translate('messages.talks.admin.slideNumber1Missing'));
 			}
@@ -105,9 +104,9 @@ final readonly class TalkSlidesFormFactory
 	}
 
 
-	private function hasSlideNo1(UiForm $form): bool
+	private function hasSlideNo1(Form $form): bool
 	{
-		$values = $form->getUntrustedFormValues();
+		$values = $form->getUntrustedValues();
 		assert($values->slides instanceof ArrayHash);
 		assert($values->new instanceof ArrayHash);
 		foreach ($values->slides as $slide) {

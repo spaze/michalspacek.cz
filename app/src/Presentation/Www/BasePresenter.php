@@ -10,7 +10,6 @@ use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use MichalSpacekCz\Form\ThemeFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Templating\DefaultTemplate;
@@ -19,6 +18,7 @@ use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Override;
 
@@ -209,7 +209,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	protected function createComponentTheme(): UiForm
+	protected function createComponentTheme(): Form
 	{
 		return $this->themeFormFactory->create(function (): void {
 			$this->httpResponse->setExpiration(null);

@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Form\Training;
 
 use DateTimeInterface;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 
@@ -24,13 +24,13 @@ final readonly class TrainingFileFormFactory
 	 * @param callable(Html|string, string): void $onSuccess
 	 * @param list<int> $applicationIdsAllowedFiles
 	 */
-	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): UiForm
+	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): Form
 	{
 		$form = $this->factory->create();
 		$form->addUpload('file', 'Soubor:');
 		$form->addSubmit('submit', 'Přidat');
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
+			$values = $form->getValues();
 			assert($values->file instanceof FileUpload);
 			if ($values->file->isOk()) {
 				$filename = $this->trainingFiles->addFile($trainingStart, $values->file, $applicationIdsAllowedFiles);

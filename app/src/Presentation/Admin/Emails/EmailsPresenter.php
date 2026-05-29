@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Emails;
 
 use MichalSpacekCz\Form\Training\TrainingMailsOutboxFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Mails\TrainingMails;
+use Nette\Forms\Form;
 
 final class EmailsPresenter extends BasePresenter
 {
@@ -32,7 +32,7 @@ final class EmailsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentMails(): UiForm
+	protected function createComponentMails(): Form
 	{
 		return $this->trainingMailsOutboxFactory->create(
 			function (int $sent): never {

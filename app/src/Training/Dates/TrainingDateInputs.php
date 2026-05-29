@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Dates;
 
 use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\Training\TrainingDateFormFactory;
-use MichalSpacekCz\Form\UiForm;
+use Nette\Forms\Form;
 
 final class TrainingDateInputs extends UiControl
 {
@@ -24,7 +24,7 @@ final class TrainingDateInputs extends UiControl
 	}
 
 
-	protected function createComponentDate(): UiForm
+	protected function createComponentDate(): Form
 	{
 		return $this->trainingDateFormFactory->create(
 			function (): never {

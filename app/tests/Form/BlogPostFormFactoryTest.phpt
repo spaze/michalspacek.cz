@@ -16,6 +16,7 @@ use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Override;
@@ -162,7 +163,7 @@ final class BlogPostFormFactoryTest extends TestCase
 	}
 
 
-	private function setFormDefaults(UiForm $form): void
+	private function setFormDefaults(Form $form): void
 	{
 		$form->setDefaults([
 			'locale' => self::LOCALE_ID,
@@ -174,7 +175,7 @@ final class BlogPostFormFactoryTest extends TestCase
 	}
 
 
-	private function buildFormAdd(): UiForm
+	private function buildFormAdd(): Form
 	{
 		$form = $this->formFactory->create(
 			function (BlogPost $post): void {
@@ -195,10 +196,7 @@ final class BlogPostFormFactoryTest extends TestCase
 	}
 
 
-	/**
-	 * @return UiForm
-	 */
-	private function buildFormEdit(): UiForm
+	private function buildFormEdit(): Form
 	{
 		$post = new BlogPost(
 			49,

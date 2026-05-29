@@ -7,12 +7,12 @@ declare(strict_types = 1);
 namespace EasterEgg\WinterIsComing;
 
 use MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Utils\Insomnia;
 use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\Form;
 use Nette\Forms\Control;
 use Nette\Forms\Controls\TextInput;
 use Nette\InvalidStateException;
@@ -46,7 +46,7 @@ final class WinterIsComingTest extends TestCase
 		WinterIsComing $winterIsComing,
 	) {
 		$this->presenter = new UiPresenterMock();
-		$this->textInput = (new UiForm($this->presenter, 'leForm'))->addText('foo');
+		$this->textInput = (new Form($this->presenter, 'leForm'))->addText('foo');
 		$this->ruleName = $winterIsComing->ruleName();
 		$this->ruleEmail = $winterIsComing->ruleEmail();
 		$this->ruleStreet = $winterIsComing->ruleStreet();

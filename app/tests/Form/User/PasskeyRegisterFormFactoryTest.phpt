@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\User;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Security\NullUserStorage;
@@ -14,6 +13,7 @@ use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\Security\User;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
@@ -69,7 +69,7 @@ final class PasskeyRegisterFormFactoryTest extends TestCase
 	}
 
 
-	private function getForm(): UiForm
+	private function getForm(): Form
 	{
 		$this->database->setFetchFieldDefaultResult('0xPasskeysUserHandle');
 		$identity = $this->authenticator->getIdentity(1337, 'foo');

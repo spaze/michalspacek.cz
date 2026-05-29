@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form\Pulse;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
@@ -33,7 +32,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 	/**
 	 * @param callable(string): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $newDisclosures): UiForm
+	public function create(callable $onSuccess, int $newDisclosures): Form
 	{
 		$form = $this->factory->create();
 
@@ -163,11 +162,11 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		}
 
 		$form->addSubmit('submit', 'Add');
-		$form->onValidate[] = function (UiForm $form): void {
-			$this->validatePasswordsStorages($form, $form->getFormValues());
+		$form->onValidate[] = function (Form $form): void {
+			$this->validatePasswordsStorages($form, $form->getValues());
 		};
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
-			$this->passwords->addStorage($form->getFormValues());
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$this->passwords->addStorage($form->getValues());
 			$onSuccess('Password storage added successfully');
 		};
 		return $form;
@@ -188,7 +187,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 	 *
 	 * @param ArrayHash<int|string> $values
 	 */
-	private function validatePasswordsStorages(UiForm $form, ArrayHash $values): void
+	private function validatePasswordsStorages(Form $form, ArrayHash $values): void
 	{
 		assert($values->company instanceof ArrayHash);
 		assert($values->company->new instanceof ArrayHash);

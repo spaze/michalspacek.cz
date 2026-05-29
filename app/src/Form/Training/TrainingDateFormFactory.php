@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form\Training;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
@@ -41,7 +40,7 @@ final readonly class TrainingDateFormFactory
 	 * @param callable(): void $onSuccessAdd
 	 * @param callable(int): void $onSuccessEdit
 	 */
-	public function create(callable $onSuccessAdd, callable $onSuccessEdit, ?TrainingDate $date = null): UiForm
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, ?TrainingDate $date = null): Form
 	{
 		$form = $this->factory->create();
 
@@ -118,8 +117,8 @@ final readonly class TrainingDateFormFactory
 		$price = $form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná cena');
-		$form->onValidate[] = function (UiForm $form) use ($price): void {
-			$values = $form->getFormValues();
+		$form->onValidate[] = function (Form $form) use ($price): void {
+			$values = $form->getValues();
 			assert(is_int($values->training));
 			$training = $this->trainings->getById($values->training);
 			if ($values->price === '' && $training->getPrice() === null) {
@@ -143,8 +142,8 @@ final readonly class TrainingDateFormFactory
 			$this->setTrainingDate($form, $date, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $date): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $date): void {
+			$values = $form->getValues();
 			assert(is_int($values->training));
 			assert(is_int($values->venue) || $values->venue === null);
 			assert(is_bool($values->remote));
@@ -208,7 +207,7 @@ final readonly class TrainingDateFormFactory
 	}
 
 
-	public function setTrainingDate(UiForm $form, TrainingDate $date, SubmitButton $submit): void
+	public function setTrainingDate(Form $form, TrainingDate $date, SubmitButton $submit): void
 	{
 		$values = [
 			'training' => $date->getTrainingId(),

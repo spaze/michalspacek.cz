@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\User;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
+use Nette\Forms\Form;
 use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;
@@ -25,15 +25,15 @@ final readonly class RegenerateTokensFormFactory
 	/**
 	 * @param callable(Html|string): void $onSuccess
 	 */
-	public function create(callable $onSuccess): UiForm
+	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$form->addCheckbox('session', 'Session id')->setDefaultValue(true);
 		$form->addCheckbox('permanent', 'Permanent login token')->setDefaultValue(true);
 		$form->addSubmit('regenerate', 'Přegenerovat');
 
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			if ($values->session) {
 				$this->sessionHandler->regenerateId();
 			}

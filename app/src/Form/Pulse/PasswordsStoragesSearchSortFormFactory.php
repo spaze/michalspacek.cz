@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Pulse;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\UnprotectedFormFactory;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
+use Nette\Forms\Form;
 
 final readonly class PasswordsStoragesSearchSortFormFactory
 {
@@ -19,7 +19,7 @@ final readonly class PasswordsStoragesSearchSortFormFactory
 	}
 
 
-	public function create(?string $rating, ?string $sort, ?string $search): UiForm
+	public function create(?string $rating, ?string $sort, ?string $search): Form
 	{
 		$form = $this->factory->create();
 		$form->setMethod('get');

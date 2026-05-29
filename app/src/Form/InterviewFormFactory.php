@@ -28,7 +28,7 @@ final readonly class InterviewFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(callable $onSuccess, ?Interview $interview = null): UiForm
+	public function create(callable $onSuccess, ?Interview $interview = null): Form
 	{
 		$form = $this->factory->create();
 		$form->addText('action', 'Akce:')
@@ -75,8 +75,8 @@ final readonly class InterviewFormFactory
 			$this->setInterview($form, $interview, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess, $hasVideoThumbnail, $hasAlternativeVideoThumbnail): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($interview, $onSuccess, $hasVideoThumbnail, $hasAlternativeVideoThumbnail): void {
+			$values = $form->getValues();
 			assert($values->videoThumbnail instanceof FileUpload);
 			assert($values->videoThumbnailAlternative instanceof FileUpload);
 			assert(is_string($values->action));
@@ -144,7 +144,7 @@ final readonly class InterviewFormFactory
 	}
 
 
-	public function setInterview(UiForm $form, Interview $interview, SubmitButton $submit): void
+	public function setInterview(Form $form, Interview $interview, SubmitButton $submit): void
 	{
 		$values = [
 			'action' => $interview->getAction(),

@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\User;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\User\RegenerateTokensFormFactory;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 final class UserPresenter extends BasePresenter
@@ -24,7 +24,7 @@ final class UserPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentRegenerateTokens(): UiForm
+	protected function createComponentRegenerateTokens(): Form
 	{
 		return $this->regenerateTokensFormFactory->create(
 			function (Html|string $message): never {
