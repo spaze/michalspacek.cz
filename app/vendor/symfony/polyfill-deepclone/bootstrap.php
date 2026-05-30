@@ -9,17 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\VarExporter\Internal;
+use Symfony\Polyfill\DeepClone as p;
 
-/**
- * @author Nicolas Grekas <p@tchwork.com>
- *
- * @internal
- */
-class Values
-{
-    public function __construct(
-        public readonly array $values,
-    ) {
-    }
+if (extension_loaded('deepclone')) {
+    return;
+}
+
+if (\PHP_VERSION_ID >= 80100) {
+    require __DIR__.'/bootstrap81.php';
 }

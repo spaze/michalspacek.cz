@@ -29,6 +29,9 @@ final readonly class Cookies
 	}
 
 
+	/**
+	 * @param Response::SameSite*|null $sameSite
+	 */
 	public function set(
 		CookieName $name,
 		string $value,

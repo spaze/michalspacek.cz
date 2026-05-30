@@ -14,7 +14,7 @@ final class Request implements IRequest
 	/** @var array<string, mixed> */
 	private array $post = [];
 
-	/** @var array<string, mixed> */
+	/** @var array<string, string> */
 	private array $cookies = [];
 
 	/** @var array<string, FileUpload> */
@@ -91,14 +91,14 @@ final class Request implements IRequest
 
 
 	#[Override]
-	public function getCookie(string $key): mixed
+	public function getCookie(string $key): ?string
 	{
 		return $this->cookies[$key] ?? null;
 	}
 
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array<string, string>
 	 */
 	#[Override]
 	public function getCookies(): array

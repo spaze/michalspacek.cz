@@ -15,6 +15,7 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -67,6 +68,15 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
      * You can disable this by setting this flag to true.
      */
     public const DISABLE_TYPE_ENFORCEMENT = 'disable_type_enforcement';
+
+    /**
+     * While denormalizing, convert scalar types to the expected type.
+     *
+     * If not defined, it will be enabled for XML and CSV format, because all basic datatypes are represented as strings.
+     * The default is computed once from the outermost $format and then propagated to child contexts. Set the key
+     * explicitly to opt in or out independently of $format.
+     */
+    public const ENABLE_TYPE_CONVERSION = 'enable_type_conversion';
 
     /**
      * Flag to control whether fields with the value `null` should be output
@@ -317,6 +327,8 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
             $data = ['#' => $data];
         }
 
+        $context[self::ENABLE_TYPE_CONVERSION] ??= XmlEncoder::FORMAT === $format || CsvEncoder::FORMAT === $format;
+
         $allowedAttributes = $this->getAllowedAttributes($type, $context, true);
         $normalizedData = $this->prepareForDenormalization($data);
         $extraAttributes = [];
@@ -412,7 +424,11 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
         }
 
         if ($extraAttributes) {
-            throw new ExtraAttributesException($extraAttributes);
+            $extraAttributeException = new ExtraAttributesException(array_map(static fn (string $extraAttribute) => PropertyPath::append($context['deserialization_path'] ?? '', $extraAttribute), $extraAttributes));
+            if (!isset($context['extra_attributes_exceptions'])) {
+                throw $extraAttributeException;
+            }
+            $context['extra_attributes_exceptions'][] = $extraAttributeException;
         }
 
         return $object;
@@ -476,7 +492,7 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                 // if a value is meant to be a string, float, int or a boolean value from the serialized representation.
                 // That's why we have to transform the values, if one of these non-string basic datatypes is expected.
                 $typeIdentifier = $t->getTypeIdentifier();
-                if (\is_string($data) && (XmlEncoder::FORMAT === $format || CsvEncoder::FORMAT === $format)) {
+                if (\is_string($data) && ($context[self::ENABLE_TYPE_CONVERSION] ?? $this->defaultContext[self::ENABLE_TYPE_CONVERSION] ?? false)) {
                     if ('' === $data) {
                         if (TypeIdentifier::ARRAY === $typeIdentifier) {
                             return [];

@@ -15,6 +15,21 @@ use function is_array;
 
 /**
  * Security extension for Nette DI.
+ *
+ * @property object{
+ *     debugger: bool|null,
+ *     users: array<string, string|array{password: string, roles?: string|list<string>, data?: array<string, mixed>}>,
+ *     roles: array<string, string|list<string>|null>,
+ *     resources: array<string, string|null>,
+ *     authentication: object{
+ *         storage: 'session'|'cookie',
+ *         expiration: string|null,
+ *         persistIdentity: bool,
+ *         cookieName: string|null,
+ *         cookieDomain: string|null,
+ *         cookieSamesite: 'Lax'|'Strict'|'None'|null,
+ *     },
+ * } $config
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
@@ -43,6 +58,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			'authentication' => Expect::structure([
 				'storage' => Expect::anyOf('session', 'cookie')->default('session'),
 				'expiration' => Expect::string()->dynamic(),
+				'persistIdentity' => Expect::bool(true),
 				'cookieName' => Expect::string(),
 				'cookieDomain' => Expect::string(),
 				'cookieSamesite' => Expect::anyOf('Lax', 'Strict', 'None'),
@@ -53,7 +69,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		/** @var object{debugger: bool, users: array<string, string|array{password: string, roles?: string|list<string>, data?: array<string, mixed>}>, roles: array<string, string|list<string>|null>, resources: array<string, string|null>, authentication: \stdClass} $config */
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
 
@@ -69,11 +84,11 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			][$auth->storage]);
 
 		if ($auth->storage === 'cookie') {
-			if ($auth->cookieDomain === 'domain') {
-				$auth->cookieDomain = $builder::literal('$this->getByType(Nette\Http\IRequest::class)->getUrl()->getDomain(2)');
-			}
+			$cookieDomain = $auth->cookieDomain === 'domain'
+				? $builder::literal('$this->getByType(Nette\Http\IRequest::class)->getUrl()->getDomain(2)')
+				: $auth->cookieDomain;
 
-			$storage->addSetup('setCookieParameters', [$auth->cookieName, $auth->cookieDomain, $auth->cookieSamesite]);
+			$storage->addSetup('setCookieParameters', [$auth->cookieName, $cookieDomain, $auth->cookieSamesite]);
 		}
 
 		$user = $builder->addDefinition($this->prefix('user'))
@@ -81,6 +96,10 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($auth->expiration) {
 			$user->addSetup('setExpiration', [$auth->expiration]);
+		}
+
+		if (!$auth->persistIdentity) {
+			$user->addSetup('$persistIdentity', [false]);
 		}
 
 		if ($config->users) {
