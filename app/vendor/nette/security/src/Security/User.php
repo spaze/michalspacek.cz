@@ -44,21 +44,26 @@ class User
 	/** @deprecated use User::LogoutInactivity */
 	public const INACTIVITY = self::LogoutInactivity;
 
-	/** default role for unauthenticated user */
+	/** role for an unauthenticated user, unless a guest identity provides its own roles */
 	public string $guestRole = 'guest';
 
 	/** default role for authenticated user without own identity */
 	public string $authenticatedRole = 'authenticated';
 
-	/** @var array<callable(self): void>  Occurs when the user is successfully logged in */
+	/** keep identity available (via getIdentity() and getId()) after logout or expiration; depends on the storage implementation */
+	public bool $persistIdentity = true;
+
+	/** @var array<callable(static): void>  Occurs when the user is successfully logged in */
 	public array $onLoggedIn = [];
 
-	/** @var array<callable(self): void>  Occurs when the user is logged out */
+	/** @var array<callable(static): void>  Occurs when the user is logged out */
 	public array $onLoggedOut = [];
 
 	private ?IIdentity $identity = null;
 	private ?bool $authenticated = null;
 	private ?int $logoutReason = null;
+	private ?IIdentity $guestIdentity = null;
+	private bool $guestIdentityResolved = false;
 
 
 	public function __construct(
@@ -111,10 +116,12 @@ class User
 
 
 	/**
-	 * Logs out the user from the current session.
+	 * Logs out the user from the current session. The identity is kept available afterwards,
+	 * unless $clearIdentity is set or the $persistIdentity property is disabled.
 	 */
 	final public function logout(bool $clearIdentity = false): void
 	{
+		$clearIdentity = $clearIdentity || !$this->persistIdentity;
 		$logged = $this->isLoggedIn();
 		$this->storage->clearAuthentication($clearIdentity);
 		$this->authenticated = false;
@@ -132,44 +139,59 @@ class User
 	 */
 	final public function isLoggedIn(): bool
 	{
-		if ($this->authenticated === null) {
-			$this->getStoredData();
-		}
-
+		$this->loadStoredData();
 		return (bool) $this->authenticated;
 	}
 
 
 	/**
-	 * Returns the current user identity, or null if not authenticated.
+	 * Returns the user identity. When not logged in, this is the retained identity (unless $persistIdentity
+	 * is disabled) or a guest identity if the authenticator provides one; null otherwise.
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
-		if ($this->authenticated === null) {
-			$this->getStoredData();
-		}
-
-		return $this->identity;
+		$this->loadStoredData();
+		return $this->identity ?? $this->resolveGuestIdentity();
 	}
 
 
-	private function getStoredData(): void
+	private function loadStoredData(): void
 	{
+		if ($this->authenticated !== null) {
+			return;
+		}
+
 		(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
 			$identity = $id;
 			$this->authenticated = $state;
 			$this->logoutReason = $reason;
 		})(...$this->storage->getState());
 
-		$this->identity = $identity && $this->authenticator instanceof IdentityHandler
+		$identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
 			: $identity;
-		$this->authenticated = $this->authenticated && $this->identity !== null;
+		$this->authenticated = $this->authenticated && $identity !== null;
+		$this->identity = !$this->authenticated && !$this->persistIdentity ? null : $identity;
+	}
+
+
+	/** Returns the guest identity provided by the IdentityHandler authenticator, or null. */
+	private function resolveGuestIdentity(): ?IIdentity
+	{
+		if (!$this->guestIdentityResolved) {
+			$this->guestIdentityResolved = true;
+			$this->guestIdentity = $this->authenticator instanceof IdentityHandler && method_exists($this->authenticator, 'getGuestIdentity')
+				? $this->authenticator->getGuestIdentity()
+				: null;
+		}
+
+		return $this->guestIdentity;
 	}
 
 
 	/**
-	 * Returns current user ID, if any.
+	 * Returns the ID of the identity returned by getIdentity(), so it may be the retained or guest
+	 * identity's ID even when not logged in; null if there is no identity.
 	 */
 	public function getId(): string|int|null
 	{
@@ -179,11 +201,13 @@ class User
 
 
 	/**
-	 * Discards cached authentication state, forcing a reload from storage on next access.
+	 * Discards the cached authentication state and identity, forcing a reload on next access.
 	 */
 	final public function refreshStorage(): void
 	{
 		$this->identity = $this->authenticated = $this->logoutReason = null;
+		$this->guestIdentity = null;
+		$this->guestIdentityResolved = false;
 	}
 
 
@@ -193,6 +217,7 @@ class User
 	public function setAuthenticator(IAuthenticator $handler): static
 	{
 		$this->authenticator = $handler;
+		$this->guestIdentityResolved = false;
 		return $this;
 	}
 
@@ -227,11 +252,12 @@ class User
 
 
 	/**
-	 * Enables log out after inactivity (like '20 minutes').
+	 * Enables log out after inactivity (like '20 minutes'). The identity is kept available afterwards,
+	 * unless $clearIdentity is set or the $persistIdentity property is disabled.
 	 */
 	public function setExpiration(?string $expire, bool $clearIdentity = false): static
 	{
-		$this->storage->setExpiration($expire, $clearIdentity);
+		$this->storage->setExpiration($expire, $clearIdentity || !$this->persistIdentity);
 		return $this;
 	}
 
@@ -249,13 +275,14 @@ class User
 
 
 	/**
-	 * Returns effective roles of the user. Unauthenticated users get the guest role.
+	 * Returns effective roles derived from the login state, not from the (possibly retained) identity.
+	 * Logged in: the identity's roles, or authenticatedRole. Otherwise: the guest identity's roles, or guestRole.
 	 * @return list<string>
 	 */
 	public function getRoles(): array
 	{
 		if (!$this->isLoggedIn()) {
-			return [$this->guestRole];
+			return $this->resolveGuestIdentity()?->getRoles() ?? [$this->guestRole];
 		}
 
 		$identity = $this->getIdentity();

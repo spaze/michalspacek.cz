@@ -178,7 +178,24 @@ Importantly, **when user logs out, identity is not deleted** and is still availa
 
 Thanks to this, you can still assume which user is at the computer and, for example, display personalized offers in the e-shop, however, you can only display his personal data after logging in.
 
+If you prefer the identity to be discarded on every logout and expiration, set `$user->persistIdentity = false`. Retaining the identity is best-effort and depends on the storage implementation.
+
 Identity is an object that implements the [Nette\Security\IIdentity](https://api.nette.org/master/Nette/Security/IIdentity.html) interface, the default implementation is [Nette\Security\SimpleIdentity](https://api.nette.org/3.0/Nette/Security/SimpleIdentity.html). And as mentioned, identity is stored in the session, so if, for example, we change the role of some of the logged-in users, old data will be kept in the identity until he logs in again.
+
+
+Guest Identity
+--------------
+
+You can provide an identity even for users who are not logged in. If the authenticator implements `IdentityHandler` and its optional method `getGuestIdentity()`, the returned identity is used as a fallback for `getIdentity()`, `getId()` and `getRoles()`. So anonymous visitors can carry their own roles and data instead of the plain `guest` role:
+
+```php
+public function getGuestIdentity(): ?Nette\Security\IIdentity
+{
+	return new Nette\Security\SimpleIdentity('guest', ['guest'], ['name' => 'Guest']);
+}
+```
+
+The guest identity is resolved only when reading and is never stored.
 
 
 

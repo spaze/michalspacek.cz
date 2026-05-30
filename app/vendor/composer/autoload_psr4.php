@@ -11,6 +11,7 @@ return array(
     'Webauthn\\' => array($vendorDir . '/web-auth/webauthn-lib/src'),
     'Tracy\\' => array($vendorDir . '/tracy/tracy/src'),
     'Texy\\' => array($vendorDir . '/texy/texy/src/Texy'),
+    'Symfony\\Polyfill\\DeepClone\\' => array($vendorDir . '/symfony/polyfill-deepclone'),
     'Symfony\\Contracts\\Translation\\' => array($vendorDir . '/symfony/translation-contracts'),
     'Symfony\\Contracts\\Service\\' => array($vendorDir . '/symfony/service-contracts'),
     'Symfony\\Contracts\\HttpClient\\' => array($vendorDir . '/symfony/http-client-contracts'),

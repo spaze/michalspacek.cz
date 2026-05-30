@@ -282,7 +282,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns true if $resource inherits from $inherit. If $onlyParents is true,
+	 * Returns true if $resource inherits from $inherit. If $onlyParent is true,
 	 * then $resource must inherit directly from $inherit.
 	 *
 	 * @throws Nette\InvalidStateException
@@ -652,7 +652,7 @@ class Permission implements Authorizator
 	/**
 	 * Performs a depth-first search of the Role DAG, starting at $role, in order to find a rule
 	 * allowing/denying $role access to a/all $privilege upon $resource.
-	 * @param  bool  $all (true) or one?
+	 * @param  bool  $all  match a rule covering all privileges (true) or the given $privilege (false)
 	 */
 	private function searchRolePrivileges(bool $all, ?string $role, ?string $resource, ?string $privilege): ?bool
 	{
