@@ -57,7 +57,7 @@ final readonly class BlogPostFormFactory
 	}
 
 
-	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): UiForm
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): Form
 	{
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
@@ -145,23 +145,23 @@ final readonly class BlogPostFormFactory
 		$previewButton->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
 			$this->blogPostPreview->sendPreview(
 				function () use ($form, $post): BlogPost {
-					return $this->buildPost($form->getFormValues(), $post?->getId());
+					return $this->buildPost($form->getValues(), $post?->getId());
 				},
 				$template,
 				$sendTemplate,
 			);
 		};
 
-		$form->onValidate[] = function (UiForm $form) use ($previewButton, $post, $previewKeyInput): void {
+		$form->onValidate[] = function (Form $form) use ($previewButton, $post, $previewKeyInput): void {
 			if ($form->isSubmitted() !== $previewButton) {
-				$newPost = $this->buildPost($form->getUntrustedFormValues(), $post?->getId());
+				$newPost = $this->buildPost($form->getUntrustedValues(), $post?->getId());
 				if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
 					$previewKeyInput->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
 				}
 			}
 		};
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
+			$values = $form->getValues();
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post !== null) {
@@ -248,7 +248,7 @@ final readonly class BlogPostFormFactory
 	}
 
 
-	private function setDefaults(BlogPost $post, UiForm $form, TextInput $editSummaryInput, SubmitButton $submitButton): void
+	private function setDefaults(BlogPost $post, Form $form, TextInput $editSummaryInput, SubmitButton $submitButton): void
 	{
 		$values = [
 			'translationGroup' => $post->getTranslationGroupId(),

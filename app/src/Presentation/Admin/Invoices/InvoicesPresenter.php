@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Invoices;
 
 use MichalSpacekCz\Form\Training\TrainingInvoiceFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
@@ -12,6 +11,7 @@ use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use Nette\Forms\Form;
 
 final class InvoicesPresenter extends BasePresenter
 {
@@ -55,7 +55,7 @@ final class InvoicesPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentInvoice(): UiForm
+	protected function createComponentInvoice(): Form
 	{
 		return $this->trainingInvoiceFormFactory->create(
 			function (int $count): never {

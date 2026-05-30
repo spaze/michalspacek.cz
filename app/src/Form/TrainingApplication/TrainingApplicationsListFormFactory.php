@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
@@ -29,7 +29,7 @@ final readonly class TrainingApplicationsListFormFactory
 	 * @param callable(Html|null): void $onSuccess
 	 * @param list<TrainingApplication> $applications
 	 */
-	public function create(callable $onSuccess, array $applications): UiForm
+	public function create(callable $onSuccess, array $applications): Form
 	{
 		$form = $this->factory->create();
 		$container = $form->addContainer('applications');
@@ -51,7 +51,7 @@ final readonly class TrainingApplicationsListFormFactory
 		$submitFamiliar = $form->addSubmit('familiar', 'Tykat všem')->setValidationScope([]);
 
 		$submitStatuses->onClick[] = function () use ($form, $onSuccess): void {
-			$values = $form->getFormValues();
+			$values = $form->getValues();
 			assert($values->applications instanceof ArrayHash);
 			assert(is_string($values->date));
 			foreach ($values->applications as $id => $status) {
@@ -65,7 +65,7 @@ final readonly class TrainingApplicationsListFormFactory
 		$submitFamiliar->onClick[] = function () use ($form, $onSuccess): void {
 			$attendedStatuses = $this->trainingApplicationStatuses->getAttendedStatuses();
 			$total = 0;
-			foreach (array_keys((array)$form->getUntrustedFormValues()->applications) as $id) {
+			foreach (array_keys((array)$form->getUntrustedValues()->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);
 				if (in_array($application->getStatus(), $attendedStatuses, true) && !$application->isFamiliar()) {
 					$this->trainingApplications->setFamiliar($id);

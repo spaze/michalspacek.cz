@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'spaze/michalspacek.cz',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => 'b1677526f21bb67c913f97dc80910c544c5162ad',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -164,9 +164,9 @@
             ),
         ),
         'nette/forms' => array(
-            'pretty_version' => 'v3.2.8',
-            'version' => '3.2.8.0',
-            'reference' => '3bbf691ea0eb50d9594c2109d9252f267092b91f',
+            'pretty_version' => 'v3.2.9',
+            'version' => '3.2.9.0',
+            'reference' => 'b749e9c2cd259a8ac75d444137f1caf94ec644ef',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/forms',
             'aliases' => array(),
@@ -440,9 +440,9 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'b1677526f21bb67c913f97dc80910c544c5162ad',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

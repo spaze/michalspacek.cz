@@ -7,7 +7,6 @@ use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\Locale\Locales;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Media\VideoThumbnails;
@@ -38,7 +37,7 @@ final readonly class TalkFormFactory
 	/**
 	 * @param callable(Html): void $onSuccess
 	 */
-	public function create(callable $onSuccess, ?Talk $talk = null): UiForm
+	public function create(callable $onSuccess, ?Talk $talk = null): Form
 	{
 		$form = $this->factory->create();
 		$allTalks = $this->getAllTalksExcept($talk !== null ? (string)$talk->getAction() : null);
@@ -121,8 +120,8 @@ final readonly class TalkFormFactory
 			$this->setTalk($form, $talk, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess, $hasVideoThumbnail, $hasAlternativeVideoThumbnail): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($talk, $onSuccess, $hasVideoThumbnail, $hasAlternativeVideoThumbnail): void {
+			$values = $form->getValues();
 			assert($values->videoThumbnail instanceof FileUpload);
 			assert($values->videoThumbnailAlternative instanceof FileUpload);
 			assert(is_int($values->locale));
@@ -226,7 +225,7 @@ final readonly class TalkFormFactory
 	}
 
 
-	public function setTalk(UiForm $form, Talk $talk, SubmitButton $submit): void
+	public function setTalk(Form $form, Talk $talk, SubmitButton $submit): void
 	{
 		$values = [
 			'action' => $talk->getAction(),

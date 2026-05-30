@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Talk;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexyTalkSlidesFactory;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -14,6 +13,7 @@ use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
 use Nette\Forms\Container;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
@@ -37,7 +37,7 @@ final readonly class TalkSlidesFormFactory
 	/**
 	 * @param callable(Html, string, int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $talkId, TalkSlideCollection $slides, int $newCount, Request $request): UiForm
+	public function create(callable $onSuccess, int $talkId, TalkSlideCollection $slides, int $newCount, Request $request): Form
 	{
 		$form = $this->factory->create();
 		$slidesContainer = $form->addContainer('slides');
@@ -67,9 +67,9 @@ final readonly class TalkSlidesFormFactory
 		$form->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
 		$form->addSubmit('submit', 'Upravit');
 
-		$form->onSuccess[] = function (UiForm $form) use ($slides, $onSuccess, $talkId): void {
+		$form->onSuccess[] = function (Form $form) use ($slides, $onSuccess, $talkId): void {
 			try {
-				$values = $form->getFormValues();
+				$values = $form->getValues();
 				assert($values->slides instanceof ArrayHash);
 				assert($values->new instanceof ArrayHash);
 				assert(is_bool($values->deleteReplaced));
@@ -82,7 +82,7 @@ final readonly class TalkSlidesFormFactory
 			}
 			$onSuccess($message, $type, $talkId);
 		};
-		$form->onValidate[] = function (UiForm $form) use ($request): void {
+		$form->onValidate[] = function (Form $form) use ($request): void {
 			if (!$this->hasSlideNo1($form)) {
 				$form->addError($this->texyFormatter->translate('messages.talks.admin.slideNumber1Missing'));
 			}
@@ -104,9 +104,9 @@ final readonly class TalkSlidesFormFactory
 	}
 
 
-	private function hasSlideNo1(UiForm $form): bool
+	private function hasSlideNo1(Form $form): bool
 	{
-		$values = $form->getUntrustedFormValues();
+		$values = $form->getUntrustedValues();
 		assert($values->slides instanceof ArrayHash);
 		assert($values->new instanceof ArrayHash);
 		foreach ($values->slides as $slide) {
@@ -131,8 +131,8 @@ final readonly class TalkSlidesFormFactory
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$aliasInput = $container->addText('alias', 'Alias:')
-			->addRule(function (BaseControl $input): bool {
-				return is_string($input->getValue()) && !$this->talkSlides->isNumberSlideAlias($input->getValue());
+			->addRule(function (Control $input): bool {
+				return !$input instanceof BaseControl || is_string($input->getValue()) && !$this->talkSlides->isNumberSlideAlias($input->getValue());
 			}, "Alias slajdu '%value' nesmí být číslo")
 			->setRequired('Zadejte prosím alias');
 		$this->validators->addValidateSlugRules($aliasInput);

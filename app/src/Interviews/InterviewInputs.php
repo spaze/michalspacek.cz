@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Interviews;
 
 use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\InterviewFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\VideoThumbnails;
+use Nette\Forms\Form;
 
 final class InterviewInputs extends UiControl
 {
@@ -28,7 +28,7 @@ final class InterviewInputs extends UiControl
 	}
 
 
-	protected function createComponentInterview(): UiForm
+	protected function createComponentInterview(): Form
 	{
 		return $this->interviewFormFactory->create(
 			function (): never {

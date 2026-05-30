@@ -11,7 +11,6 @@ use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationsListFormFactory;
 use MichalSpacekCz\Form\TrainingApplication\TrainingMultipleApplicationsFormFactory;
 use MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationsListFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
@@ -38,6 +37,7 @@ use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 final class TrainingsPresenter extends BasePresenter
@@ -240,7 +240,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentStatuses(): UiForm
+	protected function createComponentStatuses(): Form
 	{
 		return $this->trainingApplicationsListFormFactory->create(
 			function (?Html $message): never {
@@ -254,7 +254,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplications(): UiForm
+	protected function createComponentApplications(): Form
 	{
 		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() will be called first');
@@ -273,7 +273,7 @@ final class TrainingsPresenter extends BasePresenter
 	 * @throws TrainingDateNotRemoteNoVenueException
 	 * @throws InvalidTimezoneException
 	 */
-	protected function createComponentApplicationForm(): UiForm
+	protected function createComponentApplicationForm(): Form
 	{
 		if ($this->application === null) {
 			throw new ShouldNotHappenException('actionApplication() will be called first');
@@ -294,7 +294,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentFile(): UiForm
+	protected function createComponentFile(): Form
 	{
 		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionDate() or actionFiles() will be called first');
@@ -326,7 +326,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentDeletePersonalDataForm(): UiForm
+	protected function createComponentDeletePersonalDataForm(): Form
 	{
 		return $this->deletePersonalDataFormFactory->create(function (): never {
 			$this->flashMessage('Osobní data z minulých školení smazána');
@@ -368,7 +368,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentPreliminaryApplications(): UiForm
+	protected function createComponentPreliminaryApplications(): Form
 	{
 		return $this->trainingPreliminaryApplicationsListFormFactory->create(
 			$this->preliminaryTrainings,

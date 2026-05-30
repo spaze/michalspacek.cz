@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -29,6 +27,7 @@ class CheckboxList extends MultiChoiceControl
 	protected Html $itemLabel;
 
 
+	/** @param  ?mixed[]  $items */
 	public function __construct(string|Stringable|null $label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
@@ -43,9 +42,11 @@ class CheckboxList extends MultiChoiceControl
 	public function loadHttpData(): void
 	{
 		$data = $this->getForm()->getHttpData(Nette\Forms\Form::DataText, substr($this->getHtmlName(), 0, -2));
-		$data = $data === null
-			? $this->getHttpData(Nette\Forms\Form::DataText)
-			: explode(',', $data);
+		$data = match (true) {
+			$data === null => $this->getHttpData(Nette\Forms\Form::DataText),
+			is_string($data) => explode(',', $data),
+			default => [],
+		};
 		$this->value = array_keys(array_flip($data));
 	}
 
@@ -80,6 +81,9 @@ class CheckboxList extends MultiChoiceControl
 	}
 
 
+	/**
+	 * Returns the HTML input element for a specific checkbox item by key.
+	 */
 	public function getControlPart($key = null): Html
 	{
 		$key = key([(string) $key => null]);
@@ -93,6 +97,9 @@ class CheckboxList extends MultiChoiceControl
 	}
 
 
+	/**
+	 * Returns the label element for the whole checkbox list, or the item label for a specific key.
+	 */
 	public function getLabelPart($key = null): Html
 	{
 		$itemLabel = clone $this->itemLabel;

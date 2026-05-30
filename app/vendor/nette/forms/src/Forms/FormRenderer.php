@@ -1,22 +1,20 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Forms;
 
 
 /**
- * Defines method that must implement form renderer.
+ * Contract for form renderers.
  */
 interface FormRenderer
 {
 	/**
-	 * Provides complete form rendering.
+	 * Renders the form into HTML string.
 	 */
 	function render(Form $form): string;
 }

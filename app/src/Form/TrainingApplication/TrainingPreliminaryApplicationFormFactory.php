@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
+use Nette\Forms\Form;
 
 final readonly class TrainingPreliminaryApplicationFormFactory
 {
@@ -22,13 +22,13 @@ final readonly class TrainingPreliminaryApplicationFormFactory
 	}
 
 
-	public function create(callable $onSuccess, callable $onError, int $trainingId, string $action): UiForm
+	public function create(callable $onSuccess, callable $onError, int $trainingId, string $action): Form
 	{
 		$form = $this->factory->create();
 		$this->trainingControlsFactory->addAttendee($form);
 		$form->addSubmit('signUp', 'Odeslat');
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError, $trainingId, $action): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $trainingId, $action): void {
+			$values = $form->getValues();
 			assert(is_string($values->name));
 			assert(is_string($values->email));
 			try {

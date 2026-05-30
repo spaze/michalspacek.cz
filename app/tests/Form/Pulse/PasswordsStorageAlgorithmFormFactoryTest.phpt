@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Pulse;
 
 use DateTime;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Override;
 use Tester\Assert;
@@ -20,7 +20,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class PasswordsStorageAlgorithmFormFactoryTest extends TestCase
 {
 
-	private UiForm $form;
+	private Form $form;
 
 
 	public function __construct(

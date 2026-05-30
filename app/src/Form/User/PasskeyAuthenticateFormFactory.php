@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
+use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Nette\Security\User;
 use Tracy\Debugger;
@@ -32,7 +32,7 @@ final readonly class PasskeyAuthenticateFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl, ?string $options = null): UiForm
+	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl, ?string $options = null): Form
 	{
 		$form = $this->factory->create();
 		if ($options !== null) {
@@ -44,8 +44,8 @@ final readonly class PasskeyAuthenticateFormFactory
 			->setRequired()
 			->setHtmlAttribute('id', 'passkeyCredential');
 		$form->addSubmit('authenticate');
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			assert(is_string($values->credential));
 			try {
 				$result = $this->passkeyAuthenticator->verifyAuthentication($values->credential);

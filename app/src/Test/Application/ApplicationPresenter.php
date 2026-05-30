@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test\Application;
 
 use Closure;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\ComponentProperty;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -12,6 +11,7 @@ use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Form;
 use Override;
 use ReflectionException;
 
@@ -87,7 +87,7 @@ final readonly class ApplicationPresenter
 	}
 
 
-	public function anchorForm(UiForm $form): void
+	public function anchorForm(Form $form): void
 	{
 		$presenter = $this->createUiPresenter('Www:Homepage', 'foo', 'default');
 		ComponentProperty::setParentAndName($form, $presenter, null);

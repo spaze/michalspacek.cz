@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -30,6 +28,7 @@ class RadioList extends ChoiceControl
 	protected Html $itemLabel;
 
 
+	/** @param  ?mixed[]  $items */
 	public function __construct(string|Stringable|null $label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
@@ -77,6 +76,9 @@ class RadioList extends ChoiceControl
 	}
 
 
+	/**
+	 * Returns the HTML input element for a specific radio button item by key.
+	 */
 	public function getControlPart($key = null): Html
 	{
 		$key = key([(string) $key => null]);
@@ -89,6 +91,9 @@ class RadioList extends ChoiceControl
 	}
 
 
+	/**
+	 * Returns the label element for the whole radio list, or the item label for a specific key.
+	 */
 	public function getLabelPart($key = null): Html
 	{
 		$itemLabel = clone $this->itemLabel;

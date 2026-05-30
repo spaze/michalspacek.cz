@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Form\Training;
 
 use Exception;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Database\Explorer;
+use Nette\Forms\Form;
 use Tracy\Debugger;
 
 final readonly class DeletePersonalDataFormFactory
@@ -25,11 +25,11 @@ final readonly class DeletePersonalDataFormFactory
 	}
 
 
-	public function create(callable $onSuccess): UiForm
+	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$form->addSubmit('delete', 'Smazat osobní údaje');
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$this->database->beginTransaction();
 			try {
 				$pastIds = [];

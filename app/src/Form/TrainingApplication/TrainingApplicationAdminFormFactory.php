@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
@@ -38,7 +37,7 @@ final readonly class TrainingApplicationAdminFormFactory
 	 * @throws TrainingDateNotRemoteNoVenueException
 	 * @throws InvalidTimezoneException
 	 */
-	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): UiForm
+	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): Form
 	{
 		$form = $this->factory->create();
 
@@ -91,8 +90,8 @@ final readonly class TrainingApplicationAdminFormFactory
 				};
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($application, $onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
+			$values = $form->getValues();
 			assert(is_bool($values->nameSet));
 			assert(is_string($values->name));
 			assert(is_bool($values->emailSet));
@@ -151,7 +150,7 @@ final readonly class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function addPaymentInfo(UiForm $form): void
+	private function addPaymentInfo(Form $form): void
 	{
 		$form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
@@ -173,7 +172,7 @@ final readonly class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function setApplication(UiForm $form, TrainingApplication $application): void
+	private function setApplication(Form $form, TrainingApplication $application): void
 	{
 		$vatRate = $application->getVatRate();
 		$values = [

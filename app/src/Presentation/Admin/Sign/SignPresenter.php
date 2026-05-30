@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Sign;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory;
 use MichalSpacekCz\Form\User\PasskeyResetFormFactory;
 use MichalSpacekCz\Form\User\SignInHoneypotFormFactory;
@@ -18,6 +17,7 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetException;
 use MichalSpacekCz\User\WebAuthn\PasskeyReset;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\Session;
@@ -147,13 +147,13 @@ final class SignPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSignInHoneypot(): UiForm
+	protected function createComponentSignInHoneypot(): Form
 	{
 		return $this->signInHoneypotFormFactory->create();
 	}
 
 
-	protected function createComponentPasskeyAuthenticate(): UiForm
+	protected function createComponentPasskeyAuthenticate(): Form
 	{
 		return $this->passkeyAuthenticateFormFactory->create(
 			function (): void {
@@ -167,7 +167,7 @@ final class SignPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentPasskeyReset(): UiForm
+	protected function createComponentPasskeyReset(): Form
 	{
 		return $this->passkeyResetFormFactory->create(
 			function (): void {

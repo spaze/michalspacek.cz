@@ -1166,17 +1166,17 @@
         },
         {
             "name": "nette/forms",
-            "version": "v3.2.8",
-            "version_normalized": "3.2.8.0",
+            "version": "v3.2.9",
+            "version_normalized": "3.2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "3bbf691ea0eb50d9594c2109d9252f267092b91f"
+                "reference": "b749e9c2cd259a8ac75d444137f1caf94ec644ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/3bbf691ea0eb50d9594c2109d9252f267092b91f",
-                "reference": "3bbf691ea0eb50d9594c2109d9252f267092b91f",
+                "url": "https://api.github.com/repos/nette/forms/zipball/b749e9c2cd259a8ac75d444137f1caf94ec644ef",
+                "reference": "b749e9c2cd259a8ac75d444137f1caf94ec644ef",
                 "shasum": ""
             },
             "require": {
@@ -1192,14 +1192,16 @@
                 "latte/latte": "^2.10.2 || ^3.0.12",
                 "nette/application": "^3.0",
                 "nette/di": "^3.0",
-                "nette/tester": "^2.5.2",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "nette/phpstan-rules": "^1.0",
+                "nette/tester": "^2.6",
+                "phpstan/extension-installer": "^1.4@stable",
+                "phpstan/phpstan": "^2.1@stable",
                 "tracy/tracy": "^2.9"
             },
             "suggest": {
                 "ext-intl": "to use date/time controls"
             },
-            "time": "2025-11-22T19:36:34+00:00",
+            "time": "2026-05-26T15:09:08+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1243,7 +1245,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/forms/issues",
-                "source": "https://github.com/nette/forms/tree/v3.2.8"
+                "source": "https://github.com/nette/forms/tree/v3.2.9"
             },
             "install-path": "../nette/forms"
         },

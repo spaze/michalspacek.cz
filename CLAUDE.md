@@ -145,7 +145,7 @@ interface ArticleHeaderIconsFactory
 
 ### Forms
 
-`FormFactory::create()` returns a `UiForm` (extends `Nette\Application\UI\Form`) with CSRF protection always added. `UnprotectedFormFactory` exists for forms that intentionally omit CSRF (e.g. GET search/sort forms, theme toggles, honeypot traps). Domain-specific form factory classes (`*FormFactory`) inject one of these and add their own controls. Use `UiForm::getFormValues()` in `onSuccess` handlers and `getUntrustedFormValues()` in `onValidate` handlers — raw `Container::getValues()` and `Container::getUntrustedValues()` are both blocked by PHPStan.
+`FormFactory::create()` returns a `Nette\Application\UI\Form` with CSRF protection always added. `UnprotectedFormFactory` exists for forms that intentionally omit CSRF (e.g. GET search/sort forms, theme toggles, honeypot traps). Domain-specific form factory classes (`*FormFactory`) inject one of these and add their own controls. Use `Form::getValues()` in `onSuccess` handlers and `getUntrustedValues()` in `onValidate` handlers.
 
 ### Database
 

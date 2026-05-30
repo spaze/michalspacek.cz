@@ -7,13 +7,13 @@ namespace MichalSpacekCz\Pulse\Passwords;
 use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Forms\Form;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -430,7 +430,7 @@ final class PasswordsTest extends TestCase
 			],
 		]);
 
-		$this->passwords->addStorage($form->getFormValues());
+		$this->passwords->addStorage($form->getValues());
 		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO companies'));
 		Assert::same(
 			[['key_password_disclosures' => 5, 'key_password_storages' => 6]],
@@ -512,7 +512,7 @@ final class PasswordsTest extends TestCase
 		]);
 		$this->dateTimeFactory->setDateTime(new DateTimeImmutable('2020-01-01 12:34:56'));
 
-		$this->passwords->addStorage($form->getFormValues());
+		$this->passwords->addStorage($form->getValues());
 		Assert::same(
 			[[
 				'name' => 'Slevomat.cz, s.r.o.',
@@ -572,7 +572,7 @@ final class PasswordsTest extends TestCase
 	}
 
 
-	private function getForm(): UiForm
+	private function getForm(): Form
 	{
 		$form = $this->formFactory->create(
 			function (): void {

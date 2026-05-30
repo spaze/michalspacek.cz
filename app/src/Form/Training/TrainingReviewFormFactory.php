@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
@@ -28,7 +27,7 @@ final readonly class TrainingReviewFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): UiForm
+	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): Form
 	{
 		$form = $this->factory->create();
 
@@ -67,8 +66,8 @@ final readonly class TrainingReviewFormFactory
 			$this->setReview($form, $review, $submit);
 		}
 
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $review, $dateId): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $review, $dateId): void {
+			$values = $form->getValues();
 			assert(is_string($values->name));
 			assert(is_string($values->company));
 			assert(is_string($values->jobTitle));
@@ -110,7 +109,7 @@ final readonly class TrainingReviewFormFactory
 	}
 
 
-	private function setReview(UiForm $form, TrainingReview $review, SubmitButton $submit): void
+	private function setReview(Form $form, TrainingReview $review, SubmitButton $submit): void
 	{
 		$values = [
 			'name' => $review->getName(),

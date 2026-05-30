@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\ApplicationForm;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
@@ -16,6 +15,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use PDOException;
@@ -44,7 +44,7 @@ final readonly class TrainingApplicationFormSuccess
 	 * @throws SodiumException
 	 */
 	public function success(
-		UiForm $form,
+		Form $form,
 		callable $onSuccess,
 		callable $onError,
 		string $action,
@@ -53,7 +53,7 @@ final readonly class TrainingApplicationFormSuccess
 		bool $multipleDates,
 		TrainingApplicationSessionSection $sessionSection,
 	): void {
-		$values = $form->getFormValues();
+		$values = $form->getValues();
 		assert(is_string($values->name));
 		assert(is_string($values->email));
 		assert(is_string($values->company));

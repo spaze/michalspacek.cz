@@ -7,7 +7,6 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 
 use DateTime;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\NullMailer;
@@ -18,6 +17,7 @@ use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Http\SessionSection;
@@ -51,7 +51,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 
 	private ?string $onSuccessAction = null;
 	private ?string $onErrorMessage = null;
-	private UiForm $form;
+	private Form $form;
 	private ?SelectBox $trainingIdSelect = null;
 	private TrainingApplicationSessionSection $sessionSection;
 	private ReflectionMethod $sessionSectionParentGet;
@@ -70,7 +70,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 		$presenter = $presenterFactory->createPresenter('Www:Homepage'); // Has to be a real presenter that extends Ui\Presenter
 		assert($presenter instanceof Presenter);
 		PrivateProperty::setValue($application, 'presenter', $presenter);
-		$this->form = new UiForm($presenter, 'form');
+		$this->form = new Form($presenter, 'form');
 		$trainingControlsFactory->addAttendee($this->form);
 		$trainingControlsFactory->addCompany($this->form);
 		$trainingControlsFactory->addNote($this->form);

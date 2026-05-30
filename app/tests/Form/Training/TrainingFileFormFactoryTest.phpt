@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use DateTimeImmutable;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Tester\Assert;
@@ -19,7 +19,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class TrainingFileFormFactoryTest extends TestCase
 {
 
-	private readonly UiForm $form;
+	private readonly Form $form;
 	private string $message = '';
 	private string $type = '';
 

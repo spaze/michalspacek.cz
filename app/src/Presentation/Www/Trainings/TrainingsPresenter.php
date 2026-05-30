@@ -7,7 +7,6 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Http\Robots\Robots;
 use MichalSpacekCz\Http\Robots\RobotsRule;
@@ -30,6 +29,7 @@ use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings\Training;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Http\Session;
 use Override;
@@ -139,7 +139,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication(): UiForm
+	protected function createComponentApplication(): Form
 	{
 		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionTraining() or actionSuccess() will be called first');
@@ -161,7 +161,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationPreliminary(): UiForm
+	protected function createComponentApplicationPreliminary(): Form
 	{
 		if ($this->training === null) {
 			throw new ShouldNotHappenException('actionTraining() will be called first');

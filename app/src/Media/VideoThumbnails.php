@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\Exceptions\CannotDeleteMediaException;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
@@ -40,7 +39,7 @@ final readonly class VideoThumbnails
 	}
 
 
-	public function addFormFields(UiForm $form, bool $hasVideoThumbnail, bool $hasAlternativeVideoThumbnail): void
+	public function addFormFields(Form $form, bool $hasVideoThumbnail, bool $hasAlternativeVideoThumbnail): void
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
@@ -70,8 +69,8 @@ final readonly class VideoThumbnails
 			$videoThumbnailAlternative->addCondition(Form::Filled, true)
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
-		$form->onValidate[] = function (UiForm $form) use ($videoThumbnail, $videoThumbnailAlternative): void {
-			$values = $form->getUntrustedFormValues();
+		$form->onValidate[] = function (Form $form) use ($videoThumbnail, $videoThumbnailAlternative): void {
+			$values = $form->getUntrustedValues();
 			assert($values->videoThumbnail instanceof FileUpload);
 			assert($values->videoThumbnailAlternative instanceof FileUpload);
 			$this->validateUpload($values->videoThumbnail, $videoThumbnail);

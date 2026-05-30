@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -16,16 +14,20 @@ use function array_combine, array_diff, array_fill_keys, array_flip, array_keys,
 /**
  * Choice control that allows multiple items selection.
  *
- * @property   array $items
- * @property-read array $selectedItems
+ * @property   mixed[] $items
+ * @property   bool|array<bool> $disabled
+ * @property-read mixed[] $selectedItems
  */
 abstract class MultiChoiceControl extends BaseControl
 {
 	private bool $checkDefaultValue = true;
+
+	/** @var mixed[] */
 	private array $items = [];
 
 
-	public function __construct($label = null, ?array $items = null)
+	/** @param ?mixed[]  $items */
+	public function __construct(string|\Stringable|null $label = null, ?array $items = null)
 	{
 		parent::__construct($label);
 		if ($items !== null) {
@@ -41,7 +43,6 @@ abstract class MultiChoiceControl extends BaseControl
 
 
 	/**
-	 * Sets selected items (by keys).
 	 * @return static
 	 * @internal
 	 */
@@ -78,6 +79,7 @@ abstract class MultiChoiceControl extends BaseControl
 
 	/**
 	 * Returns selected keys.
+	 * @return list<int|string>
 	 */
 	public function getValue(): array
 	{
@@ -86,7 +88,8 @@ abstract class MultiChoiceControl extends BaseControl
 
 
 	/**
-	 * Returns selected keys (not checked).
+	 * Returns raw submitted keys without validation against the available items.
+	 * @return list<int|string>
 	 */
 	public function getRawValue(): array
 	{
@@ -95,7 +98,8 @@ abstract class MultiChoiceControl extends BaseControl
 
 
 	/**
-	 * Sets items from which to choose.
+	 * Sets items from which to choose. When $useKeys is false, values are used as keys too.
+	 * @param mixed[]  $items
 	 * @return static
 	 */
 	public function setItems(array $items, bool $useKeys = true)
@@ -107,6 +111,7 @@ abstract class MultiChoiceControl extends BaseControl
 
 	/**
 	 * Returns items from which to choose.
+	 * @return mixed[]
 	 */
 	public function getItems(): array
 	{
@@ -115,7 +120,8 @@ abstract class MultiChoiceControl extends BaseControl
 
 
 	/**
-	 * Returns selected values.
+	 * Returns key-value pairs for valid, non-disabled selected items.
+	 * @return mixed[]
 	 */
 	public function getSelectedItems(): array
 	{
@@ -131,6 +137,7 @@ abstract class MultiChoiceControl extends BaseControl
 
 	/**
 	 * Disables or enables control or items.
+	 * @param bool|array<int|string>  $value
 	 */
 	public function setDisabled(bool|array $value = true): static
 	{
@@ -153,6 +160,9 @@ abstract class MultiChoiceControl extends BaseControl
 	}
 
 
+	/**
+	 * Enables or disables validation that set values exist in the items list.
+	 */
 	public function checkDefaultValue(bool $value = true): static
 	{
 		$this->checkDefaultValue = $value;

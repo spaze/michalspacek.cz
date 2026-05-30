@@ -6,10 +6,10 @@ namespace MichalSpacekCz\Form\User;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\PasskeyReset;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
+use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Tracy\Debugger;
 
@@ -30,7 +30,7 @@ final readonly class PasskeyResetFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl, string $notSupportedUrl): UiForm
+	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl, string $notSupportedUrl): Form
 	{
 		$form = $this->factory->create();
 		$form->setHtmlAttribute('data-error-url', $errorUrl);
@@ -40,8 +40,8 @@ final readonly class PasskeyResetFormFactory
 		$form->addHidden('token')
 			->setRequired()
 			->setHtmlAttribute('id', 'passkeyResetToken');
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			assert(is_string($values->credential));
 			assert(is_string($values->name));
 			assert(is_string($values->token));

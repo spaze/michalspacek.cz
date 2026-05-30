@@ -10,6 +10,7 @@ use MichalSpacekCz\Utils\Sleep;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 
@@ -43,12 +44,15 @@ final readonly class WinterIsComing
 
 
 	/**
-	 * @return callable(TextInput): true
+	 * @return callable(Control): true
 	 */
 	public function ruleName(): callable
 	{
 		// Strings longer than x containing only word characters (no spaces, punctuation, etc.) are sus
-		return function (TextInput $input) {
+		return function (Control $input) {
+			if (!$input instanceof TextInput) {
+				return true;
+			}
 			if (
 				is_string($input->getValue())
 				&& count(Preg::split('/\W/', $input->getValue())) === 1
@@ -62,11 +66,14 @@ final readonly class WinterIsComing
 
 
 	/**
-	 * @return callable(TextInput): true
+	 * @return callable(Control): true
 	 */
 	public function ruleEmail(): callable
 	{
-		return function (TextInput $input) {
+		return function (Control $input) {
+			if (!$input instanceof TextInput) {
+				return true;
+			}
 			$value = $input->getValue();
 			if (
 				is_string($value)
@@ -83,11 +90,14 @@ final readonly class WinterIsComing
 
 
 	/**
-	 * @return callable(TextInput): true
+	 * @return callable(Control): true
 	 */
 	public function ruleStreet(): callable
 	{
-		return function (TextInput $input) {
+		return function (Control $input) {
+			if (!$input instanceof TextInput) {
+				return true;
+			}
 			if (Arrays::contains(self::STREETS, $input->getValue())) {
 				$this->sendSyntaxError($input);
 			}

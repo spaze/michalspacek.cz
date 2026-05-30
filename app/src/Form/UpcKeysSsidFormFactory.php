@@ -19,7 +19,7 @@ final readonly class UpcKeysSsidFormFactory
 	/**
 	 * @param callable(string): void $onSuccess
 	 */
-	public function create(callable $onSuccess, ?string $ssid): UiForm
+	public function create(callable $onSuccess, ?string $ssid): Form
 	{
 		$form = $this->factory->create();
 		$form->addText('ssid', 'SSID:')
@@ -31,8 +31,8 @@ final readonly class UpcKeysSsidFormFactory
 		$form->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
 			->setHtmlAttribute('data-alt', 'Wait…');
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			assert(is_string($values->ssid));
 			$ssid = strtoupper(trim($values->ssid));
 			$onSuccess($ssid);

@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Form\User;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\Form\Controls\FormControlsFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\UnprotectedFormFactory;
+use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Nette\Utils\Html;
 use Tracy\Debugger;
@@ -22,12 +22,12 @@ final readonly class SignInHoneypotFormFactory
 	}
 
 
-	public function create(): UiForm
+	public function create(): Form
 	{
 		$form = $this->factory->create();
 		$this->controlsFactory->addSignIn($form);
-		$form->onSuccess[] = function (UiForm $form): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form): void {
+			$values = $form->getValues();
 			assert(is_string($values->username));
 			assert(is_string($values->password));
 			Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->httpRequest->getRemoteAddress()}", 'honeypot');

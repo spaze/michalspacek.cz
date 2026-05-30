@@ -86,11 +86,6 @@
 				<file name="src/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
 			</errorLevel>
 		</PossiblyUnusedReturnValue>
-		<PropertyNotSetInConstructor>
-			<errorLevel type="suppress">
-				<referencedProperty name="Nette\Forms\Form::$httpRequest" /> <!-- Marked as @internal -->
-			</errorLevel>
-		</PropertyNotSetInConstructor>
 		<ReservedWord>
 			<errorLevel type="suppress">
 				<directory name="src/Test" /> <!-- The void keyword is reported in @throws void -->

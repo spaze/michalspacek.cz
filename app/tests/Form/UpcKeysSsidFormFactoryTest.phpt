@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Form\FormComponents;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Tester\Assert;
 use Tester\TestCase;
@@ -17,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 final class UpcKeysSsidFormFactoryTest extends TestCase
 {
 
-	private readonly UiForm $form;
+	private readonly Form $form;
 	private string $ssid = '';
 
 

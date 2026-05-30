@@ -8,7 +8,6 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
@@ -20,6 +19,7 @@ use MichalSpacekCz\User\WebAuthn\PasskeyReset;
 use MichalSpacekCz\User\WebAuthn\PasskeyResetTokens;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
 use Override;
@@ -114,7 +114,7 @@ final class PasskeyResetFormFactoryTest extends TestCase
 	}
 
 
-	private function getForm(string $tokenString): UiForm
+	private function getForm(string $tokenString): Form
 	{
 		$form = $this->createFormFactory()->create(
 			function (): void {

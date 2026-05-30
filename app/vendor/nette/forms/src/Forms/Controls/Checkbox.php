@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -16,7 +14,7 @@ use function is_scalar, sprintf;
 
 
 /**
- * Check box control. Allows the user to select a true or false condition.
+ * Checkbox control returning a boolean value.
  */
 class Checkbox extends BaseControl
 {
@@ -33,7 +31,6 @@ class Checkbox extends BaseControl
 
 
 	/**
-	 * Sets control's value.
 	 * @return static
 	 * @internal
 	 */

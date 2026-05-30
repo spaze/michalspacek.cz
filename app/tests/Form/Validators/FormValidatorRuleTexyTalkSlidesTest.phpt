@@ -9,6 +9,7 @@ use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\TextArea;
 use Override;
 use Tester\Assert;
@@ -90,6 +91,54 @@ final class FormValidatorRuleTexyTalkSlidesTest extends TestCase
 		$rule = $this->rule;
 		Assert::true($rule->getRule()($textArea));
 		Assert::same(['Invalid link: oops/bar'], $textArea->getErrors());
+	}
+
+
+	public function testGetRuleNotTextBase(): void
+	{
+		$control = $this->getControl();
+		Assert::true(($this->rule->getRule())($control));
+	}
+
+
+	private function getControl(): Control
+	{
+		return new class implements Control {
+
+			#[Override]
+			public function setValue(mixed $value): self
+			{
+				return $this;
+			}
+
+
+			#[Override]
+			public function getValue(): mixed
+			{
+				return null;
+			}
+
+
+			#[Override]
+			public function validate(): void
+			{
+			}
+
+
+			#[Override]
+			public function getErrors(): array
+			{
+				return [];
+			}
+
+
+			#[Override]
+			public function isOmitted(): bool
+			{
+				return false;
+			}
+
+		};
 	}
 
 }

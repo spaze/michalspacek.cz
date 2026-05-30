@@ -7,12 +7,13 @@ declare(strict_types = 1);
 namespace EasterEgg\WinterIsComing;
 
 use MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Utils\Insomnia;
 use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\Form;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\TextInput;
 use Nette\InvalidStateException;
 use Override;
@@ -27,13 +28,13 @@ final class WinterIsComingTest extends TestCase
 
 	private TextInput $textInput;
 
-	/** @var callable(TextInput): true */
+	/** @var callable(Control): true */
 	private $ruleName;
 
-	/** @var callable(TextInput): true */
+	/** @var callable(Control): true */
 	private $ruleEmail;
 
-	/** @var callable(TextInput): true */
+	/** @var callable(Control): true */
 	private $ruleStreet;
 
 	private UiPresenterMock $presenter;
@@ -45,7 +46,7 @@ final class WinterIsComingTest extends TestCase
 		WinterIsComing $winterIsComing,
 	) {
 		$this->presenter = new UiPresenterMock();
-		$this->textInput = (new UiForm($this->presenter, 'leForm'))->addText('foo');
+		$this->textInput = (new Form($this->presenter, 'leForm'))->addText('foo');
 		$this->ruleName = $winterIsComing->ruleName();
 		$this->ruleEmail = $winterIsComing->ruleEmail();
 		$this->ruleStreet = $winterIsComing->ruleStreet();
@@ -113,6 +114,13 @@ final class WinterIsComingTest extends TestCase
 	}
 
 
+	public function testRuleNameNotTextInput(): void
+	{
+		$control = $this->getControl();
+		Assert::true(($this->ruleName)($control));
+	}
+
+
 	public function testRuleEmail(): void
 	{
 		Assert::true(($this->ruleEmail)($this->textInput->setDefaultValue('foo@bar.com')));
@@ -152,6 +160,13 @@ final class WinterIsComingTest extends TestCase
 	{
 		($this->ruleEmail)($this->textInput->setDefaultValue('regexp@ssemarketing-net'));
 		Assert::false($this->presenter->isResponseSent());
+	}
+
+
+	public function testRuleEmailNotTextInput(): void
+	{
+		$control = $this->getControl();
+		Assert::true(($this->ruleEmail)($control));
 	}
 
 
@@ -197,6 +212,13 @@ final class WinterIsComingTest extends TestCase
 	}
 
 
+	public function testRuleStreetNotTextInput(): void
+	{
+		$control = $this->getControl();
+		Assert::true(($this->ruleStreet)($control));
+	}
+
+
 	public function testNoForm(): void
 	{
 		Assert::exception(function (): void {
@@ -220,6 +242,47 @@ final class WinterIsComingTest extends TestCase
 				Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $source);
 			}
 		}
+	}
+
+
+	private function getControl(): Control
+	{
+		return new class implements Control {
+
+			#[Override]
+			public function setValue(mixed $value): self
+			{
+				return $this;
+			}
+
+
+			#[Override]
+			public function getValue(): mixed
+			{
+				return null;
+			}
+
+
+			#[Override]
+			public function validate(): void
+			{
+			}
+
+
+			#[Override]
+			public function getErrors(): array
+			{
+				return [];
+			}
+
+
+			#[Override]
+			public function isOmitted(): bool
+			{
+				return false;
+			}
+
+		};
 	}
 
 }

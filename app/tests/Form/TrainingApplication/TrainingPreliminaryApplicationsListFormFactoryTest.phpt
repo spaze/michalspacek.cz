@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\TrainingApplication;
 
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Database\DatabaseTransactionStatus;
@@ -12,6 +11,7 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTraining;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Override;
 use PDOException;
@@ -26,7 +26,7 @@ final class TrainingPreliminaryApplicationsListFormFactoryTest extends TestCase
 
 	private ?bool $result = null;
 
-	private UiForm $form;
+	private Form $form;
 
 
 	public function __construct(

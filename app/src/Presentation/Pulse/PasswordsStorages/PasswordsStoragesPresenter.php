@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Pulse\PasswordsStorages;
 
 use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
@@ -14,6 +13,7 @@ use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Forms\Form;
 
 final class PasswordsStoragesPresenter extends BasePresenter
 {
@@ -143,7 +143,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSearchSort(): UiForm
+	protected function createComponentSearchSort(): Form
 	{
 		return $this->searchSortFactory->create($this->rating, $this->sort, $this->search);
 	}

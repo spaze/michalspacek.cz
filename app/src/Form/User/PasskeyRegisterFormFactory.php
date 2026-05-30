@@ -6,10 +6,10 @@ namespace MichalSpacekCz\Form\User;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
+use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Nette\Security\User;
 use Tracy\Debugger;
@@ -31,7 +31,7 @@ final readonly class PasskeyRegisterFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(callable $onSuccess, User $user, string $errorUrl, string $canceledUrl, string $notSupportedUrl, ?string $options = null): UiForm
+	public function create(callable $onSuccess, User $user, string $errorUrl, string $canceledUrl, string $notSupportedUrl, ?string $options = null): Form
 	{
 		$form = $this->factory->create();
 		if ($options !== null) {
@@ -41,8 +41,8 @@ final readonly class PasskeyRegisterFormFactory
 		$form->setHtmlAttribute('data-canceled-url', $canceledUrl);
 		$form->setHtmlAttribute('data-not-supported-url', $notSupportedUrl);
 		$this->passkeyFormControls->addRegistrationFields($form);
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $user): void {
-			$values = $form->getFormValues();
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $user): void {
+			$values = $form->getValues();
 			assert(is_string($values->credential));
 			assert(is_string($values->name));
 			$userId = (int)$user->getId();

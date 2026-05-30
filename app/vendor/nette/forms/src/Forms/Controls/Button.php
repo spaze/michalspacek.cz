@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -46,6 +44,9 @@ class Button extends BaseControl
 	}
 
 
+	/**
+	 * Renders as a <button> element instead of <input type="button">.
+	 */
 	public function renderAsButton(bool $state = true): static
 	{
 		$this->control->setName($state ? 'button' : 'input');

@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 
 use DateTime;
 use DateTimeImmutable;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
@@ -14,6 +13,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Training\TrainingTestDataFactory;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Tester\Assert;
@@ -28,7 +28,7 @@ final class TrainingApplicationsListFormFactoryTest extends TestCase
 	private const int APPLICATION_ID = 1337;
 	private const int STATUS_ID = 121;
 
-	private UiForm $form;
+	private Form $form;
 	private bool|string|null $result = null;
 
 

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form\Validators;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\Form\Validators\Exceptions\FormValidatorTexyFormatterErrorException;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\TextBase;
 
 /**
@@ -20,11 +21,14 @@ final class FormValidatorRuleTexyTalkSlides
 
 
 	/**
-	 * @return callable(TextBase): true
+	 * @return callable(Control): true
 	 */
 	public function getRule(): callable
 	{
-		return function (TextBase $input): true {
+		return function (Control $input): true {
+			if (!$input instanceof TextBase) {
+				return true;
+			}
 			try {
 				$html = $this->formValidatorTexyFormatter->format($input->value);
 			} catch (FormValidatorTexyFormatterErrorException $e) {

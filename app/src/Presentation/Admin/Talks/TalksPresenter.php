@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Presentation\Admin\Talks;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Talk\TalkSlidesFormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
@@ -18,6 +17,7 @@ use MichalSpacekCz\Talks\TalkInputs;
 use MichalSpacekCz\Talks\TalkInputsFactory;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 final class TalksPresenter extends BasePresenter
@@ -99,7 +99,7 @@ final class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSlides(): UiForm
+	protected function createComponentSlides(): Form
 	{
 		$request = $this->getRequest();
 		if ($this->talk === null || $this->slides === null || $request === null) {

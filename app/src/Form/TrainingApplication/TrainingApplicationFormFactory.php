@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
-use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
@@ -44,7 +43,7 @@ final readonly class TrainingApplicationFormFactory
 		Html $name,
 		array $dates,
 		TrainingApplicationSessionSection $sessionSection,
-	): UiForm {
+	): Form {
 		$form = $this->factory->create();
 
 		$inputDates = [];
@@ -77,7 +76,7 @@ final readonly class TrainingApplicationFormFactory
 
 		$form->addSubmit('signUp', 'Odeslat');
 
-		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			$this->formSuccess->success($form, $onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection);
 		};
 		$this->setApplication($form, $sessionSection, $country);
@@ -85,7 +84,7 @@ final readonly class TrainingApplicationFormFactory
 	}
 
 
-	private function setApplication(UiForm $form, TrainingApplicationSessionSection $application, SelectBox $country): void
+	private function setApplication(Form $form, TrainingApplicationSessionSection $application, SelectBox $country): void
 	{
 		$form->setDefaults($application->getApplicationValues());
 		$message = "messages.label.taxid.{$country->getValue()}";

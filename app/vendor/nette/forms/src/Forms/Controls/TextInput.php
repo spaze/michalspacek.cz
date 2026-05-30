@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Forms\Controls;
 
@@ -57,12 +55,15 @@ class TextInput extends TextBase
 	{
 		return parent::getControl()->addAttributes([
 			'value' => $this->control->type === 'password' ? $this->control->value : $this->getRenderedValue(),
-			'type' => $this->control->type ?: 'text',
+			'type' => $this->control->type ?? 'text',
 		]);
 	}
 
 
-	/** @return static */
+	/**
+	 * @param  (callable(Nette\Forms\Control): bool)|string  $validator
+	 * @return static
+	 */
 	public function addRule(
 		callable|string $validator,
 		string|Stringable|null $errorMessage = null,
@@ -74,13 +75,13 @@ class TextInput extends TextBase
 			}
 		}
 
-		if ($this->control->type === null && in_array($validator, [Form::Email, Form::URL, Form::Integer], true)) {
+		if ($this->control->type === null && in_array($validator, [Form::Email, Form::URL, Form::Integer], strict: true)) {
 			$types = [Form::Email => 'email', Form::URL => 'url', Form::Integer => 'number'];
 			$this->control->type = $types[$validator];
 
 		} elseif (
-			in_array($validator, [Form::Min, Form::Max, Form::Range], true)
-			&& in_array($this->control->type, ['number', 'range', 'datetime-local', 'datetime', 'date', 'month', 'week', 'time'], true)
+			in_array($validator, [Form::Min, Form::Max, Form::Range], strict: true)
+			&& in_array($this->control->type, ['number', 'range', 'datetime-local', 'datetime', 'date', 'month', 'week', 'time'], strict: true)
 		) {
 			if ($validator === Form::Min) {
 				$range = [$arg, null];
@@ -105,9 +106,9 @@ class TextInput extends TextBase
 		} elseif (
 			$validator === Form::Pattern
 			&& is_scalar($arg)
-			&& in_array($this->control->type, [null, 'text', 'search', 'tel', 'url', 'email', 'password'], true)
+			&& in_array($this->control->type, [null, 'text', 'search', 'tel', 'url', 'email', 'password'], strict: true)
 		) {
-			$this->control->pattern = $arg;
+			$this->control->pattern = (string) $arg;
 		}
 
 		return parent::addRule($validator, $errorMessage, $arg);

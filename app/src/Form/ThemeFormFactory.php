@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\Application\Theme\ThemeMode;
+use Nette\Forms\Form;
 
 final readonly class ThemeFormFactory
 {
@@ -19,7 +20,7 @@ final readonly class ThemeFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(callable $onSuccess): UiForm
+	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$form->addSubmit(ThemeMode::Light->value)->onClick[] = function () use ($onSuccess): void {
