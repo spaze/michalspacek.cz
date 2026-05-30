@@ -172,12 +172,12 @@ parameters:
 				- 'Nette\Http\Response::deleteCookie()'
 			message: 'instead use methods from MichalSpacekCz\Http\Cookies'
 			allowIn:
+				- vendor/contributte/translation/src/LocalesResolvers/Cookie.php # Unused
 				- vendor/nette/http/src/Http/*.php
 				- vendor/nette/security/src/Bridges/SecurityHttp/CookieStorage.php # Unused
 		-
 			method:
 				- 'Nette\Application\Request::getPost()'
-				- 'Nette\Http\IRequest::getCookie()'
 				- 'Nette\Http\IRequest::getPost()'
 			message: 'instead use methods from MichalSpacekCz\Http\HttpInput with more handy return types'
 			allowIn:
