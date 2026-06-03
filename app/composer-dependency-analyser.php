@@ -17,10 +17,6 @@ return (new Configuration())
 	->setFileExtensions(['php', 'phpt'])
 	->addPathToScan(__DIR__ . '/tests', true)
 
-	// The provider references classes bundled inside PHPStan's phar (PhpParser\Node, PHPStan\Node\InClassNode).
-	// Composer cannot resolve those from outside PHPStan, so the analyser's reflection probe crashes.
-	->addPathToExclude(__DIR__ . '/src/PhpStan/DeadCode/NetteServicesUsageProvider.php')
-
 	// Add classes from services.neon and extensions.neon
 	->addForceUsedSymbols(DiServices::getAllClasses())
 
