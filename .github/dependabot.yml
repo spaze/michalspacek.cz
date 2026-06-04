@@ -8,28 +8,14 @@ updates:
       default-days: 3
 
   - package-ecosystem: "npm"
-    directory: "/site"
-    schedule:
-      interval: "monthly"
-    cooldown:
-      default-days: 5
-
-  - package-ecosystem: "npm"
-    directory: "/site/vendor/nette/forms"
-    schedule:
-      interval: "monthly"
-    cooldown:
-      default-days: 5
-
-  - package-ecosystem: "npm"
-    directory: "/site/vendor/tracy/tracy"
+    directory: "/app"
     schedule:
       interval: "monthly"
     cooldown:
       default-days: 5
 
   - package-ecosystem: "composer"
-    directory: "/site"
+    directory: "/app"
     schedule:
       interval: "monthly"
     cooldown:
