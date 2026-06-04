@@ -56,18 +56,9 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 
 
 	#[Override]
-	public static function getArgs(): array
+	public static function defineArgs(Parser $parser): void
 	{
-		return [];
-	}
-
-
-	#[Override]
-	public static function getPositionalArgs(): array
-	{
-		return [
-			self::ARG_USERNAME => [Parser::Argument => true],
-		];
+		$parser->addArgument(self::ARG_USERNAME);
 	}
 
 }

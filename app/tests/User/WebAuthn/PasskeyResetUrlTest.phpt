@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
+use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
@@ -86,10 +87,14 @@ final class PasskeyResetUrlTest extends TestCase
 	}
 
 
-	public function testArgs(): void
+	public function testDefineArgs(): void
 	{
-		Assert::same([], PasskeyResetUrl::getArgs());
-		Assert::same(['username' => [Parser::Argument => true]], PasskeyResetUrl::getPositionalArgs());
+		$parser = new Parser();
+		PasskeyResetUrl::defineArgs($parser);
+		Assert::same(['username' => 'leet'], $parser->parse(['leet']));
+		Assert::exception(function () use ($parser): void {
+			$parser->parse([]);
+		}, Exception::class, 'Missing required argument <username>.');
 	}
 
 }

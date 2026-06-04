@@ -70,21 +70,14 @@ final readonly class LatteLinter implements CliArgsProvider
 
 
 	#[Override]
-	public static function getArgs(): array
+	public static function defineArgs(Parser $parser): void
 	{
-		return [
-			self::ARG_DEBUG,
-			self::ARG_DISABLE_STRICT_PARSING,
-		];
-	}
-
-
-	#[Override]
-	public static function getPositionalArgs(): array
-	{
-		return [
-			self::ARG_PATH => [Parser::RealPath => true],
-		];
+		$parser->addSwitch(self::ARG_DEBUG);
+		$parser->addSwitch(self::ARG_DISABLE_STRICT_PARSING);
+		$parser->addArgument(self::ARG_PATH, normalizer: static function (mixed $path): string {
+			assert(is_string($path)); // a positional argument's value always arrives as a string from $argv
+			return Parser::normalizeRealPath($path);
+		});
 	}
 
 }

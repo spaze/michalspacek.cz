@@ -3,22 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Cli;
 
+use Nette\CommandLine\Parser;
 use Override;
 
 final class NoCliArgs implements CliArgsProvider
 {
 
 	#[Override]
-	public static function getArgs(): array
+	public static function defineArgs(Parser $parser): void
 	{
-		return [];
-	}
-
-
-	#[Override]
-	public static function getPositionalArgs(): array
-	{
-		return [];
 	}
 
 }
