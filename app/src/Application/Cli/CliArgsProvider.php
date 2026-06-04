@@ -9,14 +9,9 @@ interface CliArgsProvider
 {
 
 	/**
-	 * @return list<string>
+	 * Declare the script's command-line arguments on the parser, using its
+	 * `addSwitch()`/`addArgument()`/`addOption()` builders.
 	 */
-	public static function getArgs(): array;
-
-
-	/**
-	 * @return array<string, array<Parser::Argument|Parser::Optional|Parser::Repeatable|Parser::Enum|Parser::RealPath|Parser::Normalizer|Parser::Default, int|string|bool>>
-	 */
-	public static function getPositionalArgs(): array;
+	public static function defineArgs(Parser $parser): void;
 
 }

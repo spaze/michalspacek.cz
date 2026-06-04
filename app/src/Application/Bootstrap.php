@@ -105,14 +105,10 @@ final class Bootstrap
 	 */
 	private static function getCliArgs(string $argsProvider): CliArgs
 	{
-		$args = $argsProvider::getArgs();
-		$hasCustomArgs = $args !== [];
-		$args[] = self::DEBUG;
-		$args[] = self::COLORS;
-		if ($hasCustomArgs) {
-			$args = array_unique($args);
-		}
-		$cliArgsParser = new Parser("\n " . implode("\n ", $args), $argsProvider::getPositionalArgs());
+		$cliArgsParser = new Parser();
+		$argsProvider::defineArgs($cliArgsParser);
+		$cliArgsParser->addSwitch(self::DEBUG); // --debug and --colors are available to every script, but can be readded there for readability
+		$cliArgsParser->addSwitch(self::COLORS);
 		$cliArgsParsed = [];
 		$cliArgsError = null;
 		try {
