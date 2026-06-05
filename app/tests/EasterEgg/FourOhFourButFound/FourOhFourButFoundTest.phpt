@@ -3,7 +3,7 @@
 /** @noinspection PhpMissingParentConstructorInspection */
 declare(strict_types = 1);
 
-namespace EasterEgg\FourOhFourButFound;
+namespace MichalSpacekCz\EasterEgg\FourOhFourButFound;
 
 use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;

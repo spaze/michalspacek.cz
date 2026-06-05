@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace Media;
+namespace MichalSpacekCz\Media;
 
 use MichalSpacekCz\Media\VideoPlatform;
 use MichalSpacekCz\Test\TestCaseRunner;

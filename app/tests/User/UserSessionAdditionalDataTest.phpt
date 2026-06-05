@@ -4,7 +4,7 @@
 /** @noinspection PhpUndefinedFieldInspection */
 declare(strict_types = 1);
 
-namespace User;
+namespace MichalSpacekCz\User;
 
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\Security\NullUserStorage;

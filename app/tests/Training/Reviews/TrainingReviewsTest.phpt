@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Preliminary;
+namespace MichalSpacekCz\Training\Reviews;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormat;

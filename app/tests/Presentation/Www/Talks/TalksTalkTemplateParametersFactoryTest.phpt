@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace Presentation\Www\Talks;
+namespace MichalSpacekCz\Presentation\Www\Talks;
 
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\DeprecatedEmbedSlideInUrlException;

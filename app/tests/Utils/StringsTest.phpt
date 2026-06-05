@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Utils;
+namespace MichalSpacekCz\Utils;
 
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
