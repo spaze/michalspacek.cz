@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Database;
+namespace MichalSpacekCz\Database;
 
 use MichalSpacekCz\Database\Exceptions\TypedDatabaseTypeException;
 use MichalSpacekCz\Database\TypedDatabase;

@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace Pulse\Error;
+namespace MichalSpacekCz\Pulse\Error;
 
 use MichalSpacekCz\Pulse\Error\PulseError;
 use MichalSpacekCz\Test\Http\Response;

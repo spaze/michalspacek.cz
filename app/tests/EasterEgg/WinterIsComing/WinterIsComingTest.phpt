@@ -4,7 +4,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace EasterEgg\WinterIsComing;
+namespace MichalSpacekCz\EasterEgg\WinterIsComing;
 
 use MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;

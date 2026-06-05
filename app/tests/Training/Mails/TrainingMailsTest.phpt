@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Training\Mails;
+namespace MichalSpacekCz\Training\Mails;
 
 use DateTime;
 use MichalSpacekCz\Templating\TemplateFactory;
