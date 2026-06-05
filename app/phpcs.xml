@@ -6,6 +6,20 @@
 	<arg value="s"/>
 	<arg value="p"/>
 	<rule ref="vendor-dev/vendor/spaze/coding-standard/src/ruleset.xml"/>
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+		<properties>
+			<property name="rootNamespaces" type="array">
+				<element key="src" value="MichalSpacekCz"/>
+				<element key="tests" value="MichalSpacekCz"/>
+				<!-- bin scripts are procedural, so this only catches a class placed in bin/ if any, not a script's namespace -->
+				<element key="bin" value="MichalSpacekCz\Bin"/>
+			</property>
+			<property name="extensions" type="array">
+				<element value="php"/>
+				<element value="phpt"/>
+			</property>
+		</properties>
+	</rule>
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
 		<exclude-pattern>tests/</exclude-pattern> <!-- PHPStorm's @noinspection must be on the first line, before declare(strict_types = 1) -->
 	</rule>
