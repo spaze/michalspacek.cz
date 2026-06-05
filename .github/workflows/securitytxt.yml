@@ -27,7 +27,7 @@ jobs:
         php-version: ${{ matrix.php-version }}
         extensions: gnupg
     - name: Install the checker
-      run: composer require spaze/security-txt:dev-main
+      run: composer require spaze/security-txt:^2.0
     - name: Check security.txt at ${{ matrix.host }}
       run: |
         php \
