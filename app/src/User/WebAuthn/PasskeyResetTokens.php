@@ -12,7 +12,7 @@ use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use Override;
 
-final readonly class PasskeyResetTokens implements UserAuthTokenLifetime
+final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, PasskeyRegistrationTokens
 {
 
 	public function __construct(
@@ -66,6 +66,7 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime
 	/**
 	 * @throws PasskeyResetDisabledException
 	 */
+	#[Override]
 	public function verify(string $value): ?UserAuthToken
 	{
 		if (!$this->resetEnabled) {
@@ -75,6 +76,7 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime
 	}
 
 
+	#[Override]
 	public function deleteById(int $tokenId): void
 	{
 		$this->tokens->deleteById($tokenId, $this->getTokenType());

@@ -11,7 +11,7 @@ final readonly class PasskeyReset
 {
 
 	public function __construct(
-		private PasskeyResetTokens $resetTokens,
+		private PasskeyRegistrationTokens $registrationTokens,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 	) {
 	}
@@ -23,7 +23,7 @@ final readonly class PasskeyReset
 	 */
 	public function getUserAuthToken(string $token): UserAuthToken
 	{
-		$userAuthToken = $this->resetTokens->verify($token);
+		$userAuthToken = $this->registrationTokens->verify($token);
 		if ($userAuthToken === null) {
 			throw new PasskeyResetInvalidOrExpiredTokenException();
 		}
@@ -47,7 +47,7 @@ final readonly class PasskeyReset
 
 	public function cleanupToken(UserAuthToken $userAuthToken): void
 	{
-		$this->resetTokens->deleteById($userAuthToken->getId());
+		$this->registrationTokens->deleteById($userAuthToken->getId());
 	}
 
 }
