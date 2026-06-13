@@ -102,7 +102,7 @@ final class PasskeyResetFormFactoryTest extends TestCase
 
 	private function createFormFactory(): PasskeyResetFormFactory
 	{
-		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true);
+		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
 		return new PasskeyResetFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,

@@ -78,6 +78,7 @@ parameters:
 			allowInMethods:
 				- 'MichalSpacekCz\User\AuthTokens\UserAuthTokens::*' # internal calls, e.g. replaceForUser() -> insert()
 				- 'MichalSpacekCz\User\PermanentLogin\PermanentLogin::*'
+				- 'MichalSpacekCz\User\WebAuthn\PasskeyAddTokens::*'
 				- 'MichalSpacekCz\User\WebAuthn\PasskeyResetTokens::*'
 		-
 			method:

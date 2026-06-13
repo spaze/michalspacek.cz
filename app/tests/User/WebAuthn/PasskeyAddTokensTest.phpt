@@ -10,7 +10,7 @@ use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAddDisabledException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -18,7 +18,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-final class PasskeyResetTokensTest extends TestCase
+final class PasskeyAddTokensTest extends TestCase
 {
 
 	public function __construct(
@@ -47,45 +47,38 @@ final class PasskeyResetTokensTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->getTokens(false)->create(1337);
-		}, PasskeyResetDisabledException::class);
+		}, PasskeyAddDisabledException::class);
 	}
 
 
-	public function testVerifyThrowsWhenDisabled(): void
+	public function testCreateReturnsTokenWhenEnabled(): void
 	{
-		Assert::exception(function (): void {
-			$this->getTokens(false)->verify('some token');
-		}, PasskeyResetDisabledException::class);
-	}
-
-
-	public function testDeleteByIdQueriesAdminResetType(): void
-	{
-		$this->getTokens(true)->deleteById(42);
+		$token = $this->getTokens(true)->create(1337);
+		Assert::contains(':', $token); // selector:token
 		Assert::same(
-			[42, UserAuthTokenType::AdminPasskeyReset->value],
-			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),
+			[1337, UserAuthTokenType::AdminPasskeyAdd->value],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?'),
 		);
 	}
 
 
-	public function testDeleteExpiredQueriesAdminResetType(): void
+	public function testDeleteExpiredQueriesAdminAddType(): void
 	{
 		$this->database->setResultSet(new ResultSet(2));
 		$deleted = $this->getTokens(true)->deleteExpired();
 
 		Assert::same(2, $deleted);
 		$params = $this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE type = ? AND created <= ?');
-		Assert::same(UserAuthTokenType::AdminPasskeyReset->value, $params[0]);
+		Assert::same(UserAuthTokenType::AdminPasskeyAdd->value, $params[0]);
 		Assert::type('string', $params[1]); // DateTime formatted by Database mock
 	}
 
 
-	private function getTokens(bool $enabled): PasskeyResetTokens
+	private function getTokens(bool $enabled): PasskeyAddTokens
 	{
-		return new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $enabled, '5 minutes');
+		return new PasskeyAddTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $enabled, '5 minutes');
 	}
 
 }
 
-TestCaseRunner::run(PasskeyResetTokensTest::class);
+TestCaseRunner::run(PasskeyAddTokensTest::class);

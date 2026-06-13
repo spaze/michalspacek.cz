@@ -5,14 +5,18 @@ namespace MichalSpacekCz\User\WebAuthn;
 
 use Exception;
 use MichalSpacekCz\DateTime\DateTimeFactory;
-use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAddDisabledException;
 use Override;
 
-final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, PasskeyRegistrationTokens
+/**
+ * Creates one-time tokens for registering an additional passkey while keeping the existing ones,
+ * the counterpart to PasskeyResetTokens. A separate token type so an add and a reset stay distinct
+ * and the reset's revoke-others step never runs for an add.
+ */
+final readonly class PasskeyAddTokens implements UserAuthTokenLifetime
 {
 
 	public function __construct(
@@ -27,7 +31,7 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, Passke
 	#[Override]
 	public function getTokenType(): UserAuthTokenType
 	{
-		return UserAuthTokenType::AdminPasskeyReset;
+		return UserAuthTokenType::AdminPasskeyAdd;
 	}
 
 
@@ -52,35 +56,15 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, Passke
 
 
 	/**
-	 * @throws PasskeyResetDisabledException
+	 * @throws PasskeyAddDisabledException
 	 * @throws Exception
 	 */
 	public function create(int $userId): string
 	{
 		if (!$this->registrationEnabled) {
-			throw new PasskeyResetDisabledException();
+			throw new PasskeyAddDisabledException();
 		}
 		return $this->tokens->replaceForUser($userId, $this->getTokenType());
-	}
-
-
-	/**
-	 * @throws PasskeyResetDisabledException
-	 */
-	#[Override]
-	public function verify(string $value): ?UserAuthToken
-	{
-		if (!$this->registrationEnabled) {
-			throw new PasskeyResetDisabledException();
-		}
-		return $this->tokens->verify($value, $this->dateTimeFactory->create('-' . $this->getTtl()), $this->getTokenType());
-	}
-
-
-	#[Override]
-	public function deleteById(int $tokenId): void
-	{
-		$this->tokens->deleteById($tokenId, $this->getTokenType());
 	}
 
 }

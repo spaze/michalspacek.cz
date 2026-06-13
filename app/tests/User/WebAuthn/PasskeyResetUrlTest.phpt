@@ -48,7 +48,7 @@ final class PasskeyResetUrlTest extends TestCase
 	private function getPasskeyResetUrl(CliArgs $cliArgs, bool $passkeyResetEnabled): PasskeyResetUrl
 	{
 		$manager = new Manager($this->typedDatabase, $this->httpRequest, 'users');
-		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $passkeyResetEnabled);
+		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $passkeyResetEnabled, '5 minutes');
 		return new PasskeyResetUrl($manager, $resetTokens, $this->linkGenerator, $cliArgs);
 	}
 

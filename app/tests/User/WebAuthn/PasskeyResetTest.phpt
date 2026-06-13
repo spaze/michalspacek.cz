@@ -93,7 +93,7 @@ final class PasskeyResetTest extends TestCase
 	private function createPasskeyReset(): PasskeyReset
 	{
 		$tokens = new UserAuthTokens($this->database, 'users');
-		$resetTokens = new PasskeyResetTokens($tokens, $this->dateTimeFactory, true);
+		$resetTokens = new PasskeyResetTokens($tokens, $this->dateTimeFactory, true, '5 minutes');
 		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator);
 	}
 

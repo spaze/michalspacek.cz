@@ -20,7 +20,7 @@ try {
 	fprintf(STDERR, "Usage: passkey-reset.php <username>\n%s\n", $e->getMessage());
 	exit(1);
 } catch (PasskeyResetDisabledException) {
-	fprintf(STDERR, "Error: passkey reset is disabled. To enable it, set authentication.passkeys.resetEnabled: true in local.neon\n");
+	fprintf(STDERR, "Error: passkey reset is disabled. To enable it, set authentication.passkeys.registrationEnabled: true in local.neon\n");
 	exit(1);
 } catch (PasskeyResetUserNotFoundException $e) {
 	fprintf(STDERR, "Error: user '%s' not found\n", $e->getUsername());
