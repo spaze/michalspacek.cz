@@ -58,8 +58,18 @@ final readonly class PermanentLogin implements UserAuthTokenLifetime
 
 	public function clear(User $user): void
 	{
-		$this->tokens->deleteAllForUser($this->manager->getUserId($user), $this->getTokenType());
+		$this->revokeForUser($this->manager->getUserId($user));
 		$this->cookies->delete(CookieName::PermanentLogin, $this->authCookiesPath);
+	}
+
+
+	/**
+	 * Revoke a user's permanent login (tokens only, no cookie), for revoking a user you are not
+	 * signed in as. clear() is the self-logout variant that also drops the current browser cookie.
+	 */
+	public function revokeForUser(int $userId): void
+	{
+		$this->tokens->deleteAllForUser($userId, $this->getTokenType());
 	}
 
 

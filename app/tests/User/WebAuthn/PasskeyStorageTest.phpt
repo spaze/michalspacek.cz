@@ -5,8 +5,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn;
 
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialAlreadyRegisteredException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialToKeepNotFoundException;
 use Nette\Database\UniqueConstraintViolationException;
 use Override;
 use Tester\Assert;
@@ -103,6 +105,30 @@ final class PasskeyStorageTest extends TestCase
 		Assert::exception(function (): void {
 			$this->passkeyStorage->saveCredential('cred-id', '{}', 'Mike E', 42);
 		}, PasskeyCredentialAlreadyRegisteredException::class);
+	}
+
+
+	public function testDeleteCredentialsByUserIdExcept(): void
+	{
+		$this->database->setFetchFieldDefaultResult(1); // the credential to keep exists for the user
+		$this->database->setResultSet(new ResultSet(2));
+		$deleted = $this->passkeyStorage->deleteCredentialsByUserIdExcept(42, 'keep-cred-id');
+
+		Assert::same(2, $deleted);
+		Assert::same(
+			['passkeys', 42, 'keep-cred-id'],
+			$this->database->getParamsForQuery('DELETE FROM ?name WHERE key_user = ? AND credential_id != ?'),
+		);
+	}
+
+
+	public function testDeleteCredentialsByUserIdExceptRefusesWhenKeptMissing(): void
+	{
+		// fetchField default is null, so the credential to keep is not found for the user
+		Assert::exception(function (): void {
+			$this->passkeyStorage->deleteCredentialsByUserIdExcept(42, 'missing-cred-id');
+		}, PasskeyCredentialToKeepNotFoundException::class);
+		Assert::same([], $this->database->getParamsForQuery('DELETE FROM ?name WHERE key_user = ? AND credential_id != ?'));
 	}
 
 
