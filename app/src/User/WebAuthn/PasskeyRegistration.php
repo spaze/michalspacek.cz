@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn;
 
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 
-final readonly class PasskeyReset
+final readonly class PasskeyRegistration
 {
 
 	public function __construct(
@@ -18,22 +18,22 @@ final readonly class PasskeyReset
 
 
 	/**
-	 * @throws PasskeyResetDisabledException
-	 * @throws PasskeyResetInvalidOrExpiredTokenException
+	 * @throws PasskeyRegistrationDisabledException
+	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
 	 */
 	public function getUserAuthToken(string $token): UserAuthToken
 	{
 		$userAuthToken = $this->registrationTokens->verify($token);
 		if ($userAuthToken === null) {
-			throw new PasskeyResetInvalidOrExpiredTokenException();
+			throw new PasskeyRegistrationInvalidOrExpiredTokenException();
 		}
 		return $userAuthToken;
 	}
 
 
 	/**
-	 * @throws PasskeyResetDisabledException
-	 * @throws PasskeyResetInvalidOrExpiredTokenException
+	 * @throws PasskeyRegistrationDisabledException
+	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
 	 */
 	public function generateRegistrationOptions(string $token): string
 	{

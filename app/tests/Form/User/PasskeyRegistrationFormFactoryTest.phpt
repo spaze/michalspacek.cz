@@ -15,7 +15,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
-use MichalSpacekCz\User\WebAuthn\PasskeyReset;
+use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
 use MichalSpacekCz\User\WebAuthn\PasskeyResetTokens;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
@@ -29,7 +29,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-final class PasskeyResetFormFactoryTest extends TestCase
+final class PasskeyRegistrationFormFactoryTest extends TestCase
 {
 
 	private bool $onSuccessCalled = false;
@@ -100,13 +100,13 @@ final class PasskeyResetFormFactoryTest extends TestCase
 	}
 
 
-	private function createFormFactory(): PasskeyResetFormFactory
+	private function createFormFactory(): PasskeyRegistrationFormFactory
 	{
 		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyResetFormFactory(
+		return new PasskeyRegistrationFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,
-			new PasskeyReset($resetTokens, $this->passkeyAuthenticator),
+			new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator),
 			$this->passkeyFormControls,
 			$this->httpRequest,
 			$this->translator,
@@ -143,4 +143,4 @@ final class PasskeyResetFormFactoryTest extends TestCase
 
 }
 
-TestCaseRunner::run(PasskeyResetFormFactoryTest::class);
+TestCaseRunner::run(PasskeyRegistrationFormFactoryTest::class);

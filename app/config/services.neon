@@ -70,7 +70,7 @@ services:
 	- MichalSpacekCz\Form\User\PasskeyDeleteFormFactory
 	- MichalSpacekCz\Form\User\PasskeyRegisterFormFactory
 	- MichalSpacekCz\Form\User\PasskeyRenameFormFactory
-	- MichalSpacekCz\Form\User\PasskeyResetFormFactory
+	- MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory
 	- MichalSpacekCz\Form\User\RegenerateTokensFormFactory
 	- MichalSpacekCz\Form\User\SignInHoneypotFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
@@ -206,7 +206,7 @@ services:
 	userPasskeys: MichalSpacekCz\User\WebAuthn\UserPasskeys(passkeysTableName: %authentication.tables.passkeys%)
 	passkeyStorage: MichalSpacekCz\User\WebAuthn\PasskeyStorage(passkeysTableName: %authentication.tables.passkeys%, usersTableName: %authentication.tables.users%)
 	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
-	- MichalSpacekCz\User\WebAuthn\PasskeyReset
+	- MichalSpacekCz\User\WebAuthn\PasskeyRegistration
 	- MichalSpacekCz\User\WebAuthn\PasskeyResetTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
 	- MichalSpacekCz\User\WebAuthn\PasskeyAddTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
 	- MichalSpacekCz\User\WebAuthn\PasskeyResetUrl

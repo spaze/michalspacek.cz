@@ -11,7 +11,7 @@ use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -19,7 +19,7 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-final class PasskeyResetTest extends TestCase
+final class PasskeyRegistrationTest extends TestCase
 {
 
 	public function __construct(
@@ -49,8 +49,8 @@ final class PasskeyResetTest extends TestCase
 			'userId' => $userId,
 			'username' => $username,
 		]);
-		$passkeyReset = $this->createPasskeyReset();
-		$token = $passkeyReset->getUserAuthToken("selector:{$tokenValue}");
+		$passkeyRegistration = $this->createPasskeyRegistration();
+		$token = $passkeyRegistration->getUserAuthToken("selector:{$tokenValue}");
 		Assert::same($tokenId, $token->getId());
 		Assert::same($userId, $token->getUserId());
 		Assert::same($username, $token->getUsername());
@@ -60,8 +60,8 @@ final class PasskeyResetTest extends TestCase
 	public function testGetUserAuthTokenInvalidOrExpired(): void
 	{
 		Assert::exception(function (): void {
-			$this->createPasskeyReset()->getUserAuthToken('selector:invalidtoken');
-		}, PasskeyResetInvalidOrExpiredTokenException::class);
+			$this->createPasskeyRegistration()->getUserAuthToken('selector:invalidtoken');
+		}, PasskeyRegistrationInvalidOrExpiredTokenException::class);
 	}
 
 
@@ -74,7 +74,7 @@ final class PasskeyResetTest extends TestCase
 			'userId' => 1337,
 			'username' => 'foo',
 		]);
-		$result = $this->createPasskeyReset()->generateRegistrationOptions("selector:{$tokenValue}");
+		$result = $this->createPasskeyRegistration()->generateRegistrationOptions("selector:{$tokenValue}");
 		Assert::same('{}', $result);
 	}
 
@@ -82,7 +82,7 @@ final class PasskeyResetTest extends TestCase
 	public function testCleanupToken(): void
 	{
 		$tokenId = 42;
-		$this->createPasskeyReset()->cleanupToken(new UserAuthToken($tokenId, 'hash', 1337, 'foo'));
+		$this->createPasskeyRegistration()->cleanupToken(new UserAuthToken($tokenId, 'hash', 1337, 'foo'));
 		Assert::same(
 			[$tokenId, UserAuthTokenType::AdminPasskeyReset->value],
 			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),
@@ -90,13 +90,13 @@ final class PasskeyResetTest extends TestCase
 	}
 
 
-	private function createPasskeyReset(): PasskeyReset
+	private function createPasskeyRegistration(): PasskeyRegistration
 	{
 		$tokens = new UserAuthTokens($this->database, 'users');
 		$resetTokens = new PasskeyResetTokens($tokens, $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator);
+		return new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator);
 	}
 
 }
 
-TestCaseRunner::run(PasskeyResetTest::class);
+TestCaseRunner::run(PasskeyRegistrationTest::class);

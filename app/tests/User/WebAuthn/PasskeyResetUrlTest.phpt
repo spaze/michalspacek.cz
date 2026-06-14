@@ -13,8 +13,8 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetArgsException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetUserNotFoundException;
 use Nette\CommandLine\Parser;
 use Nette\Http\IRequest;
@@ -65,7 +65,7 @@ final class PasskeyResetUrlTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->getPasskeyResetUrl(new CliArgs(['username' => 'waldo'], null), false)->generate();
-		}, PasskeyResetDisabledException::class);
+		}, PasskeyRegistrationDisabledException::class);
 	}
 
 

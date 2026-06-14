@@ -7,19 +7,19 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
-use MichalSpacekCz\User\WebAuthn\PasskeyReset;
+use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Tracy\Debugger;
 
-final readonly class PasskeyResetFormFactory
+final readonly class PasskeyRegistrationFormFactory
 {
 
 	public function __construct(
 		private FormFactory $factory,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
-		private PasskeyReset $passkeyReset,
+		private PasskeyRegistration $passkeyRegistration,
 		private PasskeyFormControls $passkeyFormControls,
 		private IRequest $httpRequest,
 		private Translator $translator,
@@ -46,8 +46,8 @@ final readonly class PasskeyResetFormFactory
 			assert(is_string($values->name));
 			assert(is_string($values->token));
 			try {
-				$userAuthToken = $this->passkeyReset->getUserAuthToken($values->token);
-				$this->passkeyReset->cleanupToken($userAuthToken);
+				$userAuthToken = $this->passkeyRegistration->getUserAuthToken($values->token);
+				$this->passkeyRegistration->cleanupToken($userAuthToken);
 				$this->passkeyAuthenticator->verifyRegistration($values->credential, $values->name, $userAuthToken->getUserId());
 				Debugger::log("Successful passkey reset ({$userAuthToken->getUsername()}, {$this->httpRequest->getRemoteAddress()})", 'auth');
 				$onSuccess();

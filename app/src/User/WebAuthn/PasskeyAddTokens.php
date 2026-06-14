@@ -8,7 +8,7 @@ use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAddDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use Override;
 
 /**
@@ -56,13 +56,13 @@ final readonly class PasskeyAddTokens implements UserAuthTokenLifetime
 
 
 	/**
-	 * @throws PasskeyAddDisabledException
+	 * @throws PasskeyRegistrationDisabledException
 	 * @throws Exception
 	 */
 	public function create(int $userId): string
 	{
 		if (!$this->registrationEnabled) {
-			throw new PasskeyAddDisabledException();
+			throw new PasskeyRegistrationDisabledException();
 		}
 		return $this->tokens->replaceForUser($userId, $this->getTokenType());
 	}

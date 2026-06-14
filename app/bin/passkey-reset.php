@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Bin;
 
 use MichalSpacekCz\Application\Bootstrap;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetArgsException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetUserNotFoundException;
 use MichalSpacekCz\User\WebAuthn\PasskeyResetUrl;
 
@@ -19,7 +19,7 @@ try {
 } catch (PasskeyResetArgsException $e) {
 	fprintf(STDERR, "Usage: passkey-reset.php <username>\n%s\n", $e->getMessage());
 	exit(1);
-} catch (PasskeyResetDisabledException) {
+} catch (PasskeyRegistrationDisabledException) {
 	fprintf(STDERR, "Error: passkey reset is disabled. To enable it, set authentication.passkeys.registrationEnabled: true in local.neon\n");
 	exit(1);
 } catch (PasskeyResetUserNotFoundException $e) {

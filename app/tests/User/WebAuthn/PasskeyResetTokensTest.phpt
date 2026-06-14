@@ -10,7 +10,7 @@ use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -47,7 +47,7 @@ final class PasskeyResetTokensTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->getTokens(false)->create(1337);
-		}, PasskeyResetDisabledException::class);
+		}, PasskeyRegistrationDisabledException::class);
 	}
 
 
@@ -55,7 +55,7 @@ final class PasskeyResetTokensTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->getTokens(false)->verify('some token');
-		}, PasskeyResetDisabledException::class);
+		}, PasskeyRegistrationDisabledException::class);
 	}
 
 

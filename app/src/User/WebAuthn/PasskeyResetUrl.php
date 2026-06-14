@@ -7,8 +7,8 @@ use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetArgsException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetUserNotFoundException;
 use Nette\CommandLine\Parser;
 use Override;
@@ -30,7 +30,7 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 
 	/**
 	 * @throws PasskeyResetArgsException
-	 * @throws PasskeyResetDisabledException
+	 * @throws PasskeyRegistrationDisabledException
 	 * @throws PasskeyResetUserNotFoundException
 	 */
 	public function generate(): string
@@ -41,7 +41,7 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 		}
 
 		if (!$this->resetTokens->isEnabled()) {
-			throw new PasskeyResetDisabledException();
+			throw new PasskeyRegistrationDisabledException();
 		}
 
 		$username = $this->cliArgs->getArg(self::ARG_USERNAME);

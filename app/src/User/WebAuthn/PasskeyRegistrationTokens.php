@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn;
 
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 
 /**
  * One-time tokens that authorize registering a passkey out of band.
@@ -19,7 +19,7 @@ interface PasskeyRegistrationTokens
 
 	/**
 	 * @return UserAuthToken|null The matching token, or null when the value is invalid, expired, or belongs to a different token type
-	 * @throws PasskeyResetDisabledException
+	 * @throws PasskeyRegistrationDisabledException
 	 */
 	public function verify(string $value): ?UserAuthToken;
 

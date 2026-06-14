@@ -9,7 +9,7 @@ use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use Override;
 
 final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, PasskeyRegistrationTokens
@@ -52,26 +52,26 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, Passke
 
 
 	/**
-	 * @throws PasskeyResetDisabledException
+	 * @throws PasskeyRegistrationDisabledException
 	 * @throws Exception
 	 */
 	public function create(int $userId): string
 	{
 		if (!$this->registrationEnabled) {
-			throw new PasskeyResetDisabledException();
+			throw new PasskeyRegistrationDisabledException();
 		}
 		return $this->tokens->replaceForUser($userId, $this->getTokenType());
 	}
 
 
 	/**
-	 * @throws PasskeyResetDisabledException
+	 * @throws PasskeyRegistrationDisabledException
 	 */
 	#[Override]
 	public function verify(string $value): ?UserAuthToken
 	{
 		if (!$this->registrationEnabled) {
-			throw new PasskeyResetDisabledException();
+			throw new PasskeyRegistrationDisabledException();
 		}
 		return $this->tokens->verify($value, $this->dateTimeFactory->create('-' . $this->getTtl()), $this->getTokenType());
 	}
