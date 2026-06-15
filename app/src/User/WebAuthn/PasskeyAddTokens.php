@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User\WebAuthn;
 
 use Exception;
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
@@ -16,7 +17,7 @@ use Override;
  * the counterpart to PasskeyResetTokens. A separate token type so an add and a reset stay distinct
  * and the reset's revoke-others step never runs for an add.
  */
-final readonly class PasskeyAddTokens implements UserAuthTokenLifetime
+final readonly class PasskeyAddTokens implements UserAuthTokenLifetime, PasskeyRegistrationTokens
 {
 
 	public function __construct(
@@ -65,6 +66,26 @@ final readonly class PasskeyAddTokens implements UserAuthTokenLifetime
 			throw new PasskeyRegistrationDisabledException();
 		}
 		return $this->tokens->replaceForUser($userId, $this->getTokenType());
+	}
+
+
+	/**
+	 * @throws PasskeyRegistrationDisabledException
+	 */
+	#[Override]
+	public function verify(string $value): ?UserAuthToken
+	{
+		if (!$this->registrationEnabled) {
+			throw new PasskeyRegistrationDisabledException();
+		}
+		return $this->tokens->verify($value, $this->dateTimeFactory->create('-' . $this->getTtl()), $this->getTokenType());
+	}
+
+
+	#[Override]
+	public function deleteById(int $tokenId): void
+	{
+		$this->tokens->deleteById($tokenId, $this->getTokenType());
 	}
 
 }

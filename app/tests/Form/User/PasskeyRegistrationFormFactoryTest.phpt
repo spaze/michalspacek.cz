@@ -20,6 +20,8 @@ use MichalSpacekCz\User\WebAuthn\PasskeyResetTokens;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\Security\SimpleIdentity;
+use Nette\Security\User;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
 use Override;
@@ -44,6 +46,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 		private readonly Request $httpRequest,
 		private readonly Translator $translator,
 		private readonly DateTimeFactory $dateTimeFactory,
+		private readonly User $user,
 	) {
 	}
 
@@ -54,6 +57,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 		$this->database->reset();
 		$this->onSuccessCalled = false;
 		$this->passkeyAuthenticator->wontThrow();
+		$this->user->logout();
 	}
 
 
@@ -87,6 +91,17 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 	}
 
 
+	public function testSignedInAsDifferentUserIsRefused(): void
+	{
+		$tokenString = $this->setUpTokenInDb(42, 1337, 'foo');
+		$this->user->login(new SimpleIdentity(9999));
+		$form = $this->getForm($tokenString);
+		Arrays::invoke($form->onSuccess, $form);
+		Assert::false($this->onSuccessCalled);
+		Assert::count(1, $form->getErrors());
+	}
+
+
 	private function setUpTokenInDb(int $tokenId, int $userId, string $username): string
 	{
 		$tokenValue = 'secret';
@@ -106,7 +121,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 		return new PasskeyRegistrationFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,
-			new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator),
+			new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user),
 			$this->passkeyFormControls,
 			$this->httpRequest,
 			$this->translator,
@@ -120,6 +135,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 			function (): void {
 				$this->onSuccessCalled = true;
 			},
+			'https://url.example/foo/bar/options',
 			'https://url.example/foo/bar/error',
 			'https://url.example/foo/bar/canceled',
 			'https://url.example/foo/bar/not-supported',

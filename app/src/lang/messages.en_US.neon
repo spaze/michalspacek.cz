@@ -420,6 +420,9 @@ passkeys:
 	loadingOptions: "Loading, please wait"
 	optionsFetchFailed: "Failed to load passkey options"
 	optionsFetchTryAgain: "Try again"
+	add:
+		addPasskey: "Add a passkey"
+		reopenLink: "To add a passkey, open the link again"
 	manage:
 		yourPasskeys: "Your passkeys"
 		managePasskeys: "Manage passkeys"

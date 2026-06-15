@@ -12,6 +12,9 @@ use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
+use Nette\Security\SimpleIdentity;
+use Nette\Security\User;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -26,6 +29,7 @@ final class PasskeyRegistrationTest extends TestCase
 		private readonly Database $database,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly DateTimeFactory $dateTimeFactory,
+		private readonly User $user,
 	) {
 	}
 
@@ -34,6 +38,7 @@ final class PasskeyRegistrationTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		$this->user->logout();
 	}
 
 
@@ -62,6 +67,38 @@ final class PasskeyRegistrationTest extends TestCase
 		Assert::exception(function (): void {
 			$this->createPasskeyRegistration()->getUserAuthToken('selector:invalidtoken');
 		}, PasskeyRegistrationInvalidOrExpiredTokenException::class);
+	}
+
+
+	public function testGetUserAuthTokenSignedInUserMatches(): void
+	{
+		$userId = 1337;
+		$tokenValue = 'secret';
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'token' => hash('sha512', $tokenValue),
+			'userId' => $userId,
+			'username' => 'foo',
+		]);
+		$this->user->login(new SimpleIdentity($userId));
+		$token = $this->createPasskeyRegistration()->getUserAuthToken("selector:{$tokenValue}");
+		Assert::same($userId, $token->getUserId());
+	}
+
+
+	public function testGetUserAuthTokenSignedInAsDifferentUserThrows(): void
+	{
+		$tokenValue = 'secret';
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'token' => hash('sha512', $tokenValue),
+			'userId' => 1337,
+			'username' => 'foo',
+		]);
+		$this->user->login(new SimpleIdentity(9999));
+		Assert::exception(function () use ($tokenValue): void {
+			$this->createPasskeyRegistration()->getUserAuthToken("selector:{$tokenValue}");
+		}, PasskeyRegistrationUserMismatchException::class);
 	}
 
 
@@ -94,7 +131,7 @@ final class PasskeyRegistrationTest extends TestCase
 	{
 		$tokens = new UserAuthTokens($this->database, 'users');
 		$resetTokens = new PasskeyResetTokens($tokens, $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator);
+		return new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user);
 	}
 
 }

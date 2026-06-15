@@ -420,6 +420,9 @@ passkeys:
 	loadingOptions: "Nahrávám, prosím čekejte"
 	optionsFetchFailed: "Nepodařilo se načíst parametry passkey"
 	optionsFetchTryAgain: "Zkuste to znovu"
+	add:
+		addPasskey: "Přidat passkey"
+		reopenLink: "Pro přidání passkey znovu otevřete odkaz"
 	manage:
 		yourPasskeys: "Vaše passkeys"
 		managePasskeys: "Spravovat passkeys"

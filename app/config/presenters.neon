@@ -34,12 +34,12 @@ services:
 	- MichalSpacekCz\Presentation\Admin\Emails\EmailsPresenter
 	- MichalSpacekCz\Presentation\Admin\Homepage\HomepagePresenter
 	- MichalSpacekCz\Presentation\Admin\Info\InfoPresenter
-	- MichalSpacekCz\Presentation\Admin\Passkeys\PasskeysPresenter
+	- MichalSpacekCz\Presentation\Admin\Passkeys\PasskeysPresenter(passkeyRegistration: @passkeyRegistrationAdd, passkeyRegistrationFormFactory: @passkeyRegistrationFormFactoryAdd)
 	- MichalSpacekCz\Presentation\Admin\Interviews\InterviewsPresenter
 	- MichalSpacekCz\Presentation\Admin\Invoices\InvoicesPresenter
 	- MichalSpacekCz\Presentation\Admin\Pulse\PulsePresenter
 	- MichalSpacekCz\Presentation\Admin\Reviews\ReviewsPresenter
-	- MichalSpacekCz\Presentation\Admin\Sign\SignPresenter
+	- MichalSpacekCz\Presentation\Admin\Sign\SignPresenter(passkeyRegistration: @passkeyRegistrationReset, passkeyRegistrationFormFactory: @passkeyRegistrationFormFactoryReset)
 	- MichalSpacekCz\Presentation\Admin\Talks\TalksPresenter
 	- MichalSpacekCz\Presentation\Admin\Trainings\TrainingsPresenter
 	- MichalSpacekCz\Presentation\Admin\User\UserPresenter

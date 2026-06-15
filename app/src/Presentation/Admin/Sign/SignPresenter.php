@@ -15,6 +15,7 @@ use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
@@ -125,7 +126,7 @@ final class SignPresenter extends BasePresenter
 		}
 		try {
 			$options = $this->passkeyRegistration->generateRegistrationOptions($token);
-		} catch (PasskeyRegistrationDisabledException | PasskeyRegistrationInvalidOrExpiredTokenException) {
+		} catch (PasskeyRegistrationDisabledException | PasskeyRegistrationInvalidOrExpiredTokenException | PasskeyRegistrationUserMismatchException) {
 			throw new BadRequestException('Invalid or expired token', IResponse::S403_Forbidden);
 		}
 		$this->sendJsonString($options);
@@ -174,6 +175,7 @@ final class SignPresenter extends BasePresenter
 			function (): void {
 				$this->redirect('in');
 			},
+			$this->link('passkey-reset-options'),
 			$this->link('passkey-reset-error'),
 			$this->link('passkey-reset-canceled'),
 			$this->link('passkey-not-supported'),

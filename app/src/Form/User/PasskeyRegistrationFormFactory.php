@@ -30,16 +30,17 @@ final readonly class PasskeyRegistrationFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 */
-	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl, string $notSupportedUrl): Form
+	public function create(callable $onSuccess, string $optionsUrl, string $errorUrl, string $canceledUrl, string $notSupportedUrl): Form
 	{
 		$form = $this->factory->create();
+		$form->setHtmlAttribute('id', 'passkeyRegistration'); // passkey-register.js finds the form by this id
+		$form->setHtmlAttribute('data-options-url', $optionsUrl);
 		$form->setHtmlAttribute('data-error-url', $errorUrl);
 		$form->setHtmlAttribute('data-canceled-url', $canceledUrl);
 		$form->setHtmlAttribute('data-not-supported-url', $notSupportedUrl);
 		$this->passkeyFormControls->addRegistrationFields($form, $this->translator->translate('messages.passkeys.loadingOptions'));
 		$form->addHidden('token')
-			->setRequired()
-			->setHtmlAttribute('id', 'passkeyResetToken');
+			->setRequired();
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$values = $form->getValues();
 			assert(is_string($values->credential));
@@ -49,10 +50,10 @@ final readonly class PasskeyRegistrationFormFactory
 				$userAuthToken = $this->passkeyRegistration->getUserAuthToken($values->token);
 				$this->passkeyRegistration->cleanupToken($userAuthToken);
 				$this->passkeyAuthenticator->verifyRegistration($values->credential, $values->name, $userAuthToken->getUserId());
-				Debugger::log("Successful passkey reset ({$userAuthToken->getUsername()}, {$this->httpRequest->getRemoteAddress()})", 'auth');
+				Debugger::log("Successful passkey registration ({$userAuthToken->getUsername()}, {$this->httpRequest->getRemoteAddress()})", 'auth');
 				$onSuccess();
 			} catch (PasskeyException $e) {
-				Debugger::log("Failed passkey reset: {$e->getMessage()} ({$this->httpRequest->getRemoteAddress()})", 'auth');
+				Debugger::log("Failed passkey registration: {$e->getMessage()} ({$this->httpRequest->getRemoteAddress()})", 'auth');
 				$form->addError($this->translator->translate('messages.passkeys.registrationFailed'));
 			}
 		};

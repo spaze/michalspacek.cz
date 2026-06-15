@@ -7,18 +7,26 @@ use Contributte\Translation\Translator;
 use InvalidArgumentException;
 use MichalSpacekCz\Form\User\PasskeyDeleteFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRegisterFormFactory;
+use MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRenameFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
+use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
 use MichalSpacekCz\User\WebAuthn\UserPasskeys;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 use Nette\Security\User;
 use Symfony\Component\Uid\Uuid;
 
@@ -40,6 +48,9 @@ final class PasskeysPresenter extends BasePresenter
 		private readonly UserPasskeys $userPasskeys,
 		private readonly Translator $translator,
 		private readonly TexyFormatter $texyFormatter,
+		private readonly PasskeyRegistration $passkeyRegistration,
+		private readonly PasskeyRegistrationFormFactory $passkeyRegistrationFormFactory,
+		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
 	}
@@ -83,6 +94,45 @@ final class PasskeysPresenter extends BasePresenter
 	{
 		$this->flashMessage($this->translator->translate('messages.passkeys.registrationFailed'), 'error');
 		$this->redirect('register');
+	}
+
+
+	public function actionAdd(): void
+	{
+		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsCreate, PermissionsPolicyOrigin::Self);
+		$this->template->pageTitle = $this->translator->translate('messages.passkeys.add.addPasskey');
+	}
+
+
+	public function actionAddOptions(): never
+	{
+		if (!$this->getHttpRequest()->isMethod(IRequest::Post)) {
+			throw new BadRequestException('POST haste, GET lost', IResponse::S405_MethodNotAllowed);
+		}
+		$token = $this->httpInput->getPostString('token');
+		if ($token === null) {
+			throw new BadRequestException('Missing token', IResponse::S400_BadRequest);
+		}
+		try {
+			$options = $this->passkeyRegistration->generateRegistrationOptions($token);
+		} catch (PasskeyRegistrationDisabledException | PasskeyRegistrationInvalidOrExpiredTokenException | PasskeyRegistrationUserMismatchException) {
+			throw new BadRequestException('Invalid or expired token', IResponse::S403_Forbidden);
+		}
+		$this->sendJsonString($options);
+	}
+
+
+	public function actionAddCanceled(): never
+	{
+		$this->flashMessage($this->translator->translate('messages.passkeys.registrationCanceled'), 'error');
+		$this->redirect('Passkeys:');
+	}
+
+
+	public function actionAddError(): never
+	{
+		$this->flashMessage($this->translator->translate('messages.passkeys.registrationFailed'), 'error');
+		$this->redirect('Passkeys:');
 	}
 
 
@@ -132,6 +182,21 @@ final class PasskeysPresenter extends BasePresenter
 			$this->link('register-canceled'),
 			$this->link('Sign:passkey-not-supported'),
 			$this->passkeyRegisterOptions,
+		);
+	}
+
+
+	protected function createComponentPasskeyAdd(): Form
+	{
+		return $this->passkeyRegistrationFormFactory->create(
+			function (): void {
+				$this->flashMessage($this->translator->translate('messages.passkeys.registered'));
+				$this->redirect('Passkeys:');
+			},
+			$this->link('add-options'),
+			$this->link('add-error'),
+			$this->link('add-canceled'),
+			$this->link('Sign:passkey-not-supported'),
 		);
 	}
 

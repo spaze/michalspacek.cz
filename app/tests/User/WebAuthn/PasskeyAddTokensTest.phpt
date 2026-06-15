@@ -62,6 +62,39 @@ final class PasskeyAddTokensTest extends TestCase
 	}
 
 
+	public function testVerifyThrowsWhenDisabled(): void
+	{
+		Assert::exception(function (): void {
+			$this->getTokens(false)->verify('some token');
+		}, PasskeyRegistrationDisabledException::class);
+	}
+
+
+	public function testVerifyReturnsTokenWhenEnabled(): void
+	{
+		$tokenValue = 'secret';
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'token' => hash('sha512', $tokenValue),
+			'userId' => 1337,
+			'username' => 'foo',
+		]);
+		$token = $this->getTokens(true)->verify("selector:{$tokenValue}");
+		Assert::same(42, $token?->getId());
+		Assert::same(1337, $token?->getUserId());
+	}
+
+
+	public function testDeleteByIdQueriesAdminAddType(): void
+	{
+		$this->getTokens(true)->deleteById(42);
+		Assert::same(
+			[42, UserAuthTokenType::AdminPasskeyAdd->value],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),
+		);
+	}
+
+
 	public function testDeleteExpiredQueriesAdminAddType(): void
 	{
 		$this->database->setResultSet(new ResultSet(2));

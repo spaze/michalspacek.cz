@@ -54,6 +54,10 @@ contentSecurityPolicy:
 			@extends: www.*.*
 			img-src:
 				- 'data:'
+		admin.passkeys.add:
+			@extends: admin.*.*
+			connect-src:
+				- "'self'"
 		admin.sign.passkeyreset:
 			@extends: admin.*.*
 			connect-src:
