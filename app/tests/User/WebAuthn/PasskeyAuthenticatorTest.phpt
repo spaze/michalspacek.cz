@@ -102,9 +102,24 @@ final class PasskeyAuthenticatorTest extends TestCase
 	public function testGenerateRegistrationOptionsGeneratesFreshChallenge(): void
 	{
 		$this->database->setFetchFieldDefaultResult('handle');
-		$options1 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user');
-		$options2 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+		$options1 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', false);
+		$options2 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', false);
 		Assert::notSame($options1, $options2);
+	}
+
+
+	public function testGenerateRegistrationOptionsExcludesExistingCredentialsOnlyWhenAsked(): void
+	{
+		$this->database->setFetchFieldDefaultResult('handle');
+		$this->database->setFetchPairsDefaultResult([1 => 'existing-credential-id']);
+
+		$without = Json::decode($this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', false), forceArrays: true);
+		assert(is_array($without));
+		Assert::same([], $without['excludeCredentials'] ?? []);
+
+		$with = Json::decode($this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', true), forceArrays: true);
+		assert(is_array($with));
+		Assert::notSame([], $with['excludeCredentials'] ?? []);
 	}
 
 
@@ -369,7 +384,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 		);
 		$this->database->setFetchFieldDefaultResult('handle');
 		Assert::exception(function () use ($passkeyAuthenticator): void {
-			$passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+			$passkeyAuthenticator->generateRegistrationOptions(1, 'user', false);
 		}, PasskeyRegistrationOptionsSerializationException::class);
 	}
 

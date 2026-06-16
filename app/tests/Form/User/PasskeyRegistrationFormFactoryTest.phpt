@@ -121,7 +121,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 		return new PasskeyRegistrationFormFactory(
 			$this->factory,
 			$this->passkeyAuthenticator,
-			new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user),
+			new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user, false),
 			$this->passkeyFormControls,
 			$this->httpRequest,
 			$this->translator,

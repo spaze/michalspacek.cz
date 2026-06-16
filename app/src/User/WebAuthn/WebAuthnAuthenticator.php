@@ -14,7 +14,7 @@ interface WebAuthnAuthenticator
 	/**
 	 * @throws PasskeyRegistrationOptionsSerializationException
 	 */
-	public function generateRegistrationOptions(int $userId, string $username): string;
+	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string;
 
 
 	/**

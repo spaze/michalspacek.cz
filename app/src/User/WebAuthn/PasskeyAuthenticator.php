@@ -64,7 +64,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	 * @phpstan-impure
 	 */
 	#[Override]
-	public function generateRegistrationOptions(int $userId, string $username): string
+	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string
 	{
 		$rp = PublicKeyCredentialRpEntity::create($this->rpName, $this->rpId);
 		$userHandle = $this->passkeyStorage->getUserHandleByUserId($userId);
@@ -80,7 +80,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 				userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
 				residentKey: AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
 			),
-			excludeCredentials: $this->passkeyStorage->getDescriptorsByUserId($userId),
+			excludeCredentials: $excludeExistingCredentials ? $this->passkeyStorage->getDescriptorsByUserId($userId) : [],
 		);
 		try {
 			return $this->serializer->serialize($options, 'json');

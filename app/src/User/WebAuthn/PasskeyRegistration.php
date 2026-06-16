@@ -16,6 +16,7 @@ final readonly class PasskeyRegistration
 		private PasskeyRegistrationTokens $registrationTokens,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private User $user,
+		private bool $excludeExistingCredentials,
 	) {
 	}
 
@@ -58,6 +59,7 @@ final readonly class PasskeyRegistration
 		return $this->passkeyAuthenticator->generateRegistrationOptions(
 			$userAuthToken->getUserId(),
 			$userAuthToken->getUsername(),
+			$this->excludeExistingCredentials,
 		);
 	}
 

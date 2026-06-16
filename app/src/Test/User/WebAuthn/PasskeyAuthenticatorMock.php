@@ -32,7 +32,7 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 
 	#[Override]
-	public function generateRegistrationOptions(int $userId, string $username): string
+	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string
 	{
 		return '{}';
 	}

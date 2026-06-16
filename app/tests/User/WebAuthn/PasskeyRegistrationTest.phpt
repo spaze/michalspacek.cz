@@ -131,7 +131,7 @@ final class PasskeyRegistrationTest extends TestCase
 	{
 		$tokens = new UserAuthTokens($this->database, 'users');
 		$resetTokens = new PasskeyResetTokens($tokens, $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user);
+		return new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user, false);
 	}
 
 }
