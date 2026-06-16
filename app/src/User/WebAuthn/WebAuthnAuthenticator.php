@@ -18,9 +18,10 @@ interface WebAuthnAuthenticator
 
 
 	/**
+	 * @return string The id of the newly registered passkey credential
 	 * @throws PasskeyRegistrationException
 	 */
-	public function verifyRegistration(string $json, string $name, int $userId): void;
+	public function verifyRegistration(string $json, string $name, int $userId): string;
 
 
 	/**

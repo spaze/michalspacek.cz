@@ -91,6 +91,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 
 
 	/**
+	 * @return string The id of the newly registered passkey credential
 	 * @throws PasskeyChallengeInvalidException
 	 * @throws PasskeyCredentialAlreadyRegisteredException
 	 * @throws PasskeyRegistrationAttestationResponseValidatorException
@@ -101,7 +102,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	 * @throws PasskeyRegistrationInvalidTypeException
 	 */
 	#[Override]
-	public function verifyRegistration(string $json, string $name, int $userId): void
+	public function verifyRegistration(string $json, string $name, int $userId): string
 	{
 		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveRegChallenge());
 		try {
@@ -145,6 +146,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		}
 
 		$this->passkeyStorage->saveCredential($credentialRecord->publicKeyCredentialId, $credentialRecordJson, $name, $userId);
+		return $credentialRecord->publicKeyCredentialId;
 	}
 
 

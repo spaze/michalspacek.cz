@@ -429,7 +429,8 @@ final class PasskeyAuthenticatorTest extends TestCase
 		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
 		$this->database->addFetchFieldResult('user-handle');
 
-		$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42);
+		$credentialId = $passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42);
+		Assert::same(str_repeat("\x00", 16), $credentialId);
 
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name ?');
 		Assert::count(1, $params);
