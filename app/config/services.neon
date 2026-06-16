@@ -68,7 +68,6 @@ services:
 	- MichalSpacekCz\Form\Controls\PasskeyFormControls
 	- MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyDeleteFormFactory
-	- MichalSpacekCz\Form\User\PasskeyRegisterFormFactory
 	- MichalSpacekCz\Form\User\PasskeyRenameFormFactory
 	passkeyRegistrationFormFactoryReset: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyRegistrationReset)
 	passkeyRegistrationFormFactoryAdd: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyRegistrationAdd)
@@ -211,7 +210,8 @@ services:
 	passkeyRegistrationAdd: MichalSpacekCz\User\WebAuthn\PasskeyRegistration(registrationTokens: @passkeyAddTokens)
 	passkeyResetTokens: MichalSpacekCz\User\WebAuthn\PasskeyResetTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
 	passkeyAddTokens: MichalSpacekCz\User\WebAuthn\PasskeyAddTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
-	- MichalSpacekCz\User\WebAuthn\PasskeyResetUrl
+	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetUrl(tokens: @passkeyResetTokens)
+	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddUrl(tokens: @passkeyAddTokens)
 	- MichalSpacekCz\User\UserSessionAdditionalData
 	sleep: MichalSpacekCz\Utils\Sleep
 	- MichalSpacekCz\Utils\Strings

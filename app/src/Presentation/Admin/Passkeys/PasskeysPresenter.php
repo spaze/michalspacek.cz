@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Presentation\Admin\Passkeys;
 use Contributte\Translation\Translator;
 use InvalidArgumentException;
 use MichalSpacekCz\Form\User\PasskeyDeleteFormFactory;
-use MichalSpacekCz\Form\User\PasskeyRegisterFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRenameFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -15,36 +14,28 @@ use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirec
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
 use MichalSpacekCz\User\WebAuthn\UserPasskeys;
-use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
-use Nette\Security\User;
 use Symfony\Component\Uid\Uuid;
 
 final class PasskeysPresenter extends BasePresenter
 {
 
-	private ?string $passkeyRegisterOptions = null;
 	private ?Uuid $passkeyId = null;
 	private ?string $passkeyCurrentName = null;
 
 
 	public function __construct(
-		private readonly User $user,
-		private readonly PasskeyRegisterFormFactory $passkeyRegisterFormFactory,
 		private readonly PasskeyRenameFormFactory $passkeyRenameFormFactory,
 		private readonly PasskeyDeleteFormFactory $passkeyDeleteFormFactory,
-		private readonly Manager $authenticator,
-		private readonly WebAuthnAuthenticator $passkeyAuthenticator,
 		private readonly UserPasskeys $userPasskeys,
 		private readonly Translator $translator,
 		private readonly TexyFormatter $texyFormatter,
@@ -67,33 +58,10 @@ final class PasskeysPresenter extends BasePresenter
 
 	public function actionRegister(): void
 	{
-		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsCreate, PermissionsPolicyOrigin::Self);
-		$this->template->pageTitle = $this->translator->translate('messages.passkeys.registerPasskey');
-	}
-
-
-	public function renderRegister(): void
-	{
-		// generateRegistrationOptions() writes a fresh challenge to the session each time the form is rendered,
-		// so verifyRegistration() always finds the challenge from the most recent render in the session
-		$this->passkeyRegisterOptions = $this->passkeyAuthenticator->generateRegistrationOptions(
-			(int)$this->user->getId(),
-			$this->authenticator->getIdentityUsernameByUser($this->user),
-		);
-	}
-
-
-	public function actionRegisterCanceled(): never
-	{
-		$this->flashMessage($this->translator->translate('messages.passkeys.registrationCanceled'), 'error');
-		$this->redirect('register');
-	}
-
-
-	public function actionRegisterError(): never
-	{
-		$this->flashMessage($this->translator->translate('messages.passkeys.registrationFailed'), 'error');
-		$this->redirect('register');
+		$this->template->setParameters(new PasskeysRegisterTemplateParameters(
+			$this->translator->translate('messages.passkeys.registerPasskey'),
+			$this->passkeyRegistration->isEnabled(),
+		));
 	}
 
 
@@ -167,22 +135,6 @@ final class PasskeysPresenter extends BasePresenter
 			$this->translator->translate('messages.passkeys.delete.deletePasskey'),
 			$this->passkeyCurrentName,
 		));
-	}
-
-
-	protected function createComponentPasskeyRegister(): Form
-	{
-		return $this->passkeyRegisterFormFactory->create(
-			function (): void {
-				$this->flashMessage($this->translator->translate('messages.passkeys.registered'));
-				$this->redirect('Passkeys:');
-			},
-			$this->user,
-			$this->link('register-error'),
-			$this->link('register-canceled'),
-			$this->link('Sign:passkey-not-supported'),
-			$this->passkeyRegisterOptions,
-		);
 	}
 
 

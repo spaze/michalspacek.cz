@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\User\WebAuthn;
+namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
@@ -14,15 +14,16 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetArgsException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetUserNotFoundException;
+use MichalSpacekCz\User\WebAuthn\PasskeyResetTokens;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
 use Nette\CommandLine\Parser;
 use Nette\Http\IRequest;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
 /** @testCase */
 final class PasskeyResetUrlTest extends TestCase
@@ -57,7 +58,7 @@ final class PasskeyResetUrlTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->getPasskeyResetUrl(new CliArgs(['username' => 'waldo'], 'Unknown argument --foo'), false)->generate();
-		}, PasskeyResetArgsException::class, 'Unknown argument --foo');
+		}, PasskeyRegistrationUrlArgsException::class, 'Unknown argument --foo');
 	}
 
 
@@ -73,8 +74,8 @@ final class PasskeyResetUrlTest extends TestCase
 	{
 		$e = Assert::exception(function (): void {
 			$this->getPasskeyResetUrl(new CliArgs(['username' => 'nobody'], null), true)->generate();
-		}, PasskeyResetUserNotFoundException::class);
-		assert($e instanceof PasskeyResetUserNotFoundException);
+		}, PasskeyRegistrationUrlUserNotFoundException::class);
+		assert($e instanceof PasskeyRegistrationUrlUserNotFoundException);
 		Assert::same('nobody', $e->getUsername());
 	}
 

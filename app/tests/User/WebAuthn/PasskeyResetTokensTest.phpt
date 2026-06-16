@@ -51,11 +51,37 @@ final class PasskeyResetTokensTest extends TestCase
 	}
 
 
+	public function testCreateReturnsTokenWhenEnabled(): void
+	{
+		$token = $this->getTokens(true)->create(1337);
+		Assert::contains(':', $token); // selector:token
+		Assert::same(
+			[1337, UserAuthTokenType::AdminPasskeyReset->value],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?'),
+		);
+	}
+
+
 	public function testVerifyThrowsWhenDisabled(): void
 	{
 		Assert::exception(function (): void {
 			$this->getTokens(false)->verify('some token');
 		}, PasskeyRegistrationDisabledException::class);
+	}
+
+
+	public function testVerifyReturnsTokenWhenEnabled(): void
+	{
+		$tokenValue = 'secret';
+		$this->database->setFetchDefaultResult([
+			'id' => 42,
+			'token' => hash('sha512', $tokenValue),
+			'userId' => 1337,
+			'username' => 'foo',
+		]);
+		$token = $this->getTokens(true)->verify("selector:{$tokenValue}");
+		Assert::same(42, $token?->getId());
+		Assert::same(1337, $token?->getUserId());
 	}
 
 

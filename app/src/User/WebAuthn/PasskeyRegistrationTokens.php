@@ -9,13 +9,26 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException
 /**
  * One-time tokens that authorize registering a passkey out of band.
  *
- * Each token type is its own implementation. The code that checks the token and
- * registers the passkey depends only on this interface, so it works the same for
- * every token type. Creating tokens is not part of the interface because each
- * type creates and delivers its token differently.
+ * Each token type is its own implementation. The shared registration code (the
+ * from-token flow and the link generator) depends only on this interface, so it
+ * works the same for every token type; only delivery differs, e.g. the reset link
+ * is anonymous account recovery while the add link is opened behind login.
  */
 interface PasskeyRegistrationTokens
 {
+
+	/**
+	 * @return bool Whether registering a passkey with this token type is currently allowed
+	 */
+	public function isEnabled(): bool;
+
+
+	/**
+	 * @return string The selector:token value to put in the registration link
+	 * @throws PasskeyRegistrationDisabledException
+	 */
+	public function create(int $userId): string;
+
 
 	/**
 	 * @return UserAuthToken|null The matching token, or null when the value is invalid, expired, or belongs to a different token type

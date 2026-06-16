@@ -1,27 +1,34 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\User\WebAuthn;
+namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetArgsException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetUserNotFoundException;
+use MichalSpacekCz\User\WebAuthn\PasskeyRegistrationTokens;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
 use Nette\CommandLine\Parser;
 use Override;
 
-final readonly class PasskeyResetUrl implements CliArgsProvider
+abstract readonly class PasskeyRegistrationUrl implements CliArgsProvider
 {
 
 	private const string ARG_USERNAME = 'username';
 
 
+	/**
+	 * @return string The presenter:action destination the token's registration link points to
+	 */
+	abstract protected function getDestination(): string;
+
+
 	public function __construct(
 		private Manager $authenticator,
-		private PasskeyResetTokens $resetTokens,
+		private PasskeyRegistrationTokens $tokens,
 		private LinkGenerator $linkGenerator,
 		private CliArgs $cliArgs,
 	) {
@@ -29,29 +36,29 @@ final readonly class PasskeyResetUrl implements CliArgsProvider
 
 
 	/**
-	 * @throws PasskeyResetArgsException
+	 * @throws PasskeyRegistrationUrlArgsException
 	 * @throws PasskeyRegistrationDisabledException
-	 * @throws PasskeyResetUserNotFoundException
+	 * @throws PasskeyRegistrationUrlUserNotFoundException
 	 */
 	public function generate(): string
 	{
 		$error = $this->cliArgs->getError();
 		if ($error !== null) {
-			throw new PasskeyResetArgsException($error);
+			throw new PasskeyRegistrationUrlArgsException($error);
 		}
 
-		if (!$this->resetTokens->isEnabled()) {
+		if (!$this->tokens->isEnabled()) {
 			throw new PasskeyRegistrationDisabledException();
 		}
 
 		$username = $this->cliArgs->getArg(self::ARG_USERNAME);
 		$userId = $this->authenticator->getUserIdByUsername($username);
 		if ($userId === null) {
-			throw new PasskeyResetUserNotFoundException($username);
+			throw new PasskeyRegistrationUrlUserNotFoundException($username);
 		}
 
-		$selectorToken = $this->resetTokens->create($userId);
-		return $this->linkGenerator->link('Admin:Sign:passkeyReset#' . $selectorToken);
+		$selectorToken = $this->tokens->create($userId);
+		return $this->linkGenerator->link($this->getDestination() . '#' . $selectorToken);
 	}
 
 

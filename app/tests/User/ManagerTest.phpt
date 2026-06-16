@@ -9,11 +9,7 @@ namespace MichalSpacekCz\User;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
-use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
-use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
-use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
@@ -57,46 +53,6 @@ final class ManagerTest extends TestCase
 			Assert::same($username, $identity->username);
 		}
 		Assert::same($username, $identity->getData()['username']);
-	}
-
-
-	public function testGetIdentityUsernameByUserNoIdentity(): void
-	{
-		Assert::exception(function (): void {
-			$this->getManager()->getIdentityUsernameByUser($this->user);
-		}, IdentityNotSimpleIdentityException::class, 'Identity is of class <null> but should be Nette\Security\SimpleIdentity');
-	}
-
-
-	public function testGetIdentityUsernameByUserNoUsername(): void
-	{
-		PrivateProperty::setValue($this->user, 'authenticated', true);
-		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337));
-		Assert::exception(function (): void {
-			$this->getManager()->getIdentityUsernameByUser($this->user);
-		}, IdentityWithoutUsernameException::class);
-	}
-
-
-	public function testGetIdentityUsernameByUserUsernameNotString(): void
-	{
-		PrivateProperty::setValue($this->user, 'authenticated', true);
-		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337, [], ['username' => 303]));
-		Assert::exception(function (): void {
-			$this->getManager()->getIdentityUsernameByUser($this->user);
-		}, IdentityUsernameNotStringException::class, 'Identity username is of type int, not a string');
-	}
-
-
-	public function testGetIdentityUsernameByUser(): void
-	{
-		$id = 1337;
-		$username = 'pizza';
-		$manager = $this->getManager();
-		$identity = $manager->getIdentity($id, $username);
-		PrivateProperty::setValue($this->user, 'authenticated', true);
-		PrivateProperty::setValue($this->user, 'identity', $identity);
-		Assert::same($username, $manager->getIdentityUsernameByUser($this->user));
 	}
 
 

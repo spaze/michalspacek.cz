@@ -423,6 +423,10 @@ passkeys:
 	add:
 		addPasskey: "Add a passkey"
 		reopenLink: "To add a passkey, open the link again"
+	register:
+		enabled: "Passkey registration is **enabled**, can be disabled by setting `%s` (default value)"
+		disabled: "Passkey registration is **disabled**, to enable set `%s` in `%s`"
+		howTo: "To add a passkey, generate a one-time link with this command and open it:"
 	manage:
 		yourPasskeys: "Your passkeys"
 		managePasskeys: "Manage passkeys"

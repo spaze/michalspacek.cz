@@ -20,6 +20,12 @@ final readonly class PasskeyRegistration
 	}
 
 
+	public function isEnabled(): bool
+	{
+		return $this->registrationTokens->isEnabled();
+	}
+
+
 	/**
 	 * @throws PasskeyRegistrationDisabledException
 	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException

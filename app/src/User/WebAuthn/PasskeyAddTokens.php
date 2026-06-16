@@ -50,6 +50,7 @@ final readonly class PasskeyAddTokens implements UserAuthTokenLifetime, PasskeyR
 	}
 
 
+	#[Override]
 	public function isEnabled(): bool
 	{
 		return $this->registrationEnabled;
@@ -60,6 +61,7 @@ final readonly class PasskeyAddTokens implements UserAuthTokenLifetime, PasskeyR
 	 * @throws PasskeyRegistrationDisabledException
 	 * @throws Exception
 	 */
+	#[Override]
 	public function create(int $userId): string
 	{
 		if (!$this->registrationEnabled) {

@@ -423,6 +423,10 @@ passkeys:
 	add:
 		addPasskey: "Přidat passkey"
 		reopenLink: "Pro přidání passkey znovu otevřete odkaz"
+	register:
+		enabled: "Registrace passkey je **povolena**, lze vypnout nastavením `%s` (defaultní hodnota) "
+		disabled: "Registrace passkey je **zakázána**, pro povolení nastavte `%s` v `%s`"
+		howTo: "Pro přidání passkey vygenerujte jednorázový odkaz tímto příkazem a otevřete ho:"
 	manage:
 		yourPasskeys: "Vaše passkeys"
 		managePasskeys: "Spravovat passkeys"
