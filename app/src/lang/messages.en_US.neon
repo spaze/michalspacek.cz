@@ -427,6 +427,12 @@ passkeys:
 		enabled: "Passkey registration is **enabled**, can be disabled by setting `%s` (default value)"
 		disabled: "Passkey registration is **disabled**, to enable set `%s` in `%s`"
 		howTo: "To add a passkey, generate a one-time link with this command and open it:"
+		howItWorks:
+			title: "How it works"
+			outOfBand: "The one-time link is generated on the command line, out of reach of page scripts. Without that, an XSS in the admin could call `navigator.credentials.create()` itself and silently enroll the attacker's own passkey, which with `attestation: none` would be fully trusted."
+			signedIn: "The token only authorizes the registration; you have to be signed in as the same user, so a leaked link can't enroll a passkey onto someone else's account. Account recovery is the exception, where the reset link works while signed out."
+			fragment: "The token sits in the URL fragment (after `#`), which browsers never send to the server, so it stays out of the access log."
+			notCarried: "Even if the fragment survives the hop to the sign-in page, the server assembles the redirect-back address but never sees the fragment, so you return to the passkey add page without the token. Carrying it would mean a query parameter that would put the token back in the log, or keeping extra state in the session. The simplest is to just sign in and open the link again."
 	manage:
 		yourPasskeys: "Your passkeys"
 		managePasskeys: "Manage passkeys"

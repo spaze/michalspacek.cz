@@ -9,4 +9,12 @@
 <div n:if="!$registrationEnabled" class="flash notice">{_messages.passkeys.register.disabled|format:'authentication.passkeys.registrationEnabled: true','local.neon'}</div>
 <p>{_messages.passkeys.register.howTo}</p>
 <p><code>bin/passkey-add.php &lt;username&gt;</code></p>
+
+<h2>{_messages.passkeys.register.howItWorks.title}</h2>
+<ul>
+	<li>{_messages.passkeys.register.howItWorks.outOfBand|format}</li>
+	<li>{_messages.passkeys.register.howItWorks.signedIn|format}</li>
+	<li>{_messages.passkeys.register.howItWorks.fragment|format}</li>
+	<li>{_messages.passkeys.register.howItWorks.notCarried|format}</li>
+</ul>
 {/define}
