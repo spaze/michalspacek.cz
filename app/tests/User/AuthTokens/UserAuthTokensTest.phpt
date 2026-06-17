@@ -72,6 +72,18 @@ final class UserAuthTokensTest extends TestCase
 		);
 	}
 
+
+	public function testDeleteAllTypesForUser(): void
+	{
+		(new UserAuthTokens($this->database, 'users'))->deleteAllTypesForUser(1337);
+
+		// No type predicate, so every token type for the user is deleted
+		Assert::same(
+			[1337],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE key_user = ?'),
+		);
+	}
+
 }
 
 TestCaseRunner::run(UserAuthTokensTest::class);

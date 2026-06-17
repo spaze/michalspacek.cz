@@ -102,20 +102,6 @@ final class PermanentLoginTest extends TestCase
 	}
 
 
-	public function testRevokeForUserDeletesTokensWithoutTouchingCookies(): void
-	{
-		$userId = 1338;
-		$this->cookies->set(CookieName::PermanentLogin, 'still-here', '14 days');
-		$this->getPermanentLogin()->revokeForUser($userId);
-
-		Assert::same(
-			[$userId, UserAuthTokenType::PermanentLogin->value],
-			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?'),
-		);
-		Assert::count(1, $this->httpResponse->getCookie(CookieName::PermanentLogin->value));
-	}
-
-
 	public function testClearDeletesTokensAndCookie(): void
 	{
 		$userId = 1337;

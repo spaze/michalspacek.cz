@@ -212,6 +212,9 @@ services:
 	passkeyAddTokens: MichalSpacekCz\User\WebAuthn\PasskeyAddTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
 	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetUrl(tokens: @passkeyResetTokens)
 	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddUrl(tokens: @passkeyAddTokens)
+	- MichalSpacekCz\User\WebAuthn\PasskeyResetRevoker(accessRevokers: typed(MichalSpacekCz\User\UserAccessRevoker))
+	- MichalSpacekCz\Http\Session\SessionRevoker(tableName: %session.tableName%)
+	- MichalSpacekCz\User\AuthTokens\AuthTokensRevoker
 	- MichalSpacekCz\User\UserSessionAdditionalData
 	sleep: MichalSpacekCz\Utils\Sleep
 	- MichalSpacekCz\Utils\Strings

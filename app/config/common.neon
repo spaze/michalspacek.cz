@@ -90,6 +90,7 @@ subresourceIntegrity:
 		info-admin: ../../vendor/spaze/phpinfo/src/assets/info.css
 
 sessionHandler:
+	tableName: %session.tableName%
 	encryptionService: @sessionEncryption
 
 svgIcons:
