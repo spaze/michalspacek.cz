@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Test\User\WebAuthn;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\WillThrow;
-use MichalSpacekCz\User\WebAuthn\PasskeyAuthenticationResult;
+use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Override;
 

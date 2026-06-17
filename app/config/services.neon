@@ -113,6 +113,7 @@ services:
 	- MichalSpacekCz\Http\SecurityHeaders\SecurityHeaders(reportingApiUrl: %reporting.reportingApi%)
 	- MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicy
 	- MichalSpacekCz\Http\Session\SessionGarbageCollector
+	- MichalSpacekCz\Http\Session\SessionRevoker(tableName: %session.tableName%)
 	- MichalSpacekCz\Http\StructuredHeaders
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
@@ -198,24 +199,23 @@ services:
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\UpcKeys\UpcKeysStorageConversions
 	- MichalSpacekCz\User\AuthTokenGarbageCollector\AuthTokenGarbageCollector(lifetimes: typed(MichalSpacekCz\User\AuthTokens\UserAuthTokenLifetime))
+	- MichalSpacekCz\User\AuthTokens\AuthTokensRevoker
 	- MichalSpacekCz\User\AuthTokens\UserAuthTokens(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\Manager(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\PermanentLogin\PermanentLogin(interval: %permanentLogin.interval%)
-	passkeySessionSectionFactory: MichalSpacekCz\User\WebAuthn\PasskeySessionSectionFactory
-	- @passkeySessionSectionFactory::create()
-	userPasskeys: MichalSpacekCz\User\WebAuthn\UserPasskeys(passkeysTableName: %authentication.tables.passkeys%)
-	passkeyStorage: MichalSpacekCz\User\WebAuthn\PasskeyStorage(passkeysTableName: %authentication.tables.passkeys%, usersTableName: %authentication.tables.users%)
-	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
-	passkeyReset: MichalSpacekCz\User\WebAuthn\PasskeyReset(registrationTokens: @passkeyResetTokens)
-	passkeyAdd: MichalSpacekCz\User\WebAuthn\PasskeyAdd(registrationTokens: @passkeyAddTokens)
-	passkeyResetTokens: MichalSpacekCz\User\WebAuthn\PasskeyResetTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
-	passkeyAddTokens: MichalSpacekCz\User\WebAuthn\PasskeyAddTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
-	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetUrl(tokens: @passkeyResetTokens)
-	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddUrl(tokens: @passkeyAddTokens)
-	- MichalSpacekCz\User\WebAuthn\PasskeyResetRevoker(accessRevokers: typed(MichalSpacekCz\User\UserAccessRevoker))
-	- MichalSpacekCz\Http\Session\SessionRevoker(tableName: %session.tableName%)
-	- MichalSpacekCz\User\AuthTokens\AuthTokensRevoker
 	- MichalSpacekCz\User\UserSessionAdditionalData
+	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
+	- MichalSpacekCz\User\WebAuthn\Passkeys(passkeysTableName: %authentication.tables.passkeys%)
+	- MichalSpacekCz\User\WebAuthn\PasskeyStorage(passkeysTableName: %authentication.tables.passkeys%, usersTableName: %authentication.tables.users%)
+	passkeyAdd: MichalSpacekCz\User\WebAuthn\Registration\PasskeyAdd(registrationTokens: @passkeyAddTokens)
+	passkeyAddTokens: MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
+	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddUrl(tokens: @passkeyAddTokens)
+	passkeyReset: MichalSpacekCz\User\WebAuthn\Registration\PasskeyReset(registrationTokens: @passkeyResetTokens)
+	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetRevoker(accessRevokers: typed(MichalSpacekCz\User\UserAccessRevoker))
+	passkeyResetTokens: MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
+	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetUrl(tokens: @passkeyResetTokens)
+	passkeySessionSectionFactory: MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSectionFactory
+	- @passkeySessionSectionFactory::create()
 	sleep: MichalSpacekCz\Utils\Sleep
 	- MichalSpacekCz\Utils\Strings
 	- MichalSpacekCz\Utils\JsonUtils

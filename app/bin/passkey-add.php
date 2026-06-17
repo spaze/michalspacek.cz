@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Bin;
 
 use MichalSpacekCz\Application\Bootstrap;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddUrl;

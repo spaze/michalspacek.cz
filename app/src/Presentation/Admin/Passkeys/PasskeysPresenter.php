@@ -15,11 +15,11 @@ use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigi
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
-use MichalSpacekCz\User\WebAuthn\PasskeyAdd;
-use MichalSpacekCz\User\WebAuthn\UserPasskeys;
+use MichalSpacekCz\User\WebAuthn\Passkeys;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUserMismatchException;
+use MichalSpacekCz\User\WebAuthn\Registration\PasskeyAdd;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
@@ -36,7 +36,7 @@ final class PasskeysPresenter extends BasePresenter
 	public function __construct(
 		private readonly PasskeyRenameFormFactory $passkeyRenameFormFactory,
 		private readonly PasskeyDeleteFormFactory $passkeyDeleteFormFactory,
-		private readonly UserPasskeys $userPasskeys,
+		private readonly Passkeys $passkeys,
 		private readonly Translator $translator,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly PasskeyAdd $passkeyRegistration,
@@ -51,7 +51,7 @@ final class PasskeysPresenter extends BasePresenter
 	{
 		$this->template->setParameters(new PasskeysDefaultTemplateParameters(
 			$this->translator->translate('messages.passkeys.manage.yourPasskeys'),
-			$this->userPasskeys->getPasskeys(),
+			$this->passkeys->getPasskeys(),
 		));
 	}
 
@@ -108,7 +108,7 @@ final class PasskeysPresenter extends BasePresenter
 	{
 		try {
 			$this->passkeyId = Uuid::fromRfc4122($id);
-			$this->passkeyCurrentName = $this->userPasskeys->getCredentialNameById($this->passkeyId);
+			$this->passkeyCurrentName = $this->passkeys->getCredentialNameById($this->passkeyId);
 		} catch (InvalidArgumentException $e) {
 			throw new BadRequestException("Invalid passkey id: $id", previous: $e);
 		} catch (PasskeyCredentialNotFoundException $e) {
@@ -125,7 +125,7 @@ final class PasskeysPresenter extends BasePresenter
 	{
 		try {
 			$this->passkeyId = Uuid::fromRfc4122($id);
-			$this->passkeyCurrentName = $this->userPasskeys->getCredentialNameById($this->passkeyId);
+			$this->passkeyCurrentName = $this->passkeys->getCredentialNameById($this->passkeyId);
 		} catch (InvalidArgumentException $e) {
 			throw new BadRequestException("Invalid passkey id: $id", previous: $e);
 		} catch (PasskeyCredentialNotFoundException $e) {

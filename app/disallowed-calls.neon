@@ -78,8 +78,8 @@ parameters:
 			allowInMethods:
 				- 'MichalSpacekCz\User\AuthTokens\UserAuthTokens::*' # internal calls, e.g. replaceForUser() -> insert()
 				- 'MichalSpacekCz\User\PermanentLogin\PermanentLogin::*'
-				- 'MichalSpacekCz\User\WebAuthn\PasskeyAddTokens::*'
-				- 'MichalSpacekCz\User\WebAuthn\PasskeyResetTokens::*'
+				- 'MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddTokens::*'
+				- 'MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetTokens::*'
 				- 'MichalSpacekCz\User\AuthTokens\AuthTokensRevoker::*' # account-recovery revoke deletes every token type on purpose, no per-type rule to honor
 		-
 			method:

@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
-use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
+use MichalSpacekCz\User\WebAuthn\Registration\PasskeyRegistration;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Tracy\Debugger;

@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationOptionsSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationOptionsSerializationException;
 
 interface WebAuthnAuthenticator
 {
