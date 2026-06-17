@@ -8,7 +8,6 @@ use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
-use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
 use Tracy\Debugger;
@@ -18,7 +17,6 @@ final readonly class PasskeyRegistrationFormFactory
 
 	public function __construct(
 		private FormFactory $factory,
-		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private PasskeyRegistration $passkeyRegistration,
 		private PasskeyFormControls $passkeyFormControls,
 		private IRequest $httpRequest,
@@ -28,7 +26,7 @@ final readonly class PasskeyRegistrationFormFactory
 
 
 	/**
-	 * @param callable(): void $onSuccess
+	 * @param callable(bool $otherAccessRevokeFailed): void $onSuccess
 	 */
 	public function create(callable $onSuccess, string $optionsUrl, string $errorUrl, string $canceledUrl, string $notSupportedUrl): Form
 	{
@@ -47,15 +45,17 @@ final readonly class PasskeyRegistrationFormFactory
 			assert(is_string($values->name));
 			assert(is_string($values->token));
 			try {
-				$userAuthToken = $this->passkeyRegistration->getUserAuthToken($values->token);
-				$this->passkeyRegistration->cleanupToken($userAuthToken);
-				$this->passkeyAuthenticator->verifyRegistration($values->credential, $values->name, $userAuthToken->getUserId());
-				Debugger::log("Successful passkey registration ({$userAuthToken->getUsername()}, {$this->httpRequest->getRemoteAddress()})", 'auth');
-				$onSuccess();
+				$result = $this->passkeyRegistration->register($values->credential, $values->name, $values->token);
 			} catch (PasskeyException $e) {
 				Debugger::log("Failed passkey registration: {$e->getMessage()} ({$this->httpRequest->getRemoteAddress()})", 'auth');
 				$form->addError($this->translator->translate('messages.passkeys.registrationFailed'));
+				return;
 			}
+			Debugger::log("Successful passkey registration ({$result->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
+			if ($result->revokeFailure !== null) {
+				Debugger::log("Revoking other access after reset failed: {$result->revokeFailure->getMessage()} ({$result->username})", 'auth');
+			}
+			$onSuccess($result->revokeFailure !== null);
 		};
 		return $form;
 	}

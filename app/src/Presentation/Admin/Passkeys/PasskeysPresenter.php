@@ -18,7 +18,7 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
-use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
+use MichalSpacekCz\User\WebAuthn\PasskeyAdd;
 use MichalSpacekCz\User\WebAuthn\UserPasskeys;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
@@ -39,7 +39,7 @@ final class PasskeysPresenter extends BasePresenter
 		private readonly UserPasskeys $userPasskeys,
 		private readonly Translator $translator,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly PasskeyRegistration $passkeyRegistration,
+		private readonly PasskeyAdd $passkeyRegistration,
 		private readonly PasskeyRegistrationFormFactory $passkeyRegistrationFormFactory,
 		private readonly HttpInput $httpInput,
 	) {

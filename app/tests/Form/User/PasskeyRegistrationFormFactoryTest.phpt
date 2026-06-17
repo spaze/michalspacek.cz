@@ -15,8 +15,13 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\PasskeyAdd;
+use MichalSpacekCz\User\WebAuthn\PasskeyAddTokens;
 use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
+use MichalSpacekCz\User\WebAuthn\PasskeyReset;
+use MichalSpacekCz\User\WebAuthn\PasskeyResetRevoker;
 use MichalSpacekCz\User\WebAuthn\PasskeyResetTokens;
+use MichalSpacekCz\User\WebAuthn\PasskeyStorage;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -36,6 +41,8 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 
 	private bool $onSuccessCalled = false;
 
+	private bool $onSuccessRevokeFailed = false;
+
 
 	public function __construct(
 		private readonly Database $database,
@@ -47,6 +54,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 		private readonly Translator $translator,
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly User $user,
+		private readonly PasskeyStorage $passkeyStorage,
 	) {
 	}
 
@@ -56,6 +64,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 	{
 		$this->database->reset();
 		$this->onSuccessCalled = false;
+		$this->onSuccessRevokeFailed = false;
 		$this->passkeyAuthenticator->wontThrow();
 		$this->user->logout();
 	}
@@ -63,19 +72,20 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 
 	public function testOnSuccess(): void
 	{
-		$tokenString = $this->setUpTokenInDb(42, 1337, 'foo');
-		$form = $this->getForm($tokenString);
+		$this->setUpTokenInDb(42, 1337, 'foo');
+		$form = $this->getForm($this->createPasskeyAdd(), 'selector:secret');
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::true($this->onSuccessCalled);
+		Assert::false($this->onSuccessRevokeFailed);
 		Assert::same([], $form->getErrors());
 	}
 
 
 	public function testOnError(): void
 	{
-		$tokenString = $this->setUpTokenInDb(42, 1337, 'foo');
+		$this->setUpTokenInDb(42, 1337, 'foo');
 		$this->passkeyAuthenticator->willThrow(new PasskeyRegistrationAttestationResponseValidatorException());
-		$form = $this->getForm($tokenString);
+		$form = $this->getForm($this->createPasskeyAdd(), 'selector:secret');
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::false($this->onSuccessCalled);
 		Assert::count(1, $form->getErrors());
@@ -84,7 +94,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 
 	public function testInvalidToken(): void
 	{
-		$form = $this->getForm('selector:invalidtoken');
+		$form = $this->getForm($this->createPasskeyAdd(), 'selector:invalidtoken');
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::false($this->onSuccessCalled);
 		Assert::count(1, $form->getErrors());
@@ -93,47 +103,65 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 
 	public function testSignedInAsDifferentUserIsRefused(): void
 	{
-		$tokenString = $this->setUpTokenInDb(42, 1337, 'foo');
+		$this->setUpTokenInDb(42, 1337, 'foo');
 		$this->user->login(new SimpleIdentity(9999));
-		$form = $this->getForm($tokenString);
+		$form = $this->getForm($this->createPasskeyAdd(), 'selector:secret');
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::false($this->onSuccessCalled);
 		Assert::count(1, $form->getErrors());
 	}
 
 
-	private function setUpTokenInDb(int $tokenId, int $userId, string $username): string
+	public function testResetRevokeFailureIsReportedAsSuccessWithTheFlag(): void
 	{
-		$tokenValue = 'secret';
-		$this->database->setFetchDefaultResult([
-			'id' => $tokenId,
-			'token' => hash('sha512', $tokenValue),
-			'userId' => $userId,
-			'username' => $username,
-		]);
-		return "selector:{$tokenValue}";
+		$this->setUpTokenInDb(42, 1337, 'foo');
+		// No kept-credential result set up, so the reset's revoke fails after the passkey is registered
+		$form = $this->getForm($this->createPasskeyReset(), 'selector:secret');
+		Arrays::invoke($form->onSuccess, $form);
+		Assert::true($this->onSuccessCalled); // registration succeeded, so we still proceed
+		Assert::true($this->onSuccessRevokeFailed); // ...but the presenter is told to warn
+		Assert::same([], $form->getErrors()); // a revoke failure is not a registration error
 	}
 
 
-	private function createFormFactory(): PasskeyRegistrationFormFactory
+	private function setUpTokenInDb(int $tokenId, int $userId, string $username): void
+	{
+		$this->database->setFetchDefaultResult([
+			'id' => $tokenId,
+			'token' => hash('sha512', 'secret'),
+			'userId' => $userId,
+			'username' => $username,
+		]);
+	}
+
+
+	private function createPasskeyAdd(): PasskeyAdd
+	{
+		$addTokens = new PasskeyAddTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
+		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user);
+	}
+
+
+	private function createPasskeyReset(): PasskeyReset
 	{
 		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyRegistrationFormFactory(
+		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, new PasskeyResetRevoker($this->passkeyStorage, []));
+	}
+
+
+	private function getForm(PasskeyRegistration $registration, string $tokenString): Form
+	{
+		$factory = new PasskeyRegistrationFormFactory(
 			$this->factory,
-			$this->passkeyAuthenticator,
-			new PasskeyRegistration($resetTokens, $this->passkeyAuthenticator, $this->user, false),
+			$registration,
 			$this->passkeyFormControls,
 			$this->httpRequest,
 			$this->translator,
 		);
-	}
-
-
-	private function getForm(string $tokenString): Form
-	{
-		$form = $this->createFormFactory()->create(
-			function (): void {
+		$form = $factory->create(
+			function (bool $otherAccessRevokeFailed): void {
 				$this->onSuccessCalled = true;
+				$this->onSuccessRevokeFailed = $otherAccessRevokeFailed;
 			},
 			'https://url.example/foo/bar/options',
 			'https://url.example/foo/bar/error',

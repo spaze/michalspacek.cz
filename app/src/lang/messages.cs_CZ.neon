@@ -414,6 +414,7 @@ passkeys:
 	registrationCanceled: "Registrace passkey byla zrušena"
 	registrationFailed: "Registrace passkey selhala, zkuste to prosím znovu"
 	registered: "Passkey byl zaregistrován"
+	resetRevokeFailed: "Passkey byl zaregistrován, ale došlo k chybě a některé staré passkeys, tokeny nebo sessiony mohou stále fungovat, spusťte prosím reset znovu."
 	passkeyName: "Název passkey:"
 	passkeyNameExample: "např. Nokia 3310"
 	enterPasskeyName: "Zadejte název tohoto passkey (např. název zařízení) a klikněte na tlačítko."

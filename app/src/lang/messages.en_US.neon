@@ -414,6 +414,7 @@ passkeys:
 	registrationCanceled: "Passkey registration canceled"
 	registrationFailed: "Passkey registration failed, please try again"
 	registered: "Passkey has been registered"
+	resetRevokeFailed: "Your passkey was registered, but an error occurred and some old passkeys, tokens, or sessions may still work, so run the reset again."
 	passkeyName: "Passkey name:"
 	passkeyNameExample: "e.g. Nokia 3310"
 	enterPasskeyName: "Enter a name for this passkey (e.g. device name) and click the button."

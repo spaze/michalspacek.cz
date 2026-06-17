@@ -69,8 +69,8 @@ services:
 	- MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyDeleteFormFactory
 	- MichalSpacekCz\Form\User\PasskeyRenameFormFactory
-	passkeyRegistrationFormFactoryReset: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyRegistrationReset)
-	passkeyRegistrationFormFactoryAdd: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyRegistrationAdd)
+	passkeyRegistrationFormFactoryReset: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyReset)
+	passkeyRegistrationFormFactoryAdd: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyAdd)
 	- MichalSpacekCz\Form\User\RegenerateTokensFormFactory
 	- MichalSpacekCz\Form\User\SignInHoneypotFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
@@ -206,8 +206,8 @@ services:
 	userPasskeys: MichalSpacekCz\User\WebAuthn\UserPasskeys(passkeysTableName: %authentication.tables.passkeys%)
 	passkeyStorage: MichalSpacekCz\User\WebAuthn\PasskeyStorage(passkeysTableName: %authentication.tables.passkeys%, usersTableName: %authentication.tables.users%)
 	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
-	passkeyRegistrationReset: MichalSpacekCz\User\WebAuthn\PasskeyRegistration(registrationTokens: @passkeyResetTokens, excludeExistingCredentials: false)
-	passkeyRegistrationAdd: MichalSpacekCz\User\WebAuthn\PasskeyRegistration(registrationTokens: @passkeyAddTokens, excludeExistingCredentials: true)
+	passkeyReset: MichalSpacekCz\User\WebAuthn\PasskeyReset(registrationTokens: @passkeyResetTokens)
+	passkeyAdd: MichalSpacekCz\User\WebAuthn\PasskeyAdd(registrationTokens: @passkeyAddTokens)
 	passkeyResetTokens: MichalSpacekCz\User\WebAuthn\PasskeyResetTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
 	passkeyAddTokens: MichalSpacekCz\User\WebAuthn\PasskeyAddTokens(registrationEnabled: %authentication.passkeys.registrationEnabled%, ttl: %authentication.passkeys.registrationTtl%)
 	- MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetUrl(tokens: @passkeyResetTokens)

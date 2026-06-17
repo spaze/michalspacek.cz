@@ -16,7 +16,7 @@ use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
-use MichalSpacekCz\User\WebAuthn\PasskeyRegistration;
+use MichalSpacekCz\User\WebAuthn\PasskeyReset;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
@@ -40,7 +40,7 @@ final class SignPresenter extends BasePresenter
 		private readonly SignInHoneypotFormFactory $signInHoneypotFormFactory,
 		private readonly PasskeyAuthenticateFormFactory $passkeyAuthenticateFormFactory,
 		private readonly PasskeyRegistrationFormFactory $passkeyRegistrationFormFactory,
-		private readonly PasskeyRegistration $passkeyRegistration,
+		private readonly PasskeyReset $passkeyRegistration,
 		private readonly WebAuthnAuthenticator $passkeyAuthenticator,
 		private readonly HttpInput $httpInput,
 		private readonly User $user,
@@ -172,7 +172,10 @@ final class SignPresenter extends BasePresenter
 	protected function createComponentPasskeyReset(): Form
 	{
 		return $this->passkeyRegistrationFormFactory->create(
-			function (): void {
+			function (bool $otherAccessRevokeFailed): void {
+				if ($otherAccessRevokeFailed) {
+					$this->flashMessage($this->translator->translate('messages.passkeys.resetRevokeFailed'), 'error');
+				}
 				$this->redirect('in');
 			},
 			$this->link('passkey-reset-options'),

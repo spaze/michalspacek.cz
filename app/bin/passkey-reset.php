@@ -14,10 +14,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $resetUrl = Bootstrap::bootCli(PasskeyResetUrl::class)->getByType(PasskeyResetUrl::class);
 try {
-	echo 'To register your passkey go to ' . $resetUrl->generate() . "\n";
+	echo 'To register a passkey and revoke the user\'s other passkeys, tokens, and sessions, go to ' . $resetUrl->generate() . "\n";
 	exit(0);
 } catch (PasskeyRegistrationUrlArgsException $e) {
-	fprintf(STDERR, "Usage: passkey-reset.php <username>\n%s\n", $e->getMessage());
+	fprintf(STDERR, "Usage: passkey-reset.php <username>\nGenerates a recovery link that registers a new passkey and revokes the user's other passkeys, tokens, and sessions. To add a passkey without revoking, use passkey-add.php.\n%s\n", $e->getMessage());
 	exit(1);
 } catch (PasskeyRegistrationDisabledException) {
 	fprintf(STDERR, "Error: passkey reset is disabled. To enable it, set authentication.passkeys.registrationEnabled: true in local.neon\n");

@@ -17,6 +17,8 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 	private ?PasskeyAuthenticationResult $authenticationResult = null;
 
+	public ?bool $lastExcludeExistingCredentials = null;
+
 
 	public function setAuthenticationResult(PasskeyAuthenticationResult $result): void
 	{
@@ -34,6 +36,7 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 	#[Override]
 	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string
 	{
+		$this->lastExcludeExistingCredentials = $excludeExistingCredentials;
 		return '{}';
 	}
 

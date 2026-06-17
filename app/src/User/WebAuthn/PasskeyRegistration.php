@@ -9,14 +9,21 @@ use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidOrExpiredT
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationUserMismatchException;
 use Nette\Security\User;
 
-final readonly class PasskeyRegistration
+abstract readonly class PasskeyRegistration
 {
+
+	/**
+	 * Whether to exclude the user's existing passkeys from the registration options, so an
+	 * authenticator that already holds one for this app won't offer to register another. Add
+	 * excludes them (a second passkey on the same device is pointless); reset allows re-enrolling.
+	 */
+	abstract protected function excludeExistingCredentials(): bool;
+
 
 	public function __construct(
 		private PasskeyRegistrationTokens $registrationTokens,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private User $user,
-		private bool $excludeExistingCredentials,
 	) {
 	}
 
@@ -32,7 +39,40 @@ final readonly class PasskeyRegistration
 	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
 	 * @throws PasskeyRegistrationUserMismatchException
 	 */
-	public function getUserAuthToken(string $token): UserAuthToken
+	public function generateRegistrationOptions(string $token): string
+	{
+		$userAuthToken = $this->getUserAuthToken($token);
+		return $this->passkeyAuthenticator->generateRegistrationOptions(
+			$userAuthToken->getUserId(),
+			$userAuthToken->getUsername(),
+			$this->excludeExistingCredentials(),
+		);
+	}
+
+
+	/**
+	 * Verify the submitted credential and save the passkey, returning what was registered. The token
+	 * is consumed first, so the same link can't be replayed.
+	 *
+	 * @throws PasskeyRegistrationDisabledException
+	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
+	 * @throws PasskeyRegistrationUserMismatchException
+	 */
+	public function register(string $credentialJson, string $name, string $token): PasskeyRegistrationResult
+	{
+		$userAuthToken = $this->getUserAuthToken($token);
+		$this->cleanupToken($userAuthToken);
+		$keepCredentialId = $this->passkeyAuthenticator->verifyRegistration($credentialJson, $name, $userAuthToken->getUserId());
+		return new PasskeyRegistrationResult($userAuthToken->getUsername(), $userAuthToken->getUserId(), $keepCredentialId);
+	}
+
+
+	/**
+	 * @throws PasskeyRegistrationDisabledException
+	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
+	 * @throws PasskeyRegistrationUserMismatchException
+	 */
+	private function getUserAuthToken(string $token): UserAuthToken
 	{
 		$userAuthToken = $this->registrationTokens->verify($token);
 		if ($userAuthToken === null) {
@@ -48,23 +88,7 @@ final readonly class PasskeyRegistration
 	}
 
 
-	/**
-	 * @throws PasskeyRegistrationDisabledException
-	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
-	 * @throws PasskeyRegistrationUserMismatchException
-	 */
-	public function generateRegistrationOptions(string $token): string
-	{
-		$userAuthToken = $this->getUserAuthToken($token);
-		return $this->passkeyAuthenticator->generateRegistrationOptions(
-			$userAuthToken->getUserId(),
-			$userAuthToken->getUsername(),
-			$this->excludeExistingCredentials,
-		);
-	}
-
-
-	public function cleanupToken(UserAuthToken $userAuthToken): void
+	private function cleanupToken(UserAuthToken $userAuthToken): void
 	{
 		$this->registrationTokens->deleteById($userAuthToken->getId());
 	}
