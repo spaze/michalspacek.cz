@@ -14,25 +14,26 @@ use MichalSpacekCz\Test\Serializer\SerializerMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAssertionResponseValidatorMock;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAttestationResponseValidatorMock;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationAssertionResponseValidatorException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialDeserializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialIdTooShortException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialRecordDeserializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialRecordSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCrossOriginAuthenticationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationInvalidTypeException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationOptionsSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationUnknownCredentialException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationUserNotFoundException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationAssertionResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialIdTooShortException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialRecordDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialRecordSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCrossOriginAuthenticationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationInvalidTypeException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationUnknownCredentialException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationUserNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyChallengeInvalidException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialAlreadyRegisteredException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialDeserializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialIdTooShortException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialRecordSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCrossOriginRegistrationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidTypeException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCredentialDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCredentialIdTooShortException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCredentialRecordSerializationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCrossOriginRegistrationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidTypeException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
 use MichalSpacekCz\Utils\Base64;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Security\SimpleIdentity;
@@ -102,9 +103,24 @@ final class PasskeyAuthenticatorTest extends TestCase
 	public function testGenerateRegistrationOptionsGeneratesFreshChallenge(): void
 	{
 		$this->database->setFetchFieldDefaultResult('handle');
-		$options1 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user');
-		$options2 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+		$options1 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', false);
+		$options2 = $this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', false);
 		Assert::notSame($options1, $options2);
+	}
+
+
+	public function testGenerateRegistrationOptionsExcludesExistingCredentialsOnlyWhenAsked(): void
+	{
+		$this->database->setFetchFieldDefaultResult('handle');
+		$this->database->setFetchPairsDefaultResult([1 => 'existing-credential-id']);
+
+		$without = Json::decode($this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', false), forceArrays: true);
+		assert(is_array($without));
+		Assert::same([], $without['excludeCredentials'] ?? []);
+
+		$with = Json::decode($this->passkeyAuthenticator->generateRegistrationOptions(1, 'user', true), forceArrays: true);
+		assert(is_array($with));
+		Assert::notSame([], $with['excludeCredentials'] ?? []);
 	}
 
 
@@ -369,7 +385,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 		);
 		$this->database->setFetchFieldDefaultResult('handle');
 		Assert::exception(function () use ($passkeyAuthenticator): void {
-			$passkeyAuthenticator->generateRegistrationOptions(1, 'user');
+			$passkeyAuthenticator->generateRegistrationOptions(1, 'user', false);
 		}, PasskeyRegistrationOptionsSerializationException::class);
 	}
 
@@ -429,7 +445,8 @@ final class PasskeyAuthenticatorTest extends TestCase
 		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
 		$this->database->addFetchFieldResult('user-handle');
 
-		$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42);
+		$credentialId = $passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42);
+		Assert::same(str_repeat("\x00", 16), $credentialId);
 
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name ?');
 		Assert::count(1, $params);

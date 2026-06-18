@@ -414,12 +414,26 @@ passkeys:
 	registrationCanceled: "Registrace passkey byla zrušena"
 	registrationFailed: "Registrace passkey selhala, zkuste to prosím znovu"
 	registered: "Passkey byl zaregistrován"
+	resetRevokeFailed: "Passkey byl zaregistrován, ale došlo k chybě a některé staré passkeys, tokeny nebo sessiony mohou stále fungovat, spusťte prosím reset znovu."
 	passkeyName: "Název passkey:"
 	passkeyNameExample: "např. Nokia 3310"
 	enterPasskeyName: "Zadejte název tohoto passkey (např. název zařízení) a klikněte na tlačítko."
 	loadingOptions: "Nahrávám, prosím čekejte"
 	optionsFetchFailed: "Nepodařilo se načíst parametry passkey"
 	optionsFetchTryAgain: "Zkuste to znovu"
+	add:
+		addPasskey: "Přidat passkey"
+		reopenLink: "Pro přidání passkey znovu otevřete odkaz"
+	register:
+		enabled: "Registrace passkey je **povolena**, lze vypnout nastavením `%s` (defaultní hodnota) "
+		disabled: "Registrace passkey je **zakázána**, pro povolení nastavte `%s` v `%s`"
+		howTo: "Pro přidání passkey vygenerujte jednorázový odkaz tímto příkazem a otevřete ho:"
+		howItWorks:
+			title: "Jak to funguje"
+			outOfBand: "Jednorázový odkaz se generuje na příkazové řádce, mimo dosah skriptů na stránce. Bez toho by XSS v administraci mohlo samo zavolat `navigator.credentials.create()` a tiše zaregistrovat útočníkův vlastní passkey, kterému by se s `attestation: none` plně důvěřovalo."
+			signedIn: "Token jen autorizuje registraci; musíte být přihlášení jako stejný uživatel, aby uniklý odkaz nezaregistroval passkey k cizímu účtu. Výjimkou je obnova účtu, kdy odkaz na reset funguje i bez přihlášení."
+			fragment: "Token je ve fragmentu URL (za `#`), který prohlížeče nikdy neposílají na server, takže se nedostane do access logu."
+			notCarried: "I kdyby fragment přežil skok na přihlašovací stránku, adresu pro přesměrování zpět skládá server, který ale fragment nikdy nevidí, takže se na stránku pro přidání passkey vrátíte bez tokenu. Přenášet ho by znamenalo query parametr, který by ale token zase dostal do logu, nebo mít stav navíc v session. Nejjednodušší je se prostě přihlásit a odkaz otevřít znovu."
 	manage:
 		yourPasskeys: "Vaše passkeys"
 		managePasskeys: "Spravovat passkeys"

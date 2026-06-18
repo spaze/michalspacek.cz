@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Presentation\Admin\Sign;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory;
-use MichalSpacekCz\Form\User\PasskeyResetFormFactory;
+use MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory;
 use MichalSpacekCz\Form\User\SignInHoneypotFormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
@@ -13,8 +13,10 @@ use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigi
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyResetException;
-use MichalSpacekCz\User\WebAuthn\PasskeyReset;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUserMismatchException;
+use MichalSpacekCz\User\WebAuthn\Registration\PasskeyReset;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
@@ -37,8 +39,8 @@ final class SignPresenter extends BasePresenter
 		private readonly PermanentLogin $permanentLogin,
 		private readonly SignInHoneypotFormFactory $signInHoneypotFormFactory,
 		private readonly PasskeyAuthenticateFormFactory $passkeyAuthenticateFormFactory,
-		private readonly PasskeyResetFormFactory $passkeyResetFormFactory,
-		private readonly PasskeyReset $passkeyReset,
+		private readonly PasskeyRegistrationFormFactory $passkeyRegistrationFormFactory,
+		private readonly PasskeyReset $passkeyRegistration,
 		private readonly WebAuthnAuthenticator $passkeyAuthenticator,
 		private readonly HttpInput $httpInput,
 		private readonly User $user,
@@ -123,8 +125,8 @@ final class SignPresenter extends BasePresenter
 			throw new BadRequestException('Missing token', IResponse::S400_BadRequest);
 		}
 		try {
-			$options = $this->passkeyReset->generateRegistrationOptions($token);
-		} catch (PasskeyResetException) {
+			$options = $this->passkeyRegistration->generateRegistrationOptions($token);
+		} catch (PasskeyRegistrationDisabledException | PasskeyRegistrationInvalidOrExpiredTokenException | PasskeyRegistrationUserMismatchException) {
 			throw new BadRequestException('Invalid or expired token', IResponse::S403_Forbidden);
 		}
 		$this->sendJsonString($options);
@@ -169,10 +171,14 @@ final class SignPresenter extends BasePresenter
 
 	protected function createComponentPasskeyReset(): Form
 	{
-		return $this->passkeyResetFormFactory->create(
-			function (): void {
+		return $this->passkeyRegistrationFormFactory->create(
+			function (bool $otherAccessRevokeFailed): void {
+				if ($otherAccessRevokeFailed) {
+					$this->flashMessage($this->translator->translate('messages.passkeys.resetRevokeFailed'), 'error');
+				}
 				$this->redirect('in');
 			},
+			$this->link('passkey-reset-options'),
 			$this->link('passkey-reset-error'),
 			$this->link('passkey-reset-canceled'),
 			$this->link('passkey-not-supported'),

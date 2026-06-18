@@ -81,7 +81,6 @@ subresourceIntegrity:
 		remove-fbclid: /i/js/remove-fbclid.js
 		passkey-authenticate: /i/js/passkey-authenticate.js
 		passkey-register: /i/js/passkey-register.js
-		passkey-reset: /i/js/passkey-reset.js
 		rating: /i/css/rating.css
 		screen-main: /i/css/screen.css
 		screen-main-dark: /i/css/screen-dark.css
@@ -91,6 +90,7 @@ subresourceIntegrity:
 		info-admin: ../../vendor/spaze/phpinfo/src/assets/info.css
 
 sessionHandler:
+	tableName: %session.tableName%
 	encryptionService: @sessionEncryption
 
 svgIcons:

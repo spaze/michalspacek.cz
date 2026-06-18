@@ -127,6 +127,16 @@ final readonly class UserAuthTokens
 	}
 
 
+	/**
+	 * Delete every token of the user, whatever its type. For account recovery (passkey reset), where
+	 * the point is to leave no token-based way into the account behind, including types added later.
+	 */
+	public function deleteAllTypesForUser(int $userId): void
+	{
+		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ?', $userId);
+	}
+
+
 	public function deleteExpiredByType(UserAuthTokenType $type, DateTimeImmutable $before): int
 	{
 		return $this->database->query('DELETE FROM auth_tokens WHERE type = ? AND created <= ?', $type->value, $before)->getRowCount() ?? 0;

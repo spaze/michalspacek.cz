@@ -1,0 +1,22 @@
+{define #menu}
+	&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+	&raquo; <a n:href="Homepage:">Administrace</a>
+	&raquo; <a n:href="Passkeys:">{_messages.passkeys.manage.managePasskeys}</a>
+{/define}
+{define #scripts}
+	{script app-passkey + passkey-register async, defer}
+{/define}
+{define #content}
+<p id="passkeyReopenMessage" class="hidden">{_messages.passkeys.add.reopenLink}</p>
+{form passkeyAdd}
+	<p>{_messages.passkeys.enterPasskeyName}</p>
+	{label name /} {input name}
+	{input credential}
+	{input token}
+	{input register}
+	<p id="passkeyOptionsError" class="hidden">
+		{_messages.passkeys.optionsFetchFailed}
+		<button type="button" id="passkeyRetry">{_messages.passkeys.optionsFetchTryAgain}</button>
+	</p>
+{/form}
+{/define}

@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn;
 
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationOptionsSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationOptionsSerializationException;
 
 interface WebAuthnAuthenticator
 {
@@ -14,13 +15,14 @@ interface WebAuthnAuthenticator
 	/**
 	 * @throws PasskeyRegistrationOptionsSerializationException
 	 */
-	public function generateRegistrationOptions(int $userId, string $username): string;
+	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string;
 
 
 	/**
+	 * @return string The id of the newly registered passkey credential
 	 * @throws PasskeyRegistrationException
 	 */
-	public function verifyRegistration(string $json, string $name, int $userId): void;
+	public function verifyRegistration(string $json, string $name, int $userId): string;
 
 
 	/**

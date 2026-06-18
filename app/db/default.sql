@@ -512,6 +512,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `auth_token_types` VALUES (1,'Permanent login token');
 INSERT INTO `auth_token_types` VALUES (3,'Passkey bootstrap token');
+INSERT INTO `auth_token_types` VALUES (4,'Passkey add token');
 
 INSERT INTO `languages` VALUES (1,'cs_CZ');
 INSERT INTO `languages` VALUES (2,'en_US');

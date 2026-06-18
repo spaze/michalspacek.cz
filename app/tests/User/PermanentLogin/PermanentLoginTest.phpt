@@ -12,11 +12,14 @@ use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\Http\Request;
+use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\Manager;
+use Nette\Security\SimpleIdentity;
+use Nette\Security\User;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -31,9 +34,11 @@ final class PermanentLoginTest extends TestCase
 		private readonly Database $database,
 		private readonly TypedDatabase $typedDatabase,
 		private readonly Request $httpRequest,
+		private readonly Response $httpResponse,
 		private readonly Cookies $cookies,
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly LinkGenerator $linkGenerator,
+		private readonly User $user,
 	) {
 	}
 
@@ -42,6 +47,8 @@ final class PermanentLoginTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		$this->httpResponse->reset();
+		$this->user->logout();
 	}
 
 
@@ -92,6 +99,21 @@ final class PermanentLoginTest extends TestCase
 		$params = $this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE type = ? AND created <= ?');
 		Assert::same(UserAuthTokenType::PermanentLogin->value, $params[0]);
 		Assert::type('string', $params[1]); // DateTime formatted by Database mock
+	}
+
+
+	public function testClearDeletesTokensAndCookie(): void
+	{
+		$userId = 1337;
+		$this->user->login(new SimpleIdentity($userId));
+		$this->cookies->set(CookieName::PermanentLogin, 'goodbye', '14 days');
+		$this->getPermanentLogin()->clear($this->user);
+
+		Assert::same(
+			[$userId, UserAuthTokenType::PermanentLogin->value],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?'),
+		);
+		Assert::count(0, $this->httpResponse->getCookie(CookieName::PermanentLogin->value));
 	}
 
 

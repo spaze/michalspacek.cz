@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Test\User\WebAuthn;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\WillThrow;
-use MichalSpacekCz\User\WebAuthn\PasskeyAuthenticationResult;
+use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Override;
 
@@ -16,6 +16,8 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 
 	private ?PasskeyAuthenticationResult $authenticationResult = null;
+
+	public ?bool $lastExcludeExistingCredentials = null;
 
 
 	public function setAuthenticationResult(PasskeyAuthenticationResult $result): void
@@ -32,8 +34,9 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 
 	#[Override]
-	public function generateRegistrationOptions(int $userId, string $username): string
+	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string
 	{
+		$this->lastExcludeExistingCredentials = $excludeExistingCredentials;
 		return '{}';
 	}
 
@@ -50,9 +53,10 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 
 	#[Override]
-	public function verifyRegistration(string $json, string $name, int $userId): void
+	public function verifyRegistration(string $json, string $name, int $userId): string
 	{
 		$this->maybeThrow();
+		return 'mockPasskeyCredentialId';
 	}
 
 }

@@ -8,6 +8,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialAlreadyRegisteredException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialToKeepNotFoundException;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\DateTime;
@@ -123,6 +124,47 @@ final readonly class PasskeyStorage
 			}
 		}
 		throw new ShouldNotHappenException('Failed to generate a unique passkey id after 3 attempts');
+	}
+
+
+	/**
+	 * Revoke every passkey the user has except the freshly registered one, for the logged-out
+	 * reset. Throws when the kept credential is not the user's, because "everything except it"
+	 * with a wrong id would empty the account to zero passkeys, which has to fail loudly rather
+	 * than quietly delete them all.
+	 *
+	 * @return int How many passkeys were deleted
+	 * @throws PasskeyCredentialToKeepNotFoundException
+	 */
+	public function deleteCredentialsByUserIdExcept(int $userId, string $keepCredentialId): int
+	{
+		$this->database->beginTransaction();
+		try {
+			// Lock the kept row so a concurrent delete of it can't slip in before the delete
+			// below and leave the user at zero passkeys (FOR UPDATE is just the exclusive-lock
+			// read; a DELETE takes the same lock, there is no FOR DELETE).
+			$keptExists = $this->typedDatabase->fetchFieldIntNullable(
+				'SELECT 1 FROM ?name WHERE key_user = ? AND credential_id = ? FOR UPDATE',
+				$this->passkeysTableName,
+				$userId,
+				$keepCredentialId,
+			) !== null;
+			if ($keptExists) {
+				$deleted = $this->database->query(
+					'DELETE FROM ?name WHERE key_user = ? AND credential_id != ?',
+					$this->passkeysTableName,
+					$userId,
+					$keepCredentialId,
+				)->getRowCount() ?? 0;
+				$this->database->commit();
+				return $deleted;
+			}
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
+		}
+		throw new PasskeyCredentialToKeepNotFoundException();
 	}
 
 

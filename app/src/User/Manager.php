@@ -5,9 +5,6 @@ namespace MichalSpacekCz\User;
 
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
-use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
-use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
-use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\Http\IRequest;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
@@ -26,27 +23,6 @@ final readonly class Manager
 	public function getIdentity(int $id, string $username): SimpleIdentity
 	{
 		return new SimpleIdentity($id, [], ['username' => $username]);
-	}
-
-
-	/**
-	 * @throws IdentityNotSimpleIdentityException
-	 * @throws IdentityWithoutUsernameException
-	 * @throws IdentityUsernameNotStringException
-	 */
-	public function getIdentityUsernameByUser(User $user): string
-	{
-		$identity = $user->getIdentity();
-		if (!$identity instanceof SimpleIdentity) {
-			throw new IdentityNotSimpleIdentityException($identity);
-		}
-		if (!isset($identity->username)) {
-			throw new IdentityWithoutUsernameException();
-		}
-		if (!is_string($identity->username)) {
-			throw new IdentityUsernameNotStringException(get_debug_type($identity->username));
-		}
-		return $identity->username;
 	}
 
 

@@ -4,25 +4,27 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn;
 
 use Cose\Algorithms;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationAssertionResponseValidatorException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialDeserializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialIdTooShortException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialRecordDeserializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCredentialRecordSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationCrossOriginAuthenticationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationInvalidTypeException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationOptionsSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationUnknownCredentialException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyAuthenticationUserNotFoundException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationAssertionResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialIdTooShortException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialRecordDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCredentialRecordSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationCrossOriginAuthenticationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationInvalidTypeException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationUnknownCredentialException;
+use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationUserNotFoundException;
+use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyChallengeInvalidException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialAlreadyRegisteredException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialDeserializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialIdTooShortException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCredentialRecordSerializationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationCrossOriginRegistrationException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationInvalidTypeException;
-use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationAttestationResponseValidatorException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCredentialDeserializationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCredentialIdTooShortException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCredentialRecordSerializationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationCrossOriginRegistrationException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidTypeException;
+use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationOptionsSerializationException;
+use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
 use Nette\Security\User;
 use Override;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -64,7 +66,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	 * @phpstan-impure
 	 */
 	#[Override]
-	public function generateRegistrationOptions(int $userId, string $username): string
+	public function generateRegistrationOptions(int $userId, string $username, bool $excludeExistingCredentials): string
 	{
 		$rp = PublicKeyCredentialRpEntity::create($this->rpName, $this->rpId);
 		$userHandle = $this->passkeyStorage->getUserHandleByUserId($userId);
@@ -80,7 +82,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 				userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
 				residentKey: AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
 			),
-			excludeCredentials: $this->passkeyStorage->getDescriptorsByUserId($userId),
+			excludeCredentials: $excludeExistingCredentials ? $this->passkeyStorage->getDescriptorsByUserId($userId) : [],
 		);
 		try {
 			return $this->serializer->serialize($options, 'json');
@@ -91,6 +93,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 
 
 	/**
+	 * @return string The id of the newly registered passkey credential
 	 * @throws PasskeyChallengeInvalidException
 	 * @throws PasskeyCredentialAlreadyRegisteredException
 	 * @throws PasskeyRegistrationAttestationResponseValidatorException
@@ -101,7 +104,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	 * @throws PasskeyRegistrationInvalidTypeException
 	 */
 	#[Override]
-	public function verifyRegistration(string $json, string $name, int $userId): void
+	public function verifyRegistration(string $json, string $name, int $userId): string
 	{
 		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveRegChallenge());
 		try {
@@ -145,6 +148,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		}
 
 		$this->passkeyStorage->saveCredential($credentialRecord->publicKeyCredentialId, $credentialRecordJson, $name, $userId);
+		return $credentialRecord->publicKeyCredentialId;
 	}
 
 

@@ -41,6 +41,8 @@ parameters:
 	loadCompanyDataVisible: true
 	permanentLogin:
 		interval: 14 days
+	session:
+		tableName: sessions
 	authentication:
 		tables:
 			passkeys: passkeys
@@ -49,7 +51,8 @@ parameters:
 			rpId:
 			rpName:
 			origin:
-			resetEnabled: false
+			registrationEnabled: false
+			registrationTtl: 5 minutes
 	certificatesApi:
 		hideExpiredAfter: 10
 		users:  # Added in local.neon
