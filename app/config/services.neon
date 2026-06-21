@@ -67,6 +67,7 @@ services:
 	- MichalSpacekCz\Form\Training\TrainingReviewFormFactory
 	- MichalSpacekCz\Form\Controls\PasskeyFormControls
 	- MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls
+	- MichalSpacekCz\Form\User\AccountEmailFormFactory
 	- MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyReauthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyDeleteFormFactory
@@ -205,6 +206,7 @@ services:
 	- MichalSpacekCz\User\AuthTokens\UserAuthTokens(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\Manager(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\PermanentLogin\PermanentLogin(interval: %permanentLogin.interval%)
+	- MichalSpacekCz\User\UserAccounts(emailEncryption: @emailEncryption, usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\UserSessionAdditionalData
 	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
 	- MichalSpacekCz\User\WebAuthn\Authentication\Reauthentication(ttl: %authentication.passkeys.reauthTtl%)

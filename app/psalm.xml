@@ -71,6 +71,7 @@
 				<referencedMethod name="/.*::jsonSerialize$/" /> <!-- Used by Nette\Application\UI\Presenter::sendJson() or by Nette\Utils\Json::encode() -->
 				<referencedMethod name="/.*::render$/" /> <!-- Classes that extend Nette\Application\UI\Control -->
 				<referencedMethod name="/.*Presenter::inject.*/" />
+				<referencedMethod name="/.*Presenter::(action|render).*/" /> <!-- action and render methods are called by Nette\Application\UI\Presenter via reflection -->
 				<referencedMethod name="/.*Test::test.*/" />
 				<referencedMethod name="MichalSpacekCz\Application\Routing\RouterFactory::createRouter" /> <!-- Used in services.neon -->
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->

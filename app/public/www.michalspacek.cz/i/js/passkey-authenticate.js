@@ -16,7 +16,12 @@ App.ready(document, function () {
 		}
 	});
 
+	function errorElement(form) {
+		return form.dataset.errorElement ? document.getElementById(form.dataset.errorElement) : null;
+	}
+
 	async function runCeremony(form) {
+		errorElement(form)?.classList.add('hidden');
 		const options = JSON.parse(form.dataset.options);
 		options.challenge = App.base64urlToBuffer(options.challenge);
 		try {
@@ -43,6 +48,7 @@ App.ready(document, function () {
 				}
 			} else {
 				console.error('Passkey authentication error:', e);
+				errorElement(form)?.classList.remove('hidden');
 			}
 		}
 	}

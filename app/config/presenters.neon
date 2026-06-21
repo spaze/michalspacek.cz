@@ -29,6 +29,7 @@ services:
 	- MichalSpacekCz\Presentation\Api\Error\ErrorPresenter
 
 	# admin module
+	- MichalSpacekCz\Presentation\Admin\Account\AccountPresenter
 	- MichalSpacekCz\Presentation\Admin\Blog\BlogPresenter
 	- MichalSpacekCz\Presentation\Admin\Certificates\CertificatesPresenter
 	- MichalSpacekCz\Presentation\Admin\Emails\EmailsPresenter

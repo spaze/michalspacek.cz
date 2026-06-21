@@ -405,6 +405,14 @@ httpHeaders:
 forms:
 	validateSlugParamsError: "%label musí odpovídat formátu %d"
 	validateSlugParamsEasterEgg: "%label nemůže být '%value', protože to spustí Easter egg"
+account:
+	title: "Váš účet"
+	email:
+		label: "E-mail:"
+		required: "Zadejte svůj e-mail"
+		save: "Uložit e-mail"
+		saved: "E-mail uložen"
+		help: "Pro bezpečnostní upozornění k vašemu účtu"
 reauth:
 	title: "Potvrďte, že jste to vy"
 	prompt: "Pro pokračování potvrďte svou identitu pomocí passkey"
