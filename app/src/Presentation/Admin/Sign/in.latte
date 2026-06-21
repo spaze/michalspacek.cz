@@ -4,6 +4,7 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form passkeyAuthenticate id => passkeyAuthenticate}
+<div n:foreach="$form->getErrors() as $error" class="flash error"><strong>{$error}</strong></div>
 {input credential}
 {/form}
 <fieldset id="signIn">

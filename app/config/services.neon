@@ -66,6 +66,7 @@ services:
 	- MichalSpacekCz\Form\Training\TrainingMailsOutboxFormFactory
 	- MichalSpacekCz\Form\Training\TrainingReviewFormFactory
 	- MichalSpacekCz\Form\Controls\PasskeyFormControls
+	- MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls
 	- MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyDeleteFormFactory
 	- MichalSpacekCz\Form\User\PasskeyRenameFormFactory
