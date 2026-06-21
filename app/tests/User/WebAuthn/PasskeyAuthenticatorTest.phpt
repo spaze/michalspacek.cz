@@ -302,13 +302,40 @@ final class PasskeyAuthenticatorTest extends TestCase
 	}
 
 
-	public function testLogoutClearsSignedInCredentialId(): void
+	public function testVerifyAssertionDoesNotRecordSignedInCredentialButVerifyAuthenticationDoes(): void
+	{
+		$this->passkeySessionSection->removeAll();
+		$credentialRecord = $this->buildCredentialRecord();
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
+
+		// Reauthentication uses verifyAssertion(), which must not change which passkey counts as the one signed in with
+		$passkeyAuthenticator->generateAuthenticationOptions();
+		$passkeyAuthenticator->verifyAssertion($this->buildAssertionCredentialJson());
+		Assert::null($this->passkeySessionSection->getSignedInCredentialId());
+
+		// Login uses verifyAuthentication(), which records it
+		$passkeyAuthenticator->generateAuthenticationOptions();
+		$passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
+		Assert::notNull($this->passkeySessionSection->getSignedInCredentialId());
+	}
+
+
+	public function testLogoutClearsPasskeySession(): void
 	{
 		$this->user->login(new SimpleIdentity(1));
 		$this->passkeySessionSection->setSignedInCredentialId('some-credential-id');
+		$this->passkeySessionSection->setReauthAt(1234567890);
 		Assert::same('some-credential-id', $this->passkeySessionSection->getSignedInCredentialId());
+		Assert::same(1234567890, $this->passkeySessionSection->getReauthAt());
 		$this->user->logout();
 		Assert::null($this->passkeySessionSection->getSignedInCredentialId());
+		Assert::null($this->passkeySessionSection->getReauthAt());
 	}
 
 

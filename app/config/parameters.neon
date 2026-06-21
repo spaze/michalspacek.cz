@@ -53,6 +53,7 @@ parameters:
 			origin:
 			registrationEnabled: false
 			registrationTtl: 5 minutes
+			reauthTtl: 5 minutes
 	certificatesApi:
 		hideExpiredAfter: 10
 		users:  # Added in local.neon

@@ -405,6 +405,11 @@ httpHeaders:
 forms:
 	validateSlugParamsError: "%label musí odpovídat formátu %d"
 	validateSlugParamsEasterEgg: "%label nemůže být '%value', protože to spustí Easter egg"
+reauth:
+	title: "Potvrďte, že jste to vy"
+	prompt: "Pro pokračování potvrďte svou identitu pomocí passkey"
+	interval: "Po potvrzení se několik minut nebudeme ptát znovu."
+	failed: "Potvrzení pomocí passkey se nezdařilo, zkuste to prosím znovu"
 passkeys:
 	authenticationCanceled: "Přihlášení pomocí passkey bylo zrušeno"
 	authenticationFailed: "Přihlášení pomocí passkey selhalo"

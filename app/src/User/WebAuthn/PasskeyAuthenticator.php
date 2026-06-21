@@ -57,7 +57,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		private string $rpName,
 		User $user,
 	) {
-		$user->onLoggedOut[] = $this->passkeySessionSection->removeSignedInCredentialId(...);
+		$user->onLoggedOut[] = $this->passkeySessionSection->removeAll(...);
 	}
 
 
@@ -175,6 +175,10 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 
 
 	/**
+	 * Check a passkey the user presents, without remembering it as the one they signed in with.
+	 * Sign-in uses verifyAuthentication(), which does remember it; confirming identity later uses
+	 * this, so confirming with a different passkey doesn't change which one counts as the sign-in.
+	 *
 	 * @throws PasskeyAuthenticationAssertionResponseValidatorException
 	 * @throws PasskeyAuthenticationCredentialDeserializationException
 	 * @throws PasskeyAuthenticationCredentialIdTooShortException
@@ -187,7 +191,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 	 * @throws PasskeyChallengeInvalidException
 	 */
 	#[Override]
-	public function verifyAuthentication(string $json): PasskeyAuthenticationResult
+	public function verifyAssertion(string $json): PasskeyAuthenticationResult
 	{
 		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveAuthChallenge());
 		try {
@@ -244,9 +248,29 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 			throw new PasskeyAuthenticationCredentialRecordSerializationException(previous: $e);
 		}
 		$this->passkeyStorage->updateCredentialAfterAuthentication($credentialId, $updatedCredentialRecordJson);
-		$this->passkeySessionSection->setSignedInCredentialId($credentialId);
 
-		return new PasskeyAuthenticationResult($user->id, $user->username);
+		return new PasskeyAuthenticationResult($user->id, $user->username, $credentialId);
+	}
+
+
+	/**
+	 * @throws PasskeyAuthenticationAssertionResponseValidatorException
+	 * @throws PasskeyAuthenticationCredentialDeserializationException
+	 * @throws PasskeyAuthenticationCredentialIdTooShortException
+	 * @throws PasskeyAuthenticationCredentialRecordDeserializationException
+	 * @throws PasskeyAuthenticationCredentialRecordSerializationException
+	 * @throws PasskeyAuthenticationCrossOriginAuthenticationException
+	 * @throws PasskeyAuthenticationInvalidTypeException
+	 * @throws PasskeyAuthenticationUnknownCredentialException
+	 * @throws PasskeyAuthenticationUserNotFoundException
+	 * @throws PasskeyChallengeInvalidException
+	 */
+	#[Override]
+	public function verifyAuthentication(string $json): PasskeyAuthenticationResult
+	{
+		$result = $this->verifyAssertion($json);
+		$this->passkeySessionSection->setSignedInCredentialId($result->credentialId);
+		return $result;
 	}
 
 

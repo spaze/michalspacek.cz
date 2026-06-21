@@ -15,6 +15,7 @@ final class PasskeySessionSection extends SessionSection
 	private const string AUTH_CHALLENGE = 'authChallenge';
 	private const string REG_CHALLENGE = 'regChallenge';
 	private const string SIGNED_IN_CREDENTIAL_ID = 'credentialId';
+	private const string REAUTH_AT = 'reauthAt';
 
 
 	public function removeAll(): void
@@ -51,6 +52,22 @@ final class PasskeySessionSection extends SessionSection
 	}
 
 
+	/**
+	 * Remembers when the user last confirmed their identity with a passkey, so we can tell whether it was recent.
+	 */
+	public function setReauthAt(int $timestamp): void
+	{
+		parent::set(self::REAUTH_AT, $timestamp);
+	}
+
+
+	public function getReauthAt(): ?int
+	{
+		$timestamp = parent::get(self::REAUTH_AT);
+		return is_int($timestamp) ? $timestamp : null;
+	}
+
+
 	public function setSignedInCredentialId(string $id): void
 	{
 		parent::set(self::SIGNED_IN_CREDENTIAL_ID, $id);
@@ -61,12 +78,6 @@ final class PasskeySessionSection extends SessionSection
 	{
 		$id = parent::get(self::SIGNED_IN_CREDENTIAL_ID);
 		return is_string($id) ? $id : null;
-	}
-
-
-	public function removeSignedInCredentialId(): void
-	{
-		parent::remove(self::SIGNED_IN_CREDENTIAL_ID);
 	}
 
 }

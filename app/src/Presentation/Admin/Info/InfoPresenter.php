@@ -17,8 +17,9 @@ final class InfoPresenter extends BasePresenter
 	}
 
 
-	public function renderPhp(): void
+	public function actionPhp(): void
 	{
+		$this->requireReauthentication();
 		$this->template->pageTitle = 'phpinfo()';
 		$this->template->phpinfo = Html::el()->setHtml($this->phpInfo->getHtml());
 	}

@@ -42,13 +42,20 @@ final class PasskeyAuthenticatorMock implements WebAuthnAuthenticator
 
 
 	#[Override]
-	public function verifyAuthentication(string $json): PasskeyAuthenticationResult
+	public function verifyAssertion(string $json): PasskeyAuthenticationResult
 	{
 		$this->maybeThrow();
 		if ($this->authenticationResult === null) {
 			throw new ShouldNotHappenException();
 		}
 		return $this->authenticationResult;
+	}
+
+
+	#[Override]
+	public function verifyAuthentication(string $json): PasskeyAuthenticationResult
+	{
+		return $this->verifyAssertion($json);
 	}
 
 

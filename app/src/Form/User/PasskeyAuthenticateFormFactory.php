@@ -8,6 +8,7 @@ use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
+use MichalSpacekCz\User\WebAuthn\Authentication\Reauthentication;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\UI\Form;
@@ -27,6 +28,7 @@ final readonly class PasskeyAuthenticateFormFactory
 		private User $user,
 		private IRequest $httpRequest,
 		private Translator $translator,
+		private Reauthentication $reauthentication,
 	) {
 	}
 
@@ -49,6 +51,8 @@ final readonly class PasskeyAuthenticateFormFactory
 				$this->user->setExpiration('30 minutes', true);
 				$this->user->login($this->authenticator->getIdentity($result->userId, $result->username));
 				$this->permanentLogin->regenerate($this->user);
+				// Signing in with a passkey also counts as confirming identity, so sensitive actions won't immediately ask again.
+				$this->reauthentication->recordFreshAuth();
 				Debugger::log("Successful passkey sign-in ({$result->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
 				$onSuccess();
 			} catch (PasskeyException $e) {

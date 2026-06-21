@@ -32,6 +32,15 @@ interface WebAuthnAuthenticator
 
 
 	/**
+	 * Check a passkey without remembering it as the one used to sign in. verifyAuthentication() does
+	 * remember it; this is for confirming identity later without changing that.
+	 *
+	 * @throws PasskeyAuthenticationException
+	 */
+	public function verifyAssertion(string $json): PasskeyAuthenticationResult;
+
+
+	/**
 	 * @throws PasskeyAuthenticationException
 	 */
 	public function verifyAuthentication(string $json): PasskeyAuthenticationResult;
