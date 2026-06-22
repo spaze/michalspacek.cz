@@ -1,5 +1,5 @@
-{define #scripts}
-	{script app-passkey + passkey-register async, defer}
+{define #scriptsReplace}
+	{script app + admin + passkey-register + netteForms async, defer}
 {/define}
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>

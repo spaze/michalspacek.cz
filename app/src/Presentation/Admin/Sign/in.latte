@@ -1,6 +1,3 @@
-{define #scripts}
-	{script passkey-authenticate async, defer}
-{/define}
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form passkeyAuthenticate id => passkeyAuthenticate}
