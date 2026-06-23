@@ -6,10 +6,13 @@ namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
+use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
+use MichalSpacekCz\User\UserAccounts;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUserMismatchException;
 use Nette\Security\SimpleIdentity;
@@ -29,6 +32,9 @@ final class PasskeyAddTest extends TestCase
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly User $user,
+		private readonly UserSecurityNotifier $notifier,
+		private readonly UserAccounts $userAccounts,
+		private readonly NullMailer $mailer,
 	) {
 	}
 
@@ -37,6 +43,7 @@ final class PasskeyAddTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		$this->mailer->reset();
 		$this->user->logout();
 	}
 
@@ -87,6 +94,28 @@ final class PasskeyAddTest extends TestCase
 	}
 
 
+	public function testRegisterNotifiesTheUserByEmail(): void
+	{
+		$userId = 1337;
+		$this->setUpToken(42, $userId, 'foo');
+		$this->seedEmail($userId, 'owner@example.com');
+
+		$this->createPasskeyAdd()->register('{"id":"test","type":"public-key"}', 'My Passkey', 'selector:secret');
+
+		Assert::same(['owner@example.com' => null], $this->mailer->getMail()->getHeader('To'));
+	}
+
+
+	private function seedEmail(int $userId, string $address): void
+	{
+		$this->userAccounts->setEmail($userId, $address);
+		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
+		$stored = $params[0]['email'];
+		assert(is_string($stored));
+		$this->database->setFetchFieldDefaultResult($stored);
+	}
+
+
 	private function setUpToken(int $tokenId, int $userId, string $username): void
 	{
 		$this->database->setFetchDefaultResult([
@@ -101,7 +130,7 @@ final class PasskeyAddTest extends TestCase
 	private function createPasskeyAdd(): PasskeyAdd
 	{
 		$addTokens = new PasskeyAddTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user);
+		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user, $this->notifier);
 	}
 
 }

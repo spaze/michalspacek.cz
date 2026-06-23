@@ -207,6 +207,7 @@ services:
 	- MichalSpacekCz\User\Manager(usersTableName: %authentication.tables.users%)
 	- MichalSpacekCz\User\PermanentLogin\PermanentLogin(interval: %permanentLogin.interval%)
 	- MichalSpacekCz\User\UserAccounts(emailEncryption: @emailEncryption, usersTableName: %authentication.tables.users%)
+	- MichalSpacekCz\User\Notifications\UserSecurityNotifier(emailFrom: %mail.securityNotificationsFrom%)
 	- MichalSpacekCz\User\UserSessionAdditionalData
 	passkeyAuthentication: MichalSpacekCz\User\WebAuthn\PasskeyAuthenticator(rpId: %authentication.passkeys.rpId%, rpName: %authentication.passkeys.rpName%)
 	- MichalSpacekCz\User\WebAuthn\Authentication\Reauthentication(ttl: %authentication.passkeys.reauthTtl%)

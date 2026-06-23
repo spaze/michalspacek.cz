@@ -52,6 +52,9 @@ parameters:
 	securityTxtDirs:
 			www.michalspacek.cz.test: www.michalspacek.cz
 
+	mail:
+		securityNotificationsFrom: "Fred <fred@waldo.example>"
+
 	encryption:
 		keys:
 			password:

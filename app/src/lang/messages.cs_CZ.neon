@@ -413,6 +413,21 @@ account:
 		save: "Uložit e-mail"
 		saved: "E-mail uložen"
 		help: "Pro bezpečnostní upozornění k vašemu účtu"
+notifications:
+	field:
+		name: "Název passkey"
+		when: "Kdy"
+		from: "IP adresa"
+	passkeyAdded:
+		subject: "Do vašeho účtu byl přidán nový passkey"
+		intro: "Do vašeho účtu byl přidán nový passkey."
+		ifNotYou: "Pokud jste tento passkey nepřidávali vy, přihlaste se a odeberte ho:"
+	passkeyReset:
+		subject: "Vaše passkeys byly resetovány"
+		intro: "Do vašeho účtu byl pomocí obnovení účtu (resetu) zaregistrován nový passkey."
+		otherAccessRevoked: "Odebrání vašich ostatních passkeys a odhlášení aktivních přihlášení proběhlo úspěšně."
+		otherAccessRevokeFailed: "Odebrání vašich ostatních passkeys a odhlášení aktivních přihlášení se nepodařilo úplně dokončit, takže některé z nich mohou mít stále přístup k vašemu účtu."
+		ifNotYou: "Pokud jste o reset nežádali, váš účet může být kompromitován. Přihlaste se a zkontrolujte své passkeys:"
 reauth:
 	title: "Potvrďte, že jste to vy"
 	prompt: "Pro pokračování potvrďte svou identitu pomocí passkey"

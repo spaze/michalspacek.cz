@@ -23,6 +23,8 @@ parameters:
 			password: mspetest
 			email: mseetest
 			session: mssetest
+	mail:
+		securityNotificationsFrom: "Tests <foo@tests.example>"
 	awsLambda:
 		upcKeys:
 			url: "https://was.example/%s/%s"
