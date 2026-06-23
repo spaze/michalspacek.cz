@@ -17,7 +17,6 @@ use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisa
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyReset;
-use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
@@ -31,8 +30,6 @@ final class SignPresenter extends BasePresenter
 	/** @persistent */
 	public string $backlink = '';
 
-	private ?string $passkeyAuthOptions = null;
-
 
 	public function __construct(
 		private readonly Manager $authenticator,
@@ -41,7 +38,6 @@ final class SignPresenter extends BasePresenter
 		private readonly PasskeyAuthenticateFormFactory $passkeyAuthenticateFormFactory,
 		private readonly PasskeyRegistrationFormFactory $passkeyRegistrationFormFactory,
 		private readonly PasskeyReset $passkeyRegistration,
-		private readonly WebAuthnAuthenticator $passkeyAuthenticator,
 		private readonly HttpInput $httpInput,
 		private readonly User $user,
 		private readonly Session $sessionHandler,
@@ -69,14 +65,6 @@ final class SignPresenter extends BasePresenter
 			$this->redirect('Homepage:');
 		}
 		$this->template->pageTitle = 'Přihlásit se';
-	}
-
-
-	public function renderIn(): void
-	{
-		// generateAuthenticationOptions() writes a fresh challenge to the session each time the sign-in form is rendered,
-		// so verifyAuthentication() always finds the challenge from the most recent render in the session
-		$this->passkeyAuthOptions = $this->passkeyAuthenticator->generateAuthenticationOptions();
 	}
 
 
@@ -164,7 +152,6 @@ final class SignPresenter extends BasePresenter
 			},
 			$this->link('passkey-auth-error'),
 			$this->link('passkey-auth-canceled'),
-			$this->passkeyAuthOptions,
 		);
 	}
 

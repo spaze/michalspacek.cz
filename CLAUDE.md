@@ -147,6 +147,18 @@ interface ArticleHeaderIconsFactory
 
 `FormFactory::create()` returns a `Nette\Application\UI\Form` with CSRF protection always added. `UnprotectedFormFactory` exists for forms that intentionally omit CSRF (e.g. GET search/sort forms, theme toggles, honeypot traps). Domain-specific form factory classes (`*FormFactory`) inject one of these and add their own controls. Use `Form::getValues()` in `onSuccess` handlers and `getUntrustedValues()` in `onValidate` handlers.
 
+### Passkey reauthentication
+
+Some admin actions ask the signed-in user to confirm their identity with a passkey again. There are two mechanisms, picked by whether you're guarding a page or a form — `Reauthentication` (`app/src/User/WebAuthn/Authentication/`) holds the shared freshness window (`isFreshAuth()`/`recordFreshAuth()`, TTL from `authentication.passkeys.reauthTtl`).
+
+**Viewing a sensitive page** (e.g. the phpinfo() output): call `$this->requireReauthentication()` (on `Admin\BasePresenter`) at the top of the action. If the user hasn't confirmed within the window it redirects to the `Admin:Reauth` page and brings them back; otherwise it's a no-op. The reauth page must never call it (it would redirect to itself). The freshness window means a just-signed-in user passes without a second prompt.
+
+**Submitting a form that changes something sensitive** (e.g. the account email): confirm in place, with no window — every submit is verified. Two steps:
+- In the form factory's `create()`: `$this->passkeyAuthenticationControls->addReauthTo($form);` (adds the hidden credential field, an `onValidate` that verifies the assertion belongs to the current user, and an `onRender` that embeds the prompt's options — minted at render so they match the challenge `verifyAssertion()` checks).
+- In the presenter's action/render: `$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsGet, PermissionsPolicyOrigin::Self);`. This **must** come from the presenter, not the form: the `Permissions-Policy` header is built on the application's response event, before the template (and the form) renders, so adding it from the form's `onRender` would be too late. (The options are fine in `onRender` — they're a body attribute, sent after the header.)
+
+`PasskeyAuthenticationControls` is shared by every session-based passkey ceremony: sign-in's login form uses `addOptionsTo`, the reauth page and inline forms use `addReauthTo`. One `passkey-authenticate.js` drives them all — prompt on load for the dedicated ceremony pages (sign-in, reauth), prompt on submit for inline forms (the account email), keyed off whether the form carries a `data-canceled-url`. A page gate can't drive a form submit (the redirect can't replay the POST), which is why forms confirm in place instead of being page-gated.
+
 ### Database
 
 `TypedDatabase` wraps Nette Database Explorer with methods that return typed values (`fetchFieldString()`, `fetchPairsStringString()`, etc.) and throw on type mismatches. Three databases, each with its own `TypedDatabase` service instance:

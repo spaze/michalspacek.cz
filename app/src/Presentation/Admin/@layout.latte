@@ -3,6 +3,5 @@
 {var $headerLinks = false}
 {define #feeds}{/define}
 {define #scriptsReplace}
-{script app + admin async, defer}
-{script netteForms async, defer}
+{script app + admin + passkey-authenticate + netteForms async, defer}
 {/define}

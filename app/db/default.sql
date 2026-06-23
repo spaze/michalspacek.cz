@@ -503,6 +503,7 @@ CREATE TABLE `users` (
   `id_user` int unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
   `passkey_user_handle` varbinary(64) NOT NULL,
+  `email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `passkey_user_handle` (`passkey_user_handle`)

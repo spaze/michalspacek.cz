@@ -1,11 +1,9 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{form passkeyAuthenticate id => passkeyAuthenticate}
+<p>{_messages.reauth.prompt}</p>
+<p class="note"><small>{_messages.reauth.interval}</small></p>
+{form passkeyReauthenticate id => passkeyAuthenticate}
 <div n:foreach="$form->getErrors() as $error" class="flash error"><strong>{$error}</strong></div>
 {input credential}
 {/form}
-<fieldset id="signIn">
-	<legend>Přihlásit</legend>
-	{control signInHoneypot}
-</fieldset>
 {/define}

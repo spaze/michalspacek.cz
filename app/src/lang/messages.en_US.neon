@@ -405,6 +405,19 @@ httpHeaders:
 forms:
 	validateSlugParamsError: "%label must match %d"
 	validateSlugParamsEasterEgg: "%label can't be '%value', because that's used by an Easter egg"
+account:
+	title: "Your account"
+	email:
+		label: "Email:"
+		required: "Enter your email"
+		save: "Save email"
+		saved: "Email saved"
+		help: "Used for security alerts about your account"
+reauth:
+	title: "Confirm it's you"
+	prompt: "Confirm it's you with your passkey to continue"
+	interval: "After you confirm, you won't be asked again for a few minutes."
+	failed: "Passkey confirmation failed, please try again"
 passkeys:
 	authenticationCanceled: "Passkey authentication canceled"
 	authenticationFailed: "Passkey authentication failed"

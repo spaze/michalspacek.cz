@@ -29,6 +29,7 @@ services:
 	- MichalSpacekCz\Presentation\Api\Error\ErrorPresenter
 
 	# admin module
+	- MichalSpacekCz\Presentation\Admin\Account\AccountPresenter
 	- MichalSpacekCz\Presentation\Admin\Blog\BlogPresenter
 	- MichalSpacekCz\Presentation\Admin\Certificates\CertificatesPresenter
 	- MichalSpacekCz\Presentation\Admin\Emails\EmailsPresenter
@@ -38,6 +39,7 @@ services:
 	- MichalSpacekCz\Presentation\Admin\Interviews\InterviewsPresenter
 	- MichalSpacekCz\Presentation\Admin\Invoices\InvoicesPresenter
 	- MichalSpacekCz\Presentation\Admin\Pulse\PulsePresenter
+	- MichalSpacekCz\Presentation\Admin\Reauth\ReauthPresenter
 	- MichalSpacekCz\Presentation\Admin\Reviews\ReviewsPresenter
 	- MichalSpacekCz\Presentation\Admin\Sign\SignPresenter(passkeyRegistrationFormFactory: @passkeyRegistrationFormFactoryReset)
 	- MichalSpacekCz\Presentation\Admin\Talks\TalksPresenter

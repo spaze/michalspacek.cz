@@ -71,7 +71,6 @@ subresourceIntegrity:
 	resources:
 		netteForms: ../../vendor/nette/forms/src/assets/netteForms.min.js
 		app: /i/js/app.js
-		app-passkey: /i/js/app-passkey.js
 		scripts: /i/js/scripts.js
 		encryption: /i/js/encryption.js
 		admin: /i/js/admin.js
