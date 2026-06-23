@@ -9,7 +9,7 @@ App.ready(document, function () {
 		} else {
 			form.addEventListener('submit', function (event) {
 				event.preventDefault();
-				if (Nette.validateForm(form)) {
+				if (Nette.validateForm(form, true)) {
 					runCeremony(form);
 				}
 			});
