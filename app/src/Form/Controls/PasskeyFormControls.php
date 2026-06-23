@@ -28,8 +28,10 @@ final readonly class PasskeyFormControls
 	public function addRegistrationFields(Container $container, ?string $loadingText = null): void
 	{
 		$this->addNameField($container);
+		// Not setRequired(): passkey-register.js fills this field after the ceremony, so it's legitimately
+		// empty when the form is validated. verifyRegistration() rejects an empty or invalid value with a
+		// caught PasskeyException, so it, not a required rule, is the gate.
 		$container->addHidden('credential')
-			->setRequired()
 			->setHtmlAttribute('id', 'passkeyCredential');
 		$submit = $container->addSubmit('register', $this->translator->translate('messages.passkeys.registerPasskey'))
 			->setHtmlAttribute('id', 'passkeyRegisterButton');
