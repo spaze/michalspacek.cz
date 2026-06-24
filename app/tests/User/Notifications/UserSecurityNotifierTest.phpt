@@ -101,6 +101,9 @@ final class UserSecurityNotifierTest extends TestCase
 		Assert::count(2, $mails);
 		Assert::same(['old@example.com' => null], $mails[0]->getHeader('To'));
 		Assert::contains('new@example.com', $mails[0]->getBody()); // the old address learns where the email went
+		$subject = $mails[0]->getSubject();
+		assert(is_string($subject));
+		Assert::contains('www.domain.example', $subject);
 		Assert::same(['new@example.com' => null], $mails[1]->getHeader('To'));
 		Assert::notContains('old@example.com', $mails[1]->getBody()); // the new address must not learn the old one
 	}
