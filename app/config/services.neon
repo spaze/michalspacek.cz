@@ -186,7 +186,7 @@ services:
 	trainingFilesStorage: MichalSpacekCz\Training\Files\TrainingFilesStorage
 	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Mails\TrainingMailMessageFactory
-	- MichalSpacekCz\Training\Mails\TrainingMails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
+	- MichalSpacekCz\Training\Mails\TrainingMails(emailFrom: %mail.trainingFrom%, phoneNumber: %contact.phoneNumber%)
 	- MichalSpacekCz\Training\Preliminary\PreliminaryTrainings
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana

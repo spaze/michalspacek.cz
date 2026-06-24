@@ -25,6 +25,7 @@ parameters:
 			session: mssetest
 	mail:
 		securityNotificationsFrom: "Tests <foo@tests.example>"
+		trainingFrom: "Tests <bar@tests.example>"
 	awsLambda:
 		upcKeys:
 			url: "https://was.example/%s/%s"
