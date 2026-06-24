@@ -1,0 +1,16 @@
+{contentType text}
+{varType string $credentialName}
+{varType \DateTimeImmutable $when}
+{varType string|null $ipAddress}
+{varType string $reviewUrl}
+{varType bool $otherAccessRevoked}
+{_messages.notifications.passkeyReset.intro}
+
+{_messages.notifications.field.name}: {$credentialName}
+{_messages.notifications.field.when}: {$when|localeDay} {$when|date:'H:i'}
+{if $ipAddress !== null}{_messages.notifications.field.from}: {$ipAddress}{/if}
+
+{if $otherAccessRevoked}{_messages.notifications.passkeyReset.otherAccessRevoked}{else}{_messages.notifications.passkeyReset.otherAccessRevokeFailed}{/if}
+
+{_messages.notifications.passkeyReset.ifNotYou}
+{$reviewUrl}

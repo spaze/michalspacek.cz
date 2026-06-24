@@ -32,4 +32,10 @@ final class NullMailer implements Mailer
 		return $this->mail;
 	}
 
+
+	public function reset(): void
+	{
+		$this->mail = null;
+	}
+
 }

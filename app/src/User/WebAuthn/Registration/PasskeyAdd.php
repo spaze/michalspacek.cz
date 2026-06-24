@@ -14,4 +14,13 @@ final readonly class PasskeyAdd extends PasskeyRegistration
 		return true;
 	}
 
+
+	#[Override]
+	public function register(string $credentialJson, string $name, string $token): PasskeyRegistrationResult
+	{
+		$result = parent::register($credentialJson, $name, $token);
+		$this->notifier->passkeyAdded($result->userId, $name);
+		return $result;
+	}
+
 }

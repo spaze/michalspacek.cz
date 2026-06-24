@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn\Registration;
 
+use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyResetRevokeFailedException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Security\User;
@@ -15,9 +16,10 @@ final readonly class PasskeyReset extends PasskeyRegistration
 		PasskeyRegistrationTokens $registrationTokens,
 		WebAuthnAuthenticator $passkeyAuthenticator,
 		User $user,
+		UserSecurityNotifier $notifier,
 		private PasskeyResetRevoker $revoker,
 	) {
-		parent::__construct($registrationTokens, $passkeyAuthenticator, $user);
+		parent::__construct($registrationTokens, $passkeyAuthenticator, $user, $notifier);
 	}
 
 
@@ -39,10 +41,11 @@ final readonly class PasskeyReset extends PasskeyRegistration
 		$result = parent::register($credentialJson, $name, $token);
 		try {
 			$this->revoker->revoke($result->userId, $result->keepCredentialId);
-			return $result;
 		} catch (PasskeyResetRevokeFailedException $e) {
-			return $result->withRevokeFailure($e);
+			$result = $result->withRevokeFailure($e);
 		}
+		$this->notifier->passkeyReset($result->userId, $name, $result->revokeFailure === null);
+		return $result;
 	}
 
 }

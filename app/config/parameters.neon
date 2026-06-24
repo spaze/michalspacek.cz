@@ -68,6 +68,8 @@ parameters:
 	# Added/changed in local.neon
 	contact:
 		phoneNumber: "123456789"
+	mail:
+		securityNotificationsFrom: "Foo <foo@bar.example>"
 	encryption:
 		keys:
 			password: []

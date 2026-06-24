@@ -1,0 +1,13 @@
+{contentType text}
+{varType string $credentialName}
+{varType \DateTimeImmutable $when}
+{varType string|null $ipAddress}
+{varType string $reviewUrl}
+{_messages.notifications.passkeyAdded.intro}
+
+{_messages.notifications.field.name}: {$credentialName}
+{_messages.notifications.field.when}: {$when|localeDay} {$when|date:'H:i'}
+{if $ipAddress !== null}{_messages.notifications.field.from}: {$ipAddress}{/if}
+
+{_messages.notifications.passkeyAdded.ifNotYou}
+{$reviewUrl}
