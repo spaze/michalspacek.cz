@@ -416,6 +416,7 @@ account:
 notifications:
 	field:
 		name: "Passkey name"
+		newAddress: "New address"
 		when: "When"
 		from: "IP address"
 	passkeyAdded:
@@ -428,6 +429,13 @@ notifications:
 		otherAccessRevoked: "Your other passkeys were removed and your active sessions signed out."
 		otherAccessRevokeFailed: "Your other passkeys couldn't all be removed or your active sessions signed out, so some may still have access to your account."
 		ifNotYou: "If you didn't request this, your account may be compromised. Sign in and review your passkeys:"
+	emailChanged:
+		subject: "Your account email was changed"
+		intro: "Your account email was changed."
+		ifNotYou: "If you didn't change it, your account may be compromised. Sign in and review your account:"
+	emailChangedConfirmation:
+		subject: "This is now your account email"
+		intro: "This address is now the email for your account."
 reauth:
 	title: "Confirm it's you"
 	prompt: "Confirm it's you with your passkey to continue"

@@ -6,8 +6,10 @@ namespace MichalSpacekCz\Form\User;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
+use MichalSpacekCz\User\UserAccounts;
 use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
 use Nette\Application\UI\Form;
@@ -42,6 +44,8 @@ final class AccountEmailFormFactoryTest extends TestCase
 		private readonly PasskeySessionSection $session,
 		private readonly User $user,
 		private readonly Database $database,
+		private readonly NullMailer $mailer,
+		private readonly UserAccounts $userAccounts,
 	) {
 	}
 
@@ -52,6 +56,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 		$this->session->removeAll();
 		$this->user->logout();
 		$this->database->reset();
+		$this->mailer->reset();
 		$this->onSuccessCalled = false;
 	}
 
@@ -72,6 +77,25 @@ final class AccountEmailFormFactoryTest extends TestCase
 		$stored = $params[0]['email'];
 		assert(is_string($stored));
 		Assert::notSame('me@example.com', $stored); // stored encrypted, never plaintext
+		Assert::same(['me@example.com' => null], $this->mailer->getMail()->getHeader('To')); // first-set confirms the new address
+	}
+
+
+	public function testCapturesTheOldEmailBeforeOverwriting(): void
+	{
+		$this->user->login(new SimpleIdentity(42));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->seedCurrentEmail('old@example.com');
+		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
+
+		Arrays::invoke($form->onValidate, $form);
+		Arrays::invoke($form->onSuccess, $form);
+
+		// an alert to the OLD address only happens if onSuccess read the old email before setEmail overwrote it
+		$mails = $this->mailer->getAllMails();
+		Assert::count(2, $mails);
+		Assert::same(['old@example.com' => null], $mails[0]->getHeader('To'));
+		Assert::same(['new@example.com' => null], $mails[1]->getHeader('To'));
 	}
 
 
@@ -87,6 +111,16 @@ final class AccountEmailFormFactoryTest extends TestCase
 		Assert::true($form->hasErrors());
 		Assert::false($this->onSuccessCalled);
 		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?')); // not saved
+	}
+
+
+	private function seedCurrentEmail(string $address): void
+	{
+		$this->userAccounts->setEmail(42, $address);
+		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
+		$stored = $params[0]['email'];
+		assert(is_string($stored));
+		$this->database->setFetchFieldDefaultResult($stored); // every getEmail() returns the seeded address until overwritten
 	}
 
 

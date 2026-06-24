@@ -11,31 +11,43 @@ use Override;
 final class NullMailer implements Mailer
 {
 
-	private ?Message $mail = null;
+	use WillThrow;
 
 
-	/**
-	 * @throws void
-	 */
+	/** @var list<Message> */
+	private array $allMails = [];
+
+
 	#[Override]
 	public function send(Message $mail): void
 	{
-		$this->mail = $mail;
+		$this->maybeThrow();
+		$this->allMails[] = $mail;
 	}
 
 
 	public function getMail(): Message
 	{
-		if ($this->mail === null) {
+		if ($this->allMails === []) {
 			throw new LogicException('Send mail first with send()');
 		}
-		return $this->mail;
+		return $this->allMails[array_key_last($this->allMails)];
+	}
+
+
+	/**
+	 * @return list<Message>
+	 */
+	public function getAllMails(): array
+	{
+		return $this->allMails;
 	}
 
 
 	public function reset(): void
 	{
-		$this->mail = null;
+		$this->allMails = [];
+		$this->wontThrow();
 	}
 
 }

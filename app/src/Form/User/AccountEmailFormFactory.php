@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Form\User;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
 use MichalSpacekCz\Form\FormFactory;
+use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\UserAccounts;
 use Nette\Application\UI\Form;
 use Nette\Security\User;
@@ -19,6 +20,7 @@ final readonly class AccountEmailFormFactory
 		private User $user,
 		private Translator $translator,
 		private PasskeyAuthenticationControls $passkeyAuthenticationControls,
+		private UserSecurityNotifier $notifier,
 	) {
 	}
 
@@ -31,17 +33,19 @@ final readonly class AccountEmailFormFactory
 		$form = $this->factory->create();
 		$email = $form->addEmail('email', $this->translator->translate('messages.account.email.label'))
 			->setRequired($this->translator->translate('messages.account.email.required'));
-		$currentEmail = $this->userAccounts->getEmail((int)$this->user->getId());
+		$userId = (int)$this->user->getId();
+		$currentEmail = $this->userAccounts->getEmail($userId);
 		if ($currentEmail !== null) {
 			$email->setDefaultValue($currentEmail);
 		}
 		$form->addSubmit('save', $this->translator->translate('messages.account.email.save'));
 		$form->setHtmlAttribute('data-error-element', 'passkeyReauthError');
 		$this->passkeyAuthenticationControls->addReauthTo($form);
-		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $userId, $currentEmail): void {
 			$values = $form->getValues();
 			assert(is_string($values->email));
-			$this->userAccounts->setEmail((int)$this->user->getId(), $values->email);
+			$this->userAccounts->setEmail($userId, $values->email);
+			$this->notifier->emailChanged($currentEmail, $values->email);
 			$onSuccess();
 		};
 		return $form;
