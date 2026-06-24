@@ -9,6 +9,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\UserAccounts;
+use Nette\Mail\SendException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -89,6 +90,49 @@ final class UserSecurityNotifierTest extends TestCase
 		$this->notifier->passkeyAdded(42, '42Password <3'); // best-effort: the failure must not propagate
 
 		Assert::exception(fn() => $this->mailer->getMail(), LogicException::class); // nothing was sent
+	}
+
+
+	public function testEmailChangeAlertsTheOldAddressAndConfirmsTheNew(): void
+	{
+		$this->notifier->emailChanged('old@example.com', 'new@example.com');
+
+		$mails = $this->mailer->getAllMails();
+		Assert::count(2, $mails);
+		Assert::same(['old@example.com' => null], $mails[0]->getHeader('To'));
+		Assert::contains('new@example.com', $mails[0]->getBody()); // the old address learns where the email went
+		Assert::same(['new@example.com' => null], $mails[1]->getHeader('To'));
+		Assert::notContains('old@example.com', $mails[1]->getBody()); // the new address must not learn the old one
+	}
+
+
+	public function testFirstEmailSetOnlyConfirmsTheNewAddress(): void
+	{
+		$this->notifier->emailChanged(null, 'new@example.com');
+
+		$mails = $this->mailer->getAllMails();
+		Assert::count(1, $mails);
+		Assert::same(['new@example.com' => null], $mails[0]->getHeader('To'));
+	}
+
+
+	public function testUnchangedEmailNotifiesNothing(): void
+	{
+		$this->notifier->emailChanged('same@example.com', 'same@example.com');
+
+		Assert::count(0, $this->mailer->getAllMails());
+	}
+
+
+	public function testEmailChangeStillConfirmsTheNewAddressWhenAlertingTheOldFails(): void
+	{
+		$this->mailer->willThrowOnce(new SendException('alert delivery failed')); // only the first send, the alert
+
+		$this->notifier->emailChanged('old@example.com', 'new@example.com'); // best-effort: must not propagate
+
+		$mails = $this->mailer->getAllMails();
+		Assert::count(1, $mails); // the failed alert is swallowed and doesn't suppress the confirmation
+		Assert::same(['new@example.com' => null], $mails[0]->getHeader('To'));
 	}
 
 

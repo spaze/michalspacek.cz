@@ -16,9 +16,9 @@ use Throwable;
 use Tracy\Debugger;
 
 /**
- * Tells a user out of band when something security-sensitive happens to their account (a passkey is
- * added or reset). Best-effort: a delivery failure is logged but never propagated, so it can't break
- * the action that triggered it. A user with no email set is logged and skipped.
+ * Tells a user out of band when something security-sensitive happens to their account: a passkey is
+ * added or reset, or the account email is changed. Best-effort: a delivery failure is logged but never
+ * propagated, so it can't break the action that triggered it. A user with no email set is logged and skipped.
  */
 final readonly class UserSecurityNotifier
 {
@@ -71,6 +71,49 @@ final readonly class UserSecurityNotifier
 			$template->reviewUrl = $this->linkGenerator->link('//:Admin:Passkeys:default');
 			$template->otherAccessRevoked = $otherAccessRevoked;
 			$this->send($address, 'messages.notifications.passkeyReset.subject', $template);
+		} catch (Throwable $e) {
+			Debugger::log($e, 'auth');
+		}
+	}
+
+
+	/**
+	 * Alerts the old address (so a hostile change is loud to whoever is losing access) and confirms
+	 * to the new one.
+	 */
+	public function emailChanged(?string $oldAddress, string $newAddress): void
+	{
+		if ($oldAddress === $newAddress) {
+			return;
+		}
+		if ($oldAddress !== null) {
+			$this->sendEmailChangedAlert($oldAddress, $newAddress);
+		}
+		$this->sendEmailChangedConfirmation($newAddress);
+	}
+
+
+	private function sendEmailChangedAlert(string $oldAddress, string $newAddress): void
+	{
+		try {
+			$template = $this->createTemplate('emailChanged');
+			$template->newAddress = $newAddress;
+			$template->when = $this->dateTimeFactory->create();
+			$template->ipAddress = $this->httpRequest->getRemoteAddress();
+			$template->reviewUrl = $this->linkGenerator->link('//:Admin:Account:default');
+			$this->send($oldAddress, 'messages.notifications.emailChanged.subject', $template);
+		} catch (Throwable $e) {
+			Debugger::log($e, 'auth');
+		}
+	}
+
+
+	private function sendEmailChangedConfirmation(string $newAddress): void
+	{
+		try {
+			$template = $this->createTemplate('emailChangedConfirmation');
+			$template->when = $this->dateTimeFactory->create();
+			$this->send($newAddress, 'messages.notifications.emailChangedConfirmation.subject', $template);
 		} catch (Throwable $e) {
 			Debugger::log($e, 'auth');
 		}
