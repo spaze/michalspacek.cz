@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User\Notifications;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LinkGenerator;
+use MichalSpacekCz\Application\WebApplication;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Templating\TemplateFactory;
@@ -31,6 +32,7 @@ final readonly class UserSecurityNotifier
 		private IRequest $httpRequest,
 		private LinkGenerator $linkGenerator,
 		private UserAccounts $userAccounts,
+		private WebApplication $application,
 		private string $emailFrom,
 	) {
 	}
@@ -133,7 +135,7 @@ final readonly class UserSecurityNotifier
 		$mail = new Message();
 		$mail->setFrom($this->emailFrom)
 			->addTo($address)
-			->setSubject($this->translator->translate($subjectKey))
+			->setSubject($this->application->getFqdn() . ': ' . $this->translator->translate($subjectKey))
 			->setBody((string)$template)
 			->clearHeader('X-Mailer');
 		$this->mailer->send($mail);
