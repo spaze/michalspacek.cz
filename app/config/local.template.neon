@@ -54,6 +54,7 @@ parameters:
 
 	mail:
 		securityNotificationsFrom: "Fred <fred@waldo.example>"
+		trainingFrom: "Barney <barney@plugh.example>"
 
 	encryption:
 		keys:

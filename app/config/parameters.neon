@@ -70,6 +70,7 @@ parameters:
 		phoneNumber: "123456789"
 	mail:
 		securityNotificationsFrom: "Foo <foo@bar.example>"
+		trainingFrom: "Bar <bar@qux.example>"
 	encryption:
 		keys:
 			password: []
