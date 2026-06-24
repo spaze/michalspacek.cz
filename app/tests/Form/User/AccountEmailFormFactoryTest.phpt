@@ -91,7 +91,6 @@ final class AccountEmailFormFactoryTest extends TestCase
 		Arrays::invoke($form->onValidate, $form);
 		Arrays::invoke($form->onSuccess, $form);
 
-		// an alert to the OLD address only happens if onSuccess read the old email before setEmail overwrote it
 		$mails = $this->mailer->getAllMails();
 		Assert::count(2, $mails);
 		Assert::same(['old@example.com' => null], $mails[0]->getHeader('To'));
