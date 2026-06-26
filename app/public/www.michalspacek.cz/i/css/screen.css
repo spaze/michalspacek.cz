@@ -306,6 +306,7 @@ table.condensed button { padding: 1px; }
 td.positionCell, td.iconCell { width: 10px; }
 td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
+.security-events .userAgent { max-width: 24em; overflow-x: auto; white-space: nowrap; }
 tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #statuses th, #statuses td, #applications th, #applications td, #certificates th, #certificates td { padding: 1px 5px 0 5px; }

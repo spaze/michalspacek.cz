@@ -11,6 +11,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\UserAccounts;
 use MichalSpacekCz\User\WebAuthn\PasskeyStorage;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyResetRevokeFailedException;
@@ -32,6 +33,7 @@ final class PasskeyResetTest extends TestCase
 		private readonly User $user,
 		private readonly PasskeyStorage $passkeyStorage,
 		private readonly UserSecurityNotifier $notifier,
+		private readonly SecurityEventLogger $securityEventLogger,
 		private readonly UserAccounts $userAccounts,
 		private readonly NullMailer $mailer,
 	) {
@@ -62,6 +64,8 @@ final class PasskeyResetTest extends TestCase
 			['passkeys', $userId, 'mockPasskeyCredentialId'], // every other passkey deleted, the just-registered one kept
 			$this->database->getParamsForQuery('DELETE FROM ?name WHERE key_user = ? AND credential_id != ?'),
 		);
+		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+		Assert::same(['passkey.reset.finished'], $events); // a clean reset records only the finish, no revoke-failure event
 	}
 
 
@@ -74,6 +78,8 @@ final class PasskeyResetTest extends TestCase
 
 		Assert::same('mockPasskeyCredentialId', $result->keepCredentialId); // the passkey was still registered
 		Assert::type(PasskeyResetRevokeFailedException::class, $result->revokeFailure);
+		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+		Assert::same(['passkey.reset.finished', 'reset.revoke.failed'], $events); // finish is always recorded; the failed revoke adds a second event
 	}
 
 
@@ -124,7 +130,7 @@ final class PasskeyResetTest extends TestCase
 	{
 		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
 		$revoker = new PasskeyResetRevoker($this->passkeyStorage, []);
-		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, $this->notifier, $revoker);
+		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, $this->notifier, $this->securityEventLogger, $revoker);
 	}
 
 }

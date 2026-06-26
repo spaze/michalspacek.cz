@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
+use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
 use Nette\Database\Explorer;
 use Spaze\Encryption\SymmetricKeyEncryption;
@@ -41,6 +42,31 @@ final readonly class UserAccounts
 			['email' => $this->emailEncryption->encrypt($email)],
 			$userId,
 		);
+	}
+
+
+	/**
+	 * @return string|null The previous email
+	 */
+	public function changeEmail(int $userId, string $newEmail): ?string
+	{
+		$this->database->beginTransaction();
+		try {
+			// lock the row so the old email can't change between this read and the write below
+			$encryptedOld = $this->typedDatabase->fetchFieldStringNullable(
+				'SELECT email FROM ?name WHERE id_user = ? FOR UPDATE',
+				$this->usersTableName,
+				$userId,
+			);
+			// decrypt before the write so an undecryptable old value rolls back rather than committing then throwing
+			$oldEmail = $encryptedOld !== null ? $this->emailEncryption->decrypt($encryptedOld) : null;
+			$this->setEmail($userId, $newEmail);
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
+		}
+		return $oldEmail;
 	}
 
 }

@@ -4,11 +4,12 @@ useDefault = true  # The default config file is https://github.com/gitleaks/gitl
 [[rules]]
 id = "michalspacek.cz-encryption-keys"
 description = "Identified an encryption key, risking data decryption and unauthorized access to sensitive information."
-regex = '''(?:mspe|msee|msse)(?:test)?_([a-fA-F0-9]{32,64})'''
+regex = '''(?:mspe|msee|msse|msle)(?:test)?_([a-fA-F0-9]{32,64})'''
 keywords = [
   "mspe",
   "msee",
   "msse",
+  "msle",
 ]
 
 [allowlist]

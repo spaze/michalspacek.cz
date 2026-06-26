@@ -8,11 +8,13 @@ use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Authentication\Reauthentication;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyServerException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\UI\Form;
-use Nette\Http\IRequest;
 use Nette\Security\User;
 use Tracy\Debugger;
 
@@ -26,9 +28,9 @@ final readonly class PasskeyAuthenticateFormFactory
 		private Manager $authenticator,
 		private PermanentLogin $permanentLogin,
 		private User $user,
-		private IRequest $httpRequest,
 		private Translator $translator,
 		private Reauthentication $reauthentication,
+		private SecurityEventLogger $securityEventLogger,
 	) {
 	}
 
@@ -53,10 +55,13 @@ final readonly class PasskeyAuthenticateFormFactory
 				$this->permanentLogin->regenerate($this->user);
 				// Signing in with a passkey also counts as confirming identity, so sensitive actions won't immediately ask again.
 				$this->reauthentication->recordFreshAuth();
-				Debugger::log("Successful passkey sign-in ({$result->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
+				$this->securityEventLogger->record($result->userId, SecurityEventType::SignInSuccess, ['username' => $result->username]);
 				$onSuccess();
 			} catch (PasskeyException $e) {
-				Debugger::log("Failed passkey sign-in: {$e->getMessage()} ({$this->httpRequest->getRemoteAddress()})", 'auth');
+				// A wrong/unknown passkey is the user's doing and needs no record; only our own faults do.
+				if ($e instanceof PasskeyServerException) {
+					Debugger::log($e, 'auth');
+				}
 				$form->addError($this->translator->translate('messages.passkeys.authenticationFailed'));
 			}
 		};

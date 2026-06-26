@@ -7,6 +7,8 @@ use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
@@ -25,11 +27,18 @@ abstract readonly class PasskeyRegistrationUrl implements CliArgsProvider
 	abstract protected function getDestination(): string;
 
 
+	/**
+	 * @return SecurityEventType The event recorded when a link of this kind is generated
+	 */
+	abstract protected function getInitiatedEventType(): SecurityEventType;
+
+
 	public function __construct(
 		private Manager $authenticator,
 		private PasskeyRegistrationTokens $tokens,
 		private LinkGenerator $linkGenerator,
 		private CliArgs $cliArgs,
+		private SecurityEventLogger $securityEventLogger,
 	) {
 	}
 
@@ -57,6 +66,7 @@ abstract readonly class PasskeyRegistrationUrl implements CliArgsProvider
 		}
 
 		$selectorToken = $this->tokens->create($userId);
+		$this->securityEventLogger->record($userId, $this->getInitiatedEventType());
 		return $this->linkGenerator->link($this->getDestination() . '#' . $selectorToken);
 	}
 

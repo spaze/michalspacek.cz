@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUserMismatchException;
@@ -27,6 +28,7 @@ abstract readonly class PasskeyRegistration
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private User $user,
 		protected UserSecurityNotifier $notifier,
+		protected SecurityEventLogger $securityEventLogger,
 	) {
 	}
 

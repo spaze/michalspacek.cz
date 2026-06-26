@@ -9,6 +9,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\User\SecurityActivity\SecurityActivity;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialSignedInWithException;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
@@ -36,6 +37,7 @@ final class PasskeysTest extends TestCase
 		private readonly DateTimeMachineFactory $dateTimeMachineFactory,
 		private readonly PasskeySessionSection $passkeySessionSection,
 		private readonly User $user,
+		private readonly SecurityActivity $securityActivity,
 	) {
 	}
 
@@ -173,11 +175,13 @@ final class PasskeysTest extends TestCase
 
 	public function testRenameCredential(): void
 	{
+		$this->database->setResultSet(new ResultSet(1));
 		$this->passkeys->renameCredential(Uuid::fromRfc4122(self::ID_1), 'New Name');
 		Assert::same(
 			['passkeys', 'New Name', Uuid::fromRfc4122(self::ID_1)->toBinary(), 42],
 			$this->database->getParamsForQuery('UPDATE ?name SET name = ? WHERE id_passkey = ? AND key_user = ?'),
 		);
+		Assert::same('passkey.renamed', $this->database->getParamsArrayForQuery('INSERT INTO security_events')[0]['action']);
 	}
 
 
@@ -188,6 +192,7 @@ final class PasskeysTest extends TestCase
 		Assert::noError(function (): void {
 			$this->passkeys->renameCredential(Uuid::fromRfc4122(self::ID_1), 'Same Name');
 		});
+		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO security_events')); // renaming to the same name changes no row, so nothing is recorded
 	}
 
 
@@ -203,17 +208,31 @@ final class PasskeysTest extends TestCase
 	public function testDeleteCredential(): void
 	{
 		$idBinary = Uuid::fromRfc4122(self::ID_1)->toBinary();
+		$this->database->setResultSet(new ResultSet(1)); // the delete removed the credential
+		$this->database->addFetchFieldResult('uPhone');
 		$this->passkeys->deleteCredential(Uuid::fromRfc4122(self::ID_1));
 		Assert::same(
 			['passkeys', $idBinary, 42, null, null],
 			$this->database->getParamsForQuery('DELETE FROM ?name WHERE id_passkey = ? AND key_user = ? AND (? IS NULL OR credential_id != ?)'),
 		);
+		$event = $this->database->getParamsArrayForQuery('INSERT INTO security_events');
+		Assert::same('passkey.deleted', $event[0]['action']);
+		$details = $event[0]['details'];
+		assert(is_string($details));
+		$this->database->setFetchAllDefaultResult([[
+			'action' => 'passkey.deleted',
+			'created' => DateTime::from('2026-06-26 10:00:00'),
+			'createdTimezone' => 'UTC',
+			'ip' => null,
+			'userAgent' => null,
+			'details' => $details,
+		]]);
+		Assert::same(['name' => 'uPhone'], $this->securityActivity->getEventsForCurrentUser()[0]->details);
 	}
 
 
 	public function testDeleteCredentialNotFound(): void
 	{
-		$this->database->setResultSet(new ResultSet(0));
 		$this->database->addFetchFieldResult(null);
 		Assert::exception(function (): void {
 			$this->passkeys->deleteCredential(Uuid::fromRfc4122(self::ID_1));
@@ -224,11 +243,23 @@ final class PasskeysTest extends TestCase
 	public function testDeleteCredentialSignedInWith(): void
 	{
 		$this->passkeySessionSection->setSignedInCredentialId('cred-id-1');
+		$this->database->addFetchFieldResult('uPhone'); // the name lookup finds it
+		$this->database->addFetchFieldResult(1); // still there after the zero-row delete, so it's the signed-in one
 		$this->database->setResultSet(new ResultSet(0));
-		$this->database->addFetchFieldResult(1);
 		Assert::exception(function (): void {
 			$this->passkeys->deleteCredential(Uuid::fromRfc4122(self::ID_1));
 		}, PasskeyCredentialSignedInWithException::class);
+	}
+
+
+	public function testDeleteCredentialConcurrentlyDeleted(): void
+	{
+		$this->database->addFetchFieldResult('uPhone'); // found when the name is read
+		$this->database->addFetchFieldResult(null); // gone by the time the delete runs
+		$this->database->setResultSet(new ResultSet(0));
+		Assert::exception(function (): void {
+			$this->passkeys->deleteCredential(Uuid::fromRfc4122(self::ID_1));
+		}, PasskeyCredentialNotFoundException::class);
 	}
 
 }

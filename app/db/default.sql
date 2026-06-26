@@ -190,6 +190,20 @@ CREATE TABLE `redirections` (
   UNIQUE KEY `source_UNIQUE` (`source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `security_events` (
+  `id_security_event` int unsigned NOT NULL AUTO_INCREMENT,
+  `key_user` int unsigned DEFAULT NULL,
+  `action` varchar(200) NOT NULL,
+  `created` datetime NOT NULL,
+  `created_timezone` varchar(200) NOT NULL,
+  `ip` varchar(200) DEFAULT NULL,
+  `user_agent` text,
+  `details` text,
+  PRIMARY KEY (`id_security_event`),
+  KEY `key_user` (`key_user`,`created`),
+  CONSTRAINT `security_events_ibfk_1` FOREIGN KEY (`key_user`) REFERENCES `users` (`id_user`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `sessions` (
   `id` binary(32) NOT NULL,
   `timestamp` bigint unsigned NOT NULL,

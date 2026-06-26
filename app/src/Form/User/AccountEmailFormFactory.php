@@ -7,7 +7,10 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\UserAccounts;
+use MichalSpacekCz\User\WebAuthn\Authentication\ReauthKind;
 use Nette\Application\UI\Form;
 use Nette\Security\User;
 
@@ -21,6 +24,7 @@ final readonly class AccountEmailFormFactory
 		private Translator $translator,
 		private PasskeyAuthenticationControls $passkeyAuthenticationControls,
 		private UserSecurityNotifier $notifier,
+		private SecurityEventLogger $securityEventLogger,
 	) {
 	}
 
@@ -40,12 +44,15 @@ final readonly class AccountEmailFormFactory
 		}
 		$form->addSubmit('save', $this->translator->translate('messages.account.email.save'));
 		$form->setHtmlAttribute('data-error-element', 'passkeyReauthError');
-		$this->passkeyAuthenticationControls->addReauthTo($form);
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $userId, $currentEmail): void {
+		$this->passkeyAuthenticationControls->addReauthTo($form, ReauthKind::Inline);
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $userId): void {
 			$values = $form->getValues();
 			assert(is_string($values->email));
-			$this->userAccounts->setEmail($userId, $values->email);
-			$this->notifier->emailChanged($currentEmail, $values->email);
+			$oldEmail = $this->userAccounts->changeEmail($userId, $values->email);
+			if ($oldEmail !== $values->email) {
+				$this->notifier->emailChanged($oldEmail, $values->email);
+				$this->securityEventLogger->record($userId, SecurityEventType::EmailChanged, ['from' => $oldEmail, 'to' => $values->email]);
+			}
 			$onSuccess();
 		};
 		return $form;

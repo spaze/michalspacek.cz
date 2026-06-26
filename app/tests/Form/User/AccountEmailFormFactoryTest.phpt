@@ -78,6 +78,8 @@ final class AccountEmailFormFactoryTest extends TestCase
 		assert(is_string($stored));
 		Assert::notSame('me@example.com', $stored); // stored encrypted, never plaintext
 		Assert::same(['me@example.com' => null], $this->mailer->getMail()->getHeader('To')); // first-set confirms the new address
+		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+		Assert::contains('email.changed', $events); // recorded alongside the inline reauth event
 	}
 
 
@@ -110,6 +112,40 @@ final class AccountEmailFormFactoryTest extends TestCase
 		Assert::true($form->hasErrors());
 		Assert::false($this->onSuccessCalled);
 		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?')); // not saved
+	}
+
+
+	public function testValidPasskeyButOtherControlFailedRecordsNoReauth(): void
+	{
+		$this->user->login(new SimpleIdentity(42));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->database->setFetchFieldDefaultResult(null);
+		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
+		$email = $form->getComponent('email');
+		assert($email instanceof TextInput);
+		$email->addError('some other control failed validation');
+
+		Arrays::invoke($form->onValidate, $form);
+
+		// the passkey verified, but another control failed so the save won't run: don't record a confirmation for it
+		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+	}
+
+
+	public function testUnchangedEmailRecordsNoChange(): void
+	{
+		$this->user->login(new SimpleIdentity(42));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->seedCurrentEmail('me@example.com');
+		$form = $this->createForm('me@example.com', '{"id":"test","type":"public-key"}');
+
+		Arrays::invoke($form->onValidate, $form);
+		Arrays::invoke($form->onSuccess, $form);
+
+		Assert::true($this->onSuccessCalled);
+		Assert::count(0, $this->mailer->getAllMails()); // resubmitting the same address notifies no one
+		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+		Assert::notContains('email.changed', $events); // and records no email-change event
 	}
 
 

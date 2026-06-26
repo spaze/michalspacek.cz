@@ -7,9 +7,9 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyServerException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyRegistration;
 use Nette\Forms\Form;
-use Nette\Http\IRequest;
 use Tracy\Debugger;
 
 final readonly class PasskeyRegistrationFormFactory
@@ -19,7 +19,6 @@ final readonly class PasskeyRegistrationFormFactory
 		private FormFactory $factory,
 		private PasskeyRegistration $passkeyRegistration,
 		private PasskeyFormControls $passkeyFormControls,
-		private IRequest $httpRequest,
 		private Translator $translator,
 	) {
 	}
@@ -47,13 +46,12 @@ final readonly class PasskeyRegistrationFormFactory
 			try {
 				$result = $this->passkeyRegistration->register($values->credential, $values->name, $values->token);
 			} catch (PasskeyException $e) {
-				Debugger::log("Failed passkey registration: {$e->getMessage()} ({$this->httpRequest->getRemoteAddress()})", 'auth');
+				// A bad registration attempt is the user's doing and needs no record; only our own faults do.
+				if ($e instanceof PasskeyServerException) {
+					Debugger::log($e, 'auth');
+				}
 				$form->addError($this->translator->translate('messages.passkeys.registrationFailed'));
 				return;
-			}
-			Debugger::log("Successful passkey registration ({$result->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
-			if ($result->revokeFailure !== null) {
-				Debugger::log("Revoking other access after reset failed: {$result->revokeFailure->getMessage()} ({$result->username})", 'auth');
 			}
 			$onSuccess($result->revokeFailure !== null);
 		};

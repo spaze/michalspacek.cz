@@ -64,14 +64,18 @@ parameters:
 				dev1: "msee_cafebabe25da1768d69ee80717cc2f30" # [0-9A-F]{64}
 			session:
 				dev1: "msse_25da1768d69ee80717cc2f30cafebabe" # [0-9A-F]{64}
+			securityEvent:
+				dev1: "msle_deadbeef" # [0-9A-F]{64}
 		activeKeyIds:
 			password: dev1
 			email: dev1
 			session: dev1
+			securityEvent: dev1
 		keyPrefixes:
 			password: mspe
 			email: msee
 			session: msse
+			securityEvent: msle
 
 	awsLambda:
 		upcKeys:

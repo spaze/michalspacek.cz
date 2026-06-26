@@ -76,14 +76,17 @@ parameters:
 			password: []
 			email: []
 			session: []
+			securityEvent: []
 		activeKeyIds:
 			password: ""
 			email: ""
 			session: ""
+			securityEvent: ""
 		keyPrefixes:
 			password: ""
 			email: ""
 			session: ""
+			securityEvent: ""
 	awsLambda:
 		upcKeys:
 			url:

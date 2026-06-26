@@ -28,6 +28,12 @@ final readonly class Reauthentication
 	}
 
 
+	public function getTtl(): string
+	{
+		return $this->ttl;
+	}
+
+
 	public function isFreshAuth(): bool
 	{
 		$reauthAt = $this->passkeySessionSection->getReauthAt();
