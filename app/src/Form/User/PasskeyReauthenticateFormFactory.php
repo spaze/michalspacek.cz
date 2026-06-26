@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form\User;
 
 use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
 use MichalSpacekCz\Form\FormFactory;
+use MichalSpacekCz\User\WebAuthn\Authentication\ReauthKind;
 use Nette\Application\UI\Form;
 
 final readonly class PasskeyReauthenticateFormFactory
@@ -23,7 +24,7 @@ final readonly class PasskeyReauthenticateFormFactory
 	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl): Form
 	{
 		$form = $this->factory->create();
-		$this->passkeyAuthenticationControls->addReauthTo($form);
+		$this->passkeyAuthenticationControls->addReauthTo($form, ReauthKind::Interval);
 		$form->setHtmlAttribute('data-error-url', $errorUrl);
 		$form->setHtmlAttribute('data-canceled-url', $canceledUrl);
 		$form->addSubmit('authenticate');

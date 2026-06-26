@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\User;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Security\NullUserStorage;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
@@ -35,6 +36,7 @@ final class PasskeyAuthenticateFormFactoryTest extends TestCase
 		private readonly User $user,
 		private readonly NullUserStorage $userStorage,
 		private readonly Reauthentication $reauthentication,
+		private readonly Database $database,
 	) {
 	}
 
@@ -45,6 +47,7 @@ final class PasskeyAuthenticateFormFactoryTest extends TestCase
 		$this->user->logout();
 		$this->onSuccessCalled = false;
 		$this->passkeyAuthenticator->wontThrow();
+		$this->database->reset();
 	}
 
 
@@ -73,6 +76,7 @@ final class PasskeyAuthenticateFormFactoryTest extends TestCase
 		Assert::same('30 minutes', $this->userStorage->expire);
 		Assert::true($this->userStorage->clearIdentity);
 		Assert::true($this->reauthentication->isFreshAuth()); // signing in with a passkey counts as confirming identity
+		Assert::same('signin.success', $this->database->getParamsArrayForQuery('INSERT INTO security_events')[0]['action']);
 	}
 
 

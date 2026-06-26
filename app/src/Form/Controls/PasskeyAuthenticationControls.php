@@ -4,11 +4,15 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Authentication\Reauthentication;
+use MichalSpacekCz\User\WebAuthn\Authentication\ReauthKind;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
+use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyServerException;
 use MichalSpacekCz\User\WebAuthn\WebAuthnAuthenticator;
 use Nette\Application\UI\Form;
-use Nette\Http\IRequest;
+use Nette\Security\User;
 use Tracy\Debugger;
 
 /**
@@ -29,7 +33,8 @@ final readonly class PasskeyAuthenticationControls
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private Reauthentication $reauthentication,
 		private Translator $translator,
-		private IRequest $httpRequest,
+		private User $user,
+		private SecurityEventLogger $securityEventLogger,
 	) {
 	}
 
@@ -60,20 +65,40 @@ final readonly class PasskeyAuthenticationControls
 	 * email). To confirm before merely *viewing* a sensitive page, gate the action with
 	 * Admin\BasePresenter::requireReauthentication() instead.
 	 */
-	public function addReauthTo(Form $form): void
+	public function addReauthTo(Form $form, ReauthKind $kind): void
 	{
 		$this->addOptionsTo($form);
-		$form->onValidate[] = function (Form $form): void {
+		$form->onValidate[] = function (Form $form) use ($kind): void {
 			$values = $form->getUntrustedValues();
 			assert(is_string($values->credential));
+			$userId = (int)$this->user->getId();
 			try {
 				$this->reauthentication->verify($values->credential);
-				Debugger::log("Successful passkey reauthentication ({$this->httpRequest->getRemoteAddress()})", 'auth');
+				// don't record a confirmation for a submit that another control already failed (the gated action won't run)
+				if (!$form->hasErrors()) {
+					$this->recordReauth($userId, $kind, true);
+				}
 			} catch (PasskeyException $e) {
-				Debugger::log("Failed passkey reauthentication: {$e->getMessage()} ({$this->httpRequest->getRemoteAddress()})", 'auth');
+				if ($e instanceof PasskeyServerException) {
+					Debugger::log($e, 'auth');
+				}
+				$this->recordReauth($userId, $kind, false);
 				$form->addError($this->translator->translate('messages.reauth.failed'));
 			}
 		};
+	}
+
+
+	private function recordReauth(int $userId, ReauthKind $kind, bool $success): void
+	{
+		$type = match ($kind) {
+			ReauthKind::Interval => $success ? SecurityEventType::ReauthIntervalSuccess : SecurityEventType::ReauthIntervalFailure,
+			ReauthKind::Inline => $success ? SecurityEventType::ReauthInlineSuccess : SecurityEventType::ReauthInlineFailure,
+		};
+		// Any successful confirmation, inline or interval, opens the same freshness window (verify() records
+		// it), so the window length is recorded whenever one was actually opened; a failure opens none.
+		$details = $success ? ['interval' => $this->reauthentication->getTtl()] : [];
+		$this->securityEventLogger->record($userId, $type, $details);
 	}
 
 }

@@ -1,0 +1,36 @@
+{templateType MichalSpacekCz\Presentation\Admin\Account\SecurityLogTemplateParameters}
+{define #menu}
+&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Account:">{_messages.account.title}</a>
+{/define}
+{define #content}
+{if $events}
+<table class="security-events">
+	<thead>
+		<tr>
+			<th>{_messages.account.securityLog.column.when}</th>
+			<th>{_messages.account.securityLog.column.event}</th>
+			<th>{_messages.account.securityLog.column.ip}</th>
+			<th>{_messages.account.securityLog.column.userAgent}</th>
+			<th>{_messages.account.securityLog.column.details}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $events as $event}
+		<tr>
+			<td>{$event->created|localeDay} <small>{$event->created|date:'H:i'}</small></td>
+			<td>{$event->labelKey()|translate}</td>
+			<td>{$event->ip ?? '?'}</td>
+			<td><div class="userAgent">{$event->userAgent ?? '?'}</div></td>
+			<td>
+				{foreach $event->details as $key => $value}{$key}: {$value ?? ''}{sep}<br>{/sep}{/foreach}
+			</td>
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+{else}
+<p>{_messages.account.securityLog.empty}</p>
+{/if}
+{/define}

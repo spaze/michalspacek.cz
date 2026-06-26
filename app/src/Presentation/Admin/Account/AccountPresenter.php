@@ -8,6 +8,7 @@ use MichalSpacekCz\Form\User\AccountEmailFormFactory;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
+use MichalSpacekCz\User\SecurityActivity\SecurityActivity;
 use Nette\Application\UI\Form;
 
 final class AccountPresenter extends BasePresenter
@@ -16,6 +17,7 @@ final class AccountPresenter extends BasePresenter
 	public function __construct(
 		private readonly AccountEmailFormFactory $accountEmailFormFactory,
 		private readonly Translator $translator,
+		private readonly SecurityActivity $securityActivity,
 	) {
 		parent::__construct();
 	}
@@ -25,6 +27,15 @@ final class AccountPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.account.title');
 		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsGet, PermissionsPolicyOrigin::Self);
+	}
+
+
+	public function renderSecurityLog(): void
+	{
+		$this->template->setParameters(new SecurityLogTemplateParameters(
+			$this->translator->translate('messages.account.securityLog.title'),
+			$this->securityActivity->getEventsForCurrentUser(),
+		));
 	}
 
 

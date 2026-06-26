@@ -14,3 +14,4 @@ e8ee56be1f7af3c54ecc5aff2e5b525151dcd847:app/config/config.neon:generic-api-key-
 0a582d9b6820eec34b371c48ac33c95512013fcf:site/config/tests.neon:michalspacek.cz-encryption-keys:18
 0a582d9b6820eec34b371c48ac33c95512013fcf:site/config/tests.neon:michalspacek.cz-encryption-keys:20
 0a582d9b6820eec34b371c48ac33c95512013fcf:site/config/local.template.neon:michalspacek.cz-encryption-keys:56
+ba01f68d7cd3aa93e42480dad42942ff68511164:app/config/tests.neon:michalspacek.cz-encryption-keys:19

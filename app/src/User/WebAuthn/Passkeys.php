@@ -7,6 +7,8 @@ use DateTimeInterface;
 use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialSignedInWithException;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
@@ -23,6 +25,7 @@ final readonly class Passkeys
 		private DateTimeFactory $dateTimeFactory,
 		private User $user,
 		private PasskeySessionSection $passkeySessionSection,
+		private SecurityEventLogger $securityEventLogger,
 		private string $passkeysTableName,
 	) {
 	}
@@ -103,14 +106,14 @@ final readonly class Passkeys
 		$found = true;
 		$this->database->beginTransaction();
 		try {
-			$affected = $this->database->query(
+			$renamed = $this->database->query(
 				'UPDATE ?name SET name = ? WHERE id_passkey = ? AND key_user = ?',
 				$this->passkeysTableName,
 				$name,
 				$id->toBinary(),
 				$userId,
-			);
-			if ($affected->getRowCount() === 0) {
+			)->getRowCount() !== 0;
+			if (!$renamed) {
 				$exists = $this->typedDatabase->fetchFieldIntNullable(
 					'SELECT 1 FROM ?name WHERE id_passkey = ? AND key_user = ?',
 					$this->passkeysTableName,
@@ -129,6 +132,9 @@ final readonly class Passkeys
 		if (!$found) {
 			throw new PasskeyCredentialNotFoundException();
 		}
+		if ($renamed) {
+			$this->securityEventLogger->record($userId, SecurityEventType::PasskeyRenamed, ['name' => $name]);
+		}
 	}
 
 
@@ -138,6 +144,7 @@ final readonly class Passkeys
 	 */
 	public function deleteCredential(Uuid $id): void
 	{
+		$name = $this->getCredentialNameById($id);
 		$idBinary = $id->toBinary();
 		$currentCredentialId = $this->passkeySessionSection->getSignedInCredentialId();
 		$affected = $this->database->query(
@@ -149,6 +156,7 @@ final readonly class Passkeys
 			$currentCredentialId,
 		)->getRowCount();
 		if ($affected === 0) {
+			// found above, so a zero-row delete is either the signed-in credential (excluded) or a concurrent delete
 			$exists = $this->typedDatabase->fetchFieldIntNullable(
 				'SELECT 1 FROM ?name WHERE id_passkey = ? AND key_user = ?',
 				$this->passkeysTableName,
@@ -161,6 +169,7 @@ final readonly class Passkeys
 				throw new PasskeyCredentialNotFoundException();
 			}
 		}
+		$this->securityEventLogger->record((int)$this->user->getId(), SecurityEventType::PasskeyDeleted, ['name' => $name]);
 	}
 
 }

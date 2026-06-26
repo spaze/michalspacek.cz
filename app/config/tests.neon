@@ -15,14 +15,18 @@ parameters:
 				test: "mseetest_17fa3225effc107a689eb72fd8c20983bbc690bf9ea42a2f0306e0c226720845"
 			session!:
 				test: "mssetest_0d89ba7b95bce3a1f5092faf7aa038bffcaca2a98d264ab18c81aec8f74b90ab"
+			securityEvent!:
+				test: "msletest_3f36cd84abba407803aba4ce26d1becdeb94a64b2afdd893789d8da59cee18ee"
 		activeKeyIds:
 			password: test
 			email: test
 			session: test
+			securityEvent: test
 		keyPrefixes:
 			password: mspetest
 			email: mseetest
 			session: mssetest
+			securityEvent: msletest
 	mail:
 		securityNotificationsFrom: "Tests <foo@tests.example>"
 		trainingFrom: "Tests <bar@tests.example>"

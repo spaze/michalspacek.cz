@@ -413,6 +413,29 @@ account:
 		save: "Save email"
 		saved: "Email saved"
 		help: "Used for security alerts about your account"
+	securityLog:
+		title: "Security log"
+		empty: "No events yet"
+		column:
+			when: "When"
+			event: "Event"
+			ip: "IP address"
+			userAgent: "User agent"
+			details: "Details"
+		event:
+			passkeyAddInitiated: "Passkey add initiated"
+			passkeyAddFinished: "Passkey added"
+			passkeyResetInitiated: "Passkey reset initiated"
+			passkeyResetFinished: "Passkey reset completed"
+			passkeyRenamed: "Passkey renamed"
+			passkeyDeleted: "Passkey deleted"
+			signInSuccess: "Signed in"
+			reauthIntervalSuccess: "Identity confirmed for viewing"
+			reauthIntervalFailure: "Failed identity confirmation for viewing"
+			reauthInlineSuccess: "Identity confirmed for a change"
+			reauthInlineFailure: "Failed identity confirmation for a change"
+			resetRevokeFailed: "Revoking other access after reset failed"
+			emailChanged: "Account email changed"
 notifications:
 	field:
 		name: "Passkey name"

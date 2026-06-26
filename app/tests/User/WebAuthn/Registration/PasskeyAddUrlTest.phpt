@@ -13,6 +13,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
@@ -34,6 +35,7 @@ final class PasskeyAddUrlTest extends TestCase
 		private readonly IRequest $httpRequest,
 		private readonly LinkGenerator $linkGenerator,
 		private readonly DateTimeFactory $dateTimeFactory,
+		private readonly SecurityEventLogger $securityEventLogger,
 	) {
 	}
 
@@ -49,7 +51,7 @@ final class PasskeyAddUrlTest extends TestCase
 	{
 		$manager = new Manager($this->typedDatabase, $this->httpRequest, 'users');
 		$addTokens = new PasskeyAddTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, $passkeyAddEnabled, '5 minutes');
-		return new PasskeyAddUrl($manager, $addTokens, $this->linkGenerator, $cliArgs);
+		return new PasskeyAddUrl($manager, $addTokens, $this->linkGenerator, $cliArgs, $this->securityEventLogger);
 	}
 
 
@@ -84,6 +86,7 @@ final class PasskeyAddUrlTest extends TestCase
 		$this->database->addFetchFieldResult(1337);
 		$url = $this->getPasskeyAddUrl(new CliArgs(['username' => 'leet'], null), true)->generate();
 		Assert::contains('/passkeys/add#', $url);
+		Assert::same('passkey.add.initiated', $this->database->getParamsArrayForQuery('INSERT INTO security_events')[0]['action']);
 	}
 
 

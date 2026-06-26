@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn\Registration;
 
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use Override;
 
 final readonly class PasskeyAdd extends PasskeyRegistration
@@ -20,6 +21,7 @@ final readonly class PasskeyAdd extends PasskeyRegistration
 	{
 		$result = parent::register($credentialJson, $name, $token);
 		$this->notifier->passkeyAdded($result->userId, $name);
+		$this->securityEventLogger->record($result->userId, SecurityEventType::PasskeyAddFinished, ['name' => $name]);
 		return $result;
 	}
 
