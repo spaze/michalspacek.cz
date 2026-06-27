@@ -55,7 +55,7 @@ final class PasskeyAuthenticateFormFactoryTest extends TestCase
 	{
 		$userId = 1337;
 		$username = 'foo';
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult($userId, $username, 'test-credential-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult($userId, $username, 'test-credential-id', 'My Passkey'));
 
 		$form = $this->formFactory->create(
 			function (): void {

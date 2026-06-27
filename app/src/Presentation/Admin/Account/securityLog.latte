@@ -22,7 +22,7 @@
 			<td>{$event->created|localeDay} <small>{$event->created|date:'H:i'}</small></td>
 			<td>{$event->labelKey()|translate}</td>
 			<td>{$event->ip ?? '?'}</td>
-			<td><div class="userAgent">{$event->userAgent ?? '?'}</div></td>
+			<td>{if $event->userAgent !== null}{$event->userAgent|replace: 'Mozilla/5.0 (', ''|truncateMiddle: 30, $event->userAgent}{else}?{/if}</td>
 			<td>
 				{foreach $event->details as $key => $value}{$key}: {$value ?? ''}{sep}<br>{/sep}{/foreach}
 			</td>

@@ -50,9 +50,9 @@ final readonly class PasskeyReset extends PasskeyRegistration
 			$result = $result->withRevokeFailure($e);
 		}
 		$this->notifier->passkeyReset($result->userId, $name, $result->revokeFailure === null);
-		$this->securityEventLogger->record($result->userId, SecurityEventType::PasskeyResetFinished, ['name' => $name]);
+		$this->securityEventLogger->record($result->userId, SecurityEventType::PasskeyResetFinished, ['passkey' => $name]);
 		if ($result->revokeFailure !== null) {
-			$this->securityEventLogger->record($result->userId, SecurityEventType::ResetRevokeFailed, ['name' => $name]);
+			$this->securityEventLogger->record($result->userId, SecurityEventType::ResetRevokeFailed, ['passkey' => $name]);
 		}
 		return $result;
 	}

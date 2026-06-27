@@ -306,7 +306,24 @@ table.condensed button { padding: 1px; }
 td.positionCell, td.iconCell { width: 10px; }
 td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
-.security-events .userAgent { max-width: 24em; overflow-x: auto; white-space: nowrap; }
+.truncateMiddle {
+	display: inline-flex;
+	max-width: 32em;
+}
+.truncateMiddle > span:first-child {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
+}
+.truncateMiddle > span:last-child {
+	white-space: nowrap;
+	flex: none;
+}
+.security-events tbody td {
+	border-top: 1px solid rgba(128, 128, 128, 0.25);
+	vertical-align: top;
+}
 tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #statuses th, #statuses td, #applications th, #applications td, #certificates th, #certificates td { padding: 1px 5px 0 5px; }

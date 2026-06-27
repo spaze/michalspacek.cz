@@ -294,7 +294,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 		$passkeyAuthenticator->generateAuthenticationOptions();
 
 		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
-		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user', 'credentialName' => 'My Passkey']);
 
 		$result = $passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
 		Assert::same(42, $result->userId);
@@ -312,7 +312,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 			$this->serializer,
 		);
 		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
-		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user', 'credentialName' => 'My Passkey']);
 
 		// Reauthentication uses verifyAssertion(), which must not change which passkey counts as the one signed in with
 		$passkeyAuthenticator->generateAuthenticationOptions();
@@ -433,7 +433,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 		);
 		$this->passkeySessionSection->setAuthChallenge(random_bytes(32));
 		$this->database->setFetchFieldDefaultResult('serialized-credential');
-		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user']);
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'test-user', 'credentialName' => 'My Passkey']);
 		Assert::exception(function () use ($passkeyAuthenticator, $assertionJson): void {
 			$passkeyAuthenticator->verifyAuthentication($assertionJson);
 		}, PasskeyAuthenticationCredentialRecordSerializationException::class);

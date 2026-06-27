@@ -133,7 +133,7 @@ final readonly class Passkeys
 			throw new PasskeyCredentialNotFoundException();
 		}
 		if ($renamed) {
-			$this->securityEventLogger->record($userId, SecurityEventType::PasskeyRenamed, ['name' => $name]);
+			$this->securityEventLogger->record($userId, SecurityEventType::PasskeyRenamed, ['passkey' => $name]);
 		}
 	}
 
@@ -169,7 +169,7 @@ final readonly class Passkeys
 				throw new PasskeyCredentialNotFoundException();
 			}
 		}
-		$this->securityEventLogger->record((int)$this->user->getId(), SecurityEventType::PasskeyDeleted, ['name' => $name]);
+		$this->securityEventLogger->record((int)$this->user->getId(), SecurityEventType::PasskeyDeleted, ['passkey' => $name]);
 	}
 
 }

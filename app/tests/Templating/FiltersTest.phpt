@@ -64,6 +64,24 @@ final class FiltersTest extends TestCase
 		Assert::same('<strong>foo</strong>', $this->filters->formatPossiblyUnsafeHtml('**%s**', $html)->render());
 	}
 
+
+	public function testTruncateMiddle(): void
+	{
+		Assert::same(
+			'<span class="truncateMiddle" title="abcdefghij"><span>abcdef</span><span>ghij</span></span>',
+			$this->filters->truncateMiddle('abcdefghij', 4)->render(),
+		);
+		Assert::same(
+			'<span class="truncateMiddle" title="abc"><span></span><span>abc</span></span>',
+			$this->filters->truncateMiddle('abc', 4)->render(),
+		);
+		Assert::same(
+			'<span class="truncateMiddle" title="the full value"><span>abcdef</span><span>ghij</span></span>',
+			$this->filters->truncateMiddle('abcdefghij', 4, 'the full value')->render(),
+		);
+		Assert::contains('&lt;', $this->filters->truncateMiddle('a<b', 1)->render());
+	}
+
 }
 
 TestCaseRunner::run(FiltersTest::class);

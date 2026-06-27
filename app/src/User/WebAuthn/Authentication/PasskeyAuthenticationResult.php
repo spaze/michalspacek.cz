@@ -10,6 +10,7 @@ final readonly class PasskeyAuthenticationResult
 		private(set) int $userId,
 		private(set) string $username,
 		private(set) string $credentialId,
+		private(set) string $credentialName,
 	) {
 	}
 

@@ -66,7 +66,7 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 
 	public function testIntervalSuccessRecordsTheWindowLength(): void
 	{
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$form = $this->createForm(ReauthKind::Interval);
 
 		Arrays::invoke($form->onValidate, $form);
@@ -75,21 +75,22 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 		Assert::same('reauth.interval.success', $params[0]['action']);
 		$encrypted = $params[0]['details'];
 		assert(is_string($encrypted)); // a window was opened, so details holds the (encrypted) length
-		Assert::same(['interval' => '5 minutes'], $this->decodeDetails($encrypted));
+		Assert::same(['passkey' => 'My Passkey', 'interval' => '5 minutes'], $this->decodeDetails($encrypted));
 	}
 
 
 	public function testInlineSuccessRecordsTheWindowLength(): void
 	{
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$form = $this->createForm(ReauthKind::Inline);
 
 		Arrays::invoke($form->onValidate, $form);
 
 		$params = $this->database->getParamsArrayForQuery(self::INSERT);
 		Assert::same('reauth.inline.success', $params[0]['action']);
-		// Inline reauth opens the same freshness window as interval, so the length is recorded here too.
-		Assert::notNull($params[0]['details']);
+		$encrypted = $params[0]['details'];
+		assert(is_string($encrypted));
+		Assert::same(['passkey' => 'My Passkey', 'interval' => '5 minutes'], $this->decodeDetails($encrypted));
 	}
 
 
@@ -122,7 +123,7 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 	public function testUserMismatchRecordsFailureAndIsLoggedForTheOperator(): void
 	{
 		// a valid assertion, but it resolves to a different account than the signed-in one (42)
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'foo', 'cred-id', 'My Passkey'));
 		$form = $this->createForm(ReauthKind::Inline);
 
 		Arrays::invoke($form->onValidate, $form);
