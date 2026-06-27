@@ -60,7 +60,7 @@ final class SecurityActivityTest extends TestCase
 			'createdTimezone' => 'UTC',
 			'ip' => '1.2.3.4',
 			'userAgent' => 'TestBrowser/1.0',
-			'details' => $this->encryptDetails(['name' => 'Yubikey']),
+			'details' => $this->encryptDetails(['passkey' => 'Yubikey']),
 		]]);
 
 		$events = $this->securityActivity->getEventsForCurrentUser();
@@ -72,7 +72,7 @@ final class SecurityActivityTest extends TestCase
 		Assert::same('UTC', $events[0]->created->getTimezone()->getName());
 		Assert::same('1.2.3.4', $events[0]->ip);
 		Assert::same('TestBrowser/1.0', $events[0]->userAgent);
-		Assert::same(['name' => 'Yubikey'], $events[0]->details);
+		Assert::same(['passkey' => 'Yubikey'], $events[0]->details);
 		Assert::same('messages.account.securityLog.event.passkeyRenamed', $events[0]->labelKey());
 	}
 

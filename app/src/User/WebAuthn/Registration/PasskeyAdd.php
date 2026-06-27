@@ -21,7 +21,7 @@ final readonly class PasskeyAdd extends PasskeyRegistration
 	{
 		$result = parent::register($credentialJson, $name, $token);
 		$this->notifier->passkeyAdded($result->userId, $name);
-		$this->securityEventLogger->record($result->userId, SecurityEventType::PasskeyAddFinished, ['name' => $name]);
+		$this->securityEventLogger->record($result->userId, SecurityEventType::PasskeyAddFinished, ['passkey' => $name]);
 		return $result;
 	}
 

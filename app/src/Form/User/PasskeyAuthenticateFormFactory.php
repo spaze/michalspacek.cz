@@ -55,7 +55,7 @@ final readonly class PasskeyAuthenticateFormFactory
 				$this->permanentLogin->regenerate($this->user);
 				// Signing in with a passkey also counts as confirming identity, so sensitive actions won't immediately ask again.
 				$this->reauthentication->recordFreshAuth();
-				$this->securityEventLogger->record($result->userId, SecurityEventType::SignInSuccess, ['username' => $result->username]);
+				$this->securityEventLogger->record($result->userId, SecurityEventType::SignInSuccess, ['user' => $result->username, 'passkey' => $result->credentialName]);
 				$onSuccess();
 			} catch (PasskeyException $e) {
 				// A wrong/unknown passkey is the user's doing and needs no record; only our own faults do.

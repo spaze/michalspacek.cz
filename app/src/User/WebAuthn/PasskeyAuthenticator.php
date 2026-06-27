@@ -249,7 +249,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		}
 		$this->passkeyStorage->updateCredentialAfterAuthentication($credentialId, $updatedCredentialRecordJson);
 
-		return new PasskeyAuthenticationResult($user->id, $user->username, $credentialId);
+		return new PasskeyAuthenticationResult($user->id, $user->username, $credentialId, $user->credentialName);
 	}
 
 

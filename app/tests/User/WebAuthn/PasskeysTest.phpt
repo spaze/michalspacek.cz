@@ -227,7 +227,7 @@ final class PasskeysTest extends TestCase
 			'userAgent' => null,
 			'details' => $details,
 		]]);
-		Assert::same(['name' => 'uPhone'], $this->securityActivity->getEventsForCurrentUser()[0]->details);
+		Assert::same(['passkey' => 'uPhone'], $this->securityActivity->getEventsForCurrentUser()[0]->details);
 	}
 
 

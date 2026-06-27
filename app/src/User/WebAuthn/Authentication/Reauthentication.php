@@ -71,7 +71,7 @@ final readonly class Reauthentication
 	 * @throws PasskeyAuthenticationException
 	 * @throws PasskeyReauthenticationUserMismatchException
 	 */
-	public function verify(string $credentialJson): void
+	public function verify(string $credentialJson): string
 	{
 		$result = $this->passkeyAuthenticator->verifyAssertion($credentialJson);
 		$signedInUserId = (int)$this->user->getId();
@@ -79,6 +79,7 @@ final readonly class Reauthentication
 			throw new PasskeyReauthenticationUserMismatchException($signedInUserId, $result->userId);
 		}
 		$this->recordFreshAuth();
+		return $result->credentialName;
 	}
 
 }

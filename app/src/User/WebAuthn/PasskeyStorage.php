@@ -67,7 +67,7 @@ final readonly class PasskeyStorage
 	public function getUserByCredentialId(string $credentialId): ?PasskeyUser
 	{
 		$result = $this->database->fetch(
-			'SELECT u.id_user AS userId, u.username FROM ?name c JOIN ?name u ON c.key_user = u.id_user WHERE credential_id = ?',
+			'SELECT u.id_user AS userId, u.username, c.name AS credentialName FROM ?name c JOIN ?name u ON c.key_user = u.id_user WHERE credential_id = ?',
 			$this->passkeysTableName,
 			$this->usersTableName,
 			$credentialId,
@@ -77,7 +77,8 @@ final readonly class PasskeyStorage
 		}
 		assert(is_int($result->userId));
 		assert(is_string($result->username));
-		return new PasskeyUser($result->userId, $result->username);
+		assert(is_string($result->credentialName));
+		return new PasskeyUser($result->userId, $result->username, $result->credentialName);
 	}
 
 

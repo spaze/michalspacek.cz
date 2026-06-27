@@ -70,11 +70,12 @@ final class PasskeyStorageTest extends TestCase
 
 	public function testGetUserByCredentialIdFound(): void
 	{
-		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'foo']);
+		$this->database->setFetchDefaultResult(['userId' => 42, 'username' => 'foo', 'credentialName' => 'My Passkey']);
 		$result = $this->passkeyStorage->getUserByCredentialId('cred-id');
 		assert($result !== null);
 		Assert::same(42, $result->id);
 		Assert::same('foo', $result->username);
+		Assert::same('My Passkey', $result->credentialName);
 	}
 
 

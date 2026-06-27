@@ -73,31 +73,29 @@ final readonly class PasskeyAuthenticationControls
 			assert(is_string($values->credential));
 			$userId = (int)$this->user->getId();
 			try {
-				$this->reauthentication->verify($values->credential);
+				$passkeyName = $this->reauthentication->verify($values->credential);
 				// don't record a confirmation for a submit that another control already failed (the gated action won't run)
 				if (!$form->hasErrors()) {
-					$this->recordReauth($userId, $kind, true);
+					$this->recordReauth($userId, $kind, true, $passkeyName);
 				}
 			} catch (PasskeyException $e) {
 				if ($e instanceof PasskeyServerException) {
 					Debugger::log($e, 'auth');
 				}
-				$this->recordReauth($userId, $kind, false);
+				$this->recordReauth($userId, $kind, false, null);
 				$form->addError($this->translator->translate('messages.reauth.failed'));
 			}
 		};
 	}
 
 
-	private function recordReauth(int $userId, ReauthKind $kind, bool $success): void
+	private function recordReauth(int $userId, ReauthKind $kind, bool $success, ?string $passkeyName): void
 	{
 		$type = match ($kind) {
 			ReauthKind::Interval => $success ? SecurityEventType::ReauthIntervalSuccess : SecurityEventType::ReauthIntervalFailure,
 			ReauthKind::Inline => $success ? SecurityEventType::ReauthInlineSuccess : SecurityEventType::ReauthInlineFailure,
 		};
-		// Any successful confirmation, inline or interval, opens the same freshness window (verify() records
-		// it), so the window length is recorded whenever one was actually opened; a failure opens none.
-		$details = $success ? ['interval' => $this->reauthentication->getTtl()] : [];
+		$details = $success ? ['passkey' => $passkeyName, 'interval' => $this->reauthentication->getTtl()] : [];
 		$this->securityEventLogger->record($userId, $type, $details);
 	}
 

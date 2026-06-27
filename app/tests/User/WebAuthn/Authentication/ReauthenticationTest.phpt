@@ -71,7 +71,7 @@ final class ReauthenticationTest extends TestCase
 	{
 		$this->dateTime->setDateTime(new DateTimeImmutable('2026-06-20 12:00:00'));
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 
 		$this->reauthentication->verify('{"id":"test","type":"public-key"}');
 
@@ -83,7 +83,7 @@ final class ReauthenticationTest extends TestCase
 	{
 		$this->dateTime->setDateTime(new DateTimeImmutable('2026-06-20 12:00:00'));
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'someone-else', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'someone-else', 'cred-id', 'My Passkey'));
 
 		Assert::exception(
 			fn() => $this->reauthentication->verify('{}'),

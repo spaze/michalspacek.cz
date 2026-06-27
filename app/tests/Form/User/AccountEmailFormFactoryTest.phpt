@@ -64,7 +64,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	public function testVerifiedPasskeySavesEncryptedEmail(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$this->database->setFetchFieldDefaultResult(null); // no current email to prefill
 		$form = $this->createForm('me@example.com', '{"id":"test","type":"public-key"}');
 
@@ -86,7 +86,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	public function testCapturesTheOldEmailBeforeOverwriting(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$this->seedCurrentEmail('old@example.com');
 		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
 
@@ -103,7 +103,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	public function testWrongUserPasskeyAddsErrorAndDoesNotSave(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'foo', 'cred-id')); // someone else's passkey
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'foo', 'cred-id', 'My Passkey')); // someone else's passkey
 		$this->database->setFetchFieldDefaultResult(null);
 		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
 
@@ -118,7 +118,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	public function testValidPasskeyButOtherControlFailedRecordsNoReauth(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$this->database->setFetchFieldDefaultResult(null);
 		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
 		$email = $form->getComponent('email');
@@ -135,7 +135,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	public function testUnchangedEmailRecordsNoChange(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$this->seedCurrentEmail('me@example.com');
 		$form = $this->createForm('me@example.com', '{"id":"test","type":"public-key"}');
 

@@ -54,7 +54,7 @@ final class PasskeyReauthenticateFormFactoryTest extends TestCase
 	public function testValidPasskeyRecordsReauthAndReachesSuccess(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 
 		$form = $this->createForm();
 		Arrays::invoke($form->onValidate, $form);
@@ -70,7 +70,7 @@ final class PasskeyReauthenticateFormFactoryTest extends TestCase
 	public function testWrongUserAddsErrorAndDoesNotReauth(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'someone-else', 'cred-id'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'someone-else', 'cred-id', 'My Passkey'));
 
 		$form = $this->createForm();
 		Arrays::invoke($form->onValidate, $form);
