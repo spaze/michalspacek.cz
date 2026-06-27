@@ -308,7 +308,7 @@ td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
 .truncateMiddle {
 	display: inline-flex;
-	max-width: 32em;
+	max-width: 26em;
 }
 .truncateMiddle > span:first-child {
 	overflow: hidden;

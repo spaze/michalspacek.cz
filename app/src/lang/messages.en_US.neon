@@ -418,8 +418,7 @@ account:
 		empty: "No events yet"
 		column:
 			when: "When"
-			event: "Event"
-			ip: "IP address"
+			event: "Event (IP address)"
 			userAgent: "User agent"
 			details: "Details"
 		event:

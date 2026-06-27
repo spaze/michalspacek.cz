@@ -418,8 +418,7 @@ account:
 		empty: "Zatím žádné události"
 		column:
 			when: "Kdy"
-			event: "Událost"
-			ip: "IP adresa"
+			event: "Událost (IP adresa)"
 			userAgent: "User agent"
 			details: "Detaily"
 		event:
