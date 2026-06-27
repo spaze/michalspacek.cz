@@ -11,7 +11,6 @@
 		<tr>
 			<th>{_messages.account.securityLog.column.when}</th>
 			<th>{_messages.account.securityLog.column.event}</th>
-			<th>{_messages.account.securityLog.column.ip}</th>
 			<th>{_messages.account.securityLog.column.userAgent}</th>
 			<th>{_messages.account.securityLog.column.details}</th>
 		</tr>
@@ -19,9 +18,8 @@
 	<tbody>
 		{foreach $events as $event}
 		<tr>
-			<td>{$event->created|localeDay} <small>{$event->created|date:'H:i'}</small></td>
-			<td><strong>{$event->labelKey()|translate}</strong></td>
-			<td><small>{$event->ip ?? '?'}</small></td>
+			<td>{$event->created|localeDay}<br><small>{$event->created|date:'H:i:s'}</small></td>
+			<td><strong>{$event->labelKey()|translate}</strong><br><small>{$event->ip ?? '?'}</small></td>
 			<td>{if $event->userAgent !== null}{$event->userAgent|replace: 'Mozilla/5.0 (', ''|truncateMiddle: 30, $event->userAgent}{else}?{/if}</td>
 			<td><small>{foreach $event->details as $key => $value}{$key}: {$value ?? ''}{sep}<br>{/sep}{/foreach}</small></td>
 		</tr>
