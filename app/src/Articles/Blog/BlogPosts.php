@@ -192,6 +192,7 @@ final readonly class BlogPosts
 
 
 	/**
+	 * @param non-empty-string|null $editSummary
 	 * @param list<string> $previousSlugTags
 	 * @throws BlogPostWithoutIdException
 	 */
