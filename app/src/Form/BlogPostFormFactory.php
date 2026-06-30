@@ -167,7 +167,7 @@ final readonly class BlogPostFormFactory
 				if ($post !== null) {
 					$editSummary = $values->editSummary ?? null;
 					assert($editSummary === null || is_string($editSummary));
-					$this->blogPosts->update($newPost, $editSummary, $post->getSlugTags());
+					$this->blogPosts->update($newPost, $editSummary === '' ? null : $editSummary, $post->getSlugTags());
 					$onSuccessEdit($newPost);
 				} else {
 					$onSuccessAdd($this->blogPosts->add($newPost));
