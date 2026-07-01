@@ -26,12 +26,9 @@ final readonly class SecurityEvent
 	}
 
 
-	/**
-	 * @return string Translation key for the label, or the raw action when the type is no longer known
-	 */
 	public function labelKey(): string
 	{
-		return $this->type?->labelKey() ?? $this->action;
+		return $this->type?->labelKey() ?? 'messages.account.securityLog.event.unknown';
 	}
 
 }

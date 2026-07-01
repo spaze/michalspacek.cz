@@ -44,7 +44,7 @@ final readonly class AccountEmailFormFactory
 		}
 		$form->addSubmit('save', $this->translator->translate('messages.account.email.save'));
 		$form->setHtmlAttribute('data-error-element', 'passkeyReauthError');
-		$this->passkeyAuthenticationControls->addReauthTo($form, ReauthKind::Inline);
+		$this->passkeyAuthenticationControls->addReauthTo($form, ReauthKind::Inline, SecurityEventType::EmailChanged);
 		$form->onSuccess[] = function (Form $form) use ($onSuccess, $userId): void {
 			$values = $form->getValues();
 			assert(is_string($values->email));

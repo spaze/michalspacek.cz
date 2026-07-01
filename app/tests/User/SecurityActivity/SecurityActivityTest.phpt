@@ -77,7 +77,7 @@ final class SecurityActivityTest extends TestCase
 	}
 
 
-	public function testUnknownActionDegradesToRawString(): void
+	public function testUnknownActionDegradesToUnknownLabel(): void
 	{
 		$this->database->setFetchAllDefaultResult([[
 			'action' => 'passkey.teleported', // a value no current SecurityEventType knows
@@ -91,8 +91,8 @@ final class SecurityActivityTest extends TestCase
 		$events = $this->securityActivity->getEventsForCurrentUser();
 
 		Assert::null($events[0]->type);
-		Assert::same('passkey.teleported', $events[0]->action);
-		Assert::same('passkey.teleported', $events[0]->labelKey()); // falls back to the raw action, never throws
+		Assert::same('passkey.teleported', $events[0]->action); // the raw action is kept
+		Assert::same('messages.account.securityLog.event.unknown', $events[0]->labelKey()); // labelled generically, never throws
 		Assert::same([], $events[0]->details);
 		Assert::null($events[0]->ip);
 		Assert::null($events[0]->userAgent);

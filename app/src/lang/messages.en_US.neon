@@ -418,8 +418,8 @@ account:
 		empty: "No events yet"
 		column:
 			when: "When"
-			event: "Event (IP address)"
-			userAgent: "User agent"
+			event: "Event and type"
+			userAgent: "User agent and IP address"
 			details: "Details"
 		event:
 			passkeyAddInitiated: "Passkey add initiated"
@@ -431,10 +431,12 @@ account:
 			signInSuccess: "Signed in"
 			reauthIntervalSuccess: "Identity confirmed for viewing"
 			reauthIntervalFailure: "Failed identity confirmation for viewing"
-			reauthInlineSuccess: "Identity confirmed for a change"
-			reauthInlineFailure: "Failed identity confirmation for a change"
+			reauthInlineSuccess: "Identity confirmed"
+			reauthInlineFailure: "Failed identity confirmation"
 			resetRevokeFailed: "Revoking other access after reset failed"
 			emailChanged: "Account email changed"
+			pageViewed: "Sensitive page viewed"
+			unknown: "Unknown type"
 notifications:
 	field:
 		name: "Passkey name"
