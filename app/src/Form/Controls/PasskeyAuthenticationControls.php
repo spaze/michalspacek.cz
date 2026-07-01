@@ -65,10 +65,10 @@ final readonly class PasskeyAuthenticationControls
 	 * email). To confirm before merely *viewing* a sensitive page, gate the action with
 	 * Admin\BasePresenter::requireReauthentication() instead.
 	 */
-	public function addReauthTo(Form $form, ReauthKind $kind): void
+	public function addReauthTo(Form $form, ReauthKind $kind, ?SecurityEventType $operation = null): void
 	{
 		$this->addOptionsTo($form);
-		$form->onValidate[] = function (Form $form) use ($kind): void {
+		$form->onValidate[] = function (Form $form) use ($kind, $operation): void {
 			$values = $form->getUntrustedValues();
 			assert(is_string($values->credential));
 			$userId = (int)$this->user->getId();
@@ -76,26 +76,33 @@ final readonly class PasskeyAuthenticationControls
 				$passkeyName = $this->reauthentication->verify($values->credential);
 				// don't record a confirmation for a submit that another control already failed (the gated action won't run)
 				if (!$form->hasErrors()) {
-					$this->recordReauth($userId, $kind, true, $passkeyName);
+					$this->recordReauth($userId, $kind, true, $passkeyName, $operation);
 				}
 			} catch (PasskeyException $e) {
 				if ($e instanceof PasskeyServerException) {
 					Debugger::log($e, 'auth');
 				}
-				$this->recordReauth($userId, $kind, false, null);
+				$this->recordReauth($userId, $kind, false, null, $operation);
 				$form->addError($this->translator->translate('messages.reauth.failed'));
 			}
 		};
 	}
 
 
-	private function recordReauth(int $userId, ReauthKind $kind, bool $success, ?string $passkeyName): void
+	private function recordReauth(int $userId, ReauthKind $kind, bool $success, ?string $passkeyName, ?SecurityEventType $operation): void
 	{
 		$type = match ($kind) {
 			ReauthKind::Interval => $success ? SecurityEventType::ReauthIntervalSuccess : SecurityEventType::ReauthIntervalFailure,
 			ReauthKind::Inline => $success ? SecurityEventType::ReauthInlineSuccess : SecurityEventType::ReauthInlineFailure,
 		};
-		$details = $success ? ['passkey' => $passkeyName, 'interval' => $this->reauthentication->getTtl()] : [];
+		$details = [];
+		if ($operation !== null) {
+			$details['operation'] = $operation->value;
+		}
+		if ($success) {
+			$details['passkey'] = $passkeyName;
+			$details['interval'] = $this->reauthentication->getTtl();
+		}
 		$this->securityEventLogger->record($userId, $type, $details);
 	}
 

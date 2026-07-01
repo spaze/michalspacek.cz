@@ -418,8 +418,8 @@ account:
 		empty: "Zatím žádné události"
 		column:
 			when: "Kdy"
-			event: "Událost (IP adresa)"
-			userAgent: "User agent"
+			event: "Událost a typ"
+			userAgent: "User agent a IP adresa"
 			details: "Detaily"
 		event:
 			passkeyAddInitiated: "Zahájeno přidání passkey"
@@ -431,10 +431,12 @@ account:
 			signInSuccess: "Přihlášení"
 			reauthIntervalSuccess: "Potvrzení identity pro zobrazení"
 			reauthIntervalFailure: "Neúspěšné potvrzení identity pro zobrazení"
-			reauthInlineSuccess: "Potvrzení identity pro změnu"
-			reauthInlineFailure: "Neúspěšné potvrzení identity pro změnu"
+			reauthInlineSuccess: "Potvrzení identity"
+			reauthInlineFailure: "Neúspěšné potvrzení identity"
 			resetRevokeFailed: "Odebrání ostatního přístupu po resetu selhalo"
 			emailChanged: "Změna e-mailu účtu"
+			pageViewed: "Zobrazení citlivé stránky"
+			unknown: "Neznámý typ"
 notifications:
 	field:
 		name: "Název passkey"

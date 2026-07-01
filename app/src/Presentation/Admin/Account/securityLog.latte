@@ -19,8 +19,8 @@
 		{foreach $events as $event}
 		<tr>
 			<td>{$event->created|localeDay}<br><small>{$event->created|date:'H:i:s'}</small></td>
-			<td><strong>{$event->labelKey()|translate}</strong><br><small>{$event->ip ?? '?'}</small></td>
-			<td>{if $event->userAgent !== null}{$event->userAgent|replace: 'Mozilla/5.0 (', ''|truncateMiddle: 30, $event->userAgent}{else}?{/if}</td>
+			<td><strong>{$event->labelKey()|translate}</strong><br><small>{$event->action}</small></td>
+			<td>{if $event->userAgent !== null}{$event->userAgent|replace: 'Mozilla/5.0 (', ''|truncateMiddle: 30, $event->userAgent}{else}?{/if}<br><small>{$event->ip ?? '?'}</small></td>
 			<td><small>{foreach $event->details as $key => $value}{$key}: {$value ?? ''}{sep}<br>{/sep}{/foreach}</small></td>
 		</tr>
 		{/foreach}

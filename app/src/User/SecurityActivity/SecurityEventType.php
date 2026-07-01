@@ -27,6 +27,7 @@ enum SecurityEventType: string
 	case ReauthInlineFailure = 'reauth.inline.failure';
 	case ResetRevokeFailed = 'reset.revoke.failed';
 	case EmailChanged = 'email.changed';
+	case PageViewed = 'page.viewed';
 
 
 	/**

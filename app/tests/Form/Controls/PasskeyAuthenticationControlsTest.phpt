@@ -11,6 +11,7 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\SecurityActivity\SecurityActivity;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationUnknownCredentialException;
 use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
 use MichalSpacekCz\User\WebAuthn\Authentication\ReauthKind;
@@ -120,6 +121,34 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 	}
 
 
+	public function testInlineRecordsTheGuardedOperation(): void
+	{
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
+		$form = $this->createForm(ReauthKind::Inline, SecurityEventType::EmailChanged);
+
+		Arrays::invoke($form->onValidate, $form);
+
+		$encrypted = $this->database->getParamsArrayForQuery(self::INSERT)[0]['details'];
+		assert(is_string($encrypted));
+		Assert::same(['operation' => 'email.changed', 'passkey' => 'My Passkey', 'interval' => '5 minutes'], $this->decodeDetails($encrypted));
+	}
+
+
+	public function testFailedReauthStillNamesTheGuardedOperation(): void
+	{
+		$this->passkeyAuthenticator->willThrow(new PasskeyAuthenticationUnknownCredentialException('foo'));
+		$form = $this->createForm(ReauthKind::Inline, SecurityEventType::EmailChanged);
+
+		Arrays::invoke($form->onValidate, $form);
+
+		$params = $this->database->getParamsArrayForQuery(self::INSERT);
+		Assert::same('reauth.inline.failure', $params[0]['action']);
+		$encrypted = $params[0]['details'];
+		assert(is_string($encrypted));
+		Assert::same(['operation' => 'email.changed'], $this->decodeDetails($encrypted));
+	}
+
+
 	public function testUserMismatchRecordsFailureAndIsLoggedForTheOperator(): void
 	{
 		// a valid assertion, but it resolves to a different account than the signed-in one (42)
@@ -133,10 +162,10 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 	}
 
 
-	private function createForm(ReauthKind $kind): Form
+	private function createForm(ReauthKind $kind, ?SecurityEventType $operation = null): Form
 	{
 		$form = $this->formFactory->create();
-		$this->controls->addReauthTo($form, $kind);
+		$this->controls->addReauthTo($form, $kind, $operation);
 		$this->applicationPresenter->anchorForm($form);
 		$field = $form->getComponent('credential');
 		assert($field instanceof HiddenField);
