@@ -429,6 +429,7 @@ account:
 			passkeyRenamed: "Passkey přejmenován"
 			passkeyDeleted: "Passkey smazán"
 			signInSuccess: "Přihlášení"
+			signInPermanent: "Automatické přihlášení"
 			reauthIntervalSuccess: "Potvrzení identity pro zobrazení"
 			reauthIntervalFailure: "Neúspěšné potvrzení identity pro zobrazení"
 			reauthInlineSuccess: "Potvrzení identity"

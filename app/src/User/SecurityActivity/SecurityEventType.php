@@ -21,6 +21,7 @@ enum SecurityEventType: string
 	case PasskeyRenamed = 'passkey.renamed';
 	case PasskeyDeleted = 'passkey.deleted';
 	case SignInSuccess = 'signin.success';
+	case SignInPermanent = 'signin.permanent';
 	case ReauthIntervalSuccess = 'reauth.interval.success';
 	case ReauthIntervalFailure = 'reauth.interval.failure';
 	case ReauthInlineSuccess = 'reauth.inline.success';

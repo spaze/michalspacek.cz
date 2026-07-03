@@ -52,7 +52,7 @@ final readonly class PasskeyAuthenticateFormFactory
 				$result = $this->passkeyAuthenticator->verifyAuthentication($values->credential);
 				$this->user->setExpiration('30 minutes', true);
 				$this->user->login($this->authenticator->getIdentity($result->userId, $result->username));
-				$this->permanentLogin->regenerate($this->user);
+				$this->permanentLogin->regenerate();
 				// Signing in with a passkey also counts as confirming identity, so sensitive actions won't immediately ask again.
 				$this->reauthentication->recordFreshAuth();
 				$this->securityEventLogger->record($result->userId, SecurityEventType::SignInSuccess, ['user' => $result->username, 'passkey' => $result->credentialName]);
