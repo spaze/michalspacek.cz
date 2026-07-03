@@ -18,6 +18,8 @@ use MichalSpacekCz\User\AuthTokens\UserAuthToken;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\Manager;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
+use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
@@ -39,6 +41,7 @@ final class PermanentLoginTest extends TestCase
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly LinkGenerator $linkGenerator,
 		private readonly User $user,
+		private readonly SecurityEventLogger $securityEventLogger,
 	) {
 	}
 
@@ -84,6 +87,35 @@ final class PermanentLoginTest extends TestCase
 	}
 
 
+	public function testSignInWithoutValidTokenDoesNothing(): void
+	{
+		Assert::false($this->getPermanentLogin()->signIn());
+		Assert::false($this->user->isLoggedIn());
+		Assert::count(0, $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+	}
+
+
+	public function testSignInLogsInRotatesAndRecordsEvent(): void
+	{
+		$token = 'sometoken';
+		$this->database->setFetchDefaultResult([
+			'id' => 1,
+			'token' => hash('sha512', $token),
+			'userId' => 42,
+			'username' => 'spaze',
+		]);
+		$this->httpRequest->setCookie(CookieName::PermanentLogin->value, "selector:{$token}");
+
+		Assert::true($this->getPermanentLogin()->signIn());
+		Assert::same(42, $this->user->getId());
+
+		$inserts = $this->database->getParamsArrayForQuery('INSERT INTO security_events');
+		Assert::count(1, $inserts);
+		Assert::same(SecurityEventType::SignInPermanent->value, $inserts[0]['action']);
+		Assert::same(42, $inserts[0]['key_user']);
+	}
+
+
 	public function testGetCookieLifetime(): void
 	{
 		Assert::same('14 days', $this->getPermanentLogin()->getCookieLifetime());
@@ -107,7 +139,7 @@ final class PermanentLoginTest extends TestCase
 		$userId = 1337;
 		$this->user->login(new SimpleIdentity($userId));
 		$this->cookies->set(CookieName::PermanentLogin, 'goodbye', '14 days');
-		$this->getPermanentLogin()->clear($this->user);
+		$this->getPermanentLogin()->clear();
 
 		Assert::same(
 			[$userId, UserAuthTokenType::PermanentLogin->value],
@@ -121,7 +153,7 @@ final class PermanentLoginTest extends TestCase
 	{
 		$manager = new Manager($this->typedDatabase, $this->httpRequest, 'users');
 		$tokens = new UserAuthTokens($this->database, 'users');
-		return new PermanentLogin($tokens, $this->cookies, $manager, $this->dateTimeFactory, $this->linkGenerator, '14 days');
+		return new PermanentLogin($tokens, $this->cookies, $manager, $this->user, $this->securityEventLogger, $this->dateTimeFactory, $this->linkGenerator, '14 days');
 	}
 
 }

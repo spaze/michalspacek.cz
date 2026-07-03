@@ -11,7 +11,6 @@ use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
-use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
@@ -32,7 +31,6 @@ final class SignPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Manager $authenticator,
 		private readonly PermanentLogin $permanentLogin,
 		private readonly SignInHoneypotFormFactory $signInHoneypotFormFactory,
 		private readonly PasskeyAuthenticateFormFactory $passkeyAuthenticateFormFactory,
@@ -57,10 +55,7 @@ final class SignPresenter extends BasePresenter
 	{
 		$this->addPermissionsPolicy(PermissionsPolicyDirective::PublicKeyCredentialsGet, PermissionsPolicyOrigin::Self);
 		$this->sessionHandler->start();
-		$token = $this->permanentLogin->verify();
-		if ($token !== null) {
-			$this->user->login($this->authenticator->getIdentity($token->getUserId(), $token->getUsername()));
-			$this->permanentLogin->regenerate($this->user);
+		if ($this->permanentLogin->signIn()) {
 			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
 		}
@@ -130,7 +125,7 @@ final class SignPresenter extends BasePresenter
 
 	public function actionOut(): never
 	{
-		$this->permanentLogin->clear($this->user);
+		$this->permanentLogin->clear();
 		$this->user->logout();
 		$this->flashMessage('Byli jste odhlášeni');
 		$this->redirect('in');

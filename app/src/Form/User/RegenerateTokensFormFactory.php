@@ -7,7 +7,6 @@ use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use Nette\Forms\Form;
 use Nette\Http\Session;
-use Nette\Security\User;
 use Nette\Utils\Html;
 
 final readonly class RegenerateTokensFormFactory
@@ -17,7 +16,6 @@ final readonly class RegenerateTokensFormFactory
 		private FormFactory $factory,
 		private Session $sessionHandler,
 		private PermanentLogin $permanentLogin,
-		private User $user,
 	) {
 	}
 
@@ -38,7 +36,7 @@ final readonly class RegenerateTokensFormFactory
 				$this->sessionHandler->regenerateId();
 			}
 			if ($values->permanent) {
-				$this->permanentLogin->regenerate($this->user);
+				$this->permanentLogin->regenerate();
 			}
 			$onSuccess('Tokeny přegenerovány');
 		};

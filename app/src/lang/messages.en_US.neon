@@ -429,6 +429,7 @@ account:
 			passkeyRenamed: "Passkey renamed"
 			passkeyDeleted: "Passkey deleted"
 			signInSuccess: "Signed in"
+			signInPermanent: "Signed in automatically"
 			reauthIntervalSuccess: "Identity confirmed for viewing"
 			reauthIntervalFailure: "Failed identity confirmation for viewing"
 			reauthInlineSuccess: "Identity confirmed"
