@@ -67,15 +67,13 @@ final class ReauthenticationTest extends TestCase
 	}
 
 
-	public function testVerifyRecordsReauthForSignedInUser(): void
+	public function testVerifyReturnsPasskeyNameAndDoesNotRefreshWindowItself(): void
 	{
-		$this->dateTime->setDateTime(new DateTimeImmutable('2026-06-20 12:00:00'));
 		$this->user->login(new SimpleIdentity(42));
 		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 
-		$this->reauthentication->verify('{"id":"test","type":"public-key"}');
-
-		Assert::true($this->reauthentication->isFreshAuth());
+		Assert::same('My Passkey', $this->reauthentication->verify('{"id":"test","type":"public-key"}'));
+		Assert::false($this->reauthentication->isFreshAuth()); // the caller refreshes the window, and only on a successful submit
 	}
 
 

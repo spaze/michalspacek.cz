@@ -65,8 +65,10 @@ final readonly class Reauthentication
 
 
 	/**
-	 * Check the passkey the user just used and, only if it is their own, mark their identity as
-	 * confirmed. This stops someone else's passkey from confirming identity for this session.
+	 * Check the passkey is the current user's own and return its name; rejects someone else's so it can't
+	 * confirm identity for this session. Deliberately does not refresh the freshness window itself: the
+	 * caller does that only when the guarded submit succeeds, so a submit that then fails leaves no fresh
+	 * window behind.
 	 *
 	 * @throws PasskeyAuthenticationException
 	 * @throws PasskeyReauthenticationUserMismatchException
@@ -78,7 +80,6 @@ final readonly class Reauthentication
 		if ($result->userId !== $signedInUserId) {
 			throw new PasskeyReauthenticationUserMismatchException($signedInUserId, $result->userId);
 		}
-		$this->recordFreshAuth();
 		return $result->credentialName;
 	}
 

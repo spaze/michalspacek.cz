@@ -70,6 +70,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 
 		Arrays::invoke($form->onValidate, $form);
 		Assert::false($form->hasErrors());
+		Assert::notNull($this->session->getReauthAt()); // a successful confirmation refreshes the freshness window
 		Arrays::invoke($form->onSuccess, $form);
 
 		Assert::true($this->onSuccessCalled);
@@ -127,8 +128,10 @@ final class AccountEmailFormFactoryTest extends TestCase
 
 		Arrays::invoke($form->onValidate, $form);
 
-		// the passkey verified, but another control failed so the save won't run: don't record a confirmation for it
+		// the passkey verified, but another control failed so the save won't run: it isn't a confirmation,
+		// so it's neither logged nor left as a refreshed freshness window
 		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
+		Assert::null($this->session->getReauthAt());
 	}
 
 

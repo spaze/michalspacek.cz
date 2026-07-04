@@ -74,8 +74,8 @@ final readonly class PasskeyAuthenticationControls
 			$userId = (int)$this->user->getId();
 			try {
 				$passkeyName = $this->reauthentication->verify($values->credential);
-				// don't record a confirmation for a submit that another control already failed (the gated action won't run)
 				if (!$form->hasErrors()) {
+					$this->reauthentication->recordFreshAuth();
 					$this->recordReauth($userId, $kind, true, $passkeyName, $operation);
 				}
 			} catch (PasskeyException $e) {
