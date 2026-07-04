@@ -10,6 +10,7 @@ use MichalSpacekCz\Form\Controls\PasskeyFormControls;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
@@ -134,6 +135,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 			'userId' => $userId,
 			'username' => $username,
 		]);
+		$this->database->setResultSet(new ResultSet(1)); // consuming the token deletes its one row
 	}
 
 

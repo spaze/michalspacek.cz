@@ -115,9 +115,9 @@ final readonly class UserAuthTokens
 	}
 
 
-	public function deleteById(int $tokenId, UserAuthTokenType $type): void
+	public function deleteById(int $tokenId, UserAuthTokenType $type): int
 	{
-		$this->database->query('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?', $tokenId, $type->value);
+		return $this->database->query('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?', $tokenId, $type->value)->getRowCount() ?? 0;
 	}
 
 

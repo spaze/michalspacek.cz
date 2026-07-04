@@ -66,7 +66,9 @@ abstract readonly class PasskeyRegistration
 	public function register(string $credentialJson, string $name, string $token): PasskeyRegistrationResult
 	{
 		$userAuthToken = $this->getUserAuthToken($token);
-		$this->cleanupToken($userAuthToken);
+		if (!$this->consumeToken($userAuthToken)) {
+			throw new PasskeyRegistrationInvalidOrExpiredTokenException();
+		}
 		$keepCredentialId = $this->passkeyAuthenticator->verifyRegistration($credentialJson, $name, $userAuthToken->getUserId());
 		return new PasskeyRegistrationResult($userAuthToken->getUsername(), $userAuthToken->getUserId(), $keepCredentialId);
 	}
@@ -93,9 +95,9 @@ abstract readonly class PasskeyRegistration
 	}
 
 
-	private function cleanupToken(UserAuthToken $userAuthToken): void
+	private function consumeToken(UserAuthToken $userAuthToken): bool
 	{
-		$this->registrationTokens->deleteById($userAuthToken->getId());
+		return $this->registrationTokens->deleteById($userAuthToken->getId()) > 0;
 	}
 
 }

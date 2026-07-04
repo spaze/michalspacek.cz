@@ -6,6 +6,7 @@ namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
@@ -123,6 +124,7 @@ final class PasskeyResetTest extends TestCase
 			'userId' => $userId,
 			'username' => $username,
 		]);
+		$this->database->setResultSet(new ResultSet(1)); // consuming the token deletes its one row
 	}
 
 
