@@ -87,7 +87,8 @@ final class PasskeyAddTokensTest extends TestCase
 
 	public function testDeleteByIdQueriesAdminAddType(): void
 	{
-		$this->getTokens(true)->deleteById(42);
+		$this->database->setResultSet(new ResultSet(1));
+		Assert::same(1, $this->getTokens(true)->deleteById(42));
 		Assert::same(
 			[42, UserAuthTokenType::AdminPasskeyAdd->value],
 			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),

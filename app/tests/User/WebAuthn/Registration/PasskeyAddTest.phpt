@@ -6,6 +6,7 @@ namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
@@ -88,6 +89,16 @@ final class PasskeyAddTest extends TestCase
 	}
 
 
+	public function testRegisterAbortsWhenTokenAlreadyConsumedByAConcurrentRequest(): void
+	{
+		$this->setUpToken(42, 1337, 'foo');
+		$this->database->setResultSet(new ResultSet(0)); // another request already deleted the token row, so our delete affects nothing
+		Assert::exception(function (): void {
+			$this->createPasskeyAdd()->register('{"id":"test","type":"public-key"}', 'My Passkey', 'selector:secret');
+		}, PasskeyRegistrationInvalidOrExpiredTokenException::class);
+	}
+
+
 	public function testGenerateRegistrationOptionsExcludesExistingCredentials(): void
 	{
 		$this->setUpToken(42, 1337, 'foo');
@@ -127,6 +138,7 @@ final class PasskeyAddTest extends TestCase
 			'userId' => $userId,
 			'username' => $username,
 		]);
+		$this->database->setResultSet(new ResultSet(1)); // consuming the token deletes its one row
 	}
 
 
