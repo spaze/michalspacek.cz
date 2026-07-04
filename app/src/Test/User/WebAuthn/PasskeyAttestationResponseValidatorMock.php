@@ -16,6 +16,9 @@ final class PasskeyAttestationResponseValidatorMock extends AuthenticatorAttesta
 	use WillThrow;
 
 
+	private ?PublicKeyCredentialCreationOptions $lastCreationOptions = null;
+
+
 	/**
 	 * @noinspection PhpMissingParentConstructorInspection Intentionally
 	 * @phpstan-ignore constructor.missingParentCall
@@ -31,8 +34,15 @@ final class PasskeyAttestationResponseValidatorMock extends AuthenticatorAttesta
 		PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions,
 		string $host,
 	): CredentialRecord {
+		$this->lastCreationOptions = $publicKeyCredentialCreationOptions;
 		$this->maybeThrow();
 		return $this->credentialRecord;
+	}
+
+
+	public function getLastCreationOptions(): ?PublicKeyCredentialCreationOptions
+	{
+		return $this->lastCreationOptions;
 	}
 
 }

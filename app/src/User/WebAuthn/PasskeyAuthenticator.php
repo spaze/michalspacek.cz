@@ -133,6 +133,9 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 			PublicKeyCredentialUserEntity::create('', $userHandle, ''),
 			$challenge,
 			$this->getPubKeyCredParams(),
+			AuthenticatorSelectionCriteria::create(
+				userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
+			),
 			excludeCredentials: $this->passkeyStorage->getDescriptorsByUserId($userId),
 		);
 

@@ -47,6 +47,7 @@ use Tester\Assert;
 use Tester\TestCase;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CredentialRecord;
 use Webauthn\Exception\AuthenticatorResponseVerificationException;
 use Webauthn\PublicKeyCredential;
@@ -479,6 +480,28 @@ final class PasskeyAuthenticatorTest extends TestCase
 		Assert::count(1, $params);
 		Assert::same(42, $params[0]['key_user']);
 		Assert::same('My Key', $params[0]['name']);
+	}
+
+
+	public function testVerifyRegistrationRequiresUserVerification(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$attestationMock = new PasskeyAttestationResponseValidatorMock($credentialRecord);
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			$attestationMock,
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$this->database->addFetchFieldResult('user-handle');
+
+		$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'My Key', 42);
+
+		$options = $attestationMock->getLastCreationOptions();
+		Assert::same(
+			AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
+			$options?->authenticatorSelection?->userVerification,
+		);
 	}
 
 
