@@ -6,6 +6,8 @@ namespace MichalSpacekCz\Form\User;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
 use MichalSpacekCz\Form\FormFactory;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
@@ -21,6 +23,7 @@ final readonly class AccountEmailFormFactory
 		private FormFactory $factory,
 		private UserAccounts $userAccounts,
 		private User $user,
+		private Manager $manager,
 		private Translator $translator,
 		private PasskeyAuthenticationControls $passkeyAuthenticationControls,
 		private UserSecurityNotifier $notifier,
@@ -31,13 +34,14 @@ final readonly class AccountEmailFormFactory
 
 	/**
 	 * @param callable(): void $onSuccess
+	 * @throws IdentityIdNotIntException
 	 */
 	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$email = $form->addEmail('email', $this->translator->translate('messages.account.email.label'))
 			->setRequired($this->translator->translate('messages.account.email.required'));
-		$userId = (int)$this->user->getId();
+		$userId = $this->manager->getUserId($this->user);
 		$currentEmail = $this->userAccounts->getEmail($userId);
 		if ($currentEmail !== null) {
 			$email->setDefaultValue($currentEmail);
