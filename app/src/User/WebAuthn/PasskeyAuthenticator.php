@@ -29,7 +29,6 @@ use Nette\Security\User;
 use Override;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Throwable;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponse;
@@ -141,7 +140,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 
 		try {
 			$credentialRecord = $this->attestationResponseValidator->check($attestationResponse, $options, $this->rpId);
-		} catch (Throwable $e) {
+		} catch (WebauthnException $e) {
 			throw new PasskeyRegistrationAttestationResponseValidatorException(previous: $e);
 		}
 		try {

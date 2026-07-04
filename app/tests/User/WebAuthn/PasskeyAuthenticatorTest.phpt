@@ -8,7 +8,6 @@ use CBOR\ByteStringObject;
 use CBOR\MapItem;
 use CBOR\MapObject;
 use CBOR\TextStringObject;
-use Exception;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Serializer\SerializerMock;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -40,6 +39,7 @@ use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Nette\Utils\Json;
 use Override;
+use RuntimeException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -374,7 +374,7 @@ final class PasskeyAuthenticatorTest extends TestCase
 	{
 		$credentialRecord = $this->buildCredentialRecord();
 		$attestationMock = new PasskeyAttestationResponseValidatorMock($credentialRecord);
-		$attestationMock->willThrow(new Exception('test'));
+		$attestationMock->willThrow(AuthenticatorResponseVerificationException::create('test'));
 		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
 			$attestationMock,
 			new PasskeyAssertionResponseValidatorMock($credentialRecord),
@@ -385,6 +385,24 @@ final class PasskeyAuthenticatorTest extends TestCase
 		Assert::exception(function () use ($passkeyAuthenticator): void {
 			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 1);
 		}, PasskeyRegistrationAttestationResponseValidatorException::class);
+	}
+
+
+	public function testVerifyRegistrationLetsNonWebauthnErrorsPropagate(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$attestationMock = new PasskeyAttestationResponseValidatorMock($credentialRecord);
+		$attestationMock->willThrow(new RuntimeException('a bug, not a verification failure'));
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			$attestationMock,
+			new PasskeyAssertionResponseValidatorMock($credentialRecord),
+			$this->serializer,
+		);
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$this->database->addFetchFieldResult('handle');
+		Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyRegistration($this->buildAttestationCredentialJson(), 'key', 1);
+		}, RuntimeException::class);
 	}
 
 

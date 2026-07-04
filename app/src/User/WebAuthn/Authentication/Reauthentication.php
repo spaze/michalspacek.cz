@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn\Authentication;
 
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationException;
 use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyReauthenticationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
@@ -23,6 +25,7 @@ final readonly class Reauthentication
 		private PasskeySessionSection $passkeySessionSection,
 		private DateTimeFactory $dateTimeFactory,
 		private User $user,
+		private Manager $manager,
 		private string $ttl,
 	) {
 	}
@@ -65,20 +68,22 @@ final readonly class Reauthentication
 
 
 	/**
-	 * Check the passkey the user just used and, only if it is their own, mark their identity as
-	 * confirmed. This stops someone else's passkey from confirming identity for this session.
+	 * Check the passkey is the current user's own and return its name; rejects someone else's so it can't
+	 * confirm identity for this session. Deliberately does not refresh the freshness window itself: the
+	 * caller does that only when the guarded submit succeeds, so a submit that then fails leaves no fresh
+	 * window behind.
 	 *
 	 * @throws PasskeyAuthenticationException
 	 * @throws PasskeyReauthenticationUserMismatchException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function verify(string $credentialJson): string
 	{
 		$result = $this->passkeyAuthenticator->verifyAssertion($credentialJson);
-		$signedInUserId = (int)$this->user->getId();
+		$signedInUserId = $this->manager->getUserId($this->user);
 		if ($result->userId !== $signedInUserId) {
 			throw new PasskeyReauthenticationUserMismatchException($signedInUserId, $result->userId);
 		}
-		$this->recordFreshAuth();
 		return $result->credentialName;
 	}
 
