@@ -50,6 +50,7 @@ use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CredentialRecord;
 use Webauthn\Exception\AuthenticatorResponseVerificationException;
+use Webauthn\Exception\CounterException;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\TrustPath\EmptyTrustPath;
@@ -265,6 +266,26 @@ final class PasskeyAuthenticatorTest extends TestCase
 		Assert::exception(function () use ($passkeyAuthenticator): void {
 			$passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
 		}, PasskeyAuthenticationAssertionResponseValidatorException::class);
+	}
+
+
+	public function testVerifyAuthenticationWrapsCounterExceptionAsAssertionFailure(): void
+	{
+		$credentialRecord = $this->buildCredentialRecord();
+		$assertionMock = new PasskeyAssertionResponseValidatorMock($credentialRecord);
+		$counterException = CounterException::create(1, 0, 'counter regression');
+		$assertionMock->willThrow($counterException);
+		$passkeyAuthenticator = $this->createPasskeyAuthenticator(
+			new PasskeyAttestationResponseValidatorMock($credentialRecord),
+			$assertionMock,
+			$this->serializer,
+		);
+		$passkeyAuthenticator->generateAuthenticationOptions();
+		$this->database->setFetchFieldDefaultResult($this->serializer->serialize($credentialRecord, 'json'));
+		$e = Assert::exception(function () use ($passkeyAuthenticator): void {
+			$passkeyAuthenticator->verifyAuthentication($this->buildAssertionCredentialJson());
+		}, PasskeyAuthenticationAssertionResponseValidatorException::class);
+		Assert::same($counterException, $e?->getPrevious());
 	}
 
 

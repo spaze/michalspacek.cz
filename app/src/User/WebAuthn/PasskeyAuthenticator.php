@@ -36,7 +36,7 @@ use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CredentialRecord;
-use Webauthn\Exception\AuthenticatorResponseVerificationException;
+use Webauthn\Exception\WebauthnException;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialParameters;
@@ -236,7 +236,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 
 		try {
 			$credentialRecord = $this->assertionResponseValidator->check($credentialRecord, $assertionResponse, $options, $this->rpId, null);
-		} catch (AuthenticatorResponseVerificationException $e) {
+		} catch (WebauthnException $e) {
 			throw new PasskeyAuthenticationAssertionResponseValidatorException(previous: $e);
 		}
 
