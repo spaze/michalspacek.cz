@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn\Authentication;
 
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyAuthenticationException;
 use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyReauthenticationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
@@ -23,6 +25,7 @@ final readonly class Reauthentication
 		private PasskeySessionSection $passkeySessionSection,
 		private DateTimeFactory $dateTimeFactory,
 		private User $user,
+		private Manager $manager,
 		private string $ttl,
 	) {
 	}
@@ -72,11 +75,12 @@ final readonly class Reauthentication
 	 *
 	 * @throws PasskeyAuthenticationException
 	 * @throws PasskeyReauthenticationUserMismatchException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function verify(string $credentialJson): string
 	{
 		$result = $this->passkeyAuthenticator->verifyAssertion($credentialJson);
-		$signedInUserId = (int)$this->user->getId();
+		$signedInUserId = $this->manager->getUserId($this->user);
 		if ($result->userId !== $signedInUserId) {
 			throw new PasskeyReauthenticationUserMismatchException($signedInUserId, $result->userId);
 		}

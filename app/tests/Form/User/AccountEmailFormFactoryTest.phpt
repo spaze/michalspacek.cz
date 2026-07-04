@@ -9,6 +9,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\UserAccounts;
 use MichalSpacekCz\User\WebAuthn\Authentication\PasskeyAuthenticationResult;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
@@ -149,6 +150,15 @@ final class AccountEmailFormFactoryTest extends TestCase
 		Assert::count(0, $this->mailer->getAllMails()); // resubmitting the same address notifies no one
 		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
 		Assert::notContains('email.changed', $events); // and records no email-change event
+	}
+
+
+	public function testRejectsNonIntegerIdentity(): void
+	{
+		$this->user->login(new SimpleIdentity('not-an-int'));
+		Assert::exception(function (): void {
+			$this->createForm('me@example.com', '{"id":"test","type":"public-key"}');
+		}, IdentityIdNotIntException::class);
 	}
 
 

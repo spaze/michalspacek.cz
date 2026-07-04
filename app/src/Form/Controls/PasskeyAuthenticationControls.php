@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Authentication\Reauthentication;
@@ -34,6 +35,7 @@ final readonly class PasskeyAuthenticationControls
 		private Reauthentication $reauthentication,
 		private Translator $translator,
 		private User $user,
+		private Manager $manager,
 		private SecurityEventLogger $securityEventLogger,
 	) {
 	}
@@ -71,7 +73,7 @@ final readonly class PasskeyAuthenticationControls
 		$form->onValidate[] = function (Form $form) use ($kind, $operation): void {
 			$values = $form->getUntrustedValues();
 			assert(is_string($values->credential));
-			$userId = (int)$this->user->getId();
+			$userId = $this->manager->getUserId($this->user);
 			try {
 				$passkeyName = $this->reauthentication->verify($values->credential);
 				if (!$form->hasErrors()) {

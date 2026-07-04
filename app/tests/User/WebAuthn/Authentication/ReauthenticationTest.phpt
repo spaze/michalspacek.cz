@@ -9,6 +9,7 @@ use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\Test\User\WebAuthn\ReauthenticationRedirectorMock;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\WebAuthn\Authentication\Exceptions\PasskeyReauthenticationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\Session\PasskeySessionSection;
 use Nette\Security\SimpleIdentity;
@@ -83,11 +84,21 @@ final class ReauthenticationTest extends TestCase
 		$this->user->login(new SimpleIdentity(42));
 		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(99, 'someone-else', 'cred-id', 'My Passkey'));
 
-		Assert::exception(
-			fn() => $this->reauthentication->verify('{}'),
-			PasskeyReauthenticationUserMismatchException::class,
-		);
+		Assert::exception(function (): void {
+			$this->reauthentication->verify('{}');
+		}, PasskeyReauthenticationUserMismatchException::class);
 		Assert::false($this->reauthentication->isFreshAuth());
+	}
+
+
+	public function testVerifyRejectsNonIntegerIdentity(): void
+	{
+		$this->user->login(new SimpleIdentity('not-an-int'));
+		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
+
+		Assert::exception(function (): void {
+			$this->reauthentication->verify('{"id":"test","type":"public-key"}');
+		}, IdentityIdNotIntException::class);
 	}
 
 
@@ -107,10 +118,9 @@ final class ReauthenticationTest extends TestCase
 	{
 		$redirector = new ReauthenticationRedirectorMock();
 
-		Assert::exception(
-			fn() => $this->reauthentication->requireFreshAuth($redirector),
-			RuntimeException::class,
-		);
+		Assert::exception(function () use ($redirector): void {
+			$this->reauthentication->requireFreshAuth($redirector);
+		}, RuntimeException::class);
 		Assert::true($redirector->redirected); // not confirmed recently, sent to reauth
 	}
 
