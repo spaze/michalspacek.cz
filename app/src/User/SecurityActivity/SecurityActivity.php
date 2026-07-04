@@ -5,6 +5,8 @@ namespace MichalSpacekCz\User\SecurityActivity;
 
 use DateTimeInterface;
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Manager;
 use Nette\Database\Explorer;
 use Nette\Security\User;
 use Nette\Utils\Json;
@@ -29,6 +31,7 @@ final readonly class SecurityActivity
 		private Explorer $database,
 		private DateTimeFactory $dateTimeFactory,
 		private User $user,
+		private Manager $manager,
 		private SymmetricKeyEncryption $securityEventEncryption,
 	) {
 	}
@@ -36,12 +39,13 @@ final readonly class SecurityActivity
 
 	/**
 	 * @return list<SecurityEvent>
+	 * @throws IdentityIdNotIntException
 	 */
 	public function getEventsForCurrentUser(): array
 	{
 		return $this->buildEvents($this->database->fetchAll(
 			self::SELECT . ' WHERE key_user = ? ORDER BY created DESC, id_security_event DESC',
-			(int)$this->user->getId(),
+			$this->manager->getUserId($this->user),
 		));
 	}
 

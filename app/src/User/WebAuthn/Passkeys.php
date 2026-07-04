@@ -7,6 +7,8 @@ use DateTimeInterface;
 use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
@@ -24,6 +26,7 @@ final readonly class Passkeys
 		private TypedDatabase $typedDatabase,
 		private DateTimeFactory $dateTimeFactory,
 		private User $user,
+		private Manager $manager,
 		private PasskeySessionSection $passkeySessionSection,
 		private SecurityEventLogger $securityEventLogger,
 		private string $passkeysTableName,
@@ -33,6 +36,7 @@ final readonly class Passkeys
 
 	/**
 	 * @return list<RegisteredPasskey>
+	 * @throws IdentityIdNotIntException
 	 */
 	public function getPasskeys(): array
 	{
@@ -51,7 +55,7 @@ final readonly class Passkeys
 			ORDER BY last_used DESC,
 		 	created DESC',
 			$this->passkeysTableName,
-			(int)$this->user->getId(),
+			$this->manager->getUserId($this->user),
 		);
 		$now = $this->dateTimeFactory->create();
 		$items = [];
@@ -81,6 +85,7 @@ final readonly class Passkeys
 
 	/**
 	 * @throws PasskeyCredentialNotFoundException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function getCredentialNameById(Uuid $id): string
 	{
@@ -88,7 +93,7 @@ final readonly class Passkeys
 			'SELECT name FROM ?name WHERE id_passkey = ? AND key_user = ?',
 			$this->passkeysTableName,
 			$id->toBinary(),
-			(int)$this->user->getId(),
+			$this->manager->getUserId($this->user),
 		);
 		if ($name === null) {
 			throw new PasskeyCredentialNotFoundException();
@@ -99,10 +104,11 @@ final readonly class Passkeys
 
 	/**
 	 * @throws PasskeyCredentialNotFoundException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function renameCredential(Uuid $id, string $name): void
 	{
-		$userId = (int)$this->user->getId();
+		$userId = $this->manager->getUserId($this->user);
 		$found = true;
 		$this->database->beginTransaction();
 		try {
@@ -141,6 +147,7 @@ final readonly class Passkeys
 	/**
 	 * @throws PasskeyCredentialNotFoundException
 	 * @throws PasskeyCredentialSignedInWithException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function deleteCredential(Uuid $id): void
 	{
@@ -151,7 +158,7 @@ final readonly class Passkeys
 			'DELETE FROM ?name WHERE id_passkey = ? AND key_user = ? AND (? IS NULL OR credential_id != ?)',
 			$this->passkeysTableName,
 			$idBinary,
-			(int)$this->user->getId(),
+			$this->manager->getUserId($this->user),
 			$currentCredentialId,
 			$currentCredentialId,
 		)->getRowCount();
@@ -161,7 +168,7 @@ final readonly class Passkeys
 				'SELECT 1 FROM ?name WHERE id_passkey = ? AND key_user = ?',
 				$this->passkeysTableName,
 				$idBinary,
-				(int)$this->user->getId(),
+				$this->manager->getUserId($this->user),
 			);
 			if ($exists !== null) {
 				throw new PasskeyCredentialSignedInWithException();
@@ -169,7 +176,7 @@ final readonly class Passkeys
 				throw new PasskeyCredentialNotFoundException();
 			}
 		}
-		$this->securityEventLogger->record((int)$this->user->getId(), SecurityEventType::PasskeyDeleted, ['passkey' => $name]);
+		$this->securityEventLogger->record($this->manager->getUserId($this->user), SecurityEventType::PasskeyDeleted, ['passkey' => $name]);
 	}
 
 }

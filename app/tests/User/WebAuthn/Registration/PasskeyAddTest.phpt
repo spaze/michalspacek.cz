@@ -12,6 +12,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\UserAccounts;
@@ -34,6 +35,7 @@ final class PasskeyAddTest extends TestCase
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly User $user,
+		private readonly Manager $manager,
 		private readonly UserSecurityNotifier $notifier,
 		private readonly SecurityEventLogger $securityEventLogger,
 		private readonly UserAccounts $userAccounts,
@@ -145,7 +147,7 @@ final class PasskeyAddTest extends TestCase
 	private function createPasskeyAdd(): PasskeyAdd
 	{
 		$addTokens = new PasskeyAddTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user, $this->notifier, $this->securityEventLogger);
+		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user, $this->manager, $this->notifier, $this->securityEventLogger);
 	}
 
 }

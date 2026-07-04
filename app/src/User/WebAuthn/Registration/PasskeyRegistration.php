@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\User\AuthTokens\UserAuthToken;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
@@ -27,6 +29,7 @@ abstract readonly class PasskeyRegistration
 		private PasskeyRegistrationTokens $registrationTokens,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private User $user,
+		private Manager $manager,
 		protected UserSecurityNotifier $notifier,
 		protected SecurityEventLogger $securityEventLogger,
 	) {
@@ -43,6 +46,7 @@ abstract readonly class PasskeyRegistration
 	 * @throws PasskeyRegistrationDisabledException
 	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
 	 * @throws PasskeyRegistrationUserMismatchException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function generateRegistrationOptions(string $token): string
 	{
@@ -62,6 +66,7 @@ abstract readonly class PasskeyRegistration
 	 * @throws PasskeyRegistrationDisabledException
 	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
 	 * @throws PasskeyRegistrationUserMismatchException
+	 * @throws IdentityIdNotIntException
 	 */
 	public function register(string $credentialJson, string $name, string $token): PasskeyRegistrationResult
 	{
@@ -78,6 +83,7 @@ abstract readonly class PasskeyRegistration
 	 * @throws PasskeyRegistrationDisabledException
 	 * @throws PasskeyRegistrationInvalidOrExpiredTokenException
 	 * @throws PasskeyRegistrationUserMismatchException
+	 * @throws IdentityIdNotIntException
 	 */
 	private function getUserAuthToken(string $token): UserAuthToken
 	{
@@ -87,7 +93,7 @@ abstract readonly class PasskeyRegistration
 		}
 		// When signed in, the token must be the signed-in user's, so a leaked link can't register a
 		// passkey onto someone else's account; logged out (reset recovery) there is no one to match.
-		$loggedInUserId = $this->user->isLoggedIn() ? (int) $this->user->getId() : null;
+		$loggedInUserId = $this->user->isLoggedIn() ? $this->manager->getUserId($this->user) : null;
 		if ($loggedInUserId !== null && $userAuthToken->getUserId() !== $loggedInUserId) {
 			throw new PasskeyRegistrationUserMismatchException();
 		}

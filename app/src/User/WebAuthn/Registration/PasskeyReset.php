@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn\Registration;
 
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
@@ -19,11 +20,12 @@ final readonly class PasskeyReset extends PasskeyRegistration
 		PasskeyRegistrationTokens $registrationTokens,
 		WebAuthnAuthenticator $passkeyAuthenticator,
 		User $user,
+		Manager $manager,
 		UserSecurityNotifier $notifier,
 		SecurityEventLogger $securityEventLogger,
 		private PasskeyResetRevoker $revoker,
 	) {
-		parent::__construct($registrationTokens, $passkeyAuthenticator, $user, $notifier, $securityEventLogger);
+		parent::__construct($registrationTokens, $passkeyAuthenticator, $user, $manager, $notifier, $securityEventLogger);
 	}
 
 

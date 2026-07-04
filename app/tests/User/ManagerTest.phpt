@@ -10,6 +10,7 @@ use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
@@ -53,6 +54,22 @@ final class ManagerTest extends TestCase
 			Assert::same($username, $identity->username);
 		}
 		Assert::same($username, $identity->getData()['username']);
+	}
+
+
+	public function testGetUserIdReturnsIntForIntIdentity(): void
+	{
+		$this->user->login(new SimpleIdentity(1337));
+		Assert::same(1337, $this->getManager()->getUserId($this->user));
+	}
+
+
+	public function testGetUserIdRejectsNonIntegerIdentity(): void
+	{
+		$this->user->login(new SimpleIdentity('not-an-int'));
+		Assert::exception(function (): void {
+			$this->getManager()->getUserId($this->user);
+		}, IdentityIdNotIntException::class);
 	}
 
 

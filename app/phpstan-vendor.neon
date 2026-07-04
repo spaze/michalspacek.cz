@@ -190,6 +190,11 @@ parameters:
 			message: 'use MichalSpacekCz\DateTime\DateTimeZoneFactory::get() instead, throws a more specific exception'
 			allowIn:
 				- vendor/*.php
+		-
+			method: 'Nette\Security\User::getId()'
+			message: 'use MichalSpacekCz\User\Manager::getUserId() instead'
+			allowIn:
+				- vendor/*.php
 	disallowedStaticCalls:
 		-
 			method: 'Tracy\Debugger::dump()'
