@@ -18,8 +18,8 @@ use Tracy\Debugger;
 
 /**
  * Tells a user out of band when something security-sensitive happens to their account: a passkey is
- * added or reset, or the account email is changed. Best-effort: a delivery failure is logged but never
- * propagated, so it can't break the action that triggered it. A user with no email set is logged and skipped.
+ * added or reset, or the notification email is changed. Best-effort: a delivery failure is logged but never
+ * propagated, so it can't break the action that triggered it. A user with no notification email set is logged and skipped.
  */
 final readonly class UserSecurityNotifier
 {
@@ -41,9 +41,9 @@ final readonly class UserSecurityNotifier
 	public function passkeyAdded(int $userId, string $credentialName): void
 	{
 		try {
-			$address = $this->userAccounts->getEmail($userId);
+			$address = $this->userAccounts->getNotificationEmail($userId);
 			if ($address === null) {
-				$this->logNoEmail($userId);
+				$this->logNoNotificationEmail($userId);
 				return;
 			}
 			$template = $this->createTemplate('passkeyAdded');
@@ -61,9 +61,9 @@ final readonly class UserSecurityNotifier
 	public function passkeyReset(int $userId, string $credentialName, bool $otherAccessRevoked): void
 	{
 		try {
-			$address = $this->userAccounts->getEmail($userId);
+			$address = $this->userAccounts->getNotificationEmail($userId);
 			if ($address === null) {
-				$this->logNoEmail($userId);
+				$this->logNoNotificationEmail($userId);
 				return;
 			}
 			$template = $this->createTemplate('passkeyReset');
@@ -83,39 +83,39 @@ final readonly class UserSecurityNotifier
 	 * Alerts the old address (so a hostile change is loud to whoever is losing access) and confirms
 	 * to the new one.
 	 */
-	public function emailChanged(?string $oldAddress, string $newAddress): void
+	public function notificationEmailChanged(?string $oldAddress, string $newAddress): void
 	{
 		if ($oldAddress === $newAddress) {
 			return;
 		}
 		if ($oldAddress !== null) {
-			$this->sendEmailChangedAlert($oldAddress, $newAddress);
+			$this->sendNotificationEmailChangedAlert($oldAddress, $newAddress);
 		}
-		$this->sendEmailChangedConfirmation($newAddress);
+		$this->sendNotificationEmailChangedConfirmation($newAddress);
 	}
 
 
-	private function sendEmailChangedAlert(string $oldAddress, string $newAddress): void
+	private function sendNotificationEmailChangedAlert(string $oldAddress, string $newAddress): void
 	{
 		try {
-			$template = $this->createTemplate('emailChanged');
+			$template = $this->createTemplate('notificationEmailChanged');
 			$template->newAddress = $newAddress;
 			$template->when = $this->dateTimeFactory->create();
 			$template->ipAddress = $this->httpRequest->getRemoteAddress();
 			$template->reviewUrl = $this->linkGenerator->link('//:Admin:Account:default');
-			$this->send($oldAddress, 'messages.notifications.emailChanged.subject', $template);
+			$this->send($oldAddress, 'messages.notifications.notificationEmailChanged.subject', $template);
 		} catch (Throwable $e) {
 			Debugger::log($e, 'auth');
 		}
 	}
 
 
-	private function sendEmailChangedConfirmation(string $newAddress): void
+	private function sendNotificationEmailChangedConfirmation(string $newAddress): void
 	{
 		try {
-			$template = $this->createTemplate('emailChangedConfirmation');
+			$template = $this->createTemplate('notificationEmailChangedConfirmation');
 			$template->when = $this->dateTimeFactory->create();
-			$this->send($newAddress, 'messages.notifications.emailChangedConfirmation.subject', $template);
+			$this->send($newAddress, 'messages.notifications.notificationEmailChangedConfirmation.subject', $template);
 		} catch (Throwable $e) {
 			Debugger::log($e, 'auth');
 		}
@@ -142,9 +142,9 @@ final readonly class UserSecurityNotifier
 	}
 
 
-	private function logNoEmail(int $userId): void
+	private function logNoNotificationEmail(int $userId): void
 	{
-		Debugger::log("No email set for user {$userId}, skipping security notification", 'auth');
+		Debugger::log("No notification email set for user {$userId}, skipping security notification", 'auth');
 	}
 
 }

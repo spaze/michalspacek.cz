@@ -39,7 +39,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testPasskeyAddedEmailsTheUser(): void
 	{
-		$this->seedEmail(42, 'owner@example.com');
+		$this->seedNotificationEmail(42, 'owner@example.com');
 
 		$this->notifier->passkeyAdded(42, '42Password <3');
 
@@ -52,7 +52,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testPasskeyResetEmailsTheUserAndConfirmsOtherAccessWasRevoked(): void
 	{
-		$this->seedEmail(42, 'owner@example.com');
+		$this->seedNotificationEmail(42, 'owner@example.com');
 
 		$this->notifier->passkeyReset(42, '42Password <3', true);
 
@@ -65,7 +65,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testPasskeyResetTellsTheUserWhenOtherAccessCouldNotBeRevoked(): void
 	{
-		$this->seedEmail(42, 'owner@example.com');
+		$this->seedNotificationEmail(42, 'owner@example.com');
 
 		$this->notifier->passkeyReset(42, '42Password <3', false);
 
@@ -85,7 +85,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testRecipientLookupFailureIsSwallowed(): void
 	{
-		$this->database->setFetchFieldDefaultResult('not-a-valid-ciphertext'); // getEmail()'s decryption throws
+		$this->database->setFetchFieldDefaultResult('not-a-valid-ciphertext'); // getNotificationEmail()'s decryption throws
 
 		$this->notifier->passkeyAdded(42, '42Password <3'); // best-effort: the failure must not propagate
 
@@ -95,7 +95,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testEmailChangeAlertsTheOldAddressAndConfirmsTheNew(): void
 	{
-		$this->notifier->emailChanged('old@example.com', 'new@example.com');
+		$this->notifier->notificationEmailChanged('old@example.com', 'new@example.com');
 
 		$mails = $this->mailer->getAllMails();
 		Assert::count(2, $mails);
@@ -111,7 +111,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testFirstEmailSetOnlyConfirmsTheNewAddress(): void
 	{
-		$this->notifier->emailChanged(null, 'new@example.com');
+		$this->notifier->notificationEmailChanged(null, 'new@example.com');
 
 		$mails = $this->mailer->getAllMails();
 		Assert::count(1, $mails);
@@ -121,7 +121,7 @@ final class UserSecurityNotifierTest extends TestCase
 
 	public function testUnchangedEmailNotifiesNothing(): void
 	{
-		$this->notifier->emailChanged('same@example.com', 'same@example.com');
+		$this->notifier->notificationEmailChanged('same@example.com', 'same@example.com');
 
 		Assert::count(0, $this->mailer->getAllMails());
 	}
@@ -131,7 +131,7 @@ final class UserSecurityNotifierTest extends TestCase
 	{
 		$this->mailer->willThrowOnce(new SendException('alert delivery failed')); // only the first send, the alert
 
-		$this->notifier->emailChanged('old@example.com', 'new@example.com'); // best-effort: must not propagate
+		$this->notifier->notificationEmailChanged('old@example.com', 'new@example.com'); // best-effort: must not propagate
 
 		$mails = $this->mailer->getAllMails();
 		Assert::count(1, $mails); // the failed alert is swallowed and doesn't suppress the confirmation
@@ -139,11 +139,11 @@ final class UserSecurityNotifierTest extends TestCase
 	}
 
 
-	private function seedEmail(int $userId, string $address): void
+	private function seedNotificationEmail(int $userId, string $address): void
 	{
-		$this->userAccounts->setEmail($userId, $address);
+		$this->userAccounts->setNotificationEmail($userId, $address);
 		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
-		$stored = $params[0]['email'];
+		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
 		$this->database->addFetchFieldResult($stored);
 	}

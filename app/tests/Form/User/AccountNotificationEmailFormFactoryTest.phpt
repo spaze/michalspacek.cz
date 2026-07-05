@@ -32,14 +32,14 @@ require __DIR__ . '/../../bootstrap.php';
  *
  * @testCase
  */
-final class AccountEmailFormFactoryTest extends TestCase
+final class AccountNotificationEmailFormFactoryTest extends TestCase
 {
 
 	private bool $onSuccessCalled = false;
 
 
 	public function __construct(
-		private readonly AccountEmailFormFactory $formFactory,
+		private readonly AccountNotificationEmailFormFactory $formFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly PasskeySessionSection $session,
@@ -76,12 +76,12 @@ final class AccountEmailFormFactoryTest extends TestCase
 
 		Assert::true($this->onSuccessCalled);
 		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
-		$stored = $params[0]['email'];
+		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
 		Assert::notSame('me@example.com', $stored); // stored encrypted, never plaintext
 		Assert::same(['me@example.com' => null], $this->mailer->getMail()->getHeader('To')); // first-set confirms the new address
 		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
-		Assert::contains('email.changed', $events); // recorded alongside the inline reauth event
+		Assert::contains('notification.email.changed', $events); // recorded alongside the inline reauth event
 	}
 
 
@@ -89,7 +89,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	{
 		$this->user->login(new SimpleIdentity(42));
 		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
-		$this->seedCurrentEmail('old@example.com');
+		$this->seedCurrentNotificationEmail('old@example.com');
 		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
 
 		Arrays::invoke($form->onValidate, $form);
@@ -123,7 +123,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
 		$this->database->setFetchFieldDefaultResult(null);
 		$form = $this->createForm('new@example.com', '{"id":"test","type":"public-key"}');
-		$email = $form->getComponent('email');
+		$email = $form->getComponent('notificationEmail');
 		assert($email instanceof TextInput);
 		$email->addError('some other control failed validation');
 
@@ -140,7 +140,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 	{
 		$this->user->login(new SimpleIdentity(42));
 		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
-		$this->seedCurrentEmail('me@example.com');
+		$this->seedCurrentNotificationEmail('me@example.com');
 		$form = $this->createForm('me@example.com', '{"id":"test","type":"public-key"}');
 
 		Arrays::invoke($form->onValidate, $form);
@@ -149,7 +149,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 		Assert::true($this->onSuccessCalled);
 		Assert::count(0, $this->mailer->getAllMails()); // resubmitting the same address notifies no one
 		$events = array_map(fn(array $e): mixed => $e['action'], $this->database->getParamsArrayForQuery('INSERT INTO security_events'));
-		Assert::notContains('email.changed', $events); // and records no email-change event
+		Assert::notContains('notification.email.changed', $events); // and records no notification-email-change event
 	}
 
 
@@ -162,13 +162,13 @@ final class AccountEmailFormFactoryTest extends TestCase
 	}
 
 
-	private function seedCurrentEmail(string $address): void
+	private function seedCurrentNotificationEmail(string $address): void
 	{
-		$this->userAccounts->setEmail(42, $address);
+		$this->userAccounts->setNotificationEmail(42, $address);
 		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
-		$stored = $params[0]['email'];
+		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
-		$this->database->setFetchFieldDefaultResult($stored); // every getEmail() returns the seeded address until overwritten
+		$this->database->setFetchFieldDefaultResult($stored); // every getNotificationEmail() returns the seeded address until overwritten
 	}
 
 
@@ -178,7 +178,7 @@ final class AccountEmailFormFactoryTest extends TestCase
 			$this->onSuccessCalled = true;
 		});
 		$this->applicationPresenter->anchorForm($form);
-		$emailField = $form->getComponent('email');
+		$emailField = $form->getComponent('notificationEmail');
 		assert($emailField instanceof TextInput);
 		$emailField->setDefaultValue($email);
 		$credentialField = $form->getComponent('credential');
@@ -189,4 +189,4 @@ final class AccountEmailFormFactoryTest extends TestCase
 
 }
 
-TestCaseRunner::run(AccountEmailFormFactoryTest::class);
+TestCaseRunner::run(AccountNotificationEmailFormFactoryTest::class);

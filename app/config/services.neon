@@ -67,7 +67,7 @@ services:
 	- MichalSpacekCz\Form\Training\TrainingReviewFormFactory
 	- MichalSpacekCz\Form\Controls\PasskeyFormControls
 	- MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls
-	- MichalSpacekCz\Form\User\AccountEmailFormFactory
+	- MichalSpacekCz\Form\User\AccountNotificationEmailFormFactory
 	- MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyReauthenticateFormFactory
 	- MichalSpacekCz\Form\User\PasskeyDeleteFormFactory
