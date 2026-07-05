@@ -82,6 +82,14 @@ parameters:
 				- 'MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetTokens::*'
 				- 'MichalSpacekCz\User\AuthTokens\AuthTokensRevoker::*' # account-recovery revoke deletes every token type on purpose, no per-type rule to honor
 		-
+			method: 'Nette\Security\User::getId()'
+			message: 'use MichalSpacekCz\User\Manager::getUserId() instead'
+			errorTip: 'it rejects a non-integer identity id instead of silently coercing it to 0'
+			allowIn:
+				- tests/*.phpt
+			allowInMethods:
+				- 'MichalSpacekCz\User\Manager::getUserId()'
+		-
 			method:
 				- 'MichalSpacekCz\Formatter\TexyFormatter::substitutePossiblyUnsafeHtml()'
 				- 'MichalSpacekCz\Formatter\TexyFormatter::translatePossiblyUnsafeHtml()'

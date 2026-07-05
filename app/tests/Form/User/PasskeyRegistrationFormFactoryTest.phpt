@@ -14,6 +14,7 @@ use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\PasskeyStorage;
@@ -55,6 +56,7 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 		private readonly Translator $translator,
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly User $user,
+		private readonly Manager $manager,
 		private readonly PasskeyStorage $passkeyStorage,
 		private readonly UserSecurityNotifier $notifier,
 		private readonly SecurityEventLogger $securityEventLogger,
@@ -142,14 +144,14 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 	private function createPasskeyAdd(): PasskeyAdd
 	{
 		$addTokens = new PasskeyAddTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user, $this->notifier, $this->securityEventLogger);
+		return new PasskeyAdd($addTokens, $this->passkeyAuthenticator, $this->user, $this->manager, $this->notifier, $this->securityEventLogger);
 	}
 
 
 	private function createPasskeyReset(): PasskeyReset
 	{
 		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
-		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, $this->notifier, $this->securityEventLogger, new PasskeyResetRevoker($this->passkeyStorage, []));
+		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, $this->manager, $this->notifier, $this->securityEventLogger, new PasskeyResetRevoker($this->passkeyStorage, []));
 	}
 
 

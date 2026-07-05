@@ -11,6 +11,7 @@ use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock;
 use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
+use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\UserAccounts;
@@ -32,6 +33,7 @@ final class PasskeyResetTest extends TestCase
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
 		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly User $user,
+		private readonly Manager $manager,
 		private readonly PasskeyStorage $passkeyStorage,
 		private readonly UserSecurityNotifier $notifier,
 		private readonly SecurityEventLogger $securityEventLogger,
@@ -132,7 +134,7 @@ final class PasskeyResetTest extends TestCase
 	{
 		$resetTokens = new PasskeyResetTokens(new UserAuthTokens($this->database, 'users'), $this->dateTimeFactory, true, '5 minutes');
 		$revoker = new PasskeyResetRevoker($this->passkeyStorage, []);
-		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, $this->notifier, $this->securityEventLogger, $revoker);
+		return new PasskeyReset($resetTokens, $this->passkeyAuthenticator, $this->user, $this->manager, $this->notifier, $this->securityEventLogger, $revoker);
 	}
 
 }
