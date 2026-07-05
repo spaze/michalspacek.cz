@@ -407,11 +407,11 @@ forms:
 	validateSlugParamsEasterEgg: "%label nemůže být '%value', protože to spustí Easter egg"
 account:
 	title: "Váš účet"
-	email:
-		label: "E-mail:"
-		required: "Zadejte svůj e-mail"
-		save: "Uložit e-mail"
-		saved: "E-mail uložen"
+	notificationEmail:
+		label: "Notifikační e-mail:"
+		required: "Zadejte svůj notifikační e-mail"
+		save: "Uložit notifikační e-mail"
+		saved: "Notifikační e-mail uložen"
 		help: "Pro bezpečnostní upozornění k vašemu účtu"
 	securityLog:
 		title: "Bezpečnostní log"
@@ -435,7 +435,7 @@ account:
 			reauthInlineSuccess: "Potvrzení identity"
 			reauthInlineFailure: "Neúspěšné potvrzení identity"
 			resetRevokeFailed: "Odebrání ostatního přístupu po resetu selhalo"
-			emailChanged: "Změna e-mailu účtu"
+			notificationEmailChanged: "Změna notifikačního e-mailu"
 			pageViewed: "Zobrazení citlivé stránky"
 			unknown: "Neznámý typ"
 notifications:
@@ -454,13 +454,13 @@ notifications:
 		otherAccessRevoked: "Odebrání vašich ostatních passkeys a odhlášení aktivních přihlášení proběhlo úspěšně."
 		otherAccessRevokeFailed: "Odebrání vašich ostatních passkeys a odhlášení aktivních přihlášení se nepodařilo úplně dokončit, takže některé z nich mohou mít stále přístup k vašemu účtu."
 		ifNotYou: "Pokud jste o reset nežádali, váš účet může být kompromitován. Přihlaste se a zkontrolujte své passkeys:"
-	emailChanged:
-		subject: "E-mailová adresa vašeho účtu byla změněna"
-		intro: "E-mailová adresa vašeho účtu byla změněna."
-		ifNotYou: "Pokud jste ji neměnili vy, váš účet může být kompromitován. Přihlaste se a zkontrolujte svůj účet:"
-	emailChangedConfirmation:
-		subject: "Toto je nyní e-mailová adresa vašeho účtu"
-		intro: "Tato adresa je nyní e-mailovou adresou vašeho účtu."
+	notificationEmailChanged:
+		subject: "Váš notifikační e-mail byl změněn"
+		intro: "Váš notifikační e-mail byl změněn."
+		ifNotYou: "Pokud jste ho neměnili vy, váš účet může být kompromitován. Přihlaste se a zkontrolujte svůj účet:"
+	notificationEmailChangedConfirmation:
+		subject: "Toto je nyní váš notifikační e-mail"
+		intro: "Tato adresa je nyní vaším notifikačním e-mailem."
 reauth:
 	title: "Potvrďte, že jste to vy"
 	prompt: "Pro pokračování potvrďte svou identitu pomocí passkey"

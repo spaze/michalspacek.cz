@@ -6,10 +6,11 @@ namespace MichalSpacekCz\User\SecurityActivity;
 /**
  * The kinds of security-relevant account events recorded in the security_events table.
  *
- * The string value is a permanent serialization contract: it's stored verbatim in the database and the
- * log is never garbage-collected, so old rows keep their value forever. Add new cases freely, but never
- * rename or repurpose an existing value, and read with tryFrom() so an unknown value from an older row
- * degrades to its raw string instead of throwing.
+ * The string value is stored verbatim in the database and the log is never garbage-collected, so old
+ * rows keep their value forever. Add new cases freely and never repurpose an existing value for a
+ * different meaning. Renaming a value is only safe together with a migration that updates the stored
+ * rows in the same deploy; read with tryFrom() so any un-migrated value from an older row degrades to
+ * its raw string instead of throwing.
  */
 enum SecurityEventType: string
 {
@@ -27,7 +28,7 @@ enum SecurityEventType: string
 	case ReauthInlineSuccess = 'reauth.inline.success';
 	case ReauthInlineFailure = 'reauth.inline.failure';
 	case ResetRevokeFailed = 'reset.revoke.failed';
-	case EmailChanged = 'email.changed';
+	case NotificationEmailChanged = 'notification.email.changed';
 	case PageViewed = 'page.viewed';
 
 

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Account;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Form\User\AccountEmailFormFactory;
+use MichalSpacekCz\Form\User\AccountNotificationEmailFormFactory;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
@@ -15,7 +15,7 @@ final class AccountPresenter extends BasePresenter
 {
 
 	public function __construct(
-		private readonly AccountEmailFormFactory $accountEmailFormFactory,
+		private readonly AccountNotificationEmailFormFactory $accountNotificationEmailFormFactory,
 		private readonly Translator $translator,
 		private readonly SecurityActivity $securityActivity,
 	) {
@@ -39,11 +39,11 @@ final class AccountPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEmail(): Form
+	protected function createComponentNotificationEmail(): Form
 	{
-		return $this->accountEmailFormFactory->create(
+		return $this->accountNotificationEmailFormFactory->create(
 			function (): void {
-				$this->flashMessage($this->translator->translate('messages.account.email.saved'));
+				$this->flashMessage($this->translator->translate('messages.account.notificationEmail.saved'));
 				$this->redirect('this');
 			},
 		);

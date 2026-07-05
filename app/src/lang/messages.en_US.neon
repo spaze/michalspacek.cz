@@ -407,12 +407,12 @@ forms:
 	validateSlugParamsEasterEgg: "%label can't be '%value', because that's used by an Easter egg"
 account:
 	title: "Your account"
-	email:
-		label: "Email:"
-		required: "Enter your email"
-		save: "Save email"
-		saved: "Email saved"
-		help: "Used for security alerts about your account"
+	notificationEmail:
+		label: "Notification email:"
+		required: "Enter your notification email"
+		save: "Save notification email"
+		saved: "Notification email saved"
+		help: "Used for security notifications about your account"
 	securityLog:
 		title: "Security log"
 		empty: "No events yet"
@@ -435,7 +435,7 @@ account:
 			reauthInlineSuccess: "Identity confirmed"
 			reauthInlineFailure: "Failed identity confirmation"
 			resetRevokeFailed: "Revoking other access after reset failed"
-			emailChanged: "Account email changed"
+			notificationEmailChanged: "Notification email changed"
 			pageViewed: "Sensitive page viewed"
 			unknown: "Unknown type"
 notifications:
@@ -454,13 +454,13 @@ notifications:
 		otherAccessRevoked: "Your other passkeys were removed and your active sessions signed out."
 		otherAccessRevokeFailed: "Your other passkeys couldn't all be removed or your active sessions signed out, so some may still have access to your account."
 		ifNotYou: "If you didn't request this, your account may be compromised. Sign in and review your passkeys:"
-	emailChanged:
-		subject: "Your account email was changed"
-		intro: "Your account email was changed."
+	notificationEmailChanged:
+		subject: "Your notification email was changed"
+		intro: "Your notification email was changed."
 		ifNotYou: "If you didn't change it, your account may be compromised. Sign in and review your account:"
-	emailChangedConfirmation:
-		subject: "This is now your account email"
-		intro: "This address is now the email for your account."
+	notificationEmailChangedConfirmation:
+		subject: "This is now your notification email"
+		intro: "This address is now your notification email."
 reauth:
 	title: "Confirm it's you"
 	prompt: "Confirm it's you with your passkey to continue"

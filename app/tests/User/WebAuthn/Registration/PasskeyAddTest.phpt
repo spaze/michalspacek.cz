@@ -114,7 +114,7 @@ final class PasskeyAddTest extends TestCase
 	{
 		$userId = 1337;
 		$this->setUpToken(42, $userId, 'foo');
-		$this->seedEmail($userId, 'owner@example.com');
+		$this->seedNotificationEmail($userId, 'owner@example.com');
 
 		$this->createPasskeyAdd()->register('{"id":"test","type":"public-key"}', 'My Passkey', 'selector:secret');
 
@@ -122,11 +122,11 @@ final class PasskeyAddTest extends TestCase
 	}
 
 
-	private function seedEmail(int $userId, string $address): void
+	private function seedNotificationEmail(int $userId, string $address): void
 	{
-		$this->userAccounts->setEmail($userId, $address);
+		$this->userAccounts->setNotificationEmail($userId, $address);
 		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
-		$stored = $params[0]['email'];
+		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
 		$this->database->setFetchFieldDefaultResult($stored);
 	}

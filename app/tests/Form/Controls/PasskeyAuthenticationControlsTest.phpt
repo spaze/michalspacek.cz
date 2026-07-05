@@ -124,20 +124,20 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 	public function testInlineRecordsTheGuardedOperation(): void
 	{
 		$this->passkeyAuthenticator->setAuthenticationResult(new PasskeyAuthenticationResult(42, 'foo', 'cred-id', 'My Passkey'));
-		$form = $this->createForm(ReauthKind::Inline, SecurityEventType::EmailChanged);
+		$form = $this->createForm(ReauthKind::Inline, SecurityEventType::NotificationEmailChanged);
 
 		Arrays::invoke($form->onValidate, $form);
 
 		$encrypted = $this->database->getParamsArrayForQuery(self::INSERT)[0]['details'];
 		assert(is_string($encrypted));
-		Assert::same(['operation' => 'email.changed', 'passkey' => 'My Passkey', 'interval' => '5 minutes'], $this->decodeDetails($encrypted));
+		Assert::same(['operation' => 'notification.email.changed', 'passkey' => 'My Passkey', 'interval' => '5 minutes'], $this->decodeDetails($encrypted));
 	}
 
 
 	public function testFailedReauthStillNamesTheGuardedOperation(): void
 	{
 		$this->passkeyAuthenticator->willThrow(new PasskeyAuthenticationUnknownCredentialException('foo'));
-		$form = $this->createForm(ReauthKind::Inline, SecurityEventType::EmailChanged);
+		$form = $this->createForm(ReauthKind::Inline, SecurityEventType::NotificationEmailChanged);
 
 		Arrays::invoke($form->onValidate, $form);
 
@@ -145,7 +145,7 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 		Assert::same('reauth.inline.failure', $params[0]['action']);
 		$encrypted = $params[0]['details'];
 		assert(is_string($encrypted));
-		Assert::same(['operation' => 'email.changed'], $this->decodeDetails($encrypted));
+		Assert::same(['operation' => 'notification.email.changed'], $this->decodeDetails($encrypted));
 	}
 
 

@@ -1,7 +1,7 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="passkeyReauthError" class="flash error hidden"><strong>{_messages.reauth.failed}</strong></div>
-<p>{_messages.account.email.help}</p>
-{control email}
+<p>{_messages.account.notificationEmail.help}</p>
+{control notificationEmail}
 <p><a n:href="securityLog">{_messages.account.securityLog.title}</a></p>
 {/define}

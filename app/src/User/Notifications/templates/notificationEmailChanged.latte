@@ -3,11 +3,11 @@
 {varType \DateTimeImmutable $when}
 {varType string|null $ipAddress}
 {varType string $reviewUrl}
-{_messages.notifications.emailChanged.intro}
+{_messages.notifications.notificationEmailChanged.intro}
 
 {_messages.notifications.field.newAddress}: {$newAddress}
 {_messages.notifications.field.when}: {$when|localeDay} {$when|date:'H:i'}
 {if $ipAddress !== null}{_messages.notifications.field.from}: {$ipAddress}{/if}
 
-{_messages.notifications.emailChanged.ifNotYou}
+{_messages.notifications.notificationEmailChanged.ifNotYou}
 {$reviewUrl}

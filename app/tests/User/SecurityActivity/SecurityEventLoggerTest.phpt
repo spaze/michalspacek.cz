@@ -73,7 +73,7 @@ final class SecurityEventLoggerTest extends TestCase
 	{
 		$this->database->willThrow(new Exception('database is down'));
 		Assert::noError(function (): void {
-			$this->securityEventLogger->record(42, SecurityEventType::EmailChanged, ['to' => 'new@example.com']);
+			$this->securityEventLogger->record(42, SecurityEventType::NotificationEmailChanged, ['to' => 'new@example.com']);
 		});
 	}
 
