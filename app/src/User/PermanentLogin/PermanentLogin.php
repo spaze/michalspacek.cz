@@ -111,6 +111,7 @@ final readonly class PermanentLogin implements UserAuthTokenLifetime
 
 	private function setCookie(string $value): void
 	{
+		// Uses the __Secure- cookie prefix because __Host- requires Path=/, but this cookie is intentionally path-scoped to the sign-in path
 		$this->cookies->set(CookieName::PermanentLogin, $value, $this->interval, $this->authCookiesPath, sameSite: 'Strict');
 	}
 
