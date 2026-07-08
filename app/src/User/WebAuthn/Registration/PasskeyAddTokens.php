@@ -85,9 +85,9 @@ final readonly class PasskeyAddTokens implements UserAuthTokenLifetime, PasskeyR
 
 
 	#[Override]
-	public function deleteById(int $tokenId): int
+	public function deleteById(int $tokenId, int $userId): int
 	{
-		return $this->tokens->deleteById($tokenId, $this->getTokenType());
+		return $this->tokens->deleteById($tokenId, $this->getTokenType(), $userId);
 	}
 
 }

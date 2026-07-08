@@ -66,8 +66,8 @@ final class PasskeyAddTest extends TestCase
 		Assert::same('mockPasskeyCredentialId', $result->keepCredentialId);
 		Assert::null($result->revokeFailure); // add keeps the user's other passkeys, so it never revokes
 		Assert::same(
-			[$tokenId, UserAuthTokenType::AdminPasskeyAdd->value],
-			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),
+			[$tokenId, UserAuthTokenType::AdminPasskeyAdd->value, $userId],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ? AND key_user = ?'),
 		);
 		Assert::same('passkey.add.finished', $this->database->getParamsArrayForQuery('INSERT INTO security_events')[0]['action']);
 	}

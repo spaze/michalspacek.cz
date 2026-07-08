@@ -37,6 +37,6 @@ interface PasskeyRegistrationTokens
 	public function verify(string $value): ?UserAuthToken;
 
 
-	public function deleteById(int $tokenId): int;
+	public function deleteById(int $tokenId, int $userId): int;
 
 }
