@@ -50,7 +50,7 @@
 		"texy/texy": "^3.1.7",
 		"tracy/tracy": "^2.9.4",
 		"web-auth/cose-lib": "^4.5",
-		"web-auth/webauthn-lib": "^5.3"
+		"web-auth/webauthn-lib": "^5.3.5"
 	},
 	"replace": {
 		"nette/finder": "3.0",
