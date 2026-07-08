@@ -85,13 +85,13 @@ final class PasskeyResetTokensTest extends TestCase
 	}
 
 
-	public function testDeleteByIdQueriesAdminResetType(): void
+	public function testDeleteByIdQueriesAdminResetTypeScopedToUser(): void
 	{
 		$this->database->setResultSet(new ResultSet(1));
-		Assert::same(1, $this->getTokens(true)->deleteById(42));
+		Assert::same(1, $this->getTokens(true)->deleteById(42, 1337));
 		Assert::same(
-			[42, UserAuthTokenType::AdminPasskeyReset->value],
-			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ?'),
+			[42, UserAuthTokenType::AdminPasskeyReset->value, 1337],
+			$this->database->getParamsForQuery('DELETE FROM auth_tokens WHERE id_auth_token = ? AND type = ? AND key_user = ?'),
 		);
 	}
 

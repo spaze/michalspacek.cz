@@ -103,7 +103,7 @@ abstract readonly class PasskeyRegistration
 
 	private function consumeToken(UserAuthToken $userAuthToken): bool
 	{
-		return $this->registrationTokens->deleteById($userAuthToken->getId()) > 0;
+		return $this->registrationTokens->deleteById($userAuthToken->getId(), $userAuthToken->getUserId()) > 0;
 	}
 
 }

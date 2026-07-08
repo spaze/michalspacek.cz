@@ -80,9 +80,9 @@ final readonly class PasskeyResetTokens implements UserAuthTokenLifetime, Passke
 
 
 	#[Override]
-	public function deleteById(int $tokenId): int
+	public function deleteById(int $tokenId, int $userId): int
 	{
-		return $this->tokens->deleteById($tokenId, $this->getTokenType());
+		return $this->tokens->deleteById($tokenId, $this->getTokenType(), $userId);
 	}
 
 }
