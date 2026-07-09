@@ -51,13 +51,18 @@ final readonly class FetchMetadataTexyFormatterPlaceholder implements TexyFormat
 		}
 		$result = [];
 		foreach ($headers as $header => $value) {
+			$line = Html::el()->addText("{$header}: ");
 			if ($value === null) {
-				$value = Html::el('em')
-					->addText('[')
-					->addText($this->translator->translate('messages.httpHeaders.headerNotSent'))
-					->addText(']');
+				$line->addHtml(
+					Html::el('em')
+						->addText('[')
+						->addText($this->translator->translate('messages.httpHeaders.headerNotSent'))
+						->addText(']'),
+				);
+			} else {
+				$line->addText($value);
 			}
-			$result[] = "{$header}: {$value}";
+			$result[] = (string)$line;
 		}
 		return implode("\n", $result);
 	}
