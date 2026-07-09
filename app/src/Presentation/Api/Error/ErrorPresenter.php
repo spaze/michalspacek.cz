@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Api\Error;
 
+use MichalSpacekCz\Api\Endpoint\NotAnEndpoint;
 use MichalSpacekCz\Presentation\Www\BaseErrorPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
+#[NotAnEndpoint]
 final class ErrorPresenter extends BaseErrorPresenter
 {
 
