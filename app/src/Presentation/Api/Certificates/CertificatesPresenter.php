@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Api\Certificates;
 
+use MichalSpacekCz\Api\Endpoint\EndpointRequiresAuthentication;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Presentation\Api\BasePresenter;
 use MichalSpacekCz\Tls\CertificateFactory;
@@ -13,6 +14,7 @@ use Override;
 use Throwable;
 use Tracy\Debugger;
 
+#[EndpointRequiresAuthentication]
 final class CertificatesPresenter extends BasePresenter
 {
 
@@ -26,9 +28,8 @@ final class CertificatesPresenter extends BasePresenter
 
 
 	#[Override]
-	protected function startup(): void
+	protected function startupApi(): void
 	{
-		parent::startup();
 		try {
 			$this->certificates->authenticate($this->httpInput->getPostString('user') ?? '', $this->httpInput->getPostString('key') ?? '');
 		} catch (AuthenticationException) {

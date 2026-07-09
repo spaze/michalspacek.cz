@@ -3,12 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Api\Company;
 
+use MichalSpacekCz\Api\Endpoint\EndpointAllowsPublicAccess;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Http\SecurityHeaders\CrossOriginResourceSharing;
 use MichalSpacekCz\Presentation\Api\BasePresenter;
 use Nette\Application\BadRequestException;
 
+#[EndpointAllowsPublicAccess]
 final class CompanyPresenter extends BasePresenter
 {
 
