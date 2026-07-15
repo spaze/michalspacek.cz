@@ -4,16 +4,19 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Www;
 
 use DateTimeInterface;
+use MichalSpacekCz\Application\ActionMethodAttributes;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
 use MichalSpacekCz\Form\ThemeFormFactory;
+use MichalSpacekCz\Http\SameOrigin\CrossOriginRedirectsTo;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\User\Manager;
+use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -175,6 +178,26 @@ abstract class BasePresenter extends Presenter
 		parent::lastModified($lastModified, $etag, $expire);
 		// If the response was HTTP 304 then the following line won't be reached and 304s won't be compressed
 		ini_set('zlib.output_compression', $compression);
+	}
+
+
+	/**
+	 * An action with #[CrossOriginRedirectsTo] sends a blocked cross-origin request to the attribute's
+	 * destination, all other actions keep Nette's redirect back to the same action, see the attribute for why.
+	 */
+	#[Override]
+	public function detectedCsrf(): void
+	{
+		$redirect = ActionMethodAttributes::find($this, CrossOriginRedirectsTo::class);
+		if ($redirect === null) {
+			parent::detectedCsrf();
+			return;
+		}
+		try {
+			$this->redirect($redirect->newInstance()->destination);
+		} catch (InvalidLinkException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
+		}
 	}
 
 

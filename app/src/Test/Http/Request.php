@@ -152,6 +152,22 @@ final class Request implements IRequest
 	}
 
 
+	/**
+	 * IRequest declares isSameSite() only via a @method annotation, not as a real method, so there is no #[Override];
+	 * Nette's AccessPolicy calls it dynamically at runtime, which the dead-code detector can't see.
+	 *
+	 * Upgrade caveat: nette/http 3.4+ changes isSameSite() (deprecated toward isFrom(), and the same-origin check
+	 * moves to the Sec-Fetch-Site header, with the `_nss` cookie kept as a fallback). When bumping the package,
+	 * recheck what AccessPolicy actually calls and update or drop this shim to match.
+	 *
+	 * @phpstan-ignore shipmonk.deadMethod
+	 */
+	public function isSameSite(): bool
+	{
+		return isset($this->cookies['_nss']); // Nette\Http\Helpers::StrictCookieName, the SameSite=Strict marker cookie
+	}
+
+
 	#[Override]
 	public function getRemoteAddress(): ?string
 	{
