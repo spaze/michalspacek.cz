@@ -8,6 +8,7 @@ use MichalSpacekCz\Form\User\PasskeyAuthenticateFormFactory;
 use MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory;
 use MichalSpacekCz\Form\User\SignInHoneypotFormFactory;
 use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\Http\SameOrigin\CrossOriginRedirectsTo;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
@@ -123,6 +124,10 @@ final class SignPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * Logout changes state on a GET, so require same-origin: a cross-site request must not be able to force it
+	 */
+	#[CrossOriginRedirectsTo(':Admin:Homepage:')]
 	public function actionOut(): never
 	{
 		$this->permanentLogin->clear();
