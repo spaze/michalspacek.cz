@@ -80,6 +80,7 @@ subresourceIntegrity:
 		remove-fbclid: /i/js/remove-fbclid.js
 		passkey-authenticate: /i/js/passkey-authenticate.js
 		passkey-register: /i/js/passkey-register.js
+		theme: /i/js/theme.js
 		rating: /i/css/rating.css
 		screen-main: /i/css/screen.css
 		screen-main-dark: /i/css/screen-dark.css

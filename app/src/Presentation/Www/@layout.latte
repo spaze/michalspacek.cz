@@ -5,7 +5,7 @@
 {/define}
 {block|strip}
 <!DOCTYPE html>
-<html lang="{_html.attribute.lang}">
+<html lang="{_html.attribute.lang}" data-theme="{$darkMode === null ? 'auto' : ($darkMode ? 'dark' : 'light')}">
 <head>
 	<meta charset="utf-8">
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
@@ -23,7 +23,7 @@
 	{ifset #scriptsReplace}
 		{include #scriptsReplace}
 	{else}
-		{script app + scripts async, defer}
+		{script app + scripts + theme async, defer}
 		{script netteForms async, defer}
 		{script remove-fbclid async, defer}
 	{/ifset}
@@ -35,7 +35,14 @@
 	{else}
 		<link rel="canonical" n:href="//this">
 	{/ifset}
-	<meta name="theme-color" content="#EEE">
+	{if $darkMode === null}
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEE">
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15202B">
+	{elseif $darkMode}
+		<meta name="theme-color" content="#15202B">
+	{else}
+		<meta name="theme-color" content="#EEE">
+	{/if}
 	<link rel="apple-touch-icon" href="{='michal-spacek.jpg'|staticImageUrl}">
 	<meta property="article:author" content="https://www.facebook.com/spaze">
 	<link rel="icon" href="{='/favicon.ico'|staticUrl}">
