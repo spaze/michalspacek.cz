@@ -45,7 +45,7 @@ final readonly class Theme
 
 	private function setCookie(ThemeMode $mode): void
 	{
-		$this->cookies->set(CookieName::Theme, $mode->value, $this->getCookieLifetime(), sameSite: 'None');
+		$this->cookies->set(CookieName::Theme, $mode->value, $this->getCookieLifetime(), sameSite: 'Lax');
 	}
 
 

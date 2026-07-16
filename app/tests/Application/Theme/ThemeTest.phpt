@@ -51,7 +51,7 @@ final class ThemeTest extends TestCase
 		Assert::true($cookie->isSecure());
 		Assert::same('/foo', $cookie->getPath());
 		Assert::same('example.org', $cookie->getDomain());
-		Assert::same('None', $cookie->getSameSite());
+		Assert::same('Lax', $cookie->getSameSite());
 	}
 
 
