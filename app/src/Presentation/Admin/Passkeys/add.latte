@@ -4,7 +4,7 @@
 	&raquo; <a n:href="Passkeys:">{_messages.passkeys.manage.managePasskeys}</a>
 {/define}
 {define #scriptsReplace}
-	{script app + admin + passkey-register + netteForms async, defer}
+	{script app + admin + theme + passkey-register + netteForms async, defer}
 {/define}
 {define #content}
 <p id="passkeyReopenMessage" class="hidden">{_messages.passkeys.add.reopenLink}</p>
