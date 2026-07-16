@@ -53,7 +53,7 @@ final readonly class CookieDescriptions
 				$this->dateTimeParser->getDaysFromString($cookieLifetime . ' seconds'),
 			),
 			new CookieDescription(
-				'_nss', // Same as in Nette\Http\Helpers::StrictCookieName, the name is tested in CookieDescriptionsTest
+				CookieName::NetteSameSiteCheck->value,
 				false,
 				$this->texyFormatter->translate('messages.cookies.cookie.netteSameSiteCheck'),
 				null,

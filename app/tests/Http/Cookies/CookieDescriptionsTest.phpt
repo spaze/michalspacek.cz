@@ -31,9 +31,11 @@ final class CookieDescriptionsTest extends TestCase
 		Helpers::initCookie($this->request, $this->response);
 		$expectedCookieNames = array_map(fn(CookieName $cookieName): string => $cookieName->value, CookieName::cases());
 		$expectedCookieNames[] = $this->sessionHandler->getName();
-		$expectedCookieNames = array_merge($expectedCookieNames, $this->response->getCookieNames());
+		$expectedCookieNames = array_unique(array_merge($expectedCookieNames, $this->response->getCookieNames()));
+		sort($expectedCookieNames);
 		$cookieDescriptions = $this->cookieDescriptions->get();
 		$describedCookieNames = array_map(fn(CookieDescription $cookieDescription): string => $cookieDescription->getName(), $cookieDescriptions);
+		sort($describedCookieNames);
 		Assert::same($expectedCookieNames, $describedCookieNames, 'All cookies must be described');
 		Assert::same('messages.cookies.cookie.permanentLogin', $cookieDescriptions[0]->getDescription()->render());
 		Assert::true($cookieDescriptions[0]->isInternal());

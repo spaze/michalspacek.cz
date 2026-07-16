@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Http;
 
+use MichalSpacekCz\Http\Cookies\CookieName;
 use Nette\Http\FileUpload;
 use Nette\Http\IRequest;
 use Nette\Http\UrlScript;
@@ -164,7 +165,7 @@ final class Request implements IRequest
 	 */
 	public function isSameSite(): bool
 	{
-		return isset($this->cookies['_nss']); // Nette\Http\Helpers::StrictCookieName, the SameSite=Strict marker cookie
+		return isset($this->cookies[CookieName::NetteSameSiteCheck->value]);
 	}
 
 

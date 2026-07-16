@@ -113,7 +113,7 @@ final class SignPresenterTest extends TestCase
 	public function testSameSiteLogoutSignsUserOut(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->httpRequest->setCookie('_nss', '1'); // Nette's SameSite=Strict marker cookie, the request now looks same-site
+		$this->httpRequest->setCookie(CookieName::NetteSameSiteCheck->value, '1');
 		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Sign', 'Sign', 'out');
 		$presenter->autoCanonicalize = false;
 		$response = $presenter->run(new Request('Admin:Sign', IRequest::Get, ['action' => 'out']));
