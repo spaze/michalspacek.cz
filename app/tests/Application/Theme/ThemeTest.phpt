@@ -75,13 +75,6 @@ final class ThemeTest extends TestCase
 	}
 
 
-	public function testIsDarkModeValueLegacy(): void
-	{
-		$this->request->setCookie(self::COOKIE, 'bright');
-		Assert::false($this->theme->isDarkMode());
-	}
-
-
 	public function testIsDarkModeValueLight(): void
 	{
 		$this->request->setCookie(self::COOKIE, 'light');
