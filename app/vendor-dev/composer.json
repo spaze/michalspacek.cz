@@ -17,7 +17,7 @@
 		"shipmonk/dead-code-detector": "^1.2",
 		"spaze/coding-standard": "^1.9",
 		"spaze/phpcs-phar": "^4.0",
-		"spaze/phpstan-disallowed-calls": "^4.0",
+		"spaze/phpstan-disallowed-calls": "^4.13",
 		"spaze/phpstan-disallowed-calls-nette": "^3.0",
 		"spomky-labs/cbor-php": "^3.2",
 		"symfony/uid": "^8.0"
