@@ -32,19 +32,12 @@ final class CrossOriginRedirectsToTest extends TestCase
 	}
 
 
-	/**
-	 * The redirect happens in Www\BasePresenter::detectedCsrf(), so outside that presenter tree the attribute
-	 * would arm Nette's check but a blocked request would loop like there was no attribute at all. And Nette
-	 * checks a method's attributes right before invoking that method, so on a render method the check would
-	 * fire only after the action body, the thing being guarded, has already run.
-	 */
-	public function testEveryUseIsOnAnActionMethodOfAPresenterWithTheOverride(): void
+	public function testEveryUseIsInAPresenterWithTheOverride(): void
 	{
 		$uses = $this->findAttributeUses();
 		Assert::contains(SignPresenter::class . '::actionOut()', array_keys($uses)); // the scan must find at least the known usage
 		foreach ($uses as $name => [$method]) {
 			Assert::true(is_subclass_of($method->getDeclaringClass()->getName(), BasePresenter::class), "{$name} is outside the Www\\BasePresenter tree, its detectedCsrf() override would never run and a blocked request would loop");
-			Assert::true(str_starts_with($method->getName(), 'action'), "{$name} must carry the attribute on the action method, on a render method the check would fire only after the action body has run");
 		}
 	}
 

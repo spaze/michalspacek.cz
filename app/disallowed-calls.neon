@@ -125,6 +125,12 @@ parameters:
 				- src/Application/ServerEnv.php
 				- tests/Application/ServerEnvTest.phpt
 				- tests/EasterEgg/FourOhFourButFound/FourOhFourButFoundTest.phpt
+	disallowedAttributes:
+		-
+			attribute: 'MichalSpacekCz\Http\SameOrigin\CrossOriginRedirectsTo'
+			message: 'put it on a presenter action method, elsewhere Nette checks it only after the action body, when the thing being guarded, has already run'
+			allowInMethods:
+				- '*Presenter::action*()'
 	disallowedClasses:
 		-
 			class:
