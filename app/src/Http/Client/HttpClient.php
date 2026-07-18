@@ -39,10 +39,14 @@ class HttpClient
 				'http' => $httpOptions,
 			],
 			[
-				'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode): void {
-					if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
-						throw new HttpStreamException($notificationCode, $message, $messageCode);
+				'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) use ($request): void {
+					if ($severity !== STREAM_NOTIFY_SEVERITY_ERR) {
+						return;
 					}
+					if ($request->getIgnoreHttpErrors() && $messageCode >= 400 && $messageCode <= 599) {
+						return; // a real HTTP 4xx/5xx, the opt-in caller wants the response, not an exception
+					}
+					throw new HttpStreamException($notificationCode, $message, $messageCode);
 				},
 			],
 		);
@@ -100,6 +104,7 @@ class HttpClient
 				throw new HttpClientRequestException($request->getUrl());
 			}
 			$result = stream_get_contents($fp);
+			$wrapperData = stream_get_meta_data($fp)['wrapper_data'];
 			$options = stream_context_get_options($fp);
 			fclose($fp);
 		} catch (HttpStreamException $e) {
@@ -115,7 +120,8 @@ class HttpClient
 		} else {
 			$certificate = null;
 		}
-		return new HttpClientResponse($request, $result, $certificate);
+		$headers = is_array($wrapperData) ? array_values(array_filter($wrapperData, is_string(...))) : [];
+		return new HttpClientResponse($request, $result, $certificate, $headers);
 	}
 
 }

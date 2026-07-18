@@ -2,17 +2,15 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Http;
+namespace MichalSpacekCz\Http\Client;
 
-use MichalSpacekCz\Http\Client\HttpClient;
-use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpStreamException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use ReflectionMethod;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 final class HttpClientTest extends TestCase
@@ -81,6 +79,39 @@ final class HttpClientTest extends TestCase
 		Assert::exception(function () use ($params): void {
 			call_user_func($params['notification'], 418, STREAM_NOTIFY_SEVERITY_ERR, null, 808);
 		}, HttpStreamException::class, '¯\_(ツ)_/¯ (418)', 808);
+	}
+
+
+	public function testCreateStreamContextNotificationIgnoresHttpErrors(): void
+	{
+		$errorAt = function (callable $notification, int $status): callable {
+			return function () use ($notification, $status): void {
+				$notification(STREAM_NOTIFY_FAILURE, STREAM_NOTIFY_SEVERITY_ERR, 'err', $status);
+			};
+		};
+
+		// off by default: an HTTP error severity throws, even for a 4xx
+		$default = $this->notificationCallback(new HttpClientRequest('https://example.com/'));
+		Assert::exception($errorAt($default, 404), HttpStreamException::class);
+
+		// on: a 4xx/5xx (400 to 599) is swallowed so the response comes back; anything outside that range still throws
+		$ignoring = $this->notificationCallback(new HttpClientRequest('https://example.com/')->setIgnoreHttpErrors(true));
+		Assert::noError($errorAt($ignoring, 400));
+		Assert::noError($errorAt($ignoring, 404));
+		Assert::noError($errorAt($ignoring, 599));
+		Assert::exception($errorAt($ignoring, 399), HttpStreamException::class);
+		Assert::exception($errorAt($ignoring, 600), HttpStreamException::class);
+	}
+
+
+	private function notificationCallback(HttpClientRequest $request): callable
+	{
+		$method = new ReflectionMethod($this->httpClient, 'createStreamContext');
+		$context = $method->invoke($this->httpClient, $request);
+		assert(is_resource($context));
+		$notification = stream_context_get_params($context)['notification'];
+		assert(is_callable($notification));
+		return $notification;
 	}
 
 }
