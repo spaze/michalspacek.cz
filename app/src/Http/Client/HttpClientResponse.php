@@ -39,7 +39,7 @@ final class HttpClientResponse
 	{
 		$this->normalizeHeaders();
 		$name = strtolower($name);
-		return isset($this->normalizedHeaders[$name]) ? reset($this->normalizedHeaders[$name]) : null;
+		return isset($this->normalizedHeaders[$name][0]) ? $this->normalizedHeaders[$name][0] : null;
 	}
 
 
