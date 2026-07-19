@@ -23,7 +23,7 @@ final class HttpClientMock extends HttpClient
 	#[Override]
 	public function get(HttpClientRequest $request): HttpClientResponse
 	{
-		return new HttpClientResponse($request, $this->response, null);
+		return new HttpClientResponse($request, $this->response, null, []);
 	}
 
 }

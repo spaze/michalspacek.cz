@@ -17,6 +17,8 @@ final class HttpClientRequest
 
 	private ?bool $tlsCaptureCertificate = null;
 
+	private bool $ignoreHttpErrors = false;
+
 
 	public function __construct(
 		private readonly string $url,
@@ -95,6 +97,25 @@ final class HttpClientRequest
 	{
 		$this->tlsCaptureCertificate = $tlsCaptureCertificate;
 		return $this;
+	}
+
+
+	public function getIgnoreHttpErrors(): bool
+	{
+		return $this->ignoreHttpErrors;
+	}
+
+
+	public function setIgnoreHttpErrors(bool $ignoreHttpErrors): self
+	{
+		$this->ignoreHttpErrors = $ignoreHttpErrors;
+		return $this;
+	}
+
+
+	public function withUrl(string $url): self
+	{
+		return clone($this, ['url' => $url]);
 	}
 
 }
