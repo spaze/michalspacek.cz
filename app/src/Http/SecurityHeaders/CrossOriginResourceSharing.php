@@ -34,6 +34,7 @@ final readonly class CrossOriginResourceSharing
 	 */
 	public function accessControlAllowOrigin(string $source): void
 	{
+		$this->httpResponse->addHeader('Vary', 'Origin');
 		$origin = $this->httpRequest->getHeader('Origin');
 		if ($origin === null) {
 			return;
