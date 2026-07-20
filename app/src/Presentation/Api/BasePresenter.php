@@ -7,6 +7,7 @@ use MichalSpacekCz\Api\Endpoint\EndpointAccess;
 use MichalSpacekCz\Api\Endpoint\EndpointAccessAttribute;
 use MichalSpacekCz\Http\Robots\Robots;
 use MichalSpacekCz\Http\Robots\RobotsRule;
+use MichalSpacekCz\Http\SecurityHeaders\CrossOriginResourceSharing;
 use MichalSpacekCz\Presentation\Www\BasePresenter as WwwBasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -16,6 +17,7 @@ abstract class BasePresenter extends WwwBasePresenter
 {
 
 	private Robots $robots;
+	private CrossOriginResourceSharing $crossOriginResourceSharing;
 
 
 	/**
@@ -27,11 +29,21 @@ abstract class BasePresenter extends WwwBasePresenter
 	}
 
 
+	/**
+	 * @internal
+	 */
+	public function injectCrossOriginResourceSharing(CrossOriginResourceSharing $crossOriginResourceSharing): void
+	{
+		$this->crossOriginResourceSharing = $crossOriginResourceSharing;
+	}
+
+
 	#[Override]
 	final protected function startup(): void
 	{
 		parent::startup();
 		$this->robots->setHeader([RobotsRule::NoIndex, RobotsRule::NoFollow]);
+		$this->crossOriginResourceSharing->accessControlAllowOrigin('Www:Homepage:');
 		$this->checkAccessAttribute();
 		$this->startupApi();
 	}
