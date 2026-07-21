@@ -3,7 +3,7 @@
 <div class="flash error"><strong>
 	{icon trash} <code>{$status->type->name}</code> {_messages.garbageCollector.title}:
 	{if $status->noStatus}{_messages.garbageCollector.noStatus}{/if}
-	{if $status->tooOld}{_messages.garbageCollector.tooOld, $status->lastRun->format(\DATE_RFC3339)}{/if}
+	{if $status->lastRun?->tooOld}{_messages.garbageCollector.tooOld, $status->lastRun->date->format(\DATE_RFC3339)}{/if}
 	{if $status->message !== null}{$status->message}{/if}
 </strong></div>
 {/foreach}

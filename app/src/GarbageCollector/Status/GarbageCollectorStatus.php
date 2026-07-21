@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\GarbageCollector\Status;
 
-use DateTimeImmutable;
 use MichalSpacekCz\GarbageCollector\GarbageCollectorType;
 
 final readonly class GarbageCollectorStatus
@@ -13,8 +12,7 @@ final readonly class GarbageCollectorStatus
 		private(set) GarbageCollectorType $type,
 		private(set) bool $ok,
 		private(set) bool $noStatus = false,
-		private(set) bool $tooOld = false,
-		private(set) ?DateTimeImmutable $lastRun = null,
+		private(set) ?GarbageCollectorStatusLastRun $lastRun = null,
 		private(set) ?string $message = null,
 	) {
 	}

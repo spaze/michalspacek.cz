@@ -60,8 +60,7 @@ final readonly class GarbageCollectorStatusFactory
 				$type,
 				$ok,
 				false,
-				$tooOld,
-				$lastRun,
+				new GarbageCollectorStatusLastRun($lastRun, $tooOld),
 				$message,
 			);
 		}
