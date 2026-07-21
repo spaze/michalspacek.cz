@@ -67,8 +67,8 @@ final class GarbageCollectorStatusFactoryTest extends TestCase
 		Assert::count(1, $statuses);
 		Assert::true($statuses[0]->ok);
 		Assert::false($statuses[0]->noStatus);
-		Assert::false($statuses[0]->tooOld);
-		Assert::same(self::NOW, $statuses[0]->lastRun?->format('Y-m-d H:i:s'));
+		Assert::false($statuses[0]->lastRun?->tooOld);
+		Assert::same(self::NOW, $statuses[0]->lastRun?->date->format('Y-m-d H:i:s'));
 	}
 
 
@@ -84,7 +84,7 @@ final class GarbageCollectorStatusFactoryTest extends TestCase
 		$statuses = $factory->createStatuses();
 		Assert::count(1, $statuses);
 		Assert::false($statuses[0]->ok);
-		Assert::true($statuses[0]->tooOld);
+		Assert::true($statuses[0]->lastRun?->tooOld);
 	}
 
 

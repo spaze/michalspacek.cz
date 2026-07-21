@@ -3,7 +3,7 @@
 {varType int $videoThumbnailHeight}
 <p class="center">
 <a href="{plink :Www:Talks:talk $talk->getAction()}" n:if="$talk?->getAction()">{icon desktop class => space-after}Zobrazit přednášku</a>
-• <a n:if="$talk?->getId()" href="{plink slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a>
+• <a n:if="$talk?->getId()" href="{plink :Admin:Talks:slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a>
 </p>
 {form talk class => "aligned wide"}
 	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
@@ -98,7 +98,7 @@
 			<th>{label supersededBy /}</th><td>{input supersededBy}</td>
 		</tr>
 		<tr>
-			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk?->getId()" href="{plink slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a></td>
+			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk?->getId()" href="{plink :Admin:Talks:slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a></td>
 		</tr>
 		<tr>
 			<th></th><td class="short"><p>{input submit}</p></td>

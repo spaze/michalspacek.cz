@@ -46,7 +46,7 @@ final readonly class UserSecurityNotifier
 				$this->logNoNotificationEmail($userId);
 				return;
 			}
-			$template = $this->createTemplate('passkeyAdded');
+			$template = $this->createTemplate(UserSecurityNotifierTemplate::PasskeyAdded);
 			$template->credentialName = $credentialName;
 			$template->when = $this->dateTimeFactory->create();
 			$template->ipAddress = $this->httpRequest->getRemoteAddress();
@@ -66,7 +66,7 @@ final readonly class UserSecurityNotifier
 				$this->logNoNotificationEmail($userId);
 				return;
 			}
-			$template = $this->createTemplate('passkeyReset');
+			$template = $this->createTemplate(UserSecurityNotifierTemplate::PasskeyReset);
 			$template->credentialName = $credentialName;
 			$template->when = $this->dateTimeFactory->create();
 			$template->ipAddress = $this->httpRequest->getRemoteAddress();
@@ -98,7 +98,7 @@ final readonly class UserSecurityNotifier
 	private function sendNotificationEmailChangedAlert(string $oldAddress, string $newAddress): void
 	{
 		try {
-			$template = $this->createTemplate('notificationEmailChanged');
+			$template = $this->createTemplate(UserSecurityNotifierTemplate::NotificationEmailChanged);
 			$template->newAddress = $newAddress;
 			$template->when = $this->dateTimeFactory->create();
 			$template->ipAddress = $this->httpRequest->getRemoteAddress();
@@ -113,7 +113,7 @@ final readonly class UserSecurityNotifier
 	private function sendNotificationEmailChangedConfirmation(string $newAddress): void
 	{
 		try {
-			$template = $this->createTemplate('notificationEmailChangedConfirmation');
+			$template = $this->createTemplate(UserSecurityNotifierTemplate::NotificationEmailChangedConfirmation);
 			$template->when = $this->dateTimeFactory->create();
 			$this->send($newAddress, 'messages.notifications.notificationEmailChangedConfirmation.subject', $template);
 		} catch (Throwable $e) {
@@ -122,10 +122,10 @@ final readonly class UserSecurityNotifier
 	}
 
 
-	private function createTemplate(string $name): DefaultTemplate
+	private function createTemplate(UserSecurityNotifierTemplate $name): DefaultTemplate
 	{
 		$template = $this->templateFactory->createTemplate();
-		$template->setFile(__DIR__ . '/templates/' . $name . '.latte');
+		$template->setFile(__DIR__ . '/templates/' . $name->value . '.latte');
 		return $template;
 	}
 
