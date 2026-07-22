@@ -4,3 +4,5 @@ Disallow: /*/result/
 Disallow: /*/request/
 Disallow: /*/search/
 Disallow: /*/searches/
+Disallow: /passwords/storages/site/*/
+Disallow: /passwords/storages/site/*?
