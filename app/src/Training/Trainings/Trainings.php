@@ -270,6 +270,7 @@ final class Trainings
 				'company_id' => null,
 				'company_tax_id' => null,
 				'note' => null,
+				'access_token' => null,
 			],
 			$dateIds,
 		);

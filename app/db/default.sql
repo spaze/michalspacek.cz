@@ -331,7 +331,7 @@ CREATE TABLE `training_applications` (
   `invoice_id` int unsigned DEFAULT NULL,
   `paid` datetime DEFAULT NULL,
   `paid_timezone` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `access_token` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+  `access_token` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
   `key_status` int unsigned NOT NULL,
   `status_time` datetime NOT NULL,
   `status_time_timezone` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
