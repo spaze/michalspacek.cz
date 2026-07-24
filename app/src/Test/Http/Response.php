@@ -14,6 +14,10 @@ final class Response implements IResponse
 
 	private ?string $reason = null;
 
+	private ?string $redirectUrl = null;
+
+	private ?int $redirectCode = null;
+
 	/** @var array<string, string> */
 	private array $headers = [];
 
@@ -82,6 +86,20 @@ final class Response implements IResponse
 	#[Override]
 	public function redirect(string $url, int $code = self::S302_Found): void
 	{
+		$this->redirectUrl = $url;
+		$this->redirectCode = $code;
+	}
+
+
+	public function getRedirectUrl(): ?string
+	{
+		return $this->redirectUrl;
+	}
+
+
+	public function getRedirectCode(): ?int
+	{
+		return $this->redirectCode;
 	}
 
 
@@ -181,6 +199,8 @@ final class Response implements IResponse
 		$this->cookies = [];
 		$this->cookieDomain = '';
 		$this->cookiePath = '/';
+		$this->redirectUrl = null;
+		$this->redirectCode = null;
 	}
 
 }

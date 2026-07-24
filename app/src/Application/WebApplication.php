@@ -33,7 +33,10 @@ final readonly class WebApplication
 	public function run(): void
 	{
 		$this->detectCrLfUrlInjectionAttempt();
-		$this->redirectToSecure();
+		if (ServerEnv::tryGetString('HTTP_HOST') !== $this->fqdn) {
+			$this->redirectToCanonicalHost();
+			return;
+		}
 		$this->resourceIsolationPolicy->install();
 		$this->application->onResponse[] = function (): void {
 			$this->securityHeaders->sendHeaders();
@@ -43,14 +46,11 @@ final readonly class WebApplication
 	}
 
 
-	private function redirectToSecure(): void
+	private function redirectToCanonicalHost(): void
 	{
-		if (ServerEnv::tryGetString('HTTP_HOST') !== $this->fqdn) {
-			$this->securityHeaders->sendHeaders(CspValues::Default);
-			$url = $this->httpRequest->getUrl()->withScheme('https')->withHost($this->fqdn);
-			$this->httpResponse->redirect($url->getAbsoluteUrl(), IResponse::S301_MovedPermanently);
-			exit();
-		}
+		$this->securityHeaders->sendHeaders(CspValues::Default);
+		$url = $this->httpRequest->getUrl()->withScheme('https')->withHost($this->fqdn);
+		$this->httpResponse->redirect($url->getAbsoluteUrl(), IResponse::S301_MovedPermanently);
 	}
 
 
