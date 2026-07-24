@@ -112,10 +112,4 @@ final class HttpClientRequest
 		return $this;
 	}
 
-
-	public function withUrl(string $url): self
-	{
-		return clone($this, ['url' => $url]);
-	}
-
 }

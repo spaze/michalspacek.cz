@@ -35,6 +35,10 @@ final readonly class SecurityHeaders
 		$this->httpResponse->setHeader('X-Powered-By', "<script>document.write('<img src=//xss.sk title=inline_js_is_bad_mkay.gif>');</script>");
 		$this->httpResponse->setHeader('X-Content-Type-Options', 'nosniff');
 		$this->httpResponse->setHeader('X-Frame-Options', 'DENY');
+		$this->httpResponse->setHeader('Cross-Origin-Opener-Policy', sprintf('same-origin; report-to="%s"', ReportingApiEndpointName::Default->value));
+		// App responses aren't embeddable unlike public assets, which send CORP: cross-origin (set in nginx config)
+		$this->httpResponse->setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+		$this->httpResponse->setHeader('Cross-Origin-Embedder-Policy-Report-Only', sprintf('require-corp; report-to="%s"', ReportingApiEndpointName::Default->value));
 		$this->httpResponse->setHeader('Referrer-Policy', 'no-referrer, strict-origin-when-cross-origin');
 		$this->sendContentSecurityPolicyHeaders($cspValues);
 		$this->permissionsPolicy->set();
