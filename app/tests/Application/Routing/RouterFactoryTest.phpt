@@ -4,7 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application\Routing;
 
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Application\Routers\RouteList;
 use Nette\Http\UrlScript;
+use Nette\Routing\Route;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -39,6 +41,42 @@ final class RouterFactoryTest extends TestCase
 			'presenter' => 'Api:Certificates',
 			'action' => 'logIssued',
 		], $refUrl));
+	}
+
+
+	public function testEveryRouteEnforcesHttps(): void
+	{
+		$localeRouter = $this->routerFactory->createRouter();
+		$masks = [];
+		foreach ([$localeRouter->getRouteList(), ...array_values($localeRouter->getLocaleRouters())] as $routeList) {
+			$masks = [...$masks, ...$this->collectMasks($routeList)];
+		}
+
+		Assert::notSame([], $masks);
+		$notHttps = [];
+		foreach ($masks as $mask) {
+			if (!str_starts_with($mask, 'https://')) {
+				$notHttps[] = $mask;
+			}
+		}
+		Assert::same([], $notHttps);
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	private function collectMasks(RouteList $routeList): array
+	{
+		$masks = [];
+		foreach ($routeList->getRouters() as $router) {
+			if ($router instanceof RouteList) {
+				$masks = [...$masks, ...$this->collectMasks($router)];
+			} elseif ($router instanceof Route) {
+				$masks[] = $router->getMask();
+			}
+		}
+		return $masks;
 	}
 
 }

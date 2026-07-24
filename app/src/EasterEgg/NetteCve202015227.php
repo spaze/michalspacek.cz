@@ -148,7 +148,7 @@ final readonly class NetteCve202015227
 
 	public function addRoute(RouteList $router): void
 	{
-		$router->withModule('EasterEgg')->addRoute('/nette.micro', ['presenter' => 'Nette', 'action' => 'micro']);
+		$router->withModule('EasterEgg')->addRoute('https://%host%/nette.micro', ['presenter' => 'Nette', 'action' => 'micro']);
 	}
 
 }
