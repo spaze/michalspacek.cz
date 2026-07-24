@@ -1,4 +1,5 @@
 <?php
+/** @testCase */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
@@ -10,6 +11,7 @@ use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Test\Http\Client\HttpClientMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Schema\Processor;
+use Nette\Utils\FileSystem;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -56,15 +58,15 @@ final class CompanyRegisterAresTest extends TestCase
 		$expected = new CompanyInfoDetails(
 			200,
 			'OK',
-			'26688093',
-			'CZ26688093',
-			'Landis+Gyr s.r.o.',
-			'Generála Píky 430/26',
+			'26435675',
+			'CZ26435675',
+			'CineStar s.r.o.',
+			'Radlická 3185/1c',
 			'Praha',
-			'16000',
+			'15000',
 			'cz',
 		);
-		Assert::equal($expected, $this->ares->getDetails('26688093'), 'All house number & street number & extra letter');
+		Assert::equal($expected, $this->ares->getDetails('26435675'), 'All house number & street number & extra letter');
 		sleep(3);
 
 		$expected = new CompanyInfoDetails(
@@ -122,75 +124,19 @@ final class CompanyRegisterAresTest extends TestCase
 
 	public function testGetDetailsWithHttpMock(): void
 	{
-		$this->httpClientMock->setResponse('{
-		   "adresaDorucovaci" : {},
-		   "czNace" : [
-			  "46900",
-			  "27120",
-			  "95110",
-			  "69200",
-			  "620",
-			  "4778"
-		   ],
-		   "datumAktualizace" : "2023-08-10",
-		   "datumVzniku" : "2023-03-30",
-		   "dic" : "CZ26688093",
-		   "financniUrad" : "005",
-		   "ico" : "26688093",
-		   "icoId" : "26688093",
-		   "obchodniJmeno" : "Landis+Gyr s.r.o.",
-		   "pravniForma" : "112",
-		   "primarniZdroj" : "vr",
-		   "seznamRegistraci" : {
-			  "stavZdrojeCeu" : "NEEXISTUJICI",
-			  "stavZdrojeDph" : "AKTIVNI",
-			  "stavZdrojeIr" : "NEEXISTUJICI",
-			  "stavZdrojeNrpzs" : "NEEXISTUJICI",
-			  "stavZdrojeRcns" : "NEEXISTUJICI",
-			  "stavZdrojeRed" : "NEEXISTUJICI",
-			  "stavZdrojeRes" : "AKTIVNI",
-			  "stavZdrojeRpsh" : "NEEXISTUJICI",
-			  "stavZdrojeRs" : "NEEXISTUJICI",
-			  "stavZdrojeRzp" : "AKTIVNI",
-			  "stavZdrojeSzr" : "NEEXISTUJICI",
-			  "stavZdrojeVr" : "AKTIVNI"
-		   },
-		   "sidlo" : {
-			  "cisloDomovni" : 3185,
-			  "cisloOrientacni" : 5,
-			  "cisloOrientacniPismeno" : "a",
-			  "kodAdresnihoMista" : 25713787,
-			  "kodCastiObce" : 400301,
-			  "kodKraje" : 19,
-			  "kodMestskeCastiObvodu" : 500143,
-			  "kodMestskehoObvodu" : 51,
-			  "kodObce" : 554782,
-			  "kodOkresu" : 3100,
-			  "kodStatu" : "CZ",
-			  "kodUlice" : 464287,
-			  "nazevCastiObce" : "Smíchov",
-			  "nazevKraje" : "Hlavní město Praha",
-			  "nazevMestskeCastiObvodu" : "Praha 5",
-			  "nazevMestskehoObvodu" : "Praha 5",
-			  "nazevObce" : "Praha",
-			  "nazevStatu" : "Česká republika",
-			  "nazevUlice" : "Plzeňská",
-			  "psc" : 15000,
-			  "textovaAdresa" : "Plzeňská 3185/5a, Smíchov, 15000 Praha 5"
-		   }
-		}');
+		$this->httpClientMock->setResponse(FileSystem::read(__DIR__ . '/ares26435675.json'));
 		$expected = new CompanyInfoDetails(
 			200,
 			'OK',
-			'26688093',
-			'CZ26688093',
-			'Landis+Gyr s.r.o.',
-			'Plzeňská 3185/5a',
+			'26435675',
+			'CZ26435675',
+			'CineStar s.r.o.',
+			'Radlická 3185/1c',
 			'Praha',
 			'15000',
 			'cz',
 		);
-		Assert::equal($expected, $this->aresWithHttpClientMock->getDetails('26688093'));
+		Assert::equal($expected, $this->aresWithHttpClientMock->getDetails('26435675'));
 	}
 
 }
