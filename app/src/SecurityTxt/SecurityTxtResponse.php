@@ -39,7 +39,7 @@ final readonly class SecurityTxtResponse
 
 	public function addRoute(RouteList $router): void
 	{
-		$router->withModule('WellKnown')->addRoute('/.well-known/security.txt', ['presenter' => 'WellKnown', 'action' => 'securityTxt']);
+		$router->withModule('WellKnown')->addRoute('https://%host%/.well-known/security.txt', ['presenter' => 'WellKnown', 'action' => 'securityTxt']);
 	}
 
 }
