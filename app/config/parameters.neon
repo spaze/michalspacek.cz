@@ -39,6 +39,10 @@ parameters:
 		reportingApi: https://plz.report-uri.com/a/d/g
 	vatRate: 0.21
 	loadCompanyDataVisible: true
+	trainingFiles:
+		# The file's real type is not verified, only the extension. Images are saved under the extension
+		# detected from their content, so list them as jpeg (not jpg), png, gif, webp
+		allowedExtensions: [7z, docx, gif, gz, jpeg, odp, ods, odt, pdf, png, pptx, tar, tgz, txt, webp, xlsx, zip]
 	permanentLogin:
 		interval: 14 days
 	session:

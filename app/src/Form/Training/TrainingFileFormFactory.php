@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Form\Training;
 use DateTimeInterface;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Utils\MimeType;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
@@ -27,8 +28,32 @@ final readonly class TrainingFileFormFactory
 	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): Form
 	{
 		$form = $this->factory->create();
-		$form->addUpload('file', 'Soubor:');
+		$allowedExtensions = $this->trainingFiles->getAllowedExtensions();
+		$accept = [];
+		foreach ($allowedExtensions as $extension) {
+			$accept[] = ".{$extension}";
+			// Images also get MIME type in the list, because some (mobile) pickers match images by type rather than by extension
+			$mimeType = MimeType::getMimeTypeByExtension($extension);
+			if ($mimeType !== null) {
+				$accept[] = $mimeType;
+			}
+		}
+		$upload = $form->addUpload('file', 'Soubor:')
+			->setHtmlAttribute('accept', implode(',', $accept));
 		$form->addSubmit('submit', 'Přidat');
+		$form->onValidate[] = function () use ($upload, $allowedExtensions): void {
+			$file = $upload->getValue();
+			if (!$file instanceof FileUpload || !$file->hasFile()) {
+				return;
+			}
+			$extension = pathinfo($file->getSanitizedName(), PATHINFO_EXTENSION);
+			if (!$this->trainingFiles->isAllowedExtension($extension)) {
+				// For an image the extension is rewritten by the detected MIME type and may differ from the uploaded filename ext
+				$mime = $file->getContentType() ?? 'neznámý';
+				$allowed = implode(', ', $allowedExtensions);
+				$upload->addError("Nepodporovaný soubor (přípona {$extension}, typ {$mime}), povolené přípony: {$allowed}");
+			}
+		};
 		$form->onSuccess[] = function (Form $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
 			$values = $form->getValues();
 			assert($values->file instanceof FileUpload);
