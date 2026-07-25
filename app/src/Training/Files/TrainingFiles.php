@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Files;
 
-use DateTime;
 use DateTimeInterface;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingFileUnsupportedExtensionException;
@@ -29,6 +29,7 @@ final readonly class TrainingFiles
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingFileFactory $trainingFileFactory,
 		private TrainingFilesStorage $trainingFilesStorage,
+		private DateTimeFactory $dateTimeFactory,
 		private array $allowedExtensions,
 	) {
 	}
@@ -123,7 +124,7 @@ final readonly class TrainingFiles
 		}
 		$file->move($this->trainingFilesStorage->getFilesDir($start) . $name);
 
-		$datetime = new DateTime();
+		$datetime = $this->dateTimeFactory->create();
 		$this->database->beginTransaction();
 
 		$timeZone = $datetime->getTimezone()->getName();
