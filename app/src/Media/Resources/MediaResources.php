@@ -24,7 +24,7 @@ abstract class MediaResources
 
 	public function getImageFilename(int $id, string $fileName): string
 	{
-		return "{$this->locationRoot}/{$this->imagesRoot}/{$this->getSubDir()}/{$id}/{$fileName}";
+		return "{$this->locationRoot}/{$this->imagesRoot}/{$this->getSubDir()}/{$id}/" . basename($fileName);
 	}
 
 
