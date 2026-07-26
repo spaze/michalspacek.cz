@@ -15,6 +15,7 @@ use Nette\Application\Request;
 use Nette\Forms\Container;
 use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
@@ -125,6 +126,19 @@ final readonly class TalkSlidesFormFactory
 	}
 
 
+	/**
+	 * @param non-empty-list<string> $extensions
+	 */
+	private function addSlideFilenameField(Container $container, string $name, array $extensions, bool $disabled): TextInput
+	{
+		$pattern = '[a-zA-Z0-9_-]+\.(' . implode('|', $extensions) . ')';
+		return $container->addText($name, 'Soubor:')
+			->setDisabled($disabled)
+			->setHtmlAttribute('class', 'slide-filename')
+			->addRule(Form::Pattern, 'Neplatný název souboru, povolené přípony: ' . implode(', ', $extensions), $pattern);
+	}
+
+
 	private function addSlideFields(Container $container, ?int $filenamesTalkId): void
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
@@ -147,9 +161,7 @@ final readonly class TalkSlidesFormFactory
 			->addRule(Form::MimeType, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
 			->setHtmlAttribute('title', "Nahradit soubor ({$supportedImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getMainContentTypes()));
-		$container->addText('filename', 'Soubor:')
-			->setDisabled($disableSlideUploads)
-			->setHtmlAttribute('class', 'slide-filename')
+		$this->addSlideFilenameField($container, 'filename', $this->supportedImageFileFormats->getMainExtensions(), $disableSlideUploads)
 			->addConditionOn($upload, Form::Blank)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
@@ -157,9 +169,7 @@ final readonly class TalkSlidesFormFactory
 			->addRule(Form::MimeType, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Nahradit alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
-		$container->addText('filenameAlternative', 'Soubor:')
-			->setDisabled($disableSlideUploads)
-			->setHtmlAttribute('class', 'slide-filename');
+		$this->addSlideFilenameField($container, 'filenameAlternative', $this->supportedImageFileFormats->getAlternativeExtensions(), $disableSlideUploads);
 		$ruleTexyTalkSlides = $this->talkSlidesTexyRuleFactory->create();
 		$container->addTextArea('speakerNotes', 'Poznámky:')
 			->addRule($ruleTexyTalkSlides->getRule())
