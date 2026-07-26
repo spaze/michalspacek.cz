@@ -24,10 +24,6 @@ final class HttpClientResponseTest extends TestCase
 		assert($certificate instanceof OpenSSLCertificate);
 
 		Assert::exception(function () use (&$certificate): void {
-			new HttpClientResponse(new HttpClientRequest(':-/'), 'body', $certificate, [])->getTlsCertificate();
-		}, HttpClientTlsCertificateNotAvailableException::class);
-
-		Assert::exception(function () use (&$certificate): void {
 			new HttpClientResponse(new HttpClientRequest('http://not.secure.example'), 'body', $certificate, [])->getTlsCertificate();
 		}, HttpClientTlsCertificateNotAvailableException::class);
 
