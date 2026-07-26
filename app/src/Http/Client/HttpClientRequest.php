@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\Client;
 
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestUnsupportedSchemeException;
+use Uri\WhatWg\Url;
+
 final class HttpClientRequest
 {
 
@@ -20,9 +23,16 @@ final class HttpClientRequest
 	private bool $ignoreHttpErrors = false;
 
 
+	/**
+	 * @throws HttpClientRequestUnsupportedSchemeException
+	 */
 	public function __construct(
 		private readonly string $url,
 	) {
+		$scheme = Url::parse($url)?->getScheme();
+		if ($scheme !== 'http' && $scheme !== 'https') {
+			throw new HttpClientRequestUnsupportedSchemeException($url, $scheme);
+		}
 	}
 
 
