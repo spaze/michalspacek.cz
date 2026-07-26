@@ -1,25 +1,6 @@
 App.ready(document, function () {
-	let submitted = false;
 	let timer = null;
 	let orig = null;
-	App.on('submit', '#frm-ssid', function () {
-		if (submitted) {
-			return false;
-		}
-		submitted = true;
-		const s = document.querySelector('#submit');
-		const alt = s.dataset.alt;
-		s.dataset.alt = s.value;
-		s.value = alt;
-		s.disabled = true;
-		setTimeout(function () {
-			const alt = s.value;
-			s.value = s.dataset.alt;
-			s.disabled = false;
-			s.dataset.alt = alt;
-			submitted = false;
-		}, 5000);
-	});
 	const listener = function () {
 		const filterType = document.querySelector('#filterType').value;
 		const filterPrefix = document.querySelector('#filterPrefix').value;

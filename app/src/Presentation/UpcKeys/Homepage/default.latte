@@ -42,7 +42,7 @@
 	<div id="result">
 		<div n:ifset="$error" class="error"><strong>{$error}</strong></div>
 		<div>
-		{form ssid}
+		{form ssid, data-submit-once => true, data-submit-once-disabled-label => Wait…}
 		{label ssid /} {input ssid} {input submit}
 		{/form}
 		</div>

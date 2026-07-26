@@ -29,8 +29,7 @@ final readonly class UpcKeysSsidFormFactory
 			->setRequired('Please enter an SSID')
 			->addRule(Form::Pattern, 'Wi-Fi network name has to be "UPC" and 7 digits (UPC1234567)', '\s*' . $this->upcKeys->getValidSsidPattern() . '\s*');
 		$form->addSubmit('submit', 'Get keys')
-			->setHtmlId('submit')
-			->setHtmlAttribute('data-alt', 'Wait…');
+			->setHtmlId('submit');
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$values = $form->getValues();
 			assert(is_string($values->ssid));
