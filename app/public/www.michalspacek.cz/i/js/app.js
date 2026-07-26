@@ -81,18 +81,19 @@ App.bufferToBase64url = function (buffer) {
 	return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
-// A form marked with data-submit-once has its submit buttons disabled after the first submit for
-// data-submit-once-timeout seconds (default 5), showing their data-submit-once-disabled-label while disabled
+// A form marked with data-submit-once has its submit buttons disabled after the first submit for data-submit-once-timeout
+// seconds (default 5), each showing its data-submit-once-disabled-label (or the form's) while disabled
 App.onDelegated('submit', 'form[data-submit-once]', function (event) {
 	if (event.defaultPrevented) {
 		return;
 	}
 	const buttons = this.querySelectorAll('[type="submit"]');
 	const labels = new Map();
+	const formLabel = this.dataset.submitOnceDisabledLabel;
 	for (const button of buttons) {
 		labels.set(button, button.value);
 		button.disabled = true;
-		button.value = button.dataset.submitOnceDisabledLabel ?? button.value;
+		button.value = button.dataset.submitOnceDisabledLabel ?? formLabel ?? button.value;
 	}
 	const reenableAfter = (parseInt(this.dataset.submitOnceTimeout, 10) || 5) * 1000;
 	setTimeout(function () {
