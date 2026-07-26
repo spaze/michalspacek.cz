@@ -24,9 +24,8 @@ class HttpClient
 		if ($request->getUserAgent() !== null) {
 			$httpOptions = ['user_agent' => str_replace('\\', '/', $request->getUserAgent())] + $httpOptions;
 		}
-		if ($request->getFollowLocation() !== null) {
-			$httpOptions = ['follow_location' => (int)$request->getFollowLocation()] + $httpOptions;
-		}
+		// Don't follow redirects unless a request opts in, so an unset value can't silently follow to a redirect target
+		$httpOptions = ['follow_location' => (int)($request->getFollowLocation() ?? false)] + $httpOptions;
 		if ($request->getTlsCaptureCertificate() !== null) {
 			$tlsOptions = ['capture_peer_cert' => $request->getTlsCaptureCertificate()] + $tlsOptions;
 		}
