@@ -82,6 +82,26 @@ final class HttpClientTest extends TestCase
 	}
 
 
+	public function testCreateStreamContextDoesNotFollowRedirectsUnlessRequested(): void
+	{
+		$method = new ReflectionMethod($this->httpClient, 'createStreamContext');
+		$requests = [
+			'unset' => new HttpClientRequest('https://example.com/'),
+			'off' => new HttpClientRequest('https://example.com/')->setFollowLocation(false),
+			'on' => new HttpClientRequest('https://example.com/')->setFollowLocation(true),
+		];
+		$actual = [];
+		foreach ($requests as $label => $request) {
+			$context = $method->invoke($this->httpClient, $request);
+			assert(is_resource($context));
+			$options = stream_context_get_params($context)['options'];
+			assert(is_array($options['http']));
+			$actual[$label] = $options['http']['follow_location'];
+		}
+		Assert::same(['unset' => 0, 'off' => 0, 'on' => 1], $actual);
+	}
+
+
 	public function testCreateStreamContextNotificationIgnoresHttpErrors(): void
 	{
 		$errorAt = function (callable $notification, int $status): callable {
