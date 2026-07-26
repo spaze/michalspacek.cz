@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Files;
 
-use finfo;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
+use MichalSpacekCz\Utils\MimeType;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
@@ -71,8 +71,7 @@ final readonly class TrainingFilesDownload
 			throw new BadRequestException(sprintf('No file %s for application id %s', $filename, $applicationId));
 		}
 		$pathname = $file->getFileInfo()->getPathname();
-		$mimeType = (new finfo(FILEINFO_MIME_TYPE))->file($pathname);
-		return new FileResponse($pathname, null, $mimeType !== false ? $mimeType : null);
+		return new FileResponse($pathname, null, MimeType::detectMimeType($pathname));
 	}
 
 

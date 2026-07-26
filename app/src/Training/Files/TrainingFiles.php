@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Files;
 
-use DateTime;
 use DateTimeInterface;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use MichalSpacekCz\Training\Exceptions\TrainingFileUnsupportedExtensionException;
+use MichalSpacekCz\Utils\MimeType;
 use Nette\Database\Explorer;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
@@ -15,13 +17,41 @@ use Nette\Utils\FileSystem;
 final readonly class TrainingFiles
 {
 
+	/**
+	 * Extensions must be lowercase: isAllowedExtension() lowercases the uploaded name's extension but
+	 * not this list, so a non-lowercase entry like PDF would silently never match.
+	 *
+	 * @param list<lowercase-string> $allowedExtensions
+	 */
 	public function __construct(
 		private Explorer $database,
 		private TypedDatabase $typedDatabase,
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingFileFactory $trainingFileFactory,
 		private TrainingFilesStorage $trainingFilesStorage,
+		private DateTimeFactory $dateTimeFactory,
+		private array $allowedExtensions,
 	) {
+	}
+
+
+	/**
+	 * @return list<lowercase-string>
+	 */
+	public function getAllowedExtensions(): array
+	{
+		return $this->allowedExtensions;
+	}
+
+
+	/**
+	 * Matched on the extension only; the file's real type is not verified, so e.g. a binary named .txt
+	 * is accepted. Harmless: these files are only ever downloaded as content-typed attachments served by
+	 * TrainingFilesDownload from outside the web root, never executed or rendered inline.
+	 */
+	public function isAllowedExtension(string $extension): bool
+	{
+		return in_array(strtolower($extension), $this->allowedExtensions, true);
 	}
 
 
@@ -87,10 +117,14 @@ final readonly class TrainingFiles
 	 */
 	public function addFile(DateTimeInterface $start, FileUpload $file, array $applicationIds): string
 	{
-		$name = basename($file->getSanitizedName());
+		$name = $file->getSanitizedName();
+		if (!$this->isAllowedExtension(pathinfo($name, PATHINFO_EXTENSION))) {
+			$mimeType = MimeType::detectMimeType($file->getTemporaryFile());
+			throw new TrainingFileUnsupportedExtensionException($name, $this->allowedExtensions, $mimeType);
+		}
 		$file->move($this->trainingFilesStorage->getFilesDir($start) . $name);
 
-		$datetime = new DateTime();
+		$datetime = $this->dateTimeFactory->create();
 		$this->database->beginTransaction();
 
 		$timeZone = $datetime->getTimezone()->getName();

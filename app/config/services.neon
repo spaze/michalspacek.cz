@@ -181,7 +181,7 @@ services:
 	- MichalSpacekCz\Training\Dates\UpcomingTrainingDates
 	- MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
-	- MichalSpacekCz\Training\Files\TrainingFiles
+	- MichalSpacekCz\Training\Files\TrainingFiles(allowedExtensions: %trainingFiles.allowedExtensions%)
 	- MichalSpacekCz\Training\Files\TrainingFilesDownload
 	trainingFilesStorage: MichalSpacekCz\Training\Files\TrainingFilesStorage
 	- MichalSpacekCz\Training\FreeSeats

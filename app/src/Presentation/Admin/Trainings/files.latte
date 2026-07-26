@@ -15,7 +15,8 @@
 </ol>
 <hr>
 {form file}
-<p class="separated"><strong>{label file /}</strong> {input file}</p>
+<p class="separated"><strong>{label file /}</strong> {input file} <small>kontroluje se jen přípona souboru, ne jeho obsah</small></p>
+<p class="inputError" n:if="$form['file']->hasErrors()"><strong>{inputError file}</strong></p>
 <p>{input submit}</p>
 {/form file}
 {/define}
