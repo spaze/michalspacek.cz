@@ -30,6 +30,14 @@ App.onChange = function (selector, listener) {
 App.onLoad = function (selector, listener) {
 	App.on('load', selector, listener);
 }
+App.onDelegated = function (type, selector, listener) {
+	document.addEventListener(type, function (event) {
+		const element = event.target.closest?.(selector);
+		if (element) {
+			listener.call(element, event);
+		}
+	});
+}
 App.clone = function (element) {
 	const cloned = element.cloneNode(true);
 	const sourceElements = element.getElementsByTagName('*');
@@ -72,3 +80,25 @@ App.bufferToBase64url = function (buffer) {
 	}
 	return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
+
+// A form marked with data-submit-once has its submit buttons disabled after the first submit for
+// data-submit-once-timeout seconds (default 5), showing their data-submit-once-disabled-label while disabled
+App.onDelegated('submit', 'form[data-submit-once]', function (event) {
+	if (event.defaultPrevented) {
+		return;
+	}
+	const buttons = this.querySelectorAll('[type="submit"]');
+	const labels = new Map();
+	for (const button of buttons) {
+		labels.set(button, button.value);
+		button.disabled = true;
+		button.value = button.dataset.submitOnceDisabledLabel ?? button.value;
+	}
+	const reenableAfter = (parseInt(this.dataset.submitOnceTimeout, 10) || 5) * 1000;
+	setTimeout(function () {
+		for (const button of buttons) {
+			button.disabled = false;
+			button.value = labels.get(button);
+		}
+	}, reenableAfter);
+});

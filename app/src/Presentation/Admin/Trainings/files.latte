@@ -14,7 +14,7 @@
 	<li>{$file->getFileInfo()->getPathInfo()->getBasename()}/{$file->getFilename()} {if $file->getFileInfo()->isReadable()}({$file->getFileInfo()->getSize()|bytes}, přidáno {$file->getAdded()|localeDay}){else}<strong>does not exist</strong>{/if}</li>
 </ol>
 <hr>
-{form file}
+{form file, data-submit-once => true}
 <p class="separated"><strong>{label file /}</strong> {input file} <small>kontroluje se jen přípona souboru, ne jeho obsah</small></p>
 <p class="inputError" n:if="$form['file']->hasErrors()"><strong>{inputError file}</strong></p>
 <p>{input submit}</p>
