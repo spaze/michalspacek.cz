@@ -9,6 +9,8 @@ use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Request;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
 use Nette\Http\FileUpload;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
@@ -53,6 +55,33 @@ final class TalkSlidesFormFactoryTest extends TestCase
 		Assert::same('messages.talks.admin.slideadded', $onSuccessMessage);
 		Assert::same('info', $onSuccessType);
 		Assert::same($talkId, $onSuccessTalkId);
+	}
+
+
+	public function testFilenameFieldRejectsPathTraversal(): void
+	{
+		$talkId = 123;
+		$slides = new TalkSlideCollection($talkId);
+		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null));
+		$form = $this->talkSlidesFormFactory->create(function (): void {
+		}, $talkId, $slides, 0, new Request('foo'));
+		$this->applicationPresenter->anchorForm($form);
+
+		$slidesContainer = $form->getComponent('slides');
+		assert($slidesContainer instanceof Container);
+		$slideContainer = $slidesContainer->getComponent('1');
+		assert($slideContainer instanceof Container);
+		$filename = $slideContainer->getComponent('filename');
+		assert($filename instanceof TextInput);
+
+		$filename->setDefaultValue('../../../etc/passwd');
+		$filename->validate();
+		Assert::true($filename->hasErrors());
+
+		$filename->cleanErrors();
+		$filename->setDefaultValue('abc-123_DEF.png');
+		$filename->validate();
+		Assert::false($filename->hasErrors());
 	}
 
 
