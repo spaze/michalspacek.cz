@@ -23,5 +23,5 @@ paths = [
 ]
 regexTarget = "match"
 regexes = [
-  '''^ms[a-z]{2}_(cafe){15}[0-9a-f]{4}$''',
+  '''^ms[a-z]{2}(test)?_(cafe){15}[0-9a-f]{4}$''',
 ]
