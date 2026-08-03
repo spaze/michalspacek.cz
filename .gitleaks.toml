@@ -21,3 +21,7 @@ paths = [
   '''i/build/''',
   '''app/temp/cache/''',
 ]
+regexTarget = "match"
+regexes = [
+  '''^ms[a-z]{2}(test)?_(cafe){15}[0-9a-f]{4}$''',
+]

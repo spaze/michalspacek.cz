@@ -59,13 +59,13 @@ parameters:
 	encryption:
 		keys:
 			password:
-				dev1: "mspe_abadcafec15c0d06f00dcafed00dbeef" # [0-9A-F]{64}
+				dev1: "mspe_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafef00d" # [0-9a-fA-F]{64}
 			email:
-				dev1: "msee_cafebabe25da1768d69ee80717cc2f30" # [0-9A-F]{64}
+				dev1: "msee_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafebabe" # [0-9a-fA-F]{64}
 			session:
-				dev1: "msse_25da1768d69ee80717cc2f30cafebabe" # [0-9A-F]{64}
+				dev1: "msse_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafed00d" # [0-9a-fA-F]{64}
 			securityEvent:
-				dev1: "msle_deadbeef" # [0-9A-F]{64}
+				dev1: "msle_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe1337" # [0-9a-fA-F]{64}
 		activeKeyIds:
 			password: dev1
 			email: dev1
