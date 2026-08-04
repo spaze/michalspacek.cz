@@ -233,7 +233,6 @@ services:
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
 	emailEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.email%, %encryption.activeKeyIds.email%, %encryption.keyPrefixes.email%)
-	passwordEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.password%, %encryption.activeKeyIds.password%, %encryption.keyPrefixes.password%)
 	sessionEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.session%, %encryption.activeKeyIds.session%, %encryption.keyPrefixes.session%)
 	securityEventEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.securityEvent%, %encryption.activeKeyIds.securityEvent%, %encryption.keyPrefixes.securityEvent%)
 	- Spaze\PhpInfo\PhpInfo
