@@ -9,8 +9,6 @@ parameters:
 			com: burger.test
 	encryption:
 		keys:
-			password!:
-				test: "mspetest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafea570"
 			email!:
 				test: "mseetest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafeb053"
 			session!:
@@ -18,12 +16,10 @@ parameters:
 			securityEvent!:
 				test: "msletest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe7100"
 		activeKeyIds:
-			password: test
 			email: test
 			session: test
 			securityEvent: test
 		keyPrefixes:
-			password: mspetest
 			email: mseetest
 			session: mssetest
 			securityEvent: msletest
