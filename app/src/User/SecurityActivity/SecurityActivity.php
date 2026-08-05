@@ -5,26 +5,24 @@ namespace MichalSpacekCz\User\SecurityActivity;
 
 use DateTimeInterface;
 use MichalSpacekCz\DateTime\DateTimeFactory;
+use MichalSpacekCz\Encryption\EncryptedColumn;
+use MichalSpacekCz\Encryption\EncryptedStorage;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Manager;
 use Nette\Database\Explorer;
 use Nette\Security\User;
 use Nette\Utils\Json;
+use Override;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Throwable;
 use Tracy\Debugger;
 
-final readonly class SecurityActivity
+final readonly class SecurityActivity implements EncryptedStorage
 {
 
-	private const string SELECT = 'SELECT
-			action,
-			created,
-			created_timezone AS createdTimezone,
-			ip,
-			user_agent AS userAgent,
-			details
-		FROM security_events';
+	private const string TABLE = 'security_events';
+	private const string ID_COLUMN = 'id_security_event';
+	private const string DETAILS_COLUMN = 'details';
 
 
 	public function __construct(
@@ -44,8 +42,14 @@ final readonly class SecurityActivity
 	public function getEventsForCurrentUser(): array
 	{
 		return $this->buildEvents($this->database->fetchAll(
-			self::SELECT . ' WHERE key_user = ? ORDER BY created DESC, id_security_event DESC',
+			'SELECT action, created, created_timezone AS createdTimezone, ip, user_agent AS userAgent, ?name
+				FROM ?name
+				WHERE key_user = ?
+				ORDER BY created DESC, ?name DESC',
+			self::DETAILS_COLUMN,
+			self::TABLE,
 			$this->manager->getUserId($this->user),
+			self::ID_COLUMN,
 		));
 	}
 
@@ -98,6 +102,23 @@ final readonly class SecurityActivity
 			Debugger::log($e, 'auth');
 			return [];
 		}
+	}
+
+
+	#[Override]
+	public function getEncryptedDataLabel(): string
+	{
+		return 'security event details';
+	}
+
+
+	/**
+	 * @return non-empty-list<EncryptedColumn>
+	 */
+	#[Override]
+	public function getEncryptedColumns(): array
+	{
+		return [new EncryptedColumn($this->securityEventEncryption, self::TABLE, self::ID_COLUMN, self::DETAILS_COLUMN)];
 	}
 
 }

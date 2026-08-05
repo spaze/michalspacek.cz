@@ -139,6 +139,16 @@ final class Database extends Explorer
 	public function query(string $sql, ...$params): ResultSet
 	{
 		$this->maybeThrow();
+		$this->recordParams($sql, $params);
+		return $this->resultSet ?? new ResultSet();
+	}
+
+
+	/**
+	 * @param array<array-key, mixed> $params
+	 */
+	private function recordParams(string $sql, array $params): void
+	{
 		foreach ($params as $param) {
 			if (is_array($param)) {
 				$arrayParams = [];
@@ -150,7 +160,6 @@ final class Database extends Explorer
 				$this->queriesScalarParams[$sql][] = $this->formatValue($param);
 			}
 		}
-		return $this->resultSet ?? new ResultSet();
 	}
 
 
@@ -209,6 +218,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
 	{
+		$this->recordParams($sql, $params);
 		$row = $this->createRow($this->fetchResults[$this->fetchResultsPosition++] ?? $this->fetchDefaultResult);
 		return $row->count() > 0 ? $row : null;
 	}
@@ -233,6 +243,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchField(string $sql, ...$params): mixed
 	{
+		$this->recordParams($sql, $params);
 		return $this->fetchFieldResults[$this->fetchFieldResultsPosition++] ?? $this->fetchFieldDefaultResult;
 	}
 
@@ -263,6 +274,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchPairs(string $sql, ...$params): array
 	{
+		$this->recordParams($sql, $params);
 		return $this->fetchPairsResults[$this->fetchPairsResultsPosition++] ?? $this->fetchPairsDefaultResult;
 	}
 
@@ -315,6 +327,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchAll(string $sql, ...$params): array
 	{
+		$this->recordParams($sql, $params);
 		return $this->fetchAllResults[$this->fetchAllResultsPosition++] ?? $this->fetchAllDefaultResult;
 	}
 

@@ -141,7 +141,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 		Assert::same(self::TRAINING_ACTION, $this->onSuccessAction);
 		Assert::null($this->onErrorMessage);
 
-		$params = $this->database->getParamsArrayForQuery('INSERT INTO training_applications');
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name');
 		Assert::same(self::DATE_ID, $params[0]['key_date']);
 
 		$this->assertSessionSection();
@@ -161,11 +161,10 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 		Assert::same(self::TRAINING_ACTION, $this->onSuccessAction);
 		Assert::null($this->onErrorMessage);
 
-		$query = 'UPDATE training_applications SET ? WHERE id_application = ?';
+		$query = 'UPDATE ?name SET ? WHERE ?name = ?';
 		$params = $this->database->getParamsArrayForQuery($query);
 		Assert::same(self::NAME, $params[0]['name']);
-		$whereParams = $this->database->getParamsForQuery($query);
-		Assert::same(self::APPLICATION_ID, $whereParams[0]);
+		Assert::same(['training_applications', 'id_application', self::APPLICATION_ID], $this->database->getParamsForQuery($query));
 
 		$this->assertSessionSection();
 

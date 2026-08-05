@@ -42,6 +42,8 @@ services:
 	- MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
 	- MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing
+	- MichalSpacekCz\Encryption\ColumnReEncryptor(batchSize: 1000)
+	- MichalSpacekCz\Encryption\ReEncryption(storages: typed(MichalSpacekCz\Encryption\EncryptedStorage))
 	- MichalSpacekCz\Feed\Exports
 	- MichalSpacekCz\Form\BlogPostFormFactory
 	- MichalSpacekCz\Form\Controls\FormControlsFactory

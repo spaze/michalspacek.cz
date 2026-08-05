@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
+use MichalSpacekCz\Encryption\EncryptedColumn;
+use MichalSpacekCz\Encryption\EncryptedStorage;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
@@ -13,14 +15,20 @@ use MichalSpacekCz\Training\Prices;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;
+use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use RuntimeException;
 use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
 
-final readonly class TrainingApplicationStorage
+final readonly class TrainingApplicationStorage implements EncryptedStorage
 {
+
+	private const string TABLE = 'training_applications';
+	private const string ID_COLUMN = 'id_application';
+	private const string EMAIL_COLUMN = 'email';
+
 
 	public function __construct(
 		private Explorer $database,
@@ -178,7 +186,7 @@ final readonly class TrainingApplicationStorage
 		$data = [
 			'key_date' => $dateId,
 			'name' => $name,
-			'email' => $this->emailEncryption->encrypt($email),
+			self::EMAIL_COLUMN => $this->emailEncryption->encrypt($email),
 			'company' => $company !== '' ? $company : null,
 			'street' => $street !== '' ? $street : null,
 			'city' => $city !== '' ? $city : null,
@@ -213,7 +221,7 @@ final readonly class TrainingApplicationStorage
 	{
 		$data['access_token'] = $this->generateAccessCode();
 		try {
-			$this->database->query('INSERT INTO training_applications', $data);
+			$this->database->query('INSERT INTO ?name', self::TABLE, $data);
 		} catch (UniqueConstraintViolationException) {
 			// regenerate the access code and try harder this time
 			Debugger::log("Regenerating access token, {$data['access_token']} already exists");
@@ -262,10 +270,11 @@ final readonly class TrainingApplicationStorage
 			): void {
 				$price = $this->prices->resolvePriceDiscountVat($date->getPrice(), $date->getStudentDiscount(), TrainingApplicationStatus::SignedUp, $note);
 				$this->database->query(
-					'UPDATE training_applications SET ? WHERE id_application = ?',
+					'UPDATE ?name SET ? WHERE ?name = ?',
+					self::TABLE,
 					[
 						'name' => $name,
-						'email' => $this->emailEncryption->encrypt($email),
+						self::EMAIL_COLUMN => $this->emailEncryption->encrypt($email),
 						'company' => $company,
 						'street' => $street,
 						'city' => $city,
@@ -279,6 +288,7 @@ final readonly class TrainingApplicationStorage
 						'price_vat' => $price->getPriceVat(),
 						'discount' => $price->getDiscount(),
 					],
+					self::ID_COLUMN,
 					$applicationId,
 				);
 			},
@@ -319,7 +329,7 @@ final readonly class TrainingApplicationStorage
 		}
 		$data = [
 			'name' => $name,
-			'email' => $email !== null ? $this->emailEncryption->encrypt($email) : null,
+			self::EMAIL_COLUMN => $email !== null ? $this->emailEncryption->encrypt($email) : null,
 			'company' => $company,
 			'familiar' => $familiar,
 			'street' => $street,
@@ -341,19 +351,38 @@ final readonly class TrainingApplicationStorage
 		if ($dateId !== null) {
 			$data['key_date'] = $dateId;
 		}
-		$this->database->query('UPDATE training_applications SET ? WHERE id_application = ?', $data, $applicationId);
+		$this->database->query('UPDATE ?name SET ? WHERE ?name = ?', self::TABLE, $data, self::ID_COLUMN, $applicationId);
 	}
 
 
 	public function updateApplicationInvoiceData(int $applicationId, string $invoiceId): void
 	{
 		$this->database->query(
-			'UPDATE training_applications SET ? WHERE id_application = ?',
+			'UPDATE ?name SET ? WHERE ?name = ?',
+			self::TABLE,
 			[
 				'invoice_id' => $invoiceId !== '' ? (int)$invoiceId : null,
 			],
+			self::ID_COLUMN,
 			$applicationId,
 		);
+	}
+
+
+	#[Override]
+	public function getEncryptedDataLabel(): string
+	{
+		return 'training application emails';
+	}
+
+
+	/**
+	 * @return non-empty-list<EncryptedColumn>
+	 */
+	#[Override]
+	public function getEncryptedColumns(): array
+	{
+		return [new EncryptedColumn($this->emailEncryption, self::TABLE, self::ID_COLUMN, self::EMAIL_COLUMN)];
 	}
 
 }

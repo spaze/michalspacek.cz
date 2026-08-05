@@ -125,7 +125,7 @@ final class PasskeyAddTest extends TestCase
 	private function seedNotificationEmail(int $userId, string $address): void
 	{
 		$this->userAccounts->setNotificationEmail($userId, $address);
-		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
+		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE ?name = ?');
 		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
 		$this->database->setFetchFieldDefaultResult($stored);

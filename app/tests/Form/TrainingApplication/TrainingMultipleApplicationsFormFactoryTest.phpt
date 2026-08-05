@@ -74,7 +74,7 @@ final class TrainingMultipleApplicationsFormFactoryTest extends TestCase
 		$this->applicationPresenter->anchorForm($form);
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::same(self::TRAINING_DATE_ID, $this->result);
-		$params = $this->database->getParamsArrayForQuery('INSERT INTO training_applications');
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name');
 		Assert::same(self::TRAINING_DATE_ID, $params[0]['key_date']);
 		Assert::same(self::NEW_STATUS_ID, $params[0]['key_status']);
 	}

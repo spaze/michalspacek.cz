@@ -96,7 +96,7 @@ final class TrainingApplicationAdminFormFactoryTest extends TestCase
 		]);
 		Arrays::invoke($form->onSuccess, $form);
 		Assert::same(self::TRAINING_DATE_ID, $this->result);
-		$params = $this->database->getParamsArrayForQuery('UPDATE training_applications SET ? WHERE id_application = ?');
+		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE ?name = ?');
 		Assert::true($params[0]['familiar']);
 		Assert::same(self::TRAINING_DATE_ID, $params[0]['key_date']);
 	}

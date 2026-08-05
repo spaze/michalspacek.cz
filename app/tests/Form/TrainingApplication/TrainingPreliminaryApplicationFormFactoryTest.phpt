@@ -75,7 +75,7 @@ final class TrainingPreliminaryApplicationFormFactoryTest extends TestCase
 		Arrays::invoke($this->form->onSuccess, $this->form);
 		Assert::same('action', $this->action);
 		Assert::null($this->message);
-		$params = $this->database->getParamsArrayForQuery('INSERT INTO training_applications');
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name');
 		Assert::same(self::TRAINING_ID, $params[0]['key_training']);
 	}
 
