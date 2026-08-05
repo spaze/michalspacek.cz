@@ -24,12 +24,14 @@ return (new Configuration())
 	->ignoreErrorsOnPackage('async-aws/lambda', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('mlocati/ip-lib', [ErrorType::UNUSED_DEPENDENCY])
 
-	// These are in vendor-dev/composer.json, not in the main composer.json
-	// Remove once https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/258 is implemented
+	// These are in vendor-dev/composer.json or come with a dependency, not in the main composer.json
+	// Remove the vendor-dev ones once https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/258 is implemented
 	->ignoreErrorsOnPackages([
 		'jetbrains/phpstorm-attributes',
 		'nette/component-model',
 		'nette/tester',
+		'paragonie/halite',
+		'paragonie/hidden-string',
 		'spomky-labs/cbor-php',
 	], [ErrorType::SHADOW_DEPENDENCY])
 	->ignoreErrorsOnExtensions([
