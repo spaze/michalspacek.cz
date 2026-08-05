@@ -7,12 +7,12 @@ use OutOfRangeException;
 use Spaze\Encryption\Format\LogSafeValue;
 use Throwable;
 
-class UnknownEncryptionKeyIdException extends OutOfRangeException
+class MissingSecretKeyException extends OutOfRangeException
 {
 
 	public function __construct(string $keyId, ?Throwable $previous = null)
 	{
-		parent::__construct("Unknown encryption key id: '" . LogSafeValue::from($keyId) . "'", previous: $previous);
+		parent::__construct("No secret key configured for key id '" . LogSafeValue::from($keyId) . "', it can only be used to encrypt", previous: $previous);
 	}
 
 }

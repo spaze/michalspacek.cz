@@ -2770,33 +2770,36 @@
         },
         {
             "name": "spaze/encryption",
-            "version": "v2.1.0",
-            "version_normalized": "2.1.0.0",
+            "version": "v3.0.0",
+            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/encryption.git",
-                "reference": "322c078c1ee3c98e952b4335475e3b7151992f58"
+                "reference": "69bdb311ceb6bb8c49ed2ec6ea03cb87adac49aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/encryption/zipball/322c078c1ee3c98e952b4335475e3b7151992f58",
-                "reference": "322c078c1ee3c98e952b4335475e3b7151992f58",
+                "url": "https://api.github.com/repos/spaze/encryption/zipball/69bdb311ceb6bb8c49ed2ec6ea03cb87adac49aa",
+                "reference": "69bdb311ceb6bb8c49ed2ec6ea03cb87adac49aa",
                 "shasum": ""
             },
             "require": {
-                "paragonie/halite": "^5.0",
+                "ext-sodium": "*",
+                "paragonie/halite": "^5.1",
                 "paragonie/hidden-string": "^2.0",
                 "php": "^8.2"
             },
             "require-dev": {
                 "nette/tester": "^2.5.7",
+                "paragonie/sodium_compat": "^2.5",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan": "^2.2.7",
                 "phpstan/phpstan-strict-rules": "^2.0",
-                "spaze/coding-standard": "^1.9.1"
+                "spaze/coding-standard": "^1.9.1",
+                "spaze/phpstan-disallowed-calls": "^4.14"
             },
-            "time": "2025-11-24T03:57:05+00:00",
+            "time": "2026-08-02T17:21:47+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2818,7 +2821,7 @@
             "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
             "support": {
                 "issues": "https://github.com/spaze/encryption/issues",
-                "source": "https://github.com/spaze/encryption/tree/v2.1.0"
+                "source": "https://github.com/spaze/encryption/tree/v3.0.0"
             },
             "install-path": "../spaze/encryption"
         },

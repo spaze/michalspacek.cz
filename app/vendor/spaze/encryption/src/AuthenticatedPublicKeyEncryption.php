@@ -10,8 +10,9 @@ use ParagonIE\Halite\Alerts\InvalidKey;
 use ParagonIE\Halite\Alerts\InvalidMessage;
 use ParagonIE\Halite\Alerts\InvalidSignature;
 use ParagonIE\Halite\Alerts\InvalidType;
-use ParagonIE\Halite\Symmetric\Crypto;
-use ParagonIE\Halite\Symmetric\EncryptionKey;
+use ParagonIE\Halite\Asymmetric\Crypto;
+use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
+use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
 use ParagonIE\HiddenString\HiddenString;
 use SensitiveParameter;
 use SodiumException;
@@ -19,45 +20,71 @@ use Spaze\Encryption\Exceptions\ActiveKeyIdNotFoundException;
 use Spaze\Encryption\Exceptions\DecryptWithAdNeedsAdditionalDataException;
 use Spaze\Encryption\Exceptions\EncryptWithAdNeedsAdditionalDataException;
 use Spaze\Encryption\Exceptions\FormatMarkerMismatchException;
+use Spaze\Encryption\Exceptions\IncompleteKeyPairException;
 use Spaze\Encryption\Exceptions\InvalidCipherTextFormatException;
 use Spaze\Encryption\Exceptions\InvalidKeyEncodingException;
 use Spaze\Encryption\Exceptions\InvalidKeyIdException;
 use Spaze\Encryption\Exceptions\InvalidKeyLengthException;
 use Spaze\Encryption\Exceptions\InvalidKeyPrefixException;
+use Spaze\Encryption\Exceptions\InvalidKeyRoleException;
 use Spaze\Encryption\Exceptions\InvalidNumberOfComponentsException;
 use Spaze\Encryption\Exceptions\MissingKeyPrefixException;
 use Spaze\Encryption\Exceptions\UnknownEncryptionKeyIdException;
 use Spaze\Encryption\Exceptions\UnknownFormatMarkerException;
+use Spaze\Encryption\Format\AsymmetricKeyRole;
 use Spaze\Encryption\Format\FormatMarker;
 use Spaze\Encryption\Format\KeyEnvelope;
 use TypeError;
+use function array_keys;
 
-class SymmetricKeyEncryption
+class AuthenticatedPublicKeyEncryption
 {
 
 	use KeyEnvelope;
 
 
 	/** @var array<string, HiddenString> */
-	private array $keys = [];
+	private array $secretKeys = [];
+
+	/** @var array<string, HiddenString> */
+	private array $publicKeys = [];
 
 
 	/**
-	 * @param array<array-key, string> $keys key id => key
+	 * Encryption between two parties: each side configures its own secret key and the other side's public key under the same key id.
+	 * Both sides can encrypt and decrypt, and decryption only succeeds for data created with one of the two configured keys,
+	 * so it also proves the data came from the other party, or from us.
+	 *
+	 * @param array<array-key, string> $secretKeys key id => our secret key
+	 * @param array<array-key, string> $publicKeys key id => the other party's public key
 	 * @throws ActiveKeyIdNotFoundException
+	 * @throws IncompleteKeyPairException
 	 * @throws InvalidKeyEncodingException
 	 * @throws InvalidKeyIdException
 	 * @throws InvalidKeyLengthException
 	 * @throws InvalidKeyPrefixException
+	 * @throws InvalidKeyRoleException
 	 * @throws MissingKeyPrefixException
 	 */
 	public function __construct(
-		#[SensitiveParameter] array $keys,
+		#[SensitiveParameter] array $secretKeys,
+		#[SensitiveParameter] array $publicKeys,
 		private string $activeKeyId,
 		private string $keyPrefix,
 	) {
-		$this->keys = $this->decodeKeys($keys, $this->keyPrefix, SODIUM_CRYPTO_STREAM_KEYBYTES);
-		if (!isset($this->keys[$this->activeKeyId])) {
+		$this->secretKeys = $this->decodeKeys($secretKeys, $this->keyPrefix, SODIUM_CRYPTO_BOX_SECRETKEYBYTES, AsymmetricKeyRole::Secret);
+		$this->publicKeys = $this->decodeKeys($publicKeys, $this->keyPrefix, SODIUM_CRYPTO_BOX_PUBLICKEYBYTES, AsymmetricKeyRole::Public);
+		foreach (array_keys($secretKeys) as $id) {
+			if (!isset($this->publicKeys[$id])) {
+				throw new IncompleteKeyPairException((string)$id);
+			}
+		}
+		foreach (array_keys($publicKeys) as $id) {
+			if (!isset($this->secretKeys[$id])) {
+				throw new IncompleteKeyPairException((string)$id);
+			}
+		}
+		if (!isset($this->secretKeys[$this->activeKeyId])) {
 			throw new ActiveKeyIdNotFoundException($this->activeKeyId);
 		}
 	}
@@ -78,10 +105,10 @@ class SymmetricKeyEncryption
 	 */
 	public function encrypt(#[SensitiveParameter] string $data): string
 	{
-		$key = $this->getKey($this->activeKeyId);
-		$boundData = $this->buildBoundAdditionalData($this->activeKeyId, FormatMarker::SymmetricKeyV1);
-		$cipherText = Crypto::encryptWithAD(new HiddenString($data), $key, $boundData);
-		return $this->formatKeyCipherText($this->activeKeyId, FormatMarker::SymmetricKeyV1, $cipherText);
+		[$secretKey, $publicKey] = $this->getKeyPair($this->activeKeyId);
+		$boundData = $this->buildBoundAdditionalData($this->activeKeyId, FormatMarker::AuthenticatedPublicKeyV1);
+		$cipherText = Crypto::encryptWithAD(new HiddenString($data), $secretKey, $publicKey, $boundData);
+		return $this->formatKeyCipherText($this->activeKeyId, FormatMarker::AuthenticatedPublicKeyV1, $cipherText);
 	}
 
 
@@ -104,10 +131,10 @@ class SymmetricKeyEncryption
 		if ($additionalData === '') {
 			throw new EncryptWithAdNeedsAdditionalDataException();
 		}
-		$key = $this->getKey($this->activeKeyId);
-		$boundData = $this->buildBoundAdditionalData($this->activeKeyId, FormatMarker::SymmetricKeyWithAdV1, $additionalData);
-		$cipherText = Crypto::encryptWithAD(new HiddenString($data), $key, $boundData);
-		return $this->formatKeyCipherText($this->activeKeyId, FormatMarker::SymmetricKeyWithAdV1, $cipherText);
+		[$secretKey, $publicKey] = $this->getKeyPair($this->activeKeyId);
+		$boundData = $this->buildBoundAdditionalData($this->activeKeyId, FormatMarker::AuthenticatedPublicKeyWithAdV1, $additionalData);
+		$cipherText = Crypto::encryptWithAD(new HiddenString($data), $secretKey, $publicKey, $boundData);
+		return $this->formatKeyCipherText($this->activeKeyId, FormatMarker::AuthenticatedPublicKeyWithAdV1, $cipherText);
 	}
 
 
@@ -119,9 +146,9 @@ class SymmetricKeyEncryption
 	 * @throws InvalidMessage
 	 * @throws InvalidSignature
 	 * @throws InvalidType
-	 * @throws JsonException
 	 * @throws SodiumException
 	 * @throws TypeError
+	 * @throws JsonException
 	 * @throws UnknownEncryptionKeyIdException
 	 * @throws UnknownFormatMarkerException
 	 * @throws InvalidCipherTextFormatException
@@ -130,14 +157,14 @@ class SymmetricKeyEncryption
 	public function decrypt(string $data): string
 	{
 		[$keyId, $marker, $cipherText] = $this->parseKeyCipherText($data);
-		$validMarker = $this->checkFormatMarker($marker, FormatMarker::SymmetricKeyV1);
-		$key = $this->getKey($keyId);
+		$validMarker = $this->checkFormatMarker($marker, FormatMarker::AuthenticatedPublicKeyV1);
+		[$secretKey, $publicKey] = $this->getKeyPair($keyId);
 		if ($validMarker === null) {
 			// Data from before the marker existed, nothing was added to what the decryption verifies back then
-			return Crypto::decrypt($cipherText, $key)->getString();
+			return Crypto::decrypt($cipherText, $secretKey, $publicKey)->getString();
 		}
 		$boundData = $this->buildBoundAdditionalData($keyId, $validMarker);
-		return Crypto::decryptWithAD($cipherText, $key, $boundData)->getString();
+		return Crypto::decryptWithAD($cipherText, $secretKey, $publicKey, $boundData)->getString();
 	}
 
 
@@ -150,9 +177,9 @@ class SymmetricKeyEncryption
 	 * @throws InvalidMessage
 	 * @throws InvalidSignature
 	 * @throws InvalidType
-	 * @throws JsonException
 	 * @throws SodiumException
 	 * @throws TypeError
+	 * @throws JsonException
 	 * @throws UnknownEncryptionKeyIdException
 	 * @throws UnknownFormatMarkerException
 	 * @throws InvalidCipherTextFormatException
@@ -164,14 +191,14 @@ class SymmetricKeyEncryption
 			throw new DecryptWithAdNeedsAdditionalDataException();
 		}
 		[$keyId, $marker, $cipherText] = $this->parseKeyCipherText($data);
-		$validMarker = $this->checkFormatMarker($marker, FormatMarker::SymmetricKeyWithAdV1);
-		$key = $this->getKey($keyId);
+		$validMarker = $this->checkFormatMarker($marker, FormatMarker::AuthenticatedPublicKeyWithAdV1);
+		[$secretKey, $publicKey] = $this->getKeyPair($keyId);
 		if ($validMarker === null) {
 			// Data from before the marker existed, the additional data was used alone back then
-			return Crypto::decryptWithAD($cipherText, $key, $additionalData)->getString();
+			return Crypto::decryptWithAD($cipherText, $secretKey, $publicKey, $additionalData)->getString();
 		}
 		$boundData = $this->buildBoundAdditionalData($keyId, $validMarker, $additionalData);
-		return Crypto::decryptWithAD($cipherText, $key, $boundData)->getString();
+		return Crypto::decryptWithAD($cipherText, $secretKey, $publicKey, $boundData)->getString();
 	}
 
 
@@ -187,19 +214,22 @@ class SymmetricKeyEncryption
 	 */
 	public function needsReEncrypt(string $data): bool
 	{
-		return $this->needsReEncryptMarked($data, $this->activeKeyId, FormatMarker::SymmetricKeyV1, FormatMarker::SymmetricKeyWithAdV1);
+		return $this->needsReEncryptMarked($data, $this->activeKeyId, FormatMarker::AuthenticatedPublicKeyV1, FormatMarker::AuthenticatedPublicKeyWithAdV1);
 	}
 
 
 	/**
+	 * The constructor guarantees a key id always has both keys, so one lookup can serve both.
+	 *
+	 * @return array{0:EncryptionSecretKey, 1:EncryptionPublicKey}
 	 * @throws InvalidKey
 	 * @throws TypeError
 	 * @throws UnknownEncryptionKeyIdException
 	 */
-	private function getKey(string $keyId): EncryptionKey
+	private function getKeyPair(string $keyId): array
 	{
-		if (isset($this->keys[$keyId])) {
-			return new EncryptionKey($this->keys[$keyId]);
+		if (isset($this->secretKeys[$keyId], $this->publicKeys[$keyId])) {
+			return [new EncryptionSecretKey($this->secretKeys[$keyId]), new EncryptionPublicKey($this->publicKeys[$keyId])];
 		} else {
 			throw new UnknownEncryptionKeyIdException($keyId);
 		}
