@@ -227,7 +227,7 @@ final class TrainingApplicationStorageTest extends TestCase
 		?int $discount,
 		int $statusId,
 	): void {
-		$params = $this->database->getParamsArrayForQuery('INSERT INTO training_applications')[0];
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO ?name')[0];
 		Assert::same($dateId, $params['key_date']);
 		Assert::hasNotKey('key_training', $params);
 		Assert::same($name, $params['name']);
@@ -312,6 +312,18 @@ final class TrainingApplicationStorageTest extends TestCase
 			null,
 			null,
 		);
+	}
+
+
+	public function testDeclaresTheEmailColumn(): void
+	{
+		Assert::same('training application emails', $this->trainingApplicationStorage->getEncryptedDataLabel());
+
+		$columns = $this->trainingApplicationStorage->getEncryptedColumns();
+		Assert::count(1, $columns);
+		Assert::same('training_applications', $columns[0]->table);
+		Assert::same('id_application', $columns[0]->idColumn);
+		Assert::same('email', $columns[0]->valueColumn);
 	}
 
 

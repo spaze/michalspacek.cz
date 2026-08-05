@@ -75,7 +75,7 @@ final class AccountNotificationEmailFormFactoryTest extends TestCase
 		Arrays::invoke($form->onSuccess, $form);
 
 		Assert::true($this->onSuccessCalled);
-		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
+		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE ?name = ?');
 		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
 		Assert::notSame('me@example.com', $stored); // stored encrypted, never plaintext
@@ -113,7 +113,7 @@ final class AccountNotificationEmailFormFactoryTest extends TestCase
 
 		Assert::true($form->hasErrors());
 		Assert::false($this->onSuccessCalled);
-		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?')); // not saved
+		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE ?name = ?')); // not saved
 	}
 
 
@@ -165,7 +165,7 @@ final class AccountNotificationEmailFormFactoryTest extends TestCase
 	private function seedCurrentNotificationEmail(string $address): void
 	{
 		$this->userAccounts->setNotificationEmail(42, $address);
-		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE id_user = ?');
+		$params = $this->database->getParamsArrayForQuery('UPDATE ?name SET ? WHERE ?name = ?');
 		$stored = $params[0]['notification_email'];
 		assert(is_string($stored));
 		$this->database->setFetchFieldDefaultResult($stored); // every getNotificationEmail() returns the seeded address until overwritten

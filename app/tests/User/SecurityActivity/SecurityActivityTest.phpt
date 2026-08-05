@@ -134,6 +134,21 @@ final class SecurityActivityTest extends TestCase
 	}
 
 
+	public function testDeclaresTheDetailsColumnWithTheKeyThatStoredIt(): void
+	{
+		Assert::same('security event details', $this->securityActivity->getEncryptedDataLabel());
+
+		$columns = $this->securityActivity->getEncryptedColumns();
+		Assert::count(1, $columns);
+		Assert::same('security_events', $columns[0]->table);
+		Assert::same('id_security_event', $columns[0]->idColumn);
+		Assert::same('details', $columns[0]->valueColumn);
+
+		// The declared key set has to be the one the column was written with, or a sweep would find every row undecryptable
+		Assert::same('{"passkey":"Yubikey"}', $columns[0]->encryption->decrypt($this->encryptDetails(['passkey' => 'Yubikey'])));
+	}
+
+
 	/**
 	 * @param array<string, string|null> $details
 	 */

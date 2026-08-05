@@ -5,14 +5,21 @@ namespace MichalSpacekCz\User;
 
 use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
+use MichalSpacekCz\Encryption\EncryptedColumn;
+use MichalSpacekCz\Encryption\EncryptedStorage;
 use Nette\Database\Explorer;
+use Override;
 use Spaze\Encryption\SymmetricKeyEncryption;
 
 /**
  * A user's own account settings, with the notification email encrypted at rest like other emails in the app.
  */
-final readonly class UserAccounts
+final readonly class UserAccounts implements EncryptedStorage
 {
+
+	private const string ID_COLUMN = 'id_user';
+	private const string NOTIFICATION_EMAIL_COLUMN = 'notification_email';
+
 
 	public function __construct(
 		private Explorer $database,
@@ -26,8 +33,10 @@ final readonly class UserAccounts
 	public function getNotificationEmail(int $userId): ?string
 	{
 		$encrypted = $this->typedDatabase->fetchFieldStringNullable(
-			'SELECT notification_email FROM ?name WHERE id_user = ?',
+			'SELECT ?name FROM ?name WHERE ?name = ?',
+			self::NOTIFICATION_EMAIL_COLUMN,
 			$this->usersTableName,
+			self::ID_COLUMN,
 			$userId,
 		);
 		return $encrypted !== null ? $this->emailEncryption->decrypt($encrypted) : null;
@@ -37,9 +46,10 @@ final readonly class UserAccounts
 	public function setNotificationEmail(int $userId, string $email): void
 	{
 		$this->database->query(
-			'UPDATE ?name SET ? WHERE id_user = ?',
+			'UPDATE ?name SET ? WHERE ?name = ?',
 			$this->usersTableName,
-			['notification_email' => $this->emailEncryption->encrypt($email)],
+			[self::NOTIFICATION_EMAIL_COLUMN => $this->emailEncryption->encrypt($email)],
+			self::ID_COLUMN,
 			$userId,
 		);
 	}
@@ -54,8 +64,10 @@ final readonly class UserAccounts
 		try {
 			// lock the row so the old notification email can't change between this read and the write below
 			$encryptedOld = $this->typedDatabase->fetchFieldStringNullable(
-				'SELECT notification_email FROM ?name WHERE id_user = ? FOR UPDATE',
+				'SELECT ?name FROM ?name WHERE ?name = ? FOR UPDATE',
+				self::NOTIFICATION_EMAIL_COLUMN,
 				$this->usersTableName,
+				self::ID_COLUMN,
 				$userId,
 			);
 			// decrypt before the write so an undecryptable old value rolls back rather than committing then throwing
@@ -67,6 +79,23 @@ final readonly class UserAccounts
 			throw $e;
 		}
 		return $oldEmail;
+	}
+
+
+	#[Override]
+	public function getEncryptedDataLabel(): string
+	{
+		return 'user notification emails';
+	}
+
+
+	/**
+	 * @return non-empty-list<EncryptedColumn>
+	 */
+	#[Override]
+	public function getEncryptedColumns(): array
+	{
+		return [new EncryptedColumn($this->emailEncryption, $this->usersTableName, self::ID_COLUMN, self::NOTIFICATION_EMAIL_COLUMN)];
 	}
 
 }
