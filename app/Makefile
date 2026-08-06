@@ -1,6 +1,6 @@
-.PHONY: test composer-audit composer-update composer-validate composer-outdated npm-audit cs-fix check-file-patterns check-makefile check-sri-macros-concat check-dependabot-directories lint-php lint-latte lint-neon lint-xml lint-xml-auto-install-download-xsd phpcs phpstan phpstan-vendor psalm psalm-clear-cache tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt dump-db-schema
+.PHONY: test composer-audit composer-update composer-validate composer-outdated npm-audit cs-fix check-file-patterns check-makefile check-sri-macros-concat check-dependabot-directories lint-php lint-latte lint-neon lint-xml lint-xml-auto-install-download-xsd shellcheck phpcs phpstan phpstan-vendor psalm psalm-clear-cache tester tester-include-skipped gitleaks composer-dependency-analyser update-security-txt dump-db-schema
 
-test: composer-audit composer-validate npm-audit check-file-patterns check-makefile check-sri-macros-concat check-dependabot-directories lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
+test: composer-audit composer-validate npm-audit check-file-patterns check-makefile check-sri-macros-concat check-dependabot-directories lint-php lint-latte lint-neon lint-xml shellcheck phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
 
 composer-audit:
 	composer audit
@@ -51,6 +51,9 @@ lint-xml:
 
 lint-xml-auto-install-download-xsd:
 	bin/xmllint.sh --auto-install-with-apt --auto-download-xsd
+
+shellcheck:
+	shellcheck --external-sources bin/*.sh
 
 phpcs:
 	vendor-dev/vendor/bin/phpcs src/ public/ tests/ bin/

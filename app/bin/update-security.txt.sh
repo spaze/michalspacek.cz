@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck source=bin/colors.sh
 source "$(dirname "$0")/colors.sh"
 
 # The new date is less than a year/365 days into the future because the spec says that it is recommended that the value be less
