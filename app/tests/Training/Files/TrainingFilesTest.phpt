@@ -40,6 +40,18 @@ final class TrainingFilesTest extends TestCase
 	}
 
 
+	public function testGetFileAsksForTheApplicationTokenAndFilenameGivenToIt(): void
+	{
+		// Same as the application itself, the token is the authorization, and the file is only this
+		// application's file: a query missing either would hand a visitor somebody else's materials
+		$this->database->setFetchFieldDefaultResult(1); // getAllowFilesStatuses() looks up status ids before this query runs
+
+		Assert::null($this->trainingFiles->getFile(42, 'a-visitors-token', 'materials.pdf'));
+
+		Assert::same([42, 'a-visitors-token', 'materials.pdf'], $this->database->getParamsForQueryContaining('AND a.access_token = ?'));
+	}
+
+
 	public function testIsAllowedExtension(): void
 	{
 		Assert::true($this->trainingFiles->isAllowedExtension('pdf'));
