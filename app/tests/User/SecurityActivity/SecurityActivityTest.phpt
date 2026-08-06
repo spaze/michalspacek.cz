@@ -7,6 +7,7 @@ namespace MichalSpacekCz\User\SecurityActivity;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Database\DriverException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
@@ -147,6 +148,19 @@ final class SecurityActivityTest extends TestCase
 
 		Assert::same([], $this->securityActivity->getEventsForCurrentUser()); // bad row skipped, the page survives
 		Assert::count(1, $this->logger->getLogged()); // the skipped row is logged for the operator
+	}
+
+
+	public function testFailingReadIsNotHiddenTheWayABadRowIs(): void
+	{
+		$this->database->willThrowOnRead(new DriverException('The database fell over'));
+
+		// A row this method can't make sense of is logged and skipped so the rest of the log still renders.
+		// A read that fails outright has no rest to render, and an empty page would read as "no events".
+		Assert::exception(function (): void {
+			$this->securityActivity->getEventsForCurrentUser();
+		}, DriverException::class);
+		Assert::same([], $this->logger->getLogged());
 	}
 
 

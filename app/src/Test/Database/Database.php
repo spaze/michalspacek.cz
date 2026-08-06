@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Database;
 
+use Closure;
 use DateTime;
 use DateTimeInterface;
+use Exception;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\WillThrow;
@@ -17,6 +19,9 @@ final class Database extends Explorer
 
 	use WillThrow;
 
+
+	/** @var Exception|(Closure(): Exception)|null */
+	private Exception|Closure|null $willThrowOnRead = null;
 
 	private string $defaultInsertId = '';
 
@@ -67,6 +72,23 @@ final class Database extends Explorer
 	private(set) DatabaseTransactionStatus $transactionStatus = DatabaseTransactionStatus::None;
 
 
+	/**
+	 * @param Exception|Closure(): Exception $e
+	 */
+	public function willThrowOnRead(Exception|Closure $e): void
+	{
+		$this->willThrowOnRead = $e;
+	}
+
+
+	private function maybeThrowOnRead(): void
+	{
+		if ($this->willThrowOnRead !== null) {
+			throw $this->willThrowOnRead instanceof Closure ? ($this->willThrowOnRead)() : $this->willThrowOnRead;
+		}
+	}
+
+
 	public function reset(): void
 	{
 		$this->defaultInsertId = '';
@@ -88,6 +110,7 @@ final class Database extends Explorer
 		$this->fetchAllResultsPosition = 0;
 		$this->resultSet = null;
 		$this->wontThrow();
+		$this->willThrowOnRead = null;
 		$this->transactionStatus = DatabaseTransactionStatus::None;
 	}
 
@@ -244,6 +267,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		$row = $this->createRow($this->fetchResults[$this->fetchResultsPosition++] ?? $this->fetchDefaultResult);
 		return $row->count() > 0 ? $row : null;
@@ -269,6 +293,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchField(string $sql, ...$params): mixed
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		return $this->fetchFieldResults[$this->fetchFieldResultsPosition++] ?? $this->fetchFieldDefaultResult;
 	}
@@ -300,6 +325,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchPairs(string $sql, ...$params): array
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		return $this->fetchPairsResults[$this->fetchPairsResultsPosition++] ?? $this->fetchPairsDefaultResult;
 	}
@@ -353,6 +379,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchAll(string $sql, ...$params): array
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		return $this->fetchAllResults[$this->fetchAllResultsPosition++] ?? $this->fetchAllDefaultResult;
 	}
