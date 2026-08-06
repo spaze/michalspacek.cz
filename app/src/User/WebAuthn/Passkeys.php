@@ -53,7 +53,7 @@ final readonly class Passkeys
 			FROM ?name
 			WHERE key_user = ?
 			ORDER BY last_used DESC,
-		 	created DESC',
+			created DESC',
 			$this->passkeysTableName,
 			$this->manager->getUserId($this->user),
 		);
