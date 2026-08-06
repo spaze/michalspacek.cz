@@ -11,7 +11,8 @@
 	],
 	"require": {
 		"php": "^8.2",
-		"paragonie/halite": "^5.0",
+		"ext-sodium": "*",
+		"paragonie/halite": "^5.1",
 		"paragonie/hidden-string": "^2.0"
 	},
 	"autoload": {
@@ -19,11 +20,13 @@
 	},
 	"require-dev": {
 		"spaze/coding-standard": "^1.9.1",
+		"paragonie/sodium_compat": "^2.5",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
 		"php-parallel-lint/php-console-highlighter": "^1.0",
-		"phpstan/phpstan": "^2.1",
+		"phpstan/phpstan": "^2.2.7",
 		"nette/tester": "^2.5.7",
-		"phpstan/phpstan-strict-rules": "^2.0"
+		"phpstan/phpstan-strict-rules": "^2.0",
+		"spaze/phpstan-disallowed-calls": "^4.14"
 	},
 	"config": {
 		"allow-plugins": {

@@ -35,7 +35,7 @@
 		"nette/utils": "^4.0",
 		"php-parallel-lint/php-console-color": "^1.0.1",
 		"spaze/csp-config": "^4.0",
-		"spaze/encryption": "^2.0",
+		"spaze/encryption": "^3.0",
 		"spaze/feed-exports": "^2.0",
 		"spaze/mysql-session-handler": "^3.2",
 		"spaze/nonce-generator": "^4.0",
