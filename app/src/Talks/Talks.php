@@ -63,7 +63,7 @@ final readonly class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
-			    LEFT JOIN locales l ON l.id_locale = t.key_locale
+				LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.date <= NOW()
 			ORDER BY t.date DESC
@@ -124,7 +124,7 @@ final readonly class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
-			    LEFT JOIN locales l ON l.id_locale = t.key_locale
+				LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.date > NOW()
 			ORDER BY t.date';
@@ -175,7 +175,7 @@ final readonly class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
-			    LEFT JOIN locales l ON l.id_locale = t.key_locale
+				LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.action = ?',
 			$name,
@@ -268,7 +268,7 @@ final readonly class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
-			    LEFT JOIN locales l ON l.id_locale = t.key_locale
+				LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.id_talk = ?',
 			$id,

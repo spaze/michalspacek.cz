@@ -27,6 +27,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class PasskeysTest extends TestCase
 {
 
+	private const int USER_ID = 42;
 	private const string ID_1 = '019e08b4-8b1e-77b7-bb24-3c8e4aee3444';
 	private const string ID_2 = '019e08b4-8b1e-77b7-bb24-3c8e4aee3445';
 
@@ -45,7 +46,7 @@ final class PasskeysTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
-		$this->user->login(new SimpleIdentity(42));
+		$this->user->login(new SimpleIdentity(self::USER_ID));
 	}
 
 
@@ -62,6 +63,15 @@ final class PasskeysTest extends TestCase
 	public function testGetPasskeysEmpty(): void
 	{
 		Assert::same([], $this->passkeys->getPasskeys());
+	}
+
+
+	public function testGetPasskeysListsOnlyTheSignedInUsersOwn(): void
+	{
+		$this->passkeys->getPasskeys();
+
+		// The double hands back its rows whoever asks, so only the parameter says whose passkeys the page lists
+		Assert::same(['passkeys', self::USER_ID], $this->database->getParamsForQueryContaining('WHERE key_user = ?'));
 	}
 
 
@@ -162,6 +172,11 @@ final class PasskeysTest extends TestCase
 	{
 		$this->database->setFetchFieldDefaultResult('My Phone');
 		Assert::same('My Phone', $this->passkeys->getCredentialNameById(Uuid::fromRfc4122(self::ID_1)));
+		// Without the user in the WHERE this would name someone else's passkey to whoever guesses an id
+		Assert::same(
+			['passkeys', Uuid::fromRfc4122(self::ID_1)->toBinary(), self::USER_ID],
+			$this->database->getParamsForQuery('SELECT name FROM ?name WHERE id_passkey = ? AND key_user = ?'),
+		);
 	}
 
 
@@ -178,7 +193,7 @@ final class PasskeysTest extends TestCase
 		$this->database->setResultSet(new ResultSet(1));
 		$this->passkeys->renameCredential(Uuid::fromRfc4122(self::ID_1), 'New Name');
 		Assert::same(
-			['passkeys', 'New Name', Uuid::fromRfc4122(self::ID_1)->toBinary(), 42],
+			['passkeys', 'New Name', Uuid::fromRfc4122(self::ID_1)->toBinary(), self::USER_ID],
 			$this->database->getParamsForQuery('UPDATE ?name SET name = ? WHERE id_passkey = ? AND key_user = ?'),
 		);
 		Assert::same('passkey.renamed', $this->database->getParamsArrayForQuery('INSERT INTO security_events')[0]['action']);
@@ -193,6 +208,12 @@ final class PasskeysTest extends TestCase
 			$this->passkeys->renameCredential(Uuid::fromRfc4122(self::ID_1), 'Same Name');
 		});
 		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO security_events')); // renaming to the same name changes no row, so nothing is recorded
+		// The zero-row update is ambiguous, and this is the query that decides between "not yours" and "same name",
+		// so it has to ask about this user's row and not just the id
+		Assert::same(
+			['passkeys', Uuid::fromRfc4122(self::ID_1)->toBinary(), self::USER_ID],
+			$this->database->getParamsForQuery('SELECT 1 FROM ?name WHERE id_passkey = ? AND key_user = ?'),
+		);
 	}
 
 
@@ -212,7 +233,7 @@ final class PasskeysTest extends TestCase
 		$this->database->addFetchFieldResult('uPhone');
 		$this->passkeys->deleteCredential(Uuid::fromRfc4122(self::ID_1));
 		Assert::same(
-			['passkeys', $idBinary, 42, null, null],
+			['passkeys', $idBinary, self::USER_ID, null, null],
 			$this->database->getParamsForQuery('DELETE FROM ?name WHERE id_passkey = ? AND key_user = ? AND (? IS NULL OR credential_id != ?)'),
 		);
 		$event = $this->database->getParamsArrayForQuery('INSERT INTO security_events');
@@ -249,6 +270,11 @@ final class PasskeysTest extends TestCase
 		Assert::exception(function (): void {
 			$this->passkeys->deleteCredential(Uuid::fromRfc4122(self::ID_1));
 		}, PasskeyCredentialSignedInWithException::class);
+		// Asking about somebody else's row here would call a concurrent delete a signed-in credential and the other way round
+		Assert::same(
+			['passkeys', Uuid::fromRfc4122(self::ID_1)->toBinary(), self::USER_ID],
+			$this->database->getParamsForQuery('SELECT 1 FROM ?name WHERE id_passkey = ? AND key_user = ?'),
+		);
 	}
 
 

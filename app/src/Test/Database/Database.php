@@ -3,9 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Database;
 
+use Closure;
 use DateTime;
 use DateTimeInterface;
+use Exception;
 use MichalSpacekCz\DateTime\DateTimeFormat;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\WillThrow;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -16,6 +19,9 @@ final class Database extends Explorer
 
 	use WillThrow;
 
+
+	/** @var Exception|(Closure(): Exception)|null */
+	private Exception|Closure|null $willThrowOnRead = null;
 
 	private string $defaultInsertId = '';
 
@@ -66,6 +72,23 @@ final class Database extends Explorer
 	private(set) DatabaseTransactionStatus $transactionStatus = DatabaseTransactionStatus::None;
 
 
+	/**
+	 * @param Exception|Closure(): Exception $e
+	 */
+	public function willThrowOnRead(Exception|Closure $e): void
+	{
+		$this->willThrowOnRead = $e;
+	}
+
+
+	private function maybeThrowOnRead(): void
+	{
+		if ($this->willThrowOnRead !== null) {
+			throw $this->willThrowOnRead instanceof Closure ? ($this->willThrowOnRead)() : $this->willThrowOnRead;
+		}
+	}
+
+
 	public function reset(): void
 	{
 		$this->defaultInsertId = '';
@@ -87,6 +110,7 @@ final class Database extends Explorer
 		$this->fetchAllResultsPosition = 0;
 		$this->resultSet = null;
 		$this->wontThrow();
+		$this->willThrowOnRead = null;
 		$this->transactionStatus = DatabaseTransactionStatus::None;
 	}
 
@@ -185,6 +209,31 @@ final class Database extends Explorer
 
 
 	/**
+	 * For queries too long to repeat in a test verbatim, where doing so would fail on reformatting rather than on
+	 * the parameters it is checking. Pass enough of the query to pick out one, an ambiguous match is an error
+	 * rather than a guess.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public function getParamsForQueryContaining(string $part): array
+	{
+		$matching = [];
+		foreach ($this->queriesScalarParams as $query => $params) {
+			if (str_contains($query, $part)) {
+				$matching[$query] = $params;
+			}
+		}
+		if (count($matching) > 1) {
+			throw new ShouldNotHappenException(sprintf('%s matches %d queries: %s', $part, count($matching), implode(', ', array_keys($matching))));
+		}
+		foreach ($matching as $params) {
+			return $params;
+		}
+		return [];
+	}
+
+
+	/**
 	 * @return array<int, array<array-key, mixed>>
 	 */
 	public function getParamsArrayForQuery(string $query): array
@@ -218,6 +267,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		$row = $this->createRow($this->fetchResults[$this->fetchResultsPosition++] ?? $this->fetchDefaultResult);
 		return $row->count() > 0 ? $row : null;
@@ -243,6 +293,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchField(string $sql, ...$params): mixed
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		return $this->fetchFieldResults[$this->fetchFieldResultsPosition++] ?? $this->fetchFieldDefaultResult;
 	}
@@ -274,6 +325,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchPairs(string $sql, ...$params): array
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		return $this->fetchPairsResults[$this->fetchPairsResultsPosition++] ?? $this->fetchPairsDefaultResult;
 	}
@@ -327,6 +379,7 @@ final class Database extends Explorer
 	#[Override]
 	public function fetchAll(string $sql, ...$params): array
 	{
+		$this->maybeThrowOnRead();
 		$this->recordParams($sql, $params);
 		return $this->fetchAllResults[$this->fetchAllResultsPosition++] ?? $this->fetchAllDefaultResult;
 	}

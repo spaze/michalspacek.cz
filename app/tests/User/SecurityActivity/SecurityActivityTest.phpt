@@ -7,6 +7,7 @@ namespace MichalSpacekCz\User\SecurityActivity;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Database\DriverException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
@@ -19,6 +20,9 @@ require __DIR__ . '/../../bootstrap.php';
 /** @testCase */
 final class SecurityActivityTest extends TestCase
 {
+
+	private const int USER_ID = 42;
+
 
 	public function __construct(
 		private readonly Database $database,
@@ -33,7 +37,7 @@ final class SecurityActivityTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
-		$this->user->login(new SimpleIdentity(42));
+		$this->user->login(new SimpleIdentity(self::USER_ID));
 	}
 
 
@@ -74,6 +78,19 @@ final class SecurityActivityTest extends TestCase
 		Assert::same('TestBrowser/1.0', $events[0]->userAgent);
 		Assert::same(['passkey' => 'Yubikey'], $events[0]->details);
 		Assert::same('messages.account.securityLog.event.passkeyRenamed', $events[0]->labelKey());
+	}
+
+
+	public function testGetEventsForCurrentUserReadsOnlyTheSignedInUsersRows(): void
+	{
+		$this->securityActivity->getEventsForCurrentUser();
+
+		// The WHERE parameter is the whole authorization here, and the double returns its rows whoever asks,
+		// so without this a hardcoded id would show one admin another's security log with every test still green
+		Assert::same(
+			['details', 'security_events', self::USER_ID, 'id_security_event'],
+			$this->database->getParamsForQueryContaining('WHERE key_user = ?'),
+		);
 	}
 
 
@@ -131,6 +148,19 @@ final class SecurityActivityTest extends TestCase
 
 		Assert::same([], $this->securityActivity->getEventsForCurrentUser()); // bad row skipped, the page survives
 		Assert::count(1, $this->logger->getLogged()); // the skipped row is logged for the operator
+	}
+
+
+	public function testFailingReadIsNotHiddenTheWayABadRowIs(): void
+	{
+		$this->database->willThrowOnRead(new DriverException('The database fell over'));
+
+		// A row this method can't make sense of is logged and skipped so the rest of the log still renders.
+		// A read that fails outright has no rest to render, and an empty page would read as "no events".
+		Assert::exception(function (): void {
+			$this->securityActivity->getEventsForCurrentUser();
+		}, DriverException::class);
+		Assert::same([], $this->logger->getLogged());
 	}
 
 

@@ -20,9 +20,9 @@ final class HeartbleedPresenter extends BasePresenter
 	private function getSmallPrint(): Html
 	{
 		$smallPrint = [
-			 'Knocking on yer servar\'s ports since 2014.',
-			 'Do you even scan?',
-			 'Wow. So heart. Much bleed.',
+			'Knocking on yer servar\'s ports since 2014.',
+			'Do you even scan?',
+			'Wow. So heart. Much bleed.',
 			htmlspecialchars('<script>alert(\'XSS\');</script>'),
 			'<a href="https://www.youtube.com/watch?v=DLzxrzFCyOs">admin</a>',
 		];

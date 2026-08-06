@@ -39,6 +39,7 @@ final class PasskeyStorageTest extends TestCase
 	{
 		$this->database->setFetchFieldDefaultResult('user-handle-42');
 		Assert::same('user-handle-42', $this->passkeyStorage->getUserHandleByUserId(42));
+		Assert::same(['users', 42], $this->database->getParamsForQuery('SELECT passkey_user_handle FROM ?name WHERE id_user = ?'));
 	}
 
 
@@ -143,6 +144,9 @@ final class PasskeyStorageTest extends TestCase
 	{
 		$this->database->setFetchPairsDefaultResult([0 => 'cred-id-1', 1 => 'cred-id-2']);
 		$result = $this->passkeyStorage->getDescriptorsByUserId(42);
+		// These descriptors are handed to the authenticator as the credentials it may sign with,
+		// so descriptors read for the wrong user would offer someone else's passkeys
+		Assert::same(['passkeys', 42], $this->database->getParamsForQuery('SELECT credential_id FROM ?name WHERE key_user = ?'));
 		Assert::count(2, $result);
 		Assert::same(PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY, $result[0]->type);
 		Assert::same('cred-id-1', $result[0]->id);

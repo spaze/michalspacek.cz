@@ -106,7 +106,7 @@ final class UpcomingTrainingDates
 					JOIN languages l ON a.key_language = l.id_language
 					JOIN training_date_status s ON d.key_status = s.id_status
 					LEFT JOIN training_venues v ON d.key_venue = v.id_venue
-				    LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
+					LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 					JOIN (
 						SELECT
 							t2.id_training,
