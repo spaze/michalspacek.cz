@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Test\Database;
 use DateTime;
 use DateTimeInterface;
 use MichalSpacekCz\DateTime\DateTimeFormat;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\WillThrow;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -181,6 +182,31 @@ final class Database extends Explorer
 	public function getParamsForQuery(string $query): array
 	{
 		return $this->queriesScalarParams[$query] ?? [];
+	}
+
+
+	/**
+	 * For queries too long to repeat in a test verbatim, where doing so would fail on reformatting rather than on
+	 * the parameters it is checking. Pass enough of the query to pick out one, an ambiguous match is an error
+	 * rather than a guess.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public function getParamsForQueryContaining(string $part): array
+	{
+		$matching = [];
+		foreach ($this->queriesScalarParams as $query => $params) {
+			if (str_contains($query, $part)) {
+				$matching[$query] = $params;
+			}
+		}
+		if (count($matching) > 1) {
+			throw new ShouldNotHappenException(sprintf('%s matches %d queries: %s', $part, count($matching), implode(', ', array_keys($matching))));
+		}
+		foreach ($matching as $params) {
+			return $params;
+		}
+		return [];
 	}
 
 

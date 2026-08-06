@@ -20,6 +20,9 @@ require __DIR__ . '/../../bootstrap.php';
 final class SecurityActivityTest extends TestCase
 {
 
+	private const int USER_ID = 42;
+
+
 	public function __construct(
 		private readonly Database $database,
 		private readonly SecurityActivity $securityActivity,
@@ -33,7 +36,7 @@ final class SecurityActivityTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
-		$this->user->login(new SimpleIdentity(42));
+		$this->user->login(new SimpleIdentity(self::USER_ID));
 	}
 
 
@@ -74,6 +77,19 @@ final class SecurityActivityTest extends TestCase
 		Assert::same('TestBrowser/1.0', $events[0]->userAgent);
 		Assert::same(['passkey' => 'Yubikey'], $events[0]->details);
 		Assert::same('messages.account.securityLog.event.passkeyRenamed', $events[0]->labelKey());
+	}
+
+
+	public function testGetEventsForCurrentUserReadsOnlyTheSignedInUsersRows(): void
+	{
+		$this->securityActivity->getEventsForCurrentUser();
+
+		// The WHERE parameter is the whole authorization here, and the double returns its rows whoever asks,
+		// so without this a hardcoded id would show one admin another's security log with every test still green
+		Assert::same(
+			['details', 'security_events', self::USER_ID, 'id_security_event'],
+			$this->database->getParamsForQueryContaining('WHERE key_user = ?'),
+		);
 	}
 
 
