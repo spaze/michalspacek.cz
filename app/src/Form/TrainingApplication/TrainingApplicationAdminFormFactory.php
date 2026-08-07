@@ -68,7 +68,7 @@ final readonly class TrainingApplicationAdminFormFactory
 			->setRequired($required)
 			->setDisabled(!$required);
 
-		$this->addDeletableFieldCheckbox($attendeeInputs->getName(), $form->addCheckbox('nameSet'), $application->getName());
+		$this->addDeletableFieldCheckbox($attendeeInputs->getName(), $form->addCheckbox('nameSet'), $application->getAttendeeName());
 		$this->addDeletableFieldCheckbox($attendeeInputs->getEmail(), $form->addCheckbox('emailSet'), $application->getEmail());
 		$this->addDeletableFieldCheckbox($companyInputs->getCompany(), $form->addCheckbox('companySet'), $application->getCompany());
 		$this->addDeletableFieldCheckbox($companyInputs->getStreet(), $form->addCheckbox('streetSet'), $application->getStreet());
@@ -176,7 +176,7 @@ final readonly class TrainingApplicationAdminFormFactory
 	{
 		$vatRate = $application->getVatRate();
 		$values = [
-			'name' => $application->getName(),
+			'name' => $application->getAttendeeName(),
 			'email' => $application->getEmail(),
 			'familiar' => $application->isFamiliar(),
 			'source' => $application->getSourceAlias(),

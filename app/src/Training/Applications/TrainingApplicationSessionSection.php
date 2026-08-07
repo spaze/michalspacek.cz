@@ -20,7 +20,7 @@ final class TrainingApplicationSessionSection extends SessionSection
 		$data = (array)parent::get('application');
 		$data[$trainingAction] = ['id' => $application->getId(), 'dateId' => $application->getDateId()];
 		parent::set('application', $data);
-		parent::set('name', $application->getName());
+		parent::set('name', $application->getAttendeeName());
 		parent::set('email', $application->getEmail());
 		parent::set('company', $application->getCompany());
 		parent::set('street', $application->getStreet());

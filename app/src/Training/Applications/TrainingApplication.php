@@ -29,7 +29,7 @@ final class TrainingApplication
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly int $id,
-		private readonly ?string $name,
+		#[SensitiveParameter] private readonly ?string $attendeeName,
 		#[SensitiveParameter] private readonly ?string $email,
 		private readonly bool $familiar,
 		private readonly ?string $company,
@@ -84,9 +84,9 @@ final class TrainingApplication
 	}
 
 
-	public function getName(): ?string
+	public function getAttendeeName(): ?string
 	{
-		return $this->name;
+		return $this->attendeeName;
 	}
 
 

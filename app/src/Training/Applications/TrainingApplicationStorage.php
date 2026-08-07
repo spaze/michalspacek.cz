@@ -48,7 +48,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	 */
 	public function addInvitation(
 		TrainingDate $date,
-		string $name,
+		#[SensitiveParameter] string $attendeeName,
 		#[SensitiveParameter] string $email,
 		string $company,
 		string $street,
@@ -62,7 +62,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 		return $this->insertApplication(
 			$date->getTrainingId(),
 			$date->getId(),
-			$name,
+			$attendeeName,
 			$email,
 			$company,
 			$street,
@@ -87,7 +87,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	 */
 	public function addApplication(
 		TrainingDate $date,
-		string $name,
+		#[SensitiveParameter] string $attendeeName,
 		#[SensitiveParameter] string $email,
 		string $company,
 		string $street,
@@ -101,7 +101,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 		return $this->insertApplication(
 			$date->getTrainingId(),
 			$date->getId(),
-			$name,
+			$attendeeName,
 			$email,
 			$company,
 			$street,
@@ -127,12 +127,12 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
-	public function addPreliminaryInvitation(int $trainingId, string $name, #[SensitiveParameter] string $email): int
+	public function addPreliminaryInvitation(int $trainingId, #[SensitiveParameter] string $attendeeName, #[SensitiveParameter] string $email): int
 	{
 		return $this->insertApplication(
 			$trainingId,
 			null,
-			$name,
+			$attendeeName,
 			$email,
 			null,
 			null,
@@ -158,7 +158,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	public function insertApplication(
 		int $trainingId,
 		?int $dateId,
-		string $name,
+		#[SensitiveParameter] string $attendeeName,
 		#[SensitiveParameter] string $email,
 		?string $company,
 		?string $street,
@@ -186,7 +186,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 		$timeZone = $datetime->getTimezone()->getName();
 		$data = [
 			'key_date' => $dateId,
-			'name' => $name,
+			'name' => $attendeeName,
 			self::EMAIL_COLUMN => $this->emailEncryption->encrypt($email),
 			'company' => $company !== '' ? $company : null,
 			'street' => $street !== '' ? $street : null,
@@ -240,7 +240,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	public function updateApplication(
 		TrainingDate $date,
 		int $applicationId,
-		string $name,
+		#[SensitiveParameter] string $attendeeName,
 		#[SensitiveParameter] string $email,
 		string $company,
 		string $street,
@@ -258,7 +258,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 			function () use (
 				$date,
 				$applicationId,
-				$name,
+				$attendeeName,
 				$email,
 				$company,
 				$street,
@@ -274,7 +274,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 					'UPDATE ?name SET ? WHERE ?name = ?',
 					self::TABLE,
 					[
-						'name' => $name,
+						'name' => $attendeeName,
 						self::EMAIL_COLUMN => $this->emailEncryption->encrypt($email),
 						'company' => $company,
 						'street' => $street,
@@ -303,7 +303,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	 */
 	public function updateApplicationData(
 		int $applicationId,
-		?string $name,
+		#[SensitiveParameter] ?string $attendeeName,
 		#[SensitiveParameter] ?string $email,
 		?string $company,
 		?string $street,
@@ -329,7 +329,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 			$discount = null;
 		}
 		$data = [
-			'name' => $name,
+			'name' => $attendeeName,
 			self::EMAIL_COLUMN => $email !== null ? $this->emailEncryption->encrypt($email) : null,
 			'company' => $company,
 			'familiar' => $familiar,

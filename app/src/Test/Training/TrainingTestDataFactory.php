@@ -27,7 +27,7 @@ final readonly class TrainingTestDataFactory
 
 	public function getTrainingApplication(
 		int $id,
-		?string $name = null,
+		#[SensitiveParameter] ?string $attendeeName = null,
 		#[SensitiveParameter] ?string $email = null,
 		bool $familiar = false,
 		TrainingApplicationStatus $status = TrainingApplicationStatus::Attended,
@@ -46,7 +46,7 @@ final readonly class TrainingTestDataFactory
 			$this->trainingMailMessageFactory,
 			$this->trainingFiles,
 			$id,
-			$name,
+			$attendeeName,
 			$email,
 			$familiar,
 			null,

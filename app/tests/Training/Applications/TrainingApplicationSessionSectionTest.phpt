@@ -52,7 +52,7 @@ final class TrainingApplicationSessionSectionTest extends TestCase
 		$this->sessionSection->set('application', ['foo' => 'bar']);
 		$this->trainingApplicationSessionSection->setApplicationForTraining('training-action', $application);
 		Assert::same(['foo' => 'bar', 'training-action' => ['id' => $application->getId(), 'dateId' => $application->getDateId()]], $this->sessionSection->get('application'));
-		Assert::same($this->sessionSection->get('name'), $application->getName());
+		Assert::same($this->sessionSection->get('name'), $application->getAttendeeName());
 		Assert::same($this->sessionSection->get('email'), $application->getEmail());
 		Assert::same($this->sessionSection->get('company'), $application->getCompany());
 		Assert::same($this->sessionSection->get('street'), $application->getStreet());

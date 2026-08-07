@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\User\UserAccounts;
 use Nette\Database\DriverException;
 use Override;
@@ -45,6 +46,7 @@ final class ExceptionLogSecretsTest extends TestCase
 		private readonly BlueScreen $blueScreen,
 		private readonly Database $database,
 		private readonly UserAccounts $userAccounts,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 	) {
 		FileMock::register(); // can't use FileMock::create(), it creates the file and Tracy's fopen(..., 'x') would fail
 	}
@@ -115,6 +117,31 @@ final class ExceptionLogSecretsTest extends TestCase
 
 		foreach ($this->logAndReadBack($thrown, 'A key with the wrong prefix should have been rejected') as $extension => $contents) {
 			Assert::notContains($goodKey, $contents, "a valid key leaked into the {$extension} log because another one was malformed");
+		}
+	}
+
+
+	/**
+	 * The applicant's name travels beside the email through the same writes, and identifies them more directly
+	 * than the address does, so it is marked and checked the same way.
+	 */
+	public function testAttendeeNameIsNotLoggedWhenTheWriteFails(): void
+	{
+		$attendeeName = 'Probe ' . bin2hex(random_bytes(6));
+		$email = bin2hex(random_bytes(8)) . '@example.com';
+		// The status id is read before anything is written, so failing the read puts both parameters on the stack
+		$this->database->willThrowOnRead(fn(): DriverException => new DriverException('The database fell over'));
+
+		$thrown = null;
+		try {
+			$this->trainingApplicationStorage->addPreliminaryInvitation(1, $attendeeName, $email);
+		} catch (Throwable $e) {
+			$thrown = $e;
+		}
+
+		foreach ($this->logAndReadBack($thrown, 'Adding a preliminary invitation should have failed') as $extension => $contents) {
+			Assert::notContains($attendeeName, $contents, "the attendee name leaked into the {$extension} log");
+			Assert::notContains($email, $contents, "the email leaked into the {$extension} log");
 		}
 	}
 

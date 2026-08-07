@@ -81,7 +81,7 @@ final class TrainingApplicationFactoryTest extends TestCase
 		$application = $this->trainingApplicationFactory->createFromDatabaseRow($row);
 
 		Assert::same(1, $application->getId());
-		Assert::null($application->getName());
+		Assert::null($application->getAttendeeName());
 		Assert::null($application->getEmail());
 		Assert::false($application->isFamiliar());
 		Assert::null($application->getCompany());

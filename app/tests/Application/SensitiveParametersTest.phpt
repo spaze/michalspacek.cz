@@ -36,6 +36,7 @@ final class SensitiveParametersTest extends TestCase
 {
 
 	private const array PERSONAL_DATA_PARAMETERS = [
+		'attendeeName',
 		'email',
 	];
 

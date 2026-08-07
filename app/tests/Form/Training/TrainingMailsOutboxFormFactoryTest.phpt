@@ -59,7 +59,7 @@ final class TrainingMailsOutboxFormFactoryTest extends TestCase
 		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 		$application = $this->dataFactory->getTrainingApplication(
 			3212,
-			name: 'John Doe',
+			attendeeName: 'John Doe',
 			email: 'email@example.com',
 			trainingStart: $this->trainingStart,
 			trainingEnd: new DateTime('2024-04-05 06:07:08'),
