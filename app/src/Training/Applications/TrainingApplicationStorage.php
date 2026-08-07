@@ -18,6 +18,7 @@ use Nette\Utils\Random;
 use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use RuntimeException;
+use SensitiveParameter;
 use SodiumException;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
@@ -48,7 +49,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	public function addInvitation(
 		TrainingDate $date,
 		string $name,
-		string $email,
+		#[SensitiveParameter] string $email,
 		string $company,
 		string $street,
 		string $city,
@@ -87,7 +88,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	public function addApplication(
 		TrainingDate $date,
 		string $name,
-		string $email,
+		#[SensitiveParameter] string $email,
 		string $company,
 		string $street,
 		string $city,
@@ -126,7 +127,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
-	public function addPreliminaryInvitation(int $trainingId, string $name, string $email): int
+	public function addPreliminaryInvitation(int $trainingId, string $name, #[SensitiveParameter] string $email): int
 	{
 		return $this->insertApplication(
 			$trainingId,
@@ -158,7 +159,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 		int $trainingId,
 		?int $dateId,
 		string $name,
-		string $email,
+		#[SensitiveParameter] string $email,
 		?string $company,
 		?string $street,
 		?string $city,
@@ -240,7 +241,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 		TrainingDate $date,
 		int $applicationId,
 		string $name,
-		string $email,
+		#[SensitiveParameter] string $email,
 		string $company,
 		string $street,
 		string $city,
@@ -303,7 +304,7 @@ final readonly class TrainingApplicationStorage implements EncryptedStorage
 	public function updateApplicationData(
 		int $applicationId,
 		?string $name,
-		?string $email,
+		#[SensitiveParameter] ?string $email,
 		?string $company,
 		?string $street,
 		?string $city,

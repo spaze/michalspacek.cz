@@ -9,6 +9,7 @@ use MichalSpacekCz\Encryption\EncryptedColumn;
 use MichalSpacekCz\Encryption\EncryptedStorage;
 use Nette\Database\Explorer;
 use Override;
+use SensitiveParameter;
 use Spaze\Encryption\SymmetricKeyEncryption;
 
 /**
@@ -43,7 +44,7 @@ final readonly class UserAccounts implements EncryptedStorage
 	}
 
 
-	public function setNotificationEmail(int $userId, string $email): void
+	public function setNotificationEmail(int $userId, #[SensitiveParameter] string $email): void
 	{
 		$this->database->query(
 			'UPDATE ?name SET ? WHERE ?name = ?',
