@@ -20,7 +20,7 @@ final class TrainingApplicationSessionSection extends SessionSection
 		$data = (array)parent::get('application');
 		$data[$trainingAction] = ['id' => $application->getId(), 'dateId' => $application->getDateId()];
 		parent::set('application', $data);
-		parent::set('name', $application->getAttendeeName());
+		parent::set('attendeeName', $application->getAttendeeName());
 		parent::set('email', $application->getEmail());
 		parent::set('company', $application->getCompany());
 		parent::set('street', $application->getStreet());
@@ -74,7 +74,7 @@ final class TrainingApplicationSessionSection extends SessionSection
 	public function setOnSuccess(TrainingDate $date, stdClass $values): void
 	{
 		parent::set('trainingId', $date->getId());
-		parent::set('name', $values->name);
+		parent::set('attendeeName', $values->attendeeName);
 		parent::set('email', $values->email);
 		parent::set('company', $values->company);
 		parent::set('street', $values->street);
@@ -104,7 +104,7 @@ final class TrainingApplicationSessionSection extends SessionSection
 	public function getApplicationValues(): array
 	{
 		return [
-			'name' => parent::get('name'),
+			'attendeeName' => parent::get('attendeeName'),
 			'email' => parent::get('email'),
 			'company' => parent::get('company'),
 			'street' => parent::get('street'),
@@ -122,7 +122,7 @@ final class TrainingApplicationSessionSection extends SessionSection
 	{
 		parent::remove([
 			'application',
-			'name',
+			'attendeeName',
 			'email',
 			'company',
 			'street',

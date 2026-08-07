@@ -171,18 +171,20 @@ final class ExceptionLogSecretsTest extends TestCase
 
 	/**
 	 * The attribute only covers the value while it is a stack frame's argument. The blue screen also dumps `$_POST`
-	 * on its own, so a form submission that errors would log what was typed into it regardless, which the `email`
-	 * entry in `keysToHide` is what stops. That section renders only on the web (`section-http.phtml` returns early
+	 * on its own, so a form submission that errors would log what was typed into it regardless, which the entries
+	 * in `keysToHide` are what stop. That section renders only on the web (`section-http.phtml` returns early
 	 * under CLI), so what is checked here is the dumper it hands each key and value to.
 	 */
-	public function testEmailIsHiddenWhereverItIsDumpedByName(): void
+	public function testPersonalDataIsHiddenWhereverItIsDumpedByName(): void
 	{
-		$email = bin2hex(random_bytes(8)) . '@example.com';
+		$value = 'probe-' . bin2hex(random_bytes(8));
 
 		$dumper = $this->blueScreen->getAgentDumper(); // the section dumps each entry as $dump($value, $key)
 
-		Assert::notContains($email, $dumper($email, 'email'), 'an email dumped under an `email` key leaked');
-		Assert::contains($email, $dumper($email, 'note'), 'the same value under another key vanished too, so this passes whatever the config says');
+		foreach (['email', 'attendeeName'] as $key) {
+			Assert::notContains($value, $dumper($value, $key), "a value dumped under a `{$key}` key leaked");
+		}
+		Assert::contains($value, $dumper($value, 'note'), 'the same value under another key vanished too, so this passes whatever the config says');
 	}
 
 

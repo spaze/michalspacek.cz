@@ -66,7 +66,7 @@ final readonly class TrainingMultipleApplicationsFormFactory
 			assert(is_string($values->date));
 			foreach ($values->applications as $application) {
 				assert($application instanceof ArrayHash);
-				assert(is_string($application->name));
+				assert(is_string($application->attendeeName));
 				assert(is_string($application->email));
 				assert(is_string($application->company));
 				assert(is_string($application->street));
@@ -78,7 +78,7 @@ final readonly class TrainingMultipleApplicationsFormFactory
 				$this->trainingApplicationStorage->insertApplication(
 					$trainingDate->getTrainingId(),
 					$trainingDate->getId(),
-					$application->name,
+					$application->attendeeName,
 					$application->email,
 					$application->company,
 					$application->street,

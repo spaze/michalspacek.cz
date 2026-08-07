@@ -24,7 +24,7 @@ final readonly class TrainingControlsFactory
 
 	public function addAttendee(Container $container): TrainingControlsAttendee
 	{
-		$nameInput = $container->addText('name', 'Jméno a příjmení:')
+		$nameInput = $container->addText('attendeeName', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')
 			->addRule(Form::MinLength, 'Minimální délka jména a příjmení je %d znaky', 3)
 			->addRule(Form::MaxLength, 'Maximální délka jména a příjmení je %d znaků', 200)
