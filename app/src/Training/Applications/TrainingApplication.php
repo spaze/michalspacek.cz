@@ -11,6 +11,7 @@ use MichalSpacekCz\Training\Files\TrainingFilesCollection;
 use MichalSpacekCz\Training\Mails\MailMessageAdmin;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Utils\Html;
+use SensitiveParameter;
 
 final class TrainingApplication
 {
@@ -29,7 +30,7 @@ final class TrainingApplication
 		private readonly TrainingFiles $trainingFiles,
 		private readonly int $id,
 		private readonly ?string $name,
-		private readonly ?string $email,
+		#[SensitiveParameter] private readonly ?string $email,
 		private readonly bool $familiar,
 		private readonly ?string $company,
 		private readonly ?string $street,

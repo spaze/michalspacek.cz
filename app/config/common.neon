@@ -15,6 +15,7 @@ tracy:
 		- keyMaterial # Halite's Key copies the encryption key out of its HiddenString into this
 		- ParagonIE\HiddenString\HiddenString::$internalStringValue # spaze/encryption wraps every value in one of these before handing it to Halite
 		- SensitiveParameterValue::$value # .md dump #[SensitiveParameter] handling, remove once https://github.com/nette/tracy/pull/618 is released
+		- email # Tracy BlueScreen dumps $_POST on its own, where #[SensitiveParameter] on the parameters can't reach it
 
 session:
 	name: __Host-yourluckynumbers

@@ -12,6 +12,7 @@ use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Utils\Html;
+use SensitiveParameter;
 
 final readonly class TrainingTestDataFactory
 {
@@ -27,7 +28,7 @@ final readonly class TrainingTestDataFactory
 	public function getTrainingApplication(
 		int $id,
 		?string $name = null,
-		?string $email = null,
+		#[SensitiveParameter] ?string $email = null,
 		bool $familiar = false,
 		TrainingApplicationStatus $status = TrainingApplicationStatus::Attended,
 		?int $dateId = null,
