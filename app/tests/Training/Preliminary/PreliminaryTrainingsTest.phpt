@@ -44,8 +44,8 @@ final class PreliminaryTrainingsTest extends TestCase
 		Assert::same('Training 2', $preliminaryTrainings[1]->getName());
 		$training2Applications = $preliminaryTrainings[1]->getApplications();
 		Assert::count(1, $training2Applications);
-		Assert::same('Name One', $training1Applications[0]->getName());
-		Assert::same('Name Two', $training2Applications[0]->getName());
+		Assert::same('Name One', $training1Applications[0]->getAttendeeName());
+		Assert::same('Name Two', $training2Applications[0]->getAttendeeName());
 	}
 
 
@@ -59,7 +59,7 @@ final class PreliminaryTrainingsTest extends TestCase
 		$this->setDatabaseResultsForGetPreliminary();
 		$trainingApplications = $this->preliminaryTrainings->getPreliminaryWithDateSet();
 		Assert::count(1, $trainingApplications);
-		Assert::same('Name One', $trainingApplications[0]->getName());
+		Assert::same('Name One', $trainingApplications[0]->getAttendeeName());
 	}
 
 

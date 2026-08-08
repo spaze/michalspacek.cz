@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\User\UserAccounts;
 use Nette\Database\DriverException;
 use Override;
@@ -45,6 +46,7 @@ final class ExceptionLogSecretsTest extends TestCase
 		private readonly BlueScreen $blueScreen,
 		private readonly Database $database,
 		private readonly UserAccounts $userAccounts,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 	) {
 		FileMock::register(); // can't use FileMock::create(), it creates the file and Tracy's fopen(..., 'x') would fail
 	}
@@ -120,6 +122,31 @@ final class ExceptionLogSecretsTest extends TestCase
 
 
 	/**
+	 * The applicant's name travels beside the email through the same writes, and identifies them more directly
+	 * than the address does, so it is marked and checked the same way.
+	 */
+	public function testAttendeeNameIsNotLoggedWhenTheWriteFails(): void
+	{
+		$attendeeName = 'Probe ' . bin2hex(random_bytes(6));
+		$email = bin2hex(random_bytes(8)) . '@example.com';
+		// The status id is read before anything is written, so failing the read puts both parameters on the stack
+		$this->database->willThrowOnRead(fn(): DriverException => new DriverException('The database fell over'));
+
+		$thrown = null;
+		try {
+			$this->trainingApplicationStorage->addPreliminaryInvitation(1, $attendeeName, $email);
+		} catch (Throwable $e) {
+			$thrown = $e;
+		}
+
+		foreach ($this->logAndReadBack($thrown, 'Adding a preliminary invitation should have failed') as $extension => $contents) {
+			Assert::notContains($attendeeName, $contents, "the attendee name leaked into the {$extension} log");
+			Assert::notContains($email, $contents, "the email leaked into the {$extension} log");
+		}
+	}
+
+
+	/**
 	 * Unlike the key and the HiddenString above, an email arrives as a plain string parameter, which `keysToHide`
 	 * can't help with: the name is `$email` and the value is just a string. `#[SensitiveParameter]` is what hides it.
 	 */
@@ -144,18 +171,20 @@ final class ExceptionLogSecretsTest extends TestCase
 
 	/**
 	 * The attribute only covers the value while it is a stack frame's argument. The blue screen also dumps `$_POST`
-	 * on its own, so a form submission that errors would log what was typed into it regardless, which the `email`
-	 * entry in `keysToHide` is what stops. That section renders only on the web (`section-http.phtml` returns early
+	 * on its own, so a form submission that errors would log what was typed into it regardless, which the entries
+	 * in `keysToHide` are what stop. That section renders only on the web (`section-http.phtml` returns early
 	 * under CLI), so what is checked here is the dumper it hands each key and value to.
 	 */
-	public function testEmailIsHiddenWhereverItIsDumpedByName(): void
+	public function testPersonalDataIsHiddenWhereverItIsDumpedByName(): void
 	{
-		$email = bin2hex(random_bytes(8)) . '@example.com';
+		$value = 'probe-' . bin2hex(random_bytes(8));
 
 		$dumper = $this->blueScreen->getAgentDumper(); // the section dumps each entry as $dump($value, $key)
 
-		Assert::notContains($email, $dumper($email, 'email'), 'an email dumped under an `email` key leaked');
-		Assert::contains($email, $dumper($email, 'note'), 'the same value under another key vanished too, so this passes whatever the config says');
+		foreach (['email', 'attendeeName'] as $key) {
+			Assert::notContains($value, $dumper($value, $key), "a value dumped under a `{$key}` key leaked");
+		}
+		Assert::contains($value, $dumper($value, 'note'), 'the same value under another key vanished too, so this passes whatever the config says');
 	}
 
 

@@ -5,7 +5,7 @@
 {define #listItems, MichalSpacekCz\Training\Applications\TrainingApplication[] $applications}
 	<tr class="summary" n:foreach="$applications as $application">
 		<td><small>{$iterator->getCounter()}.</small></td>
-		<td><small n:tag-if="$application->getName() === null"><a href="{plink Trainings:application $application->getId()}">{$application->getName() ?? smazáno}</a></small></td>
+		<td><small n:tag-if="$application->getAttendeeName() === null"><a href="{plink Trainings:application $application->getId()}">{$application->getAttendeeName() ?? smazáno}</a></small></td>
 		<td><small>{$application->getEmail() ?? smazáno}</small></td>
 		<td><span n:tag-if="$application->getCompany() && ($application->getCompany()|length) > 40" title="{$application->getCompany()}">{$application->getCompany()|truncate:40}</span></td>
 		<td><small n:attr="title: $application->getNote() && ($application->getNote()|length) > 20 ? $application->getNote()">{$application->getNote()|truncate:20}</small></td>

@@ -161,7 +161,7 @@ final readonly class TrainingMails
 		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template);
+		$this->sendMail($application->getEmail(), $application->getAttendeeName(), $message->getSubject(), $template);
 	}
 
 
@@ -173,7 +173,7 @@ final readonly class TrainingMails
 		$template->application = $application;
 		$template->feedbackRequest = $feedbackRequest;
 		$template->additional = $additional;
-		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template);
+		$this->sendMail($application->getEmail(), $application->getAttendeeName(), $message->getSubject(), $template);
 	}
 
 
@@ -184,7 +184,7 @@ final readonly class TrainingMails
 		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()], $cc);
+		$this->sendMail($application->getEmail(), $application->getAttendeeName(), $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()], $cc);
 	}
 
 
@@ -203,7 +203,7 @@ final readonly class TrainingMails
 		$template->application = $application;
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
-		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template);
+		$this->sendMail($application->getEmail(), $application->getAttendeeName(), $message->getSubject(), $template);
 	}
 
 

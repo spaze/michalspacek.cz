@@ -39,7 +39,7 @@
 		<tr n:foreach="$training->getApplications() as $application">
 			<td>{input (string)$application->getId():}</td>
 			<td><label n:name="(string)$application->getId()"><small>{$iterator->getCounter()}.</small></label></td>
-			<td><small n:tag-if="$application->getName() === null"><a n:href="Trainings:application $application->getId()">{$application->getName() ?? smazáno}</a></small></td>
+			<td><small n:tag-if="$application->getAttendeeName() === null"><a n:href="Trainings:application $application->getId()">{$application->getAttendeeName() ?? smazáno}</a></small></td>
 			<td><small>{$application->getEmail() ?? smazáno}</small></td>
 			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()->value}</code></small></td>
 		</tr>

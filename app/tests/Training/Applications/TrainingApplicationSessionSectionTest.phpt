@@ -52,7 +52,7 @@ final class TrainingApplicationSessionSectionTest extends TestCase
 		$this->sessionSection->set('application', ['foo' => 'bar']);
 		$this->trainingApplicationSessionSection->setApplicationForTraining('training-action', $application);
 		Assert::same(['foo' => 'bar', 'training-action' => ['id' => $application->getId(), 'dateId' => $application->getDateId()]], $this->sessionSection->get('application'));
-		Assert::same($this->sessionSection->get('name'), $application->getName());
+		Assert::same($this->sessionSection->get('attendeeName'), $application->getAttendeeName());
 		Assert::same($this->sessionSection->get('email'), $application->getEmail());
 		Assert::same($this->sessionSection->get('company'), $application->getCompany());
 		Assert::same($this->sessionSection->get('street'), $application->getStreet());
@@ -129,7 +129,7 @@ final class TrainingApplicationSessionSectionTest extends TestCase
 		$trainingDate = $this->buildTrainingDate();
 		$this->trainingApplicationSessionSection->setOnSuccess($trainingDate, $this->buildValues());
 		Assert::same(self::DATE_ID, $this->sessionSection->get('trainingId'));
-		Assert::same('Name', $this->sessionSection->get('name'));
+		Assert::same('Name', $this->sessionSection->get('attendeeName'));
 		Assert::same('Email', $this->sessionSection->get('email'));
 		Assert::same('Company', $this->sessionSection->get('company'));
 		Assert::same('Street', $this->sessionSection->get('street'));
@@ -221,7 +221,7 @@ final class TrainingApplicationSessionSectionTest extends TestCase
 	private function buildValues(): stdClass
 	{
 		$values = new stdClass();
-		$values->name = 'Name';
+		$values->attendeeName = 'Name';
 		$values->email = 'Email';
 		$values->company = 'Company';
 		$values->street = 'Street';

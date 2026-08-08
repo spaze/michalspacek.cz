@@ -54,7 +54,7 @@ final readonly class TrainingApplicationFormSuccess
 		TrainingApplicationSessionSection $sessionSection,
 	): void {
 		$values = $form->getValues();
-		assert(is_string($values->name));
+		assert(is_string($values->attendeeName));
 		assert(is_string($values->email));
 		assert(is_string($values->company));
 		assert(is_string($values->street));
@@ -65,7 +65,7 @@ final readonly class TrainingApplicationFormSuccess
 		assert(is_string($values->companyTaxId));
 		assert(is_string($values->note));
 		try {
-			$this->formSpam->check($values->name, $values->company, $values->companyId, $values->companyTaxId, $values->note);
+			$this->formSpam->check($values->attendeeName, $values->company, $values->companyId, $values->companyTaxId, $values->note);
 			if ($multipleDates) {
 				assert(is_int($values->trainingId));
 				$this->checkTrainingDate((array)$values, $action, $values->trainingId, $dates, $sessionSection);
@@ -80,7 +80,7 @@ final readonly class TrainingApplicationFormSuccess
 			if ($date->isTentative()) {
 				$this->trainingApplicationStorage->addInvitation(
 					$date,
-					$values->name,
+					$values->attendeeName,
 					$values->email,
 					$values->company,
 					$values->street,
@@ -97,7 +97,7 @@ final readonly class TrainingApplicationFormSuccess
 					$this->trainingApplicationStorage->updateApplication(
 						$date,
 						$applicationId,
-						$values->name,
+						$values->attendeeName,
 						$values->email,
 						$values->company,
 						$values->street,
@@ -112,7 +112,7 @@ final readonly class TrainingApplicationFormSuccess
 				} else {
 					$applicationId = $this->trainingApplicationStorage->addApplication(
 						$date,
-						$values->name,
+						$values->attendeeName,
 						$values->email,
 						$values->company,
 						$values->street,
@@ -132,7 +132,7 @@ final readonly class TrainingApplicationFormSuccess
 					$applicationId,
 					$this->templateFactory->createTemplate($presenter),
 					$values->email,
-					$values->name,
+					$values->attendeeName,
 					$date->getStart(),
 					$date->getEnd(),
 					$action,

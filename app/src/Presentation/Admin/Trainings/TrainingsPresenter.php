@@ -145,7 +145,7 @@ final class TrainingsPresenter extends BasePresenter
 		$this->template->trainingEnd = $this->training->getEnd();
 		$this->template->trainingName = $this->training->getName();
 		$this->template->trainingCity = $this->training->getVenueCity();
-		$this->template->name = $application->getName();
+		$this->template->name = $application->getAttendeeName();
 		$this->template->dateId = $dateId;
 	}
 
@@ -187,7 +187,7 @@ final class TrainingsPresenter extends BasePresenter
 			$name = $this->trainings->getIncludingCustom($this->application->getTrainingAction())->getName();
 		}
 
-		$this->template->pageTitle = $this->application->getName() ?? 'smazáno';
+		$this->template->pageTitle = $this->application->getAttendeeName() ?? 'smazáno';
 		$this->template->applicationId = $param;
 		$this->template->applicationDateId = $applicationDateId;
 		$this->template->status = $this->application->getStatus();

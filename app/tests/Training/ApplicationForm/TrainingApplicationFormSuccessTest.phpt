@@ -76,7 +76,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 		$trainingControlsFactory->addNote($this->form);
 		$trainingControlsFactory->addCountry($this->form);
 		$this->form->setDefaults([
-			'name' => self::NAME,
+			'attendeeName' => self::NAME,
 			'email' => self::EMAIL,
 			'company' => self::COMPANY,
 			'companyId' => self::COMPANY_ID,
@@ -252,7 +252,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 	private function assertSessionSection(): void
 	{
 		Assert::same(self::DATE_ID, $this->sessionSectionGet('trainingId'));
-		Assert::same(self::NAME, $this->sessionSectionGet('name'));
+		Assert::same(self::NAME, $this->sessionSectionGet('attendeeName'));
 		Assert::same(self::EMAIL, $this->sessionSectionGet('email'));
 		Assert::same(self::COMPANY, $this->sessionSectionGet('company'));
 		Assert::same(self::STREET, $this->sessionSectionGet('street'));

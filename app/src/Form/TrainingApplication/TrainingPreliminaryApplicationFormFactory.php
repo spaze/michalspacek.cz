@@ -29,11 +29,11 @@ final readonly class TrainingPreliminaryApplicationFormFactory
 		$form->addSubmit('signUp', 'Odeslat');
 		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $trainingId, $action): void {
 			$values = $form->getValues();
-			assert(is_string($values->name));
+			assert(is_string($values->attendeeName));
 			assert(is_string($values->email));
 			try {
-				$this->formSpam->check($values->name);
-				$this->trainingApplicationStorage->addPreliminaryInvitation($trainingId, $values->name, $values->email);
+				$this->formSpam->check($values->attendeeName);
+				$this->trainingApplicationStorage->addPreliminaryInvitation($trainingId, $values->attendeeName, $values->email);
 				$onSuccess($action);
 			} catch (SpammyApplicationException) {
 				$onError('messages.trainings.spammyapplication');

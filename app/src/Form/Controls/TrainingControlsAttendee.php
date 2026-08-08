@@ -9,15 +9,15 @@ final readonly class TrainingControlsAttendee
 {
 
 	public function __construct(
-		private TextInput $name,
+		private TextInput $attendeeName,
 		private TextInput $email,
 	) {
 	}
 
 
-	public function getName(): TextInput
+	public function getAttendeeName(): TextInput
 	{
-		return $this->name;
+		return $this->attendeeName;
 	}
 
 

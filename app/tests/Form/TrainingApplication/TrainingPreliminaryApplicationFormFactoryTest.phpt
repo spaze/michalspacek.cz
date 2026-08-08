@@ -83,7 +83,7 @@ final class TrainingPreliminaryApplicationFormFactoryTest extends TestCase
 	public function testCreateOnSuccessSpam(): void
 	{
 		$this->form->setDefaults([
-			'name' => 'lowercase',
+			'attendeeName' => 'lowercase',
 		]);
 		Arrays::invoke($this->form->onSuccess, $this->form);
 		Assert::null($this->action);

@@ -68,7 +68,7 @@ final readonly class TrainingApplicationAdminFormFactory
 			->setRequired($required)
 			->setDisabled(!$required);
 
-		$this->addDeletableFieldCheckbox($attendeeInputs->getName(), $form->addCheckbox('nameSet'), $application->getName());
+		$this->addDeletableFieldCheckbox($attendeeInputs->getAttendeeName(), $form->addCheckbox('nameSet'), $application->getAttendeeName());
 		$this->addDeletableFieldCheckbox($attendeeInputs->getEmail(), $form->addCheckbox('emailSet'), $application->getEmail());
 		$this->addDeletableFieldCheckbox($companyInputs->getCompany(), $form->addCheckbox('companySet'), $application->getCompany());
 		$this->addDeletableFieldCheckbox($companyInputs->getStreet(), $form->addCheckbox('streetSet'), $application->getStreet());
@@ -93,7 +93,7 @@ final readonly class TrainingApplicationAdminFormFactory
 		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
 			$values = $form->getValues();
 			assert(is_bool($values->nameSet));
-			assert(is_string($values->name));
+			assert(is_string($values->attendeeName));
 			assert(is_bool($values->emailSet));
 			assert(is_string($values->email));
 			assert(is_bool($values->companySet));
@@ -123,7 +123,7 @@ final readonly class TrainingApplicationAdminFormFactory
 			assert(is_int($values->date) || $values->date === null);
 			$this->trainingApplicationStorage->updateApplicationData(
 				$application->getId(),
-				$values->nameSet ? $values->name : null,
+				$values->nameSet ? $values->attendeeName : null,
 				$values->emailSet ? $values->email : null,
 				$values->companySet ? $values->company : null,
 				$values->streetSet ? $values->street : null,
@@ -176,7 +176,7 @@ final readonly class TrainingApplicationAdminFormFactory
 	{
 		$vatRate = $application->getVatRate();
 		$values = [
-			'name' => $application->getName(),
+			'attendeeName' => $application->getAttendeeName(),
 			'email' => $application->getEmail(),
 			'familiar' => $application->isFamiliar(),
 			'source' => $application->getSourceAlias(),
