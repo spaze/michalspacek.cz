@@ -38,22 +38,22 @@ latte:
 database:
 	default:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz'
-		user: ...
-		password: ...
+		user: ... # set in local.neon
+		password: %secrets.database.default.password%
 		options:
 			lazy: true
 			PDO::ATTR_EMULATE_PREPARES: false
 	upcKeys:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_upckeys'
-		user: ...
-		password: ...
+		user: ... # set in local.neon
+		password: %secrets.database.upcKeys.password%
 		options:
 			lazy: true
 			PDO::ATTR_EMULATE_PREPARES: false
 	pulse:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_pulse'
-		user: ...
-		password: ...
+		user: ... # set in local.neon
+		password: %secrets.database.pulse.password%
 		options:
 			lazy: true
 			PDO::ATTR_EMULATE_PREPARES: false

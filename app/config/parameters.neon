@@ -60,7 +60,6 @@ parameters:
 			reauthTtl: 5 minutes
 	certificatesApi:
 		hideExpiredAfter: 10
-		users:  # Added in local.neon
 	blog:
 		updatedInfoThreshold: 30
 		allowedTags:
@@ -75,11 +74,24 @@ parameters:
 	mail:
 		securityNotificationsFrom: "Foo <foo@bar.example>"
 		trainingFrom: "Bar <bar@qux.example>"
-	encryption:
-		keys:
+	# Declares the shape only, keep every value here empty and put the real ones in config/secrets.neon:
+	# a value filled in here gets compiled into the container in temp/
+	secrets:
+		encryptionKeys:
 			email: []
 			session: []
 			securityEvent: []
+		awsLambdaApiKeys:
+			upcKeys:
+		certificatesApiUsers: []
+		database:
+			default:
+				password:
+			upcKeys:
+				password:
+			pulse:
+				password:
+	encryption:
 		activeKeyIds:
 			email: ""
 			session: ""
@@ -91,4 +103,3 @@ parameters:
 	awsLambda:
 		upcKeys:
 			url:
-			apiKey:

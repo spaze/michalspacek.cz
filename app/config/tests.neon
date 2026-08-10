@@ -7,14 +7,26 @@ parameters:
 		rootDomainMapping:
 			cz: rizek.test
 			com: burger.test
-	encryption:
-		keys:
-			email!:
+	secrets!: # replaced whole, and bootTest() never loads secrets.neon, so tests run against these on any machine
+		encryptionKeys:
+			email:
 				test: "mseetest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafeb053"
-			session!:
+			session:
 				test: "mssetest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe5a08"
-			securityEvent!:
+			securityEvent:
 				test: "msletest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe7100"
+		awsLambdaApiKeys:
+			upcKeys: "thisismychurchthisiswhereihealmyhurts"
+		certificatesApiUsers:
+			foo: f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7 # foo
+		database:
+			default:
+				password: ""
+			upcKeys:
+				password: ""
+			pulse:
+				password: ""
+	encryption:
 		activeKeyIds:
 			email: test
 			session: test
@@ -29,11 +41,8 @@ parameters:
 	awsLambda:
 		upcKeys:
 			url: "https://was.example/%s/%s"
-			apiKey: "thisismychurchthisiswhereihealmyhurts"
 	certificatesApi:
 		hideExpiredAfter: 7
-		users:
-			foo: f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7 # foo
 
 services:
 	garbageCollectorRunner: MichalSpacekCz\GarbageCollector\GarbageCollectorRunner(lockFilePath: %tempDir%/tests/garbageCollectorRunner.lock)
