@@ -86,6 +86,11 @@
 				<file name="src/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
 			</errorLevel>
 		</PossiblyUnusedReturnValue>
+		<PropertyNotSetInConstructor>
+			<errorLevel type="suppress">
+				<file name="src/Application/ContainerSecretsChecker.php"/> <!-- $compiler, $name and $initialization are declared by Nette\DI\CompilerExtension and set by Compiler::addExtension() right after construction -->
+			</errorLevel>
+		</PropertyNotSetInConstructor>
 		<ReservedWord>
 			<errorLevel type="suppress">
 				<directory name="src/Test" /> <!-- The void keyword is reported in @throws void -->

@@ -40,6 +40,14 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 			script-src:
 				-"'self'"
 
+database:
+	default:
+		user: dev_user # the password is in secrets.neon, see secrets.template.neon
+	upcKeys:
+		user: dev_user
+	pulse:
+		user: dev_user
+
 parameters:
 	locales:
 		supported:
@@ -56,14 +64,8 @@ parameters:
 		securityNotificationsFrom: "Fred <fred@waldo.example>"
 		trainingFrom: "Barney <barney@plugh.example>"
 
+	# The keys themselves live in secrets.neon, see secrets.template.neon
 	encryption:
-		keys:
-			email:
-				dev1: "msee_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafebabe" # [0-9a-fA-F]{64}
-			session:
-				dev1: "msse_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafed00d" # [0-9a-fA-F]{64}
-			securityEvent:
-				dev1: "msle_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe1337" # [0-9a-fA-F]{64}
 		activeKeyIds:
 			email: dev1
 			session: dev1
@@ -76,13 +78,6 @@ parameters:
 	awsLambda:
 		upcKeys:
 			url: "https://example.amazonaws.com/stage/upc_keys/%s/%s"
-			apiKey: "britishteaatfiveoclockisnotacoffee"
-
-	certificatesApi:
-		users:
-			web: sha512bin2hexrandom_bytes64
-			demo:
-			githubactions:
 
 services:
 	sleep: MichalSpacekCz\Test\Utils\Insomnia
