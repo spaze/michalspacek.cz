@@ -488,21 +488,11 @@ final class TrainingDates
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
 				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
-				JOIN (
-					SELECT
-						t2.id_training,
-						d2.key_venue,
-						d2.start
-					FROM
-						trainings t2
-						JOIN training_dates d2 ON t2.id_training = d2.key_training
-						JOIN training_date_status s2 ON d2.key_status = s2.id_status
-					WHERE
-						d2.public
-						AND t2.id_training = ?
-						AND d2.end > NOW()
-						AND s2.status IN (?, ?)
-				) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
+			WHERE
+				d.public
+				AND t.id_training = ?
+				AND d.end > NOW()
+				AND s.status IN (?, ?)
 			ORDER BY
 				d.start',
 			$trainingId,
