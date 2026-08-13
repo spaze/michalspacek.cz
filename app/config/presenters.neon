@@ -55,6 +55,7 @@ services:
 	# pulse module
 	- MichalSpacekCz\Presentation\Pulse\ErrorGeneric\ErrorGenericPresenter
 	- MichalSpacekCz\Presentation\Pulse\Error\ErrorPresenter
+	- MichalSpacekCz\Presentation\Pulse\Heartbleed\HeartbleedPresenter
 	- MichalSpacekCz\Presentation\Pulse\Homepage\HomepagePresenter
 	- MichalSpacekCz\Presentation\Pulse\Passwords\PasswordsPresenter
 	- MichalSpacekCz\Presentation\Pulse\PasswordsStorages\PasswordsStoragesPresenter
