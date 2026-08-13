@@ -84,6 +84,8 @@ parameters:
 		awsLambdaApiKeys:
 			upcKeys:
 		certificatesApiUsers: []
+		mail:
+			password:
 		database:
 			default:
 				password:
