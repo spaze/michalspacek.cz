@@ -67,6 +67,7 @@ final class ContainerSecretsChecker extends CompilerExtension
 		$hidden = array_fill_keys(array_keys($secretValues), '…');
 
 		$filled = [];
+		$unknownKeys = [];
 		$copied = [];
 		foreach ($this->compiler->getExtensions() as $name => $extension) {
 			if ($extension === $this) {
@@ -86,12 +87,17 @@ final class ContainerSecretsChecker extends CompilerExtension
 			foreach (self::configKeys($extension->getConfig(), $name) as [$holder, $key]) {
 				if ($holder === 'parameters.secrets' || str_starts_with($holder, 'parameters.secrets.')) {
 					// Keys under parameters.secrets are compiled into the container as the fallback structure
-					// even with nothing under them, an empty array say, and a stale secret left as a key there
-					// equals nothing current, so every key has to be one the current secrets declare. With no
-					// secrets loaded there's no shape to compare against, and nothing current to protect either
-					$declaredPath = $this->declaredSecretsPath("{$holder}.{$key}");
-					if ($this->secrets !== [] && str_ends_with($declaredPath, '…')) {
-						$filled[] = $declaredPath;
+					// even with nothing under them, an empty array say, so every key has to be one the current
+					// secrets declare: what isn't is either a secret nobody has put in secrets.neon yet or one
+					// left there after a rotation. With no secrets loaded there's no shape to compare against,
+					// and nothing current to protect either
+					$holderPath = $this->declaredSecretsPath($holder);
+					if (
+						$this->secrets !== []
+						&& !str_ends_with($holderPath, '…')
+						&& str_ends_with($this->declaredSecretsPath("{$holder}.{$key}"), '…')
+					) {
+						$unknownKeys[] = $holderPath; // the topmost unknown key only, everything below it is unknown by definition
 					}
 				} elseif (isset($secretValues[$key])) {
 					$copied[] = "{$secretValues[$key]} (a key under " . strtr($holder, $hidden) . ')';
@@ -100,6 +106,9 @@ final class ContainerSecretsChecker extends CompilerExtension
 		}
 		if ($filled !== []) {
 			throw new RuntimeException('Values of ' . implode(', ', array_unique($filled)) . ' are defined statically in the config files and would be compiled into the container as the fallback for the dynamic parameter; they belong only in config/secrets.neon');
+		}
+		if ($unknownKeys !== []) {
+			throw new RuntimeException('The config files declare keys under ' . implode(', ', array_unique($unknownKeys)) . " that config/secrets.neon does not have, and that file replaces the whole tree: add them there, or delete them from the config files if they are left over after a rotation; the names aren't printed because a key can be a secret itself, compare the two files to find them");
 		}
 		if ($copied !== []) {
 			throw new RuntimeException('Values of ' . implode(', ', $copied) . ' are written into the configuration statically and would be compiled into the container; they belong only in config/secrets.neon');

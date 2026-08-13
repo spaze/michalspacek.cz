@@ -116,7 +116,7 @@ final class CompiledContainerSecretsTest extends TestCase
 		$thrown = $this->compileRefused('a stale key with an empty array under parameters.secrets was accepted', ['apiKey' => $secret], [
 			'factory' => 'ArrayObject',
 		], extraConfig: ['parameters' => ['secrets' => ['apiKey' => [$staleValue => []]]]]);
-		Assert::match('%a%secrets.apiKey.…%a%statically%a%', $thrown->getMessage());
+		Assert::match('%a%keys under secrets.apiKey%a%does not have%a%', $thrown->getMessage());
 		Assert::notContains(substr($staleValue, -16), $thrown->getMessage(), 'the message leaked the stale key');
 	}
 
@@ -129,7 +129,7 @@ final class CompiledContainerSecretsTest extends TestCase
 		$thrown = $this->compileRefused('a stale numeric key with an empty array under parameters.secrets was accepted', ['apiKey' => $secret], [
 			'factory' => 'ArrayObject',
 		], extraConfig: ['parameters' => ['secrets' => ['apiKey' => [12345678 => []]]]]);
-		Assert::match('%a%secrets.apiKey.…%a%statically%a%', $thrown->getMessage());
+		Assert::match('%a%keys under secrets.apiKey%a%does not have%a%', $thrown->getMessage());
 	}
 
 
@@ -235,8 +235,9 @@ final class CompiledContainerSecretsTest extends TestCase
 		Assert::match('%a%secrets.apiKey (parameters.probe)%a%', $thrown->getMessage());
 		Assert::notContains($secret, $thrown->getMessage(), 'the message leaked the value it exists to protect');
 
-		// A stale key under parameters.secrets with the adapter's ! suffix: the adapter strips it, so the
-		// shape rule has to see the bare key
+		// A stale key under parameters.secrets with the adapter's ! suffix: the adapter strips the suffix and
+		// puts its own merge marker under the key, so what the rules see is neither the key nor the value the
+		// file has, and this is here to notice if that ever stops being caught
 		$staleValue = 'stalebang-' . bin2hex(random_bytes(8));
 		$thrown = $this->compileRefused('a file-backed config with a stale key under parameters.secrets was accepted', ['apiKey' => $secret], [
 			'factory' => 'ArrayObject',
