@@ -3,6 +3,7 @@ php:
 
 application:
 	errorPresenter: Www:ErrorGeneric
+	scanComposer: false # presenters.neon registers them all, so searching the Composer classmap for more would only make the container depend on what is in it
 	mapping:
 		*: MichalSpacekCz\Presentation\*\**Presenter
 

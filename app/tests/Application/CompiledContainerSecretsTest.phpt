@@ -629,7 +629,8 @@ final class CompiledContainerSecretsTest extends TestCase
 			$configurator->addStaticParameters(['secrets' => $secrets]);
 		}
 		$configurator->addConfig([
-			'application' => ['scanDirs' => false], // or it finds this app's presenters and fails on their dependencies
+			// both off, or it finds this app's presenters, by scanning or in the Composer classmap, and fails on their dependencies
+			'application' => ['scanDirs' => false, 'scanComposer' => false],
 			'services' => ['probe' => $service],
 		]);
 		if ($extraConfig !== []) {
