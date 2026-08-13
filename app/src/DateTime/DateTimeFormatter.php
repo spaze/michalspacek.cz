@@ -7,7 +7,7 @@ use DateTimeInterface;
 use IntlDateFormatter;
 use RuntimeException;
 
-final readonly class DateTimeFormatter
+final class DateTimeFormatter
 {
 
 	private const string DATE_DAY = 'day';
@@ -106,9 +106,23 @@ final readonly class DateTimeFormatter
 	];
 
 
+	/**
+	 * Creating one costs an order of magnitude more than using it.
+	 *
+	 * @var array<string, IntlDateFormatter>
+	 */
+	private array $formatters = [];
+
+
 	public function __construct(
-		private string $defaultLocale,
+		private readonly string $defaultLocale,
 	) {
+	}
+
+
+	private function getFormatter(string $locale): IntlDateFormatter
+	{
+		return $this->formatters[$locale] ??= new IntlDateFormatter($locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE);
 	}
 
 
@@ -118,7 +132,7 @@ final readonly class DateTimeFormatter
 			$locale = $this->defaultLocale;
 		}
 
-		$formatter = new IntlDateFormatter($locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE);
+		$formatter = $this->getFormatter($locale);
 		if ($end === null || $this->sameDates($start, $end, $type, self::NO_INTERVAL)) {
 			$formatter->setPattern(self::LOCAL_DATE_FORMAT[$locale][$type][self::NO_INTERVAL]);
 			$result = $formatter->format($start);
