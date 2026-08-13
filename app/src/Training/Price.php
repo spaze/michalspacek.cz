@@ -71,10 +71,19 @@ final readonly class Price
 
 	private function formatCurrency(float $price): string
 	{
-		$formatter = new NumberFormatter('cs_CZ', NumberFormatter::CURRENCY);
-		if (fmod($price, 1) === (float)0) {
-			$formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+		// Creating one costs an order of magnitude more than using it, one per setting so none of them is changed later
+		/** @var array<string, NumberFormatter> $formatters */
+		static $formatters = [];
+		$wholeNumber = fmod($price, 1) === (float)0;
+		$key = $wholeNumber ? 'whole' : 'fraction';
+		if (!isset($formatters[$key])) {
+			$formatter = new NumberFormatter('cs_CZ', NumberFormatter::CURRENCY);
+			if ($wholeNumber) {
+				$formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+			}
+			$formatters[$key] = $formatter;
 		}
+		$formatter = $formatters[$key];
 
 		$currency = 'CZK';
 		$formatted = $formatter->formatCurrency($price, $currency);
