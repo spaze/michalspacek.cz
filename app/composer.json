@@ -64,6 +64,7 @@
 		"symfony/polyfill-uuid": "*"
 	},
 	"config": {
+		"optimize-autoloader": true,
 		"sort-packages": true
 	},
 	"autoload": {
