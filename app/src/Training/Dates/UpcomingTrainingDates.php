@@ -107,22 +107,11 @@ final class UpcomingTrainingDates
 					JOIN training_date_status s ON d.key_status = s.id_status
 					LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 					LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
-					JOIN (
-						SELECT
-							t2.id_training,
-							d2.key_venue,
-							d2.start
-						FROM
-							trainings t2
-							JOIN training_dates d2 ON t2.id_training = d2.key_training
-							JOIN training_date_status s2 ON d2.key_status = s2.id_status
-						WHERE
-							(d2.public != ? OR TRUE = ?)
-							AND d2.end > NOW()
-							AND s2.status IN (?, ?)
-					) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
 				WHERE
-					t.key_successor IS NULL
+					(d.public != ? OR TRUE = ?)
+					AND d.end > NOW()
+					AND s.status IN (?, ?)
+					AND t.key_successor IS NULL
 					AND t.key_discontinued IS NULL
 					AND l.language = ?
 				ORDER BY
