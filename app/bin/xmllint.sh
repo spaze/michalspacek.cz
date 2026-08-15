@@ -2,7 +2,7 @@
 
 OPT_AUTO_INSTALL_WITH_APT="--auto-install-with-apt"
 OPT_AUTO_DOWNLOAD_XSD="--auto-download-xsd"
-XSD_VENDOR="vendor-dev/vendor/spaze/phpcs-phar/phpcs.xsd"
+XSD_VENDOR="../dev-tools/vendor/spaze/phpcs-phar/phpcs.xsd"
 XSD_URL="https://raw.githubusercontent.com/spaze/phpcs-phar/main/phpcs.xsd"
 XSD_TMP="/tmp/phpcs.xsd"
 
@@ -42,7 +42,7 @@ if [ "$AUTO_DOWNLOAD_XSD" = true ]; then
 	XSD="$XSD_TMP"
 else
 	if ! [ -f "$XSD_VENDOR" ]; then
-		echo "XSD not found at $XSD_VENDOR, install vendor-dev first or download it automatically with $0 $OPT_AUTO_DOWNLOAD_XSD"
+		echo "XSD not found at $XSD_VENDOR, install dev-tools first or download it automatically with $0 $OPT_AUTO_DOWNLOAD_XSD"
 		exit 2
 	fi
 	XSD="$XSD_VENDOR"

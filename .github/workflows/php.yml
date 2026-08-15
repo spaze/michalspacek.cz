@@ -89,7 +89,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=app/vendor-dev install
+    - run: composer --working-dir=dev-tools install
     - run: make --directory=app lint-php
 
   lint-latte:
@@ -161,7 +161,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=app/vendor-dev install
+    - run: composer --working-dir=dev-tools install
     - run: make --directory=app phpcs
 
   phpstan:
@@ -185,7 +185,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=app/vendor-dev install
+    - run: composer --working-dir=dev-tools install
     - run: make --directory=app phpstan
 
   phpstan-vendor:
@@ -209,7 +209,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=app/vendor-dev install
+    - run: composer --working-dir=dev-tools install
     - run: make --directory=app phpstan-vendor
 
   tester:
@@ -230,7 +230,7 @@ jobs:
       run: |
         sudo mkdir --parents /srv/www
         sudo ln --symbolic $GITHUB_WORKSPACE /srv/www
-    - run: composer --working-dir=app/vendor-dev install
+    - run: composer --working-dir=dev-tools install
     - run: make --directory=app tester
     - name: Failed test output, if any
       if: failure()
@@ -257,7 +257,7 @@ jobs:
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
-      - run: composer --working-dir=app/vendor-dev install
+      - run: composer --working-dir=dev-tools install
       - run: make --directory=app psalm
 
   composer-dependency-analyser:
@@ -274,5 +274,5 @@ jobs:
         with:
           coverage: none
           php-version: ${{ matrix.php-version }}
-      - run: composer --working-dir=app/vendor-dev install
+      - run: composer --working-dir=dev-tools install
       - run: make --directory=app composer-dependency-analyser

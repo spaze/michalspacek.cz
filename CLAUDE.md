@@ -8,8 +8,8 @@ All commands run from the `app/` directory.
 
 ```sh
 make test                    # full suite: audits, checks, all linters, phpcs, phpstan (+ vendor), tester, psalm, dependency analysis
-make composer-update         # update packages in both vendor/ and vendor-dev/
-make composer-outdated       # check outdated packages in both vendor/ and vendor-dev/
+make composer-update         # update packages in both app/vendor/ and dev-tools/
+make composer-outdated       # check outdated packages in both app/vendor/ and dev-tools/
 make phpstan                 # static analysis (level max)
 make phpcs                   # code style check
 make cs-fix                  # auto-fix code style
@@ -20,14 +20,14 @@ make lint-latte              # Latte template lint
 make lint-neon               # NEON config file lint
 ```
 
-Dev tools (PHPStan, Psalm, phpcs, Nette Tester, etc.) live in `app/vendor-dev/` — a separate Composer project kept out of Git. Install before first use:
+Dev tools (PHPStan, Psalm, phpcs, Nette Tester, etc.) live in `dev-tools/` at the repository root, a separate Composer project shared by every project in the repo and kept out of Git. Install before first use:
 ```sh
-composer --working-dir=vendor-dev/ install
+composer --working-dir=../dev-tools/ install
 ```
 
 Run a single test file (from `app/`):
 ```sh
-vendor-dev/vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 tests/Path/To/FooTest.phpt
+../dev-tools/vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 tests/Path/To/FooTest.phpt
 ```
 
 Run tests that require Internet (skipped by default):

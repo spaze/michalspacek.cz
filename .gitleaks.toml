@@ -20,7 +20,7 @@ paths = [
   # Paths otherwise .gitignored should be listed here if you want to use `gitleaks directory`
   '''i/build/''',
   '''app/temp/cache/''',
-  '''app/vendor-dev/''',
+  '''dev-tools/''',
 ]
 regexTarget = "match"
 regexes = [
