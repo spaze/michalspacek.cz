@@ -11,4 +11,4 @@ parameters:
 					- config/tests.neon
 
 includes:
-	- vendor-dev/vendor/shipmonk/dead-code-detector/rules.neon
+	- ../dev-tools/vendor/shipmonk/dead-code-detector/rules.neon

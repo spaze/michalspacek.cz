@@ -5,11 +5,11 @@ use MichalSpacekCz\DependencyInjection\DiServices;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
-// Needed so the analyser can resolve classes from vendor-dev (e.g. Tester\*, JetBrains\*)
+// Needed so the analyser can resolve classes from dev-tools (e.g. Tester\*, JetBrains\*)
 // Remove once https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/258 is implemented
-$vendorDevAutoload = __DIR__ . '/vendor-dev/vendor/autoload.php';
+$vendorDevAutoload = __DIR__ . '/../dev-tools/vendor/autoload.php';
 if (!is_file($vendorDevAutoload)) {
-	throw new RuntimeException('Missing development autoloader at "' . $vendorDevAutoload . '", run "composer --working-dir=vendor-dev install" and try again.');
+	throw new RuntimeException('Missing development autoloader at "' . $vendorDevAutoload . '", run "composer --working-dir=../dev-tools install" and try again.');
 }
 require $vendorDevAutoload;
 
@@ -24,8 +24,8 @@ return (new Configuration())
 	->ignoreErrorsOnPackage('async-aws/lambda', [ErrorType::UNUSED_DEPENDENCY])
 	->ignoreErrorsOnPackage('mlocati/ip-lib', [ErrorType::UNUSED_DEPENDENCY])
 
-	// These are in vendor-dev/composer.json or come with a dependency, not in the main composer.json
-	// Remove the vendor-dev ones once https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/258 is implemented
+	// These are in dev-tools/composer.json or come with a dependency, not in the main composer.json
+	// Remove the dev-tools ones once https://github.com/shipmonk-rnd/composer-dependency-analyser/issues/258 is implemented
 	->ignoreErrorsOnPackages([
 		'jetbrains/phpstorm-attributes',
 		'nette/component-model',

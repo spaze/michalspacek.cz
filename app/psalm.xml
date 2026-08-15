@@ -17,7 +17,7 @@
 			<directory name="bin" />
 			<directory name="temp" />
 			<directory name="vendor" />
-			<directory name="vendor-dev" />
+			<directory name="../dev-tools" />
 		</ignoreFiles>
 	</projectFiles>
 	<fileExtensions>

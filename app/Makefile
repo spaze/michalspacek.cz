@@ -4,25 +4,25 @@ test: composer-audit composer-validate npm-audit check-file-patterns check-makef
 
 composer-audit:
 	composer audit
-	composer --working-dir=vendor-dev/ audit
+	composer --working-dir=../dev-tools/ audit
 
 composer-update:
 	composer update
-	composer --working-dir=vendor-dev/ update
+	composer --working-dir=../dev-tools/ update
 
 composer-validate:
 	composer validate
-	composer --working-dir=vendor-dev/ validate --no-check-publish
+	composer --working-dir=../dev-tools/ validate --no-check-publish
 
 composer-outdated:
 	composer outdated
-	composer --working-dir=vendor-dev/ outdated
+	composer --working-dir=../dev-tools/ outdated
 
 npm-audit:
 	npm audit
 
 cs-fix:
-	vendor-dev/vendor/bin/phpcbf src/ public/ tests/ bin/
+	../dev-tools/vendor/bin/phpcbf src/ public/ tests/ bin/
 
 check-file-patterns:
 	bin/check-file-patterns.sh
@@ -37,7 +37,7 @@ check-dependabot-directories:
 	bin/check-dependabot-directories.sh
 
 lint-php:
-	vendor-dev/vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub src/ public/ stubs/ tests/
+	../dev-tools/vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub src/ public/ stubs/ tests/
 
 lint-latte:
 	bin/latte-lint.php src/
@@ -56,22 +56,22 @@ shellcheck:
 	shellcheck --external-sources bin/*.sh
 
 phpcs:
-	vendor-dev/vendor/bin/phpcs src/ public/ tests/ bin/
+	../dev-tools/vendor/bin/phpcs src/ public/ tests/ bin/
 
 phpstan:
-	vendor-dev/vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon
+	../dev-tools/vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon
 
 phpstan-vendor:
-	vendor-dev/vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon
+	../dev-tools/vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon
 
 psalm:
-	vendor-dev/vendor/bin/psalm.phar
+	../dev-tools/vendor/bin/psalm.phar
 
 psalm-clear-cache:
-	vendor-dev/vendor/bin/psalm.phar --clear-cache
+	../dev-tools/vendor/bin/psalm.phar --clear-cache
 
 tester:
-	vendor-dev/vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
+	../dev-tools/vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 --colors 1 --coverage temp/coverage.html --coverage-src src/ tests/
 
 tester-include-skipped:
 	TEST_CASE_RUNNER_INCLUDE_SKIPPED=1 \
@@ -81,7 +81,7 @@ gitleaks:
 	gitleaks git --verbose $(realpath ..)
 
 composer-dependency-analyser:
-	vendor-dev/vendor/bin/composer-dependency-analyser --verbose
+	../dev-tools/vendor/bin/composer-dependency-analyser --verbose
 
 update-security-txt:
 	bin/update-security.txt.sh
