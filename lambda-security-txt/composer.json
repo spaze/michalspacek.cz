@@ -1,0 +1,14 @@
+{
+	"name": "spaze/lambda-security-txt",
+	"type": "project",
+	"description": "security.txt fetching and validation proxy for AWS Lambda",
+	"license": "MIT",
+	"require": {
+		"php": "^8.5",
+		"bref/bref": "^3.0",
+		"spaze/security-txt": "^2.1"
+	},
+	"config": {
+		"sort-packages": true
+	}
+}

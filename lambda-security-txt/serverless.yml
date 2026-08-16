@@ -1,0 +1,30 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: exploited
+service: security-txt
+
+provider:
+    name: aws
+    region: eu-west-1
+
+plugins:
+    - ./vendor/bref/bref
+
+functions:
+    fetch:
+        handler: src/fetch.php
+        description: 'Fetch security.txt and return SecurityTxtFetchResult'
+        runtime: php-85
+    version:
+        handler: src/version.php
+        description: 'Return the installed library version number and reference'
+        runtime: php-85
+
+package:
+    patterns:
+        - '!vendor/**'
+        - 'vendor/bref/**'
+        - 'vendor/composer/**'
+        - '!vendor/composer/autoload_files.php'
+        - 'vendor/psr/**'
+        - 'vendor/spaze/security-txt/**'
+        - 'vendor/autoload.php'

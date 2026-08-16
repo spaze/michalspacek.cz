@@ -1,0 +1,11 @@
+parameters:
+	tmpDir: /tmp/phpstan/lambda-security-txt
+	paths:
+		- src
+	level: max
+	checkMissingOverrideMethodAttribute: true
+
+includes:
+	- phar://phpstan.phar/conf/bleedingEdge.neon
+	- ../dev-tools/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+	- ../dev-tools/vendor/phpstan/phpstan-strict-rules/rules.neon
