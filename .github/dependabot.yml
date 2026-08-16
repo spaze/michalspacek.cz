@@ -23,3 +23,13 @@ updates:
     allow:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "all"
+
+  - package-ecosystem: "composer"
+    directory: "/lambda-security-txt"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 5
+    allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "all"

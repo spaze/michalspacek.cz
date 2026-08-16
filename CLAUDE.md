@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-All commands run from the `app/` directory.
+Unless noted otherwise, all commands run from the `app/` directory.
 
 ```sh
 make test                    # full suite: audits, checks, all linters, phpcs, phpstan (+ vendor), tester, psalm, dependency analysis
@@ -34,6 +34,14 @@ Run tests that require Internet (skipped by default):
 ```sh
 make tester-include-skipped
 ```
+
+## `lambda-security-txt/`
+
+`lambda-security-txt/` is a separate, much smaller Composer project: the security.txt fetching and validation proxy deployed to AWS Lambda with Bref. It has its own `composer.json`, its own committed production `vendor/`, and its own `Makefile` with a reduced target list (`make test` runs `composer audit`, `composer validate`, `lint-php`, `phpcs` and `phpstan`). Its commands run from `lambda-security-txt/`, and it shares the same `dev-tools/`, so it declares no dev dependencies of its own.
+
+`serverless.yml` ships only an allow-listed subset of `vendor/`, so most of the tree (`symfony/process`, `nyholm/psr7` and the rest of Bref's dependencies) never reaches Lambda. It also excludes `vendor/composer/autoload_files.php`; no production dependency uses `files` autoloading, so Composer doesn't generate that file at all now and the exclusion is currently a no-op. It would need revisiting if a production dependency ever adds a `files` autoload entry, because then the deployed package would quietly skip it.
+
+The `src/*.php` files are handlers that require the autoloader and return a closure rather than declaring classes, so they are themselves neither autoloaded nor namespaced. `make test` and the `PHP tests for lambda-security-txt` workflow cover them; the app's own workflow does not.
 
 ## Architecture
 

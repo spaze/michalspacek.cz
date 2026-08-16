@@ -1,0 +1,256 @@
+<?php
+declare(strict_types = 1);
+
+namespace Spaze\SecurityTxt\Parser;
+
+use LogicException;
+use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
+use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
+use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
+use Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
+use Spaze\SecurityTxt\Parser\FieldProcessors\AcknowledgmentsAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\BugBountyCheckMultipleFields;
+use Spaze\SecurityTxt\Parser\FieldProcessors\BugBountySetFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\CanonicalAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\ContactAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\CsafAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\EncryptionAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckFieldFormat;
+use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckFieldValueExpiresSoon;
+use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresCheckMultipleFields;
+use Spaze\SecurityTxt\Parser\FieldProcessors\ExpiresSetFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\FieldProcessor;
+use Spaze\SecurityTxt\Parser\FieldProcessors\HiringAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\PolicyAddFieldValue;
+use Spaze\SecurityTxt\Parser\FieldProcessors\PreferredLanguagesCheckMultipleFields;
+use Spaze\SecurityTxt\Parser\FieldProcessors\PreferredLanguagesSetFieldValue;
+use Spaze\SecurityTxt\Parser\SplitProviders\SecurityTxtSplitProvider;
+use Spaze\SecurityTxt\SecurityTxt;
+use Spaze\SecurityTxt\SecurityTxtValidationLevel;
+use Spaze\SecurityTxt\Signature\SecurityTxtSignature;
+use Spaze\SecurityTxt\Validator\SecurityTxtValidateResult;
+use Spaze\SecurityTxt\Validator\SecurityTxtValidator;
+use Spaze\SecurityTxt\Violations\SecurityTxtContentNotUtf8;
+use Spaze\SecurityTxt\Violations\SecurityTxtLineNoEol;
+use Spaze\SecurityTxt\Violations\SecurityTxtPossibelFieldTypo;
+use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
+use Spaze\SecurityTxt\Violations\SecurityTxtUnknownField;
+
+final class SecurityTxtParser
+{
+
+	/**
+	 * @var array<string, list<FieldProcessor>>
+	 */
+	private array $fieldProcessors = [];
+
+	/** @var array<int<1, max>, list<SecurityTxtSpecViolation>> */
+	private array $lineErrors = [];
+
+	/** @var array<int<1, max>, list<SecurityTxtSpecViolation>> */
+	private array $lineWarnings = [];
+
+	private ?int $expiresWarningThreshold = null;
+
+
+	public function __construct(
+		private readonly SecurityTxtValidator $validator,
+		private readonly SecurityTxtSignature $signature,
+		private readonly SecurityTxtExpiresFactory $expiresFactory,
+		private readonly SecurityTxtSplitLines $splitLines,
+		private readonly SecurityTxtSplitProvider $splitProvider,
+	) {
+	}
+
+
+	private function initFieldProcessors(): void
+	{
+		if ($this->fieldProcessors !== []) {
+			return;
+		}
+		$this->fieldProcessors[SecurityTxtField::Acknowledgments->value] = [
+			new AcknowledgmentsAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::BugBounty->value] = [
+			new BugBountyCheckMultipleFields(),
+			new BugBountySetFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Canonical->value] = [
+			new CanonicalAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Contact->value] = [
+			new ContactAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Csaf->value] = [
+			new CsafAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Encryption->value] = [
+			new EncryptionAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Expires->value] = [
+			new ExpiresCheckMultipleFields(),
+			new ExpiresCheckFieldFormat(),
+			new ExpiresSetFieldValue($this->expiresFactory),
+			new ExpiresCheckFieldValueExpiresSoon(fn(): ?int => $this->expiresWarningThreshold),
+		];
+		$this->fieldProcessors[SecurityTxtField::Hiring->value] = [
+			new HiringAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::Policy->value] = [
+			new PolicyAddFieldValue(),
+		];
+		$this->fieldProcessors[SecurityTxtField::PreferredLanguages->value] = [
+			new PreferredLanguagesCheckMultipleFields(),
+			new PreferredLanguagesSetFieldValue($this->splitProvider),
+		];
+	}
+
+
+	/**
+	 * @param int<1, max> $lineNumber
+	 */
+	private function processField(int $lineNumber, string $value, SecurityTxtField $field, SecurityTxt $securityTxt): void
+	{
+		foreach ($this->fieldProcessors[$field->value] as $processor) {
+			try {
+				$processor->process($value, $securityTxt);
+			} catch (SecurityTxtError $e) {
+				$this->lineErrors[$lineNumber][] = $e->getViolation();
+			} catch (SecurityTxtWarning $e) {
+				$this->lineWarnings[$lineNumber][] = $e->getViolation();
+			}
+		}
+	}
+
+
+	public function parseString(string $contents, ?string $fileLocation = null, ?int $expiresWarningThreshold = null, bool $strictMode = false): SecurityTxtParseStringResult
+	{
+		$this->expiresWarningThreshold = $expiresWarningThreshold;
+		$this->initFieldProcessors();
+		$this->lineErrors = $this->lineWarnings = [];
+		$securityTxt = new SecurityTxt(SecurityTxtValidationLevel::AllowInvalidValues);
+		if ($fileLocation !== null) {
+			$securityTxt->setFileLocation($fileLocation);
+		}
+		if (@preg_match('//u', $contents) === false) { // Intentionally silenced
+			$pregError = preg_last_error();
+			if ($pregError !== PREG_BAD_UTF8_ERROR) {
+				throw new LogicException('preg_match() failed with PCRE error code ' . $pregError);
+			}
+			return new SecurityTxtParseStringResult(
+				$securityTxt,
+				false,
+				$strictMode,
+				$this->expiresWarningThreshold,
+				$this->lineErrors,
+				$this->lineWarnings,
+				new SecurityTxtValidateResult([new SecurityTxtContentNotUtf8()], []),
+			);
+		}
+		$lines = $this->splitLines->splitLines($contents);
+		$securityTxtFields = array_combine(
+			array_map(function (SecurityTxtField $securityTxtField): string {
+				return strtolower($securityTxtField->value);
+			}, SecurityTxtField::cases()),
+			SecurityTxtField::cases(),
+		);
+		for ($lineNumber = 1; $lineNumber <= count($lines); $lineNumber++) {
+			$line = trim($lines[$lineNumber - 1]);
+			if (!str_ends_with($lines[$lineNumber - 1], "\n")) {
+				$this->lineErrors[$lineNumber][] = new SecurityTxtLineNoEol($line);
+			}
+			if (str_starts_with($line, '#')) {
+				continue;
+			}
+			if (isset($skipSignatureArmorHeaders) && $skipSignatureArmorHeaders) {
+				if ($line === '') {
+					$skipSignatureArmorHeaders = false;
+				}
+				continue;
+			}
+			if ($this->signature->isClearsignHeader($line)) {
+				$securityTxt = $this->checkSignature($lineNumber, $contents, $securityTxt);
+				$skipSignatureArmorHeaders = true;
+				continue;
+			}
+			$field = explode(':', $line, 2);
+			if (count($field) !== 2) {
+				continue;
+			}
+			$fieldName = strtolower($field[0]);
+			$fieldValue = trim($field[1]);
+			if (isset($securityTxtFields[$fieldName])) {
+				$this->processField($lineNumber, $fieldValue, $securityTxtFields[$fieldName], $securityTxt);
+			} else {
+				$suggestion = $this->getSuggestion($securityTxtFields, $fieldName);
+				if ($suggestion !== null) {
+					$this->lineWarnings[$lineNumber][] = new SecurityTxtPossibelFieldTypo($field[0], $suggestion->value, $line);
+				} else {
+					$this->lineWarnings[$lineNumber][] = new SecurityTxtUnknownField($field[0], $line);
+				}
+			}
+		}
+		$validateResult = $this->validator->validate($securityTxt);
+		$expires = $securityTxt->getExpires();
+		$hasErrors = $this->lineErrors !== [] || $validateResult->getErrors() !== [];
+		$hasWarnings = $this->lineWarnings !== [] || $validateResult->getWarnings() !== [];
+		return new SecurityTxtParseStringResult(
+			$securityTxt,
+			($expires === null || !$expires->isExpired()) && !$hasErrors && (!$strictMode || !$hasWarnings),
+			$strictMode,
+			$this->expiresWarningThreshold,
+			$this->lineErrors,
+			$this->lineWarnings,
+			$validateResult,
+		);
+	}
+
+
+	public function parseFetchResult(SecurityTxtFetchResult $fetchResult, ?int $expiresWarningThreshold = null, bool $strictMode = false): SecurityTxtParseHostResult
+	{
+		$parseResult = $this->parseString($fetchResult->getContents(), $fetchResult->getFinalUrl(), $expiresWarningThreshold, $strictMode);
+		return new SecurityTxtParseHostResult(
+			$parseResult->isValid() && $fetchResult->getErrors() === [] && (!$strictMode || $fetchResult->getWarnings() === []),
+			$parseResult,
+			$fetchResult,
+		);
+	}
+
+
+	/**
+	 * @param positive-int $lineNumber
+	 */
+	private function checkSignature(int $lineNumber, string $contents, SecurityTxt $securityTxt): SecurityTxt
+	{
+		try {
+			$result = $this->signature->verify($contents);
+			return $securityTxt->withSignatureVerifyResult($result);
+		} catch (SecurityTxtError $e) {
+			$this->lineErrors[$lineNumber][] = $e->getViolation();
+		} catch (SecurityTxtWarning $e) {
+			$this->lineWarnings[$lineNumber][] = $e->getViolation();
+		}
+		return $securityTxt;
+	}
+
+
+	/**
+	 * @see https://github.com/nette/utils/blob/c7ec4476eff478e6eec4263171ae0e3b0e2b4e55/src/Utils/Helpers.php#L72 Algorithm taken from nette/utils under the terms of the New BSD License
+	 * @param array<string, SecurityTxtField> $securityTxtFields
+	 */
+	public function getSuggestion(array $securityTxtFields, string $lowercaseName): ?SecurityTxtField
+	{
+		$best = null;
+		$min = (strlen($lowercaseName) / 4 + 1) * 10 + .1;
+		foreach ($securityTxtFields as $lowercaseSecurityTxtFieldName => $securityTxtField) {
+			$len = levenshtein($lowercaseSecurityTxtFieldName, $lowercaseName, 10, 11, 10);
+			if ($lowercaseSecurityTxtFieldName !== $lowercaseName && $len < $min) {
+				$min = $len;
+				$best = $securityTxtField;
+			}
+		}
+		return $best;
+	}
+
+}

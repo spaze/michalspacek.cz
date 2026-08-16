@@ -1,0 +1,20 @@
+<?php
+declare(strict_types = 1);
+
+namespace Spaze\SecurityTxt\Writer;
+
+use Spaze\SecurityTxt\SecurityTxt;
+
+final readonly class SecurityTxtWriter
+{
+
+	public function write(SecurityTxt $securityTxt): string
+	{
+		$result = '';
+		foreach ($securityTxt->getFields() as $field) {
+			$result .= sprintf("%s: %s\n", $field->getField()->value, $field->getValue());
+		}
+		return $result;
+	}
+
+}
