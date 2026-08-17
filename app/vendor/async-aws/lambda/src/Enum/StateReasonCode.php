@@ -6,6 +6,7 @@ final class StateReasonCode
 {
     public const CAPACITY_PROVIDER_SCALING_LIMIT_EXCEEDED = 'CapacityProviderScalingLimitExceeded';
     public const CREATING = 'Creating';
+    public const DEPENDENCY_ERROR = 'DependencyError';
     public const DISABLED_KMSKEY = 'DisabledKMSKey';
     public const DISALLOWED_BY_VPC_ENCRYPTION_CONTROL = 'DisallowedByVpcEncryptionControl';
     public const DRAINING_DURABLE_EXECUTIONS = 'DrainingDurableExecutions';
@@ -40,6 +41,7 @@ final class StateReasonCode
     public const KMSKEY_ACCESS_DENIED = 'KMSKeyAccessDenied';
     public const KMSKEY_NOT_FOUND = 'KMSKeyNotFound';
     public const RESTORING = 'Restoring';
+    public const SERVICE_QUOTA_EXCEEDED_EXCEPTION = 'ServiceQuotaExceededException';
     public const SUBNET_OUT_OF_IPADDRESSES = 'SubnetOutOfIPAddresses';
     public const VCPU_LIMIT_EXCEEDED = 'VcpuLimitExceeded';
     public const UNKNOWN_TO_SDK = 'UNKNOWN_TO_SDK';
@@ -52,6 +54,7 @@ final class StateReasonCode
         return isset([
             self::CAPACITY_PROVIDER_SCALING_LIMIT_EXCEEDED => true,
             self::CREATING => true,
+            self::DEPENDENCY_ERROR => true,
             self::DISABLED_KMSKEY => true,
             self::DISALLOWED_BY_VPC_ENCRYPTION_CONTROL => true,
             self::DRAINING_DURABLE_EXECUTIONS => true,
@@ -86,6 +89,7 @@ final class StateReasonCode
             self::KMSKEY_ACCESS_DENIED => true,
             self::KMSKEY_NOT_FOUND => true,
             self::RESTORING => true,
+            self::SERVICE_QUOTA_EXCEEDED_EXCEPTION => true,
             self::SUBNET_OUT_OF_IPADDRESSES => true,
             self::VCPU_LIMIT_EXCEEDED => true,
         ][$value]);

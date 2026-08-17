@@ -29,6 +29,9 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	}
 
 
+	/**
+	 * The file contents fetched from the host, do not render as HTML or feed it to a Markdown parser, could be malicious.
+	 */
 	public function getContents(): string
 	{
 		return $this->contents;
@@ -64,6 +67,8 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 
 
 	/**
+	 * The redirect URLs, do not render as HTML or Markdown, could be malicious.
+	 *
 	 * @return array<string, list<string>>
 	 */
 	public function getRedirects(): array

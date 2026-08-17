@@ -2,6 +2,25 @@
 
 ## NOT RELEASED
 
+## 2.17.0
+
+### Added
+
+- AWS api-change: AWS Lambda Durable Functions now supports customer managed KMS keys. This allows customers to configure a KMS key in Durable Config to have all their durable execution data encrypted.
+- AWS api-change: Add Java 8, 11 and 17 on AL2023 (java8.al2023, java11.al2023, java17.al2023) support to AWS Lambda.
+- AWS api-change: AWS Lambda now returns a new DependencyError value in StateReasonCode and LastUpdateStatusReasonCode to provide more actionable information when a function reaches a failed state due to an error from an upstream dependency or service.
+
+### Fixed
+
+- Fix typos.
+
+## 2.16.0
+
+### Added
+
+- AWS api-change: Converging and fixing existing documentation gaps in Lambda SDK
+- AWS api-change: Lambda now supports self-managed S3 buckets for Lambda code storage giving you the option for Lambda to reference a copy of your source code from your own S3 buckets. This allows you to maintain a single copy of your source code and manage your own code storage limits.
+
 ## 2.15.0
 
 ### Added
@@ -52,7 +71,7 @@
 ### Added
 
 - AWS api-change: Rework regions configuration
-- AWS api-change: remove trailling `/` in `ListFunctions` request
+- AWS api-change: remove trailing `/` in `ListFunctions` request
 
 ### Changed
 

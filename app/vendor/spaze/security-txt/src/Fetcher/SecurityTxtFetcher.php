@@ -60,6 +60,7 @@ final class SecurityTxtFetcher
 		private readonly SecurityTxtUrlParser $urlParser,
 		private readonly SecurityTxtSplitLines $splitLines,
 		private readonly SecurityTxtDnsProvider $dnsLookupProvider,
+		private readonly SecurityTxtIpAddressValidator $ipAddressValidator,
 		private readonly int $maxAllowedRedirects = 5,
 	) {
 		$this->validateMaxAllowedRedirects($this->maxAllowedRedirects);
@@ -205,7 +206,7 @@ final class SecurityTxtFetcher
 		if (!isset($ipAddress) || !isset($ipAddressType)) {
 			throw new SecurityTxtHostIpAddressNotFoundException($url->getUrl()->toUnicodeString(), $host);
 		}
-		$this->validateIpAddress($ipAddress, $ipAddressType, $host, $url);
+		$this->ipAddressValidator->validate($ipAddress, $ipAddressType, $host, $url->getUrl()->toUnicodeString());
 
 		$response = $this->httpClient->getResponse($url, $host, $ipAddress, $ipAddressType);
 		if ($response->getHttpCode() >= 400) {
@@ -215,22 +216,6 @@ final class SecurityTxtFetcher
 			return $this->redirect($url->getUrl(), $originalUrl, $response, $finalUrl, $noIpv6, $maxAllowedRedirects);
 		}
 		return $response;
-	}
-
-
-	/**
-	 * @throws SecurityTxtHostIpAddressInvalidException
-	 * @throws SecurityTxtHostIpAddressNotPublicException
-	 */
-	private function validateIpAddress(string $ipAddress, SecurityTxtIpAddressType $type, string $host, SecurityTxtFetcherUrl $url): void
-	{
-		$flag = $type === SecurityTxtIpAddressType::V4 ? FILTER_FLAG_IPV4 : FILTER_FLAG_IPV6;
-		if (filter_var($ipAddress, FILTER_VALIDATE_IP, $flag) === false) {
-			throw new SecurityTxtHostIpAddressInvalidException($host, $ipAddress, $type->value, $url->getUrl()->toUnicodeString());
-		}
-		if (filter_var($ipAddress, FILTER_VALIDATE_IP, $flag | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_GLOBAL_RANGE) === false) {
-			throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url->getUrl()->toUnicodeString());
-		}
 	}
 
 
@@ -275,9 +260,6 @@ final class SecurityTxtFetcher
 			$result = $topLevel;
 			$contents = $topLevelContents;
 		} elseif ($wellKnownContents !== $topLevelContents) {
-			if ($topLevelContents === null) {
-				throw new LogicException('This should not happen');
-			}
 			if ($wellKnown->getFinalUrl() !== $topLevel->getFinalUrl()) {
 				$warnings[] = new SecurityTxtTopLevelDiffers($wellKnownContents, $topLevelContents);
 			}

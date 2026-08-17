@@ -22,6 +22,9 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 		private string $userAgent = 'Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)',
 		private int $maxResponseLength = 10_000,
 	) {
+		if (strlen($this->userAgent) === 0) {
+			throw new LogicException('userAgent must not be an empty string');
+		}
 		if ($this->maxResponseLength <= 0) {
 			throw new LogicException('maxResponseLength must be greater than 0');
 		}

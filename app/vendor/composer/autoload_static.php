@@ -16,21 +16,21 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' =>
+        'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'W' =>
+        'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
             'Webauthn\\' => 9,
         ),
-        'T' =>
+        'T' => 
         array (
             'Tracy\\' => 6,
             'Texy\\' => 5,
         ),
-        'S' =>
+        'S' => 
         array (
             'Symfony\\Polyfill\\DeepClone\\' => 27,
             'Symfony\\Contracts\\Translation\\' => 30,
@@ -60,7 +60,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\Encryption\\' => 17,
             'Spaze\\ContentSecurityPolicy\\' => 28,
         ),
-        'P' =>
+        'P' => 
         array (
             'Psr\\Log\\' => 8,
             'Psr\\EventDispatcher\\' => 20,
@@ -73,38 +73,38 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
         ),
-        'N' =>
+        'N' => 
         array (
             'Nette\\' => 6,
         ),
-        'M' =>
+        'M' => 
         array (
             'MichalSpacekCz\\' => 15,
         ),
-        'L' =>
+        'L' => 
         array (
             'Latte\\' => 6,
         ),
-        'I' =>
+        'I' => 
         array (
             'IPLib\\' => 6,
         ),
-        'D' =>
+        'D' => 
         array (
             'Doctrine\\Deprecations\\' => 22,
         ),
-        'C' =>
+        'C' => 
         array (
             'Cose\\' => 5,
             'Contributte\\Translation\\' => 24,
             'Composer\\Pcre\\' => 14,
             'CBOR\\' => 5,
         ),
-        'B' =>
+        'B' => 
         array (
             'Brick\\Math\\' => 11,
         ),
-        'A' =>
+        'A' => 
         array (
             'AsyncAws\\Lambda\\' => 16,
             'AsyncAws\\Core\\' => 14,
@@ -112,177 +112,177 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpDocumentor\\Reflection\\' =>
+        'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
         ),
-        'Webmozart\\Assert\\' =>
+        'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Webauthn\\' =>
+        'Webauthn\\' => 
         array (
             0 => __DIR__ . '/..' . '/web-auth/webauthn-lib/src',
         ),
-        'Tracy\\' =>
+        'Tracy\\' => 
         array (
             0 => __DIR__ . '/..' . '/tracy/tracy/src',
         ),
-        'Texy\\' =>
+        'Texy\\' => 
         array (
             0 => __DIR__ . '/..' . '/texy/texy/src/Texy',
         ),
-        'Symfony\\Polyfill\\DeepClone\\' =>
+        'Symfony\\Polyfill\\DeepClone\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-deepclone',
         ),
-        'Symfony\\Contracts\\Translation\\' =>
+        'Symfony\\Contracts\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
         ),
-        'Symfony\\Contracts\\Service\\' =>
+        'Symfony\\Contracts\\Service\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
-        'Symfony\\Contracts\\HttpClient\\' =>
+        'Symfony\\Contracts\\HttpClient\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
         ),
-        'Symfony\\Contracts\\Cache\\' =>
+        'Symfony\\Contracts\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache-contracts',
         ),
-        'Symfony\\Component\\VarExporter\\' =>
+        'Symfony\\Component\\VarExporter\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/var-exporter',
         ),
-        'Symfony\\Component\\Uid\\' =>
+        'Symfony\\Component\\Uid\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/uid',
         ),
-        'Symfony\\Component\\TypeInfo\\' =>
+        'Symfony\\Component\\TypeInfo\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/type-info',
         ),
-        'Symfony\\Component\\Translation\\' =>
+        'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\String\\' =>
+        'Symfony\\Component\\String\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\Serializer\\' =>
+        'Symfony\\Component\\Serializer\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/serializer',
         ),
-        'Symfony\\Component\\PropertyInfo\\' =>
+        'Symfony\\Component\\PropertyInfo\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/property-info',
         ),
-        'Symfony\\Component\\PropertyAccess\\' =>
+        'Symfony\\Component\\PropertyAccess\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/property-access',
         ),
-        'Symfony\\Component\\HttpClient\\' =>
+        'Symfony\\Component\\HttpClient\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/http-client',
         ),
-        'Symfony\\Component\\Filesystem\\' =>
+        'Symfony\\Component\\Filesystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
         ),
-        'Symfony\\Component\\Config\\' =>
+        'Symfony\\Component\\Config\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/config',
         ),
-        'Symfony\\Component\\Clock\\' =>
+        'Symfony\\Component\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
         ),
-        'Symfony\\Component\\Cache\\' =>
+        'Symfony\\Component\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
         ),
-        'SpomkyLabs\\Pki\\' =>
+        'SpomkyLabs\\Pki\\' => 
         array (
             0 => __DIR__ . '/..' . '/spomky-labs/pki-framework/src',
         ),
-        'Spaze\\SvgIcons\\' =>
+        'Spaze\\SvgIcons\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/svg-icons-latte/src',
         ),
-        'Spaze\\SubresourceIntegrity\\' =>
+        'Spaze\\SubresourceIntegrity\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/sri-macros/src',
         ),
-        'Spaze\\SecurityTxt\\' =>
+        'Spaze\\SecurityTxt\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/security-txt/src',
         ),
-        'Spaze\\PhpInfo\\' =>
+        'Spaze\\PhpInfo\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/phpinfo/src',
         ),
-        'Spaze\\NonceGenerator\\' =>
+        'Spaze\\NonceGenerator\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/nonce-generator/src',
         ),
-        'Spaze\\Exports\\' =>
+        'Spaze\\Exports\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/feed-exports/src',
         ),
-        'Spaze\\Encryption\\' =>
+        'Spaze\\Encryption\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/encryption/src',
         ),
-        'Spaze\\ContentSecurityPolicy\\' =>
+        'Spaze\\ContentSecurityPolicy\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
         ),
-        'Psr\\Log\\' =>
+        'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\EventDispatcher\\' =>
+        'Psr\\EventDispatcher\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'Psr\\Container\\' =>
+        'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Clock\\' =>
+        'Psr\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
-        'Psr\\Cache\\' =>
+        'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'ParagonIE\\HiddenString\\' =>
+        'ParagonIE\\HiddenString\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/hidden-string/src',
         ),
-        'ParagonIE\\Halite\\' =>
+        'ParagonIE\\Halite\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/halite/src',
         ),
-        'ParagonIE\\ConstantTime\\' =>
+        'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'PHP_Parallel_Lint\\PhpConsoleColor\\' =>
+        'PHP_Parallel_Lint\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
         ),
-        'PHPStan\\PhpDocParser\\' =>
+        'PHPStan\\PhpDocParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
-        'Nette\\' =>
+        'Nette\\' => 
         array (
             0 => __DIR__ . '/..' . '/nette/security/src',
             1 => __DIR__ . '/..' . '/nette/mail/src',
@@ -302,47 +302,47 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             15 => __DIR__ . '/..' . '/nette/http/src',
             16 => __DIR__ . '/..' . '/nette/utils/src',
         ),
-        'MichalSpacekCz\\' =>
+        'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Latte\\' =>
+        'Latte\\' => 
         array (
             0 => __DIR__ . '/..' . '/latte/latte/src/Latte',
         ),
-        'IPLib\\' =>
+        'IPLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/mlocati/ip-lib/src',
         ),
-        'Doctrine\\Deprecations\\' =>
+        'Doctrine\\Deprecations\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/deprecations/src',
         ),
-        'Cose\\' =>
+        'Cose\\' => 
         array (
             0 => __DIR__ . '/..' . '/web-auth/cose-lib/src',
         ),
-        'Contributte\\Translation\\' =>
+        'Contributte\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/contributte/translation/src',
         ),
-        'Composer\\Pcre\\' =>
+        'Composer\\Pcre\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
-        'CBOR\\' =>
+        'CBOR\\' => 
         array (
             0 => __DIR__ . '/..' . '/spomky-labs/cbor-php/src',
         ),
-        'Brick\\Math\\' =>
+        'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-        'AsyncAws\\Lambda\\' =>
+        'AsyncAws\\Lambda\\' => 
         array (
             0 => __DIR__ . '/..' . '/async-aws/lambda/src',
         ),
-        'AsyncAws\\Core\\' =>
+        'AsyncAws\\Core\\' => 
         array (
             0 => __DIR__ . '/..' . '/async-aws/core/src',
         ),
@@ -458,6 +458,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'AsyncAws\\Lambda\\Enum\\LogType' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/LogType.php',
         'AsyncAws\\Lambda\\Enum\\PackageType' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/PackageType.php',
         'AsyncAws\\Lambda\\Enum\\Runtime' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/Runtime.php',
+        'AsyncAws\\Lambda\\Enum\\S3ObjectStorageMode' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/S3ObjectStorageMode.php',
         'AsyncAws\\Lambda\\Enum\\SchemaRegistryEventRecordFormat' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/SchemaRegistryEventRecordFormat.php',
         'AsyncAws\\Lambda\\Enum\\SnapStartApplyOn' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/SnapStartApplyOn.php',
         'AsyncAws\\Lambda\\Enum\\SnapStartOptimizationStatus' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/SnapStartOptimizationStatus.php',
@@ -468,6 +469,9 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'AsyncAws\\Lambda\\Enum\\TenantIsolationMode' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/TenantIsolationMode.php',
         'AsyncAws\\Lambda\\Enum\\ThrottleReason' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/ThrottleReason.php',
         'AsyncAws\\Lambda\\Enum\\TracingMode' => __DIR__ . '/..' . '/async-aws/lambda/src/Enum/TracingMode.php',
+        'AsyncAws\\Lambda\\Exception\\CodeArtifactUserDeletedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/CodeArtifactUserDeletedException.php',
+        'AsyncAws\\Lambda\\Exception\\CodeArtifactUserFailedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/CodeArtifactUserFailedException.php',
+        'AsyncAws\\Lambda\\Exception\\CodeArtifactUserPendingException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/CodeArtifactUserPendingException.php',
         'AsyncAws\\Lambda\\Exception\\CodeSigningConfigNotFoundException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/CodeSigningConfigNotFoundException.php',
         'AsyncAws\\Lambda\\Exception\\CodeStorageExceededException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/CodeStorageExceededException.php',
         'AsyncAws\\Lambda\\Exception\\CodeVerificationFailedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/CodeVerificationFailedException.php',
@@ -480,6 +484,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'AsyncAws\\Lambda\\Exception\\EFSMountFailureException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/EFSMountFailureException.php',
         'AsyncAws\\Lambda\\Exception\\EFSMountTimeoutException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/EFSMountTimeoutException.php',
         'AsyncAws\\Lambda\\Exception\\ENILimitReachedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/ENILimitReachedException.php',
+        'AsyncAws\\Lambda\\Exception\\ENINotReadyException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/ENINotReadyException.php',
         'AsyncAws\\Lambda\\Exception\\InvalidCodeSignatureException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/InvalidCodeSignatureException.php',
         'AsyncAws\\Lambda\\Exception\\InvalidParameterValueException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/InvalidParameterValueException.php',
         'AsyncAws\\Lambda\\Exception\\InvalidRequestContentException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/InvalidRequestContentException.php',
@@ -491,6 +496,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'AsyncAws\\Lambda\\Exception\\KMSDisabledException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/KMSDisabledException.php',
         'AsyncAws\\Lambda\\Exception\\KMSInvalidStateException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/KMSInvalidStateException.php',
         'AsyncAws\\Lambda\\Exception\\KMSNotFoundException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/KMSNotFoundException.php',
+        'AsyncAws\\Lambda\\Exception\\ModeNotSupportedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/ModeNotSupportedException.php',
         'AsyncAws\\Lambda\\Exception\\NoPublishedVersionException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/NoPublishedVersionException.php',
         'AsyncAws\\Lambda\\Exception\\PolicyLengthExceededException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/PolicyLengthExceededException.php',
         'AsyncAws\\Lambda\\Exception\\PreconditionFailedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/PreconditionFailedException.php',
@@ -504,8 +510,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'AsyncAws\\Lambda\\Exception\\S3FilesMountTimeoutException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/S3FilesMountTimeoutException.php',
         'AsyncAws\\Lambda\\Exception\\SerializedRequestEntityTooLargeException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/SerializedRequestEntityTooLargeException.php',
         'AsyncAws\\Lambda\\Exception\\ServiceException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/ServiceException.php',
+        'AsyncAws\\Lambda\\Exception\\ServiceQuotaExceededException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/ServiceQuotaExceededException.php',
         'AsyncAws\\Lambda\\Exception\\SnapStartException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/SnapStartException.php',
         'AsyncAws\\Lambda\\Exception\\SnapStartNotReadyException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/SnapStartNotReadyException.php',
+        'AsyncAws\\Lambda\\Exception\\SnapStartRegenerationFailureException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/SnapStartRegenerationFailureException.php',
         'AsyncAws\\Lambda\\Exception\\SnapStartTimeoutException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/SnapStartTimeoutException.php',
         'AsyncAws\\Lambda\\Exception\\SubnetIPAddressLimitReachedException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/SubnetIPAddressLimitReachedException.php',
         'AsyncAws\\Lambda\\Exception\\TooManyRequestsException' => __DIR__ . '/..' . '/async-aws/lambda/src/Exception/TooManyRequestsException.php',
@@ -571,6 +579,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'AsyncAws\\Lambda\\ValueObject\\OnFailure' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/OnFailure.php',
         'AsyncAws\\Lambda\\ValueObject\\OnSuccess' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/OnSuccess.php',
         'AsyncAws\\Lambda\\ValueObject\\ProvisionedPollerConfig' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/ProvisionedPollerConfig.php',
+        'AsyncAws\\Lambda\\ValueObject\\ResolvedS3Object' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/ResolvedS3Object.php',
         'AsyncAws\\Lambda\\ValueObject\\RuntimeVersionConfig' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/RuntimeVersionConfig.php',
         'AsyncAws\\Lambda\\ValueObject\\RuntimeVersionError' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/RuntimeVersionError.php',
         'AsyncAws\\Lambda\\ValueObject\\ScalingConfig' => __DIR__ . '/..' . '/async-aws/lambda/src/ValueObject/ScalingConfig.php',
@@ -653,6 +662,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'CBOR\\Tag\\GenericTag' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/GenericTag.php',
         'CBOR\\Tag\\MimeTag' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/MimeTag.php',
         'CBOR\\Tag\\NegativeBigIntegerTag' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/NegativeBigIntegerTag.php',
+        'CBOR\\Tag\\SelfDescribeCBORTag' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/SelfDescribeCBORTag.php',
         'CBOR\\Tag\\TagInterface' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/TagInterface.php',
         'CBOR\\Tag\\TagManager' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/TagManager.php',
         'CBOR\\Tag\\TagManagerInterface' => __DIR__ . '/..' . '/spomky-labs/cbor-php/src/Tag/TagManagerInterface.php',
@@ -2034,6 +2044,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\PhpDocTextNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/PhpDocTextNode.php',
         'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\PropertyTagValueNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/PropertyTagValueNode.php',
         'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\PureUnlessCallableIsImpureTagValueNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/PureUnlessCallableIsImpureTagValueNode.php',
+        'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\PureUnlessParameterIsPassedTagValueNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/PureUnlessParameterIsPassedTagValueNode.php',
         'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\RequireExtendsTagValueNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/RequireExtendsTagValueNode.php',
         'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\RequireImplementsTagValueNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/RequireImplementsTagValueNode.php',
         'PHPStan\\PhpDocParser\\Ast\\PhpDoc\\ReturnTagValueNode' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Ast/PhpDoc/ReturnTagValueNode.php',
@@ -2238,6 +2249,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\SecurityTxt\\Fetcher\\SecurityTxtFetcherResponse' => __DIR__ . '/..' . '/spaze/security-txt/src/Fetcher/SecurityTxtFetcherResponse.php',
         'Spaze\\SecurityTxt\\Fetcher\\SecurityTxtFetcherUrl' => __DIR__ . '/..' . '/spaze/security-txt/src/Fetcher/SecurityTxtFetcherUrl.php',
         'Spaze\\SecurityTxt\\Fetcher\\SecurityTxtIpAddressType' => __DIR__ . '/..' . '/spaze/security-txt/src/Fetcher/SecurityTxtIpAddressType.php',
+        'Spaze\\SecurityTxt\\Fetcher\\SecurityTxtIpAddressValidator' => __DIR__ . '/..' . '/spaze/security-txt/src/Fetcher/SecurityTxtIpAddressValidator.php',
         'Spaze\\SecurityTxt\\Fields\\SecurityTxtAcknowledgments' => __DIR__ . '/..' . '/spaze/security-txt/src/Fields/SecurityTxtAcknowledgments.php',
         'Spaze\\SecurityTxt\\Fields\\SecurityTxtBugBounty' => __DIR__ . '/..' . '/spaze/security-txt/src/Fields/SecurityTxtBugBounty.php',
         'Spaze\\SecurityTxt\\Fields\\SecurityTxtCanonical' => __DIR__ . '/..' . '/spaze/security-txt/src/Fields/SecurityTxtCanonical.php',
@@ -2746,8 +2758,12 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay20Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay20Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay21Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay21Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay22Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay22Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\Relay30Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay30Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\Relay40Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay40Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\RelayCluster20Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/RelayCluster20Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\RelayCluster21Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/RelayCluster21Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\RelayCluster30Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/RelayCluster30Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\RelayCluster40Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/RelayCluster40Trait.php',
         'Symfony\\Component\\Clock\\Clock' => __DIR__ . '/..' . '/symfony/clock/Clock.php',
         'Symfony\\Component\\Clock\\ClockAwareTrait' => __DIR__ . '/..' . '/symfony/clock/ClockAwareTrait.php',
         'Symfony\\Component\\Clock\\ClockInterface' => __DIR__ . '/..' . '/symfony/clock/ClockInterface.php',
@@ -2886,6 +2902,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Symfony\\Component\\HttpClient\\Internal\\Canary' => __DIR__ . '/..' . '/symfony/http-client/Internal/Canary.php',
         'Symfony\\Component\\HttpClient\\Internal\\ClientState' => __DIR__ . '/..' . '/symfony/http-client/Internal/ClientState.php',
         'Symfony\\Component\\HttpClient\\Internal\\CurlClientState' => __DIR__ . '/..' . '/symfony/http-client/Internal/CurlClientState.php',
+        'Symfony\\Component\\HttpClient\\Internal\\Dechunker' => __DIR__ . '/..' . '/symfony/http-client/Internal/Dechunker.php',
         'Symfony\\Component\\HttpClient\\Internal\\DnsCache' => __DIR__ . '/..' . '/symfony/http-client/Internal/DnsCache.php',
         'Symfony\\Component\\HttpClient\\Internal\\FollowRedirectsTrait' => __DIR__ . '/..' . '/symfony/http-client/Internal/FollowRedirectsTrait.php',
         'Symfony\\Component\\HttpClient\\Internal\\HttplugWaitLoop' => __DIR__ . '/..' . '/symfony/http-client/Internal/HttplugWaitLoop.php',
@@ -3297,6 +3314,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Symfony\\Contracts\\Service\\Attribute\\Required' => __DIR__ . '/..' . '/symfony/service-contracts/Attribute/Required.php',
         'Symfony\\Contracts\\Service\\Attribute\\SubscribedService' => __DIR__ . '/..' . '/symfony/service-contracts/Attribute/SubscribedService.php',
         'Symfony\\Contracts\\Service\\ContainerAwareInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ContainerAwareInterface.php',
+        'Symfony\\Contracts\\Service\\ContainerProviderInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ContainerProviderInterface.php',
         'Symfony\\Contracts\\Service\\ResetInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ResetInterface.php',
         'Symfony\\Contracts\\Service\\ServiceCollectionInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ServiceCollectionInterface.php',
         'Symfony\\Contracts\\Service\\ServiceLocatorTrait' => __DIR__ . '/..' . '/symfony/service-contracts/ServiceLocatorTrait.php',

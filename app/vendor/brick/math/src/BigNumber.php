@@ -41,6 +41,8 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
 {
     /**
      * The regular expression used to parse integer or decimal numbers.
+     *
+     * The end anchor must be \z, not $: the latter would also match before a trailing newline.
      */
     private const PARSE_REGEXP_NUMERICAL =
         '/^' .
@@ -49,10 +51,12 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
         '(?<point>\.)?' .
         '(?<fractional>[0-9]+)?' .
         '(?:[eE](?<exponent>[\-\+]?[0-9]+))?' .
-        '$/';
+        '\z/';
 
     /**
      * The regular expression used to parse rational numbers.
+     *
+     * The end anchor must be \z, not $: the latter would also match before a trailing newline.
      */
     private const PARSE_REGEXP_RATIONAL =
         '/^' .
@@ -60,7 +64,7 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
         '(?<numerator>[0-9]+)' .
         '\/' .
         '(?<denominator>[0-9]+)' .
-        '$/';
+        '\z/';
 
     /**
      * Creates a BigNumber of the given value.
@@ -586,69 +590,74 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
                 false,
                 true,
             );
-        } else {
-            // Integer or decimal number
-            if (preg_match(self::PARSE_REGEXP_NUMERICAL, $value, $matches, PREG_UNMATCHED_AS_NULL) !== 1) {
-                throw NumberFormatException::invalidFormat($value);
-            }
+        }
 
-            $sign = $matches['sign'];
-            $point = $matches['point'];
-            $integral = $matches['integral'];
-            $fractional = $matches['fractional'];
-            $exponent = $matches['exponent'];
+        // Integer or decimal number
+        if (preg_match(self::PARSE_REGEXP_NUMERICAL, $value, $matches, PREG_UNMATCHED_AS_NULL) !== 1) {
+            throw NumberFormatException::invalidFormat($value);
+        }
 
-            if ($integral === null && $fractional === null) {
-                throw NumberFormatException::invalidFormat($value);
-            }
+        $sign = $matches['sign'];
+        $point = $matches['point'];
+        $integral = $matches['integral'];
+        $fractional = $matches['fractional'];
+        $exponent = $matches['exponent'];
 
-            if ($integral === null) {
-                $integral = '0';
-            }
+        if ($integral === null && $fractional === null) {
+            throw NumberFormatException::invalidFormat($value);
+        }
 
-            if ($point !== null || $exponent !== null) {
-                $fractional ??= '';
+        if ($integral === null) {
+            $integral = '0';
+        }
 
-                if ($exponent !== null) {
-                    if ($exponent[0] === '-') {
-                        $exponent = ltrim(substr($exponent, 1), '0') ?: '0';
-                        $exponent = filter_var($exponent, FILTER_VALIDATE_INT);
-                        if ($exponent !== false) {
-                            $exponent = -$exponent;
-                        }
-                    } else {
-                        if ($exponent[0] === '+') {
-                            $exponent = substr($exponent, 1);
-                        }
-                        $exponent = ltrim($exponent, '0') ?: '0';
-                        $exponent = filter_var($exponent, FILTER_VALIDATE_INT);
+        if ($point !== null || $exponent !== null) {
+            $fractional ??= '';
+
+            if ($exponent !== null) {
+                if ($exponent[0] === '-') {
+                    $exponent = ltrim(substr($exponent, 1), '0') ?: '0';
+                    $exponent = filter_var($exponent, FILTER_VALIDATE_INT);
+                    if ($exponent !== false) {
+                        $exponent = -$exponent;
                     }
                 } else {
-                    $exponent = 0;
-                }
-
-                if ($exponent === false) {
-                    throw NumberFormatException::exponentTooLarge();
-                }
-
-                $unscaledValue = self::cleanUp($sign, $integral . $fractional);
-
-                $scale = Safe::sub(strlen($fractional), $exponent);
-
-                if ($scale < 0) {
-                    if ($unscaledValue !== '0') {
-                        $unscaledValue .= str_repeat('0', Safe::neg($scale));
+                    if ($exponent[0] === '+') {
+                        $exponent = substr($exponent, 1);
                     }
-                    $scale = 0;
+                    $exponent = ltrim($exponent, '0') ?: '0';
+                    $exponent = filter_var($exponent, FILTER_VALIDATE_INT);
                 }
-
-                return new BigDecimal($unscaledValue, $scale);
+            } else {
+                $exponent = 0;
             }
 
-            $integral = self::cleanUp($sign, $integral);
+            if ($exponent === false) {
+                throw NumberFormatException::exponentTooLarge();
+            }
 
-            return new BigInteger($integral);
+            $unscaledValue = self::cleanUp($sign, $integral . $fractional);
+
+            $scale = strlen($fractional) - $exponent;
+
+            // @phpstan-ignore function.alreadyNarrowedType
+            if (! is_int($scale)) {
+                throw NumberFormatException::exponentTooLarge();
+            }
+
+            if ($scale < 0) {
+                if ($unscaledValue !== '0') {
+                    $unscaledValue .= str_repeat('0', Safe::neg($scale));
+                }
+                $scale = 0;
+            }
+
+            return new BigDecimal($unscaledValue, $scale);
         }
+
+        $integral = self::cleanUp($sign, $integral);
+
+        return new BigInteger($integral);
     }
 
     /**
