@@ -70,6 +70,8 @@ Maximum number of redirects to follow when fetching `security.txt`. Set to `0` t
 `Spaze\SecurityTxt\Check\SecurityTxtCheckHost::check()` returns a `Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult` object with some obvious and less obvious properties.
 The less obvious ones can be obtained with the following methods. All of them return an array of `SecurityTxtSpecViolation` descendants.
 
+The violation classes are part of the public API, their constructors are not. They are called by the library, and by `SecurityTxtJson` when recreating violations from stored JSON, so their parameters can change in a minor version.
+
 ### `getFetchErrors()`
 Returns `list<SecurityTxtSpecViolation>` and contains errors encountered when fetching the file from a server. For example but not limited to:
 - When the content type or charset is wrong
@@ -103,9 +105,19 @@ Returns `list<SecurityTxtSpecViolation>`, the list contains file-level warnings 
 ## User agent
 When fetching the `security.txt` file, the library uses a default `User-Agent` HTTP header. The default value contains a link back to the GitHub repository, but it is recommended you use a custom `User-Agent` header.
 You can set it in `SecurityTxtFetcherCurlClient` constructor (the `$userAgent` parameter), and then pass the client object to `SecurityTxtFetcher` constructor as one of its arguments.
+The value must not be empty, the constructor throws a `LogicException` if it is, and it must not contain control characters, which would make it possible to inject other headers, `SecurityTxtCannotOpenUrlUserAgentInvalidException` is thrown when it does.
 
 ## Maximum file size
 The size of the file is limited when fetching the contents from remote hosts. By default, the limit is 10 000 bytes, but you can change it in `SecurityTxtFetcherCurlClient` constructor (the `$maxResponseLength` parameter). Then, when creating `SecurityTxtFetcher`, pass that customized client as its HTTP client argument together with the other constructor arguments required by `SecurityTxtFetcher`.
+
+## Fetching restrictions
+The file is fetched from hosts you don't control, so the fetcher is restrictive by default:
+- Fetching always starts at `https://`, whatever scheme you pass in, and any username, password, query and fragment are removed from the URL first.
+- Only `http://` and `https://` are followed, a redirect anywhere else throws `SecurityTxtUrlUnsupportedSchemeException`.
+- Redirects are followed by the library, not by curl, at most 5 by default. Every target goes through the same checks as the original URL.
+- The host is resolved by the library and each address is validated before connecting: private and reserved ranges are rejected, only publicly routable addresses are used. IPv6 addresses are also checked for NAT64, because those embed an IPv4 address the range check can't see: an address with the RFC 6052 well-known prefix (`64:ff9b::/96`) is rejected when the IPv4 it embeds is not public, and the RFC 8215 local-use prefix (`64:ff9b:1::/48`) is rejected as a whole.
+- curl then connects to that validated address, and the response is rejected with `SecurityTxtConnectedToWrongIpAddressException` when it turns out to have talked to a different one.
+- The certificate and the hostname are verified, and the connection times out after 5 seconds, the whole transfer after 10.
 
 ## DNS lookups
 DNS resolution is handled by `SecurityTxtPhpDnsProvider`, which uses PHP's built-in `dns_get_record()`. This function has no timeout parameter, the system DNS timeout applies.
@@ -115,6 +127,8 @@ and then pass it to `SecurityTxtFetcher` in the `$dnsLookupProvider` parameter.
 ## Signature verification
 This library verifies that the signature is a valid OpenPGP cleartext signature, but cannot verify whether the signing key is trustworthy, for example when the key is not in local keyring etc. As the [`security.txt` RFC](https://www.rfc-editor.org/rfc/rfc9116#name-digital-signature) puts it:
 "it is always the security researcher's responsibility to make sure the key being used is indeed one they trust." Verify the key fingerprint or key id out-of-band, for example by checking it against the company's website or other trusted sources.
+
+Verifying a signature can, depending on your GnuPG configuration, make an outbound network connection, which may be surprising. When the key that made the signature isn't in the local keyring (the usual case when you're checking someone else's `security.txt`) and GnuPG is configured to fetch missing keys automatically ([`auto-key-retrieve`](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration-Options.html#index-auto_002dkey_002dretrieve), off by default), it will try to retrieve the key over the network. To be certain verification never makes a network connection, make sure `auto-key-retrieve` stays disabled (it is unless you turned it on), or point GnuPG at an isolated home directory that holds no keys and does not enable key retrieval, either through the `GNUPGHOME` environment variable or the `$homeDir` argument of the `SecurityTxtSignatureGnuPgProvider` constructor (see [Signing the file](#signing-the-file)).
 
 ## JSON
 The `Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult` object can be encoded to JSON with `json_encode()`,
@@ -129,6 +143,9 @@ If that's the case, then you may want to encode the `Spaze\SecurityTxt\Fetcher\S
 Fetch exceptions can be recreated with `Spaze\SecurityTxt\Json\SecurityTxtJson::createFetcherExceptionFromJsonValues()`.
 
 JSON is not versioned. Newer versions of this library will make a best effort to decode JSON created by previous versions, but compatibility cannot be guaranteed across refactors or format changes.
+
+When the JSON can't be decoded, the `create*FromJsonValues()` methods throw `Spaze\SecurityTxt\Check\Exceptions\SecurityTxtCannotParseJsonException`.
+If it's a result you have stored, treat it as a cache miss and check the host again, instead of reporting the error to the user: the stored data was either written by an older version of this library or damaged some other way, and it will not become readable later.
 
 ## The other methods
 The `Spaze\SecurityTxt\Parser\SecurityTxtParser::parseString()` method returns a `Spaze\SecurityTxt\Parser\SecurityTxtParseStringResult` object.
@@ -270,10 +287,12 @@ If you want to verify signatures you'll need to use [the `setup-php` GitHub acti
 
 You can use my own checks as a template or for inspiration; see [the `securitytxt.yml` file](https://github.com/spaze/michalspacek.cz/blob/main/.github/workflows/securitytxt.yml) in my repository.
 
-# Exceptions
+# Formatting exceptions and contents
 The messages in the exceptions as thrown by this library do not contain any sensitive information and are safe to display to the user using the `getMessage()` method.
 But please be aware that the messages contain server-supplied information, so please do not display the messages as HTML or do not feed them into a Markdown parser or similar.
 If you'd do that, a malicious server could inject content that would result in Cross-Site Scripting attack for example.
+
+The same applies to other server-supplied values you might display, such as the fetched file contents (`SecurityTxtFetchResult::getContents()`) and the redirect URLs (`getRedirects()`): escape them before displaying and don't render them as HTML.
 
 ## Formatting messages
 If you'd like to format some of the values contained in the messages, you can use the exception's `getMessageFormat()` and `getMessageValues()` methods.

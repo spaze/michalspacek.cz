@@ -7,6 +7,7 @@ use AsyncAws\Core\Result;
 use AsyncAws\Lambda\Enum\Architecture;
 use AsyncAws\Lambda\Enum\Runtime;
 use AsyncAws\Lambda\ValueObject\LayerVersionContentOutput;
+use AsyncAws\Lambda\ValueObject\ResolvedS3Object;
 
 class PublishLayerVersionResponse extends Result
 {
@@ -55,6 +56,15 @@ class PublishLayerVersionResponse extends Result
     private $version;
 
     /**
+     * A list of compatible instruction set architectures [^1].
+     *
+     * [^1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
+     *
+     * @var list<Architecture::*>
+     */
+    private $compatibleArchitectures;
+
+    /**
      * The layer's compatible runtimes.
      *
      * The following list includes deprecated runtimes. For more information, see Runtime use after deprecation [^1].
@@ -74,15 +84,6 @@ class PublishLayerVersionResponse extends Result
      * @var string|null
      */
     private $licenseInfo;
-
-    /**
-     * A list of compatible instruction set architectures [^1].
-     *
-     * [^1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
-     *
-     * @var list<Architecture::*>
-     */
-    private $compatibleArchitectures;
 
     /**
      * @return list<Architecture::*>
@@ -163,9 +164,9 @@ class PublishLayerVersionResponse extends Result
         $this->description = isset($data['Description']) ? (string) $data['Description'] : null;
         $this->createdDate = isset($data['CreatedDate']) ? (string) $data['CreatedDate'] : null;
         $this->version = isset($data['Version']) ? (int) $data['Version'] : null;
+        $this->compatibleArchitectures = empty($data['CompatibleArchitectures']) ? [] : $this->populateResultCompatibleArchitectures($data['CompatibleArchitectures']);
         $this->compatibleRuntimes = empty($data['CompatibleRuntimes']) ? [] : $this->populateResultCompatibleRuntimes($data['CompatibleRuntimes']);
         $this->licenseInfo = isset($data['LicenseInfo']) ? (string) $data['LicenseInfo'] : null;
-        $this->compatibleArchitectures = empty($data['CompatibleArchitectures']) ? [] : $this->populateResultCompatibleArchitectures($data['CompatibleArchitectures']);
     }
 
     /**
@@ -214,6 +215,16 @@ class PublishLayerVersionResponse extends Result
             'CodeSize' => isset($json['CodeSize']) ? (int) $json['CodeSize'] : null,
             'SigningProfileVersionArn' => isset($json['SigningProfileVersionArn']) ? (string) $json['SigningProfileVersionArn'] : null,
             'SigningJobArn' => isset($json['SigningJobArn']) ? (string) $json['SigningJobArn'] : null,
+            'ResolvedS3Object' => empty($json['ResolvedS3Object']) ? null : $this->populateResultResolvedS3Object($json['ResolvedS3Object']),
+        ]);
+    }
+
+    private function populateResultResolvedS3Object(array $json): ResolvedS3Object
+    {
+        return new ResolvedS3Object([
+            'S3Bucket' => isset($json['S3Bucket']) ? (string) $json['S3Bucket'] : null,
+            'S3Key' => isset($json['S3Key']) ? (string) $json['S3Key'] : null,
+            'S3ObjectVersion' => isset($json['S3ObjectVersion']) ? (string) $json['S3ObjectVersion'] : null,
         ]);
     }
 }

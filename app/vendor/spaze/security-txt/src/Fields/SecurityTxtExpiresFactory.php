@@ -12,8 +12,7 @@ final class SecurityTxtExpiresFactory
 	{
 		$interval = (new DateTimeImmutable())->diff($dateTime);
 		$isExpired = $interval->invert === 1;
-		$days = (int)$interval->days; // $interval is created by diff() so days is always set
-		return new SecurityTxtExpires($dateTime, $isExpired, $isExpired ? -$days : $days);
+		return new SecurityTxtExpires($dateTime, $isExpired, $isExpired ? -$interval->days : $interval->days);
 	}
 
 }

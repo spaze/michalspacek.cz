@@ -5,6 +5,7 @@ namespace AsyncAws\Lambda\Enum;
 final class LastUpdateStatusReasonCode
 {
     public const CAPACITY_PROVIDER_SCALING_LIMIT_EXCEEDED = 'CapacityProviderScalingLimitExceeded';
+    public const DEPENDENCY_ERROR = 'DependencyError';
     public const DISABLED_KMSKEY = 'DisabledKMSKey';
     public const DISALLOWED_BY_VPC_ENCRYPTION_CONTROL = 'DisallowedByVpcEncryptionControl';
     public const EC2REQUEST_LIMIT_EXCEEDED = 'EC2RequestLimitExceeded';
@@ -36,6 +37,7 @@ final class LastUpdateStatusReasonCode
     public const INVALID_ZIP_FILE_EXCEPTION = 'InvalidZipFileException';
     public const KMSKEY_ACCESS_DENIED = 'KMSKeyAccessDenied';
     public const KMSKEY_NOT_FOUND = 'KMSKeyNotFound';
+    public const SERVICE_QUOTA_EXCEEDED_EXCEPTION = 'ServiceQuotaExceededException';
     public const SUBNET_OUT_OF_IPADDRESSES = 'SubnetOutOfIPAddresses';
     public const VCPU_LIMIT_EXCEEDED = 'VcpuLimitExceeded';
     public const UNKNOWN_TO_SDK = 'UNKNOWN_TO_SDK';
@@ -47,6 +49,7 @@ final class LastUpdateStatusReasonCode
     {
         return isset([
             self::CAPACITY_PROVIDER_SCALING_LIMIT_EXCEEDED => true,
+            self::DEPENDENCY_ERROR => true,
             self::DISABLED_KMSKEY => true,
             self::DISALLOWED_BY_VPC_ENCRYPTION_CONTROL => true,
             self::EC2REQUEST_LIMIT_EXCEEDED => true,
@@ -78,6 +81,7 @@ final class LastUpdateStatusReasonCode
             self::INVALID_ZIP_FILE_EXCEPTION => true,
             self::KMSKEY_ACCESS_DENIED => true,
             self::KMSKEY_NOT_FOUND => true,
+            self::SERVICE_QUOTA_EXCEEDED_EXCEPTION => true,
             self::SUBNET_OUT_OF_IPADDRESSES => true,
             self::VCPU_LIMIT_EXCEEDED => true,
         ][$value]);

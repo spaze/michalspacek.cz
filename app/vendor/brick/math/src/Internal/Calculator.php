@@ -232,15 +232,11 @@ abstract readonly class Calculator
      */
     public function gcd(string $a, string $b): string
     {
-        if ($a === '0') {
-            return $this->abs($b);
+        while ($b !== '0') {
+            [$a, $b] = [$b, $this->divR($a, $b)];
         }
 
-        if ($b === '0') {
-            return $this->abs($a);
-        }
-
-        return $this->gcd($b, $this->divR($a, $b));
+        return $this->abs($a);
     }
 
     /**
@@ -604,22 +600,27 @@ abstract readonly class Calculator
     }
 
     /**
-     * @return array{string, string, string} GCD, X, Y
+     * @param string $a Must be non-negative.
+     * @param string $b Must be non-negative.
+     *
+     * @return array{string, string} GCD, X
      *
      * @pure
      */
     private function gcdExtended(string $a, string $b): array
     {
-        if ($a === '0') {
-            return [$b, '0', '1'];
+        // Iterative extended Euclidean algorithm; recursion would exhaust memory on large inputs.
+        [$r0, $r1] = [$a, $b];
+        [$x0, $x1] = ['1', '0'];
+
+        while ($r1 !== '0') {
+            [$q, $r] = $this->divQR($r0, $r1);
+
+            [$r0, $r1] = [$r1, $r];
+            [$x0, $x1] = [$x1, $this->sub($x0, $this->mul($q, $x1))];
         }
 
-        [$gcd, $x1, $y1] = $this->gcdExtended($this->mod($b, $a), $a);
-
-        $x = $this->sub($y1, $this->mul($this->divQ($b, $a), $x1));
-        $y = $x1;
-
-        return [$gcd, $x, $y];
+        return [$r0, $x0];
     }
 
     /**
