@@ -26,6 +26,7 @@ final readonly class DirectInputFormFactory
 		$form->addTextArea('input', 'Input')
 			->setHtmlId('direct-input')
 			->addRule(fn(Control $input): bool => is_string($input->getValue()) && trim($input->getValue()) !== '', 'Enter the contents of the file, like at least one letter')
+			->addRule(Form::MaxLength, 'The security.txt file is too large, paste at most %d characters', 10_000)
 			->setRequired('Enter the contents of the security.txt file');
 		$form->addSubmit('validate', 'Validate');
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
