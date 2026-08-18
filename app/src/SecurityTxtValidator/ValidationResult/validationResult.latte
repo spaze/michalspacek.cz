@@ -6,10 +6,10 @@
 	<p>{icon exclamation-triangle} {$errorMessage}</p>
 </div>
 <div class="container valid" n:if="$isValid === true">
-	<p>{icon check-circle} The file is valid, expires in {$expiresInDays} days</p>
+	<p>{icon check-circle} The file is valid, expires {_messages.timeIntervalIn.days, $expiresInDays}</p>
 </div>
 <div class="container warning" n:if="$isValidWithWarnings === true">
-	<p>{icon check-circle} The file is valid, but there are some warnings you should still fix. The file expires in {$expiresInDays} days</p>
+	<p>{icon check-circle} The file is valid, but there are some warnings you should still fix. The file expires {_messages.timeIntervalIn.days, $expiresInDays}</p>
 </div>
 <div class="container error" n:if="$isInvalid === true">
 	<p>{icon exclamation-triangle} The file is not valid, please fix the issues listed below</p>

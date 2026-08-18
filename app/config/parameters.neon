@@ -72,6 +72,7 @@ parameters:
 	securityTxtValidator:
 		userAgent: spaze/security-txt
 		policyCacheTtl: "5 minutes"
+		policyCacheClearableAfter: "30 seconds"
 		lambdaStage: "prod"
 		gnupgHome: /home/keymaker/.gnupg
 		accountFeatureEnabled: false
