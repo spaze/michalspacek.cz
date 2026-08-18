@@ -32,8 +32,10 @@ use Spaze\SecurityTxt\Signature\SecurityTxtSignature;
 use Spaze\SecurityTxt\Validator\SecurityTxtValidateResult;
 use Spaze\SecurityTxt\Validator\SecurityTxtValidator;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentNotUtf8;
+use Spaze\SecurityTxt\Violations\SecurityTxtFieldNotCoveredBySignature;
 use Spaze\SecurityTxt\Violations\SecurityTxtLineNoEol;
 use Spaze\SecurityTxt\Violations\SecurityTxtPossibelFieldTypo;
+use Spaze\SecurityTxt\Violations\SecurityTxtSignatureMultipleCleartextHeaders;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
 use Spaze\SecurityTxt\Violations\SecurityTxtUnknownField;
 
@@ -155,6 +157,10 @@ final class SecurityTxtParser
 			}, SecurityTxtField::cases()),
 			SecurityTxtField::cases(),
 		);
+		$signatureChecked = false;
+		$fieldsBeforeSignature = [];
+		$inSignatureArmor = false;
+		$afterSignature = false;
 		for ($lineNumber = 1; $lineNumber <= count($lines); $lineNumber++) {
 			$line = trim($lines[$lineNumber - 1]);
 			if (!str_ends_with($lines[$lineNumber - 1], "\n")) {
@@ -169,14 +175,40 @@ final class SecurityTxtParser
 				}
 				continue;
 			}
+			if ($inSignatureArmor) {
+				// The lines between the signature armor header and tail are the signature, not fields
+				if ($this->signature->isSignatureArmorTail($line)) {
+					$inSignatureArmor = false;
+					$afterSignature = true;
+				}
+				continue;
+			}
 			if ($this->signature->isClearsignHeader($line)) {
-				$securityTxt = $this->checkSignature($lineNumber, $contents, $securityTxt);
+				if (!$signatureChecked) {
+					$securityTxt = $this->checkSignature($lineNumber, $contents, $securityTxt);
+					$signatureChecked = true;
+					// Fields before the header can only be reported once the file turns out to be signed
+					foreach ($fieldsBeforeSignature as $fieldLineNumber => $fieldBeforeSignature) {
+						$this->lineErrors[$fieldLineNumber][] = new SecurityTxtFieldNotCoveredBySignature($fieldBeforeSignature);
+					}
+				} else {
+					$this->lineErrors[$lineNumber][] = new SecurityTxtSignatureMultipleCleartextHeaders();
+				}
 				$skipSignatureArmorHeaders = true;
+				continue;
+			}
+			if ($signatureChecked && !$afterSignature && $this->signature->isSignatureArmorHeader($line)) {
+				$inSignatureArmor = true;
 				continue;
 			}
 			$field = explode(':', $line, 2);
 			if (count($field) !== 2) {
 				continue;
+			}
+			if ($afterSignature) {
+				$this->lineErrors[$lineNumber][] = new SecurityTxtFieldNotCoveredBySignature($field[0]);
+			} elseif (!$signatureChecked) {
+				$fieldsBeforeSignature[$lineNumber] = $field[0];
 			}
 			$fieldName = strtolower($field[0]);
 			$fieldValue = trim($field[1]);
@@ -191,6 +223,7 @@ final class SecurityTxtParser
 				}
 			}
 		}
+		ksort($this->lineErrors);
 		$validateResult = $this->validator->validate($securityTxt);
 		$expires = $securityTxt->getExpires();
 		$hasErrors = $this->lineErrors !== [] || $validateResult->getErrors() !== [];

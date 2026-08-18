@@ -75,6 +75,18 @@ final class SecurityTxtSignature
 	}
 
 
+	public function isSignatureArmorHeader(string $line): bool
+	{
+		return $line === '-----BEGIN PGP SIGNATURE-----';
+	}
+
+
+	public function isSignatureArmorTail(string $line): bool
+	{
+		return $line === '-----END PGP SIGNATURE-----';
+	}
+
+
 	/**
 	 * Sign the contents with OpenPGP/GnuPG, use only if you know what you're doing.
 	 *

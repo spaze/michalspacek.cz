@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9a63cd08c9f38a5ebaa280f57ecea23",
+    "content-hash": "5361fe330ab59230e5101ad01e23c82f",
     "packages": [
         {
             "name": "bref/bref",
@@ -543,16 +543,16 @@
         },
         {
             "name": "spaze/security-txt",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "45fb6db49acaedbb28ab61654541758aaab02ac2"
+                "reference": "4a9169a7f323a9c7fce07939941608627cddd0c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/45fb6db49acaedbb28ab61654541758aaab02ac2",
-                "reference": "45fb6db49acaedbb28ab61654541758aaab02ac2",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/4a9169a7f323a9c7fce07939941608627cddd0c3",
+                "reference": "4a9169a7f323a9c7fce07939941608627cddd0c3",
                 "shasum": ""
             },
             "require": {
@@ -596,9 +596,9 @@
             "description": "security.txt (RFC 9116) generator, parser, validator",
             "support": {
                 "issues": "https://github.com/spaze/security-txt/issues",
-                "source": "https://github.com/spaze/security-txt/tree/v2.1.0"
+                "source": "https://github.com/spaze/security-txt/tree/v2.2.0"
             },
-            "time": "2026-08-14T18:22:50+00:00"
+            "time": "2026-08-18T22:20:05+00:00"
         },
         {
             "name": "symfony/process",
@@ -676,5 +676,5 @@
         "php": "^8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
