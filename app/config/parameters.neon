@@ -72,6 +72,7 @@ parameters:
 	securityTxtValidator:
 		userAgent: spaze/security-txt
 		responseTtl: "5 minutes"
+		responseClearableAfter: "30 seconds"
 		lambdaStage: "prod"
 		gnupgHome: /home/keymaker/.gnupg
 		accountFeatureEnabled: false

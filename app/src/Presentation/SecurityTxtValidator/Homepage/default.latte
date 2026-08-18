@@ -14,7 +14,7 @@
 	<h2>Validation result of <code>{$displayUrl}</code><small n:ifset="$url"><a href="{$url}" target="_blank">{icon external-link}</a></small></h2>
 	<span n:ifset="$downloadedAt" class="lighter">
 		Created at {$downloadedAt|date:DateTime::RFC3339}
-		<small n:ifset="$downloadedAgo, $cacheTtl">({$downloadedAgo}, the result is cached for {$cacheTtl}, <form n:name="clearCache" class="inline-form submit-once">{input clear class => link-button}</form>)</small>
+		<small n:ifset="$downloadedAgo, $cacheTtl">({$downloadedAgo}, the result is cached for {$cacheTtl} &ndash; {if $clearableIn === null}<form n:name="clearCache" class="inline-form submit-once">{input clear class => link-button}</form>{else}can be checked again {$clearableIn}{/if})</small>
 	</span>
 	<p><small><a n:href="default">check another &raquo;</a></small></p>
 </div>

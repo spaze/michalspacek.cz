@@ -48,6 +48,7 @@ final readonly class SecurityTxtValidator
 		private SecurityTxtLibraryVersion $libraryVersion,
 		private LibraryVersions $libraryVersions,
 		private string $responseTtl,
+		private string $responseClearableAfter,
 	) {
 	}
 
@@ -126,7 +127,16 @@ final readonly class SecurityTxtValidator
 				if (is_array($decoded)) {
 					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
 					$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
-					$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchTime, $now->diff($fetchTime));
+					$clearableAt = $fetchTime->modify("+{$this->responseClearableAfter}");
+					$secondsUntilClearable = (int)ceil((float)$clearableAt->format('U.u') - (float)$now->format('U.u'));
+					$clearableIn = $secondsUntilClearable > 0 ? $now->diff($now->modify("+{$secondsUntilClearable} seconds")) : null;
+					$this->templateParametersEnricher->addFromCheckHostResult(
+						$template,
+						$checkHostResult,
+						$fetchTime,
+						$now->diff($fetchTime),
+						$clearableIn,
+					);
 					return;
 				}
 				$this->logger->log($host, "Ignoring stored response, not an array: {$result->checkHostResult}");
@@ -138,7 +148,7 @@ final readonly class SecurityTxtValidator
 		$response = $this->validatorFetch->fetch($url, false);
 		$parseResult = $this->securityTxtParser->parseFetchResult($response->getFetchResult());
 		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
-		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null);
+		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null, null);
 		$this->database->query('INSERT INTO responses', [
 			'ascii_host' => $asciiHost,
 			'fetch_time' => $now,
@@ -160,7 +170,11 @@ final readonly class SecurityTxtValidator
 		} catch (SecurityTxtValidatorHostException) {
 			return;
 		}
-		$this->database->query('DELETE FROM responses WHERE ascii_host = ?', $validatorUrl->getAsciiHost());
+		$this->database->query(
+			'DELETE FROM responses WHERE ascii_host = ? AND fetch_time < ?',
+			$validatorUrl->getAsciiHost(),
+			$this->dateTimeFactory->getNow()->modify("-{$this->responseClearableAfter}"),
+		);
 	}
 
 
