@@ -23,7 +23,7 @@ final readonly class ClearCacheFormFactory
 	public function create(callable $onSuccess, ?string $host): Form
 	{
 		$form = $this->factory->create();
-		$form->addSubmit('clear', 'clear cache');
+		$form->addSubmit('clear', 'check again');
 		$form->onSuccess[] = function () use ($onSuccess, $host): void {
 			if ($host !== null) {
 				$this->validator->clearCache($host);

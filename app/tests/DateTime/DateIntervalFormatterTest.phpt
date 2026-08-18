@@ -53,6 +53,31 @@ final class DateIntervalFormatterTest extends TestCase
 	/**
 	 * @return list<array{0:string, 1:string, 2:int}>
 	 */
+	public function getIntervalsIn(): array
+	{
+		return [
+			['PT0S', 'messages.timeIntervalIn.seconds', 0],
+			['PT1S', 'messages.timeIntervalIn.seconds', 1],
+			['PT30S', 'messages.timeIntervalIn.seconds', 30],
+			['PT1M', 'messages.timeIntervalIn.minutes', 1],
+			['PT105M', 'messages.timeIntervalIn.minutes', 105],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getIntervalsIn
+	 */
+	public function testToMinutesSecondsIn(string $interval, string $expectedMessage, int $expectedNumber): void
+	{
+		Assert::same($expectedMessage, $this->dateIntervalFormatter->toMinutesSecondsIn(new DateInterval($interval)));
+		Assert::same([$expectedNumber], $this->translator->getParameters($expectedMessage)[0]);
+	}
+
+
+	/**
+	 * @return list<array{0:string, 1:string, 2:int}>
+	 */
 	public function getModifiers(): array
 	{
 		return [

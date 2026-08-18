@@ -17,6 +17,7 @@ final class ValidationResultTemplateParameters extends LayoutTemplateParameters
 	public ?string $host = null;
 	public ?DateTimeImmutable $downloadedAt = null;
 	public ?string $downloadedAgo = null;
+	public ?string $clearableIn = null;
 	public ?bool $fileExists = null;
 	public ?bool $isValid = null;
 	public ?bool $isValidWithWarnings = null;
