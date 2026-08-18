@@ -17,11 +17,27 @@ final readonly class DateIntervalFormatter
 
 	public function toMinutesSecondsAgo(DateInterval $interval): string
 	{
-		$minutes = ($interval->days !== false ? $interval->days * 24 * 60 : 0) + $interval->h * 60 + $interval->i;
+		$minutes = $this->toMinutes($interval);
 		if ($minutes < 1) {
 			return $this->translator->translate('messages.timeIntervalAgo.seconds', $interval->s);
 		}
 		return $this->translator->translate('messages.timeIntervalAgo.minutes', $minutes);
+	}
+
+
+	public function toMinutesSecondsIn(DateInterval $interval): string
+	{
+		$minutes = $this->toMinutes($interval);
+		if ($minutes < 1) {
+			return $this->translator->translate('messages.timeIntervalIn.seconds', $interval->s);
+		}
+		return $this->translator->translate('messages.timeIntervalIn.minutes', $minutes);
+	}
+
+
+	private function toMinutes(DateInterval $interval): int
+	{
+		return ($interval->days !== false ? $interval->days * 24 * 60 : 0) + $interval->h * 60 + $interval->i;
 	}
 
 }

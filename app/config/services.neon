@@ -161,7 +161,7 @@ services:
 	- MichalSpacekCz\SecurityTxtValidator\LambdaResponse
 	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionCheck(@database.securityTxtValidator.explorer)
 	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessageFactory
-	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, policyCacheTtl: %securityTxtValidator.policyCacheTtl%)
+	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, policyCacheTtl: %securityTxtValidator.policyCacheTtl%, policyCacheClearableAfter: %securityTxtValidator.policyCacheClearableAfter%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorHost
 	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher
