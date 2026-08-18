@@ -47,6 +47,7 @@ final readonly class SecurityTxtValidator
 		private ValidationResultTemplateParametersEnricher $templateParametersEnricher,
 		private IpRanges $ipRanges,
 		private string $policyCacheTtl,
+		private string $policyCacheClearableAfter,
 	) {
 	}
 
@@ -124,7 +125,16 @@ final readonly class SecurityTxtValidator
 				if (is_array($decoded)) {
 					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
 					$lastCheckTime = $this->dateTimeFactory->createFrom($result->lastCheckTime);
-					$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $lastCheckTime, $now->diff($lastCheckTime));
+					$clearableAt = $lastCheckTime->modify("+{$this->policyCacheClearableAfter}");
+					$secondsUntilClearable = (int)ceil((float)$clearableAt->format('U.u') - (float)$now->format('U.u'));
+					$clearableIn = $secondsUntilClearable > 0 ? $now->diff($now->modify("+{$secondsUntilClearable} seconds")) : null;
+					$this->templateParametersEnricher->addFromCheckHostResult(
+						$template,
+						$checkHostResult,
+						$lastCheckTime,
+						$now->diff($lastCheckTime),
+						$clearableIn,
+					);
 					return;
 				}
 				$this->logger->log($host, "Ignoring cached policy, not an array: {$result->checkHostResult}");
@@ -136,7 +146,7 @@ final readonly class SecurityTxtValidator
 		$fetchResult = $this->validatorFetch->fetch($url, false);
 		$parseResult = $this->securityTxtParser->parseFetchResult($fetchResult);
 		$checkHostResult = $this->checkHostResultFactory->create($host, $parseResult);
-		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null);
+		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null, null);
 		$encodedResult = Json::encode($checkHostResult);
 		$insertData = [
 			'ascii_host' => $asciiHost,
@@ -162,7 +172,11 @@ final readonly class SecurityTxtValidator
 		} catch (SecurityTxtValidatorHostException) {
 			return;
 		}
-		$this->database->query('DELETE FROM policy_cache WHERE ascii_host = ?', $validatorUrl->getAsciiHost());
+		$this->database->query(
+			'DELETE FROM policy_cache WHERE ascii_host = ? AND last_check_time < ?',
+			$validatorUrl->getAsciiHost(),
+			$this->dateTimeFactory->getNow()->modify("-{$this->policyCacheClearableAfter}"),
+		);
 	}
 
 

@@ -526,3 +526,6 @@ garbageCollector:
 timeIntervalAgo:
 	seconds: "před %count% vteřinou|před %count% vteřinami|před %count% vteřinami"
 	minutes: "před %count% minutou|před %count% minutami|před %count% minutami"
+timeIntervalIn:
+	seconds: "za %count% vteřinu|za %count% vteřiny|za %count% vteřin"
+	minutes: "za %count% minutu|za %count% minuty|za %count% minut"

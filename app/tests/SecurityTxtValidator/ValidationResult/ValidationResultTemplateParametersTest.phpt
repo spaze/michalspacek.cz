@@ -27,6 +27,7 @@ final class ValidationResultTemplateParametersTest extends TestCase
 		$params->host = 'host.example';
 		$params->downloadedAt = $downloadedAt;
 		$params->downloadedAgo = '3 minutes';
+		$params->clearableIn = 'in 5 seconds';
 		$params->fileExists = true;
 		$params->isValid = true;
 		$params->isValidWithWarnings = false;
@@ -53,6 +54,7 @@ final class ValidationResultTemplateParametersTest extends TestCase
 		Assert::same('host.example', $params->host);
 		Assert::same($downloadedAt, $params->downloadedAt);
 		Assert::same('3 minutes', $params->downloadedAgo);
+		Assert::same('in 5 seconds', $params->clearableIn);
 		Assert::true($params->fileExists);
 		Assert::true($params->isValid);
 		Assert::false($params->isValidWithWarnings);

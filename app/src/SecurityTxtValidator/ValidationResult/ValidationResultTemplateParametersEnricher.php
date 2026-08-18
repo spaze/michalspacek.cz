@@ -34,10 +34,14 @@ final readonly class ValidationResultTemplateParametersEnricher
 		SecurityTxtCheckHostResult $checkHostResult,
 		DateTimeImmutable $downloadedAt,
 		?DateInterval $downloadedAgo,
+		?DateInterval $clearableIn,
 	): void {
 		$template->downloadedAt = $downloadedAt;
 		if ($downloadedAgo !== null) {
 			$template->downloadedAgo = $this->dateIntervalFormatter->toMinutesSecondsAgo($downloadedAgo);
+		}
+		if ($clearableIn !== null) {
+			$template->clearableIn = $this->dateIntervalFormatter->toMinutesSecondsIn($clearableIn);
 		}
 		$template->fileExists = true;
 		$hasWarnings = $checkHostResult->getFetchWarnings() !== [] || $checkHostResult->getLineWarnings() !== [] || $checkHostResult->getFileWarnings() !== [];

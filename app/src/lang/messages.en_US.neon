@@ -526,3 +526,6 @@ garbageCollector:
 timeIntervalAgo:
 	seconds: "%count% second ago|%count% seconds ago"
 	minutes: "%count% minute ago|%count% minutes ago"
+timeIntervalIn:
+	seconds: "in %count% second|in %count% seconds"
+	minutes: "in %count% minute|in %count% minutes"
