@@ -3053,17 +3053,17 @@
         },
         {
             "name": "spaze/security-txt",
-            "version": "v2.1.0",
-            "version_normalized": "2.1.0.0",
+            "version": "v2.2.0",
+            "version_normalized": "2.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "45fb6db49acaedbb28ab61654541758aaab02ac2"
+                "reference": "4a9169a7f323a9c7fce07939941608627cddd0c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/45fb6db49acaedbb28ab61654541758aaab02ac2",
-                "reference": "45fb6db49acaedbb28ab61654541758aaab02ac2",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/4a9169a7f323a9c7fce07939941608627cddd0c3",
+                "reference": "4a9169a7f323a9c7fce07939941608627cddd0c3",
                 "shasum": ""
             },
             "require": {
@@ -3085,7 +3085,7 @@
                 "ext-curl": "To validate security.txt on remote hosts",
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2026-08-14T18:22:50+00:00",
+            "time": "2026-08-18T22:20:05+00:00",
             "bin": [
                 "bin/checksecuritytxt.php"
             ],
@@ -3109,7 +3109,7 @@
             "description": "security.txt (RFC 9116) generator, parser, validator",
             "support": {
                 "issues": "https://github.com/spaze/security-txt/issues",
-                "source": "https://github.com/spaze/security-txt/tree/v2.1.0"
+                "source": "https://github.com/spaze/security-txt/tree/v2.2.0"
             },
             "install-path": "../spaze/security-txt"
         },
