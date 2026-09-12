@@ -106,17 +106,21 @@ final readonly class SecurityTxtValidator
 	private function checkHost(SecurityTxtValidatorUrl $url, ValidationResultTemplateParameters $template): void
 	{
 		$host = $url->getHost();
-		$asciiHostPort = $url->getAsciiHostPort();
+		$scheme = $url->getScheme();
+		$asciiHost = $url->getAsciiHost();
+		$port = $url->getPort();
 		$now = $this->dateTimeFactory->getNow();
 		$result = $this->database->fetch(
 			'SELECT
 				fetch_time AS fetchTime,
 				check_host_result AS checkHostResult
 			FROM responses
-			WHERE ascii_host_port = ? AND fetch_time > ?
+			WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time > ?
 			ORDER BY fetch_time DESC, id DESC
 			LIMIT 1',
-			$asciiHostPort,
+			$scheme,
+			$asciiHost,
+			$port,
 			$now->modify("-{$this->responseTtl}"),
 		);
 		if ($result !== null) {
@@ -150,7 +154,9 @@ final readonly class SecurityTxtValidator
 		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
 		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null, null);
 		$this->database->query('INSERT INTO responses', [
-			'ascii_host_port' => $asciiHostPort,
+			'scheme' => $scheme,
+			'ascii_host' => $asciiHost,
+			'port' => $port,
 			'fetch_time' => $now,
 			'check_host_result' => Json::encode($checkHostResult),
 			'key_parser_library_version' => $this->libraryVersions->getId($this->libraryVersion->getInstalled()),
@@ -171,8 +177,10 @@ final readonly class SecurityTxtValidator
 			return;
 		}
 		$this->database->query(
-			'DELETE FROM responses WHERE ascii_host_port = ? AND fetch_time < ?',
-			$validatorUrl->getAsciiHostPort(),
+			'DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time < ?',
+			$validatorUrl->getScheme(),
+			$validatorUrl->getAsciiHost(),
+			$validatorUrl->getPort(),
 			$this->dateTimeFactory->getNow()->modify("-{$this->responseClearableAfter}"),
 		);
 	}
