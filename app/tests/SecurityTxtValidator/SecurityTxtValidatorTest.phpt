@@ -32,17 +32,25 @@ final class SecurityTxtValidatorTest extends TestCase
 
 	/**
 	 * Anyone can press the clear button, so the age condition is the only thing stopping a host being re-fetched over
-	 * and over. It belongs in the statement, and the row has to be found by the same ASCII host the write used, not by
-	 * the URL the visitor typed.
+	 * and over. It belongs in the statement, and the row has to be found by the same key the write used, not by the
+	 * URL the visitor typed.
 	 */
-	public function testClearCacheDeletesByAsciiHostAndOnlyOnceOldEnough(): void
+	public function testClearCacheDeletesByTheWrittenKeyAndOnlyOnceOldEnough(): void
 	{
 		$this->validator->clearCache('https://foó.example/some/path');
 		// The whole condition is the needle: drop the age from the statement and this stops matching, which is the
 		// point, because an age checked anywhere but in the DELETE leaves a gap between deciding and deleting.
-		$params = $this->database->getParamsForQueryContaining('DELETE FROM responses WHERE ascii_host = ? AND fetch_time < ?');
-		Assert::count(2, $params); // the host to delete, and the age the cached result has to have reached
+		$params = $this->database->getParamsForQueryContaining('DELETE FROM responses WHERE ascii_host_port = ? AND fetch_time < ?');
+		Assert::count(2, $params); // the key to delete, and the age the cached result has to have reached
 		Assert::same('xn--fo-6ja.example', $params[0]);
+	}
+
+
+	public function testClearCacheDeletesThePortedRowNotTheBareHostRow(): void
+	{
+		$this->validator->clearCache('https://foó.example:8443/some/path');
+		$params = $this->database->getParamsForQueryContaining('DELETE FROM responses WHERE ascii_host_port = ?');
+		Assert::same('xn--fo-6ja.example:8443', $params[0]);
 	}
 
 

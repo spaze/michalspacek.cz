@@ -25,7 +25,7 @@ final class SecurityTxtValidatorHostTest extends TestCase
 	 */
 	public function getErrorMessages(): array
 	{
-		$a243 = str_repeat('a', 243); // 243 + strlen('.example.com') is exactly the 255 the column holds
+		$a241 = str_repeat('a', 241); // 241 + strlen('.example.com') is exactly the 253 characters a hostname can have
 		return [
 			['localhost', null, "There's no security.txt on your machine (◔_◔)"],
 			['127.0.0.1', null, "There's no security.txt on your machine (◔_◔)"],
@@ -34,8 +34,8 @@ final class SecurityTxtValidatorHostTest extends TestCase
 			['128.0.0.1', '128.0.0.1', null],
 			['[::1]', null, "There's no security.txt on your machine (◔_◔)"],
 			['[::2]', '[::2]', null],
-			["{$a243}.example.com", "{$a243}.example.com", null],
-			["{$a243}a.example.com", null, 'The hostname is too long, way too long /┆\\'],
+			["{$a241}.example.com", "{$a241}.example.com", null],
+			["{$a241}a.example.com", null, 'The hostname is too long, way too long /┆\\'],
 			['example.com', 'example.com', null],
 			// To confirm normalization in spaze/security-txt:
 			['LocalHost', null, "There's no security.txt on your machine (◔_◔)"],
