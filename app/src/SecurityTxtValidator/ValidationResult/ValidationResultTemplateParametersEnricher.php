@@ -30,9 +30,12 @@ final readonly class ValidationResultTemplateParametersEnricher
 	}
 
 
-	public function addFromCheckHostResult(
+	/**
+	 * When the answer was fetched and how long it has left, which a cached failure has to say as much as a cached
+	 * result does: both are answers of the same age, arrived at the same way.
+	 */
+	public function addCacheTiming(
 		ValidationResultTemplateParameters $template,
-		SecurityTxtCheckHostResult $checkHostResult,
 		DateTimeImmutable $downloadedAt,
 		?DateInterval $downloadedAgo,
 		?DateInterval $clearableIn,
@@ -44,6 +47,17 @@ final readonly class ValidationResultTemplateParametersEnricher
 		if ($clearableIn !== null) {
 			$template->clearableIn = $this->dateIntervalFormatter->toMinutesSecondsIn($clearableIn);
 		}
+	}
+
+
+	public function addFromCheckHostResult(
+		ValidationResultTemplateParameters $template,
+		SecurityTxtCheckHostResult $checkHostResult,
+		DateTimeImmutable $downloadedAt,
+		?DateInterval $downloadedAgo,
+		?DateInterval $clearableIn,
+	): void {
+		$this->addCacheTiming($template, $downloadedAt, $downloadedAgo, $clearableIn);
 		$template->fileExists = true;
 		$hasWarnings = $checkHostResult->getFetchWarnings() !== [] || $checkHostResult->getLineWarnings() !== [] || $checkHostResult->getFileWarnings() !== [];
 		$template->isValid = $checkHostResult->isValid() && !$hasWarnings;

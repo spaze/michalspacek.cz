@@ -5,6 +5,7 @@ namespace MichalSpacekCz\SecurityTxtValidator;
 
 use DateMalformedStringException;
 use DateTime;
+use DateTimeImmutable;
 use Exception;
 use MichalSpacekCz\DateTime\DateTimeFactoryUtc;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
@@ -125,11 +126,18 @@ final readonly class SecurityTxtValidator
 			try {
 				$decoded = Json::decode($result->checkHostResult, true);
 				if (is_array($decoded)) {
-					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
 					$lastCheckTime = $this->dateTimeFactory->createFrom($result->lastCheckTime);
 					$clearableAt = $lastCheckTime->modify("+{$this->policyCacheClearableAfter}");
 					$secondsUntilClearable = (int)ceil((float)$clearableAt->format('U.u') - (float)$now->format('U.u'));
 					$clearableIn = $secondsUntilClearable > 0 ? $now->diff($now->modify("+{$secondsUntilClearable} seconds")) : null;
+					if (isset($decoded['error'])) {
+						// Thrown rather than rendered here, so a stored failure reaches the same arm in validate() that
+						// the live one does and there is one place that decides what a visitor is told. It passes the
+						// catch below untouched, which only reads a row that could not be understood.
+						$this->templateParametersEnricher->addCacheTiming($template, $lastCheckTime, $now->diff($lastCheckTime), $clearableIn);
+						throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
+					}
+					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
 					$this->templateParametersEnricher->addFromCheckHostResult(
 						$template,
 						$checkHostResult,
@@ -145,24 +153,38 @@ final readonly class SecurityTxtValidator
 			}
 		}
 
-		$fetchResult = $this->validatorFetch->fetch($url, false);
+		try {
+			$fetchResult = $this->validatorFetch->fetch($url, false);
+		} catch (SecurityTxtFetcherException $e) {
+			// A host that answered and has no usable file has been checked, and the answer is worth the same as any
+			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
+			$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $e]));
+			throw $e;
+		}
 		// When the fetch finished, not when the request started: everything downstream measures the age of the answer
 		// from this, and a slow fetch would otherwise hand back a row that is already part way through its life
 		$fetchedAt = $this->dateTimeFactory->getNow();
 		$parseResult = $this->securityTxtParser->parseFetchResult($fetchResult);
 		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
+		// Stored before the template is filled in, so a write that fails cannot leave the page showing a whole result
+		// with an error banner over it
+		$this->store($scheme, $asciiHost, $port, $fetchedAt, Json::encode($checkHostResult));
 		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
-		$encodedResult = Json::encode($checkHostResult);
+	}
+
+
+	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $checkedAt, string $checkHostResult): void
+	{
 		$insertData = [
 			'scheme' => $scheme,
 			'ascii_host' => $asciiHost,
 			'port' => $port,
-			'last_check_time' => $fetchedAt,
-			'check_host_result' => $encodedResult,
+			'last_check_time' => $checkedAt,
+			'check_host_result' => $checkHostResult,
 		];
 		$updateData = [
-			'last_check_time' => $fetchedAt,
-			'check_host_result' => $encodedResult,
+			'last_check_time' => $checkedAt,
+			'check_host_result' => $checkHostResult,
 		];
 		$this->database->query('INSERT INTO policy_cache', $insertData, 'ON DUPLICATE KEY UPDATE', $updateData);
 	}
