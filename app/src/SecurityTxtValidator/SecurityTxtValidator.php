@@ -6,7 +6,6 @@ namespace MichalSpacekCz\SecurityTxtValidator;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use Exception;
 use MichalSpacekCz\DateTime\DateTimeFactoryUtc;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
 use MichalSpacekCz\Net\IpAddressType;
@@ -24,15 +23,39 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Spaze\SecurityTxt\Check\Exceptions\SecurityTxtCannotParseJsonException;
 use Spaze\SecurityTxt\Check\SecurityTxtCheckHostResultFactory;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Spaze\SecurityTxt\Json\SecurityTxtJson;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
+use Throwable;
 use Tracy\Debugger;
 
 final readonly class SecurityTxtValidator
 {
+
+	/**
+	 * Failures that describe this application rather than the host it was asked about: our runtime with no curl
+	 * extension, our own user agent being unusable, and a host reachable only over IPv6 while our settings have IPv6
+	 * turned off, which would go on being the answer after that setting changed.
+	 *
+	 * Stored, any of them becomes the host's answer: everyone asking about that domain is told it is broken for as
+	 * long as it is kept, nobody can clear it for the first 30 seconds, and its owner has no way to tell the fault is
+	 * ours. A page that reports on other people's domains must not publish a claim about one that is really about us.
+	 *
+	 * Everything else the fetcher throws describes the host and is worth keeping. `SecurityTxtValidatorStoredFailureAllowListTest`
+	 * fails when the library grows a failure neither it nor this list has heard of, so a new one is decided rather than
+	 * inherited, and phpstan reports any of these three going away under a different name.
+	 */
+	private const array NOT_THE_HOSTS_ANSWER = [
+		SecurityTxtCannotOpenUrlExtensionNotLoadedException::class,
+		SecurityTxtCannotOpenUrlUserAgentInvalidException::class,
+		SecurityTxtOnlyIpv6HostButIpv6DisabledException::class,
+	];
+
 
 	public function __construct(
 		private Explorer $database,
@@ -85,7 +108,7 @@ final readonly class SecurityTxtValidator
 			$this->addIpRangeNames($e, $template->errorMessage);
 		} catch (SecurityTxtFetcherException $e) {
 			$template->errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			Debugger::log($e, Debugger::EXCEPTION);
 			$template->errorMessage = Html::el()->setText('Something went wrong while checking ')
 				->addHtml(Html::el('code')->setText($host))
@@ -112,7 +135,7 @@ final readonly class SecurityTxtValidator
 		$result = $this->database->fetch(
 			'SELECT
 				last_check_time AS lastCheckTime,
-				check_host_result AS checkHostResult
+				check_result AS checkResult
 			FROM policy_cache
 			WHERE scheme = ? AND ascii_host = ? AND port = ? AND last_check_time > ?',
 			$scheme,
@@ -121,10 +144,10 @@ final readonly class SecurityTxtValidator
 			$now->modify("-{$this->policyCacheTtl}"),
 		);
 		if ($result !== null) {
-			assert(is_string($result->checkHostResult));
+			assert(is_string($result->checkResult));
 			assert($result->lastCheckTime instanceof DateTime);
 			try {
-				$decoded = Json::decode($result->checkHostResult, true);
+				$decoded = Json::decode($result->checkResult, true);
 				if (is_array($decoded)) {
 					$lastCheckTime = $this->dateTimeFactory->createFrom($result->lastCheckTime);
 					$clearableAt = $lastCheckTime->modify("+{$this->policyCacheClearableAfter}");
@@ -147,7 +170,7 @@ final readonly class SecurityTxtValidator
 					);
 					return;
 				}
-				$this->logger->log($host, "Ignoring cached policy, not an array: {$result->checkHostResult}");
+				$this->logger->log($host, "Ignoring cached policy, not an array: {$result->checkResult}");
 			} catch (JsonException | SecurityTxtCannotParseJsonException $e) {
 				$this->logger->logException($host, $e);
 			}
@@ -158,7 +181,15 @@ final readonly class SecurityTxtValidator
 		} catch (SecurityTxtFetcherException $e) {
 			// A host that answered and has no usable file has been checked, and the answer is worth the same as any
 			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
-			$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $e]));
+			try {
+				if (!in_array($e::class, self::NOT_THE_HOSTS_ANSWER, true)) {
+					$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $e]));
+				}
+			} catch (Throwable $cacheFailure) {
+				// Failing to write the answer down is ours to deal with, and throwing from here would throw away the
+				// answer itself, leaving the visitor with a generic apology instead of what their host actually said
+				$this->logger->logException($host, $cacheFailure);
+			}
 			throw $e;
 		}
 		// When the fetch finished, not when the request started: everything downstream measures the age of the answer
@@ -173,18 +204,18 @@ final readonly class SecurityTxtValidator
 	}
 
 
-	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $checkedAt, string $checkHostResult): void
+	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $checkedAt, string $checkResult): void
 	{
 		$insertData = [
 			'scheme' => $scheme,
 			'ascii_host' => $asciiHost,
 			'port' => $port,
 			'last_check_time' => $checkedAt,
-			'check_host_result' => $checkHostResult,
+			'check_result' => $checkResult,
 		];
 		$updateData = [
 			'last_check_time' => $checkedAt,
-			'check_host_result' => $checkHostResult,
+			'check_result' => $checkResult,
 		];
 		$this->database->query('INSERT INTO policy_cache', $insertData, 'ON DUPLICATE KEY UPDATE', $updateData);
 	}
