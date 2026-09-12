@@ -6,11 +6,13 @@ namespace MichalSpacekCz\Test\SecurityTxtValidator;
 use Closure;
 use LogicException;
 use MichalSpacekCz\Application\DependencyVersion;
+use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorFetchFailedException;
 use MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorFetch;
 use MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorFetchResponse;
 use MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorUrl;
 use MichalSpacekCz\Test\WillThrow;
 use Override;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
 
 final class SecurityTxtValidatorFetchMock implements SecurityTxtValidatorFetch
@@ -69,7 +71,12 @@ final class SecurityTxtValidatorFetchMock implements SecurityTxtValidatorFetch
 		if ($this->whileFetching !== null) {
 			($this->whileFetching)();
 		}
-		$this->maybeThrow();
+		try {
+			$this->maybeThrow();
+		} catch (SecurityTxtFetcherException $e) {
+			// A test hands over the library's exception, and it comes out wrapped the way the real fetchers wrap it
+			throw new SecurityTxtValidatorFetchFailedException($e, $this->getFetcherVersion());
+		}
 		if ($this->fetchResult === null) {
 			throw new LogicException('Set the result first with setFetchResult()');
 		}
