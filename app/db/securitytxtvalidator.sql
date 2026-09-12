@@ -2,11 +2,11 @@
 
 CREATE TABLE `policy_cache` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ascii_host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `ascii_host_port` varchar(259) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `last_check_time` datetime NOT NULL,
   `check_host_result` mediumtext NOT NULL COMMENT 'Not json: MySQL sorts JSON object keys, reordering the redirect chains',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `ascii_host` (`ascii_host`)
+  UNIQUE KEY `ascii_host_port` (`ascii_host_port`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `version_check` (
