@@ -5,21 +5,19 @@ namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
 use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Throwable;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtUrlNotFoundException extends SecurityTxtFetcherException
 {
 
-	/**
-	 * @param value-of<SecurityTxtIpAddressType> $ipAddressType
-	 */
 	public function __construct(
-		string $url,
+		Url $url,
 		int $code,
 		private readonly string $ipAddress,
-		private readonly int $ipAddressType,
+		private readonly SecurityTxtIpAddressType $ipAddressType,
 		?Throwable $previous = null,
 	) {
-		parent::__construct([$url, $code, $ipAddress, $ipAddressType], 'URL %s not found, code %s', [$url, (string)$code], $url, code: $code, previous: $previous);
+		parent::__construct([$url, $code, $ipAddress, $ipAddressType->value], 'URL %s not found, code %s', [$url, (string)$code], $url, code: $code, previous: $previous);
 	}
 
 
@@ -29,7 +27,7 @@ final class SecurityTxtUrlNotFoundException extends SecurityTxtFetcherException
 	}
 
 
-	public function getIpAddressType(): int
+	public function getIpAddressType(): SecurityTxtIpAddressType
 	{
 		return $this->ipAddressType;
 	}

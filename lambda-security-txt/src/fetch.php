@@ -66,7 +66,7 @@ return function (array $event): array {
 			$expiresFactory = new SecurityTxtExpiresFactory();
 			$parser = new SecurityTxtParser($validator, $signature, $expiresFactory, $splitLines, $splitProvider);
 			$checkHostResultFactory = new SecurityTxtCheckHostResultFactory();
-			$checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory);
+			$checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory, $urlParser);
 			$checkHostResult = $checkHost->check($url, null, false, $requireTopLevelLocation, $noIpv6);
 			$fetchResult = $checkHostResult->getFetchResult();
 		}

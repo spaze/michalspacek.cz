@@ -4,11 +4,12 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Check;
 
 use Spaze\SecurityTxt\Parser\SecurityTxtParseHostResult;
+use Spaze\SecurityTxt\SecurityTxtHost;
 
 final readonly class SecurityTxtCheckHostResultFactory
 {
 
-	public function create(string $host, SecurityTxtParseHostResult $parseResult): SecurityTxtCheckHostResult
+	public function create(SecurityTxtHost $host, SecurityTxtParseHostResult $parseResult): SecurityTxtCheckHostResult
 	{
 		return new SecurityTxtCheckHostResult(
 			$host,

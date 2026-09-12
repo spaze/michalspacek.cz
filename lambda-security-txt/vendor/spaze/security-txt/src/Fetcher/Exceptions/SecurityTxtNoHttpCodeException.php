@@ -3,20 +3,19 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
+use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
 use Throwable;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtNoHttpCodeException extends SecurityTxtFetcherException
 {
 
-	/**
-	 * @param list<string> $redirects
-	 */
-	public function __construct(string $url, array $redirects, ?Throwable $previous = null)
+	public function __construct(Url $url, SecurityTxtRedirects $redirects, ?Throwable $previous = null)
 	{
 		parent::__construct(
 			[$url, $redirects],
-			$redirects !== [] ? 'Missing HTTP code when fetching %s (redirects: %s' . str_repeat(' → %s', count($redirects) - 1) . ')' : 'Missing HTTP code when fetching %s',
-			$redirects !== [] ? [$url, ...$redirects] : [$url],
+			'Missing HTTP code when fetching %s' . $this->getRedirectsFormat($redirects),
+			[$url, ...$redirects->getMessageValues()],
 			$url,
 			$redirects,
 			previous: $previous,

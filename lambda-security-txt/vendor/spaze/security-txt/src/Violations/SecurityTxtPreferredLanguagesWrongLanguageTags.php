@@ -13,14 +13,16 @@ final class SecurityTxtPreferredLanguagesWrongLanguageTags extends SecurityTxtSp
 	 */
 	public function __construct(array $wrongLanguages)
 	{
-		$tags = $tagsValues = [];
+		$tagsValues = [];
+		// `#%s` and not `#{$key}`, a runtime number written into the format would stop it being a `literal-string`
 		foreach ($wrongLanguages as $key => $value) {
-			$tags[] = "#{$key} %s";
+			$tagsValues[] = (string)$key;
 			$tagsValues[] = $value;
 		}
+		$tags = $this->getRepeatedFormat('#%s %s', count($wrongLanguages));
 		$format = count($wrongLanguages) > 1
-			? 'The language tags ' . implode(', ', $tags) . ' seem invalid, the %s field must contain one or more language tags as defined in RFC 5646'
-			: 'The language tag ' . implode(', ', $tags) . ' seems invalid, the %s field must contain one or more language tags as defined in RFC 5646';
+			? 'The language tags ' . $tags . ' seem invalid, the %s field must contain one or more language tags as defined in RFC 5646'
+			: 'The language tag ' . $tags . ' seems invalid, the %s field must contain one or more language tags as defined in RFC 5646';
 		parent::__construct(
 			func_get_args(),
 			$format,

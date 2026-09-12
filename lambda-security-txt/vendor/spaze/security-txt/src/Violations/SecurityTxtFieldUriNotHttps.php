@@ -21,7 +21,8 @@ abstract class SecurityTxtFieldUriNotHttps extends SecurityTxtSpecViolation
 			'If the %s field indicates a web URI, then it must begin with "https://"',
 			[$field->value],
 			'draft-foudil-securitytxt-06',
-			preg_replace('~^http://~i', 'https://', $uri),
+			// A value to copy into a file, so it reads as a URL when it is one, and stays as written when the swapped scheme leaves something that will not parse
+			self::asUrl(preg_replace('~^http://~i', 'https://', $uri)),
 			'Make sure the %s field points to an https:// URI',
 			[$field->value],
 			$specSection,

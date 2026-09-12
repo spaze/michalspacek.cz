@@ -14,14 +14,16 @@ final class SecurityTxtPreferredLanguagesSeparatorNotComma extends SecurityTxtSp
 	 */
 	public function __construct(array $wrongSeparators, array $languages)
 	{
-		$separators = $separatorsValues = [];
+		$separatorsValues = [];
+		// `#%s` and not `#{$number}`, a runtime number written into the format would stop it being a `literal-string`
 		foreach ($wrongSeparators as $number => $separator) {
-			$separators[] = "#{$number} %s";
+			$separatorsValues[] = (string)$number;
 			$separatorsValues[] = $separator;
 		}
+		$separators = $this->getRepeatedFormat('#%s %s', count($wrongSeparators));
 		$message = count($wrongSeparators) > 1
-			? 'The %s field uses wrong separators (' . implode(', ', $separators) . '), separate multiple values with a comma (%s)'
-			: 'The %s field uses a wrong separator (' . implode(', ', $separators) . '), separate multiple values with a comma (%s)';
+			? 'The %s field uses wrong separators (' . $separators . '), separate multiple values with a comma (%s)'
+			: 'The %s field uses a wrong separator (' . $separators . '), separate multiple values with a comma (%s)';
 		parent::__construct(
 			func_get_args(),
 			$message,

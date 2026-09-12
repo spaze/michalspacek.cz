@@ -3,12 +3,14 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
+use Spaze\SecurityTxt\SecurityTxtHost;
 use Throwable;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtHostIpAddressNotPublicException extends SecurityTxtFetcherException
 {
 
-	public function __construct(string $host, string $ip, string $url, ?Throwable $previous = null)
+	public function __construct(SecurityTxtHost $host, string $ip, Url $url, ?Throwable $previous = null)
 	{
 		parent::__construct(
 			[$host, $ip, $url],

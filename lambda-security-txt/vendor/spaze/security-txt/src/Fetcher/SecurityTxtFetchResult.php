@@ -5,20 +5,23 @@ namespace Spaze\SecurityTxt\Fetcher;
 
 use JsonSerializable;
 use Override;
+use Spaze\SecurityTxt\Json\SecurityTxtJson;
+use Spaze\SecurityTxt\SecurityTxtPrintableValue;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
+use Uri\WhatWg\Url;
 
 final readonly class SecurityTxtFetchResult implements JsonSerializable
 {
 
 	/**
-	 * @param array<string, list<string>> $redirects
+	 * @param array<string, SecurityTxtRedirects> $redirects
 	 * @param array<int, string> $lines
 	 * @param list<SecurityTxtSpecViolation> $errors
 	 * @param list<SecurityTxtSpecViolation> $warnings
 	 */
 	public function __construct(
-		private string $constructedUrl,
-		private string $finalUrl,
+		private Url $constructedUrl,
+		private Url $finalUrl,
 		private array $redirects,
 		private string $contents,
 		private bool $isTruncated,
@@ -54,13 +57,13 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	}
 
 
-	public function getFinalUrl(): string
+	public function getFinalUrl(): Url
 	{
 		return $this->finalUrl;
 	}
 
 
-	public function getConstructedUrl(): string
+	public function getConstructedUrl(): Url
 	{
 		return $this->constructedUrl;
 	}
@@ -69,7 +72,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	/**
 	 * The redirect URLs, do not render as HTML or Markdown, could be malicious.
 	 *
-	 * @return array<string, list<string>>
+	 * @return array<string, SecurityTxtRedirects>
 	 */
 	public function getRedirects(): array
 	{
@@ -103,9 +106,12 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	{
 		return [
 			'class' => $this::class,
-			'constructedUrl' => $this->getConstructedUrl(),
-			'finalUrl' => $this->getFinalUrl(),
-			'redirects' => $this->getRedirects(),
+			'formatVersion' => SecurityTxtJson::FORMAT_VERSION,
+			// Spelled the way this library spells one, not decoded: `toUnicodeString()` on a host whose punycode does not survive decoding writes a URL naming another host,
+			// which `SecurityTxtJson` then refuses as not a URL this library writes, taking a whole stored result down over a URL nobody stored
+			'constructedUrl' => new SecurityTxtPrintableValue($this->getConstructedUrl())->render(),
+			'finalUrl' => new SecurityTxtPrintableValue($this->getFinalUrl())->render(),
+			'redirects' => array_map(fn(SecurityTxtRedirects $redirects): array => $redirects->toStrings(), $this->getRedirects()),
 			'contents' => $this->getContents(),
 			'isTruncated' => $this->isTruncated(),
 			'errors' => $this->getErrors(),

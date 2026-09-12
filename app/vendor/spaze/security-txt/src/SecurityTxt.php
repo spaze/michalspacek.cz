@@ -39,6 +39,7 @@ use Spaze\SecurityTxt\Violations\SecurityTxtHiringNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtPolicyNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtPolicyNotUri;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesCommonMistake;
+use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesCommonMistakeReason;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesEmpty;
 use Spaze\SecurityTxt\Violations\SecurityTxtPreferredLanguagesWrongLanguageTags;
 use Uri\WhatWg\Url;
@@ -104,6 +105,9 @@ final class SecurityTxt implements JsonSerializable
 	}
 
 
+	/**
+	 * @throws SecurityTxtError
+	 */
 	public function setFileLocation(string $fileLocation): void
 	{
 		$this->setValue(
@@ -245,8 +249,7 @@ final class SecurityTxt implements JsonSerializable
 							$key + 1,
 							$value,
 							preg_replace('/^cz$|cz(-)/i', 'cs$1', $value),
-							'the code for Czech language is %s, not %s',
-							['cs', 'cz'],
+							SecurityTxtPreferredLanguagesCommonMistakeReason::CzechUsesCsNotCz,
 						));
 					}
 				}

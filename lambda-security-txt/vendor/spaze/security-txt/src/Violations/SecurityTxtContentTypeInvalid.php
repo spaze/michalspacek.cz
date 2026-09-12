@@ -4,11 +4,12 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Violations;
 
 use Spaze\SecurityTxt\SecurityTxtContentType;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtContentTypeInvalid extends SecurityTxtSpecViolation
 {
 
-	public function __construct(string $uri, ?string $contentType)
+	public function __construct(Url $uri, ?string $contentType)
 	{
 		if ($contentType !== null) {
 			$format = 'The file at %s has a %s of %s but it should be a %s of %s with the %s parameter set to %s';

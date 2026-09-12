@@ -11,9 +11,9 @@ final class SecurityTxtFileLocationNotHttps extends SecurityTxtSpecViolation
 		parent::__construct(
 			func_get_args(),
 			"The file at %s must use HTTPS",
-			[$uri],
+			[self::asUrl($uri)],
 			'draft-foudil-securitytxt-06',
-			preg_replace('~^http://~', 'https://', $uri),
+			self::asUrl(preg_replace('~^http://~i', 'https://', $uri)),
 			'Use HTTPS to serve the %s file',
 			['security.txt'],
 			'3',
