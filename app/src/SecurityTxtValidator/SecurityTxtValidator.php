@@ -104,15 +104,15 @@ final readonly class SecurityTxtValidator
 	private function checkHost(SecurityTxtValidatorUrl $url, ValidationResultTemplateParameters $template): void
 	{
 		$host = $url->getHost();
-		$asciiHost = $url->getAsciiHost();
+		$asciiHostPort = $url->getAsciiHostPort();
 		$now = $this->dateTimeFactory->getNow();
 		$result = $this->database->fetch(
 			'SELECT
 				last_check_time AS lastCheckTime,
 				check_host_result AS checkHostResult
 			FROM policy_cache
-			WHERE ascii_host = ? AND last_check_time > ?',
-			$asciiHost,
+			WHERE ascii_host_port = ? AND last_check_time > ?',
+			$asciiHostPort,
 			$now->modify("-{$this->policyCacheTtl}"),
 		);
 		if ($result !== null) {
@@ -147,7 +147,7 @@ final readonly class SecurityTxtValidator
 		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null, null);
 		$encodedResult = Json::encode($checkHostResult);
 		$insertData = [
-			'ascii_host' => $asciiHost,
+			'ascii_host_port' => $asciiHostPort,
 			'last_check_time' => $now,
 			'check_host_result' => $encodedResult,
 		];
@@ -171,8 +171,8 @@ final readonly class SecurityTxtValidator
 			return;
 		}
 		$this->database->query(
-			'DELETE FROM policy_cache WHERE ascii_host = ? AND last_check_time < ?',
-			$validatorUrl->getAsciiHost(),
+			'DELETE FROM policy_cache WHERE ascii_host_port = ? AND last_check_time < ?',
+			$validatorUrl->getAsciiHostPort(),
 			$this->dateTimeFactory->getNow()->modify("-{$this->policyCacheClearableAfter}"),
 		);
 	}

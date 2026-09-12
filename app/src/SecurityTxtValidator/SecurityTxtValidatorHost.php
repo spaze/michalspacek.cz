@@ -36,7 +36,7 @@ final readonly class SecurityTxtValidatorHost
 				->addText(' on your machine ')
 				->addHtml(Html::el('code')->addText('(◔_◔)')));
 		}
-		if (strlen($validatorUrl->getAsciiHost()) > 255) {
+		if (strlen($validatorUrl->getAsciiHost()) > 253) {
 			throw new SecurityTxtValidatorHostException(Html::fromText('The hostname is too long, way too long ')
 				->addHtml(Html::el('code')->addText('/┆\\')));
 		}

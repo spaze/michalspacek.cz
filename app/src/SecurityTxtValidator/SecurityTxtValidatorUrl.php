@@ -49,6 +49,17 @@ final readonly class SecurityTxtValidatorUrl
 	}
 
 
+	/**
+	 * The hostname and, when it is not the default one, the port, because those two together are what decides which
+	 * file gets checked. Used as the cache key so a check of one port can't answer for another.
+	 */
+	public function getAsciiHostPort(): string
+	{
+		$port = $this->baseUrl->getPort();
+		return $port === null ? $this->getAsciiHost() : "{$this->getAsciiHost()}:{$port}";
+	}
+
+
 	public function getSecurityTxtHost(): SecurityTxtHost
 	{
 		return $this->host;
