@@ -6,7 +6,6 @@ namespace MichalSpacekCz\SecurityTxtValidator;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use Exception;
 use MichalSpacekCz\Application\DependencyVersion;
 use MichalSpacekCz\DateTime\DateTimeFactoryUtc;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
@@ -26,15 +25,39 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Spaze\SecurityTxt\Check\Exceptions\SecurityTxtCannotParseJsonException;
 use Spaze\SecurityTxt\Check\SecurityTxtCheckHostResultFactory;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Spaze\SecurityTxt\Json\SecurityTxtJson;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
+use Throwable;
 use Tracy\Debugger;
 
 final readonly class SecurityTxtValidator
 {
+
+	/**
+	 * Failures that describe this application rather than the host it was asked about: our runtime with no curl
+	 * extension, our own user agent being unusable, and a host reachable only over IPv6 while our settings have IPv6
+	 * turned off, which would go on being the response after that setting changed.
+	 *
+	 * Stored, any of them becomes the host's response: everyone asking about that domain is told it is broken for as
+	 * long as it is kept, nobody can clear it for the first 30 seconds, and its owner has no way to tell the fault is
+	 * ours. A page that reports on other people's domains must not publish a claim about one that is really about us.
+	 *
+	 * Everything else the fetcher throws describes the host and is worth keeping. `SecurityTxtValidatorStoredFailureAllowListTest`
+	 * fails when the library grows a failure neither it nor this list has heard of, so a new one is decided rather than
+	 * inherited, and phpstan reports any of these three going away under a different name.
+	 */
+	private const array NOT_THE_HOSTS_RESPONSE = [
+		SecurityTxtCannotOpenUrlExtensionNotLoadedException::class,
+		SecurityTxtCannotOpenUrlUserAgentInvalidException::class,
+		SecurityTxtOnlyIpv6HostButIpv6DisabledException::class,
+	];
+
 
 	public function __construct(
 		private Explorer $database,
@@ -89,7 +112,7 @@ final readonly class SecurityTxtValidator
 			$this->addIpRangeNames($e, $template->errorMessage);
 		} catch (SecurityTxtFetcherException $e) {
 			$template->errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			Debugger::log($e, Debugger::EXCEPTION);
 			$template->errorMessage = Html::el()->setText('Something went wrong while checking ')
 				->addHtml(Html::el('code')->setText($host))
@@ -116,7 +139,7 @@ final readonly class SecurityTxtValidator
 		$result = $this->database->fetch(
 			'SELECT
 				fetch_time AS fetchTime,
-				check_host_result AS checkHostResult
+				check_result AS checkResult
 			FROM responses
 			WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time > ?
 			ORDER BY fetch_time DESC, id DESC
@@ -127,10 +150,10 @@ final readonly class SecurityTxtValidator
 			$now->modify("-{$this->responseTtl}"),
 		);
 		if ($result !== null) {
-			assert(is_string($result->checkHostResult));
+			assert(is_string($result->checkResult));
 			assert($result->fetchTime instanceof DateTime);
 			try {
-				$decoded = Json::decode($result->checkHostResult, true);
+				$decoded = Json::decode($result->checkResult, true);
 				if (is_array($decoded)) {
 					$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
 					$clearableAt = $fetchTime->modify("+{$this->responseClearableAfter}");
@@ -153,7 +176,7 @@ final readonly class SecurityTxtValidator
 					);
 					return;
 				}
-				$this->logger->log($host, "Ignoring stored response, not an array: {$result->checkHostResult}");
+				$this->logger->log($host, "Ignoring stored response, not an array: {$result->checkResult}");
 			} catch (JsonException | SecurityTxtCannotParseJsonException $e) {
 				$this->logger->logException($host, $e);
 			}
@@ -164,8 +187,17 @@ final readonly class SecurityTxtValidator
 		} catch (SecurityTxtValidatorFetchFailedException $e) {
 			// A host that answered and has no usable file has been checked, and the response is worth the same as any
 			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
-			$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $e->getFetcherException()]), $e->getFetcherVersion());
-			throw $e->getFetcherException();
+			$fetcherException = $e->getFetcherException();
+			try {
+				if (!in_array($fetcherException::class, self::NOT_THE_HOSTS_RESPONSE, true)) {
+					$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $fetcherException]), $e->getFetcherVersion());
+				}
+			} catch (Throwable $cacheFailure) {
+				// Failing to write the response down is ours to deal with, and throwing from here would throw away the
+				// response itself, leaving the visitor with a generic apology instead of what their host actually said
+				$this->logger->logException($host, $cacheFailure);
+			}
+			throw $fetcherException;
 		}
 		// When the fetch finished, not when the request started: everything downstream measures the age of the response
 		// from this, and a slow fetch would otherwise hand back a row that is already part way through its life
@@ -179,14 +211,14 @@ final readonly class SecurityTxtValidator
 	}
 
 
-	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $fetchedAt, string $checkHostResult, DependencyVersion $fetcherVersion): void
+	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $fetchedAt, string $checkResult, DependencyVersion $fetcherVersion): void
 	{
 		$this->database->query('INSERT INTO responses', [
 			'scheme' => $scheme,
 			'ascii_host' => $asciiHost,
 			'port' => $port,
 			'fetch_time' => $fetchedAt,
-			'check_host_result' => $checkHostResult,
+			'check_result' => $checkResult,
 			'key_parser_library_version' => $this->libraryVersions->getId($this->libraryVersion->getInstalled()),
 			'key_fetcher_library_version' => $this->libraryVersions->getId($fetcherVersion),
 		]);

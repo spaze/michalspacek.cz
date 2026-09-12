@@ -47,7 +47,7 @@ final class SecurityTxtValidatorFetchMock implements SecurityTxtValidatorFetch
 
 
 	/**
-	 * How many times a fetch was attempted, so a test can tell a cached answer from a fetched one.
+	 * How many times a fetch was attempted, so a test can tell a cached response from a fetched one.
 	 */
 	public function getFetches(): int
 	{
