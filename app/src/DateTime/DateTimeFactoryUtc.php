@@ -8,7 +8,7 @@ namespace MichalSpacekCz\DateTime;
  * In other words, if you look at the dependencies of some other class, and there's this one there,
  * you'll immediately know that the timezone will be UTC in that other class.
  */
-final class DateTimeFactoryUtc extends DateTimeFactory
+class DateTimeFactoryUtc extends DateTimeFactory
 {
 
 	public function __construct(

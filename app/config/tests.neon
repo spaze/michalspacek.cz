@@ -60,6 +60,9 @@ services:
 	database.pulse.explorer: @database.default.explorer
 	database.securityTxtValidator.explorer: @database.default.explorer
 	dateTimeFactory: MichalSpacekCz\Test\DateTime\DateTimeMachineFactory
+	dateTimeFactoryUtc:
+		create: MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc
+		autowired: [MichalSpacekCz\DateTime\DateTimeFactoryUtc, MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc]
 	texyFormatter: MichalSpacekCz\Test\Formatter\TexyFormatterMock(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	httpClient: MichalSpacekCz\Test\Http\Client\HttpClientMock
 	- MichalSpacekCz\Test\Form\FormComponents

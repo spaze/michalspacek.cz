@@ -5,7 +5,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\SecurityTxtValidator;
 
 use DateTime;
+use DateTimeImmutable;
+use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc;
 use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Override;
@@ -27,6 +30,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		private readonly SecurityTxtValidatorFetchMock $fetch,
 		private readonly SecurityTxtSplitLines $splitLines,
 		private readonly SecurityTxtLibraryVersion $libraryVersion,
+		private readonly DateTimeMachineFactoryUtc $dateTime,
 	) {
 	}
 
@@ -43,6 +47,7 @@ final class SecurityTxtValidatorTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		$this->dateTime->setDateTime(null);
 	}
 
 
@@ -130,6 +135,24 @@ final class SecurityTxtValidatorTest extends TestCase
 		$params = $this->database->getParamsForQueryContaining('WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time > ?');
 		Assert::count(4, $params); // the three parts of the key, and the age a cached result may not have passed
 		Assert::same(['https', 'example.com', 443], array_slice($params, 0, 3));
+	}
+
+
+	/**
+	 * The floor on how often a host can be fetched again is measured from what this stores, so a fetch that takes 25
+	 * seconds would leave a row already 25 seconds into that floor if the stamp came from when the request started.
+	 */
+	public function testTheRowIsStampedWhenTheFetchFinishedNotWhenTheRequestStarted(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$started = $this->dateTime->getNow(); // as the code under test sees it, in UTC
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->fetch->whileFetching(function () use ($started): void {
+			$this->dateTime->setDateTime($started->modify('+25 seconds'));
+		});
+		$this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		Assert::same($started->modify('+25 seconds')->format(DateTimeFormat::MYSQL), $written[0]['fetch_time']);
 	}
 
 
