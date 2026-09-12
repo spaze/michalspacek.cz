@@ -4,11 +4,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\SecurityTxtValidator;
 
+use DateTime;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Override;
+use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
+use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Tester\Assert;
 use Tester\TestCase;
+use Uri\WhatWg\Url;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -19,7 +24,17 @@ final class SecurityTxtValidatorTest extends TestCase
 	public function __construct(
 		private readonly SecurityTxtValidator $validator,
 		private readonly Database $database,
+		private readonly SecurityTxtValidatorFetchMock $fetch,
+		private readonly SecurityTxtSplitLines $splitLines,
 	) {
+	}
+
+
+	private function fetchResult(): SecurityTxtFetchResult
+	{
+		$url = new Url('https://example.com/.well-known/security.txt');
+		$contents = "Contact: mailto:security@example.com\n";
+		return new SecurityTxtFetchResult($url, $url, [], $contents, false, $this->splitLines->splitLines($contents), [], []);
 	}
 
 
@@ -51,6 +66,48 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->validator->clearCache('https://foó.example:8443/some/path');
 		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE ascii_host_port = ?');
 		Assert::same('xn--fo-6ja.example:8443', $params[0]);
+	}
+
+
+	public function testACacheMissFetchesAndWritesTheRowUnderTheKeyItWillBeReadBy(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		Assert::same(1, $this->fetch->getFetches());
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		Assert::same('example.com', $written[0]['ascii_host_port']);
+	}
+
+
+	public function testACachedResultIsServedWithoutFetching(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		assert(is_string($written[0]['check_host_result']));
+		$this->database->reset();
+		$this->database->addFetchResult([
+			'lastCheckTime' => new DateTime(),
+			'checkHostResult' => $written[0]['check_host_result'],
+		]);
+		$fetches = $this->fetch->getFetches();
+		$this->validator->validate('https://example.com');
+		Assert::same($fetches, $this->fetch->getFetches()); // served from the row, nothing went out
+		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO policy_cache')); // and nothing was written back
+	}
+
+
+	/**
+	 * The age belongs in the statement for the same reason it does in the DELETE: an age checked anywhere but in the
+	 * SELECT leaves a gap between deciding a row is fresh and using it.
+	 */
+	public function testTheCacheReadIsBoundedByTheTtl(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host_port = ? AND last_check_time > ?');
+		Assert::count(2, $params); // the key to look up, and the age a cached result may not have passed
+		Assert::same('example.com', $params[0]);
 	}
 
 
