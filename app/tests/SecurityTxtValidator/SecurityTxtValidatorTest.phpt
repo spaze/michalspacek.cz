@@ -6,6 +6,7 @@ namespace MichalSpacekCz\SecurityTxtValidator;
 
 use DateTime;
 use DateTimeImmutable;
+use Exception;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
 use MichalSpacekCz\Test\Database\Database;
@@ -14,12 +15,16 @@ use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Json;
 use Override;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
+use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\SecurityTxtHost;
 use Tester\Assert;
 use Tester\TestCase;
+use TypeError;
 use Uri\WhatWg\Url;
 
 require __DIR__ . '/../bootstrap.php';
@@ -42,6 +47,24 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$url = new Url('https://example.com/.well-known/security.txt');
 		return new SecurityTxtHostNotFoundException($url, new SecurityTxtHost($url));
+	}
+
+
+	private function notFound(): SecurityTxtNotFoundException
+	{
+		$wellKnownUrl = 'https://example.com/.well-known/security.txt';
+		$components = [
+			'ip' => '1.2.3.4',
+			'type' => SecurityTxtIpAddressType::V4->value,
+			'code' => 403,
+			'redirects' => ['https://example.com/security.txt'],
+			'html' => false,
+			'truncated' => false,
+		];
+		return new SecurityTxtNotFoundException(
+			[$wellKnownUrl => $components, 'https://example.com/security.txt' => $components],
+			new Url($wellKnownUrl),
+		);
 	}
 
 
@@ -102,11 +125,11 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
 		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
-		assert(is_string($written[0]['check_host_result']));
+		assert(is_string($written[0]['check_result']));
 		$this->database->reset();
 		$this->database->addFetchResult([
 			'lastCheckTime' => new DateTime(),
-			'checkHostResult' => $written[0]['check_host_result'],
+			'checkResult' => $written[0]['check_result'],
 		]);
 		$fetches = $this->fetch->getFetches();
 		$this->validator->validate('https://example.com');
@@ -159,10 +182,44 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::same('https', $written[0]['scheme']);
 		Assert::same('example.com', $written[0]['ascii_host']);
 		Assert::same(443, $written[0]['port']);
-		assert(is_string($written[0]['check_host_result']));
-		$decoded = Json::decode($written[0]['check_host_result'], true);
+		assert(is_string($written[0]['check_result']));
+		$decoded = Json::decode($written[0]['check_result'], true);
 		assert(is_array($decoded) && is_array($decoded['error']));
 		Assert::same(SecurityTxtHostNotFoundException::class, $decoded['error']['class']);
+	}
+
+
+	/**
+	 * An origin that already has a row is the normal case once anything has been checked twice, and the half of the
+	 * statement that handles it is a second array nothing looked at: dropping the answer from it would leave the old
+	 * one in place with a fresh timestamp on it, which reads as current and is not.
+	 */
+	public function testAStoredAnswerReplacesWhateverTheOriginHadBefore(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		Assert::count(2, $written); // what to write, and what to put there when the origin already has a row
+		Assert::same($written[0]['check_result'], $written[1]['check_result']);
+		Assert::same($written[0]['last_check_time'], $written[1]['last_check_time']);
+	}
+
+
+	/**
+	 * A failure takes as long to arrive as an answer does, and the wait before the host is asked again is measured
+	 * from what this stores, so it is stamped when the fetch gave up rather than when the request started.
+	 */
+	public function testAFailedCheckIsStampedWhenTheFetchGaveUp(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$started = $this->dateTime->getNow();
+		$this->fetch->whileFetching(function () use ($started): void {
+			$this->dateTime->setDateTime($started->modify('+25 seconds'));
+		});
+		$this->fetch->willThrow($this->hostNotFound());
+		$this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		Assert::same($started->modify('+25 seconds')->format(DateTimeFormat::MYSQL), $written[0]['last_check_time']);
 	}
 
 
@@ -175,17 +232,91 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->fetch->willThrow($this->hostNotFound());
 		$live = $this->validator->validate('https://example.com');
 		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
-		assert(is_string($written[0]['check_host_result']));
+		assert(is_string($written[0]['check_result']));
 		$this->database->reset();
 		$this->database->addFetchResult([
 			'lastCheckTime' => new DateTime(),
-			'checkHostResult' => $written[0]['check_host_result'],
+			'checkResult' => $written[0]['check_result'],
 		]);
 		$fetches = $this->fetch->getFetches();
 		$cached = $this->validator->validate('https://example.com');
 		Assert::same($fetches, $this->fetch->getFetches());
 		Assert::same((string)$live->errorMessage, (string)$cached->errorMessage);
 		Assert::notNull($cached->downloadedAt); // and it says when it was checked, the same as a stored result does
+	}
+
+
+	/**
+	 * The failure a host is most likely to produce, and the one with the most to lose on the way through the cache:
+	 * its own arm in validate() reads the redirects and the IP addresses back out of the exception, so a stored one has
+	 * to come back still carrying both. The other failures reach an arm that only reads the message.
+	 */
+	public function testAStoredNotFoundIsReplayedStillCarryingItsRedirectsAndAddresses(): void
+	{
+		$this->fetch->willThrow($this->notFound());
+		$live = $this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		assert(is_string($written[0]['check_result']));
+		$this->database->reset();
+		$this->database->addFetchResult([
+			'lastCheckTime' => new DateTime(),
+			'checkResult' => $written[0]['check_result'],
+		]);
+		$fetches = $this->fetch->getFetches();
+		$cached = $this->validator->validate('https://example.com');
+
+		Assert::same($fetches, $this->fetch->getFetches());
+		Assert::same((string)$live->errorMessage, (string)$cached->errorMessage);
+		Assert::notSame([], $cached->allRedirects); // getAllRedirects() survived
+		Assert::same($live->allRedirects, $cached->allRedirects);
+		// And getIpAddresses() did too: the range lookup only runs for an address the exception still knows about
+		Assert::notSame([], $this->database->getParamsForQueryContaining('FROM ip_ranges r'));
+	}
+
+
+	/**
+	 * The answer is the visitor's; writing it down is ours. A cache write that fails has to leave them with what their
+	 * host said rather than replacing it with a generic apology about our database.
+	 */
+	public function testAFailedCacheWriteDoesNotReplaceTheAnswerItWasWriting(): void
+	{
+		$this->fetch->willThrow($this->hostNotFound());
+		$expected = (string)$this->validator->validate('https://example.com')->errorMessage;
+
+		$this->database->reset();
+		$this->fetch->willThrow($this->hostNotFound());
+		$this->database->willThrow(new Exception('The cache write failed'));
+		$actual = (string)$this->validator->validate('https://example.com')->errorMessage;
+
+		Assert::same($expected, $actual);
+		Assert::notSame('', $expected); // and it is a real message, not both paths being empty
+	}
+
+
+	/**
+	 * The fetcher throws these for our own runtime and our own settings, so they say nothing about the host, and
+	 * filing one under the host's name would tell everyone asking about them that they are broken when we are.
+	 */
+	public function testOurOwnMisconfigurationIsNotStoredAsTheHostsAnswer(): void
+	{
+		$this->fetch->willThrow(new SecurityTxtCannotOpenUrlExtensionNotLoadedException(new Url('https://example.com/.well-known/security.txt')));
+		$this->validator->validate('https://example.com');
+		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO policy_cache'));
+	}
+
+
+	/**
+	 * A programming mistake is not an `Exception`, and a visitor should get a page rather than a stack trace whichever
+	 * of the two went wrong.
+	 */
+	public function testAnErrorIsHandledLikeAnException(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->fetch->whileFetching(function (): void {
+			throw new TypeError('Whatever a caller got wrong');
+		});
+		$template = $this->validator->validate('https://example.com');
+		Assert::contains('Something went wrong while checking', (string)$template->errorMessage);
 	}
 
 
