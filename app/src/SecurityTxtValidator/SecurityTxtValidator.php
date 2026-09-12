@@ -150,14 +150,17 @@ final readonly class SecurityTxtValidator
 		}
 
 		$response = $this->validatorFetch->fetch($url, false);
+		// When the fetch finished, not when the request started: everything downstream measures the age of the answer
+		// from this, and a slow fetch would otherwise hand back a row that is already part way through its life
+		$fetchedAt = $this->dateTimeFactory->getNow();
 		$parseResult = $this->securityTxtParser->parseFetchResult($response->getFetchResult());
 		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
-		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null, null);
+		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
 		$this->database->query('INSERT INTO responses', [
 			'scheme' => $scheme,
 			'ascii_host' => $asciiHost,
 			'port' => $port,
-			'fetch_time' => $now,
+			'fetch_time' => $fetchedAt,
 			'check_host_result' => Json::encode($checkHostResult),
 			'key_parser_library_version' => $this->libraryVersions->getId($this->libraryVersion->getInstalled()),
 			'key_fetcher_library_version' => $this->libraryVersions->getId($response->getFetcherVersion()),
