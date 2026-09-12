@@ -146,19 +146,22 @@ final readonly class SecurityTxtValidator
 		}
 
 		$fetchResult = $this->validatorFetch->fetch($url, false);
+		// When the fetch finished, not when the request started: everything downstream measures the age of the answer
+		// from this, and a slow fetch would otherwise hand back a row that is already part way through its life
+		$fetchedAt = $this->dateTimeFactory->getNow();
 		$parseResult = $this->securityTxtParser->parseFetchResult($fetchResult);
 		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
-		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $now, null, null);
+		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
 		$encodedResult = Json::encode($checkHostResult);
 		$insertData = [
 			'scheme' => $scheme,
 			'ascii_host' => $asciiHost,
 			'port' => $port,
-			'last_check_time' => $now,
+			'last_check_time' => $fetchedAt,
 			'check_host_result' => $encodedResult,
 		];
 		$updateData = [
-			'last_check_time' => $now,
+			'last_check_time' => $fetchedAt,
 			'check_host_result' => $encodedResult,
 		];
 		$this->database->query('INSERT INTO policy_cache', $insertData, 'ON DUPLICATE KEY UPDATE', $updateData);
