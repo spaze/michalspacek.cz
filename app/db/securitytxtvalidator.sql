@@ -13,7 +13,7 @@ CREATE TABLE `responses` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ascii_host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `fetch_time` datetime NOT NULL,
-  `check_host_result` json NOT NULL,
+  `check_host_result` mediumtext NOT NULL COMMENT 'Not json: MySQL sorts JSON object keys, reordering the redirect chains',
   `key_parser_library_version` smallint unsigned NOT NULL,
   `key_fetcher_library_version` smallint unsigned NOT NULL,
   PRIMARY KEY (`id`),
