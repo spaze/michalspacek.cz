@@ -5,6 +5,7 @@ namespace MichalSpacekCz\SecurityTxtValidator\Fetch;
 
 use AsyncAws\Lambda\LambdaClient;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
+use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorFetchFailedException;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorLambdaException;
 use MichalSpacekCz\SecurityTxtValidator\LambdaFunctions;
 use MichalSpacekCz\SecurityTxtValidator\LambdaResponse;
@@ -15,7 +16,6 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Override;
 use Spaze\SecurityTxt\Check\Exceptions\SecurityTxtCannotParseJsonException;
-use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Json\SecurityTxtJson;
 
 readonly final class SecurityTxtValidatorLambdaFetch implements SecurityTxtValidatorFetch
@@ -35,7 +35,7 @@ readonly final class SecurityTxtValidatorLambdaFetch implements SecurityTxtValid
 
 
 	/**
-	 * @throws SecurityTxtFetcherException
+	 * @throws SecurityTxtValidatorFetchFailedException
 	 * @throws SecurityTxtValidatorException
 	 */
 	#[Override]
@@ -56,7 +56,7 @@ readonly final class SecurityTxtValidatorLambdaFetch implements SecurityTxtValid
 	/**
 	 * @throws JsonException
 	 * @throws SecurityTxtCannotParseJsonException
-	 * @throws SecurityTxtFetcherException
+	 * @throws SecurityTxtValidatorFetchFailedException
 	 * @throws SecurityTxtValidatorException
 	 * @throws SecurityTxtValidatorLambdaException
 	 */
@@ -77,7 +77,7 @@ readonly final class SecurityTxtValidatorLambdaFetch implements SecurityTxtValid
 		$fetcherVersion = $this->lambdaVersionCheck->getVersionFromResponse($decoded);
 		$this->lambdaVersionCheck->checkResponse($fetcherVersion, 3, false);
 		if (isset($decoded['status']) && $decoded['status'] === 'Error') {
-			throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
+			throw new SecurityTxtValidatorFetchFailedException($this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded), $fetcherVersion);
 		} elseif (isset($decoded['errorType']) || (isset($decoded['status']) && $decoded['status'] !== 'OK')) {
 			$statusCode = $lambdaResult->getStatusCode() ?? '<missing>';
 			$functionError = $lambdaResult->getFunctionError() ?? '<missing>';

@@ -5,12 +5,15 @@ namespace MichalSpacekCz\SecurityTxtValidator;
 
 use DateMalformedStringException;
 use DateTime;
+use DateTimeImmutable;
 use Exception;
+use MichalSpacekCz\Application\DependencyVersion;
 use MichalSpacekCz\DateTime\DateTimeFactoryUtc;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
 use MichalSpacekCz\Net\IpAddressType;
 use MichalSpacekCz\Net\IpRanges;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
+use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorFetchFailedException;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorHostException;
 use MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorFetch;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter;
@@ -129,11 +132,18 @@ final readonly class SecurityTxtValidator
 			try {
 				$decoded = Json::decode($result->checkHostResult, true);
 				if (is_array($decoded)) {
-					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
 					$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
 					$clearableAt = $fetchTime->modify("+{$this->responseClearableAfter}");
 					$secondsUntilClearable = (int)ceil((float)$clearableAt->format('U.u') - (float)$now->format('U.u'));
 					$clearableIn = $secondsUntilClearable > 0 ? $now->diff($now->modify("+{$secondsUntilClearable} seconds")) : null;
+					if (isset($decoded['error'])) {
+						// Thrown rather than rendered here, so a stored failure reaches the same arm in validate() that
+						// the live one does and there is one place that decides what a visitor is told. It passes the
+						// catch below untouched, which only reads a row that could not be understood.
+						$this->templateParametersEnricher->addCacheTiming($template, $fetchTime, $now->diff($fetchTime), $clearableIn);
+						throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
+					}
+					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
 					$this->templateParametersEnricher->addFromCheckHostResult(
 						$template,
 						$checkHostResult,
@@ -149,21 +159,36 @@ final readonly class SecurityTxtValidator
 			}
 		}
 
-		$response = $this->validatorFetch->fetch($url, false);
-		// When the fetch finished, not when the request started: everything downstream measures the age of the answer
+		try {
+			$response = $this->validatorFetch->fetch($url, false);
+		} catch (SecurityTxtValidatorFetchFailedException $e) {
+			// A host that answered and has no usable file has been checked, and the response is worth the same as any
+			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
+			$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $e->getFetcherException()]), $e->getFetcherVersion());
+			throw $e->getFetcherException();
+		}
+		// When the fetch finished, not when the request started: everything downstream measures the age of the response
 		// from this, and a slow fetch would otherwise hand back a row that is already part way through its life
 		$fetchedAt = $this->dateTimeFactory->getNow();
 		$parseResult = $this->securityTxtParser->parseFetchResult($response->getFetchResult());
 		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
+		// Stored before the template is filled in, so a write that fails cannot leave the page showing a whole result
+		// with an error banner over it
+		$this->store($scheme, $asciiHost, $port, $fetchedAt, Json::encode($checkHostResult), $response->getFetcherVersion());
 		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
+	}
+
+
+	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $fetchedAt, string $checkHostResult, DependencyVersion $fetcherVersion): void
+	{
 		$this->database->query('INSERT INTO responses', [
 			'scheme' => $scheme,
 			'ascii_host' => $asciiHost,
 			'port' => $port,
 			'fetch_time' => $fetchedAt,
-			'check_host_result' => Json::encode($checkHostResult),
+			'check_host_result' => $checkHostResult,
 			'key_parser_library_version' => $this->libraryVersions->getId($this->libraryVersion->getInstalled()),
-			'key_fetcher_library_version' => $this->libraryVersions->getId($response->getFetcherVersion()),
+			'key_fetcher_library_version' => $this->libraryVersions->getId($fetcherVersion),
 		]);
 	}
 
