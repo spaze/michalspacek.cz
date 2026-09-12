@@ -4,11 +4,12 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Violations;
 
 use Spaze\SecurityTxt\SecurityTxtContentType;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtContentTypeWrongCharset extends SecurityTxtSpecViolation
 {
 
-	public function __construct(string $uri, string $contentType, ?string $charsetParameter)
+	public function __construct(Url $uri, string $contentType, ?string $charsetParameter)
 	{
 		$format = $charsetParameter !== null
 			? 'The file at %s has a correct %s of %s but the %s parameter should be changed to %s'

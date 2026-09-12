@@ -4,11 +4,12 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
 use Throwable;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtNoLocationHeaderException extends SecurityTxtFetcherException
 {
 
-	public function __construct(string $url, int $httpCode, ?Throwable $previous = null)
+	public function __construct(Url $url, int $httpCode, ?Throwable $previous = null)
 	{
 		parent::__construct(
 			[$url, $httpCode],

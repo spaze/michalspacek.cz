@@ -51,7 +51,7 @@ $ipAddressValidator = new SecurityTxtIpAddressValidator();
 $fetcher = new SecurityTxtFetcher($curlClient, $urlParser, $splitLines, $dnsProvider, $ipAddressValidator);
 $consolePrinter = new ConsolePrinter();
 $checkHostResultFactory = new SecurityTxtCheckHostResultFactory();
-$checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory);
+$checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory, $urlParser);
 $checkHostCli = new SecurityTxtCheckHostCli($consolePrinter, $checkHost, exit(...));
 
 /** @var list<string> $args */

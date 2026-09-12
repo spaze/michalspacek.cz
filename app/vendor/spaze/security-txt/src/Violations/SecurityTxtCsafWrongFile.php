@@ -13,7 +13,7 @@ final class SecurityTxtCsafWrongFile extends SecurityTxtSpecViolation
 		parent::__construct(
 			func_get_args(),
 			'The file with the Common Security Advisory Framework (CSAF) metadata currently located at %s must be called %s',
-			[$uri, SecurityTxtCsaf::METADATA_FILENAME],
+			[self::asUrl($uri), SecurityTxtCsaf::METADATA_FILENAME],
 			null,
 			null,
 			'Rename the file to %s',

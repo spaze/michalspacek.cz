@@ -6,6 +6,8 @@ namespace Spaze\SecurityTxt\Check;
 use Closure;
 use DateTimeImmutable;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
+use Spaze\SecurityTxt\SecurityTxtHost;
+use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
 use Uri\WhatWg\Url;
 
 final class SecurityTxtCheckHostCli
@@ -38,15 +40,13 @@ final class SecurityTxtCheckHostCli
 		string $usageHelp,
 	): void {
 		$this->verbose = $verbose;
-		if ($colors) {
-			$this->consolePrinter->enableColors();
-		}
+		$this->consolePrinter->setColors($colors);
 		if ($showUsageHelp) {
-			$this->consolePrinter->info($usageHelp);
+			$this->printUsageHelp($usageHelp);
 			$this->exit(CheckExitStatus::Ok);
 			return;
 		} elseif ($url === null) {
-			$this->consolePrinter->info($usageHelp);
+			$this->printUsageHelp($usageHelp);
 			$this->exit(CheckExitStatus::NoFile);
 			return;
 		}
@@ -59,14 +59,14 @@ final class SecurityTxtCheckHostCli
 				$noIpv6,
 			);
 			if (!$checkResult->isValid()) {
-				$this->consolePrinter->error($this->consolePrinter->colorRed('The file is invalid'));
+				$this->consolePrinter->error('<red>The file is invalid</red>');
 				$this->exit(CheckExitStatus::Error);
 			} else {
-				$this->consolePrinter->ok($this->consolePrinter->colorGreen('The file is valid'));
+				$this->consolePrinter->ok('<green>The file is valid</green>');
 				$this->exit(CheckExitStatus::Ok);
 			}
 		} catch (SecurityTxtFetcherException $e) {
-			$this->consolePrinter->error($e->getMessage());
+			$this->consolePrinter->error($e->getMessageFormat(), ...$e->getMessageValues());
 			$this->exit(CheckExitStatus::FileError);
 		}
 	}
@@ -78,77 +78,112 @@ final class SecurityTxtCheckHostCli
 	}
 
 
+	/**
+	 * The text is written by whoever calls `check()`, not by a checked host, so it is printed the way they wrote it.
+	 */
+	private function printUsageHelp(string $usageHelp): void
+	{
+		$this->consolePrinter->infoText($usageHelp);
+	}
+
+
+	/**
+	 * The violation's own formats and values are composed, not its rendered strings, so what the console prints and what `getMessage()` returns are the same values put through
+	 * the same rule. Which values are URLs is the violation's to say, it was handed them, so nothing is guessed here.
+	 *
+	 * Two things the types cannot say. A violation format must not use positional specifiers, `%1$s`, because the line number is put in front of it, which would renumber the
+	 * rest, and must not contain the printer's color markup, because a format is where markup is read. Both hold for every violation and neither is checked, `literal-string`
+	 * says where a string was written, not what is in it.
+	 *
+	 * `vsprintf()` only refuses too few values, so composing the two formats relies on each violation bringing exactly as many values as its own format takes. All of them do,
+	 * and a surplus would shift the values of the second half.
+	 *
+	 * @return array{0:literal-string, 1:list<string|Url|SecurityTxtHost>}
+	 */
+	private function getViolationMessage(?int $line, SecurityTxtSpecViolation $violation): array
+	{
+		$format = $violation->getMessageFormat() . ' (How to fix: ' . $violation->getHowToFixFormat();
+		$values = [...$violation->getMessageValues(), ...$violation->getHowToFixValues()];
+		if ($line !== null) {
+			$format = 'on line <b>%s</b>: ' . $format;
+			array_unshift($values, (string)$line);
+		}
+		$correctValue = $violation->getCorrectValue();
+		if ($correctValue !== null) {
+			$format .= ', e.g. %s';
+			$values[] = $correctValue;
+		}
+		return [$format . ')', $values];
+	}
+
+
 	private function initCheckHostCallbacks(): void
 	{
 		$this->checkHost->addOnUrl(
-			function (string $url): void {
+			function (Url $url): void {
 				if ($this->verbose) {
-					$this->consolePrinter->info('Loading security.txt from ' . $this->consolePrinter->colorBold($url));
+					$this->consolePrinter->info('Loading security.txt from <b>%s</b>', $url);
 				}
 			},
 		);
 		$this->checkHost->addOnRedirect(
-			function (string $url, string $destination): void {
+			function (Url $url, Url $destination): void {
 				if ($this->verbose) {
-					$this->consolePrinter->info('Redirected from ' . $this->consolePrinter->colorBold($url) . ' to ' . $this->consolePrinter->colorBold($destination));
+					$this->consolePrinter->info('Redirected from <b>%s</b> to <b>%s</b>', $url, $destination);
 				}
 			},
 		);
 		$this->checkHost->addOnUrlNotFound(
-			function (string $url): void {
+			function (Url $url): void {
 				if ($this->verbose) {
-					$this->consolePrinter->info('Not found ' . $this->consolePrinter->colorBold($url));
+					$this->consolePrinter->info('Not found <b>%s</b>', $url);
 				}
 			},
 		);
 		$this->checkHost->addOnFinalUrl(
-			function (string $url): void {
-				$this->consolePrinter->info('Using ' . $this->consolePrinter->colorBold($url));
+			function (Url $url): void {
+				$this->consolePrinter->info('Using <b>%s</b>', $url);
 			},
 		);
 		$this->checkHost->addOnIsExpired(
 			function (int $daysAgo, DateTimeImmutable $expiryDate): void {
-				$this->consolePrinter->error($this->consolePrinter->colorRed("The file has expired {$daysAgo} " . ($daysAgo === 1 ? 'day' : 'days') . ' ago') . " ({$expiryDate->format(DATE_RFC3339)})");
+				$this->consolePrinter->error(
+					'<red>The file has expired %s ' . ($daysAgo === 1 ? 'day' : 'days') . ' ago</red> (%s)',
+					(string)$daysAgo,
+					$expiryDate->format(DATE_RFC3339),
+				);
 			},
 		);
 		$this->checkHost->addOnExpires(
 			function (int $inDays, DateTimeImmutable $expiryDate): void {
-				$this->consolePrinter->ok("The file will expire in {$inDays} " . ($inDays === 1 ? 'day' : 'days') . " ({$expiryDate->format(DATE_RFC3339)})");
+				$this->consolePrinter->ok(
+					'The file will expire in %s ' . ($inDays === 1 ? 'day' : 'days') . ' (%s)',
+					(string)$inDays,
+					$expiryDate->format(DATE_RFC3339),
+				);
 			},
 		);
 		$this->checkHost->addOnHost(
-			function (string $host): void {
-				$this->consolePrinter->info('Parsing security.txt for ' . $this->consolePrinter->colorBold($host));
+			function (SecurityTxtHost $host): void {
+				$this->consolePrinter->info('Parsing security.txt for <b>%s</b>', $host);
 			},
 		);
 		$this->checkHost->addOnValidSignature(
 			function (string $keyFingerprint, DateTimeImmutable $signatureDate): void {
-				$this->consolePrinter->ok(sprintf(
+				$this->consolePrinter->ok(
 					'Signature valid, key %s, signed on %s',
 					$keyFingerprint,
 					$signatureDate->format(DATE_RFC3339),
-				));
+				);
 			},
 		);
-		$onError = function (?int $line, string $message, string $howToFix, ?string $correctValue): void {
-			$this->consolePrinter->error(sprintf(
-				'%s%s%s (How to fix: %s%s)',
-				$line !== null ? 'on line ' : '',
-				$line !== null ? $this->consolePrinter->colorBold((string)$line) . ': ' : '',
-				$message,
-				$howToFix,
-				$correctValue !== null ? ", e.g. {$correctValue}" : '',
-			));
+		$onError = function (?int $line, SecurityTxtSpecViolation $violation): void {
+			[$format, $values] = $this->getViolationMessage($line, $violation);
+			$this->consolePrinter->error($format, ...$values);
 		};
-		$onWarning = function (?int $line, string $message, string $howToFix, ?string $correctValue): void {
-			$this->consolePrinter->warning(sprintf(
-				'%s%s%s (How to fix: %s%s)',
-				$line !== null ? 'on line ' : '',
-				$line !== null ? $this->consolePrinter->colorBold((string)$line) . ': ' : '',
-				$message,
-				$howToFix,
-				$correctValue !== null ? ", e.g. {$correctValue}" : '',
-			));
+		$onWarning = function (?int $line, SecurityTxtSpecViolation $violation): void {
+			[$format, $values] = $this->getViolationMessage($line, $violation);
+			$this->consolePrinter->warning($format, ...$values);
 		};
 		$this->checkHost->addOnFetchError($onError);
 		$this->checkHost->addOnLineError($onError);

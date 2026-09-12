@@ -16,7 +16,7 @@ abstract class SecurityTxtNonRfcFieldNotUri extends SecurityTxtSpecViolation
 	 * @param SecurityTxtField $field
 	 * @param string $uri
 	 * @param string|null $correctValue
-	 * @param string|null $howToFix
+	 * @param literal-string|null $howToFix Goes into the format, so it must not be built from anything read from the file
 	 * @param string $specUrl
 	 */
 	public function __construct(

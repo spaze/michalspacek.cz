@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Violations;
 
 use Spaze\SecurityTxt\Fields\SecurityTxtField;
+use Uri\WhatWg\Url;
 
 abstract class SecurityTxtFieldNotUri extends SecurityTxtSpecViolation
 {
@@ -13,8 +14,8 @@ abstract class SecurityTxtFieldNotUri extends SecurityTxtSpecViolation
 	 * @param SecurityTxtField $field
 	 * @param string $uri
 	 * @param string $since
-	 * @param string|null $correctValue
-	 * @param string|null $howToFix
+	 * @param string|Url|null $correctValue
+	 * @param literal-string|null $howToFix Goes into the format, so it must not be built from anything read from the file
 	 * @param string|null $specSection
 	 */
 	public function __construct(
@@ -22,7 +23,7 @@ abstract class SecurityTxtFieldNotUri extends SecurityTxtSpecViolation
 		SecurityTxtField $field,
 		string $uri,
 		string $since,
-		?string $correctValue,
+		string|Url|null $correctValue,
 		?string $howToFix,
 		?string $specSection,
 	) {

@@ -3,14 +3,19 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Json;
 
+use BackedEnum;
 use DateMalformedStringException;
 use DateTimeImmutable;
+use ReflectionClass;
+use ReflectionNamedType;
 use Spaze\SecurityTxt\Check\Exceptions\SecurityTxtCannotParseJsonException;
 use Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
+use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
 use Spaze\SecurityTxt\Fields\SecurityTxtAcknowledgments;
 use Spaze\SecurityTxt\Fields\SecurityTxtBugBounty;
 use Spaze\SecurityTxt\Fields\SecurityTxtCanonical;
@@ -25,13 +30,34 @@ use Spaze\SecurityTxt\Fields\SecurityTxtPreferredLanguages;
 use Spaze\SecurityTxt\Fields\SecurityTxtUriField;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\SecurityTxt;
+use Spaze\SecurityTxt\SecurityTxtHost;
 use Spaze\SecurityTxt\SecurityTxtValidationLevel;
 use Spaze\SecurityTxt\Signature\SecurityTxtSignatureVerifyResult;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
 use Throwable;
+use Uri\WhatWg\Url;
+use ValueError;
 
 final readonly class SecurityTxtJson
 {
+
+	/**
+	 * What a stored result means, bumped when one stops being readable by the code that read the previous one. Not only the keys: an exception or a violation stores a class
+	 * name and the arguments its constructor was called with, bar the `$previous` exception, which is never stored and so leaves a replayed exception unchained. A decoder
+	 * replays by calling that constructor again, so renaming a class, reordering a parameter or adding a required one breaks a stored blob while `jsonSerialize()` goes on
+	 * writing the same two keys. `SecurityTxtWireContractTest` pins those signatures so such a
+	 * change has to be noticed here rather than in a consumer. Not the library version: this says
+	 * nothing about which release wrote the blob, only whether this decoder understands its shape. A consumer wanting to know which release wrote it should carry that
+	 * alongside itself, the installed version of this package say, because the two answer different questions.
+	 *
+	 * Bump it only when a stored blob genuinely stops being readable by the previous decoder, never to track a release, and measure that against decoders that shipped: a wire
+	 * that never made a release has no stored blobs to protect, so a change there moves nothing. A reader already fails on a break it cannot handle,
+	 * so the number costs nothing and turns `fetchResult is not set or not an array` into a sentence naming both versions; bumping it for a change an older reader could have
+	 * tolerated is what would turn a benign upgrade into a forced deploy order. What a bump should mean for a decoder that could partly understand a newer blob is issue #107,
+	 * and nothing here decides it.
+	 */
+	public const int FORMAT_VERSION = 1;
+
 
 	public function __construct(private SecurityTxtSplitLines $splitLines)
 	{
@@ -59,20 +85,19 @@ final readonly class SecurityTxtJson
 			if (!is_subclass_of($class, SecurityTxtSpecViolation::class)) {
 				throw new SecurityTxtCannotParseJsonException(sprintf("class %s doesn't extend %s", $class, SecurityTxtSpecViolation::class));
 			}
-			try {
-				$object = new $class(...$violation['params']);
-			} catch (Throwable $e) {
-				throw new SecurityTxtCannotParseJsonException("Cannot create an object of class {$class}", previous: $e);
-			}
-			$objects[] = $object;
+			$objects[] = $this->createObjectFromJsonParams($class, $violation['params']);
 		}
 		return $objects;
 	}
 
 
 	/**
+	 * A chain comes back as the spellings a stored result carries, handed to `SecurityTxtRedirects` rather than to each reader as a bare array, so what a redirect reads as is
+	 * decided once, by the chain, and a replayed result says what the one it was made from said. Not read back into `Url` objects here: a URL this library records need not
+	 * have a spelling that parses, which is why the chain holds the strings, see `SecurityTxtRedirects`.
+	 *
 	 * @param array<array-key, mixed> $values
-	 * @return array<string, list<string>>
+	 * @return array<string, SecurityTxtRedirects>
 	 * @throws SecurityTxtCannotParseJsonException
 	 */
 	public function createRedirectsFromJsonValues(array $values): array
@@ -85,12 +110,14 @@ final readonly class SecurityTxtJson
 			if (!is_array($urlRedirects)) {
 				throw new SecurityTxtCannotParseJsonException("redirects > {$url} is not an array");
 			}
+			$urls = [];
 			foreach ($urlRedirects as $urlRedirect) {
 				if (!is_string($urlRedirect)) {
 					throw new SecurityTxtCannotParseJsonException('redirects contains an item which is not a string');
 				}
-				$redirects[$url][] = $urlRedirect;
+				$urls[] = $urlRedirect;
 			}
+			$redirects[$url] = new SecurityTxtRedirects(...$urls);
 		}
 		return $redirects;
 	}
@@ -245,8 +272,14 @@ final readonly class SecurityTxtJson
 		if ($values['class'] !== SecurityTxtCheckHostResult::class) {
 			throw new SecurityTxtCannotParseJsonException('class is not ' . SecurityTxtCheckHostResult::class);
 		}
+		$this->checkFormatVersion($values);
 		if (!isset($values['host']) || !is_string($values['host'])) {
 			throw new SecurityTxtCannotParseJsonException('host is not set or not a string');
+		}
+		try {
+			$host = $this->createStoredHost($values['host']);
+		} catch (SecurityTxtCannotParseHostnameException $e) {
+			throw new SecurityTxtCannotParseJsonException('host is not a hostname', $e);
 		}
 		if (!isset($values['fetchResult']) || !is_array($values['fetchResult'])) {
 			throw new SecurityTxtCannotParseJsonException('fetchResult is not set or not an array');
@@ -323,7 +356,7 @@ final readonly class SecurityTxtJson
 			$expiresWarningThreshold = $values['expiresWarningThreshold'];
 		}
 		return new SecurityTxtCheckHostResult(
-			$values['host'],
+			$host,
 			$this->createFetchResultFromJsonValues($values['fetchResult']),
 			$this->createViolationsFromJsonValues(array_values($values['fetchErrors'])),
 			$this->createViolationsFromJsonValues(array_values($values['fetchWarnings'])),
@@ -353,12 +386,15 @@ final readonly class SecurityTxtJson
 		if ($values['class'] !== SecurityTxtFetchResult::class) {
 			throw new SecurityTxtCannotParseJsonException('class is not ' . SecurityTxtFetchResult::class);
 		}
+		$this->checkFormatVersion($values);
 		if (!isset($values['constructedUrl']) || !is_string($values['constructedUrl'])) {
 			throw new SecurityTxtCannotParseJsonException('constructedUrl is not a string');
 		}
+		$constructedUrl = $this->createUrlFromJsonValue($values['constructedUrl'], 'constructedUrl');
 		if (!isset($values['finalUrl']) || !is_string($values['finalUrl'])) {
 			throw new SecurityTxtCannotParseJsonException('finalUrl is not a string');
 		}
+		$finalUrl = $this->createUrlFromJsonValue($values['finalUrl'], 'finalUrl');
 		if (!isset($values['redirects']) || !is_array($values['redirects'])) {
 			throw new SecurityTxtCannotParseJsonException('redirects is not an array');
 		}
@@ -376,8 +412,8 @@ final readonly class SecurityTxtJson
 			throw new SecurityTxtCannotParseJsonException('warnings is not an array');
 		}
 		return new SecurityTxtFetchResult(
-			$values['constructedUrl'],
-			$values['finalUrl'],
+			$constructedUrl,
+			$finalUrl,
 			$redirects,
 			$values['contents'],
 			$values['isTruncated'],
@@ -385,6 +421,38 @@ final readonly class SecurityTxtJson
 			$this->createViolationsFromJsonValues(array_values($values['errors'])),
 			$this->createViolationsFromJsonValues(array_values($values['warnings'])),
 		);
+	}
+
+
+	/**
+	 * @param array<array-key, mixed> $values
+	 * @throws SecurityTxtCannotParseJsonException
+	 */
+	private function checkFormatVersion(array $values): void
+	{
+		if (!isset($values['formatVersion'])) {
+			return;
+		}
+		if (!is_int($values['formatVersion'])) {
+			throw new SecurityTxtCannotParseJsonException('formatVersion is not an int');
+		}
+		if ($values['formatVersion'] > self::FORMAT_VERSION) {
+			throw new SecurityTxtCannotParseJsonException(sprintf('formatVersion is %s, this version reads up to %s', $values['formatVersion'], self::FORMAT_VERSION));
+		}
+	}
+
+
+	/**
+	 * The same rule as the constructor params, said as this caller reports a bad value. One rule, because a URL stored in a field and the same URL stored as a param are the
+	 * same question, and two answers to it meant a spelling accepted in one place and refused in the other.
+	 */
+	private function createUrlFromJsonValue(string $value, string $field): Url
+	{
+		try {
+			return $this->createStoredUrl($value);
+		} catch (ValueError) {
+			throw new SecurityTxtCannotParseJsonException("{$field} is not a URL");
+		}
 	}
 
 
@@ -410,12 +478,115 @@ final readonly class SecurityTxtJson
 		if (!is_subclass_of($class, SecurityTxtFetcherException::class)) {
 			throw new SecurityTxtCannotParseJsonException(sprintf('The exception class %s is not a subclass of %s', $class, SecurityTxtFetcherException::class));
 		}
+		return $this->createObjectFromJsonParams($class, $values['error']['params']);
+	}
+
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $class
+	 * @param array<array-key, mixed> $params
+	 * @return T
+	 * @throws SecurityTxtCannotParseJsonException
+	 */
+	private function createObjectFromJsonParams(string $class, array $params): object
+	{
 		try {
-			$exception = new $class(...$values['error']['params']);
+			return new $class(...$this->createConstructorArguments($class, $params));
 		} catch (Throwable $e) {
 			throw new SecurityTxtCannotParseJsonException("Cannot create an object of class {$class}", previous: $e);
 		}
-		return $exception;
+	}
+
+
+	/**
+	 * The wire stays scalar, and the way back is decided by what each constructor parameter is typed as: a `SecurityTxtHost` is rebuilt from the name it reads as, a `Url`
+	 * from the spelling the wire carries, a backed enum from a case value. Both run inside the caller's try, so a name that rebuilds a different host or a value naming no case fails as the class it was meant for, the
+	 * same way any other bad param does. A host that cannot be rebuilt takes the whole stored error down rather than degrading into one that reads encoded, which was one
+	 * host reading as two things: refuse what cannot be rebuilt is the rule `SecurityTxtHost` itself follows, and a refused result is a cache miss to check again. A string
+	 * key is left to the spread, which reads it as a named argument, so it selects the parameter here the same way it does there.
+	 *
+	 * @param class-string $class
+	 * @param array<array-key, mixed> $params
+	 * @return array<array-key, mixed>
+	 */
+	private function createConstructorArguments(string $class, array $params): array
+	{
+		$constructor = (new ReflectionClass($class))->getConstructor();
+		if ($constructor === null) {
+			return $params;
+		}
+		$types = [];
+		foreach ($constructor->getParameters() as $position => $parameter) {
+			$type = $parameter->getType();
+			if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+				$types[$position] = $types[$parameter->getName()] = $type->getName();
+			}
+		}
+		// The spread ignores what an integer key says and feeds those values in iteration order, so a key has to mean here what it will mean there: an integer key becomes
+		// the position the spread will actually give the value, `['3' => 'c', '0' => 'a']` types and calls as `['c', 'a']`, and a string key keeps naming its parameter
+		$arguments = [];
+		$position = 0;
+		foreach ($params as $key => $value) {
+			$key = is_int($key) ? $position++ : $key;
+			$type = $types[$key] ?? null;
+			if ($type === SecurityTxtHost::class && is_string($value)) {
+				$value = $this->createStoredHost($value);
+			} elseif ($type === Url::class && is_string($value)) {
+				$value = $this->createStoredUrl($value);
+			} elseif ($type === SecurityTxtRedirects::class && is_array($value)) {
+				foreach ($value as $redirect) {
+					if (!is_string($redirect)) {
+						throw new ValueError(sprintf('a redirect is of type %s, not a string', get_debug_type($redirect)));
+					}
+				}
+				$value = new SecurityTxtRedirects(...$value);
+			} elseif ($type !== null && is_subclass_of($type, BackedEnum::class) && (is_int($value) || is_string($value))) {
+				$value = $type::from($value);
+			}
+			$arguments[$key] = $value;
+		}
+		return $arguments;
+	}
+
+
+	/**
+	 * A host out of a stored result, the inverse of the `getUnicode()` that wrote it, refused rather than rewritten for the same reason as a URL: a value that reads back as
+	 * something other than itself, `808` being the IP address `0.0.3.40`, would replay as a host nobody stored. Parsed under HTTPS, like the fetcher fetches, so a host comes
+	 * out the same whether it lived through a check or through JSON.
+	 *
+	 * @throws SecurityTxtCannotParseHostnameException
+	 */
+	private function createStoredHost(string $host): SecurityTxtHost
+	{
+		$url = Url::parse("https://{$host}");
+		if ($url === null) {
+			throw new SecurityTxtCannotParseHostnameException($host);
+		}
+		try {
+			$self = new SecurityTxtHost($url);
+		} catch (SecurityTxtCannotParseHostnameException $e) {
+			// The constructor names the URL it was handed, which is one this method derived; a caller of this one asked about a host and gets told about that host
+			throw new SecurityTxtCannotParseHostnameException($host, $e);
+		}
+		if ($self->getUnicode() !== $host) {
+			throw new SecurityTxtCannotParseHostnameException($host);
+		}
+		return $self;
+	}
+
+
+	/**
+	 * A URL out of the stored params, refused rather than rewritten, like a host: a value that serializes back as something else would replay as a URL nobody stored. Either
+	 * canonical spelling counts, since a result stored before the wire carried A-labels holds the readable one.
+	 */
+	private function createStoredUrl(string $value): Url
+	{
+		$url = Url::parse($value);
+		if ($url === null || ($url->toAsciiString() !== $value && $url->toUnicodeString() !== $value)) {
+			throw new ValueError(sprintf('%s is not a URL as this library writes one', $value));
+		}
+		return $url;
 	}
 
 }

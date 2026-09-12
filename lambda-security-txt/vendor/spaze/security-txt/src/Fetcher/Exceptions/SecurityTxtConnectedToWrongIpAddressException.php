@@ -3,20 +3,19 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
+use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
 use Throwable;
+use Uri\WhatWg\Url;
 
 final class SecurityTxtConnectedToWrongIpAddressException extends SecurityTxtFetcherException
 {
 
-	/**
-	 * @param list<string> $redirects
-	 */
-	public function __construct(string $expectedIpAddress, string $connectedToIpAddress, string $url, array $redirects, ?Throwable $previous = null)
+	public function __construct(string $expectedIpAddress, string $connectedToIpAddress, Url $url, SecurityTxtRedirects $redirects, ?Throwable $previous = null)
 	{
 		parent::__construct(
 			[$expectedIpAddress, $connectedToIpAddress, $url, $redirects],
-			$redirects !== [] ? "Can't open %s (redirects: %s" . str_repeat(' → %s', count($redirects) - 1) . '), connected to %s instead of %s as expected' : "Can't open %s, connected to %s instead of %s as expected",
-			$redirects !== [] ? [$url, ...$redirects, $connectedToIpAddress, $expectedIpAddress] : [$url, $connectedToIpAddress, $expectedIpAddress],
+			"Can't open %s" . $this->getRedirectsFormat($redirects) . ', connected to %s instead of %s as expected',
+			[$url, ...$redirects->getMessageValues(), $connectedToIpAddress, $expectedIpAddress],
 			$url,
 			$redirects,
 			previous: $previous,
