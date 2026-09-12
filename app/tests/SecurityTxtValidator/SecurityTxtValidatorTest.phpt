@@ -55,17 +55,17 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->validator->clearCache('https://foó.example/some/path');
 		// The whole condition is the needle: drop the age from the statement and this stops matching, which is the
 		// point, because an age checked anywhere but in the DELETE leaves a gap between deciding and deleting.
-		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE ascii_host_port = ? AND last_check_time < ?');
-		Assert::count(2, $params); // the key to delete, and the age the cached result has to have reached
-		Assert::same('xn--fo-6ja.example', $params[0]);
+		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE scheme = ? AND ascii_host = ? AND port = ? AND last_check_time < ?');
+		Assert::count(4, $params); // the three parts of the key, and the age the cached result has to have reached
+		Assert::same(['https', 'xn--fo-6ja.example', 443], array_slice($params, 0, 3));
 	}
 
 
 	public function testClearCacheDeletesThePortedRowNotTheBareHostRow(): void
 	{
 		$this->validator->clearCache('https://foó.example:8443/some/path');
-		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE ascii_host_port = ?');
-		Assert::same('xn--fo-6ja.example:8443', $params[0]);
+		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE scheme = ?');
+		Assert::same(['https', 'xn--fo-6ja.example', 8443], array_slice($params, 0, 3));
 	}
 
 
@@ -75,7 +75,9 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->validator->validate('https://example.com');
 		Assert::same(1, $this->fetch->getFetches());
 		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
-		Assert::same('example.com', $written[0]['ascii_host_port']);
+		Assert::same('https', $written[0]['scheme']);
+		Assert::same('example.com', $written[0]['ascii_host']);
+		Assert::same(443, $written[0]['port']);
 	}
 
 
@@ -105,9 +107,9 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
-		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host_port = ? AND last_check_time > ?');
-		Assert::count(2, $params); // the key to look up, and the age a cached result may not have passed
-		Assert::same('example.com', $params[0]);
+		$params = $this->database->getParamsForQueryContaining('WHERE scheme = ? AND ascii_host = ? AND port = ? AND last_check_time > ?');
+		Assert::count(4, $params); // the three parts of the key, and the age a cached result may not have passed
+		Assert::same(['https', 'example.com', 443], array_slice($params, 0, 3));
 	}
 
 

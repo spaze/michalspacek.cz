@@ -28,6 +28,17 @@ final readonly class SecurityTxtValidatorHost
 		} catch (SecurityTxtCannotParseHostnameException) {
 			throw new SecurityTxtValidatorHostException(Html::fromText('Invalid URL or hostname'));
 		}
+		// The fetcher takes these two and refuses everything else, but only once the request has been made, which for the
+		// Lambda means an invocation spent to be told no. Refused here instead, so a scheme nothing can be fetched over
+		// never reaches a fetch, a cache key or a column sized for the schemes that can.
+		if (!in_array($validatorUrl->getScheme(), ['https', 'http'], true)) {
+			throw new SecurityTxtValidatorHostException(Html::el()
+				->setText('Only ')
+				->addHtml(Html::el('code')->setText('https'))
+				->addText(' and ')
+				->addHtml(Html::el('code')->setText('http'))
+				->addText(' can be checked'));
+		}
 		$host = $validatorUrl->getHost();
 		if ($host === 'localhost' || str_starts_with($host, '127.') || $host === '[::1]') {
 			throw new SecurityTxtValidatorHostException(Html::el()
