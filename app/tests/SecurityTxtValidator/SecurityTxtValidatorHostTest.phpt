@@ -56,6 +56,59 @@ final class SecurityTxtValidatorHostTest extends TestCase
 	}
 
 
+	/**
+	 * @return list<array{0:string}>
+	 */
+	public function getUnfetchableSchemes(): array
+	{
+		return [
+			['foo://example.com'],
+			[str_repeat('a', 37) . '://example.com'], // longer than the column the scheme is stored in
+		];
+	}
+
+
+	/**
+	 * The fetcher refuses anything but http and https, but only after the request has been made, which in production
+	 * means a Lambda invocation spent to be told no, and an answer filed under a scheme wider than the column holding it.
+	 *
+	 * @dataProvider getUnfetchableSchemes
+	 */
+	public function testGetHostRefusesASchemeNothingCanBeFetchedOver(string $url): void
+	{
+		Assert::exception(function () use ($url): void {
+			$this->validatorHost->getHost($url);
+		}, SecurityTxtValidatorHostException::class, 'Only https and http can be checked');
+	}
+
+
+	/**
+	 * @return list<array{0:string}>
+	 */
+	public function getRewrittenSchemes(): array
+	{
+		return [
+			['http://example.com'],
+			['ftp://example.com'], // a WHATWG special scheme, so the parser can and does ask for https instead
+			['ws://example.com'],
+		];
+	}
+
+
+	/**
+	 * The URL parser asks for https whatever it is handed, and gets it for every scheme WHATWG calls special, which is
+	 * why the refusal above catches so little: only a scheme the parser cannot rewrite reaches it.
+	 *
+	 * @dataProvider getRewrittenSchemes
+	 */
+	public function testGetHostAcceptsASchemeTheParserCanRewrite(string $url): void
+	{
+		$validatorUrl = $this->validatorHost->getHost($url);
+		Assert::same('example.com', $validatorUrl->getBaseUrl()->getUnicodeHost());
+		Assert::same('https', $validatorUrl->getScheme());
+	}
+
+
 	public function testGetHostInvalidUrl(): void
 	{
 		$this->assertHost('//', null, 'Invalid URL or hostname');

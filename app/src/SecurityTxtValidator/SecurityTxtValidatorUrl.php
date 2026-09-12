@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\SecurityTxtValidator;
 
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorHostException;
+use MichalSpacekCz\ShouldNotHappenException;
+use Nette\Http\Url as NetteUrl;
 use Nette\Utils\Html;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
 use Spaze\SecurityTxt\SecurityTxtHost;
@@ -49,14 +51,31 @@ final readonly class SecurityTxtValidatorUrl
 	}
 
 
+	public function getScheme(): string
+	{
+		return $this->baseUrl->getScheme();
+	}
+
+
 	/**
-	 * The hostname and, when it is not the default one, the port, because those two together are what decides which
-	 * file gets checked. Used as the cache key so a check of one port can't answer for another.
+	 * The port the file would be fetched from, named even when it is the default one, which the URL parser normalizes
+	 * away to nothing. Stored beside the scheme and the host because those three together are what decides which file
+	 * gets checked, so a check of one port cannot answer for another.
+	 *
+	 * @throws ShouldNotHappenException A scheme with no default port, which `SecurityTxtValidatorHost` refuses before
+	 *     anything gets this far.
 	 */
-	public function getAsciiHostPort(): string
+	public function getPort(): int
 	{
 		$port = $this->baseUrl->getPort();
-		return $port === null ? $this->getAsciiHost() : "{$this->getAsciiHost()}:{$port}";
+		if ($port !== null) {
+			return $port;
+		}
+		$defaultPort = NetteUrl::$defaultPorts[$this->getScheme()] ?? null;
+		if ($defaultPort === null) {
+			throw new ShouldNotHappenException("No default port known for the {$this->getScheme()} scheme");
+		}
+		return $defaultPort;
 	}
 
 
