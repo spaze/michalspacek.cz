@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\SecurityTxtValidator;
 
+use Closure;
 use LogicException;
 use MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorFetch;
 use MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorUrl;
@@ -20,10 +21,21 @@ final class SecurityTxtValidatorFetchMock implements SecurityTxtValidatorFetch
 
 	private ?SecurityTxtFetchResult $fetchResult = null;
 
+	private ?Closure $whileFetching = null;
+
 
 	public function setFetchResult(SecurityTxtFetchResult $fetchResult): void
 	{
 		$this->fetchResult = $fetchResult;
+	}
+
+
+	/**
+	 * Runs inside fetch(), for a test that needs the world to move on while a fetch is in flight, the clock above all.
+	 */
+	public function whileFetching(Closure $callback): void
+	{
+		$this->whileFetching = $callback;
 	}
 
 
@@ -40,6 +52,9 @@ final class SecurityTxtValidatorFetchMock implements SecurityTxtValidatorFetch
 	public function fetch(SecurityTxtValidatorUrl $url, bool $requireTopLevelLocation): SecurityTxtFetchResult
 	{
 		$this->fetches++;
+		if ($this->whileFetching !== null) {
+			($this->whileFetching)();
+		}
 		$this->maybeThrow();
 		if ($this->fetchResult === null) {
 			throw new LogicException('Set the result first with setFetchResult()');
