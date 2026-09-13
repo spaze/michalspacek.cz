@@ -9,6 +9,8 @@ use DateTimeImmutable;
 use Exception;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
+use MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraCssClass;
+use MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraIcon;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc;
 use MichalSpacekCz\Test\NoOpTranslator;
@@ -145,6 +147,10 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::same((string)$live->contents, (string)$cached->contents);
 		Assert::notNull($cached->downloadedAt);
 		Assert::notNull($cached->downloadedAgo); // which a freshly fetched result has not got, so this is the stored one
+		// No signature, so nothing to look up: the page hides the whole signing key section on the same condition
+		Assert::null($cached->signed);
+		Assert::null($cached->signingKeyUrl);
+		Assert::false($cached->isStale); // and it is within the age it claims, unlike the one served when nothing may be fetched
 	}
 
 
@@ -321,6 +327,32 @@ final class SecurityTxtValidatorTest extends TestCase
 
 
 	/**
+	 * @return list<array{0:string, 1:LogoExtraCssClass, 2:LogoExtraIcon|null}>
+	 */
+	public function getLogoCases(): array
+	{
+		return [
+			['localhost', LogoExtraCssClass::Error, LogoExtraIcon::ExclamationTriangle], // refused before anything is fetched
+			['//', LogoExtraCssClass::Error, LogoExtraIcon::ExclamationTriangle], // refused as unparseable
+		];
+	}
+
+
+	/**
+	 * The logo says at a glance what the page says at length, so a page reporting a failure gets the logo for one.
+	 *
+	 * @dataProvider getLogoCases
+	 */
+	public function testAPageReportingAFailureGetsTheLogoForOne(string $host, LogoExtraCssClass $cssClass, ?LogoExtraIcon $icon): void
+	{
+		$template = $this->validator->validate($host);
+		Assert::notNull($template->errorMessage);
+		Assert::same($cssClass, $template->logoExtraCssClass);
+		Assert::same($icon, $template->logoExtraIcon);
+	}
+
+
+	/**
 	 * A programming mistake is not an `Exception`, and a visitor should get a page rather than a stack trace whichever
 	 * of the two went wrong.
 	 */
@@ -400,6 +432,39 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::notNull($cached->clearableIn);
 		Assert::same([20], $this->translator->getParameters('messages.timeIntervalIn.seconds')[0]); // 30 less the 10 since
 		Assert::same([10], $this->translator->getParameters('messages.timeIntervalAgo.seconds')[0]);
+	}
+
+
+	/**
+	 * Being told to come back later is the worst answer available when this origin has said something before. Someone
+	 * else holding the host's allowance open should cost a visitor freshness, not the answer.
+	 */
+	public function testAStaleAnswerBeatsNoAnswerWhileTheHostIsWaiting(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$rowTime = $this->dateTime->getNow();
+		$this->fetch->setFetchResult($this->fetchResult());
+		$live = $this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		assert(is_string($written[0]['check_result']));
+
+		$this->database->reset();
+		$this->fetch->reset();
+		$this->dateTime->setDateTime($rowTime->modify('+12 minutes')); // well past the five the answer is fresh for
+		$this->database->addFetchResult([]); // so the read bounded by the age finds nothing
+		$this->database->addFetchResult(['lastCheckTime' => new DateTime($rowTime->modify('+11 minutes 40 seconds')->format(DateTimeFormat::MYSQL))]); // but the host was fetched 20 seconds ago
+		$this->database->addFetchResult([ // and this origin did say something once
+			'lastCheckTime' => new DateTime($rowTime->format(DateTimeFormat::MYSQL)),
+			'checkResult' => $written[0]['check_result'],
+		]);
+		$stale = $this->validator->validate('https://example.com:8443');
+
+		Assert::same(0, $this->fetch->getFetches()); // still no fetch, the wait is the wait
+		Assert::same($live->isValid, $stale->isValid); // but the last answer is on the page
+		Assert::same((string)$live->contents, (string)$stale->contents);
+		Assert::notNull($stale->downloadedAgo); // saying how old it is
+		Assert::true($stale->isStale); // and saying that is what it is, rather than claiming to be cached and current
+		Assert::null($stale->errorMessage);
 	}
 
 
