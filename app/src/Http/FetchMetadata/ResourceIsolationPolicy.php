@@ -57,11 +57,13 @@ final readonly class ResourceIsolationPolicy
 		if (Arrays::contains(['same-origin', 'same-site', 'none'], $this->fetchMetadata->getHeader(FetchMetadataHeader::Site))) {
 			return true;
 		}
-		// Allow simple top-level navigations except <object> and <embed>
+		// Allow simple top-level navigations, which a frame is not: the recipe this follows leaves framing to
+		// X-Frame-Options and frame-ancestors, and those decline to paint a response that has already been produced.
+		// That is enough for a page whose only cost is being looked at, and not for one that acts on being asked.
 		if (
 			$this->fetchMetadata->getHeader(FetchMetadataHeader::Mode) === 'navigate'
 			&& $this->httpRequest->isMethod(IRequest::Get)
-			&& !Arrays::contains(['object', 'embed'], $this->fetchMetadata->getHeader(FetchMetadataHeader::Dest))
+			&& !Arrays::contains(['object', 'embed', 'iframe', 'frame', 'fencedframe'], $this->fetchMetadata->getHeader(FetchMetadataHeader::Dest))
 		) {
 			return true;
 		}
