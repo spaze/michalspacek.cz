@@ -20,6 +20,7 @@ use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher;
 use Nette\Database\Explorer;
+use Nette\Database\Row;
 use Nette\Http\IResponse;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -91,7 +92,7 @@ final readonly class SecurityTxtValidator
 		try {
 			$validatorUrl = $this->validatorHost->getHost($url);
 		} catch (SecurityTxtValidatorHostException $e) {
-			$template->errorMessage = $e->errorMessage;
+			$this->templateParametersEnricher->addErrorMessageAndLogo($template, $e->errorMessage);
 			return $template;
 		}
 		$host = $validatorUrl->getHost();
@@ -102,22 +103,23 @@ final readonly class SecurityTxtValidator
 			$this->checkHost($validatorUrl, $template);
 		} catch (SecurityTxtValidatorException $e) {
 			$this->logger->logException($host, $e);
-			$template->errorMessage = Html::el()->setText("Can't fetch ")
+			$this->templateParametersEnricher->addErrorMessageAndLogo($template, Html::el()->setText("Can't fetch ")
 				->addHtml(Html::el('code')->setText('security.txt'))
 				->addText(' from ')
 				->addHtml(Html::el('code')->setText($host))
-				->addText(', please try again later');
+				->addText(', please try again later'));
 		} catch (SecurityTxtNotFoundException $e) {
-			$template->errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
+			$errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
+			$this->templateParametersEnricher->addErrorMessageAndLogo($template, $errorMessage);
 			$template->allRedirects = $e->getAllRedirects();
-			$this->addIpRangeNames($e, $template->errorMessage);
+			$this->addIpRangeNames($e, $errorMessage);
 		} catch (SecurityTxtFetcherException $e) {
-			$template->errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
+			$this->templateParametersEnricher->addErrorMessageAndLogo($template, $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues()));
 		} catch (Throwable $e) {
 			Debugger::log($e, Debugger::EXCEPTION);
-			$template->errorMessage = Html::el()->setText('Something went wrong while checking ')
+			$this->templateParametersEnricher->addErrorMessageAndLogo($template, Html::el()->setText('Something went wrong while checking ')
 				->addHtml(Html::el('code')->setText($host))
-				->addText(', please try again later');
+				->addText(', please try again later'));
 		}
 		return $template;
 	}
@@ -151,38 +153,32 @@ final readonly class SecurityTxtValidator
 			$now->modify("-{$this->responseTtl}"),
 		);
 		$fetchAllowedIn = $this->fetchAllowedIn($url, $now);
-		if ($result !== null) {
-			assert(is_string($result->checkResult));
-			assert($result->fetchTime instanceof DateTime);
-			try {
-				$decoded = Json::decode($result->checkResult, true);
-				if (is_array($decoded)) {
-					$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
-					if (isset($decoded['error'])) {
-						// Thrown rather than rendered here, so a stored failure reaches the same arm in validate() that
-						// the live one does and there is one place that decides what a visitor is told. It passes the
-						// catch below untouched, which only reads a row that could not be understood.
-						$this->templateParametersEnricher->addCacheTiming($template, $fetchTime, $now->diff($fetchTime), $fetchAllowedIn);
-						throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
-					}
-					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
-					$this->templateParametersEnricher->addFromCheckHostResult(
-						$template,
-						$checkHostResult,
-						$fetchTime,
-						$now->diff($fetchTime),
-						$fetchAllowedIn,
-					);
-					return;
-				}
-				$this->logger->log($host, "Ignoring stored response, not an array: {$result->checkResult}");
-			} catch (JsonException | SecurityTxtCannotParseJsonException $e) {
-				$this->logger->logException($host, $e);
-			}
+		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $fetchAllowedIn)) {
+			return;
 		}
 
 		if ($fetchAllowedIn !== null) {
-			// Nothing cached for this exact origin, but this host was fetched a moment ago with a different port or scheme
+			// Nothing fresh for this exact origin and no fetch allowed yet, so a response that has merely gone stale is
+			// worth more than an apology: it is what this origin last said, and saying so with its age beats saying
+			// nothing until whoever is holding the host's allowance lets go
+			$stale = $this->database->fetch(
+				'SELECT
+					fetch_time AS fetchTime,
+					check_result AS checkResult
+				FROM responses
+				WHERE scheme = ? AND ascii_host = ? AND port = ?
+				ORDER BY fetch_time DESC, id DESC
+				LIMIT 1',
+				$scheme,
+				$asciiHost,
+				$port,
+			);
+			$template->isStale = true; // set before, so a row that turns out to be unreadable does not leave it claiming otherwise
+			if ($stale !== null && $this->addStoredResponse($host, $stale, $template, $now, $fetchAllowedIn)) {
+				return;
+			}
+			$template->isStale = false;
+			// Nothing stored either, so this host was fetched a moment ago with a different port or scheme
 			$this->templateParametersEnricher->addFetchedTooRecently($template, $host, $fetchAllowedIn);
 			return;
 		}
@@ -227,6 +223,49 @@ final readonly class SecurityTxtValidator
 			'key_parser_library_version' => $this->libraryVersions->getId($this->libraryVersion->getInstalled()),
 			'key_fetcher_library_version' => $this->libraryVersions->getId($fetcherVersion),
 		]);
+	}
+
+
+	/**
+	 * Puts a stored response on the page, whether it is still fresh or only the last thing this origin said. False when
+	 * the row could not be read back, which is a miss rather than an error: the caller goes and asks the host again.
+	 *
+	 * @throws SecurityTxtFetcherException The stored response, when what was stored was a failure. Thrown rather than
+	 *     rendered here so it reaches the same arm in `validate()` that a live failure does, and one place decides
+	 *     what a visitor is told. It passes the catch below untouched, which only reads a row that made no sense.
+	 * @throws CannotCreateDateTimeObjectException
+	 */
+	private function addStoredResponse(
+		string $host,
+		Row $result,
+		ValidationResultTemplateParameters $template,
+		DateTimeImmutable $now,
+		?DateInterval $fetchAllowedIn,
+	): bool {
+		assert(is_string($result->checkResult));
+		assert($result->fetchTime instanceof DateTime);
+		try {
+			$decoded = Json::decode($result->checkResult, true);
+			if (is_array($decoded)) {
+				$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
+				if (isset($decoded['error'])) {
+					$this->templateParametersEnricher->addCacheTiming($template, $fetchTime, $now->diff($fetchTime), $fetchAllowedIn);
+					throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
+				}
+				$this->templateParametersEnricher->addFromCheckHostResult(
+					$template,
+					$this->securityTxtJson->createCheckHostResultFromJsonValues($decoded),
+					$fetchTime,
+					$now->diff($fetchTime),
+					$fetchAllowedIn,
+				);
+				return true;
+			}
+			$this->logger->log($host, "Ignoring cached policy, not an array: {$result->checkResult}");
+		} catch (JsonException | SecurityTxtCannotParseJsonException $e) {
+			$this->logger->logException($host, $e);
+		}
+		return false;
 	}
 
 

@@ -18,6 +18,9 @@ final class ValidationResultTemplateParameters extends LayoutTemplateParameters
 	public ?DateTimeImmutable $downloadedAt = null;
 	public ?string $downloadedAgo = null;
 	public ?string $clearableIn = null;
+
+	/** Shown because nothing fresher could be fetched, so it is the last response rather than a current one */
+	public bool $isStale = false;
 	public ?bool $fileExists = null;
 	public ?bool $isValid = null;
 	public ?bool $isValidWithWarnings = null;
@@ -27,6 +30,8 @@ final class ValidationResultTemplateParameters extends LayoutTemplateParameters
 	public ?Html $contents = null;
 	public bool $isTruncated = false;
 	public ?SecurityTxtSignatureVerifyResult $signed = null;
+
+	public ?string $signingKeyUrl = null;
 	public ?string $url = null;
 	public ?Html $displayUrl = null;
 
