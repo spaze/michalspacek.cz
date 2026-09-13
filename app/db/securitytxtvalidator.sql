@@ -19,7 +19,7 @@ CREATE TABLE `responses` (
   `key_parser_library_version` smallint unsigned NOT NULL,
   `key_fetcher_library_version` smallint unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `origin` (`scheme`,`ascii_host`,`port`,`fetch_time`),
+  KEY `origin` (`ascii_host`,`scheme`,`port`,`fetch_time`),
   KEY `key_parser_library_version` (`key_parser_library_version`),
   KEY `key_fetcher_library_version` (`key_fetcher_library_version`),
   CONSTRAINT `responses_ibfk_1` FOREIGN KEY (`key_parser_library_version`) REFERENCES `library_versions` (`id`),

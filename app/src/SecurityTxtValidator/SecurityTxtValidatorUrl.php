@@ -79,6 +79,16 @@ final readonly class SecurityTxtValidatorUrl
 	}
 
 
+	/**
+	 * Whether the port is the one the scheme brings with it, which the URL parser says by normalizing it away to
+	 * nothing. `https://example.com` and `https://example.com:443` are the same origin and answer the same here.
+	 */
+	public function isDefaultPort(): bool
+	{
+		return $this->baseUrl->getPort() === null;
+	}
+
+
 	public function getSecurityTxtHost(): SecurityTxtHost
 	{
 		return $this->host;
