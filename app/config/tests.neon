@@ -48,7 +48,9 @@ parameters:
 			url: "https://was.example/%s/%s"
 	certificatesApi:
 		hideExpiredAfter: 7
-
+	securityTxtValidator:
+		responseTtl: "5 minutes"
+		timeBetweenFetches: "30 seconds"
 services:
 	garbageCollectorRunner: MichalSpacekCz\GarbageCollector\GarbageCollectorRunner(lockFilePath: %tempDir%/tests/garbageCollectorRunner.lock)
 	integrityPolicy: MichalSpacekCz\Test\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyMock

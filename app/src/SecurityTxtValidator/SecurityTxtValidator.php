@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\SecurityTxtValidator;
 
+use DateInterval;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
@@ -74,7 +75,7 @@ final readonly class SecurityTxtValidator
 		private SecurityTxtLibraryVersion $libraryVersion,
 		private LibraryVersions $libraryVersions,
 		private string $responseTtl,
-		private string $responseClearableAfter,
+		private string $timeBetweenFetches,
 	) {
 	}
 
@@ -149,6 +150,7 @@ final readonly class SecurityTxtValidator
 			$port,
 			$now->modify("-{$this->responseTtl}"),
 		);
+		$fetchAllowedIn = $this->fetchAllowedIn($url, $now);
 		if ($result !== null) {
 			assert(is_string($result->checkResult));
 			assert($result->fetchTime instanceof DateTime);
@@ -156,14 +158,11 @@ final readonly class SecurityTxtValidator
 				$decoded = Json::decode($result->checkResult, true);
 				if (is_array($decoded)) {
 					$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
-					$clearableAt = $fetchTime->modify("+{$this->responseClearableAfter}");
-					$secondsUntilClearable = (int)ceil((float)$clearableAt->format('U.u') - (float)$now->format('U.u'));
-					$clearableIn = $secondsUntilClearable > 0 ? $now->diff($now->modify("+{$secondsUntilClearable} seconds")) : null;
 					if (isset($decoded['error'])) {
 						// Thrown rather than rendered here, so a stored failure reaches the same arm in validate() that
 						// the live one does and there is one place that decides what a visitor is told. It passes the
 						// catch below untouched, which only reads a row that could not be understood.
-						$this->templateParametersEnricher->addCacheTiming($template, $fetchTime, $now->diff($fetchTime), $clearableIn);
+						$this->templateParametersEnricher->addCacheTiming($template, $fetchTime, $now->diff($fetchTime), $fetchAllowedIn);
 						throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
 					}
 					$checkHostResult = $this->securityTxtJson->createCheckHostResultFromJsonValues($decoded);
@@ -172,7 +171,7 @@ final readonly class SecurityTxtValidator
 						$checkHostResult,
 						$fetchTime,
 						$now->diff($fetchTime),
-						$clearableIn,
+						$fetchAllowedIn,
 					);
 					return;
 				}
@@ -180,6 +179,12 @@ final readonly class SecurityTxtValidator
 			} catch (JsonException | SecurityTxtCannotParseJsonException $e) {
 				$this->logger->logException($host, $e);
 			}
+		}
+
+		if ($fetchAllowedIn !== null) {
+			// Nothing cached for this exact origin, but this host was fetched a moment ago with a different port or scheme
+			$this->templateParametersEnricher->addFetchedTooRecently($template, $host, $fetchAllowedIn);
+			return;
 		}
 
 		try {
@@ -226,6 +231,74 @@ final readonly class SecurityTxtValidator
 
 
 	/**
+	 * How long until this host can be fetched again, and null when it can be fetched now. Whole seconds, rounded up,
+	 * because a visitor told to wait 19 and then refused at 19 has been told the wrong number: `DateInterval` counts
+	 * whole seconds and would drop the fraction the row's second-precision timestamp leaves behind.
+	 *
+	 * One answer, used by everything that needs it: what a visitor is told to wait, what the page prints beside a
+	 * cached result, and whether a fetch or a clear may go ahead. They cannot disagree if there is only one of them.
+	 *
+	 * @throws CannotCreateDateTimeObjectException
+	 */
+	private function fetchAllowedIn(SecurityTxtValidatorUrl $url, DateTimeImmutable $now): ?DateInterval
+	{
+		$recentFetch = $this->recentFetch($url, $now);
+		if ($recentFetch === null) {
+			return null;
+		}
+		$allowedAt = $recentFetch->modify("+{$this->timeBetweenFetches}");
+		$seconds = (int)ceil((float)$allowedAt->format('U.u') - (float)$now->format('U.u'));
+		return $seconds > 0 ? $now->diff($now->modify("+{$seconds} seconds")) : null;
+	}
+
+
+	/**
+	 * The most recent fetch that makes this one wait, and null when it may happen now. Recent enough to count means
+	 * within `timeBetweenFetches`.
+	 *
+	 * Two allowances per host, not one. The origin on the scheme's own port is the one nearly every visitor asks
+	 * about, and it counts only its own fetches, so it cannot be taken away from them. Every other origin of that host
+	 * shares the second allowance and counts any fetch of the host, so naming a port nobody has asked about buys no
+	 * extra fetches: a host is one machine to be polite to however many names point at it.
+	 *
+	 * One allowance for all of them would let anyone hold a host's only slot open with two requests a minute, and
+	 * nobody could check it again once the cached response aged out.
+	 *
+	 * @throws CannotCreateDateTimeObjectException
+	 */
+	private function recentFetch(SecurityTxtValidatorUrl $url, DateTimeImmutable $now): ?DateTimeImmutable
+	{
+		$since = $now->modify("-{$this->timeBetweenFetches}");
+		$result = $url->isDefaultPort()
+			? $this->database->fetch(
+				'SELECT fetch_time AS fetchTime
+				FROM responses
+				WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?
+				ORDER BY fetch_time DESC, id DESC
+				LIMIT 1',
+				$url->getAsciiHost(),
+				$url->getScheme(),
+				$url->getPort(),
+				$since,
+			)
+			: $this->database->fetch(
+				'SELECT fetch_time AS fetchTime
+				FROM responses
+				WHERE ascii_host = ? AND fetch_time > ?
+				ORDER BY fetch_time DESC, id DESC
+				LIMIT 1',
+				$url->getAsciiHost(),
+				$since,
+			);
+		if ($result === null) {
+			return null;
+		}
+		assert($result->fetchTime instanceof DateTime);
+		return $this->dateTimeFactory->createFrom($result->fetchTime);
+	}
+
+
+	/**
 	 * Takes what the visitor typed, the same as validate() does, because the field accepts a URL as well as a
 	 * hostname and the rows have to be found by the host checkHost() writes them under.
 	 */
@@ -236,12 +309,16 @@ final readonly class SecurityTxtValidator
 		} catch (SecurityTxtValidatorHostException) {
 			return;
 		}
+		$now = $this->dateTimeFactory->getNow();
+		if ($this->fetchAllowedIn($validatorUrl, $now) !== null) {
+			return;
+		}
 		$this->database->query(
-			'DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time < ?',
+			'DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time <= ?',
 			$validatorUrl->getScheme(),
 			$validatorUrl->getAsciiHost(),
 			$validatorUrl->getPort(),
-			$this->dateTimeFactory->getNow()->modify("-{$this->responseClearableAfter}"),
+			$now->modify("-{$this->timeBetweenFetches}"),
 		);
 	}
 

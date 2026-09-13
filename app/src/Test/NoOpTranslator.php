@@ -87,6 +87,16 @@ final class NoOpTranslator extends Translator
 	}
 
 
+	/**
+	 * Every test method in a file shares one container, so what one of them translated is still here for the next one
+	 * to read and mistake for its own.
+	 */
+	public function reset(): void
+	{
+		$this->parameters = [];
+	}
+
+
 	#[Override]
 	public function getAvailableLocales(): array
 	{

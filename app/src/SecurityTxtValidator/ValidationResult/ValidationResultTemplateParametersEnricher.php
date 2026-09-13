@@ -12,6 +12,7 @@ use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueLevel;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtLineIssue;
 use MichalSpacekCz\Utils\Strings;
+use Nette\Utils\Html;
 use Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult;
 use Spaze\SecurityTxt\Parser\SecurityTxtParseStringResult;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
@@ -31,8 +32,20 @@ final readonly class ValidationResultTemplateParametersEnricher
 
 
 	/**
-	 * When the answer was fetched and how long it has left, which a cached failure has to say as much as a cached
-	 * result does: both are answers of the same age, arrived at the same way.
+	 * Said when a fetch was refused because this host was fetched a moment ago, whatever port or scheme that was for.
+	 */
+	public function addFetchedTooRecently(ValidationResultTemplateParameters $template, string $host, DateInterval $tryAgainIn): void
+	{
+		$template->errorMessage = Html::el()
+			->addHtml(Html::el('code')->setText($host))
+			->addText(' was checked a moment ago, try again ')
+			->addText($this->dateIntervalFormatter->toMinutesSecondsIn($tryAgainIn));
+	}
+
+
+	/**
+	 * When the response was fetched and how long it has left, which a cached failure has to say as much as a cached
+	 * result does: both are responses of the same age, arrived at the same way.
 	 */
 	public function addCacheTiming(
 		ValidationResultTemplateParameters $template,
