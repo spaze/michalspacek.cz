@@ -160,6 +160,16 @@ final class ResourceIsolationPolicyTest extends TestCase
 		Assert::notContains('messages.homepage.aboutme', $content);
 		Assert::contains('messages.forbidden.crossSite', $content);
 		Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode());
+
+		// A frame is a navigation as far as the headers go, so it reached the action and did its work before
+		// X-Frame-Options got a say, and refusing to paint the answer does not undo having produced it
+		foreach (['iframe', 'frame', 'fencedframe'] as $dest) {
+			$this->httpRequest->setHeader(FetchMetadataHeader::Dest->value, $dest);
+			$content = $this->callPresenterAction();
+			Assert::notContains('messages.homepage.aboutme', $content, $dest);
+			Assert::contains('messages.forbidden.crossSite', $content, $dest);
+			Assert::same(IResponse::S403_Forbidden, $this->httpResponse->getCode(), $dest);
+		}
 	}
 
 
