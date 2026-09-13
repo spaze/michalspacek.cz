@@ -11,6 +11,7 @@ use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc;
+use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Json;
@@ -39,6 +40,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		private readonly SecurityTxtValidatorFetchMock $fetch,
 		private readonly SecurityTxtSplitLines $splitLines,
 		private readonly DateTimeMachineFactoryUtc $dateTime,
+		private readonly NoOpTranslator $translator,
 	) {
 	}
 
@@ -81,6 +83,8 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->database->reset();
 		$this->dateTime->setDateTime(null);
+		$this->fetch->reset();
+		$this->translator->reset();
 	}
 
 
@@ -94,7 +98,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->validator->clearCache('https://foó.example/some/path');
 		// The whole condition is the needle: drop the age from the statement and this stops matching, which is the
 		// point, because an age checked anywhere but in the DELETE leaves a gap between deciding and deleting.
-		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE scheme = ? AND ascii_host = ? AND port = ? AND last_check_time < ?');
+		$params = $this->database->getParamsForQueryContaining('DELETE FROM policy_cache WHERE scheme = ? AND ascii_host = ? AND port = ? AND last_check_time <= ?');
 		Assert::count(4, $params); // the three parts of the key, and the age the cached result has to have reached
 		Assert::same(['https', 'xn--fo-6ja.example', 443], array_slice($params, 0, 3));
 	}
@@ -123,7 +127,7 @@ final class SecurityTxtValidatorTest extends TestCase
 	public function testACachedResultIsServedWithoutFetching(): void
 	{
 		$this->fetch->setFetchResult($this->fetchResult());
-		$this->validator->validate('https://example.com');
+		$live = $this->validator->validate('https://example.com');
 		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
 		assert(is_string($written[0]['check_result']));
 		$this->database->reset();
@@ -132,9 +136,15 @@ final class SecurityTxtValidatorTest extends TestCase
 			'checkResult' => $written[0]['check_result'],
 		]);
 		$fetches = $this->fetch->getFetches();
-		$this->validator->validate('https://example.com');
+		$cached = $this->validator->validate('https://example.com');
 		Assert::same($fetches, $this->fetch->getFetches()); // served from the row, nothing went out
 		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO policy_cache')); // and nothing was written back
+		// And the row was rendered rather than read and dropped: the visitor gets the page the fetch produced
+		Assert::true($cached->fileExists);
+		Assert::same($live->isValid, $cached->isValid);
+		Assert::same((string)$live->contents, (string)$cached->contents);
+		Assert::notNull($cached->downloadedAt);
+		Assert::notNull($cached->downloadedAgo); // which a freshly fetched result has not got, so this is the stored one
 	}
 
 
@@ -144,17 +154,22 @@ final class SecurityTxtValidatorTest extends TestCase
 	 */
 	public function testTheCacheReadIsBoundedByTheTtl(): void
 	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$now = $this->dateTime->getNow();
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
 		$params = $this->database->getParamsForQueryContaining('WHERE scheme = ? AND ascii_host = ? AND port = ? AND last_check_time > ?');
 		Assert::count(4, $params); // the three parts of the key, and the age a cached result may not have passed
 		Assert::same(['https', 'example.com', 443], array_slice($params, 0, 3));
+		// The value too, not only that something was bound there: the same statement with the sign the other way round
+		// would serve results from the future, and nothing else about it would look wrong
+		Assert::same($now->modify('-5 minutes')->format(DateTimeFormat::MYSQL), $params[3]);
 	}
 
 
 	/**
-	 * The floor on how often a host can be fetched again is measured from what this stores, so a fetch that takes 25
-	 * seconds would leave a row already 25 seconds into that floor if the stamp came from when the request started.
+	 * How long until a host can be fetched again is measured from what this stores, so a fetch that takes 25 seconds
+	 * would leave a row already 25 seconds through that wait if the stamp came from when the request started.
 	 */
 	public function testTheRowIsStampedWhenTheFetchFinishedNotWhenTheRequestStarted(): void
 	{
@@ -332,10 +347,129 @@ final class SecurityTxtValidatorTest extends TestCase
 	}
 
 
+	/**
+	 * Naming another port, or another scheme, is a key nothing is cached under, so with nothing limiting how often the
+	 * host itself is fetched, one visitor could spend a fetch on each of them.
+	 */
+	public function testAnotherPortIsNotFetchedWhileTheHostWasJustFetched(): void
+	{
+		// `Bootstrap::setTimeZone()` puts the app in Europe/Prague while the validator stamps rows in UTC, so a time
+		// built from a literal here would land two hours from where the code under test reads it. Derived instead.
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$rowTime = $this->dateTime->getNow();
+		$this->dateTime->setDateTime($rowTime->modify('+10 seconds +400000 microseconds'));
+		$this->database->addFetchResult([]); // nothing cached for this exact origin
+		// The row's timestamp carries no microseconds, because the column holds none, so the wait is 19.6 seconds and
+		// the visitor has to be told 20: being told 19 and refused at 19 is worse than being told one second too many
+		$this->database->addFetchResult(['lastCheckTime' => new DateTime($rowTime->format(DateTimeFormat::MYSQL))]);
+		$this->fetch->setFetchResult($this->fetchResult());
+		$template = $this->validator->validate('https://example.com:8443');
+		Assert::same(0, $this->fetch->getFetches());
+		Assert::contains('<code>example.com</code> was checked a moment ago, try again ', (string)$template->errorMessage);
+		// Tests do not translate, so the message is the key, and how long to wait is the number handed to it
+		Assert::contains('messages.timeIntervalIn.seconds', (string)$template->errorMessage);
+		Assert::same([20], $this->translator->getParameters('messages.timeIntervalIn.seconds')[0]);
+		// The age belongs in the statement for the same reason the TTL does, an age checked anywhere else leaves a gap
+		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND last_check_time > ?');
+		Assert::same('example.com', $params[0]);
+		Assert::count(2, $params);
+	}
+
+
+	/**
+	 * The number beside a cached result is what decides whether the page offers a Clear button or says to come back
+	 * later, so it is the visible half of the wait and has to be computed, not left null.
+	 */
+	public function testACachedResultSaysWhenTheHostCanBeCheckedAgain(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$rowTime = $this->dateTime->getNow();
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$written = $this->database->getParamsArrayForQuery('INSERT INTO policy_cache');
+		assert(is_string($written[0]['check_result']));
+
+		$this->database->reset();
+		$this->translator->reset();
+		$this->dateTime->setDateTime($rowTime->modify('+10 seconds'));
+		$row = ['lastCheckTime' => new DateTime($rowTime->format(DateTimeFormat::MYSQL))];
+		$this->database->addFetchResult($row + ['checkResult' => $written[0]['check_result']]);
+		$this->database->addFetchResult($row); // and the same fetch is what the wait is measured from
+		$cached = $this->validator->validate('https://example.com');
+
+		Assert::notNull($cached->clearableIn);
+		Assert::same([20], $this->translator->getParameters('messages.timeIntervalIn.seconds')[0]); // 30 less the 10 since
+		Assert::same([10], $this->translator->getParameters('messages.timeIntervalAgo.seconds')[0]);
+	}
+
+
+	/**
+	 * The origin on the scheme's own port counts only its own fetches, so a visitor naming ports cannot stop everyone
+	 * else checking the one address they all actually ask about.
+	 *
+	 * The database double runs no SQL, so what is pinned here is which question gets asked, not what the rows answer:
+	 * the statement for the default origin names the scheme and the port, and the one for any other names neither.
+	 */
+	public function testTheDefaultOriginHasAnAllowanceOfItsOwn(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND scheme = ? AND port = ? AND last_check_time > ?');
+		Assert::same(['example.com', 'https', 443], array_slice($params, 0, 3));
+		Assert::count(4, $params); // the origin, and how far back a fetch still counts
+		Assert::same([], $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND last_check_time > ?'));
+	}
+
+
+	public function testEveryOtherOriginOfAHostSharesOne(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com:8443');
+		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND last_check_time > ?');
+		Assert::same('example.com', $params[0]); // any fetch of the host counts, whatever port it was for
+		Assert::count(2, $params);
+		Assert::same([], $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND scheme = ?'));
+	}
+
+
+	/**
+	 * Clearing deletes an answer so a new one can be fetched, so refusing the fetch afterwards would leave the visitor
+	 * with neither.
+	 */
+	public function testClearCacheDoesNothingWhileTheHostWasJustFetched(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$now = $this->dateTime->getNow();
+		$this->database->addFetchResult(['lastCheckTime' => new DateTime($now->modify('-10 seconds')->format(DateTimeFormat::MYSQL))]);
+		$this->validator->clearCache('https://example.com');
+		Assert::same([], $this->database->getParamsForQueryContaining('DELETE FROM policy_cache'));
+	}
+
+
 	public function testClearCacheDeletesNothingForAnUnusableHostname(): void
 	{
 		$this->validator->clearCache('localhost');
 		Assert::same([], $this->database->getParamsForQueryContaining('DELETE FROM policy_cache'));
+	}
+
+
+	/**
+	 * The wire carries a file the host did not write in UTF-8, so the page is the first thing to be handed such bytes.
+	 * It has to show the file and say what is wrong with it, rather than a run of line numbers with nothing between
+	 * them, which is what escaping answers for a line holding one.
+	 */
+	public function testAFileThatIsNotUtf8ReachesThePageWithItsContents(): void
+	{
+		$contents = "Contact: mailto:security@example.com\n# Kontakt: Michal \xA9pa\xE8ek\n";
+		Assert::false(mb_check_encoding($contents, 'UTF-8')); // or this test proves nothing
+		$url = new Url('https://example.com/.well-known/security.txt');
+		$this->fetch->setFetchResult(new SecurityTxtFetchResult($url, $url, [], $contents, false, $this->splitLines->splitLines($contents), [], []));
+		$template = $this->validator->validate('https://example.com');
+		$replacement = "\u{FFFD}";
+		Assert::contains('Contact: mailto:security@example.com', (string)$template->contents);
+		Assert::contains('# Kontakt: Michal ' . $replacement . 'pa' . $replacement . 'ek', (string)$template->contents);
+		Assert::count(1, $template->fileErrors);
+		Assert::same('The file content is not encoded in <code>UTF-8</code>', (string)$template->fileErrors[0]->getMessage());
 	}
 
 }
