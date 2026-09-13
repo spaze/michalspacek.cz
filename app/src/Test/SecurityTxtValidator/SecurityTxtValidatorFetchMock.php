@@ -24,6 +24,15 @@ final class SecurityTxtValidatorFetchMock implements SecurityTxtValidatorFetch
 	private ?Closure $whileFetching = null;
 
 
+	public function reset(): void
+	{
+		$this->fetches = 0;
+		$this->fetchResult = null;
+		$this->whileFetching = null;
+		$this->wontThrow();
+	}
+
+
 	public function setFetchResult(SecurityTxtFetchResult $fetchResult): void
 	{
 		$this->fetchResult = $fetchResult;
