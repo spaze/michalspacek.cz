@@ -7,6 +7,7 @@ use DateInterval;
 use DateTimeImmutable;
 use LogicException;
 use MichalSpacekCz\DateTime\DateIntervalFormatter;
+use MichalSpacekCz\Pgp\Keyserver;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssue;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueLevel;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter;
@@ -27,7 +28,15 @@ final readonly class ValidationResultTemplateParametersEnricher
 		private Strings $strings,
 		private SecurityTxtIssueMessageFormatter $issueMessageFormatter,
 		private SecurityTxtSplitLines $splitLines,
+		private Keyserver $keyserver,
 	) {
+	}
+
+
+	public function addErrorMessageAndLogo(ValidationResultTemplateParameters $template, Html $errorMessage): void
+	{
+		$template->errorMessage = $errorMessage;
+		$this->setLogoParameters($template);
 	}
 
 
@@ -36,10 +45,10 @@ final readonly class ValidationResultTemplateParametersEnricher
 	 */
 	public function addFetchedTooRecently(ValidationResultTemplateParameters $template, string $host, DateInterval $tryAgainIn): void
 	{
-		$template->errorMessage = Html::el()
+		$this->addErrorMessageAndLogo($template, Html::el()
 			->addHtml(Html::el('code')->setText($host))
 			->addText(' was checked a moment ago, try again ')
-			->addText($this->dateIntervalFormatter->toMinutesSecondsIn($tryAgainIn));
+			->addText($this->dateIntervalFormatter->toMinutesSecondsIn($tryAgainIn)));
 	}
 
 
@@ -80,6 +89,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 		$contents = $checkHostResult->getContents();
 		$template->contents = $this->strings->addLineNumbersAndEolChars($contents, 'line', 'number', 'eol');
 		$template->signed = $checkHostResult->getSecurityTxt()->getSignatureVerifyResult();
+		$template->signingKeyUrl = $template->signed === null ? null : $this->keyserver->getLookupUrl($template->signed->getKeyFingerprint());
 		$template->isTruncated = $checkHostResult->getFetchResult()->isTruncated();
 		$finalUrl = new SecurityTxtPrintableValue($checkHostResult->getFinalUrl())->render();
 		$template->url = $finalUrl;
@@ -107,6 +117,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 		$template->expiresInDays = $parseStringResult->getSecurityTxt()->getExpires()?->inDays();
 		$template->contents = $this->strings->addLineNumbersAndEolChars($contents, 'line', 'number', 'eol');
 		$template->signed = $parseStringResult->getSecurityTxt()->getSignatureVerifyResult();
+		$template->signingKeyUrl = $template->signed === null ? null : $this->keyserver->getLookupUrl($template->signed->getKeyFingerprint());
 		$template->isTruncated = false;
 		$lines = $this->splitLines->splitLines($contents);
 		$template->lineIssues = $this->getLineIssues($parseStringResult, fn(int $lineNr): ?string => $lines[$lineNr - 1] ?? null);

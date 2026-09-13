@@ -16,8 +16,7 @@
 </div>
 <div class="container valid" n:if="$signed !== null">
 	<p>
-		{icon key} The signature is valid, signed on {$signed->getDate()|date:DateTime::RFC3339} with a key
-		<a href="https://keyserver.ubuntu.com/pks/lookup?search={$signed->getKeyFingerprint()}&op=index" target="_blank"><code>{$signed->getShortKeyId()}</code><small>{icon external-link}</small></a>
+		{icon key} Signed on {$signed->getDate()|date:DateTime::RFC3339} with a key <code>{$signed->getShortKeyId()}</code>, <a href="#signing-key">see below</a>
 	</p>
 </div>
 {define #issue MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssue $issue}
@@ -62,6 +61,21 @@
 		{/foreach}
 	</div>
 {/if}
+<div class="container" id="signing-key" n:if="$signed !== null">
+	<h3>Signing key</h3>
+	<p>
+		Short ID <code>{$signed->getShortKeyId()}</code><br>
+		Key ID <code>{$signed->getKeyId()}</code><br>
+		Fingerprint <code>{$signed->getKeyFingerprint()}</code><br>
+		<a href="{$signingKeyUrl}" target="_blank">Look the key up on a keyserver<small>{icon external-link}</small></a>
+	</p>
+	<p class="lighter">
+		Anyone can sign a file with any key, so this only says which key signed it. Ask the owner for their fingerprint and compare it with the one above. Without holding their key, the signature itself cannot be checked.
+	</p>
+	<p class="lighter">
+		The date comes out of the signature, so it is what the signer put there.
+	</p>
+</div>
 <div class="container" n:if="$allRedirects !== []">
 	<h3>Observed redirects</h3>
 	<div n:inner-foreach="$allRedirects as $originalUrl => $redirects">

@@ -137,6 +137,7 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Net\IpRanges
+	- MichalSpacekCz\Pgp\Keyserver
 	- MichalSpacekCz\Presentation\Www\Talks\TalksDefaultTemplateParametersFactory
 	- MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParametersFactory
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer)
