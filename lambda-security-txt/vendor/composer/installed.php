@@ -3,7 +3,7 @@
         'name' => 'spaze/lambda-security-txt',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '02e82e759d9c5d6cd64ef5c605e2f5c5ce71c34f',
+        'reference' => 'aa6505fc0969cc98eea8aacbc06e6a35eb3af98d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -112,7 +112,7 @@
         'spaze/lambda-security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '02e82e759d9c5d6cd64ef5c605e2f5c5ce71c34f',
+            'reference' => 'aa6505fc0969cc98eea8aacbc06e6a35eb3af98d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
