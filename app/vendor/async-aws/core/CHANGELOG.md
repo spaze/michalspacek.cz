@@ -2,6 +2,12 @@
 
 ## NOT RELEASED
 
+## 1.30.0
+
+### Added
+
+- Added `AwsClientFactory::bedrockAgentCore()`
+
 ## 1.29.2
 
 ### Fixed

@@ -12,6 +12,7 @@ use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressValidator;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory;
+use Spaze\SecurityTxt\Json\SecurityTxtJsonValueFactory;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
@@ -64,7 +65,8 @@ return function (array $event): array {
 			$gnuPgProvider = new SecurityTxtSignatureGnuPgProvider();
 			$signature = new SecurityTxtSignature($gnuPgProvider);
 			$expiresFactory = new SecurityTxtExpiresFactory();
-			$parser = new SecurityTxtParser($validator, $signature, $expiresFactory, $splitLines, $splitProvider);
+			$jsonValueFactory = new SecurityTxtJsonValueFactory();
+			$parser = new SecurityTxtParser($validator, $signature, $expiresFactory, $splitLines, $splitProvider, $jsonValueFactory);
 			$checkHostResultFactory = new SecurityTxtCheckHostResultFactory();
 			$checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory, $urlParser);
 			$checkHostResult = $checkHost->check($url, null, false, $requireTopLevelLocation, $noIpv6);

@@ -45,7 +45,7 @@ final readonly class SecurityTxtJson
 	 * What a stored result means, bumped when one stops being readable by the code that read the previous one. Not only the keys: an exception or a violation stores a class
 	 * name and the arguments its constructor was called with, bar the `$previous` exception, which is never stored and so leaves a replayed exception unchained. A decoder
 	 * replays by calling that constructor again, so renaming a class, reordering a parameter or adding a required one breaks a stored blob while `jsonSerialize()` goes on
-	 * writing the same two keys. `SecurityTxtWireContractTest` pins those signatures so such a
+	 * writing the same keys. `SecurityTxtWireContractTest` pins those signatures so such a
 	 * change has to be noticed here rather than in a consumer. Not the library version: this says
 	 * nothing about which release wrote the blob, only whether this decoder understands its shape. A consumer wanting to know which release wrote it should carry that
 	 * alongside itself, the installed version of this package say, because the two answer different questions.
@@ -53,8 +53,9 @@ final readonly class SecurityTxtJson
 	 * Bump it only when a stored blob genuinely stops being readable by the previous decoder, never to track a release, and measure that against decoders that shipped: a wire
 	 * that never made a release has no stored blobs to protect, so a change there moves nothing. A reader already fails on a break it cannot handle,
 	 * so the number costs nothing and turns `fetchResult is not set or not an array` into a sentence naming both versions; bumping it for a change an older reader could have
-	 * tolerated is what would turn a benign upgrade into a forced deploy order. What a bump should mean for a decoder that could partly understand a newer blob is issue #107,
-	 * and nothing here decides it.
+	 * tolerated is what would turn a benign upgrade into a forced deploy order. Nor is a `Base64` twin of a key the older decoder requires a break: that decoder refuses the
+	 * blob by field, and no stored blob carries a twin because none could be written. What a bump should mean for a decoder that could partly understand a newer blob is
+	 * issue #107, and nothing here decides it.
 	 */
 	public const int FORMAT_VERSION = 1;
 
@@ -78,14 +79,15 @@ final readonly class SecurityTxtJson
 			} elseif (!class_exists($violation['class'])) {
 				throw new SecurityTxtCannotParseJsonException("class {$violation['class']} doesn't exist");
 			}
-			if (!isset($violation['params']) || !is_array($violation['params'])) {
+			$params = $this->createStoredEntry($violation, 'params');
+			if (!is_array($params)) {
 				throw new SecurityTxtCannotParseJsonException('params is missing or not an array');
 			}
 			$class = $violation['class'];
 			if (!is_subclass_of($class, SecurityTxtSpecViolation::class)) {
 				throw new SecurityTxtCannotParseJsonException(sprintf("class %s doesn't extend %s", $class, SecurityTxtSpecViolation::class));
 			}
-			$objects[] = $this->createObjectFromJsonParams($class, $violation['params']);
+			$objects[] = $this->createObjectFromJsonParams($class, $params);
 		}
 		return $objects;
 	}
@@ -399,7 +401,8 @@ final readonly class SecurityTxtJson
 			throw new SecurityTxtCannotParseJsonException('redirects is not an array');
 		}
 		$redirects = $this->createRedirectsFromJsonValues($values['redirects']);
-		if (!isset($values['contents']) || !is_string($values['contents'])) {
+		$contents = $this->createStoredEntry($values, 'contents');
+		if (!is_string($contents)) {
 			throw new SecurityTxtCannotParseJsonException('contents is not a string');
 		}
 		if (!isset($values['isTruncated']) || !is_bool($values['isTruncated'])) {
@@ -415,9 +418,9 @@ final readonly class SecurityTxtJson
 			$constructedUrl,
 			$finalUrl,
 			$redirects,
-			$values['contents'],
+			$contents,
 			$values['isTruncated'],
-			$this->splitLines->splitLines($values['contents']),
+			$this->splitLines->splitLines($contents),
 			$this->createViolationsFromJsonValues(array_values($values['errors'])),
 			$this->createViolationsFromJsonValues(array_values($values['warnings'])),
 		);
@@ -471,14 +474,57 @@ final readonly class SecurityTxtJson
 		) {
 			throw new SecurityTxtCannotParseJsonException('error > class is missing, not a string or not an existing class');
 		}
-		if (!isset($values['error']['params']) || !is_array($values['error']['params'])) {
+		$params = $this->createStoredEntry($values['error'], 'params', 'error > ');
+		if (!is_array($params)) {
 			throw new SecurityTxtCannotParseJsonException('error > params is missing or not an array');
 		}
 		$class = $values['error']['class'];
 		if (!is_subclass_of($class, SecurityTxtFetcherException::class)) {
 			throw new SecurityTxtCannotParseJsonException(sprintf('The exception class %s is not a subclass of %s', $class, SecurityTxtFetcherException::class));
 		}
-		return $this->createObjectFromJsonParams($class, $values['error']['params']);
+		return $this->createObjectFromJsonParams($class, $params);
+	}
+
+
+	/**
+	 * The value under the key, or under its `Base64` twin with every string in it decoded, refused unless the Base64 is as this library writes it; null when neither is set.
+	 *
+	 * @param array<array-key, mixed> $values
+	 * @param string $path What precedes the key in a message, `error > ` say
+	 * @throws SecurityTxtCannotParseJsonException
+	 */
+	private function createStoredEntry(array $values, string $key, string $path = ''): mixed
+	{
+		$base64Key = "{$key}Base64";
+		if (array_key_exists($key, $values) && array_key_exists($base64Key, $values)) {
+			throw new SecurityTxtCannotParseJsonException("{$path}{$key} and {$base64Key} are both set");
+		}
+		if (!array_key_exists($base64Key, $values)) {
+			return $values[$key] ?? null;
+		}
+		if (!is_string($values[$base64Key]) && !is_array($values[$base64Key])) {
+			throw new SecurityTxtCannotParseJsonException("{$path}{$base64Key} is neither a string nor an array");
+		}
+		return $this->decodeBase64($values[$base64Key], $path . $base64Key);
+	}
+
+
+	/**
+	 * @throws SecurityTxtCannotParseJsonException
+	 */
+	private function decodeBase64(mixed $value, string $path): mixed
+	{
+		if (is_array($value)) {
+			return array_map(fn(mixed $item): mixed => $this->decodeBase64($item, $path), $value);
+		}
+		if (!is_string($value)) {
+			return $value;
+		}
+		$decoded = base64_decode($value, true);
+		if ($decoded === false || base64_encode($decoded) !== $value) {
+			throw new SecurityTxtCannotParseJsonException("{$path} is not Base64 as this library writes it");
+		}
+		return $decoded;
 	}
 
 
