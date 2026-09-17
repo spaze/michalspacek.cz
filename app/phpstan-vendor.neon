@@ -24,6 +24,7 @@ parameters:
 			- vendor/texy/texy/examples/*/demo-*.php  # kukulich/fshl not installed
 			- vendor/tracy/tracy/examples/*.php  # dump, bdump examples
 			- vendor/tracy/tracy/src/Bridges/Psr/*  # psr/log not installed, Psr\Log\LogLevel constants missing intentionally
+			- vendor/web-auth/cose-lib/src/Key/Ec2Key.php # throws No error with identifier classConstant.deprecated is reported
 			# Throws "No error to ignore is reported on line", which can't be ignored, probably because only custom ruleset is used
 			- vendor/async-aws/core/src/Signer/SignerV4.php
 			- vendor/brick/math/src/*.php
