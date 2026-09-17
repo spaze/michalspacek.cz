@@ -543,16 +543,16 @@
         },
         {
             "name": "spaze/security-txt",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "afee043f547ded2eb774e6c2c7c1c92cb8834bbb"
+                "reference": "6932c816d35bad49d31f50fe96beedea3cc259ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/afee043f547ded2eb774e6c2c7c1c92cb8834bbb",
-                "reference": "afee043f547ded2eb774e6c2c7c1c92cb8834bbb",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/6932c816d35bad49d31f50fe96beedea3cc259ed",
+                "reference": "6932c816d35bad49d31f50fe96beedea3cc259ed",
                 "shasum": ""
             },
             "require": {
@@ -596,22 +596,22 @@
             "description": "security.txt (RFC 9116) generator, parser, validator",
             "support": {
                 "issues": "https://github.com/spaze/security-txt/issues",
-                "source": "https://github.com/spaze/security-txt/tree/v3.0.0"
+                "source": "https://github.com/spaze/security-txt/tree/v3.1.0"
             },
-            "time": "2026-09-11T20:30:37+00:00"
+            "time": "2026-09-16T18:11:10+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v8.1.0",
+            "version": "v8.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "c4a9e58f235a6bf7f97ffbfedae2687353ac79e5"
+                "reference": "10823b09358e690df4ff943e24e8492bb1019fc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/c4a9e58f235a6bf7f97ffbfedae2687353ac79e5",
-                "reference": "c4a9e58f235a6bf7f97ffbfedae2687353ac79e5",
+                "url": "https://api.github.com/repos/symfony/process/zipball/10823b09358e690df4ff943e24e8492bb1019fc3",
+                "reference": "10823b09358e690df4ff943e24e8492bb1019fc3",
                 "shasum": ""
             },
             "require": {
@@ -643,7 +643,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v8.1.0"
+                "source": "https://github.com/symfony/process/tree/v8.1.7"
             },
             "funding": [
                 {
@@ -663,7 +663,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-29T05:06:50+00:00"
+            "time": "2026-09-02T12:40:29+00:00"
         }
     ],
     "packages-dev": [],

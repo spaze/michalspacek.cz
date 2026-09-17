@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Parser;
 
-use LogicException;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory;
 use Spaze\SecurityTxt\Fields\SecurityTxtField;
+use Spaze\SecurityTxt\Json\SecurityTxtJsonValueFactory;
 use Spaze\SecurityTxt\Parser\FieldProcessors\AcknowledgmentsAddFieldValue;
 use Spaze\SecurityTxt\Parser\FieldProcessors\BugBountyCheckMultipleFields;
 use Spaze\SecurityTxt\Parser\FieldProcessors\BugBountySetFieldValue;
@@ -63,6 +63,7 @@ final class SecurityTxtParser
 		private readonly SecurityTxtExpiresFactory $expiresFactory,
 		private readonly SecurityTxtSplitLines $splitLines,
 		private readonly SecurityTxtSplitProvider $splitProvider,
+		private readonly SecurityTxtJsonValueFactory $jsonValueFactory,
 	) {
 	}
 
@@ -127,6 +128,9 @@ final class SecurityTxtParser
 	}
 
 
+	/**
+	 * @param string|null $fileLocation The URL the file came from, in UTF-8, a stored result carries it as it is
+	 */
 	public function parseString(string $contents, ?string $fileLocation = null, ?int $expiresWarningThreshold = null, bool $strictMode = false): SecurityTxtParseStringResult
 	{
 		$this->expiresWarningThreshold = $expiresWarningThreshold;
@@ -144,11 +148,7 @@ final class SecurityTxtParser
 				$fileLocationErrors[] = $e->getViolation();
 			}
 		}
-		if (@preg_match('//u', $contents) === false) { // Intentionally silenced
-			$pregError = preg_last_error();
-			if ($pregError !== PREG_BAD_UTF8_ERROR) {
-				throw new LogicException('preg_match() failed with PCRE error code ' . $pregError);
-			}
+		if (!$this->jsonValueFactory->isUtf8($contents)) {
 			return new SecurityTxtParseStringResult(
 				$securityTxt,
 				false,

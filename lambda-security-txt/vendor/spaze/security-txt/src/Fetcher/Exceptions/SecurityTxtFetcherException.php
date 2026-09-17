@@ -7,7 +7,7 @@ use Exception;
 use JsonSerializable;
 use Override;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
-use Spaze\SecurityTxt\Json\SecurityTxtJsonValue;
+use Spaze\SecurityTxt\Json\SecurityTxtJsonValueFactory;
 use Spaze\SecurityTxt\SecurityTxtHost;
 use Spaze\SecurityTxt\SecurityTxtPrintableValue;
 use Throwable;
@@ -105,9 +105,10 @@ abstract class SecurityTxtFetcherException extends Exception implements JsonSeri
 	#[Override]
 	public function jsonSerialize(): array
 	{
+		$params = new SecurityTxtJsonValueFactory()->create('params', $this->constructorParams);
 		return [
 			'class' => $this::class,
-			'params' => array_map(fn(mixed $param): string|int|float|bool|array|null => new SecurityTxtJsonValue($param)->toValue(), $this->constructorParams),
+			$params->getKey() => $params->getValue(),
 		];
 	}
 

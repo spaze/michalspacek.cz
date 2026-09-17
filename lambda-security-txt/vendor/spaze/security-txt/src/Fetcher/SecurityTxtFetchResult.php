@@ -6,6 +6,7 @@ namespace Spaze\SecurityTxt\Fetcher;
 use JsonSerializable;
 use Override;
 use Spaze\SecurityTxt\Json\SecurityTxtJson;
+use Spaze\SecurityTxt\Json\SecurityTxtJsonValueFactory;
 use Spaze\SecurityTxt\SecurityTxtPrintableValue;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
 use Uri\WhatWg\Url;
@@ -104,6 +105,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 	#[Override]
 	public function jsonSerialize(): array
 	{
+		$contents = new SecurityTxtJsonValueFactory()->create('contents', $this->getContents());
 		return [
 			'class' => $this::class,
 			'formatVersion' => SecurityTxtJson::FORMAT_VERSION,
@@ -112,7 +114,7 @@ final readonly class SecurityTxtFetchResult implements JsonSerializable
 			'constructedUrl' => new SecurityTxtPrintableValue($this->getConstructedUrl())->render(),
 			'finalUrl' => new SecurityTxtPrintableValue($this->getFinalUrl())->render(),
 			'redirects' => array_map(fn(SecurityTxtRedirects $redirects): array => $redirects->toStrings(), $this->getRedirects()),
-			'contents' => $this->getContents(),
+			$contents->getKey() => $contents->getValue(),
 			'isTruncated' => $this->isTruncated(),
 			'errors' => $this->getErrors(),
 			'warnings' => $this->getWarnings(),
