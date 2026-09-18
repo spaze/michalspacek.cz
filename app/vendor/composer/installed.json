@@ -518,17 +518,17 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.22.0",
-            "version_normalized": "1.22.0.0",
+            "version": "1.22.1",
+            "version_normalized": "1.22.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "4e40ffd3bf9989db19403d89c4d8be44b87b8a91"
+                "reference": "f096c0e9ec8bd4691ee45394cfb77c97c6bba272"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/4e40ffd3bf9989db19403d89c4d8be44b87b8a91",
-                "reference": "4e40ffd3bf9989db19403d89c4d8be44b87b8a91",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/f096c0e9ec8bd4691ee45394cfb77c97c6bba272",
+                "reference": "f096c0e9ec8bd4691ee45394cfb77c97c6bba272",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                 "ext-pdo_sqlite": "*",
                 "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.5 || ^9.5"
             },
-            "time": "2025-10-15T12:35:09+00:00",
+            "time": "2026-09-17T09:24:44+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -576,7 +576,7 @@
             ],
             "support": {
                 "issues": "https://github.com/mlocati/ip-lib/issues",
-                "source": "https://github.com/mlocati/ip-lib/tree/1.22.0"
+                "source": "https://github.com/mlocati/ip-lib/tree/1.22.1"
             },
             "funding": [
                 {
@@ -3054,17 +3054,17 @@
         },
         {
             "name": "spaze/security-txt",
-            "version": "v3.1.0",
-            "version_normalized": "3.1.0.0",
+            "version": "v3.2.0",
+            "version_normalized": "3.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "6932c816d35bad49d31f50fe96beedea3cc259ed"
+                "reference": "6bbaa056c6d4ce05f873eb63dc53db733cbc73c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/6932c816d35bad49d31f50fe96beedea3cc259ed",
-                "reference": "6932c816d35bad49d31f50fe96beedea3cc259ed",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/6bbaa056c6d4ce05f873eb63dc53db733cbc73c3",
+                "reference": "6bbaa056c6d4ce05f873eb63dc53db733cbc73c3",
                 "shasum": ""
             },
             "require": {
@@ -3086,7 +3086,7 @@
                 "ext-curl": "To validate security.txt on remote hosts",
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2026-09-16T18:11:10+00:00",
+            "time": "2026-09-18T15:27:43+00:00",
             "bin": [
                 "bin/checksecuritytxt.php"
             ],
@@ -3110,7 +3110,7 @@
             "description": "security.txt (RFC 9116) generator, parser, validator",
             "support": {
                 "issues": "https://github.com/spaze/security-txt/issues",
-                "source": "https://github.com/spaze/security-txt/tree/v3.1.0"
+                "source": "https://github.com/spaze/security-txt/tree/v3.2.0"
             },
             "install-path": "../spaze/security-txt"
         },

@@ -22,12 +22,23 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 	public function __construct(
 		private string $userAgent = 'Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)',
 		private int $maxResponseLength = 10_000,
+		private int $timeout = 10,
+		private int $connectTimeout = 5,
 	) {
 		if (strlen($this->userAgent) === 0) {
 			throw new LogicException('userAgent must not be an empty string');
 		}
 		if ($this->maxResponseLength <= 0) {
 			throw new LogicException('maxResponseLength must be greater than 0');
+		}
+		if ($this->timeout <= 0) {
+			throw new LogicException('timeout must be greater than 0');
+		}
+		if ($this->connectTimeout <= 0) {
+			throw new LogicException('connectTimeout must be greater than 0');
+		}
+		if ($this->connectTimeout > $this->timeout) {
+			throw new LogicException('connectTimeout must not be greater than timeout (timeout is for the whole transfer, connecting included)');
 		}
 	}
 
@@ -64,10 +75,10 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 			CURLOPT_RETURNTRANSFER => false,
 			CURLOPT_FOLLOWLOCATION => false,
 			CURLOPT_FAILONERROR => false,
-			CURLOPT_CONNECTTIMEOUT => 5,
-			CURLOPT_TIMEOUT => 10,
+			CURLOPT_CONNECTTIMEOUT => $this->connectTimeout,
+			CURLOPT_TIMEOUT => $this->timeout,
 			CURLOPT_LOW_SPEED_LIMIT => 10,
-			CURLOPT_LOW_SPEED_TIME => 5,
+			CURLOPT_LOW_SPEED_TIME => $this->getLowSpeedTime(),
 			CURLOPT_SSL_VERIFYHOST => 2,
 			CURLOPT_SSL_VERIFYPEER => true,
 			CURLOPT_ENCODING => '', // '' means that the Accept-Encoding: header containing all supported encoding types is sent
@@ -149,6 +160,16 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 			$ipAddress,
 			$ipAddressType,
 		);
+	}
+
+
+	/**
+	 * Scaled down from the timeout, so a transfer that has gone quiet is given up early rather than only when the whole timeout runs out. Kept above zero because curl reads
+	 * a zero window as stall detection switched off, and capped so raising the timeout for a slow host does not also lengthen the wait on a stalled one
+	 */
+	private function getLowSpeedTime(): int
+	{
+		return min(5, max(1, intdiv($this->timeout, 2)));
 	}
 
 }
