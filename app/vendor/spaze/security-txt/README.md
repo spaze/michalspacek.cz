@@ -120,6 +120,11 @@ The value must not be empty, the constructor throws a `LogicException` if it is,
 ## Maximum file size
 The size of the file is limited when fetching the contents from remote hosts. By default, the limit is 10 000 bytes, but you can change it in `SecurityTxtFetcherCurlClient` constructor (the `$maxResponseLength` parameter). Then, when creating `SecurityTxtFetcher`, pass that customized client as its HTTP client argument together with the other constructor arguments required by `SecurityTxtFetcher`.
 
+## Timeouts
+Connecting to a host has to finish in 5 seconds and the whole transfer of one URL in 10, by default. Both are `SecurityTxtFetcherCurlClient` constructor parameters, `$connectTimeout` and `$timeout`, in seconds. Both must be greater than 0, and `$connectTimeout` must not be greater than `$timeout`, because `$timeout` covers connecting too, the constructor throws a `LogicException` otherwise. So when setting `$timeout` below 5, set `$connectTimeout` as well.
+Redirects are followed by the library and every hop gets its own timeout, so fetching one location takes at most `(1 + $maxAllowedRedirects) * $timeout` seconds, and there are two locations. To limit how long a whole check can take, set `$timeout` here and `$maxAllowedRedirects` in `SecurityTxtFetcher` together, for example `timeout: 5` and `maxAllowedRedirects: 2` gives 15 seconds per location. DNS lookups, one per hop, are not included, see [DNS lookups](#dns-lookups).
+A hop that times out throws `SecurityTxtCannotOpenUrlException`. A transfer that stalls under 10 bytes per second is given up too, after a window derived from `$timeout`, so lowering the timeout never disables that.
+
 ## Fetching restrictions
 The file is fetched from hosts you don't control, so the fetcher is restrictive by default:
 - Fetching always starts at `https://`, whatever scheme you pass in, and any username, password, query and fragment are removed from the URL first.
@@ -127,7 +132,7 @@ The file is fetched from hosts you don't control, so the fetcher is restrictive 
 - Redirects are followed by the library, not by curl, at most 5 by default. Every target goes through the same checks as the original URL.
 - The host is resolved by the library and each address is validated before connecting: private and reserved ranges are rejected, only publicly routable addresses are used. IPv6 addresses are also checked for NAT64, because those embed an IPv4 address the range check can't see: an address with the RFC 6052 well-known prefix (`64:ff9b::/96`) is rejected when the IPv4 it embeds is not public, and the RFC 8215 local-use prefix (`64:ff9b:1::/48`) is rejected as a whole.
 - curl then connects to that validated address, and the response is rejected with `SecurityTxtConnectedToWrongIpAddressException` when it turns out to have talked to a different one.
-- The certificate and the hostname are verified, and the connection times out after 5 seconds, the whole transfer after 10.
+- The certificate and the hostname are verified, and the connection times out after 5 seconds, the whole transfer after 10, both configurable, see [Timeouts](#timeouts).
 
 ## DNS lookups
 DNS resolution is handled by `SecurityTxtPhpDnsProvider`, which uses PHP's built-in `dns_get_record()`. This function has no timeout parameter, the system DNS timeout applies.

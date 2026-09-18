@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0620cff8509753b2cf72d1d8140e5069",
+    "content-hash": "e1fa074bbd73df4b93db0979b0e32a8f",
     "packages": [
         {
             "name": "async-aws/core",
@@ -503,16 +503,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.22.0",
+            "version": "1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "4e40ffd3bf9989db19403d89c4d8be44b87b8a91"
+                "reference": "f096c0e9ec8bd4691ee45394cfb77c97c6bba272"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/4e40ffd3bf9989db19403d89c4d8be44b87b8a91",
-                "reference": "4e40ffd3bf9989db19403d89c4d8be44b87b8a91",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/f096c0e9ec8bd4691ee45394cfb77c97c6bba272",
+                "reference": "f096c0e9ec8bd4691ee45394cfb77c97c6bba272",
                 "shasum": ""
             },
             "require": {
@@ -558,7 +558,7 @@
             ],
             "support": {
                 "issues": "https://github.com/mlocati/ip-lib/issues",
-                "source": "https://github.com/mlocati/ip-lib/tree/1.22.0"
+                "source": "https://github.com/mlocati/ip-lib/tree/1.22.1"
             },
             "funding": [
                 {
@@ -570,7 +570,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2025-10-15T12:35:09+00:00"
+            "time": "2026-09-17T09:24:44+00:00"
         },
         {
             "name": "nette/application",
@@ -2928,16 +2928,16 @@
         },
         {
             "name": "spaze/security-txt",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "6932c816d35bad49d31f50fe96beedea3cc259ed"
+                "reference": "6bbaa056c6d4ce05f873eb63dc53db733cbc73c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/6932c816d35bad49d31f50fe96beedea3cc259ed",
-                "reference": "6932c816d35bad49d31f50fe96beedea3cc259ed",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/6bbaa056c6d4ce05f873eb63dc53db733cbc73c3",
+                "reference": "6bbaa056c6d4ce05f873eb63dc53db733cbc73c3",
                 "shasum": ""
             },
             "require": {
@@ -2981,9 +2981,9 @@
             "description": "security.txt (RFC 9116) generator, parser, validator",
             "support": {
                 "issues": "https://github.com/spaze/security-txt/issues",
-                "source": "https://github.com/spaze/security-txt/tree/v3.1.0"
+                "source": "https://github.com/spaze/security-txt/tree/v3.2.0"
             },
-            "time": "2026-09-16T18:11:10+00:00"
+            "time": "2026-09-18T15:27:43+00:00"
         },
         {
             "name": "spaze/sri-macros",
