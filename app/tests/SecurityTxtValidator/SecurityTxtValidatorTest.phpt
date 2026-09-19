@@ -14,6 +14,7 @@ use MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraIcon;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc;
 use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Json;
@@ -21,8 +22,10 @@ use Override;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetchResult;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
+use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\SecurityTxtHost;
 use Tester\Assert;
@@ -43,6 +46,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		private readonly SecurityTxtSplitLines $splitLines,
 		private readonly DateTimeMachineFactoryUtc $dateTime,
 		private readonly NoOpTranslator $translator,
+		private readonly NullLogger $logger,
 	) {
 	}
 
@@ -87,6 +91,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->dateTime->setDateTime(null);
 		$this->fetch->reset();
 		$this->translator->reset();
+		$this->logger->reset();
 	}
 
 
@@ -535,6 +540,37 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::contains('# Kontakt: Michal ' . $replacement . 'pa' . $replacement . 'ek', (string)$template->contents);
 		Assert::count(1, $template->fileErrors);
 		Assert::same('The file content is not encoded in <code>UTF-8</code>', (string)$template->fileErrors[0]->getMessage());
+	}
+
+
+	/**
+	 * The whole chain goes into the log, not only that the max redirects setting was hit, because where a host was
+	 * heading is what says whether one more redirect would have got there.
+	 */
+	public function testRunningOutOfRedirectsIsLoggedWithTheChain(): void
+	{
+		$this->fetch->willThrow(new SecurityTxtTooManyRedirectsException(
+			new Url('https://www.example.com/en/'),
+			new SecurityTxtRedirects('https://example.com/.well-known/security.txt', 'https://www.example.com/.well-known/security.txt', 'https://www.example.com/'),
+			3,
+		));
+		$template = $this->validator->validate('https://example.com');
+		Assert::contains('too many redirects', (string)$template->errorMessage);
+		Assert::same(
+			["example.com: Can't read https://www.example.com/en/, too many redirects, max allowed is 3 (redirects: https://example.com/.well-known/security.txt \u{2192} https://www.example.com/.well-known/security.txt \u{2192} https://www.example.com/, the last one not loaded)"],
+			$this->logger->getLogged(),
+		);
+	}
+
+
+	/**
+	 * Not finding the file is the common verdict, and logging every one of those would bury whatever else is in the log.
+	 */
+	public function testNotFindingTheFileIsNotLogged(): void
+	{
+		$this->fetch->willThrow($this->notFound());
+		$this->validator->validate('https://example.com');
+		Assert::same([], $this->logger->getLogged());
 	}
 
 }

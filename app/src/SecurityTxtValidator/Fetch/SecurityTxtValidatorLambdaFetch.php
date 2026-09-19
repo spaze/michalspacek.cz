@@ -31,6 +31,9 @@ readonly final class SecurityTxtValidatorLambdaFetch implements SecurityTxtValid
 		private SecurityTxtValidatorLogger $logger,
 		private bool $noIpv6,
 		private string $userAgent,
+		private int $timeout,
+		private int $connectTimeout,
+		private int $maxAllowedRedirects,
 	) {
 	}
 
@@ -70,6 +73,9 @@ readonly final class SecurityTxtValidatorLambdaFetch implements SecurityTxtValid
 				'requireTopLevelLocation' => $requireTopLevelLocation,
 				'noIpv6' => $this->noIpv6,
 				'userAgent' => $this->userAgent,
+				'timeout' => $this->timeout,
+				'connectTimeout' => $this->connectTimeout,
+				'maxAllowedRedirects' => $this->maxAllowedRedirects,
 			]),
 		]);
 		$json = $lambdaResult->getPayload();

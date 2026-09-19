@@ -43,7 +43,7 @@ final class SecurityTxtValidatorLambdaFetchTest extends TestCase
 	}
 
 
-	private function createFetch(SimpleMockedResponse $response): SecurityTxtValidatorLambdaFetch
+	private function createFetch(SimpleMockedResponse $response, int $timeout = 5, int $connectTimeout = 2, int $maxAllowedRedirects = 2): SecurityTxtValidatorLambdaFetch
 	{
 		$httpClient = new MockHttpClient(function (string $method, string $url, array $options) use ($response): SimpleMockedResponse {
 			$body = $options['body'] ?? null;
@@ -61,6 +61,9 @@ final class SecurityTxtValidatorLambdaFetchTest extends TestCase
 			$this->logger,
 			true,
 			'spaze/security-txt',
+			$timeout,
+			$connectTimeout,
+			$maxAllowedRedirects,
 		);
 	}
 
@@ -84,6 +87,31 @@ final class SecurityTxtValidatorLambdaFetchTest extends TestCase
 		$payload = Json::decode($this->sentBody, true);
 		assert(is_array($payload));
 		Assert::same('https://xn--khby.example/', $payload['host']);
+	}
+
+
+	/**
+	 * How long a check may take is decided in the app and used in the Lambda, so it travels in the payload the way the
+	 * user agent does. A fetcher left on the library's own limits would give a location longer than the app asked for,
+	 * and nothing about the reply would look wrong. Asserted against what this test passed in, so the two cannot drift
+	 * apart, and against values the app does not use, so agreeing by chance is not possible.
+	 */
+	public function testFetchSendsWhatBoundsTheFetch(): void
+	{
+		$timeout = 3;
+		$connectTimeout = 1;
+		$maxAllowedRedirects = 4;
+		$fetch = $this->createFetch(new SimpleMockedResponse('', ['x-amz-function-error' => ['Nope']], 202), $timeout, $connectTimeout, $maxAllowedRedirects);
+		Assert::exception(function () use ($fetch): void {
+			$fetch->fetch($this->validatorHost->getHost('https://example.com/'), false);
+		}, SecurityTxtValidatorException::class);
+
+		assert(is_string($this->sentBody));
+		$payload = Json::decode($this->sentBody, true);
+		assert(is_array($payload));
+		Assert::same($timeout, $payload['timeout']);
+		Assert::same($connectTimeout, $payload['connectTimeout']);
+		Assert::same($maxAllowedRedirects, $payload['maxAllowedRedirects']);
 	}
 
 

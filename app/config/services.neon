@@ -151,7 +151,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer)
 	- MichalSpacekCz\SecurityTxt\SecurityTxtResponse(dirs: %securityTxtDirs%)
-	securityTxtValidatorFetch: MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorLambdaFetch(lambdaClient: @securityTxtValidatorLambdaClient, noIpv6: true, userAgent: %securityTxtValidator.userAgent%)
+	securityTxtValidatorFetch: MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorLambdaFetch(lambdaClient: @securityTxtValidatorLambdaClient, noIpv6: true, userAgent: %securityTxtValidator.userAgent%, timeout: %securityTxtValidator.fetchTimeout%, connectTimeout: %securityTxtValidator.fetchConnectTimeout%, maxAllowedRedirects: %securityTxtValidator.fetchMaxRedirects%)
 	- MichalSpacekCz\SecurityTxtValidator\Account\SecurityTxtValidatorAccount(accountFeatureEnabled: %securityTxtValidator.accountFeatureEnabled%)
 	- MichalSpacekCz\SecurityTxtValidator\Forms\CheckLambdaVersionFormFactory
 	- MichalSpacekCz\SecurityTxtValidator\Forms\ClearCacheFormFactory
@@ -262,8 +262,8 @@ services:
 	securityEventEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.securityEvent%, %encryption.activeKeyIds.securityEvent%, %encryption.keyPrefixes.securityEvent%)
 	- Spaze\SecurityTxt\Check\SecurityTxtCheckHostResultFactory
 	- Spaze\SecurityTxt\Fetcher\DnsLookup\SecurityTxtPhpDnsProvider
-	- Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherCurlClient(%securityTxtValidator.userAgent%)
-	- Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher
+	- Spaze\SecurityTxt\Fetcher\HttpClients\SecurityTxtFetcherCurlClient(%securityTxtValidator.userAgent%, timeout: %securityTxtValidator.fetchTimeout%, connectTimeout: %securityTxtValidator.fetchConnectTimeout%)
+	- Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher(maxAllowedRedirects: %securityTxtValidator.fetchMaxRedirects%)
 	- Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressValidator
 	- Spaze\SecurityTxt\Fields\SecurityTxtExpiresFactory
 	- Spaze\SecurityTxt\Json\SecurityTxtJson

@@ -71,6 +71,9 @@ parameters:
 				input: [type, name, value]
 	securityTxtValidator:
 		userAgent: spaze/security-txt
+		fetchTimeout: 4
+		fetchConnectTimeout: 2
+		fetchMaxRedirects: 3
 		policyCacheTtl: "5 minutes"
 		timeBetweenFetches: "30 seconds"
 		lambdaStage: "prod"

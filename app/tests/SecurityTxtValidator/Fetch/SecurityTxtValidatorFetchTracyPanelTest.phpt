@@ -48,7 +48,7 @@ final class SecurityTxtValidatorFetchTracyPanelTest extends TestCase
 		$names = explode('\\', $directFetch::class);
 		Assert::contains($names[array_key_last($names)], $panel->getPanel());
 
-		$lambdaFetch = new SecurityTxtValidatorLambdaFetch($this->lambdaClient, $this->lambdaResponse, $this->lambdaFunctions, $this->securityTxtJson, $this->lambdaVersionCheck, $this->validatorLogger, true, 'wget/1.2.3');
+		$lambdaFetch = new SecurityTxtValidatorLambdaFetch($this->lambdaClient, $this->lambdaResponse, $this->lambdaFunctions, $this->securityTxtJson, $this->lambdaVersionCheck, $this->validatorLogger, true, 'wget/1.2.3', 5, 2, 2);
 		$panel = new SecurityTxtValidatorFetchTracyPanel($lambdaFetch, new SvgIcons(__DIR__ . '/../../../node_modules/humbleicons/icons'));
 		Assert::contains('AWS λ fetch', $panel->getTab());
 		$names = explode('\\', $lambdaFetch::class);
