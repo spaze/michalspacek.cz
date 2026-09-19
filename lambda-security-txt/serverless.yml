@@ -14,10 +14,18 @@ functions:
         handler: src/fetch.php
         description: 'Fetch security.txt and return SecurityTxtFetchResult'
         runtime: php-85
+        # Above what the fetcher's own limits add up to, so curl gives up before this function is killed: both
+        # locations are fetched, each may follow `fetchMaxRedirects` redirects, and every request gets `fetchTimeout`
+        # seconds, with headroom for the DNS lookup made before each request, which has no limit of its own. A curl
+        # timeout arrives as an exception the app stores against the host and counts towards its rate limit; a killed
+        # function arrives as an invocation error the app cannot store, leaving nothing to rate limit. A test in the app
+        # keeps this above the sum
+        timeout: 40
     version:
         handler: src/version.php
         description: 'Return the installed library version number and reference'
         runtime: php-85
+        timeout: 5
 
 package:
     patterns:

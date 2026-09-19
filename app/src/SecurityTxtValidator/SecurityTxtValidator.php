@@ -32,6 +32,7 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvali
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Spaze\SecurityTxt\Json\SecurityTxtJson;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
@@ -114,6 +115,9 @@ final readonly class SecurityTxtValidator
 			$template->allRedirects = $e->getAllRedirects();
 			$this->addIpRangeNames($e, $errorMessage);
 		} catch (SecurityTxtFetcherException $e) {
+			if ($e instanceof SecurityTxtTooManyRedirectsException) {
+				$this->logger->log($host, $e->getMessage());
+			}
 			$this->templateParametersEnricher->addErrorMessageAndLogo($template, $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues()));
 		} catch (Throwable $e) {
 			Debugger::log($e, Debugger::EXCEPTION);
