@@ -24,7 +24,7 @@ use Spaze\SecurityTxt\Validator\SecurityTxtValidator;
 require __DIR__ . '/../vendor/autoload.php';
 
 /**
- * @param array{host:string, userAgent:string} $event
+ * @param array{host:string, userAgent:string, timeout:int, connectTimeout:int} $event
  * @return array{status:string, fetchResult?:SecurityTxtFetchResult, checkHostResult?:SecurityTxtCheckHostResult, error?:SecurityTxtFetcherException}
  */
 return function (array $event): array {
@@ -40,7 +40,21 @@ return function (array $event): array {
 	if (!is_string($event['userAgent'])) {
 		throw new RuntimeException('The userAgent parameter is not a string');
 	}
-	$curlClient = new SecurityTxtFetcherCurlClient($event['userAgent']);
+	if (!isset($event['timeout'])) {
+		throw new RuntimeException('Missing timeout parameter');
+	}
+	if (!is_int($event['timeout'])) {
+		throw new RuntimeException('The timeout parameter is not an int');
+	}
+	if (!isset($event['connectTimeout'])) {
+		throw new RuntimeException('Missing connectTimeout parameter');
+	}
+	if (!is_int($event['connectTimeout'])) {
+		throw new RuntimeException('The connectTimeout parameter is not an int');
+	}
+	// Null leaves the number to the library rather than keeping a copy of its default here
+	$maxAllowedRedirects = isset($event['maxAllowedRedirects']) && is_int($event['maxAllowedRedirects']) && $event['maxAllowedRedirects'] >= 0 ? $event['maxAllowedRedirects'] : null;
+	$curlClient = new SecurityTxtFetcherCurlClient($event['userAgent'], timeout: $event['timeout'], connectTimeout: $event['connectTimeout']);
 	$urlParser = new SecurityTxtUrlParser();
 	$splitProvider = new SecurityTxtPregSplitProvider();
 	$splitLines = new SecurityTxtSplitLines($splitProvider);
@@ -59,7 +73,7 @@ return function (array $event): array {
 		$url = $urlParser->getUrl($event['host']);
 		if ($fetchResultOnly) {
 			$checkHostResult = null;
-			$fetchResult = $fetcher->fetch($url, $requireTopLevelLocation, $noIpv6);
+			$fetchResult = $fetcher->fetch($url, $requireTopLevelLocation, $noIpv6, $maxAllowedRedirects);
 		} else {
 			$validator = new SecurityTxtValidator();
 			$gnuPgProvider = new SecurityTxtSignatureGnuPgProvider();
@@ -69,7 +83,7 @@ return function (array $event): array {
 			$parser = new SecurityTxtParser($validator, $signature, $expiresFactory, $splitLines, $splitProvider, $jsonValueFactory);
 			$checkHostResultFactory = new SecurityTxtCheckHostResultFactory();
 			$checkHost = new SecurityTxtCheckHost($parser, $fetcher, $checkHostResultFactory, $urlParser);
-			$checkHostResult = $checkHost->check($url, null, false, $requireTopLevelLocation, $noIpv6);
+			$checkHostResult = $checkHost->check($url, null, false, $requireTopLevelLocation, $noIpv6, $maxAllowedRedirects);
 			$fetchResult = $checkHostResult->getFetchResult();
 		}
 		return $libVersion + [

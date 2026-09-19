@@ -14,10 +14,15 @@ functions:
         handler: src/fetch.php
         description: 'Fetch security.txt and return SecurityTxtFetchResult'
         runtime: php-85
+        # Higher than the fetcher's own limit on purpose, so curl gives up before this function is killed. A curl
+        # timeout arrives as an exception the app stores against the host and counts towards its rate limit; a killed
+        # function arrives as an invocation error the app cannot store, leaving nothing to rate limit
+        timeout: 35
     version:
         handler: src/version.php
         description: 'Return the installed library version number and reference'
         runtime: php-85
+        timeout: 5
 
 package:
     patterns:
