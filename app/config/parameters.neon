@@ -33,6 +33,7 @@ parameters:
 		imagesRoot: i/images
 		locationRoot: /srv/www/michalspacek.cz/app/public/www.michalspacek.cz
 	securityTxtDirs:
+			securitytxtvalidator.com: securitytxtvalidator.com
 			upcwifikeys.com: upcwifikeys.com
 			www.michalspacek.com: www.michalspacek.com
 			www.michalspacek.cz: www.michalspacek.cz

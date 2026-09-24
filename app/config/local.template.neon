@@ -67,6 +67,7 @@ parameters:
 			com: michalspacek.com.test
 
 	securityTxtDirs:
+			securitytxtvalidator.com.test: securitytxtvalidator.com
 			www.michalspacek.cz.test: www.michalspacek.cz
 
 	mail:
