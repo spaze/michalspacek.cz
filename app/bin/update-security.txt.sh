@@ -17,11 +17,18 @@ function update() {
 	UPDATED_NAME=$1-updated
 	SIGNED_NAME=$UPDATED_NAME-signed
 
-	# Update the date and remove the PGP headers and signature
-	sed "s/Expires: .*/Expires: $NEW_EXPIRES/" "$1" | head --lines=-16 | tail --lines=+4 > "$UPDATED_NAME"
+	# Remove the PGP headers and signature and update the date
+	gpg --decrypt --output - "$1" 2>/dev/null | sed "s/Expires: .*/Expires: $NEW_EXPIRES/" > "$UPDATED_NAME"
+	if ! [ -s "$UPDATED_NAME" ]; then
+		echo "[${COLOR_RED}Error${COLOR_NORMAL}] gpg cannot read the signed text in $1, leaving it as it is"
+		rm "$UPDATED_NAME"
+		return
+	fi
 	echo "[${COLOR_GREEN}Updated${COLOR_NORMAL}] Expires in $1 updated to $NEW_EXPIRES"
 
-	gpg --clear-sign --output "$SIGNED_NAME" "$UPDATED_NAME"
+	# Without the no-manu compatibility flag, a newer GPG adds the manu notation saying which GPG on which system made the signature,
+	# and nothing that reads a security.txt needs to know that. An older GPG that does not know the flag, says so and carries on
+	gpg --compatibility-flags no-manu --clear-sign --output "$SIGNED_NAME" "$UPDATED_NAME"
 	mv "$SIGNED_NAME" "$1"
 	rm "$UPDATED_NAME"
 	echo "[${COLOR_GREEN}Signed${COLOR_NORMAL}] $1"
