@@ -51,6 +51,7 @@ parameters:
 	securityTxtValidator:
 		responseTtl: "5 minutes"
 		timeBetweenFetches: "30 seconds"
+		responseDeleteAfter: "1 month"
 services:
 	garbageCollectorRunner: MichalSpacekCz\GarbageCollector\GarbageCollectorRunner(lockFilePath: %tempDir%/tests/garbageCollectorRunner.lock)
 	integrityPolicy: MichalSpacekCz\Test\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyMock
