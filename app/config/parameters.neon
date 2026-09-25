@@ -77,6 +77,7 @@ parameters:
 		fetchMaxRedirects: 3
 		responseTtl: "5 minutes"
 		timeBetweenFetches: "30 seconds"
+		responseDeleteAfter: "1 month"
 		lambdaStage: "prod"
 		gnupgHome: /home/keymaker/.gnupg
 		accountFeatureEnabled: false

@@ -163,6 +163,7 @@ services:
 	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionCheck(@database.securityTxtValidator.explorer)
 	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessageFactory
 	- MichalSpacekCz\SecurityTxtValidator\LibraryVersions(@database.securityTxtValidator.explorer)
+	- MichalSpacekCz\SecurityTxtValidator\ResponsesGarbageCollector(@database.securityTxtValidator.explorer, deleteAfter: %securityTxtValidator.responseDeleteAfter%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtLibraryVersion
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, responseTtl: %securityTxtValidator.responseTtl%, timeBetweenFetches: %securityTxtValidator.timeBetweenFetches%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger
