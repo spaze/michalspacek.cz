@@ -58,7 +58,7 @@ final class DateTimeFactoryTest extends TestCase
 			Assert::fail('Exception is of a wrong type ' . get_debug_type($e));
 		} else {
 			$previous = $e->getPrevious();
-			if (!$previous instanceof InvalidTimeZoneException) {
+			if (!$previous instanceof InvalidTimezoneException) {
 				Assert::fail('Previous exception is of a wrong type ' . get_debug_type($previous));
 			} else {
 				Assert::same("Invalid timezone 'Europe/Brno'", $previous->getMessage());
