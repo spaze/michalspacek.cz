@@ -113,7 +113,7 @@ final readonly class SecurityTxtValidator
 			$errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
 			$this->templateParametersEnricher->addErrorMessageAndLogo($template, $errorMessage);
 			$template->allRedirects = $e->getAllRedirects();
-			$this->addIpRangeNames($e, $errorMessage);
+			$this->addIpRangeNames($host, $e, $errorMessage);
 		} catch (SecurityTxtFetcherException $e) {
 			if ($e instanceof SecurityTxtTooManyRedirectsException) {
 				$this->logger->log($host, $e->getMessage());
@@ -366,16 +366,21 @@ final readonly class SecurityTxtValidator
 	}
 
 
-	private function addIpRangeNames(SecurityTxtNotFoundException $e, Html $errorMessage): void
+	private function addIpRangeNames(string $host, SecurityTxtNotFoundException $e, Html $errorMessage): void
 	{
 		$rangeNames = [];
-		foreach ($e->getIpAddresses() as $ipAddress => $typeAndCode) {
-			if ($typeAndCode[1] === IResponse::S403_Forbidden) {
-				$ipRange = $this->ipRanges->getRangeName($ipAddress, $typeAndCode[0] === SecurityTxtIpAddressType::V6 ? IpAddressType::V6 : IpAddressType::V4);
-				if ($ipRange !== null) {
-					$rangeNames[$ipAddress] = $ipRange;
+		try {
+			foreach ($e->getIpAddresses() as $ipAddress => $typeAndCode) {
+				if ($typeAndCode[1] === IResponse::S403_Forbidden) {
+					$ipRange = $this->ipRanges->getRangeName($ipAddress, $typeAndCode[0] === SecurityTxtIpAddressType::V6 ? IpAddressType::V6 : IpAddressType::V4);
+					if ($ipRange !== null) {
+						$rangeNames[$ipAddress] = $ipRange;
+					}
 				}
 			}
+		} catch (Throwable $lookupFailure) {
+			$this->logger->logException($host, $lookupFailure);
+			return;
 		}
 		if ($rangeNames === []) {
 			return;

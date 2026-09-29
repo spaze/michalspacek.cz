@@ -19,6 +19,7 @@ use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Json;
 use Override;
+use RuntimeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
@@ -315,6 +316,24 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::same($live->allRedirects, $cached->allRedirects);
 		// And getIpAddresses() did too: the range lookup only runs for an address the exception still knows about
 		Assert::notSame([], $this->database->getParamsForQueryContaining('FROM ip_ranges r'));
+	}
+
+
+	/**
+	 * The provider's name is an extra on a not-found message that is complete without it, so the lookup failing must
+	 * not turn the host's answer into an apology about our database.
+	 */
+	public function testADatabaseFailureWhileNamingTheProviderKeepsTheNotFoundAnswer(): void
+	{
+		$this->fetch->willThrow($this->notFound());
+		$this->fetch->whileFetching(function (): void {
+			$this->database->willThrowOnRead(new RuntimeException('Database gone'));
+		});
+		$template = $this->validator->validate('https://example.com');
+		$message = (string)$template->errorMessage;
+		Assert::contains("Can't read <code>security.txt</code>", $message); // the host's answer, as it reads with the lookup working
+		Assert::notContains('known provider', $message);
+		Assert::same(['example.com: Database gone'], $this->logger->getLogged());
 	}
 
 
