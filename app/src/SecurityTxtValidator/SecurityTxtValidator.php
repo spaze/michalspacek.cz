@@ -17,6 +17,9 @@ use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorFetchFail
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorHostException;
 use MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorFetch;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter;
+use MichalSpacekCz\SecurityTxtValidator\Statistics\FileStatistics;
+use MichalSpacekCz\SecurityTxtValidator\Statistics\Statistics;
+use MichalSpacekCz\SecurityTxtValidator\Statistics\StatisticsVolume;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher;
 use Nette\Database\Explorer;
@@ -76,6 +79,8 @@ final readonly class SecurityTxtValidator
 		private IpRanges $ipRanges,
 		private SecurityTxtLibraryVersion $libraryVersion,
 		private LibraryVersions $libraryVersions,
+		private FileStatistics $fileStatistics,
+		private Statistics $statistics,
 		private string $responseTtl,
 		private string $timeBetweenFetches,
 	) {
@@ -157,7 +162,7 @@ final readonly class SecurityTxtValidator
 			$now->modify("-{$this->responseTtl}"),
 		);
 		$fetchAllowedIn = $this->fetchAllowedIn($url, $now);
-		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $fetchAllowedIn)) {
+		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $fetchAllowedIn, false)) {
 			return;
 		}
 
@@ -177,11 +182,9 @@ final readonly class SecurityTxtValidator
 				$asciiHost,
 				$port,
 			);
-			$template->isStale = true; // set before, so a row that turns out to be unreadable does not leave it claiming otherwise
-			if ($stale !== null && $this->addStoredResponse($host, $stale, $template, $now, $fetchAllowedIn)) {
+			if ($stale !== null && $this->addStoredResponse($host, $stale, $template, $now, $fetchAllowedIn, true)) {
 				return;
 			}
-			$template->isStale = false;
 			// Nothing stored either, so this host was fetched a moment ago with a different port or scheme
 			$this->templateParametersEnricher->addFetchedTooRecently($template, $host, $fetchAllowedIn);
 			return;
@@ -196,6 +199,7 @@ final readonly class SecurityTxtValidator
 			try {
 				if (!in_array($fetcherException::class, self::NOT_THE_HOSTS_RESPONSE, true)) {
 					$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $fetcherException]), $e->getFetcherVersion());
+					$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forFetchFailure($fetcherException));
 				}
 			} catch (Throwable $cacheFailure) {
 				// Failing to write the response down is ours to deal with, and throwing from here would throw away the
@@ -212,6 +216,7 @@ final readonly class SecurityTxtValidator
 		// Stored before the template is filled in, so a write that fails cannot leave the page showing a whole result
 		// with an error banner over it
 		$this->store($scheme, $asciiHost, $port, $fetchedAt, Json::encode($checkHostResult), $response->getFetcherVersion());
+		$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forCheckHostResult($checkHostResult));
 		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
 	}
 
@@ -245,6 +250,7 @@ final readonly class SecurityTxtValidator
 		ValidationResultTemplateParameters $template,
 		DateTimeImmutable $now,
 		?DateInterval $fetchAllowedIn,
+		bool $isStale,
 	): bool {
 		assert(is_string($result->checkResult));
 		assert($result->fetchTime instanceof DateTime);
@@ -253,8 +259,11 @@ final readonly class SecurityTxtValidator
 			if (is_array($decoded)) {
 				$fetchTime = $this->dateTimeFactory->createFrom($result->fetchTime);
 				if (isset($decoded['error'])) {
+					$storedFailure = $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
 					$this->templateParametersEnricher->addCacheTiming($template, $fetchTime, $now->diff($fetchTime), $fetchAllowedIn);
-					throw $this->securityTxtJson->createFetcherExceptionFromJsonValues($decoded);
+					$template->isStale = $isStale;
+					$this->statistics->increment($isStale ? StatisticsVolume::Stale : StatisticsVolume::Cached);
+					throw $storedFailure;
 				}
 				$this->templateParametersEnricher->addFromCheckHostResult(
 					$template,
@@ -263,6 +272,8 @@ final readonly class SecurityTxtValidator
 					$now->diff($fetchTime),
 					$fetchAllowedIn,
 				);
+				$template->isStale = $isStale;
+				$this->statistics->increment($isStale ? StatisticsVolume::Stale : StatisticsVolume::Cached);
 				return true;
 			}
 			$this->logger->log($host, "Ignoring cached policy, not an array: {$result->checkResult}");
@@ -420,6 +431,7 @@ final readonly class SecurityTxtValidator
 	{
 		$parseStringResult = $this->securityTxtParser->parseString($input);
 		$this->templateParametersEnricher->addFromParseStringResult($templateParameters, $parseStringResult, $input);
+		$this->statistics->increment(StatisticsVolume::Pasted, ...$this->fileStatistics->forParseStringResult($parseStringResult));
 	}
 
 }
