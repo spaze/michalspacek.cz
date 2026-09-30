@@ -168,6 +168,8 @@ services:
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, responseTtl: %securityTxtValidator.responseTtl%, timeBetweenFetches: %securityTxtValidator.timeBetweenFetches%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorHost
+	- MichalSpacekCz\SecurityTxtValidator\Statistics\ResponseStatistics
+	- MichalSpacekCz\SecurityTxtValidator\Statistics\Statistics(@database.securityTxtValidator.explorer)
 	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher
 	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultFactory
 	- MichalSpacekCz\Tags\Tags

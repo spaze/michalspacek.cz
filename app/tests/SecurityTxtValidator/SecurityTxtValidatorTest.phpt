@@ -11,6 +11,7 @@ use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraCssClass;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\LogoExtraIcon;
+use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc;
 use MichalSpacekCz\Test\NoOpTranslator;
@@ -247,6 +248,98 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->validator->validate('https://example.com');
 		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
 		Assert::count(1, $written); // the values of the new row, and no second set for an existing one
+	}
+
+
+	/**
+	 * The counters say how the files out there are doing and not whose, so a response is counted under the day and
+	 * what it said, and the host goes nowhere near the table.
+	 */
+	public function testAFetchedResponseIsCountedUnderWhatItSaidAndNotWhoSaidIt(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$counted = $this->database->getParamsArrayForQuery('INSERT INTO statistics');
+		Assert::same([[
+			['day' => '2025-05-01', 'metric' => 'volume', 'bucket' => 'fetched', 'count' => 1],
+			['day' => '2025-05-01', 'metric' => 'verdict', 'bucket' => 'invalid', 'count' => 1],
+			['day' => '2025-05-01', 'metric' => 'issue', 'bucket' => 'SecurityTxtNoExpires', 'count' => 1],
+		]], $counted);
+		Assert::notContains('example.com', Json::encode($counted));
+	}
+
+
+	public function testAStoredFailureIsCountedAsFetchedAndByWhatWentWrong(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$this->fetch->willThrow($this->notFound());
+		$this->validator->validate('https://example.com');
+		Assert::same([[
+			['day' => '2025-05-01', 'metric' => 'volume', 'bucket' => 'fetched', 'count' => 1],
+			['day' => '2025-05-01', 'metric' => 'verdict', 'bucket' => 'not_found', 'count' => 1],
+		]], $this->database->getParamsArrayForQuery('INSERT INTO statistics'));
+	}
+
+
+	/**
+	 * What a stored response says was counted when it was fetched, so serving it again counts only the serving, and
+	 * the same way whether what was stored is a result or a failure.
+	 */
+	public function testAResponseServedFromTheStoreIsCountedAsCachedWhateverItSays(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$counted = [];
+		foreach (['a result' => null, 'a failure' => $this->hostNotFound()] as $name => $failure) {
+			$this->database->reset();
+			$this->fetch->reset();
+			if ($failure === null) {
+				$this->fetch->setFetchResult($this->fetchResult());
+			} else {
+				$this->fetch->willThrow($failure);
+			}
+			$this->validator->validate('https://example.com');
+			$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+			assert(is_string($written[0]['check_result']));
+			$this->database->reset();
+			$this->database->addFetchResult([
+				'fetchTime' => new DateTime($this->dateTime->getNow()->format(DateTimeFormat::MYSQL)),
+				'checkResult' => $written[0]['check_result'],
+			]);
+			$this->validator->validate('https://example.com');
+			$counted[$name] = $this->database->getParamsArrayForQuery('INSERT INTO statistics');
+		}
+		$cached = [[['day' => '2025-05-01', 'metric' => 'volume', 'bucket' => 'cached', 'count' => 1]]];
+		Assert::same(['a result' => $cached, 'a failure' => $cached], $counted);
+	}
+
+
+	/**
+	 * The counters describe the hosts, so a failure that is ours, which is not stored as the host's response either,
+	 * is not counted as one.
+	 */
+	public function testAFailureThatIsOursIsNotCountedAsTheHostsResponse(): void
+	{
+		$failures = [
+			'our runtime' => new SecurityTxtCannotOpenUrlExtensionNotLoadedException(new Url('https://example.com/.well-known/security.txt')),
+			'our fetcher' => new SecurityTxtValidatorException('Lambda is having a day'),
+		];
+		$counted = [];
+		foreach ($failures as $name => $failure) {
+			$this->database->reset();
+			$this->fetch->willThrow($failure);
+			$this->validator->validate('https://example.com');
+			$counted[$name] = $this->database->getParamsArrayForQuery('INSERT INTO statistics');
+		}
+		Assert::same(['our runtime' => [], 'our fetcher' => []], $counted);
+	}
+
+
+	public function testAPastedFileIsCountedAsPastedAndNothingElse(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$this->validator->validateDirectInput("Contact: mailto:security@example.com\n", new ValidationResultTemplateParameters());
+		Assert::same([[['day' => '2025-05-01', 'metric' => 'volume', 'bucket' => 'pasted', 'count' => 1]]], $this->database->getParamsArrayForQuery('INSERT INTO statistics'));
 	}
 
 
@@ -507,6 +600,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::notNull($stale->downloadedAgo); // saying how old it is
 		Assert::true($stale->isStale); // and saying that is what it is, rather than claiming to be cached and current
 		Assert::null($stale->errorMessage);
+		Assert::same([[['day' => '2025-05-01', 'metric' => 'volume', 'bucket' => 'stale', 'count' => 1]]], $this->database->getParamsArrayForQuery('INSERT INTO statistics'));
 	}
 
 

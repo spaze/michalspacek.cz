@@ -26,6 +26,14 @@ CREATE TABLE `responses` (
   CONSTRAINT `responses_ibfk_2` FOREIGN KEY (`key_fetcher_library_version`) REFERENCES `library_versions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `statistics` (
+  `day` date NOT NULL,
+  `metric` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `bucket` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `count` int unsigned NOT NULL,
+  PRIMARY KEY (`day`,`metric`,`bucket`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `version_check` (
   `id` int NOT NULL AUTO_INCREMENT,
   `last_check` datetime NOT NULL,
