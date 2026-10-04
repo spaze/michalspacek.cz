@@ -23,6 +23,13 @@ final class Database extends Explorer
 	/** @var Exception|(Closure(): Exception)|null */
 	private Exception|Closure|null $willThrowOnRead = null;
 
+	private ?string $willThrowOnQueryStartingWith = null;
+
+	private ?Exception $willThrowOnQuery = null;
+
+	/** @var list<string> */
+	private array $queries = [];
+
 	private string $defaultInsertId = '';
 
 	/** @var list<string> */
@@ -81,6 +88,17 @@ final class Database extends Explorer
 	}
 
 
+	/**
+	 * Throws from query() for every statement starting with the given text, and from nothing else, for a test that
+	 * needs one particular write to fail while the ones around it go through.
+	 */
+	public function willThrowOnQuery(string $sqlStartingWith, Exception $e): void
+	{
+		$this->willThrowOnQueryStartingWith = $sqlStartingWith;
+		$this->willThrowOnQuery = $e;
+	}
+
+
 	private function maybeThrowOnRead(): void
 	{
 		if ($this->willThrowOnRead !== null) {
@@ -109,8 +127,11 @@ final class Database extends Explorer
 		$this->fetchAllResults = [];
 		$this->fetchAllResultsPosition = 0;
 		$this->resultSet = null;
+		$this->queries = [];
 		$this->wontThrow();
 		$this->willThrowOnRead = null;
+		$this->willThrowOnQueryStartingWith = null;
+		$this->willThrowOnQuery = null;
 		$this->transactionStatus = DatabaseTransactionStatus::None;
 	}
 
@@ -163,6 +184,13 @@ final class Database extends Explorer
 	public function query(string $sql, ...$params): ResultSet
 	{
 		$this->maybeThrow();
+		if (
+			$this->willThrowOnQuery !== null
+			&& $this->willThrowOnQueryStartingWith !== null
+			&& str_starts_with($sql, $this->willThrowOnQueryStartingWith)
+		) {
+			throw $this->willThrowOnQuery;
+		}
 		$this->recordParams($sql, $params);
 		return $this->resultSet ?? new ResultSet();
 	}
@@ -173,6 +201,7 @@ final class Database extends Explorer
 	 */
 	private function recordParams(string $sql, array $params): void
 	{
+		$this->queries[] = $sql;
 		foreach ($params as $param) {
 			if (is_array($param)) {
 				$arrayParams = [];
@@ -196,6 +225,17 @@ final class Database extends Explorer
 	private function formatValue(mixed $value): mixed
 	{
 		return $value instanceof DateTimeInterface ? $value->format(DateTimeFormat::MYSQL) : $value;
+	}
+
+
+	/**
+	 * Every statement run, in order, for a test that has to look at the text of one with no parameters to find it by.
+	 *
+	 * @return list<string>
+	 */
+	public function getQueries(): array
+	{
+		return $this->queries;
 	}
 
 

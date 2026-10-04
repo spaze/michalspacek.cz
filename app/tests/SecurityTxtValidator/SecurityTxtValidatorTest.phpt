@@ -18,6 +18,7 @@ use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Json;
 use Override;
 use RuntimeException;
@@ -108,7 +109,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		$this->validator->clearCache('https://foó.example/some/path');
 		// The whole condition is the needle: drop the age from the statement and this stops matching, which is the
 		// point, because an age checked anywhere but in the DELETE leaves a gap between deciding and deleting.
-		$params = $this->database->getParamsForQueryContaining('DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time <= ?');
+		$params = $this->database->getParamsForQueryContaining('DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL AND fetch_time <= ?');
 		Assert::count(4, $params); // the three parts of the key, and the age the cached result has to have reached
 		Assert::same(['https', 'xn--fo-6ja.example', 443], array_slice($params, 0, 3));
 	}
@@ -122,21 +123,34 @@ final class SecurityTxtValidatorTest extends TestCase
 	}
 
 
-	public function testACacheMissFetchesAndWritesTheRowUnderTheKeyItWillBeReadBy(): void
+	/**
+	 * The row is written twice over: claimed under the key it will be read by before the fetch, with nothing to say
+	 * yet, and filled in afterwards in place. The claim is what the requests arriving during the fetch find.
+	 */
+	public function testACacheMissClaimsTheOriginThenFillsTheClaimWithTheResponse(): void
 	{
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
 		Assert::same(1, $this->fetch->getFetches());
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
-		Assert::same('https', $written[0]['scheme']);
-		Assert::same('example.com', $written[0]['ascii_host']);
-		Assert::same(443, $written[0]['port']);
+		$claimed = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		Assert::same('https', $claimed[0]['scheme']);
+		Assert::same('example.com', $claimed[0]['ascii_host']);
+		Assert::same(443, $claimed[0]['port']);
+		Assert::true($claimed[0]['default_port_fetch']);
+		Assert::false(array_key_exists('check_result', $claimed[0]));
+		$filled = $this->database->getParamsArrayForQuery('UPDATE responses SET');
+		Assert::null($filled[0]['default_port_fetch']);
+		Assert::type('string', $filled[0]['check_result']);
+		Assert::same(['WHERE id = ?', 42], $this->database->getParamsForQuery('UPDATE responses SET'));
 	}
 
 
 	public function testAFetchedResponseRecordsWhichLibraryFetchedItAndWhichParsedIt(): void
 	{
 		$this->database->addInsertId('7'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
 		$this->database->addInsertId('8'); // the fetcher's build
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
@@ -147,9 +161,10 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::count(2, $builds);
 		Assert::same([$parser->getVersion(), $parser->getReference()], [$builds[0]['version'], $builds[0]['reference']]);
 		Assert::same([$fetcher->getVersion(), $fetcher->getReference()], [$builds[1]['version'], $builds[1]['reference']]);
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
-		Assert::same(7, $written[0]['key_parser_library_version']);
-		Assert::same(8, $written[0]['key_fetcher_library_version']);
+		$claimed = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		Assert::same(7, $claimed[0]['key_parser_library_version']); // known when the claim is taken
+		$filled = $this->database->getParamsArrayForQuery('UPDATE responses SET');
+		Assert::same(8, $filled[0]['key_fetcher_library_version']); // known only once the fetcher has answered
 	}
 
 
@@ -157,7 +172,7 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->setFetchResult($this->fetchResult());
 		$live = $this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		$written = $this->database->getParamsArrayForQuery('UPDATE responses SET');
 		assert(is_string($written[0]['check_result']));
 		$this->database->reset();
 		$this->database->addFetchResult([
@@ -191,12 +206,14 @@ final class SecurityTxtValidatorTest extends TestCase
 		$now = $this->dateTime->getNow();
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
-		$params = $this->database->getParamsForQueryContaining('WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time > ?');
-		Assert::count(4, $params); // the three parts of the key, and the age a cached result may not have passed
+		$params = $this->database->getParamsForQueryContaining('WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL AND fetch_time > ?');
+		Assert::count(8, $params); // the three parts of the key and the age a cached result may not have passed, read before the claim and again once it is held
 		Assert::same(['https', 'example.com', 443], array_slice($params, 0, 3));
+		Assert::same(['https', 'example.com', 443], array_slice($params, 4, 3));
 		// The value too, not only that something was bound there: the same statement with the sign the other way round
 		// would serve results from the future, and nothing else about it would look wrong
 		Assert::same($now->modify('-5 minutes')->format(DateTimeFormat::MYSQL), $params[3]);
+		Assert::same($params[3], $params[7]);
 	}
 
 
@@ -213,8 +230,10 @@ final class SecurityTxtValidatorTest extends TestCase
 			$this->dateTime->setDateTime($started->modify('+25 seconds'));
 		});
 		$this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
-		Assert::same($started->modify('+25 seconds')->format(DateTimeFormat::MYSQL), $written[0]['fetch_time']);
+		$claimed = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		Assert::same($started->format(DateTimeFormat::MYSQL), $claimed[0]['fetch_time']); // the claim says when the fetch started
+		$filled = $this->database->getParamsArrayForQuery('UPDATE responses SET');
+		Assert::same($started->modify('+25 seconds')->format(DateTimeFormat::MYSQL), $filled[0]['fetch_time']); // the response says when it finished
 	}
 
 
@@ -226,12 +245,13 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->willThrow($this->hostNotFound());
 		$this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
-		Assert::same('https', $written[0]['scheme']);
-		Assert::same('example.com', $written[0]['ascii_host']);
-		Assert::same(443, $written[0]['port']);
-		assert(is_string($written[0]['check_result']));
-		$decoded = Json::decode($written[0]['check_result'], true);
+		$claimed = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		Assert::same('https', $claimed[0]['scheme']);
+		Assert::same('example.com', $claimed[0]['ascii_host']);
+		Assert::same(443, $claimed[0]['port']);
+		$filled = $this->database->getParamsArrayForQuery('UPDATE responses SET');
+		assert(is_string($filled[0]['check_result']));
+		$decoded = Json::decode($filled[0]['check_result'], true);
 		assert(is_array($decoded) && is_array($decoded['error']));
 		Assert::same(SecurityTxtHostNotFoundException::class, $decoded['error']['class']);
 	}
@@ -239,15 +259,17 @@ final class SecurityTxtValidatorTest extends TestCase
 
 	/**
 	 * An origin that already has a row is the normal case once anything has been checked twice. The new response is
-	 * a row of its own and the earlier one stays as it was: a single set of values goes to the database, with nothing
-	 * to put in the place of an existing row.
+	 * a row of its own, claimed and then filled, and the earlier one stays as it was: a single set of values goes to
+	 * the database as a new row, and what gets filled in afterwards is that row, not an older one.
 	 */
 	public function testAFetchedResponseIsANewRowNotAChangeToTheOneBefore(): void
 	{
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
-		Assert::count(1, $written); // the values of the new row, and no second set for an existing one
+		Assert::count(1, $this->database->getParamsArrayForQuery('INSERT INTO responses')); // the values of the new row, and no second set for an existing one
+		Assert::same(['WHERE id = ?', 42], $this->database->getParamsForQuery('UPDATE responses SET'));
 	}
 
 
@@ -299,7 +321,7 @@ final class SecurityTxtValidatorTest extends TestCase
 				$this->fetch->willThrow($failure);
 			}
 			$this->validator->validate('https://example.com');
-			$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+			$written = $this->database->getParamsArrayForQuery('UPDATE responses SET');
 			assert(is_string($written[0]['check_result']));
 			$this->database->reset();
 			$this->database->addFetchResult([
@@ -360,8 +382,8 @@ final class SecurityTxtValidatorTest extends TestCase
 		});
 		$this->fetch->willThrow($this->hostNotFound());
 		$this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
-		Assert::same($started->modify('+25 seconds')->format(DateTimeFormat::MYSQL), $written[0]['fetch_time']);
+		$filled = $this->database->getParamsArrayForQuery('UPDATE responses SET');
+		Assert::same($started->modify('+25 seconds')->format(DateTimeFormat::MYSQL), $filled[0]['fetch_time']);
 	}
 
 
@@ -373,7 +395,7 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->willThrow($this->hostNotFound());
 		$live = $this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		$written = $this->database->getParamsArrayForQuery('UPDATE responses SET');
 		assert(is_string($written[0]['check_result']));
 		$this->database->reset();
 		$this->database->addFetchResult([
@@ -397,7 +419,7 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->willThrow($this->notFound());
 		$live = $this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		$written = $this->database->getParamsArrayForQuery('UPDATE responses SET');
 		assert(is_string($written[0]['check_result']));
 		$this->database->reset();
 		$this->database->addFetchResult([
@@ -445,11 +467,31 @@ final class SecurityTxtValidatorTest extends TestCase
 
 		$this->database->reset();
 		$this->fetch->willThrow($this->hostNotFound());
-		$this->database->willThrow(new Exception('The cache write failed'));
+		$this->fetch->whileFetching(function (): void {
+			$this->database->willThrow(new Exception('The cache write failed')); // once the claim is taken, so it is the response that cannot be written
+		});
 		$actual = (string)$this->validator->validate('https://example.com')->errorMessage;
 
 		Assert::same($expected, $actual);
 		Assert::notSame('', $expected); // and it is a real message, not both paths being empty
+	}
+
+
+	/**
+	 * The fetch is over whether or not its response could be written, so the claim is given back rather than holding
+	 * the origin until it counts as abandoned. Only a claim is deleted: a write that went through before its error
+	 * reached us has made the row a response, and the condition on the delete keeps it.
+	 */
+	public function testAFailedCacheWriteGivesTheClaimBack(): void
+	{
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
+		$this->fetch->willThrow($this->hostNotFound());
+		$this->fetch->whileFetching(function (): void {
+			$this->database->willThrowOnQuery('UPDATE responses SET', new Exception('The cache write failed'));
+		});
+		$this->validator->validate('https://example.com');
+		Assert::same([42], $this->database->getParamsForQuery('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL'));
 	}
 
 
@@ -459,9 +501,12 @@ final class SecurityTxtValidatorTest extends TestCase
 	 */
 	public function testOurOwnMisconfigurationIsNotStoredAsTheHostsResponse(): void
 	{
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
 		$this->fetch->willThrow(new SecurityTxtCannotOpenUrlExtensionNotLoadedException(new Url('https://example.com/.well-known/security.txt')));
 		$this->validator->validate('https://example.com');
-		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO responses'));
+		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE responses SET')); // nothing filled in
+		Assert::same([42], $this->database->getParamsForQuery('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL')); // and the claim taken for it given back
 	}
 
 
@@ -497,12 +542,100 @@ final class SecurityTxtValidatorTest extends TestCase
 	 */
 	public function testAnErrorIsHandledLikeAnException(): void
 	{
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->fetch->whileFetching(function (): void {
 			throw new TypeError('Whatever a caller got wrong');
 		});
 		$template = $this->validator->validate('https://example.com');
 		Assert::contains('Something went wrong while checking', (string)$template->errorMessage);
+		Assert::same([42], $this->database->getParamsForQuery('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL')); // and the mistake does not keep the host claimed
+	}
+
+
+	/**
+	 * The claim is what stops a room of people checking the same site from fetching it once each: a request arriving
+	 * while another one holds the origin cannot take it, and the insert itself is the answer, the unique key refusing
+	 * a second claim under the same allowance of the host. There is no read before it that could be out of date by
+	 * the time it runs.
+	 */
+	public function testASecondVisitorDuringAFetchWaitsForItInsteadOfFetchingToo(): void
+	{
+		$this->database->willThrowOnQuery('INSERT INTO responses', new UniqueConstraintViolationException("Duplicate entry 'example.com-\x01' for key 'responses.default_port_fetch'"));
+		$this->fetch->setFetchResult($this->fetchResult());
+		$template = $this->validator->validate('https://example.com');
+		Assert::same(0, $this->fetch->getFetches());
+		Assert::same('<code>example.com</code> is being checked right now, try again in a few seconds', (string)$template->errorMessage);
+		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE responses SET'));
+	}
+
+
+	/**
+	 * A claim older than a fetch can possibly run belongs to a request that died, and left there it would hold its
+	 * allowance for good. The age is measured from when the fetch started, which is what the claim's stamp says. All
+	 * of the host's dead claims go, not only this origin's: one left for another port would hold up every other port.
+	 */
+	public function testAClaimNobodyIsWaitingOnAnyMoreIsRemovedBeforeClaiming(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$now = $this->dateTime->getNow();
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND default_port_fetch IS NOT NULL AND fetch_time < ?');
+		Assert::same(['example.com', $now->modify('-50 seconds')->format(DateTimeFormat::MYSQL)], $params);
+	}
+
+
+	/**
+	 * A fetch of the host under the other allowance can finish between the first read and the claim, and the claim
+	 * cannot collide with a fetch that is over, so the wait is checked once more once the claim is held, leaving the
+	 * request's own claim out of it: a fetch found there means the claim goes back and the visitor waits after all.
+	 */
+	public function testAFetchOfTheHostThatFinishedWhileClaimingIsWaitedFor(): void
+	{
+		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
+		$now = $this->dateTime->getNow();
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
+		$this->database->addFetchResult([]); // nothing fresh before the claim
+		$this->database->addFetchResult([]); // and no recent fetch before it either
+		$this->database->addFetchResult([]); // nothing fresh once the claim is held
+		$this->database->addFetchResult(['fetchTime' => new DateTime($now->modify('-5 seconds')->format(DateTimeFormat::MYSQL))]); // but a fetch of the host finished meanwhile
+		$this->fetch->setFetchResult($this->fetchResult());
+		$template = $this->validator->validate('https://example.com');
+		Assert::same(0, $this->fetch->getFetches());
+		Assert::contains('was checked a moment ago, try again', (string)$template->errorMessage);
+		Assert::same([42], $this->database->getParamsForQuery('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL'));
+		$params = $this->database->getParamsForQueryContaining('AND fetch_time > ? AND id <> ?');
+		Assert::same(['example.com', 'https', 443, $now->modify('-30 seconds')->format(DateTimeFormat::MYSQL), 42], $params); // the request's own claim left out
+	}
+
+
+	/**
+	 * Holding the claim, nothing else can be writing this origin, so a response that landed between the first read and
+	 * the claim is final: it is served, the claim is given back, and the host is not fetched a second time for it.
+	 */
+	public function testAResponseThatLandedWhileClaimingIsServedAndTheClaimGivenBack(): void
+	{
+		$this->fetch->setFetchResult($this->fetchResult());
+		$this->validator->validate('https://example.com');
+		$filled = $this->database->getParamsArrayForQuery('UPDATE responses SET');
+		assert(is_string($filled[0]['check_result']));
+
+		$this->database->reset();
+		$this->fetch->reset();
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
+		$this->database->addFetchResult([]); // nothing fresh before the claim
+		$this->database->addFetchResult([]); // and no recent fetch
+		$this->database->addFetchResult(['fetchTime' => new DateTime(), 'checkResult' => $filled[0]['check_result']]); // but there is a response once the claim is held
+		$this->fetch->setFetchResult($this->fetchResult());
+		$served = $this->validator->validate('https://example.com');
+		Assert::same(0, $this->fetch->getFetches());
+		Assert::true($served->fileExists);
+		Assert::same([42], $this->database->getParamsForQuery('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL'));
+		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE responses SET'));
 	}
 
 
@@ -512,9 +645,12 @@ final class SecurityTxtValidatorTest extends TestCase
 	 */
 	public function testAFailureToReachTheFetcherIsNotStored(): void
 	{
+		$this->database->addInsertId('1'); // the parser's build
+		$this->database->addInsertId('42'); // the claim
 		$this->fetch->willThrow(new SecurityTxtValidatorException('Lambda is having a day'));
 		$this->validator->validate('https://example.com');
-		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO responses'));
+		Assert::same([], $this->database->getParamsArrayForQuery('UPDATE responses SET'));
+		Assert::same([42], $this->database->getParamsForQuery('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL'));
 	}
 
 
@@ -557,7 +693,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		$rowTime = $this->dateTime->getNow();
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		$written = $this->database->getParamsArrayForQuery('UPDATE responses SET');
 		assert(is_string($written[0]['check_result']));
 
 		$this->database->reset();
@@ -584,7 +720,7 @@ final class SecurityTxtValidatorTest extends TestCase
 		$rowTime = $this->dateTime->getNow();
 		$this->fetch->setFetchResult($this->fetchResult());
 		$live = $this->validator->validate('https://example.com');
-		$written = $this->database->getParamsArrayForQuery('INSERT INTO responses');
+		$written = $this->database->getParamsArrayForQuery('UPDATE responses SET');
 		assert(is_string($written[0]['check_result']));
 
 		$this->database->reset();
@@ -619,10 +755,12 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com');
-		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?');
+		// The statement is asked twice in a fetch, before the claim and again once it is held with the claim left out, so
+		// the line break pins the first one; the second is the same statement with one more condition
+		$params = $this->database->getParamsForQueryContaining("WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?\n");
 		Assert::same(['example.com', 'https', 443], array_slice($params, 0, 3));
 		Assert::count(4, $params); // the origin, and how far back a fetch still counts
-		Assert::same([], $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND fetch_time > ?'));
+		Assert::same([], $this->database->getParamsForQueryContaining("WHERE ascii_host = ? AND fetch_time > ?\n"));
 	}
 
 
@@ -630,7 +768,7 @@ final class SecurityTxtValidatorTest extends TestCase
 	{
 		$this->fetch->setFetchResult($this->fetchResult());
 		$this->validator->validate('https://example.com:8443');
-		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND fetch_time > ?');
+		$params = $this->database->getParamsForQueryContaining("WHERE ascii_host = ? AND fetch_time > ?\n");
 		Assert::same('example.com', $params[0]); // any fetch of the host counts, whatever port it was for
 		Assert::count(2, $params);
 		Assert::same([], $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND scheme = ?'));

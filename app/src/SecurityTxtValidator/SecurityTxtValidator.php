@@ -24,6 +24,7 @@ use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplat
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\IResponse;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -83,6 +84,7 @@ final readonly class SecurityTxtValidator
 		private Statistics $statistics,
 		private string $responseTtl,
 		private string $timeBetweenFetches,
+		private string $fetchAbandonedAfter,
 	) {
 	}
 
@@ -148,12 +150,126 @@ final readonly class SecurityTxtValidator
 		$asciiHost = $url->getAsciiHost();
 		$port = $url->getPort();
 		$now = $this->dateTimeFactory->getNow();
-		$result = $this->database->fetch(
+		$result = $this->freshResponse($scheme, $asciiHost, $port, $now);
+		$fetchAllowedIn = $this->fetchAllowedIn($url, $now);
+		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $fetchAllowedIn, false)) {
+			return;
+		}
+
+		if ($fetchAllowedIn !== null) {
+			$this->addStaleResponseOrWait($host, $scheme, $asciiHost, $port, $template, $now, $fetchAllowedIn);
+			return;
+		}
+
+		$claimId = $this->claim($url, $now);
+		if ($claimId === null) {
+			// Another request took the origin between the reads above and this, so its fetch is what the visitor is
+			// waiting for and the result will be there for them in a moment
+			$this->templateParametersEnricher->addBeingChecked($template, $host);
+			return;
+		}
+		// Read again now that the claim is held: nobody else can be writing this origin, so a response that landed
+		// between the first read and the claim is found here and this one is not fetched on top of it
+		$result = $this->freshResponse($scheme, $asciiHost, $port, $now);
+		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $this->fetchAllowedIn($url, $now, $claimId), false)) {
+			$this->releaseClaim($claimId);
+			return;
+		}
+		// A fetch of the host under the other allowance may have finished in that gap too, and that one the claim could
+		// not collide with, because it was over by the time the claim was taken; so the wait is checked once more, with
+		// this request's own claim left out of it, and a fetch found there means waiting after all
+		$fetchAllowedIn = $this->fetchAllowedIn($url, $now, $claimId);
+		if ($fetchAllowedIn !== null) {
+			$this->releaseClaim($claimId);
+			$this->addStaleResponseOrWait($host, $scheme, $asciiHost, $port, $template, $now, $fetchAllowedIn);
+			return;
+		}
+
+		try {
+			$response = $this->validatorFetch->fetch($url, false);
+			// When the fetch finished, not when the request started: everything downstream measures the age of the
+			// response from this, and a slow fetch would otherwise hand back a row that is already part way through its life
+			$fetchedAt = $this->dateTimeFactory->getNow();
+			$parseResult = $this->securityTxtParser->parseFetchResult($response->getFetchResult());
+			$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
+			// Stored before the template is filled in, so a write that fails cannot leave the page showing a whole result
+			// with an error banner over it
+			$this->fill($claimId, $fetchedAt, Json::encode($checkHostResult), $response->getFetcherVersion());
+		} catch (SecurityTxtValidatorFetchFailedException $e) {
+			// A host that answered and has no usable file has been checked, and the response is worth the same as any
+			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
+			$fetcherException = $e->getFetcherException();
+			try {
+				if (in_array($fetcherException::class, self::NOT_THE_HOSTS_RESPONSE, true)) {
+					$this->releaseClaim($claimId);
+				} else {
+					$this->fill($claimId, $this->dateTimeFactory->getNow(), Json::encode(['error' => $fetcherException]), $e->getFetcherVersion());
+					$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forFetchFailure($fetcherException));
+				}
+			} catch (Throwable $cacheFailure) {
+				// Failing to write the response down is ours to deal with, and throwing from here would throw away the
+				// response itself, leaving the visitor with a generic apology instead of what their host actually said
+				$this->logger->logException($host, $cacheFailure);
+				// The fetch is over, so the claim must not go on holding the origin until it counts as abandoned
+				try {
+					$this->releaseClaim($claimId);
+				} catch (Throwable $releaseFailure) {
+					$this->logger->logException($host, $releaseFailure);
+				}
+			}
+			throw $fetcherException;
+		} catch (Throwable $e) {
+			// Whatever broke was ours, and the claim must not go on holding the origin for it
+			try {
+				$this->releaseClaim($claimId);
+			} catch (Throwable $releaseFailure) {
+				$this->logger->logException($host, $releaseFailure);
+			}
+			throw $e;
+		}
+		$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forCheckHostResult($checkHostResult));
+		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
+	}
+
+
+	/**
+	 * Nothing fresh for this exact origin and no fetch allowed yet, so a response that has merely gone stale is worth
+	 * more than an apology: it is what this origin last said, and saying so with its age beats saying nothing until
+	 * whoever is holding the host's allowance lets go.
+	 *
+	 * @throws SecurityTxtFetcherException
+	 * @throws CannotCreateDateTimeObjectException
+	 */
+	private function addStaleResponseOrWait(string $host, string $scheme, string $asciiHost, int $port, ValidationResultTemplateParameters $template, DateTimeImmutable $now, DateInterval $fetchAllowedIn): void
+	{
+		$stale = $this->database->fetch(
 			'SELECT
 				fetch_time AS fetchTime,
 				check_result AS checkResult
 			FROM responses
-			WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time > ?
+			WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL
+			ORDER BY fetch_time DESC, id DESC
+			LIMIT 1',
+			$scheme,
+			$asciiHost,
+			$port,
+		);
+		if ($stale !== null && $this->addStoredResponse($host, $stale, $template, $now, $fetchAllowedIn, true)) {
+			return;
+		}
+		// Nothing stored either, so this host was fetched a moment ago with a different port or scheme
+		$this->templateParametersEnricher->addFetchedTooRecently($template, $host, $fetchAllowedIn);
+	}
+
+
+	private function freshResponse(string $scheme, string $asciiHost, int $port, DateTimeImmutable $now): ?Row
+	{
+		return $this->database->fetch(
+			'SELECT
+				fetch_time AS fetchTime,
+				check_result AS checkResult
+			FROM responses
+			WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL AND fetch_time > ?
 			ORDER BY fetch_time DESC, id DESC
 			LIMIT 1',
 			$scheme,
@@ -161,77 +277,59 @@ final readonly class SecurityTxtValidator
 			$port,
 			$now->modify("-{$this->responseTtl}"),
 		);
-		$fetchAllowedIn = $this->fetchAllowedIn($url, $now);
-		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $fetchAllowedIn, false)) {
-			return;
-		}
-
-		if ($fetchAllowedIn !== null) {
-			// Nothing fresh for this exact origin and no fetch allowed yet, so a response that has merely gone stale is
-			// worth more than an apology: it is what this origin last said, and saying so with its age beats saying
-			// nothing until whoever is holding the host's allowance lets go
-			$stale = $this->database->fetch(
-				'SELECT
-					fetch_time AS fetchTime,
-					check_result AS checkResult
-				FROM responses
-				WHERE scheme = ? AND ascii_host = ? AND port = ?
-				ORDER BY fetch_time DESC, id DESC
-				LIMIT 1',
-				$scheme,
-				$asciiHost,
-				$port,
-			);
-			if ($stale !== null && $this->addStoredResponse($host, $stale, $template, $now, $fetchAllowedIn, true)) {
-				return;
-			}
-			// Nothing stored either, so this host was fetched a moment ago with a different port or scheme
-			$this->templateParametersEnricher->addFetchedTooRecently($template, $host, $fetchAllowedIn);
-			return;
-		}
-
-		try {
-			$response = $this->validatorFetch->fetch($url, false);
-		} catch (SecurityTxtValidatorFetchFailedException $e) {
-			// A host that answered and has no usable file has been checked, and the response is worth the same as any
-			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
-			$fetcherException = $e->getFetcherException();
-			try {
-				if (!in_array($fetcherException::class, self::NOT_THE_HOSTS_RESPONSE, true)) {
-					$this->store($scheme, $asciiHost, $port, $this->dateTimeFactory->getNow(), Json::encode(['error' => $fetcherException]), $e->getFetcherVersion());
-					$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forFetchFailure($fetcherException));
-				}
-			} catch (Throwable $cacheFailure) {
-				// Failing to write the response down is ours to deal with, and throwing from here would throw away the
-				// response itself, leaving the visitor with a generic apology instead of what their host actually said
-				$this->logger->logException($host, $cacheFailure);
-			}
-			throw $fetcherException;
-		}
-		// When the fetch finished, not when the request started: everything downstream measures the age of the response
-		// from this, and a slow fetch would otherwise hand back a row that is already part way through its life
-		$fetchedAt = $this->dateTimeFactory->getNow();
-		$parseResult = $this->securityTxtParser->parseFetchResult($response->getFetchResult());
-		$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
-		// Stored before the template is filled in, so a write that fails cannot leave the page showing a whole result
-		// with an error banner over it
-		$this->store($scheme, $asciiHost, $port, $fetchedAt, Json::encode($checkHostResult), $response->getFetcherVersion());
-		$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forCheckHostResult($checkHostResult));
-		$this->templateParametersEnricher->addFromCheckHostResult($template, $checkHostResult, $fetchedAt, null, null);
 	}
 
 
-	private function store(string $scheme, string $asciiHost, int $port, DateTimeImmutable $fetchedAt, string $checkResult, DependencyVersion $fetcherVersion): void
+	/**
+	 * Takes one of the host's two fetch allowances for this fetch, or returns null when another request holds it. The
+	 * insert is the whole check: `default_port_fetch` says which allowance the fetch is under, the default port's own
+	 * or the one every other port shares, and it is in a unique key with the host, so two fetches cannot run under the
+	 * same allowance and there is nothing to lock or to read first. A claim older than `$fetchAbandonedAfter` belongs
+	 * to a fetch that is over whatever happened to it, so those go first, or a request that died mid-fetch would hold
+	 * its allowance for good; all of the host's, because a dead claim for another port holds up every other port.
+	 */
+	private function claim(SecurityTxtValidatorUrl $url, DateTimeImmutable $now): ?int
 	{
-		$this->database->query('INSERT INTO responses', [
-			'scheme' => $scheme,
-			'ascii_host' => $asciiHost,
-			'port' => $port,
+		$this->database->query(
+			'DELETE FROM responses WHERE ascii_host = ? AND default_port_fetch IS NOT NULL AND fetch_time < ?',
+			$url->getAsciiHost(),
+			$now->modify("-{$this->fetchAbandonedAfter}"),
+		);
+		$parserVersionId = $this->libraryVersions->getId($this->libraryVersion->getInstalled());
+		try {
+			$this->database->query('INSERT INTO responses', [
+				'scheme' => $url->getScheme(),
+				'ascii_host' => $url->getAsciiHost(),
+				'port' => $url->getPort(),
+				'default_port_fetch' => $url->isDefaultPort(),
+				'fetch_time' => $now,
+				'key_parser_library_version' => $parserVersionId,
+			]);
+		} catch (UniqueConstraintViolationException) {
+			return null;
+		}
+		return (int)$this->database->getInsertId();
+	}
+
+
+	private function fill(int $claimId, DateTimeImmutable $fetchedAt, string $checkResult, DependencyVersion $fetcherVersion): void
+	{
+		$this->database->query('UPDATE responses SET', [
+			'default_port_fetch' => null,
 			'fetch_time' => $fetchedAt,
 			'check_result' => $checkResult,
-			'key_parser_library_version' => $this->libraryVersions->getId($this->libraryVersion->getInstalled()),
 			'key_fetcher_library_version' => $this->libraryVersions->getId($fetcherVersion),
-		]);
+		], 'WHERE id = ?', $claimId);
+	}
+
+
+	/**
+	 * Only while it is still a claim: a write that did go through before its error reached us has turned the row
+	 * into a response, and that stays.
+	 */
+	private function releaseClaim(int $claimId): void
+	{
+		$this->database->query('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL', $claimId);
 	}
 
 
@@ -292,11 +390,16 @@ final readonly class SecurityTxtValidator
 	 * One answer, used by everything that needs it: what a visitor is told to wait, what the page prints beside a
 	 * cached result, and whether a fetch or a clear may go ahead. They cannot disagree if there is only one of them.
 	 *
+	 * A fetch still running counts as the most recent one: its claim row is there from the moment it started, so the
+	 * requests arriving while it runs wait for it instead of each fetching the same host again. The one exception is
+	 * the caller's own claim, named by `$exceptClaimId` once it holds one, which is a fetch about to start, not a
+	 * recent one.
+	 *
 	 * @throws CannotCreateDateTimeObjectException
 	 */
-	private function fetchAllowedIn(SecurityTxtValidatorUrl $url, DateTimeImmutable $now): ?DateInterval
+	private function fetchAllowedIn(SecurityTxtValidatorUrl $url, DateTimeImmutable $now, ?int $exceptClaimId = null): ?DateInterval
 	{
-		$recentFetch = $this->recentFetch($url, $now);
+		$recentFetch = $this->recentFetch($url, $now, $exceptClaimId);
 		if ($recentFetch === null) {
 			return null;
 		}
@@ -320,29 +423,33 @@ final readonly class SecurityTxtValidator
 	 *
 	 * @throws CannotCreateDateTimeObjectException
 	 */
-	private function recentFetch(SecurityTxtValidatorUrl $url, DateTimeImmutable $now): ?DateTimeImmutable
+	private function recentFetch(SecurityTxtValidatorUrl $url, DateTimeImmutable $now, ?int $exceptId = null): ?DateTimeImmutable
 	{
 		$since = $now->modify("-{$this->timeBetweenFetches}");
+		$exceptCondition = $exceptId === null ? '' : ' AND id <> ?';
+		$exceptParams = $exceptId === null ? [] : [$exceptId];
 		$result = $url->isDefaultPort()
 			? $this->database->fetch(
 				'SELECT fetch_time AS fetchTime
 				FROM responses
-				WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?
+				WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?' . $exceptCondition . '
 				ORDER BY fetch_time DESC, id DESC
 				LIMIT 1',
 				$url->getAsciiHost(),
 				$url->getScheme(),
 				$url->getPort(),
 				$since,
+				...$exceptParams,
 			)
 			: $this->database->fetch(
 				'SELECT fetch_time AS fetchTime
 				FROM responses
-				WHERE ascii_host = ? AND fetch_time > ?
+				WHERE ascii_host = ? AND fetch_time > ?' . $exceptCondition . '
 				ORDER BY fetch_time DESC, id DESC
 				LIMIT 1',
 				$url->getAsciiHost(),
 				$since,
+				...$exceptParams,
 			);
 		if ($result === null) {
 			return null;
@@ -368,7 +475,7 @@ final readonly class SecurityTxtValidator
 			return;
 		}
 		$this->database->query(
-			'DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND fetch_time <= ?',
+			'DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL AND fetch_time <= ?',
 			$validatorUrl->getScheme(),
 			$validatorUrl->getAsciiHost(),
 			$validatorUrl->getPort(),

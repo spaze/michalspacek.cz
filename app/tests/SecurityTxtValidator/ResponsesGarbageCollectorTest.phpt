@@ -61,6 +61,11 @@ final class ResponsesGarbageCollectorTest extends TestCase
 			'message' => null,
 		];
 		Assert::same([$expectedLog, $expectedLog], $this->database->getParamsArrayForQuery('INSERT INTO gc_log'));
+		// A claim is the newest row of its origin while its fetch runs, and it replaces nothing: without this, the
+		// row it would be taken to replace is the last response the origin gave, which is what the page shows meanwhile
+		$replaced = array_values(array_filter($this->database->getQueries(), fn(string $sql): bool => str_starts_with($sql, 'DELETE r1')));
+		Assert::count(1, $replaced);
+		Assert::contains('r2.default_port_fetch IS NULL', $replaced[0]);
 	}
 
 

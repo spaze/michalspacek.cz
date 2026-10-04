@@ -52,6 +52,14 @@ final readonly class ValidationResultTemplateParametersEnricher
 	}
 
 
+	public function addBeingChecked(ValidationResultTemplateParameters $template, string $host): void
+	{
+		$this->addErrorMessageAndLogo($template, Html::el()
+			->addHtml(Html::el('code')->setText($host))
+			->addText(' is being checked right now, try again in a few seconds'));
+	}
+
+
 	/**
 	 * When the response was fetched and how long it has left, which a cached failure has to say as much as a cached
 	 * result does: both are responses of the same age, arrived at the same way.

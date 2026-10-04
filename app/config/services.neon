@@ -165,7 +165,7 @@ services:
 	- MichalSpacekCz\SecurityTxtValidator\LibraryVersions(@database.securityTxtValidator.explorer)
 	- MichalSpacekCz\SecurityTxtValidator\ResponsesGarbageCollector(@database.securityTxtValidator.explorer, deleteAfter: %securityTxtValidator.responseDeleteAfter%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtLibraryVersion
-	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, responseTtl: %securityTxtValidator.responseTtl%, timeBetweenFetches: %securityTxtValidator.timeBetweenFetches%)
+	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, responseTtl: %securityTxtValidator.responseTtl%, timeBetweenFetches: %securityTxtValidator.timeBetweenFetches%, fetchAbandonedAfter: %securityTxtValidator.fetchAbandonedAfter%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorHost
 	- MichalSpacekCz\SecurityTxtValidator\Statistics\FileStatistics

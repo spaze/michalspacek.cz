@@ -54,7 +54,7 @@ final readonly class ResponsesGarbageCollector implements GarbageCollector
 				FROM
 					responses r1
 					JOIN responses r2 USING (ascii_host, scheme, port)
-				WHERE (r2.fetch_time, r2.id) > (r1.fetch_time, r1.id)',
+				WHERE r2.default_port_fetch IS NULL AND (r2.fetch_time, r2.id) > (r1.fetch_time, r1.id)',
 			)->getRowCount() ?? 0;
 			$deleted += $this->database->query(
 				'DELETE FROM responses WHERE fetch_time < ?',
