@@ -7,18 +7,25 @@ use DateInterval;
 use DateTimeImmutable;
 use LogicException;
 use MichalSpacekCz\DateTime\DateIntervalFormatter;
+use MichalSpacekCz\Net\IpAddressType;
+use MichalSpacekCz\Net\IpRanges;
 use MichalSpacekCz\Pgp\Keyserver;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssue;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueLevel;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtIssueMessageFormatter;
 use MichalSpacekCz\SecurityTxtValidator\Issue\SecurityTxtLineIssue;
+use MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger;
 use MichalSpacekCz\Utils\Strings;
+use Nette\Http\IResponse;
 use Nette\Utils\Html;
 use Spaze\SecurityTxt\Check\SecurityTxtCheckHostResult;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
+use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Spaze\SecurityTxt\Parser\SecurityTxtParseStringResult;
 use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\SecurityTxtPrintableValue;
 use Spaze\SecurityTxt\Violations\SecurityTxtSpecViolation;
+use Throwable;
 
 final readonly class ValidationResultTemplateParametersEnricher
 {
@@ -29,6 +36,8 @@ final readonly class ValidationResultTemplateParametersEnricher
 		private SecurityTxtIssueMessageFormatter $issueMessageFormatter,
 		private SecurityTxtSplitLines $splitLines,
 		private Keyserver $keyserver,
+		private IpRanges $ipRanges,
+		private SecurityTxtValidatorLogger $logger,
 	) {
 	}
 
@@ -57,6 +66,60 @@ final readonly class ValidationResultTemplateParametersEnricher
 		$this->addErrorMessageAndLogo($template, Html::el()
 			->addHtml(Html::el('code')->setText($host))
 			->addText(' is being checked right now, try again in a few seconds'));
+	}
+
+
+	/**
+	 * Names the provider behind an address that answered 403, when it is one whose ranges are known, so the owner
+	 * knows where the block most likely sits.
+	 */
+	public function addNotFoundProviderNames(string $host, SecurityTxtNotFoundException $e, Html $errorMessage): void
+	{
+		$rangeNames = [];
+		try {
+			foreach ($e->getIpAddresses() as $ipAddress => $typeAndCode) {
+				if ($typeAndCode[1] === IResponse::S403_Forbidden) {
+					$ipRange = $this->ipRanges->getRangeName($ipAddress, $typeAndCode[0] === SecurityTxtIpAddressType::V6 ? IpAddressType::V6 : IpAddressType::V4);
+					if ($ipRange !== null) {
+						$rangeNames[$ipAddress] = $ipRange;
+					}
+				}
+			}
+		} catch (Throwable $lookupFailure) {
+			$this->logger->logException($host, $lookupFailure);
+			return;
+		}
+		if ($rangeNames === []) {
+			return;
+		}
+		$errorMessage->addHtml(Html::el('br'))->addHtml(Html::el('br'));
+		$ipRanges = implode(', ', array_map(fn(string $rangeName): string => "%s – {$rangeName}", $rangeNames));
+		$ipRangesHtml = $this->issueMessageFormatter->format($ipRanges, array_keys($rangeNames));
+		if (count($rangeNames) === 1) {
+			$message = Html::el('em')
+				->setText("The host's IP address is owned by a known provider (")
+				->addHtml($ipRangesHtml)
+				->addText(') and its firewall or configuration may block automated requests.');
+		} else {
+			$providerNames = array_flip($rangeNames);
+			if (count($providerNames) === 1) {
+				$message = Html::el('em')
+					->setText("The host's IP addresses are owned by a known provider (")
+					->addHtml($ipRangesHtml)
+					->addText(') and its firewall or configuration may block automated requests.');
+			} else {
+				$message = Html::el('em')
+					->setText("The host's IP addresses are owned by known providers (")
+					->addHtml($ipRangesHtml)
+					->addText(') and their firewall or configuration may block automated requests.');
+			}
+		}
+		$message->addText(" If you're the host owner, consider adding an exception for both ")
+			->addHtml(Html::el('code')->addText('/.well-known/security.txt'))
+			->addText(' and ')
+			->addHtml(Html::el('code')->addText('/security.txt'))
+			->addText('.');
+		$errorMessage->addHtml($message);
 	}
 
 

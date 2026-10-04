@@ -7,11 +7,8 @@ use DateInterval;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use MichalSpacekCz\Application\DependencyVersion;
 use MichalSpacekCz\DateTime\DateTimeFactoryUtc;
 use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
-use MichalSpacekCz\Net\IpAddressType;
-use MichalSpacekCz\Net\IpRanges;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorException;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorFetchFailedException;
 use MichalSpacekCz\SecurityTxtValidator\Exceptions\SecurityTxtValidatorHostException;
@@ -22,10 +19,7 @@ use MichalSpacekCz\SecurityTxtValidator\Statistics\Statistics;
 use MichalSpacekCz\SecurityTxtValidator\Statistics\StatisticsVolume;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters;
 use MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher;
-use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Database\UniqueConstraintViolationException;
-use Nette\Http\IResponse;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -37,7 +31,6 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
-use Spaze\SecurityTxt\Fetcher\SecurityTxtIpAddressType;
 use Spaze\SecurityTxt\Json\SecurityTxtJson;
 use Spaze\SecurityTxt\Parser\SecurityTxtParser;
 use Throwable;
@@ -67,7 +60,7 @@ final readonly class SecurityTxtValidator
 
 
 	public function __construct(
-		private Explorer $database,
+		private ResponseStorage $responseStorage,
 		private DateTimeFactoryUtc $dateTimeFactory,
 		private SecurityTxtJson $securityTxtJson,
 		private SecurityTxtValidatorHost $validatorHost,
@@ -77,14 +70,10 @@ final readonly class SecurityTxtValidator
 		private SecurityTxtIssueMessageFormatter $issueMessageFormatter,
 		private SecurityTxtValidatorLogger $logger,
 		private ValidationResultTemplateParametersEnricher $templateParametersEnricher,
-		private IpRanges $ipRanges,
-		private SecurityTxtLibraryVersion $libraryVersion,
-		private LibraryVersions $libraryVersions,
 		private FileStatistics $fileStatistics,
 		private Statistics $statistics,
 		private string $responseTtl,
 		private string $timeBetweenFetches,
-		private string $fetchAbandonedAfter,
 	) {
 	}
 
@@ -120,7 +109,7 @@ final readonly class SecurityTxtValidator
 			$errorMessage = $this->issueMessageFormatter->format($e->getMessageFormat(), $e->getMessageValues());
 			$this->templateParametersEnricher->addErrorMessageAndLogo($template, $errorMessage);
 			$template->allRedirects = $e->getAllRedirects();
-			$this->addIpRangeNames($host, $e, $errorMessage);
+			$this->templateParametersEnricher->addNotFoundProviderNames($host, $e, $errorMessage);
 		} catch (SecurityTxtFetcherException $e) {
 			if ($e instanceof SecurityTxtTooManyRedirectsException) {
 				$this->logger->log($host, $e->getMessage());
@@ -146,22 +135,20 @@ final readonly class SecurityTxtValidator
 	private function checkHost(SecurityTxtValidatorUrl $url, ValidationResultTemplateParameters $template): void
 	{
 		$host = $url->getHost();
-		$scheme = $url->getScheme();
-		$asciiHost = $url->getAsciiHost();
-		$port = $url->getPort();
 		$now = $this->dateTimeFactory->getNow();
-		$result = $this->freshResponse($scheme, $asciiHost, $port, $now);
+		$freshSince = $now->modify("-{$this->responseTtl}");
+		$result = $this->responseStorage->getNewestSince($url, $freshSince);
 		$fetchAllowedIn = $this->fetchAllowedIn($url, $now);
 		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $fetchAllowedIn, false)) {
 			return;
 		}
 
 		if ($fetchAllowedIn !== null) {
-			$this->addStaleResponseOrWait($host, $scheme, $asciiHost, $port, $template, $now, $fetchAllowedIn);
+			$this->addStaleResponseOrWait($host, $url, $template, $now, $fetchAllowedIn);
 			return;
 		}
 
-		$claimId = $this->claim($url, $now);
+		$claimId = $this->responseStorage->claim($url, $now);
 		if ($claimId === null) {
 			// Another request took the origin between the reads above and this, so its fetch is what the visitor is
 			// waiting for and the result will be there for them in a moment
@@ -170,9 +157,9 @@ final readonly class SecurityTxtValidator
 		}
 		// Read again now that the claim is held: nobody else can be writing this origin, so a response that landed
 		// between the first read and the claim is found here and this one is not fetched on top of it
-		$result = $this->freshResponse($scheme, $asciiHost, $port, $now);
+		$result = $this->responseStorage->getNewestSince($url, $freshSince);
 		if ($result !== null && $this->addStoredResponse($host, $result, $template, $now, $this->fetchAllowedIn($url, $now, $claimId), false)) {
-			$this->releaseClaim($claimId);
+			$this->responseStorage->release($claimId);
 			return;
 		}
 		// A fetch of the host under the other allowance may have finished in that gap too, and that one the claim could
@@ -180,8 +167,8 @@ final readonly class SecurityTxtValidator
 		// this request's own claim left out of it, and a fetch found there means waiting after all
 		$fetchAllowedIn = $this->fetchAllowedIn($url, $now, $claimId);
 		if ($fetchAllowedIn !== null) {
-			$this->releaseClaim($claimId);
-			$this->addStaleResponseOrWait($host, $scheme, $asciiHost, $port, $template, $now, $fetchAllowedIn);
+			$this->responseStorage->release($claimId);
+			$this->addStaleResponseOrWait($host, $url, $template, $now, $fetchAllowedIn);
 			return;
 		}
 
@@ -194,16 +181,16 @@ final readonly class SecurityTxtValidator
 			$checkHostResult = $this->checkHostResultFactory->create($url->getSecurityTxtHost(), $parseResult);
 			// Stored before the template is filled in, so a write that fails cannot leave the page showing a whole result
 			// with an error banner over it
-			$this->fill($claimId, $fetchedAt, Json::encode($checkHostResult), $response->getFetcherVersion());
+			$this->responseStorage->fill($claimId, $fetchedAt, Json::encode($checkHostResult), $response->getFetcherVersion());
 		} catch (SecurityTxtValidatorFetchFailedException $e) {
 			// A host that answered and has no usable file has been checked, and the response is worth the same as any
 			// other: without a row, the only checks the cache would rate-limit are the ones that succeeded
 			$fetcherException = $e->getFetcherException();
 			try {
 				if (in_array($fetcherException::class, self::NOT_THE_HOSTS_RESPONSE, true)) {
-					$this->releaseClaim($claimId);
+					$this->responseStorage->release($claimId);
 				} else {
-					$this->fill($claimId, $this->dateTimeFactory->getNow(), Json::encode(['error' => $fetcherException]), $e->getFetcherVersion());
+					$this->responseStorage->fill($claimId, $this->dateTimeFactory->getNow(), Json::encode(['error' => $fetcherException]), $e->getFetcherVersion());
 					$this->statistics->increment(StatisticsVolume::Fetched, ...$this->fileStatistics->forFetchFailure($fetcherException));
 				}
 			} catch (Throwable $cacheFailure) {
@@ -212,7 +199,7 @@ final readonly class SecurityTxtValidator
 				$this->logger->logException($host, $cacheFailure);
 				// The fetch is over, so the claim must not go on holding the origin until it counts as abandoned
 				try {
-					$this->releaseClaim($claimId);
+					$this->responseStorage->release($claimId);
 				} catch (Throwable $releaseFailure) {
 					$this->logger->logException($host, $releaseFailure);
 				}
@@ -221,7 +208,7 @@ final readonly class SecurityTxtValidator
 		} catch (Throwable $e) {
 			// Whatever broke was ours, and the claim must not go on holding the origin for it
 			try {
-				$this->releaseClaim($claimId);
+				$this->responseStorage->release($claimId);
 			} catch (Throwable $releaseFailure) {
 				$this->logger->logException($host, $releaseFailure);
 			}
@@ -240,96 +227,14 @@ final readonly class SecurityTxtValidator
 	 * @throws SecurityTxtFetcherException
 	 * @throws CannotCreateDateTimeObjectException
 	 */
-	private function addStaleResponseOrWait(string $host, string $scheme, string $asciiHost, int $port, ValidationResultTemplateParameters $template, DateTimeImmutable $now, DateInterval $fetchAllowedIn): void
+	private function addStaleResponseOrWait(string $host, SecurityTxtValidatorUrl $url, ValidationResultTemplateParameters $template, DateTimeImmutable $now, DateInterval $fetchAllowedIn): void
 	{
-		$stale = $this->database->fetch(
-			'SELECT
-				fetch_time AS fetchTime,
-				check_result AS checkResult
-			FROM responses
-			WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL
-			ORDER BY fetch_time DESC, id DESC
-			LIMIT 1',
-			$scheme,
-			$asciiHost,
-			$port,
-		);
+		$stale = $this->responseStorage->getNewest($url);
 		if ($stale !== null && $this->addStoredResponse($host, $stale, $template, $now, $fetchAllowedIn, true)) {
 			return;
 		}
 		// Nothing stored either, so this host was fetched a moment ago with a different port or scheme
 		$this->templateParametersEnricher->addFetchedTooRecently($template, $host, $fetchAllowedIn);
-	}
-
-
-	private function freshResponse(string $scheme, string $asciiHost, int $port, DateTimeImmutable $now): ?Row
-	{
-		return $this->database->fetch(
-			'SELECT
-				fetch_time AS fetchTime,
-				check_result AS checkResult
-			FROM responses
-			WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL AND fetch_time > ?
-			ORDER BY fetch_time DESC, id DESC
-			LIMIT 1',
-			$scheme,
-			$asciiHost,
-			$port,
-			$now->modify("-{$this->responseTtl}"),
-		);
-	}
-
-
-	/**
-	 * Takes one of the host's two fetch allowances for this fetch, or returns null when another request holds it. The
-	 * insert is the whole check: `default_port_fetch` says which allowance the fetch is under, the default port's own
-	 * or the one every other port shares, and it is in a unique key with the host, so two fetches cannot run under the
-	 * same allowance and there is nothing to lock or to read first. A claim older than `$fetchAbandonedAfter` belongs
-	 * to a fetch that is over whatever happened to it, so those go first, or a request that died mid-fetch would hold
-	 * its allowance for good; all of the host's, because a dead claim for another port holds up every other port.
-	 */
-	private function claim(SecurityTxtValidatorUrl $url, DateTimeImmutable $now): ?int
-	{
-		$this->database->query(
-			'DELETE FROM responses WHERE ascii_host = ? AND default_port_fetch IS NOT NULL AND fetch_time < ?',
-			$url->getAsciiHost(),
-			$now->modify("-{$this->fetchAbandonedAfter}"),
-		);
-		$parserVersionId = $this->libraryVersions->getId($this->libraryVersion->getInstalled());
-		try {
-			$this->database->query('INSERT INTO responses', [
-				'scheme' => $url->getScheme(),
-				'ascii_host' => $url->getAsciiHost(),
-				'port' => $url->getPort(),
-				'default_port_fetch' => $url->isDefaultPort(),
-				'fetch_time' => $now,
-				'key_parser_library_version' => $parserVersionId,
-			]);
-		} catch (UniqueConstraintViolationException) {
-			return null;
-		}
-		return (int)$this->database->getInsertId();
-	}
-
-
-	private function fill(int $claimId, DateTimeImmutable $fetchedAt, string $checkResult, DependencyVersion $fetcherVersion): void
-	{
-		$this->database->query('UPDATE responses SET', [
-			'default_port_fetch' => null,
-			'fetch_time' => $fetchedAt,
-			'check_result' => $checkResult,
-			'key_fetcher_library_version' => $this->libraryVersions->getId($fetcherVersion),
-		], 'WHERE id = ?', $claimId);
-	}
-
-
-	/**
-	 * Only while it is still a claim: a write that did go through before its error reached us has turned the row
-	 * into a response, and that stays.
-	 */
-	private function releaseClaim(int $claimId): void
-	{
-		$this->database->query('DELETE FROM responses WHERE id = ? AND default_port_fetch IS NOT NULL', $claimId);
 	}
 
 
@@ -390,72 +295,20 @@ final readonly class SecurityTxtValidator
 	 * One answer, used by everything that needs it: what a visitor is told to wait, what the page prints beside a
 	 * cached result, and whether a fetch or a clear may go ahead. They cannot disagree if there is only one of them.
 	 *
-	 * A fetch still running counts as the most recent one: its claim row is there from the moment it started, so the
-	 * requests arriving while it runs wait for it instead of each fetching the same host again. The one exception is
-	 * the caller's own claim, named by `$exceptClaimId` once it holds one, which is a fetch about to start, not a
-	 * recent one.
+	 * The caller's own claim, named by `$exceptClaimId` once it holds one, is left out: it is a fetch about to start,
+	 * not a recent one.
 	 *
 	 * @throws CannotCreateDateTimeObjectException
 	 */
 	private function fetchAllowedIn(SecurityTxtValidatorUrl $url, DateTimeImmutable $now, ?int $exceptClaimId = null): ?DateInterval
 	{
-		$recentFetch = $this->recentFetch($url, $now, $exceptClaimId);
+		$recentFetch = $this->responseStorage->getRecentFetchTime($url, $now->modify("-{$this->timeBetweenFetches}"), $exceptClaimId);
 		if ($recentFetch === null) {
 			return null;
 		}
 		$allowedAt = $recentFetch->modify("+{$this->timeBetweenFetches}");
 		$seconds = (int)ceil((float)$allowedAt->format('U.u') - (float)$now->format('U.u'));
 		return $seconds > 0 ? $now->diff($now->modify("+{$seconds} seconds")) : null;
-	}
-
-
-	/**
-	 * The most recent fetch that makes this one wait, and null when it may happen now. Recent enough to count means
-	 * within `timeBetweenFetches`.
-	 *
-	 * Two allowances per host, not one. The origin on the scheme's own port is the one nearly every visitor asks
-	 * about, and it counts only its own fetches, so it cannot be taken away from them. Every other origin of that host
-	 * shares the second allowance and counts any fetch of the host, so naming a port nobody has asked about buys no
-	 * extra fetches: a host is one machine to be polite to however many names point at it.
-	 *
-	 * One allowance for all of them would let anyone hold a host's only slot open with two requests a minute, and
-	 * nobody could check it again once the cached response aged out.
-	 *
-	 * @throws CannotCreateDateTimeObjectException
-	 */
-	private function recentFetch(SecurityTxtValidatorUrl $url, DateTimeImmutable $now, ?int $exceptId = null): ?DateTimeImmutable
-	{
-		$since = $now->modify("-{$this->timeBetweenFetches}");
-		$exceptCondition = $exceptId === null ? '' : ' AND id <> ?';
-		$exceptParams = $exceptId === null ? [] : [$exceptId];
-		$result = $url->isDefaultPort()
-			? $this->database->fetch(
-				'SELECT fetch_time AS fetchTime
-				FROM responses
-				WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?' . $exceptCondition . '
-				ORDER BY fetch_time DESC, id DESC
-				LIMIT 1',
-				$url->getAsciiHost(),
-				$url->getScheme(),
-				$url->getPort(),
-				$since,
-				...$exceptParams,
-			)
-			: $this->database->fetch(
-				'SELECT fetch_time AS fetchTime
-				FROM responses
-				WHERE ascii_host = ? AND fetch_time > ?' . $exceptCondition . '
-				ORDER BY fetch_time DESC, id DESC
-				LIMIT 1',
-				$url->getAsciiHost(),
-				$since,
-				...$exceptParams,
-			);
-		if ($result === null) {
-			return null;
-		}
-		assert($result->fetchTime instanceof DateTime);
-		return $this->dateTimeFactory->createFrom($result->fetchTime);
 	}
 
 
@@ -474,63 +327,7 @@ final readonly class SecurityTxtValidator
 		if ($this->fetchAllowedIn($validatorUrl, $now) !== null) {
 			return;
 		}
-		$this->database->query(
-			'DELETE FROM responses WHERE scheme = ? AND ascii_host = ? AND port = ? AND default_port_fetch IS NULL AND fetch_time <= ?',
-			$validatorUrl->getScheme(),
-			$validatorUrl->getAsciiHost(),
-			$validatorUrl->getPort(),
-			$now->modify("-{$this->timeBetweenFetches}"),
-		);
-	}
-
-
-	private function addIpRangeNames(string $host, SecurityTxtNotFoundException $e, Html $errorMessage): void
-	{
-		$rangeNames = [];
-		try {
-			foreach ($e->getIpAddresses() as $ipAddress => $typeAndCode) {
-				if ($typeAndCode[1] === IResponse::S403_Forbidden) {
-					$ipRange = $this->ipRanges->getRangeName($ipAddress, $typeAndCode[0] === SecurityTxtIpAddressType::V6 ? IpAddressType::V6 : IpAddressType::V4);
-					if ($ipRange !== null) {
-						$rangeNames[$ipAddress] = $ipRange;
-					}
-				}
-			}
-		} catch (Throwable $lookupFailure) {
-			$this->logger->logException($host, $lookupFailure);
-			return;
-		}
-		if ($rangeNames === []) {
-			return;
-		}
-		$errorMessage->addHtml(Html::el('br'))->addHtml(Html::el('br'));
-		$ipRanges = implode(', ', array_map(fn(string $rangeName): string => "%s – {$rangeName}", $rangeNames));
-		$ipRangesHtml = $this->issueMessageFormatter->format($ipRanges, array_keys($rangeNames));
-		if (count($rangeNames) === 1) {
-			$message = Html::el('em')
-				->setText("The host's IP address is owned by a known provider (")
-				->addHtml($ipRangesHtml)
-				->addText(') and its firewall or configuration may block automated requests.');
-		} else {
-			$providerNames = array_flip($rangeNames);
-			if (count($providerNames) === 1) {
-				$message = Html::el('em')
-					->setText("The host's IP addresses are owned by a known provider (")
-					->addHtml($ipRangesHtml)
-					->addText(') and its firewall or configuration may block automated requests.');
-			} else {
-				$message = Html::el('em')
-					->setText("The host's IP addresses are owned by known providers (")
-					->addHtml($ipRangesHtml)
-					->addText(') and their firewall or configuration may block automated requests.');
-			}
-		}
-		$message->addText(" If you're the host owner, consider adding an exception for both ")
-			->addHtml(Html::el('code')->addText('/.well-known/security.txt'))
-			->addText(' and ')
-			->addHtml(Html::el('code')->addText('/security.txt'))
-			->addText('.');
-		$errorMessage->addHtml($message);
+		$this->responseStorage->deleteFetchedUpTo($validatorUrl, $now->modify("-{$this->timeBetweenFetches}"));
 	}
 
 

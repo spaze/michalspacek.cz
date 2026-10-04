@@ -163,9 +163,10 @@ services:
 	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionCheck(@database.securityTxtValidator.explorer)
 	- MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionMessageFactory
 	- MichalSpacekCz\SecurityTxtValidator\LibraryVersions(@database.securityTxtValidator.explorer)
+	- MichalSpacekCz\SecurityTxtValidator\ResponseStorage(@database.securityTxtValidator.explorer, fetchAbandonedAfter: %securityTxtValidator.fetchAbandonedAfter%)
 	- MichalSpacekCz\SecurityTxtValidator\ResponsesGarbageCollector(@database.securityTxtValidator.explorer, deleteAfter: %securityTxtValidator.responseDeleteAfter%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtLibraryVersion
-	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(@database.securityTxtValidator.explorer, responseTtl: %securityTxtValidator.responseTtl%, timeBetweenFetches: %securityTxtValidator.timeBetweenFetches%, fetchAbandonedAfter: %securityTxtValidator.fetchAbandonedAfter%)
+	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator(responseTtl: %securityTxtValidator.responseTtl%, timeBetweenFetches: %securityTxtValidator.timeBetweenFetches%)
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorLogger
 	- MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidatorHost
 	- MichalSpacekCz\SecurityTxtValidator\Statistics\FileStatistics

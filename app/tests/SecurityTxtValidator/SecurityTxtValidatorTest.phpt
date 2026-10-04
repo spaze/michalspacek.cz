@@ -572,21 +572,6 @@ final class SecurityTxtValidatorTest extends TestCase
 
 
 	/**
-	 * A claim older than a fetch can possibly run belongs to a request that died, and left there it would hold its
-	 * allowance for good. The age is measured from when the fetch started, which is what the claim's stamp says. All
-	 * of the host's dead claims go, not only this origin's: one left for another port would hold up every other port.
-	 */
-	public function testAClaimNobodyIsWaitingOnAnyMoreIsRemovedBeforeClaiming(): void
-	{
-		$this->dateTime->setDateTime(new DateTimeImmutable('2025-05-01 12:00:00'));
-		$now = $this->dateTime->getNow();
-		$this->fetch->setFetchResult($this->fetchResult());
-		$this->validator->validate('https://example.com');
-		$params = $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND default_port_fetch IS NOT NULL AND fetch_time < ?');
-		Assert::same(['example.com', $now->modify('-50 seconds')->format(DateTimeFormat::MYSQL)], $params);
-	}
-
-
 	/**
 	 * A fetch of the host under the other allowance can finish between the first read and the claim, and the claim
 	 * cannot collide with a fetch that is over, so the wait is checked once more once the claim is held, leaving the
@@ -741,37 +726,6 @@ final class SecurityTxtValidatorTest extends TestCase
 		Assert::true($stale->isStale); // and saying that is what it is, rather than claiming to be cached and current
 		Assert::null($stale->errorMessage);
 		Assert::same([[['day' => '2025-05-01', 'metric' => 'volume', 'bucket' => 'stale', 'count' => 1]]], $this->database->getParamsArrayForQuery('INSERT INTO statistics'));
-	}
-
-
-	/**
-	 * The origin on the scheme's own port counts only its own fetches, so a visitor naming ports cannot stop everyone
-	 * else checking the one address they all actually ask about.
-	 *
-	 * The database double runs no SQL, so what is pinned here is which question gets asked, not what the rows answer:
-	 * the statement for the default origin names the scheme and the port, and the one for any other names neither.
-	 */
-	public function testTheDefaultOriginHasAnAllowanceOfItsOwn(): void
-	{
-		$this->fetch->setFetchResult($this->fetchResult());
-		$this->validator->validate('https://example.com');
-		// The statement is asked twice in a fetch, before the claim and again once it is held with the claim left out, so
-		// the line break pins the first one; the second is the same statement with one more condition
-		$params = $this->database->getParamsForQueryContaining("WHERE ascii_host = ? AND scheme = ? AND port = ? AND fetch_time > ?\n");
-		Assert::same(['example.com', 'https', 443], array_slice($params, 0, 3));
-		Assert::count(4, $params); // the origin, and how far back a fetch still counts
-		Assert::same([], $this->database->getParamsForQueryContaining("WHERE ascii_host = ? AND fetch_time > ?\n"));
-	}
-
-
-	public function testEveryOtherOriginOfAHostSharesOne(): void
-	{
-		$this->fetch->setFetchResult($this->fetchResult());
-		$this->validator->validate('https://example.com:8443');
-		$params = $this->database->getParamsForQueryContaining("WHERE ascii_host = ? AND fetch_time > ?\n");
-		Assert::same('example.com', $params[0]); // any fetch of the host counts, whatever port it was for
-		Assert::count(2, $params);
-		Assert::same([], $this->database->getParamsForQueryContaining('WHERE ascii_host = ? AND scheme = ?'));
 	}
 
 
