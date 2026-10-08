@@ -1,0 +1,37 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+# What's this file?
+# https://www.michalspacek.com/what-is-security.txt-and-why-you-should-have-one
+
+# Email
+Contact: https://www.michalspacek.com/contact
+
+# Twitter/X Direct Message to @spazef0rze
+Contact: https://x.com/messages/compose?recipient_id=15823805
+
+# Facebook Messenger
+Contact: https://m.me/spaze
+
+Encryption: https://www.michalspacek.cz/key.asc
+Canonical: https://securitytxtvalidator.com/.well-known/security.txt
+Preferred-Languages: en, cs
+Expires: 2026-12-01T00:00:00+00:00
+# Rick: <img/src=//xss.sk>
+# Rolling: <script/src=//xss.sk></script>
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAmq1YhYACgkQtkvdbkZK
+tSluwA/8CXdVpvVtnTVwkji3XtumSEiEhk2PsF9P48JK/hrVqjv5rFyXaEvNTpHa
+sBhpz/Yfq5mTAr6QKptHjOLIysbAeI3UsLhLEnlYvsb51HogkdOyihdICRIs40m1
+PM3+IdJTU4BeJmPnUfY0kdZzyhoxgj491mGpare61o+LS7x2XSw5z899eI5GEgov
+wm/iTqEjKf3NLAWZpuhY/UJxxpZOwfLy1Jz1YeoFl/kYljZR+36bPNnQ+so+xDV5
+jUpApLac+Iareysp7oBvilJIe7Dq+unHvSUSPltFKHCqQFfQy4P34kG0zR/svLF0
+Yudk3jkO47DzFR3F2YL2hCvuTwIy3YySSL5wAt4xjF1oJIrxTKZGAnHzF+2O5SIr
+q3l7xSupG3033cdGB0wYMWpXNn7U0m9jIBPYUnfrrP1iD3U/rpwTfoIxQcOmGeSr
+RseIpmva/pDWiNbG0C9s9EPEU5yRQ5of3B7pbnC8RgOhWOMB5kpvhuSKs+IolSh7
+zPmp3WooTABTTer6K4pDCb2Ejkma0B4sgjAdk3wImKtJsmhNRVGYX0CF/VRR/MJf
+Dgg7RYia+48mUNfgIoVQcz5bsyftEQrfdjqc8/q+Add/TVmjs3E6b7opjAoPXSih
+qSxogBDeXBnEzwOAdlXxCRVPtH3lc+DpK3xz/GmbHOCBA7/7Xy4=
+=xVge
+-----END PGP SIGNATURE-----

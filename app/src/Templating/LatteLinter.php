@@ -57,6 +57,11 @@ final readonly class LatteLinter implements CliArgsProvider
 		$latteEngine = $this->templateFactory->createTemplate()->getLatte();
 		$latteEngine->setFeature(Feature::StrictParsing, $strictParsing);
 		$latteEngine->addExtension(new LinterExtension());
+		// Nette\Bridges\ApplicationLatte\UIExtension only exposes these two when it has a control with a presenter,
+		// and the engine here has neither, so every use of them would be reported as an unknown function. The linter
+		// compiles templates and never runs them, so what these return doesn't matter, only that the names exist.
+		$latteEngine->addFunction('isLinkCurrent', static fn(): bool => true);
+		$latteEngine->addFunction('isModuleCurrent', static fn(): bool => true);
 		$linter = new Linter($latteEngine, $debug);
 		$ok = $linter->scanDirectory($this->cliArgs->getArg(self::ARG_PATH));
 		exit($ok ? 0 : 1);

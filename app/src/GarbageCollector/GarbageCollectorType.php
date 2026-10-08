@@ -8,5 +8,6 @@ enum GarbageCollectorType: int
 
 	case Sessions = 1;
 	case AuthTokens = 2;
+	case SecurityTxtValidatorResponses = 3;
 
 }

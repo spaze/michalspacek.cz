@@ -523,3 +523,10 @@ garbageCollector:
 	title: "garbage collector"
 	noStatus: "No status yet"
 	tooOld: "Status is too old (last run %s), garbage collector may not be running"
+timeIntervalAgo:
+	seconds: "%count% second ago|%count% seconds ago"
+	minutes: "%count% minute ago|%count% minutes ago"
+timeIntervalIn:
+	seconds: "in %count% second|in %count% seconds"
+	minutes: "in %count% minute|in %count% minutes"
+	days: "in %count% day|in %count% days"

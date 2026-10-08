@@ -1,0 +1,49 @@
+# Tables
+
+CREATE TABLE `library_versions` (
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
+  `version` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `reference` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `first_seen` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `version` (`version`,`reference`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `responses` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `scheme` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `ascii_host` varchar(253) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `port` smallint unsigned NOT NULL,
+  `default_port_fetch` bit(1) DEFAULT NULL COMMENT '1 while a fetch of the default port runs, 0 while a fetch of another port runs, NULL when the fetch is done',
+  `fetch_time` datetime NOT NULL,
+  `check_result` mediumtext COMMENT 'Not json: MySQL sorts JSON object keys, reordering the redirect chains',
+  `key_parser_library_version` smallint unsigned NOT NULL,
+  `key_fetcher_library_version` smallint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `default_port_fetch` (`ascii_host`,`default_port_fetch`),
+  KEY `origin` (`ascii_host`,`scheme`,`port`,`fetch_time`),
+  KEY `host` (`ascii_host`,`fetch_time`),
+  KEY `key_parser_library_version` (`key_parser_library_version`),
+  KEY `key_fetcher_library_version` (`key_fetcher_library_version`),
+  CONSTRAINT `responses_ibfk_1` FOREIGN KEY (`key_parser_library_version`) REFERENCES `library_versions` (`id`),
+  CONSTRAINT `responses_ibfk_2` FOREIGN KEY (`key_fetcher_library_version`) REFERENCES `library_versions` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `statistics` (
+  `day` date NOT NULL,
+  `metric` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `bucket` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `count` int unsigned NOT NULL,
+  PRIMARY KEY (`day`,`metric`,`bucket`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `version_check` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `last_check` datetime NOT NULL,
+  `key_library_version` smallint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `key_library_version` (`key_library_version`),
+  CONSTRAINT `version_check_ibfk_1` FOREIGN KEY (`key_library_version`) REFERENCES `library_versions` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+# No data

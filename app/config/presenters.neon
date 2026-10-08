@@ -41,6 +41,7 @@ services:
 	- MichalSpacekCz\Presentation\Admin\Pulse\PulsePresenter
 	- MichalSpacekCz\Presentation\Admin\Reauth\ReauthPresenter
 	- MichalSpacekCz\Presentation\Admin\Reviews\ReviewsPresenter
+	- MichalSpacekCz\Presentation\Admin\SecurityTxtValidator\SecurityTxtValidatorPresenter
 	- MichalSpacekCz\Presentation\Admin\Sign\SignPresenter(passkeyRegistrationFormFactory: @passkeyRegistrationFormFactoryReset)
 	- MichalSpacekCz\Presentation\Admin\Talks\TalksPresenter
 	- MichalSpacekCz\Presentation\Admin\Trainings\TrainingsPresenter
@@ -59,6 +60,11 @@ services:
 	- MichalSpacekCz\Presentation\Pulse\Homepage\HomepagePresenter
 	- MichalSpacekCz\Presentation\Pulse\Passwords\PasswordsPresenter
 	- MichalSpacekCz\Presentation\Pulse\PasswordsStorages\PasswordsStoragesPresenter
+
+	# securitytxtvalidator module
+	- MichalSpacekCz\Presentation\SecurityTxtValidator\Account\AccountPresenter
+	- MichalSpacekCz\Presentation\SecurityTxtValidator\DirectInput\DirectInputPresenter
+	- MichalSpacekCz\Presentation\SecurityTxtValidator\Homepage\HomepagePresenter
 
 	# easteregg module
 	- MichalSpacekCz\Presentation\EasterEgg\Nette\NettePresenter

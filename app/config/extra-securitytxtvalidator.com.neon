@@ -1,0 +1,7 @@
+includes:
+	- common-securitytxtvalidator.com.neon
+
+parameters:
+	domain:
+		root: securitytxtvalidator.com
+		sharedStaticRoot: https://www.michalspacek.cz

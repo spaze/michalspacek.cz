@@ -17,6 +17,7 @@ parameters:
 				test: "msletest_cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe7100"
 		awsLambdaApiKeys:
 			upcKeys: "thisismychurchthisiswhereihealmyhurts"
+			securityTxtValidator: "icantgetnosleep"
 		certificatesApiUsers:
 			foo: f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7 # foo
 		mail:
@@ -27,6 +28,8 @@ parameters:
 			upcKeys:
 				password: ""
 			pulse:
+				password: ""
+			securityTxtValidator:
 				password: ""
 	encryption:
 		activeKeyIds:
@@ -45,7 +48,11 @@ parameters:
 			url: "https://was.example/%s/%s"
 	certificatesApi:
 		hideExpiredAfter: 7
-
+	securityTxtValidator:
+		responseTtl: "5 minutes"
+		timeBetweenFetches: "30 seconds"
+		fetchAbandonedAfter: "50 seconds"
+		responseDeleteAfter: "1 month"
 services:
 	garbageCollectorRunner: MichalSpacekCz\GarbageCollector\GarbageCollectorRunner(lockFilePath: %tempDir%/tests/garbageCollectorRunner.lock)
 	integrityPolicy: MichalSpacekCz\Test\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyMock
@@ -55,10 +62,15 @@ services:
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
 	database.pulse.explorer: @database.default.explorer
+	database.securityTxtValidator.explorer: @database.default.explorer
 	dateTimeFactory: MichalSpacekCz\Test\DateTime\DateTimeMachineFactory
+	dateTimeFactoryUtc:
+		create: MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc
+		autowired: [MichalSpacekCz\DateTime\DateTimeFactoryUtc, MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc]
 	texyFormatter: MichalSpacekCz\Test\Formatter\TexyFormatterMock(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\Placeholders\TexyFormatterPlaceholder), staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	httpClient: MichalSpacekCz\Test\Http\Client\HttpClientMock
 	- MichalSpacekCz\Test\Form\FormComponents
+	securityTxtValidatorFetch: MichalSpacekCz\Test\SecurityTxtValidator\SecurityTxtValidatorFetchMock
 	passkeyAuthentication: MichalSpacekCz\Test\User\WebAuthn\PasskeyAuthenticatorMock
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
