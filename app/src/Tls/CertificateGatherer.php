@@ -70,6 +70,7 @@ final readonly class CertificateGatherer
 		$request = new HttpClientRequest("https://{$ipAddress}/");
 		$request->setUserAgent(__METHOD__);
 		$request->setFollowLocation(false); // capture this host's certificate, never a redirect target's, regardless of the client default
+		$request->setIgnoreHttpErrors(true); // only the certificate matters, not the status
 		$request->addHeader('Host', $hostname);
 		$request->setTlsCaptureCertificate(true);
 		$request->setTlsServerName($hostname);
