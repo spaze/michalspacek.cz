@@ -13,6 +13,9 @@ chmod --verbose a+w \
 # Set sticky bit to the session directory and make it writable, even if unused
 chmod --verbose 1733 "$ROOT_DIR/sessions/"
 
+# GnuPG's home, where the app keeps the keybox and trust database it verifies security.txt signatures with
+chmod --verbose 1733 "$ROOT_DIR/gnupg/"
+
 # Executable files
 FILES=$(git ls-files --stage | grep "^100755" | grep --only-matching --perl-regexp "(?<=\t).*$")
 for FILE in $FILES; do

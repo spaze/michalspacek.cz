@@ -80,7 +80,7 @@ parameters:
 		fetchAbandonedAfter: "50 seconds"
 		responseDeleteAfter: "1 month"
 		lambdaStage: "prod"
-		gnupgHome: /home/keymaker/.gnupg
+		gnupgHome: %siteDir%/../gnupg
 		accountFeatureEnabled: false
 
 	# Added/changed in local.neon
