@@ -125,4 +125,4 @@ parameters:
 			url:
 		securityTxtValidator:
 			accessKeyId:
-			region:
+			region: eu-west-1
