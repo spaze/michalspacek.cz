@@ -90,7 +90,6 @@ parameters:
 			url: "https://example.amazonaws.com/stage/upc_keys/%s/%s"
 		securityTxtValidator:
 			accessKeyId: "iamthekeymaker"
-			region: "eu-west-1"
 
 services:
 	sleep: MichalSpacekCz\Test\Utils\Insomnia
