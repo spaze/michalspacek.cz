@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Talk;
 
+use DateTime;
 use Exception;
+use MichalSpacekCz\Talks\TalkFactory;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
@@ -14,6 +16,8 @@ use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Row;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Override;
@@ -33,6 +37,7 @@ final class TalkFormFactoryTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly TalkFormFactory $formFactory,
+		private readonly TalkFactory $talkFactory,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		IPresenterFactory $presenterFactory,
@@ -109,6 +114,55 @@ final class TalkFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * A talk without an action has no page of its own, so the message has nothing to link to; it used to try anyway
+	 * and die on "No route for Www:Talks:talk()"
+	 */
+	public function testCreateOnSuccessAddWithoutAction(): void
+	{
+		$form = $this->formFactory->create(
+			function (Html $message): void {
+				$this->message = $message;
+			},
+			null,
+		);
+		$form->setDefaults([
+			'locale' => 123,
+			'date' => '3210-09-08 10:20:30',
+		]);
+		$this->applicationPresenter->anchorForm($form);
+		Arrays::invoke($form->onSuccess, $form);
+		Assert::same('Přednáška přidána', $this->message?->toHtml());
+		Assert::null($this->database->getParamsArrayForQuery('INSERT INTO talks')[0]['action']);
+	}
+
+
+	/**
+	 * The talk being edited must not offer itself as the source of slides or files, nor as its own replacement, even
+	 * when it has no action, which used to be what the talk was told apart by
+	 */
+	public function testCreateLeavesTheEditedTalkOutOfTheTalkSelects(): void
+	{
+		$edited = $this->buildTalkRow(1, null);
+		$other = $this->buildTalkRow(2, 'other-talk');
+		$this->database->addFetchAllResult([$edited, $other]);
+		$editedRow = new Row();
+		foreach ($edited as $key => $value) {
+			$editedRow->$key = $value;
+		}
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+			$this->talkFactory->createFromDatabaseRow($editedRow),
+		);
+		foreach (['slidesTalk', 'filenamesTalk', 'supersededBy'] as $name) {
+			$select = $form->getComponent($name);
+			assert($select instanceof SelectBox);
+			Assert::same([2], array_keys($select->getItems()), $name);
+		}
+	}
+
+
 	public function testValidate(): void
 	{
 		$texyFieldsValues = [
@@ -147,6 +201,45 @@ final class TalkFormFactoryTest extends TestCase
 			$errors[] = $error instanceof Stringable ? (string)$error : $error;
 		}
 		Assert::same($expected, $errors);
+	}
+
+
+	/**
+	 * @return array<string, int|string|DateTime|null>
+	 */
+	private function buildTalkRow(int $id, ?string $action): array
+	{
+		return [
+			'id' => $id,
+			'localeId' => 123,
+			'locale' => 'cs_CZ',
+			'translationGroupId' => null,
+			'action' => $action,
+			'title' => "Talk {$id}",
+			'description' => null,
+			'date' => new DateTime('2026-01-02 03:04:05'),
+			'duration' => null,
+			'href' => null,
+			'hasSlides' => 0,
+			'slidesHref' => null,
+			'slidesEmbed' => null,
+			'slidesNote' => null,
+			'videoHref' => null,
+			'videoThumbnail' => null,
+			'videoThumbnailAlternative' => null,
+			'videoEmbed' => null,
+			'event' => 'Event',
+			'eventHref' => null,
+			'ogImage' => null,
+			'transcript' => null,
+			'favorite' => null,
+			'slidesTalkId' => null,
+			'filenamesTalkId' => null,
+			'supersededById' => null,
+			'supersededByAction' => null,
+			'supersededByTitle' => null,
+			'publishSlides' => 0,
+		];
 	}
 
 }
