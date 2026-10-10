@@ -6,7 +6,7 @@ use Composer\InstalledVersions;
 require __DIR__ . '/../vendor/autoload.php';
 
 /**
- * @return array{libPrettyVersion:string, libVersion:string, libReference:string}
+ * @return array{libPrettyVersion:string|null, libVersion:string|null, libReference:string|null}
  */
 return function (): array {
 	return [
