@@ -5,10 +5,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\SecurityTxtValidator;
 
 use DateTime;
+use DateTimeImmutable;
 use MichalSpacekCz\SecurityTxtValidator\SecurityTxtLibraryVersion;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\DateTime\DateTimeMachineFactoryUtc;
 use MichalSpacekCz\Test\Http\Request as HttpRequestMock;
+use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -30,6 +33,8 @@ final class SecurityTxtValidatorPresenterTest extends TestCase
 		private readonly User $user,
 		private readonly Database $database,
 		private readonly SecurityTxtLibraryVersion $libraryVersion,
+		private readonly DateTimeMachineFactoryUtc $dateTimeFactory,
+		private readonly NoOpTranslator $translator,
 		HttpRequestMock $httpRequest,
 	) {
 		$httpRequest->setMethod(IRequest::Get);
@@ -41,6 +46,7 @@ final class SecurityTxtValidatorPresenterTest extends TestCase
 	{
 		$this->user->logout();
 		$this->database->reset();
+		$this->dateTimeFactory->setDateTime(null);
 	}
 
 
@@ -85,11 +91,14 @@ final class SecurityTxtValidatorPresenterTest extends TestCase
 	public function testTheInstalledVersionOnLambdaIsAMatch(): void
 	{
 		$installed = $this->libraryVersion->getInstalled();
-		$this->database->addFetchResult(['id' => 1, 'lastCheck' => new DateTime('-1 day'), 'lambdaVersion' => $installed->getVersion(), 'lambdaReference' => $installed->getReference()]);
+		$this->database->addFetchResult(['id' => 1, 'lastCheck' => new DateTime('2026-10-10 01:45:28 UTC'), 'lambdaVersion' => $installed->getVersion(), 'lambdaReference' => $installed->getReference()]);
+		$this->dateTimeFactory->setDateTime(new DateTimeImmutable('2026-10-10 01:48:50 UTC'));
 		$html = $this->renderPage('lambdaVersion');
 		Assert::contains('Versions match', $html);
 		Assert::notContains("Versions don't match", $html);
 		Assert::notContains('has not been checked yet', $html);
+		Assert::contains('messages.timeIntervalAgo.minutes', $html);
+		Assert::same([3], $this->translator->getParameters('messages.timeIntervalAgo.minutes')[0]);
 	}
 
 
