@@ -40,7 +40,7 @@ final readonly class TalkFormFactory
 	public function create(callable $onSuccess, ?Talk $talk = null): Form
 	{
 		$form = $this->factory->create();
-		$allTalks = $this->getAllTalksExcept($talk !== null ? (string)$talk->getAction() : null);
+		$allTalks = $this->getAllTalksExcept($talk?->getId());
 
 		$form->addInteger('translationGroup', 'Skupina překladů:')
 			->setRequired(false);
@@ -259,14 +259,13 @@ final readonly class TalkFormFactory
 
 
 	/**
-	 * @param string|null $talkAction
 	 * @return array<int, string>
 	 */
-	private function getAllTalksExcept(?string $talkAction): array
+	private function getAllTalksExcept(?int $talkId): array
 	{
 		$allTalks = [];
 		foreach ($this->talks->getAll() as $talk) {
-			if ($talkAction !== $talk->getAction()) {
+			if ($talkId !== $talk->getId()) {
 				$title = Strings::truncate($talk->getTitleTexy(), 40);
 				$event = Strings::truncate(strip_tags($talk->getEvent()->render()), 30);
 				$allTalks[$talk->getId()] = sprintf('%s (%s, %s)', $title, $talk->getDate()->format('j. n. Y'), $event);
