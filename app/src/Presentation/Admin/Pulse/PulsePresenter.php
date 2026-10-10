@@ -20,9 +20,15 @@ final class PulsePresenter extends BasePresenter
 	}
 
 
+	public function actionDefault(): void
+	{
+		$this->template->setParameters(new PulseDefaultTemplateParameters('Pulse'));
+	}
+
+
 	public function actionPasswordsStorages(): void
 	{
-		$this->template->pageTitle = 'Password storages';
+		$this->template->pageTitle = 'Pulse: Password storages';
 		$this->template->newDisclosures = self::NEW_DISCLOSURES;
 	}
 
