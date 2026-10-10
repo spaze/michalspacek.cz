@@ -373,8 +373,8 @@ certificates:
 		expiredDaysAgo: "před %count% dnem|před %count% dny|před %count% dny"
 		expiresInDays: "za %count% den|za %count% dny|za %count% dní"
 		howItWorks: "Jak to funguje"
-		certbotHook: "\"Certbot deploy hook\":[%s] reportuje obnovené certifikáty, ty jsou zobrazeny v tabulce níže."
-		certbotHookNewCert: "Deploy hook se spouští pouze při obnově, pro první certifikát v řadě je potřeba to udělat ručně. Pro zalogování nového certifikátu pro `example.com` spusťte:"
+		certbotHook: "\"Certbot deploy hook\":[%s] reportuje vydané certifikáty, nové i obnovené, ty jsou zobrazeny v tabulce certifikátů."
+		certbotHookManual: "Pokud je potřeba certifikát pro `example.com` zalogovat ručně, spusťte:"
 		certmonitor: "Skript `bin/certmonitor.php` čte log certifikátů a posílá požadavky na jednotlivé domény, přičemž kontroluje, zda hodnota `notAfter` zalogovaného certifikátu odpovídá hodnotě `notAfter` certifikátu načteného z IP adres domény."
 		certmonitorPeriodic: "Monitorovací skript se pravidelně spouští v GitHub Actions v \"//Certificate monitoring// workflow\":[%s]."
 blog:
