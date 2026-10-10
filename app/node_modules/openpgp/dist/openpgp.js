@@ -1,4 +1,4 @@
-/*! OpenPGP.js v6.3.1 - 2026-06-04 - this is LGPL licensed code, see LICENSE/our website https://openpgpjs.org/ for more information. */
+/*! OpenPGP.js v6.3.2 - 2026-09-24 - this is LGPL licensed code, see LICENSE/our website https://openpgpjs.org/ for more information. */
 var openpgp = (function (exports) {
   'use strict';
 
@@ -1740,7 +1740,7 @@ var openpgp = (function (exports) {
        * @memberof module:config
        * @property {String} versionString A version string to be included in armored messages
        */
-      versionString: 'OpenPGP.js 6.3.1',
+      versionString: 'OpenPGP.js 6.3.2',
       /**
        * @memberof module:config
        * @property {String} commentString A comment string to be included in armored messages
@@ -2099,6 +2099,23 @@ var openpgp = (function (exports) {
               }
           }
           return -1;
+      },
+      /**
+       * Check Uint8Array equality in algorithmic constant time
+       * @param {Uint8Array} array1 - First array
+       * @param {Uint8Array} array2 - Second array
+       * @returns {Boolean} Equality
+       * @throws on input arrays of different lengths
+       */
+      timingSafeEqualsUint8Array: function (array1, array2) {
+          if (array1.length !== array2.length) {
+              throw new Error('Equal input arrays expected');
+          }
+          let equal = 1;
+          for (let i = 0; i < array1.length; i++) {
+              equal &= array1[i] === array2[i];
+          }
+          return !!equal;
       },
       /**
        * Calculates a 16bit sum of a Uint8Array by adding each character
@@ -4552,8 +4569,10 @@ var openpgp = (function (exports) {
                       case 2:
                           // The packet has a four-octet length. The header is 5
                           // octets long.
-                          packetLength = (await reader.readByte() << 24) | (await reader.readByte() << 16) | (await reader.readByte() <<
-                              8) | await reader.readByte();
+                          // The final `>>> 0` is needed because `<< 24` operates on signed 32-bit integers:
+                          // without it, lengths >= 2**31 parse as negative
+                          packetLength = ((await reader.readByte() << 24) | (await reader.readByte() << 16) |
+                              (await reader.readByte() << 8) | await reader.readByte()) >>> 0;
                           break;
                       default:
                           // 3 - The packet is of indeterminate length. The header is 1
@@ -4591,8 +4610,10 @@ var openpgp = (function (exports) {
                       // 4.2.2.3. Five-Octet Lengths
                   }
                   else {
-                      packetLength = (await reader.readByte() << 24) | (await reader.readByte() << 16) | (await reader.readByte() <<
-                          8) | await reader.readByte();
+                      // The final `>>> 0` is needed because `<< 24` operates on signed 32-bit integers:
+                      // without it, lengths >= 2**31 parse as negative
+                      packetLength = ((await reader.readByte() << 24) | (await reader.readByte() << 16) |
+                          (await reader.readByte() << 8) | await reader.readByte()) >>> 0;
                   }
               }
               if (packetLength > 0) {
@@ -9061,7 +9082,7 @@ var openpgp = (function (exports) {
               for (let i = 0; i < tagLength$2; i++) {
                   tag[i] ^= omacAdata[i] ^ omacNonce[i];
               }
-              if (!util.equalsUint8Array(ctTag, tag))
+              if (!util.timingSafeEqualsUint8Array(ctTag, tag))
                   throw new Error('Authentication tag mismatch');
               const plaintext = await ctr(ciphered, omacNonce);
               return plaintext;
@@ -9297,7 +9318,7 @@ var openpgp = (function (exports) {
               ciphertext = ciphertext.subarray(0, -tagLength$1);
               const crypted = crypt(decipher, ciphertext, nonce, adata);
               // if (Tag[1..TAGLEN] == T)
-              if (util.equalsUint8Array(tag, crypted.subarray(-tagLength$1))) {
+              if (util.timingSafeEqualsUint8Array(tag, crypted.subarray(-tagLength$1))) {
                   return crypted.subarray(0, -tagLength$1);
               }
               throw new Error('Authentication tag mismatch');
@@ -11800,7 +11821,7 @@ var openpgp = (function (exports) {
           const subpacketLength = util.readNumber(bytes.subarray(0, subpacketLengthBytes));
           let i = subpacketLengthBytes;
           // subpacket data set (zero or more subpackets)
-          while (i < 2 + subpacketLength) {
+          while (i < subpacketLengthBytes + subpacketLength) {
               const len = readSimpleLength(bytes.subarray(i, bytes.length));
               i += len.offset;
               this.readSubPacket(bytes.subarray(i, i + len.len), trusted, config);
@@ -12737,7 +12758,7 @@ var openpgp = (function (exports) {
           if (!decompressionFn) {
               throw new Error(`${compressionName} decompression not supported`);
           }
-          let decompressed = await decompressionFn(this.compressed);
+          let decompressed = await decompressionFn(this.compressed, config$1);
           if (config$1.maxDecompressedMessageSize !== Infinity) {
               let decompressedSize = 0;
               decompressed = transform(decompressed, chunk => {
@@ -12810,7 +12831,7 @@ var openpgp = (function (exports) {
    * @private
    */
   function zlib(compressionStreamInstantiator, ZlibStreamedConstructor) {
-      return data => {
+      return (data, _config) => {
           let stream;
           if (isArrayStream(data)) {
               stream = new ReadableStream({
@@ -12889,9 +12910,9 @@ var openpgp = (function (exports) {
       };
   }
   function bzip2Decompress() {
-      return async function (data) {
+      return async function (data, config) {
           const { default: unbzip2Stream } = await Promise.resolve().then(function () { return index$1; });
-          return unbzip2Stream(toStream(data));
+          return unbzip2Stream(toStream(data), config.maxDecompressedMessageSize);
       };
   }
   /**
@@ -12911,7 +12932,7 @@ var openpgp = (function (exports) {
       zlib: /*#__PURE__*/ zlib(getCompressionStreamInstantiators('deflate').compressor, Zlib)
   };
   const decompress_fns = {
-      uncompressed: data => data,
+      uncompressed: (data, _config) => data,
       zip: /*#__PURE__*/ zlib(getCompressionStreamInstantiators('deflate-raw').decompressor, Inflate),
       zlib: /*#__PURE__*/ zlib(getCompressionStreamInstantiators('deflate').decompressor, Unzlib),
       bzip2: /*#__PURE__*/ bzip2Decompress() // NB: async due to dynamic lib import
@@ -12934,6 +12955,27 @@ var openpgp = (function (exports) {
   // You should have received a copy of the GNU Lesser General Public
   // License along with this library; if not, write to the Free Software
   // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  /**
+   * Store `value` in the 64-bit big-endian field at `byteOffset` of `view`.
+   * @param {DataView} dataView
+   * @param {Number} byteOffset - Offset of the 64-bit field
+   * @param {Number} value - Value to store (a safe integer)
+   */
+  function setUint64(dataView, byteOffset, value) {
+      if (typeof dataView.setBigUint64 === 'function') {
+          return dataView.setBigUint64(byteOffset, BigInt(value));
+      }
+      // Fallback for Safari 14, which lacks `DataView.prototype.setBigUint64`.
+      if (value <= 0xFFFFFFFF) {
+          dataView.setUint32(byteOffset, 0);
+          dataView.setUint32(byteOffset + 4, value);
+      }
+      else {
+          const bigValue = BigInt(value);
+          dataView.setUint32(byteOffset, Number(bigValue >> BigInt(32)));
+          dataView.setUint32(byteOffset + 4, Number(bigValue & BigInt(0xFFFFFFFF)));
+      }
+  }
   // A SEIP packet can contain the following packet types
   const allowedPackets$4 = /*#__PURE__*/ util.constructAllowedPackets([
       LiteralDataPacket,
@@ -13202,7 +13244,7 @@ var openpgp = (function (exports) {
                       // After the last chunk, we either encrypt a final, empty
                       // data chunk to get the final authentication tag or
                       // validate that final authentication tag.
-                      adataView.setInt32(5 + chunkIndexSizeIfAEADEP + 4, cryptedBytes); // Should be setInt64(5 + chunkIndexSizeIfAEADEP, ...)
+                      setUint64(adataView, 5 + chunkIndexSizeIfAEADEP, cryptedBytes);
                       cryptedPromise = modeInstance[fn](finalChunk, nonce, adataTagArray);
                       cryptedPromise.catch(() => { });
                       queuedBytes += tagLengthIfEncrypting;
@@ -13218,11 +13260,15 @@ var openpgp = (function (exports) {
                       await latestPromise; // Respect backpressure
                   }
                   if (!done) {
+                      // The chunk index is written as a full 64-bit value, so the derived nonces are always unique
+                      // and never wrap. This also keeps AES-GCM within its security bounds without an explicit chunk limit:
+                      // the NIST SP 800-38D 2^32-invocation limit guards against random-nonce collisions, which do not
+                      // apply to the OpenPGP counter-based nonces.
                       if (isSEIPDv2) { // SEIPD V2
-                          ivView.setInt32(iv.length - 4, ++chunkIndex); // Should be setInt64(iv.length - 8, ...)
+                          setUint64(ivView, iv.length - 8, ++chunkIndex);
                       }
                       else { // AEADEncryptedDataPacket
-                          adataView.setInt32(5 + 4, ++chunkIndex); // Should be setInt64(5, ...)
+                          setUint64(adataView, 5, ++chunkIndex);
                       }
                   }
                   else {
@@ -16162,10 +16208,10 @@ var openpgp = (function (exports) {
   // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   // A key revocation certificate can contain the following packets
   const allowedRevocationPackets = /*#__PURE__*/ util.constructAllowedPackets([SignaturePacket]);
-  const mainKeyPacketTags = new Set([enums.packet.publicKey, enums.packet.privateKey]);
+  const mainKeyPacketTags = new Set([enums.packet.publicKey, enums.packet.secretKey]);
   const keyPacketTags = new Set([
-      enums.packet.publicKey, enums.packet.privateKey,
-      enums.packet.publicSubkey, enums.packet.privateSubkey
+      enums.packet.publicKey, enums.packet.secretKey,
+      enums.packet.publicSubkey, enums.packet.secretSubkey
   ]);
   /**
    * Abstract class that represents an OpenPGP key. Must contain a primary key.
@@ -18084,12 +18130,12 @@ var openpgp = (function (exports) {
        * @returns {Promise<Signature>} New detached signature of message content.
        * @async
        */
-      async signDetached(signingKeys = [], recipientKeys = [], signature = null, signingKeyIDs = [], recipientKeyIDs = [], date = new Date(), userIDs = [], notations = [], config$1 = config) {
+      async signDetached(signingKeys = [], recipientKeys = [], signature = null, signingKeyIDs = [], date = new Date(), signingUserIDs = [], recipientUserIDs = [], notations = [], config$1 = config) {
           const literalDataPacket = this.packets.findPacket(enums.packet.literalData);
           if (!literalDataPacket) {
               throw new Error('No literal data packet to sign.');
           }
-          return new Signature(await createSignaturePackets(literalDataPacket, signingKeys, recipientKeys, signature, signingKeyIDs, recipientKeyIDs, date, userIDs, notations, true, config$1));
+          return new Signature(await createSignaturePackets(literalDataPacket, signingKeys, recipientKeys, signature, signingKeyIDs, date, signingUserIDs, recipientUserIDs, notations, true, config$1));
       }
       /**
        * Verify message signatures
@@ -28330,7 +28376,7 @@ var openpgp = (function (exports) {
 
   	unbzip2Stream_1 = unbzip2Stream;
 
-  	function unbzip2Stream(input) {
+  	function unbzip2Stream(input, maxDecompressedBytes = Infinity) {
   	    const bufferQueue = [];
   	    let hasBytes = 0;
   	    let blockSize = 0;
@@ -28338,20 +28384,32 @@ var openpgp = (function (exports) {
   	    let hasAllData = false;
   	    let bitReader = null;
   	    let streamCRC = null;
+  	    let totalOut = 0; // cumulative decompressed bytes across all blocks
 
   	    function decompressBlock(push){
   	        if(!blockSize) {
   	            blockSize = bz2.header(bitReader);
-  	            //console.error("got header of", blockSize);
   	            streamCRC = 0;
   	            return false;
   	        } else {
   	            const bufsize = 100000 * blockSize;
   	            const buf = new Int32Array(bufsize);
 
-  	            const chunk = [];
+  	            // Growable output buffer
+  	            let chunk = new Uint8Array(32768);
+  	            let chunkLen = 0;
   	            const f = function(b) {
-  	                chunk.push(b);
+  	                if (++totalOut > maxDecompressedBytes) {
+  	                    throw new Error('Maximum decompressed size exceeded');
+  	                }
+  	                if (chunkLen === chunk.length) {
+  	                    // Grow the chunk buffer
+  	                    const newLen = Math.min(chunk.length * 2, chunkLen + (maxDecompressedBytes - totalOut) + 1);
+  	                    const bigger = new Uint8Array(newLen);
+  	                    bigger.set(chunk);
+  	                    chunk = bigger;
+  	                }
+  	                chunk[chunkLen++] = b;
   	            };
 
   	            streamCRC = bz2.decompress(bitReader, f, buf, bufsize, streamCRC);
@@ -28360,8 +28418,7 @@ var openpgp = (function (exports) {
   	                blockSize = 0;
   	                return false;
   	            } else {
-  	                //console.error('decompressed', chunk.length,'bytes');
-  	                push(new Uint8Array(chunk));
+  	                push(chunk.subarray(0, chunkLen));
   	                return true;
   	            }
   	        }
@@ -28374,14 +28431,10 @@ var openpgp = (function (exports) {
   	            return decompressBlock(function(d) {
   	                controller.enqueue(d);
   	                if (d !== null) {
-  	                    //console.error('write at', outlength.toString(16));
   	                    outlength += d.length;
-  	                } else {
-  	                    //console.error('written EOS');
   	                }
   	            });
   	        } catch(e) {
-  	            //console.error(e);
   	            controller.error(e);
   	            broken = true;
   	            return true;
