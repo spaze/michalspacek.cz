@@ -148,7 +148,9 @@ final class FpmHandler extends HttpHandler
             $response = $this->client->readResponse($socketId, $timeoutDelayInMs);
         } catch (TimedoutException) {
             $invocationId = $context->getAwsRequestId();
-            echo "$invocationId The PHP script timed out. Bref will now restart PHP-FPM to start from a clean slate and flush the PHP logs.\nTimeouts can happen for example when trying to connect to a remote API or database, if this happens continuously check for those.\nIf you are using a RDS database, read this: https://bref.sh/docs/environment/database.html#accessing-the-internet\n";
+            echo "$invocationId The PHP script timed out. Bref will now restart PHP-FPM to start from a clean slate and flush the PHP logs. "
+                . 'Timeouts can happen for example when trying to connect to a remote API or database, if this happens continuously check for those. '
+                . "If you are using a RDS database, read this: https://bref.sh/docs/environment/database#vpc-databases-private-network\n";
 
             /**
              * Restart FPM so that the blocked script is 100% terminated and that its logs are flushed to stderr.
@@ -253,6 +255,9 @@ final class FpmHandler extends HttpHandler
         $request->setCustomVar('PATH_INFO', $event->getPath());
         $request->setCustomVar('QUERY_STRING', $event->getQueryString());
         $request->setCustomVar('LAMBDA_INVOCATION_CONTEXT', json_encode($context, JSON_THROW_ON_ERROR));
+        // Same variables as in the other runtimes, see LambdaRuntime::processNextEvent()
+        $request->setCustomVar('LAMBDA_REQUEST_ID', $context->getAwsRequestId());
+        $request->setCustomVar('_X_AMZN_TRACE_ID', $context->getTraceId());
         $request->setCustomVar('LAMBDA_REQUEST_CONTEXT', json_encode($event->getRequestContext(), JSON_THROW_ON_ERROR));
 
         $contentType = $event->getContentType();
