@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "bref/bref",
-            "version": "3.0.9",
-            "version_normalized": "3.0.9.0",
+            "version": "3.0.12",
+            "version_normalized": "3.0.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brefphp/bref.git",
-                "reference": "0d899c6a2122519d4b69f80ef20503007cccafbc"
+                "reference": "6ee3f1bbfa7820889788cd1f79fa597736e73a17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brefphp/bref/zipball/0d899c6a2122519d4b69f80ef20503007cccafbc",
-                "reference": "0d899c6a2122519d4b69f80ef20503007cccafbc",
+                "url": "https://api.github.com/repos/brefphp/bref/zipball/6ee3f1bbfa7820889788cd1f79fa597736e73a17",
+                "reference": "6ee3f1bbfa7820889788cd1f79fa597736e73a17",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 "symfony/console": "^5.4|^6.4|^7.0|^8.0",
                 "symfony/yaml": "^5.4|^6.4|^7.0|^8.0"
             },
-            "time": "2026-08-04T08:22:56+00:00",
+            "time": "2026-09-27T21:42:43+00:00",
             "bin": [
                 "src/bref-local"
             ],
@@ -66,7 +66,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brefphp/bref/issues",
-                "source": "https://github.com/brefphp/bref/tree/3.0.9"
+                "source": "https://github.com/brefphp/bref/tree/3.0.12"
             },
             "funding": [
                 {
