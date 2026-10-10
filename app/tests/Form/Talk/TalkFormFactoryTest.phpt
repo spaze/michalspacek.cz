@@ -109,6 +109,29 @@ final class TalkFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * A talk without an action has no page of its own, so the message has nothing to link to; it used to try anyway
+	 * and die on "No route for Www:Talks:talk()"
+	 */
+	public function testCreateOnSuccessAddWithoutAction(): void
+	{
+		$form = $this->formFactory->create(
+			function (Html $message): void {
+				$this->message = $message;
+			},
+			null,
+		);
+		$form->setDefaults([
+			'locale' => 123,
+			'date' => '3210-09-08 10:20:30',
+		]);
+		$this->applicationPresenter->anchorForm($form);
+		Arrays::invoke($form->onSuccess, $form);
+		Assert::same('Přednáška přidána', $this->message?->toHtml());
+		Assert::null($this->database->getParamsArrayForQuery('INSERT INTO talks')[0]['action']);
+	}
+
+
 	public function testValidate(): void
 	{
 		$texyFieldsValues = [

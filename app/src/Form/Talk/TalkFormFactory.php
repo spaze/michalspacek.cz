@@ -187,7 +187,7 @@ final readonly class TalkFormFactory
 				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename !== null) {
 					$this->videoThumbnails->deleteFile($talk->getId(), $thumbnailAlternativeFilename);
 				}
-				$message = Html::el()->setText('Přednáška upravena ');
+				$message = Html::el()->setText('Přednáška upravena');
 			} else {
 				$talkId = $this->talks->add(
 					$values->locale,
@@ -216,9 +216,11 @@ final readonly class TalkFormFactory
 					$values->publishSlides,
 				);
 				$this->videoThumbnails->saveVideoThumbnailFiles($talkId, $values->videoThumbnail, $values->videoThumbnailAlternative);
-				$message = Html::el()->setText('Přednáška přidána ');
+				$message = Html::el()->setText('Přednáška přidána');
 			}
-			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'));
+			if ($values->action !== '') {
+				$message->addText(' ')->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'));
+			}
 			$onSuccess($message);
 		};
 		return $form;
