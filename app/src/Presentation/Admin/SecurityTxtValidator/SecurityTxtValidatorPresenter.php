@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Admin\SecurityTxtValidator;
 
-use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateIntervalFormatter;
+use MichalSpacekCz\DateTime\DateTimeFactoryUtc;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
 use MichalSpacekCz\SecurityTxtValidator\Forms\CheckLambdaVersionFormFactory;
 use MichalSpacekCz\SecurityTxtValidator\LambdaVersionCheck\SecurityTxtValidatorLambdaVersionCheck;
@@ -19,6 +19,7 @@ final class SecurityTxtValidatorPresenter extends BasePresenter
 		private readonly CheckLambdaVersionFormFactory $formFactory,
 		private readonly SecurityTxtValidatorLambdaVersionCheck $lambdaVersionCheck,
 		private readonly DateIntervalFormatter $dateIntervalFormatter,
+		private readonly DateTimeFactoryUtc $dateTimeFactory,
 		private readonly SecurityTxtLibraryVersion $libraryVersion,
 	) {
 		parent::__construct();
@@ -44,7 +45,7 @@ final class SecurityTxtValidatorPresenter extends BasePresenter
 		$this->template->lambdaVersion = $lastSeenVersion?->getVersion();
 		$this->template->versionMatch = $lastSeenVersion === null ? null : $installedVersion->equals($lastSeenVersion->getVersion());
 		$this->template->lastCheck = $lastSeenVersion?->getLastCheck();
-		$this->template->lastCheckAgo = $lastSeenVersion !== null ? $this->dateIntervalFormatter->toMinutesSecondsAgo($lastSeenVersion->getLastCheck()->diff(new DateTimeImmutable())) : null;
+		$this->template->lastCheckAgo = $lastSeenVersion !== null ? $this->dateIntervalFormatter->toMinutesSecondsAgo($lastSeenVersion->getLastCheck()->diff($this->dateTimeFactory->getNow())) : null;
 	}
 
 
