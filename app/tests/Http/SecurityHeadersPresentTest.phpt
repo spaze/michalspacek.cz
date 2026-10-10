@@ -31,6 +31,8 @@ final class SecurityHeadersPresentTest extends TestCase
 			'static file' => ['url' => 'https://www.michalspacek.cz/robots.txt', 'corp' => 'cross-origin'],
 			'301 redirect' => ['url' => 'https://www.michalspacek.cz/security.txt', 'corp' => 'cross-origin'],
 			'nginx 404' => ['url' => 'https://www.michalspacek.cz/there-is-no.php', 'corp' => 'cross-origin'],
+			'redirect-only host' => ['url' => 'https://upc.michalspacek.cz/', 'corp' => 'cross-origin'],
+			'favicon redirect' => ['url' => 'https://upcwifikeys.com/favicon.ico', 'corp' => 'cross-origin'],
 			'api subdomain' => ['url' => 'https://api.michalspacek.cz/', 'corp' => 'same-origin'],
 			'pulse subdomain' => ['url' => 'https://pulse.michalspacek.cz/', 'corp' => 'same-origin'],
 		];
@@ -47,17 +49,18 @@ final class SecurityHeadersPresentTest extends TestCase
 			->setFollowLocation(false) // need a redirect's own headers, not the target's
 			->setIgnoreHttpErrors(true); // a 404 is a response to inspect, not an error to throw on
 		$response = new HttpClient()->get($request);
+		// Every header exactly once, a server block declaring one twice would still pass a first-value check
 		$expected = [
-			'Strict-Transport-Security' => self::HSTS,
-			'X-Content-Type-Options' => 'nosniff',
-			'X-Frame-Options' => 'DENY',
-			'Cross-Origin-Opener-Policy' => 'same-origin; report-to="default"',
-			'Cross-Origin-Resource-Policy' => $corp,
-			'Cross-Origin-Embedder-Policy-Report-Only' => 'require-corp; report-to="default"',
+			'Strict-Transport-Security' => [self::HSTS],
+			'X-Content-Type-Options' => ['nosniff'],
+			'X-Frame-Options' => ['DENY'],
+			'Cross-Origin-Opener-Policy' => ['same-origin; report-to="default"'],
+			'Cross-Origin-Resource-Policy' => [$corp],
+			'Cross-Origin-Embedder-Policy-Report-Only' => ['require-corp; report-to="default"'],
 		];
 		$actual = [];
 		foreach (array_keys($expected) as $name) {
-			$actual[$name] = $response->getHeader($name);
+			$actual[$name] = $response->getAllHeaders($name);
 		}
 		Assert::same($expected, $actual);
 	}
