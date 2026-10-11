@@ -183,7 +183,7 @@ final class TrainingsPresenter extends BasePresenter
 			$city = $training->getVenueCity();
 			$isRemote = $training->isRemote();
 		} else {
-			$applicationDateId = $start = $end = $city = $isRemote = null;
+			$start = $end = $city = $isRemote = null;
 			$name = $this->trainings->getIncludingCustom($this->application->getTrainingAction())->getName();
 		}
 
