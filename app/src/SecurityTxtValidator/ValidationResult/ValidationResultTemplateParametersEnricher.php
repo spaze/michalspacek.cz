@@ -213,7 +213,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 				throw new LogicException('This line should exist');
 			}
 			foreach ($errors as $error) {
-				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Error, $this->createIssue($error), trim($line));
+				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Error, $this->createIssue($error), $this->strings->addTabMarkersAndNonBreakingSpaces(rtrim($line), 'marker'));
 			}
 		}
 		foreach ($result->getLineWarnings() as $lineNr => $warnings) {
@@ -222,7 +222,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 				throw new LogicException('This line should exist');
 			}
 			foreach ($warnings as $warning) {
-				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Warning, $this->createIssue($warning), trim($line));
+				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Warning, $this->createIssue($warning), $this->strings->addTabMarkersAndNonBreakingSpaces(rtrim($line), 'marker'));
 			}
 		}
 		ksort($issues);

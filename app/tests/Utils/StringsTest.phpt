@@ -125,6 +125,24 @@ final class StringsTest extends TestCase
 	}
 
 
+	public function testAddTabMarkersAndNonBreakingSpaces(): void
+	{
+		$rendered = [];
+		foreach (['  Contact: x', ' Contact: x', 'Contact:   x', "Contact:\t\tx", "Contact:\t x", 'Contact: <x>', "Kontakt: \xA9pa\xE8ek"] as $string) {
+			$rendered[$string] = $this->strings->addTabMarkersAndNonBreakingSpaces($string, 'marker')->render();
+		}
+		Assert::same([
+			'  Contact: x' => "\u{A0}\u{A0}Contact: x",
+			' Contact: x' => "\u{A0}Contact: x",
+			'Contact:   x' => "Contact:\u{A0}\u{A0} x",
+			"Contact:\t\tx" => 'Contact:<span class="marker">→</span><span class="marker">→</span>x',
+			"Contact:\t x" => "Contact:<span class=\"marker\">→</span>\u{A0}x",
+			'Contact: <x>' => 'Contact: &lt;x&gt;',
+			"Kontakt: \xA9pa\xE8ek" => "Kontakt: \u{FFFD}pa\u{FFFD}ek",
+		], $rendered);
+	}
+
+
 	/**
 	 * @return array<array{0:string, 1:string}>
 	 */

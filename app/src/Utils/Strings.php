@@ -10,6 +10,9 @@ use Nette\Utils\Html;
 final readonly class Strings
 {
 
+	private const string NBSP = "\u{A0}";
+
+
 	public function __construct(
 		private Translator $translator,
 	) {
@@ -73,6 +76,25 @@ final readonly class Strings
 			if ($eol !== null) {
 				$el->addText($eol);
 			}
+		}
+		return $el;
+	}
+
+
+	/**
+	 * Outside `<pre>` a run of whitespace collapses, by the browser or by Latte's `|strip` before it, so leading spaces
+	 * and all but the last space of a run become non-breaking to keep their width, the last staying one a long line can
+	 * still wrap at, and a tab becomes its marker.
+	 */
+	public function addTabMarkersAndNonBreakingSpaces(string $string, ?string $cssClassMarkers = null): Html
+	{
+		$el = Html::el();
+		foreach (explode("\t", $this->replaceInvalidUtf8($string)) as $i => $part) {
+			if ($i > 0) {
+				$el->addHtml(Html::el('span')->class($cssClassMarkers)->setText('→'));
+			}
+			$rest = ltrim($part, ' ');
+			$el->addText(str_repeat(self::NBSP, strlen($part) - strlen($rest)) . Preg::replace('/ (?= )/', self::NBSP, $rest));
 		}
 		return $el;
 	}

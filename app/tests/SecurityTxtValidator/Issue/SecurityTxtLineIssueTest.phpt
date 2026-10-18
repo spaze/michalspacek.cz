@@ -23,10 +23,11 @@ final class SecurityTxtLineIssueTest extends TestCase
 			null,
 			null,
 		);
-		$lineIssue = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Error, $issue, 'Line contents');
+		$lineContents = Html::el()->setText('Line contents');
+		$lineIssue = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Error, $issue, $lineContents);
 		Assert::same(SecurityTxtIssueLevel::Error, $lineIssue->getLevel());
 		Assert::same($issue, $lineIssue->getIssue());
-		Assert::same('Line contents', $lineIssue->getLineContents());
+		Assert::same($lineContents, $lineIssue->getLineContents());
 	}
 
 }
