@@ -27,6 +27,13 @@ final class SecurityTxtIssueMessageFormatterTest extends TestCase
 		Assert::same($expected, $this->issueMessageFormatter->format('foo %s bar %s baz %d waldo', ['FOO', 'BAR'])->render());
 	}
 
+
+	public function testFormatKeepsTheSpacesInAValue(): void
+	{
+		$expected = "The line (<code>\u{A0}Contact:\u{A0} x</code>) is wrong";
+		Assert::same($expected, $this->issueMessageFormatter->format('The line (%s) is wrong', [' Contact:  x'])->render());
+	}
+
 }
 
 TestCaseRunner::run(SecurityTxtIssueMessageFormatterTest::class);
