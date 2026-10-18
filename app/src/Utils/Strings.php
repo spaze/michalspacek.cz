@@ -37,7 +37,7 @@ final readonly class Strings
 	}
 
 
-	public function addLineNumbersAndEolChars(string $string, ?string $cssClassLines = null, ?string $cssClassLineNumbers = null, ?string $cssClassEol = null): Html
+	public function addLineNumbersAndWhitespaceMarkers(string $string, ?string $cssClassLines = null, ?string $cssClassLineNumbers = null, ?string $cssClassMarkers = null): Html
 	{
 		$el = Html::el();
 		$lineNr = 1;
@@ -47,7 +47,7 @@ final readonly class Strings
 			}
 			$lineSpan = Html::el('span')->class($cssClassLines);
 			$lineSpan->addHtml(Html::el('span')->setText($lineNr++)->addText(' ')->class($cssClassLineNumbers));
-			$eolSpan = Html::el('span')->class($cssClassEol);
+			$eolSpan = Html::el('span')->class($cssClassMarkers);
 			$eol = null;
 			if (str_ends_with($line, "\r\n")) {
 				$eol = "\r\n";
@@ -57,7 +57,15 @@ final readonly class Strings
 				$eolSpan->addText('<LF>');
 			}
 			// Only the line ending the marker stands for comes off, so a stray carriage return before it stays on the page
-			$lineSpan->addText($this->replaceInvalidUtf8($eol === null ? $line : substr($line, 0, -strlen($eol))));
+			$text = $this->replaceInvalidUtf8($eol === null ? $line : substr($line, 0, -strlen($eol)));
+			foreach (explode("\t", $text) as $i => $part) {
+				if ($i > 0) {
+					// The tab follows its marker like the line ending follows its own, a marker can't be selected so a copied file would lose it
+					$lineSpan->addHtml(Html::el('span')->class($cssClassMarkers)->setText('→'));
+					$lineSpan->addText("\t");
+				}
+				$lineSpan->addText($part);
+			}
 			if ($eol !== null) {
 				$lineSpan->addHtml($eolSpan);
 			}
