@@ -128,7 +128,7 @@ form.has-errors .field-error {
 .larger { font-size: larger; }
 .center { text-align: center; }
 .lighter { opacity: 0.65; }
-pre .line:hover .number, pre .line:hover .eol { color: inherit; }
+pre .line:hover .number, pre .line:hover .marker { color: inherit; }
 pre .number {
 	width: 1.5rem;
 	display: inline-block;
@@ -139,7 +139,7 @@ pre .number {
 	user-select: none;
 	transition: color .25s ease-out;
 }
-pre .eol {
+.marker {
 	color: #444;
 	font-size: x-small;
 	vertical-align: text-bottom;
@@ -194,7 +194,7 @@ input[disabled] {
 	.link-button { color: hsl(138 33% 84% / 1); }
 	hr { background: linear-gradient(to right, hsl(287 15% 12% / 0.2), hsl(287 15% 12% / 1), hsl(287 15% 12% / 0.2)); }
 	pre { background-color: hsl(286 16% 22% / 1); }
-	pre .number, pre .eol { color: #AAA; }
+	pre .number, .marker { color: #AAA; }
 	code { background-color: hsl(285 20% 21% / 1); }
 	#logo { background: linear-gradient(to bottom, hsl(239 36% 33% / 1), hsl(239 36% 33% / 0)); }
 	#logo.valid { background: linear-gradient(to bottom, hsl(128 56% 33% / 1), hsl(128 56% 33% / 0)); }

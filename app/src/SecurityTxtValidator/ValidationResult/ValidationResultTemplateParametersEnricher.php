@@ -158,7 +158,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 		$template->isInvalid = !$checkHostResult->isValid();
 		$template->expiresInDays = $checkHostResult->getExpiryDays();
 		$contents = $checkHostResult->getContents();
-		$template->contents = $this->strings->addLineNumbersAndEolChars($contents, 'line', 'number', 'eol');
+		$template->contents = $this->strings->addLineNumbersAndWhitespaceMarkers($contents, 'line', 'number', 'marker');
 		$template->signed = $checkHostResult->getSecurityTxt()->getSignatureVerifyResult();
 		$template->signingKeyUrl = $template->signed === null ? null : $this->keyserver->getLookupUrl($template->signed->getKeyFingerprint());
 		$template->isTruncated = $checkHostResult->getFetchResult()->isTruncated();
@@ -186,7 +186,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 		$template->isValidWithWarnings = $parseStringResult->isValid() && $hasWarnings;
 		$template->isInvalid = !$parseStringResult->isValid();
 		$template->expiresInDays = $parseStringResult->getSecurityTxt()->getExpires()?->inDays();
-		$template->contents = $this->strings->addLineNumbersAndEolChars($contents, 'line', 'number', 'eol');
+		$template->contents = $this->strings->addLineNumbersAndWhitespaceMarkers($contents, 'line', 'number', 'marker');
 		$template->signed = $parseStringResult->getSecurityTxt()->getSignatureVerifyResult();
 		$template->signingKeyUrl = $template->signed === null ? null : $this->keyserver->getLookupUrl($template->signed->getKeyFingerprint());
 		$template->isTruncated = false;
@@ -213,7 +213,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 				throw new LogicException('This line should exist');
 			}
 			foreach ($errors as $error) {
-				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Error, $this->createIssue($error), trim($line));
+				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Error, $this->createIssue($error), $this->strings->addTabMarkersAndNonBreakingSpaces(rtrim($line), 'marker'));
 			}
 		}
 		foreach ($result->getLineWarnings() as $lineNr => $warnings) {
@@ -222,7 +222,7 @@ final readonly class ValidationResultTemplateParametersEnricher
 				throw new LogicException('This line should exist');
 			}
 			foreach ($warnings as $warning) {
-				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Warning, $this->createIssue($warning), trim($line));
+				$issues[$lineNr][] = new SecurityTxtLineIssue(SecurityTxtIssueLevel::Warning, $this->createIssue($warning), $this->strings->addTabMarkersAndNonBreakingSpaces(rtrim($line), 'marker'));
 			}
 		}
 		ksort($issues);

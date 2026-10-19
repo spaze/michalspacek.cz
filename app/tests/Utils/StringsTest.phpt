@@ -67,15 +67,15 @@ final class StringsTest extends TestCase
 	}
 
 
-	public function testAddLineNumbersAndEolChars(): void
+	public function testAddLineNumbersAndWhitespaceMarkers(): void
 	{
-		Assert::same('<span><span>1 </span>foo<span>&lt;LF&gt;</span></span>' . "\n", $this->strings->addLineNumbersAndEolChars("foo\n")->render());
-		$html = '<span class="ln"><span class="nr">1 </span>foo<span class="eol">&lt;LF&gt;</span></span>' . "\n" .
-			'<span class="ln"><span class="nr">2 </span>bar<span class="eol">&lt;LF&gt;</span></span>' . "\n" .
-			'<span class="ln"><span class="nr">3 </span>baz<span class="eol">&lt;CRLF&gt;</span></span>' . "\r\n" .
-			'<span class="ln"><span class="nr">4 </span>waldo<span class="eol">&lt;CRLF&gt;</span></span>' . "\r\n" .
+		Assert::same('<span><span>1 </span>foo<span>&lt;LF&gt;</span></span>' . "\n", $this->strings->addLineNumbersAndWhitespaceMarkers("foo\n")->render());
+		$html = '<span class="ln"><span class="nr">1 </span>foo<span class="marker">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">2 </span>bar<span class="marker">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">3 </span>baz<span class="marker">&lt;CRLF&gt;</span></span>' . "\r\n" .
+			'<span class="ln"><span class="nr">4 </span>waldo<span class="marker">&lt;CRLF&gt;</span></span>' . "\r\n" .
 			'<span class="ln"><span class="nr">5 </span>quux</span>';
-		Assert::same($html, $this->strings->addLineNumbersAndEolChars("foo\nbar\nbaz\r\nwaldo\r\nquux", 'ln', 'nr', 'eol')->render());
+		Assert::same($html, $this->strings->addLineNumbersAndWhitespaceMarkers("foo\nbar\nbaz\r\nwaldo\r\nquux", 'ln', 'nr', 'marker')->render());
 	}
 
 
@@ -83,11 +83,18 @@ final class StringsTest extends TestCase
 	 * The page shows the file as the host serves it, whitespace included, the same way the end-of-line marker shows
 	 * the line ending: a reader comparing the page with their file has to see what they wrote.
 	 */
-	public function testAddLineNumbersAndEolCharsKeepsTheWhitespace(): void
+	public function testAddLineNumbersAndWhitespaceMarkersKeepsTheWhitespace(): void
 	{
-		$html = '<span class="ln"><span class="nr">1 </span>  Contact: mailto:security@example.com <span class="eol">&lt;LF&gt;</span></span>' . "\n" .
-			'<span class="ln"><span class="nr">2 </span>' . "\t" . 'Expires: 2030-01-01T00:00:00.000Z</span>';
-		Assert::same($html, $this->strings->addLineNumbersAndEolChars("  Contact: mailto:security@example.com \n\tExpires: 2030-01-01T00:00:00.000Z", 'ln', 'nr', 'eol')->render());
+		$html = '<span class="ln"><span class="nr">1 </span>  Contact: mailto:security@example.com <span class="marker">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">2 </span><span class="marker">→</span>' . "\t" . 'Expires: 2030-01-01T00:00:00.000Z</span>';
+		Assert::same($html, $this->strings->addLineNumbersAndWhitespaceMarkers("  Contact: mailto:security@example.com \n\tExpires: 2030-01-01T00:00:00.000Z", 'ln', 'nr', 'marker')->render());
+	}
+
+
+	public function testAddLineNumbersAndWhitespaceMarkersMarksEveryTab(): void
+	{
+		$html = '<span class="ln"><span class="nr">1 </span>Contact:<span class="marker">→</span>' . "\t" . '<span class="marker">→</span>' . "\t" . 'https://example.com/<span class="marker">→</span>' . "\t" . '<span class="marker">&lt;LF&gt;</span></span>' . "\n";
+		Assert::same($html, $this->strings->addLineNumbersAndWhitespaceMarkers("Contact:\t\thttps://example.com/\t\n", 'ln', 'nr', 'marker')->render());
 	}
 
 
@@ -95,11 +102,11 @@ final class StringsTest extends TestCase
 	 * Only the line ending the marker names comes off, so a carriage return in front of a line feed, or one ending the
 	 * file on its own, stays where the host put it instead of being swallowed as more line ending.
 	 */
-	public function testAddLineNumbersAndEolCharsKeepsAStrayCarriageReturn(): void
+	public function testAddLineNumbersAndWhitespaceMarkersKeepsAStrayCarriageReturn(): void
 	{
-		$html = '<span class="ln"><span class="nr">1 </span>foo' . "\r" . '<span class="eol">&lt;CRLF&gt;</span></span>' . "\r\n" .
+		$html = '<span class="ln"><span class="nr">1 </span>foo' . "\r" . '<span class="marker">&lt;CRLF&gt;</span></span>' . "\r\n" .
 			'<span class="ln"><span class="nr">2 </span>bar' . "\r" . '</span>';
-		Assert::same($html, $this->strings->addLineNumbersAndEolChars("foo\r\r\nbar\r", 'ln', 'nr', 'eol')->render());
+		Assert::same($html, $this->strings->addLineNumbersAndWhitespaceMarkers("foo\r\r\nbar\r", 'ln', 'nr', 'marker')->render());
 	}
 
 
@@ -108,13 +115,31 @@ final class StringsTest extends TestCase
 	 * `htmlspecialchars()` and no `ENT_SUBSTITUTE`, which answers an empty string for anything holding such a byte, so
 	 * the line would otherwise arrive with its number and its end-of-line marker and nothing between them.
 	 */
-	public function testAddLineNumbersAndEolCharsKeepsALineThatIsNotUtf8(): void
+	public function testAddLineNumbersAndWhitespaceMarkersKeepsALineThatIsNotUtf8(): void
 	{
 		$latin2 = "Contact: mailto:security@example.com\n# Kontakt: Michal \xA9pa\xE8ek\n";
 		$replacement = "\u{FFFD}";
-		$html = '<span class="ln"><span class="nr">1 </span>Contact: mailto:security@example.com<span class="eol">&lt;LF&gt;</span></span>' . "\n" .
-			'<span class="ln"><span class="nr">2 </span># Kontakt: Michal ' . $replacement . 'pa' . $replacement . 'ek<span class="eol">&lt;LF&gt;</span></span>' . "\n";
-		Assert::same($html, $this->strings->addLineNumbersAndEolChars($latin2, 'ln', 'nr', 'eol')->render());
+		$html = '<span class="ln"><span class="nr">1 </span>Contact: mailto:security@example.com<span class="marker">&lt;LF&gt;</span></span>' . "\n" .
+			'<span class="ln"><span class="nr">2 </span># Kontakt: Michal ' . $replacement . 'pa' . $replacement . 'ek<span class="marker">&lt;LF&gt;</span></span>' . "\n";
+		Assert::same($html, $this->strings->addLineNumbersAndWhitespaceMarkers($latin2, 'ln', 'nr', 'marker')->render());
+	}
+
+
+	public function testAddTabMarkersAndNonBreakingSpaces(): void
+	{
+		$rendered = [];
+		foreach (['  Contact: x', ' Contact: x', 'Contact:   x', "Contact:\t\tx", "Contact:\t x", 'Contact: <x>', "Kontakt: \xA9pa\xE8ek"] as $string) {
+			$rendered[$string] = $this->strings->addTabMarkersAndNonBreakingSpaces($string, 'marker')->render();
+		}
+		Assert::same([
+			'  Contact: x' => "\u{A0}\u{A0}Contact: x",
+			' Contact: x' => "\u{A0}Contact: x",
+			'Contact:   x' => "Contact:\u{A0}\u{A0} x",
+			"Contact:\t\tx" => 'Contact:<span class="marker">→</span><span class="marker">→</span>x',
+			"Contact:\t x" => "Contact:<span class=\"marker\">→</span>\u{A0}x",
+			'Contact: <x>' => 'Contact: &lt;x&gt;',
+			"Kontakt: \xA9pa\xE8ek" => "Kontakt: \u{FFFD}pa\u{FFFD}ek",
+		], $rendered);
 	}
 
 

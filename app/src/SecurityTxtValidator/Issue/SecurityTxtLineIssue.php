@@ -3,13 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\SecurityTxtValidator\Issue;
 
+use Nette\Utils\Html;
+
 final readonly class SecurityTxtLineIssue
 {
 
 	public function __construct(
 		private SecurityTxtIssueLevel $level,
 		private SecurityTxtIssue $issue,
-		private string $lineContents,
+		private Html $lineContents,
 	) {
 	}
 
@@ -26,7 +28,7 @@ final readonly class SecurityTxtLineIssue
 	}
 
 
-	public function getLineContents(): string
+	public function getLineContents(): Html
 	{
 		return $this->lineContents;
 	}
