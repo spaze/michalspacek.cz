@@ -194,6 +194,8 @@ final class Response implements IResponse
 
 	public function reset(): void
 	{
+		$this->code = IResponse::S200_OK;
+		$this->reason = null;
 		$this->headers = [];
 		$this->allHeaders = [];
 		$this->cookies = [];
