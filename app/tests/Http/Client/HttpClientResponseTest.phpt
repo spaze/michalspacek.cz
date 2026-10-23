@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\Client;
 
+use MichalSpacekCz\Http\Exceptions\HttpClientResponseStatusLineMissingException;
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException;
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -61,6 +62,18 @@ final class HttpClientResponseTest extends TestCase
 		Assert::same(['foo'], $response->getAllHeaders('SiNgLe-HeAdEr2'));
 		Assert::same('bar', $response->getHeader('multiple-header'));
 		Assert::same(['bar', 'baz'], $response->getAllHeaders('multiple-header'));
+	}
+
+
+	public function testGetStatusCode(): void
+	{
+		$request = new HttpClientRequest('https://www.example');
+		Assert::same(403, new HttpClientResponse($request, '', null, ['HTTP/1.1 403 Forbidden', 'Content-Type: text/html'])->getStatusCode());
+		Assert::same(200, new HttpClientResponse($request, '', null, ['HTTP/2 200', 'Content-Type: text/html'])->getStatusCode());
+		Assert::same(200, new HttpClientResponse($request, '', null, ['HTTP/1.1 301 Moved Permanently', 'Location: /', 'HTTP/1.1 200 OK'])->getStatusCode());
+		Assert::exception(function () use ($request): void {
+			new HttpClientResponse($request, '', null, ['Content-Type: text/html'])->getStatusCode();
+		}, HttpClientResponseStatusLineMissingException::class, 'No status line in the response from https://www.example');
 	}
 
 

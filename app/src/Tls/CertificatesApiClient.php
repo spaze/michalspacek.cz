@@ -9,8 +9,10 @@ use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
+use MichalSpacekCz\Http\Exceptions\HttpClientResponseStatusLineMissingException;
 use MichalSpacekCz\Tls\Exceptions\CertificatesApiException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Http\IResponse;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
@@ -35,25 +37,32 @@ final readonly class CertificatesApiClient
 	 * @return array<int, Certificate>
 	 * @throws CannotParseDateTimeException
 	 * @throws InvalidLinkException
-	 * @throws JsonException
 	 * @throws CertificatesApiException
 	 */
 	public function getLoggedCertificates(): array
 	{
 		$request = new HttpClientRequest($this->linkGenerator->link('Api:Certificates:'));
 		$request->setUserAgent(__METHOD__);
+		$request->setIgnoreHttpErrors(true); // an error answer carries its HTTP status, the JSON body says why, so read the body instead of failing on the status
 		try {
-			$json = $this->httpClient->postForm($request, [
+			$response = $this->httpClient->postForm($request, [
 				'user' => ServerEnv::tryGetString('CERTMONITOR_USER') ?? '',
 				'key' => ServerEnv::tryGetString('CERTMONITOR_KEY') ?? '',
-			])->getBody();
+			]);
 		} catch (HttpClientRequestException $e) {
 			throw new CertificatesApiException(sprintf('Failure getting data from %s: %s', $request->getUrl(), Helpers::getLastError()), previous: $e);
 		}
+		try {
+			$statusCode = $response->getStatusCode();
+		} catch (HttpClientResponseStatusLineMissingException $e) {
+			throw new CertificatesApiException($e->getMessage(), previous: $e);
+		}
+		$json = $response->getBody();
 		$certificates = [];
-		$decoded = Json::decode($json, forceArrays: true);
+		// The HTTP status says whether the answer is the list or an error, the body carries a message either way,
+		// and nothing unknown is let through: the API lives in this repository too, so an unknown field is drift to catch
 		$schema = Expect::structure([
-			'status' => Expect::string(),
+			'message' => Expect::string()->required(),
 			'certificates' => Expect::listOf(
 				Expect::structure([
 					'certificateName' => Expect::string()->required(),
@@ -71,14 +80,16 @@ final readonly class CertificatesApiClient
 			),
 		]);
 		try {
-			$data = $this->schemaProcessor->process($schema, $decoded);
+			$data = $this->schemaProcessor->process($schema, Json::decode($json, forceArrays: true));
 			assert($data instanceof stdClass);
+			assert(is_string($data->message));
 			assert(is_array($data->certificates) && array_is_list($data->certificates));
-		} catch (ValidationException $e) {
-			throw new CertificatesApiException(sprintf('Cannot validate response from %s (`%s`): %s', $request->getUrl(), $json, implode(', ', $e->getMessages())), previous: $e);
+		} catch (JsonException | ValidationException $e) {
+			$reason = $e instanceof ValidationException ? implode(', ', $e->getMessages()) : $e->getMessage();
+			throw new CertificatesApiException(sprintf('Cannot read response from %s, HTTP %d (`%s`): %s', $request->getUrl(), $statusCode, $json, $reason), previous: $e);
 		}
-		if ($data->status !== 'ok') {
-			throw new CertificatesApiException(sprintf('Response from %s (`%s`) not ok', $request->getUrl(), $json));
+		if ($statusCode !== IResponse::S200_OK) {
+			throw new CertificatesApiException(sprintf('Response from %s not ok, HTTP %d: %s', $request->getUrl(), $statusCode, $data->message));
 		}
 		foreach ($data->certificates as $details) {
 			assert($details instanceof stdClass);
