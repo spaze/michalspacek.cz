@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\Client;
 
+use Composer\Pcre\Preg;
+use MichalSpacekCz\Http\Exceptions\HttpClientResponseStatusLineMissingException;
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException;
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use OpenSSLCertificate;
@@ -50,6 +52,24 @@ final class HttpClientResponse
 	{
 		$this->normalizeHeaders();
 		return $this->normalizedHeaders[strtolower($name)] ?? null;
+	}
+
+
+	/**
+	 * @throws HttpClientResponseStatusLineMissingException
+	 */
+	public function getStatusCode(): int
+	{
+		$statusCode = null;
+		foreach ($this->headers as $header) {
+			if (Preg::isMatch('~^HTTP/\S+ (\d{3})~', $header, $matches)) {
+				$statusCode = (int)$matches[1]; // when redirects are followed the last status line is the final response's
+			}
+		}
+		if ($statusCode === null) {
+			throw new HttpClientResponseStatusLineMissingException($this->request->getUrl());
+		}
+		return $statusCode;
 	}
 
 
