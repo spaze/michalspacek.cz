@@ -66,16 +66,30 @@ final class CertificateMonitor implements CliArgsProvider
 	private function compareCertificate(Certificate $loggedCertificate, Certificate $serverCertificate, string $ipAddress): void
 	{
 		$error = false;
-		if ($loggedCertificate->getNotAfter()->getTimestamp() !== $serverCertificate->getNotAfter()->getTimestamp()) {
+		$loggedNotAfter = $loggedCertificate->getNotAfter();
+		$serverNotAfter = $serverCertificate->getNotAfter();
+		if ($loggedNotAfter->getTimestamp() !== $serverNotAfter->getTimestamp()) {
 			$error = true;
-			$this->error($serverCertificate, sprintf(
-				"Logged certificate's notAfter (%s, %s) doesn't match %s certificate's notAfter (%s, %s)",
-				$loggedCertificate->getNotAfter()->format(DATE_RFC3339),
-				$this->getExpiryDays($loggedCertificate),
-				$ipAddress,
-				$serverCertificate->getNotAfter()->format(DATE_RFC3339),
-				$this->getExpiryDays($serverCertificate),
-			));
+			if ($serverNotAfter > $loggedNotAfter) {
+				$this->error($serverCertificate, sprintf(
+					'%s serves a newer certificate than the logged one (notAfter %s, %s; logged %s, %s; serial %s), a renewal went unreported or someone else had it issued',
+					$ipAddress,
+					$serverNotAfter->format(DATE_RFC3339),
+					$this->getExpiryDays($serverCertificate),
+					$loggedNotAfter->format(DATE_RFC3339),
+					$this->getExpiryDays($loggedCertificate),
+					$serverCertificate->getSerialNumber() ?? 'unknown',
+				));
+			} else {
+				$this->error($serverCertificate, sprintf(
+					'%s still serves an older certificate than the logged one (notAfter %s, %s; logged %s, %s), the renewed one was not deployed there',
+					$ipAddress,
+					$serverNotAfter->format(DATE_RFC3339),
+					$this->getExpiryDays($serverCertificate),
+					$loggedNotAfter->format(DATE_RFC3339),
+					$this->getExpiryDays($loggedCertificate),
+				));
+			}
 		}
 		if ($serverCertificate->isExpiringSoon()) {
 			$error = true;

@@ -52,6 +52,26 @@ final class CertificateMonitorTest extends TestCase
 	}
 
 
+	public function testServedCertificateNewerThanLoggedIsAnUnreportedRenewalOrNotOurs(): void
+	{
+		$served = $this->issue(10);
+		[$code, $output] = $this->runWithLogged($served, new DateTimeImmutable('+3 days'));
+		Assert::same(1, $code);
+		Assert::contains(self::NAME . ' ERROR: ' . self::ADDRESS . ' serves a newer certificate than the logged one', $output);
+		Assert::contains('a renewal went unreported or someone else had it issued', $output);
+		Assert::contains('serial ' . OpenSsl::x509parse($served)->getSerialNumberHex(), $output);
+	}
+
+
+	public function testServedCertificateOlderThanLoggedWasNotDeployed(): void
+	{
+		[$code, $output] = $this->runWithLogged($this->issue(10), new DateTimeImmutable('+20 days'));
+		Assert::same(1, $code);
+		Assert::contains(self::NAME . ' ERROR: ' . self::ADDRESS . ' still serves an older certificate than the logged one', $output);
+		Assert::contains('the renewed one was not deployed there', $output);
+	}
+
+
 	public function testApiRefusalStopsTheRun(): void
 	{
 		$this->httpClient->setStatusCode(403);
