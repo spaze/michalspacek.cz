@@ -9,4 +9,4 @@ use MichalSpacekCz\Tls\CertificateMonitor;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-Bootstrap::bootCli(CertificateMonitor::class)->getByType(CertificateMonitor::class)->run();
+exit(Bootstrap::bootCli(CertificateMonitor::class)->getByType(CertificateMonitor::class)->run());

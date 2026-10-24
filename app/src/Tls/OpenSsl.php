@@ -33,8 +33,9 @@ final class OpenSsl
 			throw new OpenSslX509ParseException(serialize($info));
 		}
 		$subjectAltNames = [];
-		if (isset($info['extensions']) && is_array($info['extensions']) && is_string($info['extensions']['subjectAltName'])) {
-			foreach (Preg::split('/[\s,]+/', $info['extensions']['subjectAltName']) as $subjectAltName) {
+		$subjectAltName = isset($info['extensions']) && is_array($info['extensions']) ? $info['extensions']['subjectAltName'] ?? null : null;
+		if (is_string($subjectAltName)) {
+			foreach (Preg::split('/[\s,]+/', $subjectAltName) as $subjectAltName) {
 				$parts = explode(':', $subjectAltName, 2);
 				if (isset($parts[1])) {
 					$subjectAltNames[] = $parts[1];

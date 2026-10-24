@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Test\Tls\SelfSignedCertificate;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use Tester\Assert;
 use Tester\TestCase;
@@ -40,6 +41,14 @@ final class OpenSslTest extends TestCase
 		assert(is_string($certificate));
 		$expected = new OpenSslX509ParseResult(null, ['snafu.cz', 'www.snafu.cz'], 1755987576, 1763763575, '06A43647CC3124AC82F42FA8957F5D9972B6');
 		Assert::equal($expected, OpenSsl::x509parse($certificate));
+	}
+
+
+	public function testX509ParseExtensionsWithoutSubjectAltName(): void
+	{
+		$result = OpenSsl::x509parse(SelfSignedCertificate::issue('no-san.example', 10));
+		Assert::same('no-san.example', $result->getCommonName());
+		Assert::same([], $result->getSubjectAlternativeNames());
 	}
 
 

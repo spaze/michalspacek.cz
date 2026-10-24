@@ -135,7 +135,7 @@ services:
 	interviewVideoFactory: MichalSpacekCz\Media\VideoFactory(mediaResources: @interviewMediaResources, videoThumbnails: @interviewVideoThumbnails)
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
-	- MichalSpacekCz\Net\DnsResolver
+	- MichalSpacekCz\Net\SystemDnsResolver
 	- MichalSpacekCz\Net\IpRanges
 	- MichalSpacekCz\Pgp\Keyserver
 	- MichalSpacekCz\Presentation\Www\Talks\TalksDefaultTemplateParametersFactory
