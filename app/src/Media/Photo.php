@@ -9,11 +9,11 @@ final readonly class Photo
 {
 
 	/**
-	 * @param array<string, string> $sizes
+	 * @param list<PhotoFile> $sizes
 	 */
 	public function __construct(
 		private string $title,
-		private string $file,
+		private PhotoFile $file,
 		private string|Html $description,
 		private array $sizes,
 	) {
@@ -26,7 +26,7 @@ final readonly class Photo
 	}
 
 
-	public function getFile(): string
+	public function getFile(): PhotoFile
 	{
 		return $this->file;
 	}
@@ -39,7 +39,7 @@ final readonly class Photo
 
 
 	/**
-	 * @return array<string, string>
+	 * @return list<PhotoFile>
 	 */
 	public function getSizes(): array
 	{

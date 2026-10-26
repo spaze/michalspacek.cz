@@ -351,9 +351,12 @@ photo:
 	trademark:
 		header: "Poznávací znamení"
 		desc: "Prosím používejte **tuto fotografii**, je to můj //trademark//, moje poznávací znamení. Používám ji na \"Twitteru\":[%s], na \"Facebooku\":[%s] i jinde na webu, aby si mě lidé s těmito účty vždy spojili. Takto skvěle mě vyfotil \"Lukáš Hudeček\":[%s]."
-	lecturer:
-		header: "Lektorská"
-		desc: "Zdá se vám předchozí fotka příliš veselá? Zkuste použít tuto. Je z Code Campu a pořídil ji \"Josef Havlín\":[%s]."
+	linuxdays2024:
+		header: "LinuxDays 2024"
+		desc: "Na LinuxDays přednáším již pravidelně. Takhle se usmívám před tím, než začnu povídat o něčem méně veselém, třeba \"o útocích na dodavatelský řetězec\":[%s]. Fotka od \"Petra Krčmáře\":[%s]."
+	linuxdays2026:
+		header: "LinuxDays 2026"
+		desc: "Zdají se vám předchozí fotky příliš veselé? Zkuste použít tuto. Je z LinuxDays 2026 a pořídil ji také \"Petr Krčmář\":[%s]."
 	office:
 		header: "Kancelářská"
 		desc: "Tato fotografie vznikla v pražských kancelářích Skype, když jsem tam pracoval."
