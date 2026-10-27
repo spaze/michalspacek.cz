@@ -351,9 +351,12 @@ photo:
 	trademark:
 		header: "Trademark"
 		desc: "Please use **this photo**, it's like my //trademark//. I use it on \"Twitter\":[%s], on \"Facebook\":[%s], and elsewhere on the web, so that people can recognize me easily. This great picture was shot by \"Lukáš Hudeček\":[%s]."
-	lecturer:
-		header: "As a lecturer"
-		desc: "Too optimistic? Use this one. It's from Code Camp and was taken by \"Josef Havlín\":[%s]."
+	linuxdays2024:
+		header: "LinuxDays 2024"
+		desc: "I'm a regular speaker at LinuxDays Prague. This is how I smile before I start talking about something not so funny, like for example \"supply chain attacks\":[%s]. Photo by \"Petr Krčmář\":[%s]."
+	linuxdays2026:
+		header: "LinuxDays 2026"
+		desc: "Too optimistic? Use this one. It's from LinuxDays 2026 and was taken once again by \"Petr Krčmář\":[%s]."
 	office:
 		header: "In the office"
 		desc: "Taken in Skype Prague office back in the day."
