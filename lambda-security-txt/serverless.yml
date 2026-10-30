@@ -16,11 +16,16 @@ functions:
         runtime: php-85
         # Above what the fetcher's own limits add up to, so curl gives up before this function is killed: both
         # locations are fetched, each may follow `fetchMaxRedirects` redirects, and every request gets `fetchTimeout`
-        # seconds, with headroom for the DNS lookup made before each request, which has no limit of its own. A curl
+        # seconds, with headroom for the DNS lookup made before each request, limited by `RES_OPTIONS` below. A curl
         # timeout arrives as an exception the app stores against the host and counts towards its rate limit; a killed
         # function arrives as an invocation error the app cannot store, leaving nothing to rate limit. A test in the app
         # keeps this above the sum
         timeout: 40
+        environment:
+            # `dns_get_record()` has no timeout of its own, so glibc's applies, by default 5 seconds tried twice for each
+            # of the A and AAAA queries a lookup makes. One second is plenty for the AWS resolver, and the second attempt
+            # is there so that a lost packet doesn't make a host that resolves look like one that doesn't
+            RES_OPTIONS: 'timeout:1 attempts:2'
     version:
         handler: src/version.php
         description: 'Return the installed library version number and reference'
