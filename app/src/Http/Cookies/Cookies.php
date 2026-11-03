@@ -42,7 +42,7 @@ final readonly class Cookies
 		?bool $httpOnly = null,
 		?string $sameSite = null,
 	): void {
-		/** @var Response $response Not IResponse because https://github.com/nette/http/issues/200, can't use instanceof check because it's a different Response in tests */
+		/** @var Response $response Not IResponse, its native setCookie() has no `$sameSite` until nette/http 4.0, see https://github.com/nette/http/issues/200, and Psalm ignores the `@method` that adds it; can't use instanceof check because it's a different Response in tests */
 		$response = $this->response;
 		$response->setCookie($name->value, $value, (int)DateTime::from($expire)->format('U'), $path, $domain, $secure, $httpOnly, $sameSite);
 	}
