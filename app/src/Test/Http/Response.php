@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Test\Http;
 
 use DateTimeInterface;
 use Nette\Http\IResponse;
+use Nette\Http\SameSite;
 use Override;
 
 final class Response implements IResponse
@@ -152,7 +153,7 @@ final class Response implements IResponse
 		?string $domain = null,
 		?bool $secure = null,
 		?bool $httpOnly = null,
-		?string $sameSite = null,
+		SameSite|string|null $sameSite = null,
 	): self {
 		$this->cookies[$name][] = new Cookie(
 			$name,
@@ -161,7 +162,7 @@ final class Response implements IResponse
 			$path ?? $this->cookiePath,
 			$domain ?? $this->cookieDomain,
 			$secure ?? $this->cookieSecure,
-			$sameSite,
+			$sameSite instanceof SameSite ? $sameSite->value : $sameSite,
 		);
 		return $this;
 	}
