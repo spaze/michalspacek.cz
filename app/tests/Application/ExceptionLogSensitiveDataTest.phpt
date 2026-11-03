@@ -24,13 +24,15 @@ use Tracy\Dumper;
 require __DIR__ . '/../bootstrap.php';
 
 /**
- * Tracy writes every stack frame's arguments into the exception log, and the encryption library hands both the key
- * and the not-yet-encrypted value around as objects, so anything that throws mid-encryption puts them in the log.
- * The `tracy: keysToHide` setting in common.neon is what stops it.
+ * Tracy writes every stack frame's arguments into the exception log and dumps `$_POST` there on its own, so what
+ * must not show in it is kept out three ways. The encryption library hands both the key and the not-yet-encrypted
+ * value around as objects, which the `tracy: keysToHide` setting in common.neon hides by class and property. An
+ * email or a name passed as a plain string is hidden by `#[SensitiveParameter]` on the parameter. And a form field
+ * holding one is hidden by the field's name, from the same `keysToHide` setting.
  *
  * @testCase
  */
-final class ExceptionLogSecretsTest extends TestCase
+final class ExceptionLogSensitiveDataTest extends TestCase
 {
 
 	private const string HTML_LOG = 'mock://bluescreen.html';
@@ -176,7 +178,7 @@ final class ExceptionLogSecretsTest extends TestCase
 	 * what is checked here is the dump it makes: the whole array, through Tracy's dumper with the blue screen's own
 	 * `keysToHide` and scrubber, as text for the .md log and as HTML for the .html one.
 	 */
-	public function testPersonalDataIsHiddenWhereverItIsDumpedByName(): void
+	public function testPostedPersonalDataIsHiddenInBothLogs(): void
 	{
 		$post = [
 			'email' => 'probe-' . bin2hex(random_bytes(8)),
@@ -235,4 +237,4 @@ final class ExceptionLogSecretsTest extends TestCase
 
 }
 
-TestCaseRunner::run(ExceptionLogSecretsTest::class);
+TestCaseRunner::run(ExceptionLogSensitiveDataTest::class);

@@ -18,8 +18,8 @@ require __DIR__ . '/../bootstrap.php';
 
 /*
  * Tracy writes every stack frame's arguments into the exception log, so a value passed as a plain string ends up
- * there whenever something deeper throws. ExceptionLogSecretsTest proves `#[SensitiveParameter]` hides it; this one
- * makes sure the attribute is on every parameter that carries one, including ones added later.
+ * there whenever something deeper throws. ExceptionLogSensitiveDataTest proves `#[SensitiveParameter]` hides it;
+ * this one makes sure the attribute is on every parameter that carries one, including ones added later.
  *
  * The list is deliberately short. A name has to mean personal data wherever it appears, or the failures become
  * noise and get waved through: `$name` alone is 98 parameters in src/, nearly all of them header names, session
