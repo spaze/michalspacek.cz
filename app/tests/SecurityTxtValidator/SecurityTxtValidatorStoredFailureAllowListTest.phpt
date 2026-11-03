@@ -7,6 +7,7 @@ namespace MichalSpacekCz\SecurityTxtValidator;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use ReflectionClass;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlContentEncodingException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtConnectedToWrongIpAddressException;
@@ -18,6 +19,8 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtRedirectLoopException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtRedirectUrlTooLongException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlUnsupportedSchemeException;
@@ -35,6 +38,7 @@ final class SecurityTxtValidatorStoredFailureAllowListTest extends TestCase
 	 * answered with nothing usable, it sent us somewhere we will not follow.
 	 */
 	private const array STORED_AS_THE_HOSTS_ANSWER = [
+		SecurityTxtCannotOpenUrlContentEncodingException::class,
 		SecurityTxtCannotOpenUrlException::class,
 		SecurityTxtCannotParseHostnameException::class,
 		SecurityTxtConnectedToWrongIpAddressException::class,
@@ -45,6 +49,8 @@ final class SecurityTxtValidatorStoredFailureAllowListTest extends TestCase
 		SecurityTxtNoHttpCodeException::class,
 		SecurityTxtNoLocationHeaderException::class,
 		SecurityTxtNotFoundException::class,
+		SecurityTxtRedirectLoopException::class,
+		SecurityTxtRedirectUrlTooLongException::class,
 		SecurityTxtTooManyRedirectsException::class,
 		SecurityTxtUrlNotFoundException::class,
 		SecurityTxtUrlUnsupportedSchemeException::class,
