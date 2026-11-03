@@ -51,7 +51,7 @@ final readonly class SecurityTxtRedirects implements Countable
 
 
 	/**
-	 * The chain as message values, so a redirect prints as the URL it is rather than as text a checked host sent, which `SecurityTxtPrintableValue` percent encodes. One that
+	 * The chain as message values, so a redirect prints as the URL it is rather than as text a checked host sent, which `SecurityTxtPrintableValue` percent-encodes. One that
 	 * does not read back stays the string it is, which is the spelling this library wrote and already printable.
 	 *
 	 * @return list<string|Url>

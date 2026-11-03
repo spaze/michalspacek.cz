@@ -8,7 +8,7 @@
 namespace Nette\DI;
 
 use Nette;
-use function array_flip, array_key_exists, array_keys, array_map, array_merge, array_values, class_exists, count, get_class_methods, implode, interface_exists, is_a, is_object, natsort, sprintf, str_replace, ucfirst;
+use function array_key_exists, count, is_object, sprintf, strlen;
 
 
 /**
@@ -30,6 +30,9 @@ class Container
 
 	/** @var array<class-string, array<int, list<string>>>  type => (high/low/no => service names) */
 	protected array $wiring = [];
+
+	/** @var string[]  names that getMethodName() does not encode reversibly: decoded name => service name */
+	protected array $names = [];
 
 	/** @var object[]  service name => instance */
 	private array $instances = [];
@@ -80,7 +83,10 @@ class Container
 
 	protected function getDynamicParameter(string|int $key): mixed
 	{
-		throw new Nette\InvalidStateException(sprintf("Parameter '%s' not found. Check if 'di › export › parameters' is enabled.", $key));
+		throw new Nette\InvalidStateException(sprintf(
+			"Parameter '%s' not found. Check if 'di\u{a0}›\u{a0}export\u{a0}›\u{a0}parameters' is enabled.",
+			$key,
+		));
 	}
 
 
@@ -91,7 +97,7 @@ class Container
 	public function addService(string $name, object $service): static
 	{
 		$name = $this->aliases[$name] ?? $name;
-		if (isset($this->instances[$name])) {
+		if (isset($this->instances[$name]) || isset($this->factories[$name])) {
 			throw new Nette\InvalidStateException(sprintf("Service '%s' already exists.", $name));
 		}
 
@@ -125,12 +131,12 @@ class Container
 
 
 	/**
-	 * Removes a service instance from the container.
+	 * Removes a service instance or its factory from the container.
 	 */
 	public function removeService(string $name): void
 	{
 		$name = $this->aliases[$name] ?? $name;
-		unset($this->instances[$name]);
+		unset($this->instances[$name], $this->factories[$name]);
 	}
 
 
@@ -246,20 +252,30 @@ class Container
 	 */
 	public function getByType(string $type, bool $throw = true): ?object
 	{
-		$type = Helpers::normalizeClass($type);
-		if (!empty($this->wiring[$type][0])) {
-			if (count($names = $this->wiring[$type][0]) === 1) {
-				return $this->getService($names[0]);
-			}
+		$names = $this->findAutowired($type, preferredOnly: true);
+		if (count($names) === 1) {
+			return $this->getService($names[0]);
 
+		} elseif (count($names) > 1) {
 			natsort($names);
-			throw new MissingServiceException(sprintf("Multiple services of type $type found: %s.", implode(', ', $names)));
+			throw new MissingServiceException(sprintf(
+				'Multiple services of type %s found: %s.',
+				Helpers::normalizeClass($type),
+				implode(', ', $names),
+			));
 
 		} elseif ($throw) {
+			$type = Helpers::normalizeClass($type);
 			if (!class_exists($type) && !interface_exists($type)) {
-				throw new MissingServiceException(sprintf("Service of type '%s' not found. Check the class name because it cannot be found.", $type));
+				throw new MissingServiceException(sprintf(
+					"Service of type '%s' not found. Check the class name because it cannot be found.",
+					$type,
+				));
 			} elseif ($this->findByType($type)) {
-				throw new MissingServiceException(sprintf("Service of type %s is not autowired or is missing in di\u{a0}›\u{a0}export\u{a0}›\u{a0}types.", $type));
+				throw new MissingServiceException(sprintf(
+					"Service of type %s is not autowired or is missing in di\u{a0}›\u{a0}export\u{a0}›\u{a0}types.",
+					$type,
+				));
 			} else {
 				throw new MissingServiceException(sprintf('Service of type %s not found. Did you add it to configuration file?', $type));
 			}
@@ -271,14 +287,17 @@ class Container
 
 	/**
 	 * Returns the names of autowired services of the given type.
+	 * With $preferredOnly it omits services demoted by an autowiring preference.
 	 * @param  class-string  $type
 	 * @return list<string>
 	 * @internal
 	 */
-	public function findAutowired(string $type): array
+	public function findAutowired(string $type, bool $preferredOnly = false): array
 	{
 		$type = Helpers::normalizeClass($type);
-		return array_merge($this->wiring[$type][0] ?? [], $this->wiring[$type][1] ?? []);
+		return $preferredOnly
+			? $this->wiring[$type][0] ?? []
+			: [...$this->wiring[$type][0] ?? [], ...$this->wiring[$type][1] ?? []];
 	}
 
 
@@ -307,13 +326,61 @@ class Container
 
 
 	/**
+	 * Introspection of the container: every registered service keyed by canonical name in definition order.
+	 * Aliases are folded into each descriptor's $aliases, not listed separately. No services are instantiated.
+	 * @return array<string, ServiceDescriptor>
+	 */
+	public function getServiceDescriptors(): array
+	{
+		$aliases = [];
+		foreach ($this->aliases as $alias => $target) {
+			$aliases[$target][] = $alias;
+		}
+
+		$list = [];
+		foreach (array_keys($this->methods) as $method) {
+			if (strlen($method) > 13 && str_starts_with($method, 'createService')) {
+				$name = lcfirst(str_replace('__', '.', substr($method, 13)));
+				$list[$this->names[$name] ?? $name] = true;
+			}
+		}
+		$list += $this->factories;
+
+		$descriptors = [];
+		foreach (array_keys($list) as $name) {
+			$type = $this->getServiceType($name) ?: null;
+			$wiring = $type === null ? null : $this->wiring[Helpers::normalizeClass($type)] ?? null;
+			$tags = [];
+			foreach ($this->tags as $tag => $services) {
+				if (array_key_exists($name, $services)) {
+					$tags[$tag] = $services[$name];
+				}
+			}
+
+			$descriptors[$name] = new ServiceDescriptor(
+				name: $name,
+				type: $type,
+				autowired: $wiring ? in_array($name, [...$wiring[0] ?? [], ...$wiring[1] ?? []], true) : null,
+				tags: $tags,
+				aliases: $aliases[$name] ?? [],
+				instance: $this->instances[$name] ?? null,
+			);
+		}
+		return $descriptors;
+	}
+
+
+	/**
 	 * Detects circular references and invokes the callback.
 	 * @param  \Closure(): mixed  $callback
 	 */
 	private function preventDeadLock(string $key, \Closure $callback): mixed
 	{
 		if (isset($this->creating[$key])) {
-			throw new Nette\InvalidStateException(sprintf('Circular reference detected for: %s.', implode(', ', array_keys($this->creating))));
+			throw new Nette\InvalidStateException(sprintf(
+				'Circular reference detected for: %s.',
+				implode(', ', array_keys($this->creating)),
+			));
 		}
 		try {
 			$this->creating[$key] = true;
@@ -377,8 +444,8 @@ class Container
 	private function autowireArguments(\ReflectionFunctionAbstract $function, array $args = []): array
 	{
 		return Resolver::autowireArguments($function, $args, fn(string $type, bool $single) => $single
-				? $this->getByType($type)
-				: array_map($this->getService(...), $this->findAutowired($type)));
+			? $this->getByType($type)
+			: array_map($this->getService(...), $this->findAutowired($type)));
 	}
 
 

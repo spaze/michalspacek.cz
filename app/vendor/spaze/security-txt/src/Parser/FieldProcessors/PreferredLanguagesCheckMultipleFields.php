@@ -12,14 +12,21 @@ final class PreferredLanguagesCheckMultipleFields implements FieldProcessor
 {
 
 	/**
+	 * The file the last Preferred-Languages field was in, because the `SecurityTxt` object has no Preferred-Languages value after one with a wrong separator
+	 */
+	private ?SecurityTxt $securityTxt = null;
+
+
+	/**
 	 * @throws SecurityTxtError
 	 */
 	#[Override]
 	public function process(string $value, SecurityTxt $securityTxt): void
 	{
-		if ($securityTxt->getPreferredLanguages() !== null) {
+		if ($this->securityTxt === $securityTxt) {
 			throw new SecurityTxtError(new SecurityTxtMultiplePreferredLanguages());
 		}
+		$this->securityTxt = $securityTxt;
 	}
 
 }

@@ -9,11 +9,11 @@ namespace Nette\Http;
 
 use Nette;
 use Nette\Utils\DateTime;
-use function array_map, explode, implode, inet_pton, sprintf, strlen, strncmp, unpack;
+use function is_int;
 
 
 /**
- * Rendering helpers for HTTP.
+ * Helper functions for HTTP requests, responses and headers.
  */
 final class Helpers
 {
@@ -37,32 +37,93 @@ final class Helpers
 
 
 	/**
-	 * Checks whether an IP address falls within a CIDR block (e.g. '192.168.1.0/24').
+	 * Converts an expiration value to the number of seconds from now (may be negative for the past).
+	 * Integers (or numeric strings) are relative seconds; other strings ('20 minutes', '2024-01-01')
+	 * and DateTimeInterface are absolute times. Null returns null.
+	 * @throws Nette\InvalidArgumentException  for an empty string
+	 * @throws \DateMalformedStringException  for an unparsable textual time
 	 */
-	public static function ipMatch(string $ip, string $mask): bool
+	public static function expirationToSeconds(string|int|\DateTimeInterface|null $expire): ?int
 	{
-		[$mask, $size] = explode('/', $mask . '/');
-		if (!($ipBin = inet_pton($ip)) || !($maskBin = inet_pton($mask))) {
-			return false;
+		return match (true) {
+			$expire === null => null,
+			is_int($expire) => self::normalizeToRelative($expire),
+			$expire instanceof \DateTimeInterface => $expire->getTimestamp() - time(),
+			$expire === '' => throw new Nette\InvalidArgumentException('Expiration must not be an empty string; use null instead.'),
+			($seconds = filter_var($expire, FILTER_VALIDATE_INT)) !== false => self::normalizeToRelative($seconds),
+			default => (new DateTime($expire))->getTimestamp() - time(),
+		};
+	}
+
+
+	private static function normalizeToRelative(int $seconds): int
+	{
+		// All numbers are now relative seconds. Previously DateTime::from() treated numbers above one
+		// year (~31.5M) as absolute timestamps; the threshold is intentionally raised to 1e9 (~ year 2001)
+		// so that values in between newly work as relative intervals, while genuine timestamps still warn.
+		if ($seconds >= 1_000_000_000) {
+			trigger_error(
+				'Passing an absolute timestamp as an expiration is deprecated; pass a relative number of seconds or a DateTimeInterface instead.',
+				E_USER_DEPRECATED,
+			);
+			return $seconds - time();
 		}
 
-		$tmp = fn(int $n): string => sprintf('%032b', $n);
-		$ip = implode('', array_map($tmp, unpack('N*', $ipBin) ?: []));
-		$mask = implode('', array_map($tmp, unpack('N*', $maskBin) ?: []));
-		$max = strlen($ip);
-		if (!$max || $max !== strlen($mask) || (int) $size < 0 || (int) $size > $max) {
-			return false;
-		}
-
-		return strncmp($ip, $mask, $size === '' ? $max : (int) $size) === 0;
+		return $seconds;
 	}
 
 
 	/**
-	 * Sends the strict same-site cookie used to detect same-site requests.
+	 * Parses an HTTP quality-value list such as the Accept, Accept-Language or Accept-Encoding header
+	 * into tokens mapped to their q-factor, ordered by descending preference. Tokens are lowercased and
+	 * those explicitly rejected with q=0 are omitted.
+	 * @return array<string, float>  e.g. ['cs-cz' => 1.0, 'en' => 0.8]
+	 */
+	public static function parseQualityList(string $header): array
+	{
+		$list = [];
+		foreach (explode(',', $header) as $item) {
+			$params = explode(';', $item);
+			$token = strtolower(trim((string) array_shift($params)));
+			if ($token === '') {
+				continue;
+			}
+
+			$q = 1.0;
+			foreach ($params as $param) {
+				if (preg_match('#^\s*q\s*=\s*([0-9.]+)#i', $param, $m)) {
+					$q = min(1.0, (float) $m[1]); // q is capped at 1 per RFC 9110
+				}
+			}
+
+			if ($q > 0) {
+				$list[$token] = max($list[$token] ?? 0.0, $q); // a repeated token keeps its highest q
+			}
+		}
+
+		arsort($list); // stable since PHP 8.0, so equal q keeps header order
+		return $list;
+	}
+
+
+	/**
+	 * Checks whether an IP address falls within a CIDR block (e.g. '192.168.1.0/24').
+	 * @deprecated use IPAddress class
+	 */
+	public static function ipMatch(string $ip, string $mask): bool
+	{
+		return IPAddress::tryFrom($ip)?->isInRange($mask) ?? false;
+	}
+
+
+	/**
+	 * Sends the SameSite=Strict cookie used as a fallback for detecting same-site requests
+	 * in browsers that don't support the Sec-Fetch-Site header (Safari < 16.4).
 	 */
 	public static function initCookie(IRequest $request, IResponse $response): void
 	{
-		$response->setCookie(self::StrictCookieName, '1', 0, '/', sameSite: IResponse::SameSiteStrict);
+		if ($request->getHeader('Sec-Fetch-Site') === null) {
+			$response->setCookie(self::StrictCookieName, '1', null, '/', sameSite: SameSite::Strict);
+		}
 	}
 }

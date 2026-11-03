@@ -54,8 +54,8 @@ final readonly class SecurityTxtJson
 	 * that never made a release has no stored blobs to protect, so a change there moves nothing. A reader already fails on a break it cannot handle,
 	 * so the number costs nothing and turns `fetchResult is not set or not an array` into a sentence naming both versions; bumping it for a change an older reader could have
 	 * tolerated is what would turn a benign upgrade into a forced deploy order. Nor is a `Base64` twin of a key the older decoder requires a break: that decoder refuses the
-	 * blob by field, and no stored blob carries a twin because none could be written. What a bump should mean for a decoder that could partly understand a newer blob is
-	 * issue #107, and nothing here decides it.
+	 * blob by field, and no stored blob carries a twin because none could be written. Nor is a new violation class: the older decoder reads every blob without one, and
+	 * refuses a blob with one as `class ... doesn't exist` rather than read it without the violation, because a result missing a violation looks better than the file is.
 	 */
 	public const int FORMAT_VERSION = 1;
 
@@ -72,24 +72,7 @@ final readonly class SecurityTxtJson
 	 */
 	public function createViolationsFromJsonValues(array $violations): array
 	{
-		$objects = [];
-		foreach ($violations as $violation) {
-			if (!is_array($violation) || !isset($violation['class']) || !is_string($violation['class'])) {
-				throw new SecurityTxtCannotParseJsonException('class is missing or not a string');
-			} elseif (!class_exists($violation['class'])) {
-				throw new SecurityTxtCannotParseJsonException("class {$violation['class']} doesn't exist");
-			}
-			$params = $this->createStoredEntry($violation, 'params');
-			if (!is_array($params)) {
-				throw new SecurityTxtCannotParseJsonException('params is missing or not an array');
-			}
-			$class = $violation['class'];
-			if (!is_subclass_of($class, SecurityTxtSpecViolation::class)) {
-				throw new SecurityTxtCannotParseJsonException(sprintf("class %s doesn't extend %s", $class, SecurityTxtSpecViolation::class));
-			}
-			$objects[] = $this->createObjectFromJsonParams($class, $params);
-		}
-		return $objects;
+		return array_map(fn(mixed $violation): SecurityTxtSpecViolation => $this->createStoredObject($violation, SecurityTxtSpecViolation::class), $violations);
 	}
 
 
@@ -155,9 +138,6 @@ final readonly class SecurityTxtJson
 						if (!is_string($name)) {
 							throw new SecurityTxtCannotParseJsonException('field name is not a string');
 						}
-						if (SecurityTxtField::tryFrom($name) === null) {
-							throw new SecurityTxtCannotParseJsonException("fields > {$name} is an unsupported field");
-						}
 						if ($name === SecurityTxtField::Acknowledgments->value) {
 							$this->addSecurityTxtUriField($name, $value, SecurityTxtAcknowledgments::class, $securityTxt->addAcknowledgments(...));
 						} elseif ($name === SecurityTxtField::BugBounty->value) {
@@ -210,6 +190,8 @@ final readonly class SecurityTxtJson
 								$languages[] = $language;
 							}
 							$securityTxt->setPreferredLanguages(new SecurityTxtPreferredLanguages($languages));
+						} else {
+							throw new SecurityTxtCannotParseJsonException("fields > {$name} is an unsupported field");
 						}
 					}
 				}
@@ -292,38 +274,8 @@ final readonly class SecurityTxtJson
 		if (!isset($values['fetchWarnings']) || !is_array($values['fetchWarnings'])) {
 			throw new SecurityTxtCannotParseJsonException('fetchWarnings is not set or not an array');
 		}
-		if (!isset($values['lineErrors']) || !is_array($values['lineErrors'])) {
-			throw new SecurityTxtCannotParseJsonException('lineErrors is not set or not an array');
-		}
-		$lineErrors = [];
-		foreach ($values['lineErrors'] as $errorLine => $errors) {
-			if (!is_int($errorLine)) {
-				throw new SecurityTxtCannotParseJsonException("lineErrors > {$errorLine} key is not an int");
-			}
-			if ($errorLine < 1) {
-				throw new SecurityTxtCannotParseJsonException("lineErrors > {$errorLine} key is less than 1");
-			}
-			if (!is_array($errors)) {
-				throw new SecurityTxtCannotParseJsonException("lineErrors > {$errorLine} is not an array");
-			}
-			$lineErrors[$errorLine] = $this->createViolationsFromJsonValues(array_values($errors));
-		}
-		if (!isset($values['lineWarnings']) || !is_array($values['lineWarnings'])) {
-			throw new SecurityTxtCannotParseJsonException('lineWarnings is not set or not an array');
-		}
-		$lineWarnings = [];
-		foreach ($values['lineWarnings'] as $warningLine => $warnings) {
-			if (!is_int($warningLine)) {
-				throw new SecurityTxtCannotParseJsonException("lineWarnings > {$warningLine} key is not an int");
-			}
-			if ($warningLine < 1) {
-				throw new SecurityTxtCannotParseJsonException("lineWarnings > {$warningLine} key is less than 1");
-			}
-			if (!is_array($warnings)) {
-				throw new SecurityTxtCannotParseJsonException("lineWarnings > {$warningLine} is not an array");
-			}
-			$lineWarnings[$warningLine] = $this->createViolationsFromJsonValues(array_values($warnings));
-		}
+		$lineErrors = $this->createLineViolationsFromJsonValues($values, 'lineErrors');
+		$lineWarnings = $this->createLineViolationsFromJsonValues($values, 'lineWarnings');
 		if (!isset($values['fileErrors']) || !is_array($values['fileErrors'])) {
 			throw new SecurityTxtCannotParseJsonException('fileErrors is not set or not an array');
 		}
@@ -373,6 +325,33 @@ final readonly class SecurityTxtJson
 			$values['strictMode'],
 			$expiresWarningThreshold ?? null,
 		);
+	}
+
+
+	/**
+	 * @param array<array-key, mixed> $values
+	 * @return array<int<1, max>, list<SecurityTxtSpecViolation>>
+	 * @throws SecurityTxtCannotParseJsonException
+	 */
+	private function createLineViolationsFromJsonValues(array $values, string $key): array
+	{
+		if (!isset($values[$key]) || !is_array($values[$key])) {
+			throw new SecurityTxtCannotParseJsonException("{$key} is not set or not an array");
+		}
+		$violations = [];
+		foreach ($values[$key] as $line => $lineViolations) {
+			if (!is_int($line)) {
+				throw new SecurityTxtCannotParseJsonException("{$key} > {$line} key is not an int");
+			}
+			if ($line < 1) {
+				throw new SecurityTxtCannotParseJsonException("{$key} > {$line} key is less than 1");
+			}
+			if (!is_array($lineViolations)) {
+				throw new SecurityTxtCannotParseJsonException("{$key} > {$line} is not an array");
+			}
+			$violations[$line] = $this->createViolationsFromJsonValues(array_values($lineViolations));
+		}
+		return $violations;
 	}
 
 
@@ -465,22 +444,32 @@ final readonly class SecurityTxtJson
 	 */
 	public function createFetcherExceptionFromJsonValues(array $values): SecurityTxtFetcherException
 	{
-		if (
-			!isset($values['error'])
-			|| !is_array($values['error'])
-			|| !isset($values['error']['class'])
-			|| !is_string($values['error']['class'])
-			|| !class_exists($values['error']['class'])
-		) {
-			throw new SecurityTxtCannotParseJsonException('error > class is missing, not a string or not an existing class');
+		return $this->createStoredObject($values['error'] ?? null, SecurityTxtFetcherException::class, 'error > ');
+	}
+
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $parent
+	 * @param string $path What precedes a key in a message, `error > ` for the exception a result failed with, nothing for one a violation carries in its params
+	 * @return T
+	 * @throws SecurityTxtCannotParseJsonException
+	 */
+	private function createStoredObject(mixed $values, string $parent, string $path = ''): object
+	{
+		if (!is_array($values) || !isset($values['class']) || !is_string($values['class'])) {
+			throw new SecurityTxtCannotParseJsonException("{$path}class is missing or not a string");
 		}
-		$params = $this->createStoredEntry($values['error'], 'params', 'error > ');
+		$class = $values['class'];
+		if (!class_exists($class)) {
+			throw new SecurityTxtCannotParseJsonException("{$path}class {$class} doesn't exist");
+		}
+		$params = $this->createStoredEntry($values, 'params', $path);
 		if (!is_array($params)) {
-			throw new SecurityTxtCannotParseJsonException('error > params is missing or not an array');
+			throw new SecurityTxtCannotParseJsonException("{$path}params is missing or not an array");
 		}
-		$class = $values['error']['class'];
-		if (!is_subclass_of($class, SecurityTxtFetcherException::class)) {
-			throw new SecurityTxtCannotParseJsonException(sprintf('The exception class %s is not a subclass of %s', $class, SecurityTxtFetcherException::class));
+		if (!is_subclass_of($class, $parent)) {
+			throw new SecurityTxtCannotParseJsonException(sprintf("%sclass %s doesn't extend %s", $path, $class, $parent));
 		}
 		return $this->createObjectFromJsonParams($class, $params);
 	}
@@ -589,6 +578,8 @@ final readonly class SecurityTxtJson
 				$value = new SecurityTxtRedirects(...$value);
 			} elseif ($type !== null && is_subclass_of($type, BackedEnum::class) && (is_int($value) || is_string($value))) {
 				$value = $type::from($value);
+			} elseif ($type !== null && is_a($type, SecurityTxtFetcherException::class, true) && is_array($value)) {
+				$value = $this->createStoredObject($value, SecurityTxtFetcherException::class);
 			}
 			$arguments[$key] = $value;
 		}
@@ -613,7 +604,7 @@ final readonly class SecurityTxtJson
 			$self = new SecurityTxtHost($url);
 		} catch (SecurityTxtCannotParseHostnameException $e) {
 			// The constructor names the URL it was handed, which is one this method derived; a caller of this one asked about a host and gets told about that host
-			throw new SecurityTxtCannotParseHostnameException($host, $e);
+			throw new SecurityTxtCannotParseHostnameException($host, previous: $e);
 		}
 		if ($self->getUnicode() !== $host) {
 			throw new SecurityTxtCannotParseHostnameException($host);

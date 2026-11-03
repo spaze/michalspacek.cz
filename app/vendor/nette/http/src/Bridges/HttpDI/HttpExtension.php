@@ -9,7 +9,7 @@ namespace Nette\Bridges\HttpDI;
 
 use Nette;
 use Nette\Schema\Expect;
-use function is_array, strval;
+use function is_array;
 
 
 /**
@@ -17,7 +17,9 @@ use function is_array, strval;
  *
  * @property object{
  *     proxy: array<string>,
+ *     proxyHeaders: string,
  *     forceHttps: bool,
+ *     baseUrl: ?string,
  *     headers: array<string, ?scalar>,
  *     frames: string|bool|null,
  *     csp: array<string, array<mixed>|scalar|null>,
@@ -41,7 +43,9 @@ class HttpExtension extends Nette\DI\CompilerExtension
 	{
 		return Expect::structure([
 			'proxy' => Expect::anyOf(Expect::arrayOf('string'), Expect::string()->castTo('array'))->firstIsDefault()->dynamic(),
+			'proxyHeaders' => Expect::anyOf('xForwarded', 'forwarded', 'both', 'none')->firstIsDefault(),
 			'forceHttps' => Expect::bool(false)->dynamic(),
+			'baseUrl' => Expect::string()->dynamic(),
 			'headers' => Expect::arrayOf('scalar|null')->default([
 				'X-Powered-By' => 'Nette Framework 3',
 				'Content-Type' => 'text/html; charset=utf-8',
@@ -65,10 +69,18 @@ class HttpExtension extends Nette\DI\CompilerExtension
 
 		$requestFactory = $builder->addDefinition($this->prefix('requestFactory'))
 			->setFactory(Nette\Http\RequestFactory::class)
-			->addSetup('setProxy', [$config->proxy]);
+			->addSetup('setProxy', [
+				$config->proxy,
+				'forwarded' => $config->proxyHeaders === 'forwarded' || $config->proxyHeaders === 'both',
+				'xForwarded' => $config->proxyHeaders === 'xForwarded' || $config->proxyHeaders === 'both',
+			]);
 
 		if ($config->forceHttps) {
 			$requestFactory->addSetup('setForceHttps');
+		}
+
+		if ($config->baseUrl !== null) {
+			$requestFactory->addSetup('setBaseUrl', [$config->baseUrl]);
 		}
 
 		$request = $builder->addDefinition($this->prefix('request'))

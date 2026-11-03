@@ -61,15 +61,18 @@ final class SecurityTxtSignatureGnuPgProvider implements SecurityTxtSignaturePro
 			throw new SecurityTxtCannotVerifySignatureException('signature is not an array', $this->getErrorInfo());
 		}
 		if (!isset($signature['summary']) || !is_int($signature['summary'])) {
-			throw new SecurityTxtCannotVerifySignatureException('summary is missing or not a string', $this->getErrorInfo());
+			throw new SecurityTxtCannotVerifySignatureException('summary is missing or not an int', $this->getErrorInfo());
 		}
 		if (!isset($signature['fingerprint']) || !is_string($signature['fingerprint'])) {
 			throw new SecurityTxtCannotVerifySignatureException('fingerprint is missing or not a string', $this->getErrorInfo());
 		}
 		if (!isset($signature['timestamp']) || !is_int($signature['timestamp'])) {
-			throw new SecurityTxtCannotVerifySignatureException('timestamp is missing or not a string', $this->getErrorInfo());
+			throw new SecurityTxtCannotVerifySignatureException('timestamp is missing or not an int', $this->getErrorInfo());
 		}
-		return new SecurityTxtSignatureVerifySignatureInfo($signature['summary'], $signature['fingerprint'], $signature['timestamp']);
+		if (!isset($signature['status']) || !is_int($signature['status'])) {
+			throw new SecurityTxtCannotVerifySignatureException('status is missing or not an int', $this->getErrorInfo());
+		}
+		return new SecurityTxtSignatureVerifySignatureInfo($signature['summary'], $signature['fingerprint'], $signature['timestamp'], $signature['status']);
 	}
 
 

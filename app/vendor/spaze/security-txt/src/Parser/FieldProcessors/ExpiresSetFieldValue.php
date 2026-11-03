@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Parser\FieldProcessors;
 
-use DateMalformedStringException;
-use DateTimeImmutable;
 use Override;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtError;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
@@ -16,6 +14,7 @@ final readonly class ExpiresSetFieldValue implements FieldProcessor
 
 	public function __construct(
 		private SecurityTxtExpiresFactory $expiresFactory,
+		private ExpiresCheckFieldFormat $fieldFormat,
 	) {
 	}
 
@@ -27,10 +26,9 @@ final readonly class ExpiresSetFieldValue implements FieldProcessor
 	#[Override]
 	public function process(string $value, SecurityTxt $securityTxt): void
 	{
-		try {
-			$securityTxt->setExpires($this->expiresFactory->create(new DateTimeImmutable($value)));
-		} catch (DateMalformedStringException) {
-			// can't set the Expires value
+		$dateTime = $this->fieldFormat->getDateTime($value);
+		if ($dateTime !== null) {
+			$securityTxt->setExpires($this->expiresFactory->create($dateTime));
 		}
 	}
 

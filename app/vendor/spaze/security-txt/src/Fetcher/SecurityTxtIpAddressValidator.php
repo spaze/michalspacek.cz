@@ -26,7 +26,7 @@ final class SecurityTxtIpAddressValidator
 	 * @throws SecurityTxtHostIpAddressInvalidException
 	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 */
-	public function validate(string $ipAddress, SecurityTxtIpAddressType $type, SecurityTxtHost $host, Url $url): void
+	public function validate(string $ipAddress, SecurityTxtIpAddressType $type, SecurityTxtHost $host, Url $url, ?SecurityTxtRedirects $redirects = null): void
 	{
 		// A `match` for the same reason `SecurityTxtHostIpAddressInvalidException` uses one, and with more riding on it: a case added later would fall through a ternary to
 		// `FILTER_FLAG_IPV6` while the `V6` test below stayed false, so it would be filtered as IPv6 and skip the NAT64 check that keeps a mapped address off the metadata endpoint
@@ -35,13 +35,13 @@ final class SecurityTxtIpAddressValidator
 			SecurityTxtIpAddressType::V6 => FILTER_FLAG_IPV6,
 		};
 		if (filter_var($ipAddress, FILTER_VALIDATE_IP, $flag) === false) {
-			throw new SecurityTxtHostIpAddressInvalidException($host, $ipAddress, $type, $url);
+			throw new SecurityTxtHostIpAddressInvalidException($host, $ipAddress, $type, $url, $redirects);
 		}
 		if (filter_var($ipAddress, FILTER_VALIDATE_IP, $flag | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_GLOBAL_RANGE) === false) {
-			throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url);
+			throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url, $redirects);
 		}
 		if ($type === SecurityTxtIpAddressType::V6) {
-			$this->validateNat64IpAddress($ipAddress, $host, $url);
+			$this->validateNat64IpAddress($ipAddress, $host, $url, $redirects);
 		}
 	}
 
@@ -56,7 +56,7 @@ final class SecurityTxtIpAddressValidator
 	 *
 	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 */
-	private function validateNat64IpAddress(string $ipAddress, SecurityTxtHost $host, Url $url): void
+	private function validateNat64IpAddress(string $ipAddress, SecurityTxtHost $host, Url $url, ?SecurityTxtRedirects $redirects): void
 	{
 		$binary = inet_pton($ipAddress);
 		if ($binary === false) {
@@ -64,7 +64,7 @@ final class SecurityTxtIpAddressValidator
 		}
 		$localUse = inet_pton(self::NAT64_LOCAL_USE_PREFIX);
 		if ($localUse !== false && substr($binary, 0, 6) === substr($localUse, 0, 6)) {
-			throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url);
+			throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url, $redirects);
 		}
 		$wellKnown = inet_pton(self::NAT64_WELL_KNOWN_PREFIX);
 		if ($wellKnown !== false && substr($binary, 0, 12) === substr($wellKnown, 0, 12)) {
@@ -73,7 +73,7 @@ final class SecurityTxtIpAddressValidator
 				$embedded === false
 				|| filter_var($embedded, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_GLOBAL_RANGE) === false
 			) {
-				throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url);
+				throw new SecurityTxtHostIpAddressNotPublicException($host, $ipAddress, $url, $redirects);
 			}
 		}
 	}

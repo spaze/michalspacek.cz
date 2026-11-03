@@ -10,7 +10,7 @@ use Uri\WhatWg\Url;
 /**
  * Prints messages built from a format and values.
  *
- * The format is written in this codebase and is the only part that can ask for colors, and the only part that may be anything other than printable ASCII. The values come
+ * The format is written in this codebase and is the only part that can ask for colors. The values come
  * from the checked host, a `Location` header or a field value read from its `security.txt` for example, and are encoded, never read as markup. Colors are resolved in the
  * format before the values are put in it, so a value can neither color itself nor reach the terminal as an escape sequence.
  *

@@ -16,7 +16,7 @@ final class SecurityTxtSignedButNoCanonical extends SecurityTxtSpecViolation
 			[SecurityTxtField::Canonical->value],
 			'draft-foudil-securitytxt-05',
 			null,
-			'Add %s field pointing where the %s file is located',
+			'Add a %s field with the URI where the %s file is located',
 			[SecurityTxtField::Canonical->value, 'security.txt'],
 			'2.3',
 			['2.5.2'],

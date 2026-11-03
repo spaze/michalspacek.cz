@@ -19,13 +19,15 @@ abstract class SecurityTxtFetcherException extends Exception implements JsonSeri
 	/** @var list<string|Url|SecurityTxtHost> */
 	private readonly array $messageValues;
 
+	private readonly SecurityTxtRedirects $redirects;
+
 
 	/**
 	 * @param list<scalar|null|Url|SecurityTxtHost|SecurityTxtRedirects|array<array-key, scalar|array<array-key, scalar|list<string>>>> $constructorParams Passed as themselves, a URL and a host are put in the spelling the wire carries when this is serialized and not before, so no caller has to know one
 	 * @param literal-string $messageFormat Never build this from anything the checked host sends, it is used as a format and only the values are encoded when printed
 	 * @param array<array-key, string|Url|SecurityTxtHost> $messageValues A host and a URL are passed as themselves so each prints as it reads, like everywhere else. Stored as a list, see the constructor
 	 * @param Url|null $url Null where there is none to name, which is what a hostname that would not parse leaves behind. Nullable but not optional, so a subclass with a URL to hand over cannot leave it out by saying nothing
-	 * @param SecurityTxtRedirects $redirects Where the check was sent, empty when it was not
+	 * @param SecurityTxtRedirects|null $redirects Where the check was sent, null or empty when it was not
 	 * @throws Throwable
 	 */
 	public function __construct(
@@ -33,10 +35,11 @@ abstract class SecurityTxtFetcherException extends Exception implements JsonSeri
 		private readonly string $messageFormat,
 		array $messageValues,
 		private readonly ?Url $url,
-		private readonly SecurityTxtRedirects $redirects = new SecurityTxtRedirects(),
+		?SecurityTxtRedirects $redirects = null,
 		int $code = 0,
 		?Throwable $previous = null,
 	) {
+		$this->redirects = $redirects ?? new SecurityTxtRedirects();
 		// Code always passes a list, but `SecurityTxtJson` replays whatever the serialized params hold, and a string key there is read as a named argument by the CLI, which
 		// spreads these into a call
 		$this->messageValues = array_values($messageValues);
@@ -72,6 +75,19 @@ abstract class SecurityTxtFetcherException extends Exception implements JsonSeri
 			$format .= ' → %s';
 		}
 		return $format . $suffix . ')';
+	}
+
+
+	/**
+	 * The params with the chain added last when there is one: an exception that took the chain later in its life stores it only then, so the same failure without a redirect
+	 * is still the call an older version of this library can replay.
+	 *
+	 * @param list<scalar|null|Url|SecurityTxtHost|SecurityTxtRedirects|array<array-key, scalar|array<array-key, scalar|list<string>>>> $params
+	 * @return list<scalar|null|Url|SecurityTxtHost|SecurityTxtRedirects|array<array-key, scalar|array<array-key, scalar|list<string>>>>
+	 */
+	protected function withRedirectsParam(array $params, SecurityTxtRedirects $redirects): array
+	{
+		return $redirects->count() > 0 ? [...$params, $redirects] : $params;
 	}
 
 

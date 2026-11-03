@@ -12,7 +12,7 @@ final class SecurityTxtTopLevelDiffers extends SecurityTxtSpecViolation
 	) {
 		parent::__construct(
 			func_get_args(),
-			'The file at the top-level path is different than the one in the %s path',
+			'The file at the top-level path is different from the one in the %s path',
 			['/.well-known/'],
 			'draft-foudil-securitytxt-09',
 			null,

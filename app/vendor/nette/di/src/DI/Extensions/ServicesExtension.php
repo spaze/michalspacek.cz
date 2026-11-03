@@ -8,10 +8,9 @@
 namespace Nette\DI\Extensions;
 
 use Nette;
-use Nette\DI\Definitions;
+use Nette\DI\{Definitions, Helpers};
 use Nette\DI\Definitions\Statement;
-use Nette\DI\Helpers;
-use function array_replace, array_values, is_array, is_int, is_string, key, preg_match, substr;
+use function is_array, is_int, is_string;
 
 
 /**
@@ -189,7 +188,7 @@ final class ServicesExtension extends Nette\DI\CompilerExtension
 				if ($reference instanceof Statement) {
 					$config->references[$name] = '@' . $this->getContainerBuilder()
 						->addDefinition(null)
-						->setFactory($reference)
+						->setCreator($reference)
 						->setAutowired(false)
 						->getName();
 				}
@@ -212,7 +211,7 @@ final class ServicesExtension extends Nette\DI\CompilerExtension
 	}
 
 
-	private function updateDefinition(Definitions\Definition $definition, \stdClass $config): void
+	private function updateDefinition(Nette\DI\Definition $definition, \stdClass $config): void
 	{
 		if (isset($config->autowired)) {
 			$definition->setAutowired($config->autowired);
@@ -246,7 +245,7 @@ final class ServicesExtension extends Nette\DI\CompilerExtension
 	}
 
 
-	private function retrieveDefinition(?string $name, \stdClass $config): Definitions\Definition
+	private function retrieveDefinition(?string $name, \stdClass $config): Nette\DI\Definition
 	{
 		$builder = $this->getContainerBuilder();
 		if (!empty($config->reset['all'])) {

@@ -8,10 +8,9 @@
 namespace Nette\DI;
 
 use Nette;
-use Nette\DI\Definitions\Reference;
-use Nette\DI\Definitions\Statement;
+use Nette\DI\Definitions\{Reference, Statement};
 use Nette\PhpGenerator as Php;
-use function array_walk_recursive, is_array, is_object, is_string, ksort, sprintf, str_contains, str_ends_with, str_starts_with, substr;
+use function is_array, is_object, is_string, sprintf;
 
 
 /**
@@ -85,7 +84,7 @@ class PhpGenerator
 	}
 
 
-	public function generateMethod(Definitions\Definition $def): Php\Method
+	public function generateMethod(Definition $def): Php\Method
 	{
 		$name = $def->getName();
 		assert($name !== null);

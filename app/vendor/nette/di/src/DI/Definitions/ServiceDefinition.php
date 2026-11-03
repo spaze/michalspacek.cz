@@ -8,9 +8,9 @@
 namespace Nette\DI\Definitions;
 
 use Nette;
-use Nette\DI\ServiceCreationException;
+use Nette\DI\{Definition, ServiceCreationException};
 use Nette\Utils\Strings;
-use function array_pop, class_exists, class_parents, count, implode, is_string, preg_grep, serialize, strpbrk, unserialize;
+use function count, is_string;
 
 
 /**
@@ -45,7 +45,7 @@ final class ServiceDefinition extends Definition
 
 	/**
 	 * Alias for setCreator()
-	 * @param  string|array{string|Reference|Statement, string}|Definition|Reference|Statement  $factory
+	 * @param  string|array{string|Definition|Reference|Statement, string}|Definition|Reference|Statement  $factory
 	 * @param  array<mixed>  $args
 	 */
 	public function setFactory(string|array|Definition|Reference|Statement $factory, array $args = []): static
@@ -64,7 +64,7 @@ final class ServiceDefinition extends Definition
 
 
 	/**
-	 * @param  string|array{string|Reference|Statement, string}|Definition|Reference|Statement  $creator
+	 * @param  string|array{string|Definition|Reference|Statement, string}|Definition|Reference|Statement  $creator
 	 * @param  array<mixed>  $args
 	 */
 	public function setCreator(string|array|Definition|Reference|Statement $creator, array $args = []): static
@@ -82,7 +82,7 @@ final class ServiceDefinition extends Definition
 	}
 
 
-	/** @return string|array{string|Reference|Statement, string}|Definition|Reference|null */
+	/** @return string|array{string|Definition|Reference|Statement, string}|Definition|Reference|null */
 	public function getEntity(): string|array|Definition|Reference|null
 	{
 		return $this->creator->getEntity();
@@ -129,7 +129,7 @@ final class ServiceDefinition extends Definition
 
 
 	/**
-	 * @param  string|array{string|Reference|Statement, string}|Definition|Reference|Statement  $entity
+	 * @param  string|array{string|Definition|Reference|Statement, string}|Definition|Reference|Statement  $entity
 	 * @param  array<mixed>  $args
 	 */
 	public function addSetup(string|array|Definition|Reference|Statement $entity, array $args = []): static
@@ -201,7 +201,7 @@ final class ServiceDefinition extends Definition
 			$lines[] = $generator->formatStatement($stmt) . ";\n";
 		}
 
-		if ($this->canBeLazy() && !preg_grep('#(?:func_get_arg|func_num_args)#i', $lines)) { // latteFactory workaround
+		if ($this->canBeLazy() && !preg_grep('#func_get_arg|func_num_args#i', $lines)) { // latteFactory workaround
 			$class = $this->creator->getEntity();
 			assert(is_string($class) && class_exists($class)); // canBeLazy() guarantees this
 			$lines[0] = (new \ReflectionClass($class))->hasMethod('__construct')

@@ -8,7 +8,7 @@
 namespace Tracy;
 
 use ErrorException;
-use function in_array, is_bool, is_int, is_string;
+use function dirname, function_exists, in_array, ini_get, is_bool, is_int, is_string;
 use const PHP_VERSION;
 
 
@@ -17,7 +17,7 @@ use const PHP_VERSION;
  */
 class Debugger
 {
-	public const Version = '2.12.0';
+	public const Version = '2.12.2';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -67,7 +67,7 @@ class Debugger
 	/** determines whether any error will cause immediate death in development mode; if integer that it's matched against error severity */
 	public static bool|int $strictMode = false;
 
-	/** disables the @ (shut-up) operator so that notices and warnings are no longer hidden; if integer than it's matched against error severity */
+	/** disables the @ (shut-up) operator so notices and warnings are not hidden; if integer than it's matched against error severity */
 	public static bool|int $scream = false;
 
 	/** @var array<callable(\Throwable): void>  functions that are automatically called after fatal error */
@@ -139,7 +139,7 @@ class Debugger
 	/** @var string[] */
 	public static array $customJsFiles = [];
 
-	/** @var string[] path prefixes of "transparent" packages whose frames are skipped when locating user code and collapsed in stack traces */
+	/** @var string[] path prefixes of "transparent" packages whose frames are skipped when locating user code and collapsed in traces */
 	public static array $transparentPaths = [];
 
 	/** @var array<\Closure(string, int): ?array{file: string, label: string, line?: int, column?: int, active?: bool}> */
@@ -167,8 +167,8 @@ class Debugger
 
 	/**
 	 * Enables displaying or logging errors and exceptions.
-	 * @param  bool|string|string[]  $mode  use constant Debugger::Production, Development, Detect (autodetection) or IP address(es) whitelist.
-	 * @param  string  $logDirectory  error log directory
+	 * @param  bool|string|string[]  $mode  Debugger::Production, Development, Detect (autodetection) or IP address(es) whitelist
+	 * @param  ?string  $logDirectory  error log directory
 	 * @param  string|string[]|null  $email  administrator email; enables email sending in production mode
 	 */
 	public static function enable(
@@ -280,7 +280,7 @@ class Debugger
 	public static function shutdownHandler(): void
 	{
 		$error = error_get_last();
-		if (in_array($error['type'] ?? null, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE, E_RECOVERABLE_ERROR, E_USER_ERROR], strict: true)) {
+		if (in_array($error['type'] ?? null, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE, E_RECOVERABLE_ERROR, E_USER_ERROR], true)) {
 			$e = new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']);
 			if (!empty($error['trace'])) {
 				(new \ReflectionClass(\Exception::class))->getProperty('trace')->setValue($e, $error['trace']);
@@ -314,7 +314,7 @@ class Debugger
 		self::$reserved = null;
 		self::$obStatus = ob_get_status(full_status: true);
 
-		@http_response_code(500);
+		@http_response_code(500); // @ headers may already be sent
 		Helpers::improveException($exception);
 		self::removeOutputBuffers(errorOccurred: true);
 
@@ -368,7 +368,7 @@ class Debugger
 	{
 		while (ob_get_level() > self::$obLevel) {
 			$status = ob_get_status();
-			if (in_array($status['name'], ['ob_gzhandler', 'zlib output compression'], strict: true)) {
+			if (in_array($status['name'], ['ob_gzhandler', 'zlib output compression'], true)) {
 				break;
 			}
 
@@ -458,9 +458,9 @@ class Debugger
 	public static function getSessionStorage(): SessionStorage
 	{
 		if (empty(self::$sessionStorage)) {
-			self::$sessionStorage = @is_dir($dir = (string) session_save_path())
-				|| @is_dir($dir = (string) ini_get('upload_tmp_dir'))
-				|| @is_dir($dir = sys_get_temp_dir())
+			self::$sessionStorage = @is_dir($dir = (string) session_save_path()) // @ the path may be too long or outside open_basedir
+				|| @is_dir($dir = (string) ini_get('upload_tmp_dir')) // @ the path may be too long or outside open_basedir
+				|| @is_dir($dir = sys_get_temp_dir()) // @ the path may be too long or outside open_basedir
 				|| ($dir = (string) self::$logDirectory)
 				? new FileSession($dir)
 				: new NativeSession;
@@ -484,33 +484,22 @@ class Debugger
 	public static function dump(mixed $var, bool $return = false): mixed
 	{
 		if ($return) {
-			$options = [
-				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLength,
-				Dumper::ITEMS => self::$maxItems,
-			];
+			$options = self::dumpOptions();
 			return Helpers::isCli()
-				? Dumper::toText($var)
+				? Dumper::toText($var, $options)
 				: Helpers::capture(fn() => Dumper::dump($var, $options));
 
 		} elseif (!self::$productionMode) {
 			$html = Helpers::isHtmlMode();
 			echo $html ? '<tracy-div>' : '';
-			Dumper::dump($var, [
-				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLength,
-				Dumper::ITEMS => self::$maxItems,
+			Dumper::dump($var, self::dumpOptions() + [
 				Dumper::LOCATION => self::$showLocation,
 				Dumper::THEME => self::$dumpTheme,
-				Dumper::KEYS_TO_HIDE => self::$keysToHide,
 			]);
 			echo $html ? '</tracy-div>' : '';
 
 			if ($html && Helpers::isAgent()) {
-				Helpers::consoleLog(Dumper::toText($var, [
-					Dumper::DEPTH => 3,
-					Dumper::KEYS_TO_HIDE => self::$keysToHide,
-				]));
+				Helpers::consoleLog(Dumper::toText($var, self::agentDumpOptions()));
 			}
 		}
 
@@ -549,20 +538,35 @@ class Debugger
 				self::getBar()->addPanel($panel = new DefaultBarPanel('dumps'), 'Tracy:dumps');
 			}
 
-			$panel->data[] = ['title' => $title, 'dump' => Dumper::toHtml($var, $options + [
-				Dumper::DEPTH => self::$maxDepth,
-				Dumper::ITEMS => self::$maxItems,
-				Dumper::TRUNCATE => self::$maxLength,
+			$panel->data[] = ['title' => $title, 'dump' => Dumper::toHtml($var, $options + self::dumpOptions() + [
 				Dumper::LOCATION => self::$showLocation ?: Dumper::LOCATION_CLASS | Dumper::LOCATION_SOURCE,
 				Dumper::LAZY => true,
-				Dumper::KEYS_TO_HIDE => self::$keysToHide,
-			]), 'text' => Helpers::isAgent() ? Dumper::toText($var, [
-				Dumper::DEPTH => 3,
-				Dumper::KEYS_TO_HIDE => self::$keysToHide,
-			]) : null];
+			]), 'text' => Helpers::isAgent() ? Dumper::toText($var, self::agentDumpOptions()) : null];
 		}
 
 		return $var;
+	}
+
+
+	/** @return array<string, mixed> */
+	private static function dumpOptions(): array
+	{
+		return [
+			Dumper::DEPTH => self::$maxDepth,
+			Dumper::TRUNCATE => self::$maxLength,
+			Dumper::ITEMS => self::$maxItems,
+			Dumper::KEYS_TO_HIDE => self::$keysToHide,
+		];
+	}
+
+
+	/** @return array<string, mixed> */
+	private static function agentDumpOptions(): array
+	{
+		return [
+			Dumper::DEPTH => 3,
+			Dumper::KEYS_TO_HIDE => self::$keysToHide,
+		];
 	}
 
 
@@ -628,7 +632,7 @@ class Debugger
 			$list[] = '[::1]'; // workaround for PHP < 7.3.4
 		}
 
-		return in_array($addr, $list, strict: true) || in_array("$secret@$addr", $list, strict: true);
+		return in_array($addr, $list, true) || in_array("$secret@$addr", $list, true);
 	}
 
 

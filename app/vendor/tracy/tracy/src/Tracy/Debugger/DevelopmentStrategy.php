@@ -8,7 +8,7 @@
 namespace Tracy;
 
 use ErrorException;
-use function is_bool;
+use function function_exists, is_bool;
 
 
 /**
@@ -51,10 +51,14 @@ final class DevelopmentStrategy
 
 	private function renderExceptionCli(\Throwable $exception): void
 	{
+		$escape = fn(string $s): string => Helpers::isHtmlMode() // exception message may contain user input
+			? '<pre>' . Helpers::escapeHtml($s) . '</pre>'
+			: $s;
+
 		try {
 			$logFile = Debugger::log($exception, Debugger::EXCEPTION);
 		} catch (\Throwable $e) {
-			echo "$exception\nTracy is unable to log error: {$e->getMessage()}\n";
+			echo $escape("$exception\nTracy is unable to log error: {$e->getMessage()}\n");
 			return;
 		}
 
@@ -62,11 +66,17 @@ final class DevelopmentStrategy
 			header("X-Tracy-Error-Log: $logFile", replace: false);
 		}
 
-		if (Helpers::detectColors() && @is_file($exception->getFile())) {
+		if (Helpers::isAgent() && !Helpers::isCli() && !Helpers::isHtmlMode()) {
+			// non-HTML HTTP response for an agent carries the markdown report directly in the body
+			echo $this->blueScreen->renderAgent($exception) . ($logFile ? "\n(stored in $logFile)\n" : '');
+			return;
+		}
+
+		if (Helpers::detectColors() && @is_file($exception->getFile())) { // @ the path may be too long or outside open_basedir
 			echo "\n\n" . CodeHighlighter::highlightPhpCli((string) file_get_contents($exception->getFile()), $exception->getLine()) . "\n";
 		}
 
-		echo "$exception\n" . ($logFile ? "\n(stored in $logFile)\n" : '');
+		echo $escape("$exception\n" . ($logFile ? "\n(stored in $logFile)\n" : ''));
 		if ($logFile && Debugger::$browser) {
 			exec(Debugger::$browser . ' ' . escapeshellarg(strtr($logFile, Debugger::$editorMapping)));
 		}
@@ -89,7 +99,7 @@ final class DevelopmentStrategy
 			&& !isset($_GET['_tracy_skip_error'])
 		) {
 			$e = new ErrorException($message, 0, $severity, $file, $line);
-			@$e->skippable = true; // dynamic properties are deprecated since PHP 8.2
+			@$e->skippable = true; // @ dynamic properties are deprecated
 			Debugger::exceptionHandler($e);
 			exit(255);
 		}

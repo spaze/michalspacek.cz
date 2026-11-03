@@ -6,10 +6,14 @@ namespace Spaze\SecurityTxt\Signature;
 final readonly class SecurityTxtSignatureVerifySignatureInfo
 {
 
+	/**
+	 * @param int|null $status The error the verification ended with, 0 for none
+	 */
 	public function __construct(
 		private int $summary,
 		private string $fingerprint,
 		private int $timestamp,
+		private ?int $status = null,
 	) {
 	}
 
@@ -29,6 +33,12 @@ final readonly class SecurityTxtSignatureVerifySignatureInfo
 	public function getTimestamp(): int
 	{
 		return $this->timestamp;
+	}
+
+
+	public function getStatus(): ?int
+	{
+		return $this->status;
 	}
 
 }

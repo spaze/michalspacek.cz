@@ -35,7 +35,7 @@ Installation
 composer require nette/http
 ```
 
-It requires PHP version 8.1 and supports PHP up to 8.5.
+It requires PHP version 8.3 and supports PHP up to 8.6.
 
 
 HTTP Request
@@ -168,10 +168,6 @@ Is it an AJAX request?
 getRemoteAddress(): ?string
 ---------------------------
 Returns the user's IP address. You may need to [set up a proxy|configuring#HTTP proxy] for proper functionality.
-
-getRemoteHost(): ?string
-------------------------
-Returns DNS translation of the user's IP address. You may need to [set up a proxy|configuring#HTTP proxy] for proper functionality.
 
 getRawBody(): ?string
 ---------------------
