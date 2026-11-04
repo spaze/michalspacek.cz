@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Admin\Sign;
 
 use MichalSpacekCz\Http\Cookies\CookieName;
+use MichalSpacekCz\Http\FetchMetadata\FetchMetadataHeader;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request as HttpRequestMock;
@@ -12,6 +13,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
+use Nette\Http\FetchSite;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Security\SimpleIdentity;
@@ -96,7 +98,7 @@ final class SignPresenterTest extends TestCase
 	public function testCrossSiteLogoutIsBlocked(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		// No _nss cookie, so the request looks cross-site to the same-origin guard
+		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, FetchSite::CrossSite->value);
 		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Sign', 'Sign', 'out');
 		$presenter->autoCanonicalize = false;
 		$response = $presenter->run(new Request('Admin:Sign', IRequest::Get, ['action' => 'out']));
@@ -113,7 +115,7 @@ final class SignPresenterTest extends TestCase
 	public function testSameSiteLogoutSignsUserOut(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
-		$this->httpRequest->setCookie(CookieName::NetteSameSiteCheck->value, '1');
+		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, FetchSite::SameOrigin->value);
 		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Sign', 'Sign', 'out');
 		$presenter->autoCanonicalize = false;
 		$response = $presenter->run(new Request('Admin:Sign', IRequest::Get, ['action' => 'out']));

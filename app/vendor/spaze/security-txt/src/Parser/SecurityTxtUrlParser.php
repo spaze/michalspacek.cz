@@ -5,6 +5,7 @@ namespace Spaze\SecurityTxt\Parser;
 
 use LogicException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
+use Spaze\SecurityTxt\SecurityTxtPhpUrlWorkarounds;
 use Uri\WhatWg\InvalidUrlException;
 use Uri\WhatWg\Url;
 use Uri\WhatWg\UrlValidationError;
@@ -88,6 +89,9 @@ final class SecurityTxtUrlParser
 	{
 		$redirectUrl = Url::parse($redirect, $currentUrl);
 		if ($redirectUrl === null) {
+			throw new SecurityTxtCannotParseHostnameException($redirect);
+		}
+		if (SecurityTxtPhpUrlWorkarounds::hasRawBytes($redirectUrl)) {
 			throw new SecurityTxtCannotParseHostnameException($redirect);
 		}
 		return $redirectUrl;

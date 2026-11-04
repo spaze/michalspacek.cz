@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Application\Theme;
 
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
+use Nette\Http\SameSite;
 use ValueError;
 
 final readonly class Theme
@@ -41,7 +42,7 @@ final readonly class Theme
 
 	private function setCookie(ThemeMode $mode): void
 	{
-		$this->cookies->set(CookieName::Theme, $mode->value, $this->getCookieLifetime(), sameSite: 'Lax');
+		$this->cookies->set(CookieName::Theme, $mode->value, $this->getCookieLifetime(), sameSite: SameSite::Lax);
 	}
 
 

@@ -11,7 +11,7 @@ namespace Nette\Http;
 /**
  * HTTP request contract providing access to URL, headers, cookies, uploaded files, and body.
  * @method ?UrlImmutable getReferer() Returns the referrer URL.
- * @method bool isSameSite() Checks whether the request is coming from the same site.
+ * @method bool isFrom(FetchSite|list<FetchSite> $site, FetchDest|list<FetchDest>|null $dest = null, ?bool $user = null)
  */
 interface IRequest
 {
@@ -55,13 +55,13 @@ interface IRequest
 
 	/**
 	 * Returns a URL query parameter, or all parameters as an array if no key is given.
-	 * @return mixed
+	 * @return ($key is null ? array<mixed> : mixed)
 	 */
 	function getQuery(?string $key = null);
 
 	/**
 	 * Returns a POST parameter, or all POST parameters as an array if no key is given.
-	 * @return mixed
+	 * @return ($key is null ? array<mixed> : mixed)
 	 */
 	function getPost(?string $key = null);
 
@@ -128,9 +128,7 @@ interface IRequest
 	 */
 	function getRemoteAddress(): ?string;
 
-	/**
-	 * Returns the host of the remote client.
-	 */
+	#[\Deprecated]
 	function getRemoteHost(): ?string;
 
 	/**

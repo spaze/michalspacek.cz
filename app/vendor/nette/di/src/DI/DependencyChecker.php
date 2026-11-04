@@ -11,7 +11,7 @@ use Nette;
 use Nette\Utils\Reflection;
 use ReflectionClass;
 use ReflectionMethod;
-use function array_combine, array_flip, array_keys, array_map, array_merge, array_unique, class_implements, class_parents, class_uses, count, get_debug_type, get_parent_class, hash, is_object, is_string, rtrim, serialize, sprintf, str_contains;
+use function count, is_object, is_string, sprintf;
 use const PHP_VERSION_ID;
 
 
@@ -35,7 +35,7 @@ class DependencyChecker
 	 */
 	public function add(array $deps): static
 	{
-		$this->dependencies = array_merge($this->dependencies, $deps);
+		$this->dependencies = [...$this->dependencies, ...$deps];
 		return $this;
 	}
 
@@ -164,6 +164,7 @@ class DependencyChecker
 				}
 
 				$uses = Reflection::getUseStatements($class);
+
 			} else {
 				$method = new \ReflectionFunction($name);
 				$uses = null;

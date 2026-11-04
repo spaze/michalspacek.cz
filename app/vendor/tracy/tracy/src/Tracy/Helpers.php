@@ -7,8 +7,8 @@
 
 namespace Tracy;
 
-use function array_filter, array_map, array_merge, array_pop, array_slice, array_unique, basename, bin2hex, class_exists, constant, count, dechex, defined, dirname, end, escapeshellarg, explode, extension_loaded, func_get_args, function_exists, get_class_methods, get_declared_classes, get_defined_functions, getenv, getmypid, headers_list, htmlspecialchars, htmlspecialchars_decode, iconv_strlen, implode, in_array, ini_set, is_a, is_array, is_callable, is_file, is_object, is_string, json_encode, levenshtein, ltrim, mb_strlen, mb_substr, method_exists, ob_end_clean, ob_get_clean, ob_start, ord, preg_match, preg_replace, preg_replace_callback, random_bytes, rawurlencode, rtrim, sapi_windows_vt100_support, spl_object_id, str_contains, str_pad, str_replace, strcasecmp, stream_isatty, strip_tags, strlen, strtoupper, strtr, substr, trait_exists, utf8_decode;
-use const DIRECTORY_SEPARATOR, ENT_HTML5, ENT_QUOTES, ENT_SUBSTITUTE, JSON_HEX_AMP, JSON_HEX_APOS, JSON_HEX_TAG, JSON_INVALID_UTF8_SUBSTITUTE, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE, PHP_EOL, PHP_SAPI, STDOUT, STR_PAD_LEFT;
+use function count, defined, extension_loaded, func_get_args, function_exists, is_array, is_object, is_string, strlen;
+use const ENT_HTML5, ENT_QUOTES, ENT_SUBSTITUTE, PHP_SAPI;
 
 
 /**
@@ -40,6 +40,7 @@ class Helpers
 				basename($file),
 				$line ? ":$line" : '',
 			);
+
 		} else {
 			return self::formatHtml('<span>%</span>', $file . ($line ? ":$line" : ''));
 		}
@@ -141,7 +142,10 @@ class Helpers
 			$next = $trace[$key + 1] ?? null;
 			$nextReflection = match (true) {
 				$next === null => null,
-				isset($next['class'], $next['function']) && method_exists($next['class'], $next['function']) => new \ReflectionMethod($next['class'], $next['function']),
+				isset($next['class'], $next['function']) && method_exists($next['class'], $next['function']) => new \ReflectionMethod(
+					$next['class'],
+					$next['function'],
+				),
 				isset($next['function']) && function_exists($next['function']) => new \ReflectionFunction($next['function']),
 				default => null,
 			};
@@ -218,13 +222,20 @@ class Helpers
 				. (isset($_SERVER['argv']) ? ': ' . implode(' ', array_map(self::escapeArg(...), $_SERVER['argv'])) : '');
 
 		} elseif (isset($_SERVER['REQUEST_URI'])) {
-			return (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
+			return (self::isHttps() ? 'https://' : 'http://')
 				. ($_SERVER['HTTP_HOST'] ?? '')
 				. $_SERVER['REQUEST_URI'];
 
 		} else {
 			return PHP_SAPI;
 		}
+	}
+
+
+	/** @internal */
+	public static function isHttps(): bool
+	{
+		return !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') !== 0;
 	}
 
 
@@ -249,15 +260,19 @@ class Helpers
 			} elseif (is_array($arg) && !method_exists($arg[0], $arg[1])) {
 				$hint = self::getSuggestion(get_class_methods($arg[0]) ?: [], $arg[1]);
 				$class = is_object($arg[0]) ? $arg[0]::class : $arg[0];
-				$message = str_replace($m[2], "but method $class::$arg[1]() does not exist" . ($hint ? " (did you mean $hint?)" : ''), $message);
+				$message = str_replace(
+					$m[2],
+					"but method $class::$arg[1]() does not exist" . ($hint ? " (did you mean $hint?)" : ''),
+					$message,
+				);
 			} elseif (is_string($arg) && !function_exists($arg)) {
-				$funcs = array_merge(get_defined_functions()['internal'], get_defined_functions()['user']);
+				$funcs = [...get_defined_functions()['internal'], ...get_defined_functions()['user']];
 				$hint = self::getSuggestion($funcs, $arg);
 				$message = str_replace($m[2], "but function '$arg' does not exist" . ($hint ? " (did you mean $hint?)" : ''), $message);
 			}
 
 		} elseif (preg_match('#^Call to undefined function (\S+\\\)?(\w+)\(#', $message, $m)) {
-			$funcs = array_merge(get_defined_functions()['internal'], get_defined_functions()['user']);
+			$funcs = [...get_defined_functions()['internal'], ...get_defined_functions()['user']];
 			if ($hint = self::getSuggestion($funcs, $m[1] . $m[2]) ?: self::getSuggestion($funcs, $m[2])) {
 				$message = "Call to undefined function $m[2](), did you mean $hint()?";
 				$replace = ["$m[2](", "$hint("];
@@ -296,7 +311,7 @@ class Helpers
 
 		if (isset($replace)) {
 			$loc = Debugger::mapSource($e->getFile(), $e->getLine()) ?? ['file' => $e->getFile(), 'line' => $e->getLine()];
-			@$e->tracyAction = [ // dynamic properties are deprecated since PHP 8.2
+			@$e->tracyAction = [ // @ dynamic properties are deprecated
 				'link' => self::editorUri($loc['file'], $loc['line'], 'fix', $replace[0], $replace[1]),
 				'label' => 'fix it',
 			];
@@ -334,7 +349,7 @@ class Helpers
 
 			if ($i > $max && $i < count($segments) && ($file = (new \ReflectionClass($class))->getFileName())) {
 				$max = $i;
-				$res = array_merge(array_slice(explode(DIRECTORY_SEPARATOR, $file), 0, $i - count($parts)), array_slice($segments, $i));
+				$res = [...array_slice(explode(DIRECTORY_SEPARATOR, $file), 0, $i - count($parts)), ...array_slice($segments, $i)];
 				$res = implode(DIRECTORY_SEPARATOR, $res) . '.php';
 			}
 		}
@@ -352,7 +367,10 @@ class Helpers
 	{
 		$best = null;
 		$min = (strlen($value) / 4 + 1) * 10 + .1;
-		$items = array_map(fn($item) => $item instanceof \ReflectionMethod || $item instanceof \ReflectionProperty ? $item->getName() : (string) $item, $items);
+		$items = array_map(
+			fn($item) => $item instanceof \ReflectionMethod || $item instanceof \ReflectionProperty ? $item->getName() : (string) $item,
+			$items,
+		);
 		foreach (array_unique($items) as $item) {
 			if (($len = levenshtein($item, $value, 10, 11, 10)) > 0 && $len < $min) {
 				$min = $len;
@@ -385,7 +403,8 @@ class Helpers
 	/** @internal */
 	public static function isAgent(): bool
 	{
-		return ($_COOKIE['tracy-webdriver'] ?? null) === '1';
+		return ($_COOKIE['tracy-webdriver'] ?? null) === '1' // set by bar.js when navigator.webdriver
+			|| isset($_SERVER['HTTP_X_TRACY_AGENT']); // non-browser agents (curl, HTTP clients)
 	}
 
 
@@ -413,7 +432,11 @@ class Helpers
 	/** @internal */
 	public static function getNonce(bool $attr = false): ?string
 	{
-		return preg_match('#^Content-Security-Policy(?:-Report-Only)?:.*\sscript-src(?:-elem)?\s+(?:[^;]+\s)?\'nonce-([\w+/]+=*)\'#mi', implode("\n", headers_list()), $m)
+		return preg_match(
+			'#^Content-Security-Policy(?:-Report-Only)?:.*\sscript-src(?:-elem)?\s+(?:[^;]+\s)?\'nonce-([\w+/]+=*)\'#mi',
+			implode("\n", headers_list()),
+			$m,
+		)
 			? ($attr ? ' nonce="' . self::escapeHtml($m[1]) . '"' : $m[1])
 			: null;
 	}
@@ -488,8 +511,8 @@ class Helpers
 		$s = preg_replace_callback(
 			$utf8 ? '#[\p{C}<&]#u' : '#[\x00-\x1F\x7F-\xFF<&]#',
 			fn($m) => $special[$m[0]] ?? (strlen($m[0]) === 1
-					? '<i>\x' . str_pad(strtoupper(dechex(ord($m[0]))), 2, '0', STR_PAD_LEFT) . '</i>'
-					: '<i>\u{' . strtoupper(ltrim(dechex(self::utf8Ord($m[0])), '0')) . '}</i>'),
+				? '<i>\x' . str_pad(strtoupper(dechex(ord($m[0]))), 2, '0', STR_PAD_LEFT) . '</i>'
+				: '<i>\u{' . strtoupper(ltrim(dechex(self::utf8Ord($m[0])), '0')) . '}</i>'),
 			$s,
 		);
 		$s = str_replace('</i><i>', '', $s);
@@ -519,7 +542,7 @@ class Helpers
 		return match (true) {
 			extension_loaded('mbstring') => mb_strlen($s, 'UTF-8'),
 			extension_loaded('iconv') => iconv_strlen($s, 'UTF-8') ?: strlen($s),
-			default => strlen(@utf8_decode($s)), // deprecated
+			default => strlen(@utf8_decode($s)), // @ utf8_decode() is deprecated
 		};
 	}
 
@@ -674,7 +697,7 @@ class Helpers
 	public static function getExceptionChain(\Throwable $ex): array
 	{
 		$res = [$ex];
-		while (($ex = $ex->getPrevious()) && !in_array($ex, $res, strict: true)) {
+		while (($ex = $ex->getPrevious()) && !in_array($ex, $res, true)) {
 			$res[] = $ex;
 		}
 
@@ -751,7 +774,15 @@ class Helpers
 	{
 		$old = @ini_set('serialize_precision', '-1'); // @ may be disabled
 		try {
-			return json_encode($value, ($inScript ? JSON_HEX_TAG : 0) | JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
+			return json_encode(
+				$value,
+				($inScript ? JSON_HEX_TAG : 0)
+				| JSON_HEX_APOS
+				| JSON_HEX_AMP
+				| JSON_UNESCAPED_UNICODE
+				| JSON_UNESCAPED_SLASHES
+				| JSON_INVALID_UTF8_SUBSTITUTE,
+			);
 		} finally {
 			if ($old !== false) {
 				ini_set('serialize_precision', $old);

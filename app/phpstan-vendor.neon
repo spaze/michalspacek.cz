@@ -162,7 +162,6 @@ parameters:
 			function: 'setcookie()'
 			message: 'use methods from MichalSpacekCz\Http\Cookies'
 			allowIn:
-				- vendor/nette/http/src/Http/Response.php
 				- vendor/paragonie/halite/src/Cookie.php # Unused
 				- vendor/tracy/tracy/src/Tracy/Session/FileSession.php
 	disallowedMethodCalls:
@@ -226,6 +225,12 @@ parameters:
 				- vendor/spaze/security-txt/bin/checksecuritytxt.php
 				- vendor/symfony/*.php
 				- vendor/tracy/*.php
+	disallowedClasses:
+		-
+			class: 'Uri\Rfc3986\Uri'
+			allowIn:
+				- vendor/spaze/security-txt/src/SecurityTxtUriValidator.php  # RFC 9116 field values must be URIs as RFC 3986 defines them
+				- vendor/tracy/tracy/src/Tracy/Dumper/*.php  # dumps both URI classes
 
 includes:
 	- disallowed-calls.neon

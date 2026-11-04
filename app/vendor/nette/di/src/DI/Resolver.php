@@ -8,15 +8,10 @@
 namespace Nette\DI;
 
 use Nette;
-use Nette\DI\Definitions\Definition;
-use Nette\DI\Definitions\Reference;
-use Nette\DI\Definitions\Statement;
+use Nette\DI\Definitions\{Reference, Statement};
 use Nette\PhpGenerator\Helpers as PhpHelpers;
-use Nette\Utils\Arrays;
-use Nette\Utils\Callback;
-use Nette\Utils\Reflection;
-use Nette\Utils\Validators;
-use function array_filter, array_key_exists, array_map, array_merge, array_values, array_walk_recursive, class_exists, count, ctype_digit, explode, function_exists, gettype, implode, in_array, interface_exists, is_a, is_array, is_int, is_scalar, is_string, iterator_to_array, ltrim, preg_match, preg_replace, sprintf, str_contains, str_ends_with, str_replace, str_starts_with, strlen, substr;
+use Nette\Utils\{Arrays, Callback, Reflection, Validators};
+use function array_key_exists, count, gettype, in_array, is_array, is_int, is_string, sprintf, strlen;
 
 
 /**
@@ -124,16 +119,20 @@ class Resolver
 				throw new ServiceCreationException(sprintf('Method %s() is not callable.', Callback::toString($entity)), 0, $e);
 			} elseif ($reflection instanceof \ReflectionMethod && $refClass && (!$reflection->isPublic()
 				|| ($refClass->isTrait() && !$reflection->isStatic())
-			)) {
+			)
+			) {
 				throw new ServiceCreationException(sprintf('Method %s() is not callable.', Callback::toString($entity)));
 			}
 
 			$this->addDependency($reflection);
 
 			$type = Nette\Utils\Type::fromReflection($reflection) ?? ($annotation = Helpers::getReturnTypeAnnotation($reflection));
-			if ($type && !in_array($type->getSingleName(), ['object', 'mixed'], strict: true)) {
+			if ($type && !in_array($type->getSingleName(), ['object', 'mixed'], true)) {
 				if (isset($annotation)) {
-					trigger_error('Annotation @return should be replaced with native return type at ' . Callback::toString($entity), E_USER_DEPRECATED);
+					trigger_error(
+						'Annotation @return should be replaced with native return type at ' . Callback::toString($entity),
+						E_USER_DEPRECATED,
+					);
 				}
 
 				return Helpers::ensureClassType(
@@ -170,9 +169,7 @@ class Resolver
 	 */
 	public function completeDefinition(Definition $def): void
 	{
-		$this->currentService = in_array($def, $this->builder->getDefinitions(), strict: true)
-			? $def
-			: null;
+		$this->currentService = $def;
 		$this->currentServiceType = $def->getType();
 		$this->currentServiceAllowed = false;
 
@@ -201,8 +198,9 @@ class Resolver
 		$entity = $this->normalizeEntity($statement);
 		$arguments = $this->convertReferences($statement->arguments);
 		$getter = fn(string $type, bool $single) => $single
-				? $this->getByType($type)
-				: array_values(array_filter($this->builder->findAutowired($type), fn($obj) => $obj !== $this->currentService));
+			? $this->getByType($type)
+			: array_values(array_filter($this->builder->findAutowired($type), fn($obj) => $obj !== $this->currentService));
+		$method = null;
 
 		switch (true) {
 			case $statement->arguments === self::getFirstClassCallable():
@@ -243,9 +241,13 @@ class Resolver
 				} elseif ((new \ReflectionClass($entity))->isAbstract()) {
 					throw new ServiceCreationException(sprintf('Class %s is abstract.', $entity));
 				} elseif (($rm = (new \ReflectionClass($entity))->getConstructor()) !== null && !$rm->isPublic()) {
-					throw new ServiceCreationException(sprintf('Class %s has %s constructor.', $entity, $rm->isProtected() ? 'protected' : 'private'));
+					throw new ServiceCreationException(sprintf(
+						'Class %s has %s constructor.',
+						$entity,
+						$rm->isProtected() ? 'protected' : 'private',
+					));
 				} elseif ($constructor = (new \ReflectionClass($entity))->getConstructor()) {
-					$arguments = self::autowireArguments($constructor, $arguments, $getter);
+					$arguments = self::autowireArguments($method = $constructor, $arguments, $getter);
 					$this->addDependency($constructor);
 				} elseif ($arguments) {
 					throw new ServiceCreationException(sprintf(
@@ -258,7 +260,13 @@ class Resolver
 
 			case $entity instanceof Reference:
 				if ($arguments) {
-					$e = $this->completeException(new ServiceCreationException(sprintf('Parameters were passed to reference @%s, although references cannot have any parameters.', $entity->getValue())), $this->currentService);
+					$e = $this->completeException(
+						new ServiceCreationException(sprintf(
+							'Parameters were passed to reference @%s, although references cannot have any parameters.',
+							$entity->getValue(),
+						)),
+						$this->currentService,
+					);
 					trigger_error($e->getMessage(), E_USER_DEPRECATED);
 				}
 				$entity = [new Reference(ContainerBuilder::ThisContainer), Container::getMethodName($entity->getValue())];
@@ -279,7 +287,7 @@ class Resolver
 						}
 
 						$rf = new \ReflectionFunction($entity[1]);
-						$arguments = self::autowireArguments($rf, $arguments, $getter);
+						$arguments = self::autowireArguments($method = $rf, $arguments, $getter);
 						$this->addDependency($rf);
 						break;
 
@@ -306,7 +314,7 @@ class Resolver
 									throw new ServiceCreationException(sprintf('%s::%s() is not callable.', $type, $entity[1]));
 								}
 
-								$arguments = self::autowireArguments($rm, $arguments, $getter);
+								$arguments = self::autowireArguments($method = $rm, $arguments, $getter);
 								$this->addDependency($rm);
 							}
 						}
@@ -321,6 +329,10 @@ class Resolver
 			}
 
 			throw $e;
+		}
+
+		if ($method) {
+			$arguments = $this->hideSensitiveArguments($method, $arguments);
 		}
 
 		return new Statement($entity, $arguments);
@@ -340,7 +352,9 @@ class Resolver
 					$services = [];
 					$current = $this->currentService?->getName();
 					foreach ($val->arguments as $argument) {
-						foreach ($entity === 'tagged' ? $this->builder->findByTag($argument) : $this->builder->findAutowired($argument) as $name => $foo) {
+						foreach ($entity === 'tagged'
+							? $this->builder->findByTag($argument)
+							: $this->builder->findAutowired($argument) as $name => $foo) {
 							if ($name !== $current) {
 								$services[] = new Reference($name);
 							}
@@ -348,6 +362,7 @@ class Resolver
 					}
 
 					$val = $this->completeArguments($services);
+
 				} else {
 					$val = $this->completeStatement($val, $this->currentServiceAllowed);
 				}
@@ -355,6 +370,25 @@ class Resolver
 				$val = $this->normalizeEntity(new Statement($val));
 			}
 		});
+		return $arguments;
+	}
+
+
+	/**
+	 * Wraps the arguments of #[SensitiveParameter] parameters in sensitive markers, which Tracy hides.
+	 * @param  array<mixed>  $arguments
+	 * @return array<mixed>
+	 */
+	private function hideSensitiveArguments(\ReflectionFunctionAbstract $method, array $arguments): array
+	{
+		foreach ($method->getParameters() as $param) {
+			$key = array_key_exists($param->name, $arguments) ? $param->name : $param->getPosition();
+			if (!$param->isVariadic() && array_key_exists($key, $arguments) && $param->getAttributes(\SensitiveParameter::class)) {
+				$code = (new PhpGenerator($this->builder))->formatPhp('/*sensitive{*/?/*}*/', [$arguments[$key]]);
+				$arguments[$key] = ContainerBuilder::literal($code);
+			}
+		}
+
 		return $arguments;
 	}
 
@@ -375,7 +409,6 @@ class Resolver
 		if ($item instanceof Definition) {
 			if ($this->builder->getDefinition($item->getName()) !== $item) {
 				throw new ServiceCreationException(sprintf("Service '%s' does not match the expected service.", $item->getName()));
-
 			}
 			$item = new Reference($item->getName());
 		}
@@ -389,7 +422,7 @@ class Resolver
 
 
 	/**
-	 * Normalizes reference to 'self' or named reference (or leaves it typed if it is not possible during resolving) and checks existence of service.
+	 * Normalizes reference to 'self' or named reference (leaves it typed if not possible during resolving) and checks the service exists.
 	 */
 	public function normalizeReference(Reference $ref): Reference
 	{
@@ -505,9 +538,9 @@ class Resolver
 	/** @param  mixed  $entity */
 	private function entityToString($entity): string
 	{
-		$referenceToText = fn(Reference $ref): string => $ref->isSelf() && $this->currentService
-				? '@' . $this->currentService->getName()
-				: '@' . $ref->getValue();
+		$referenceToText = fn(Reference $ref): string => $ref->isSelf() && $this->currentService?->getName() !== null
+			? '@' . $this->currentService->getName()
+			: '@' . $ref->getValue();
 		if (is_string($entity)) {
 			return $entity . '::__construct()';
 		} elseif ($entity instanceof Reference) {
@@ -590,19 +623,16 @@ class Resolver
 						));
 					}
 
-					$res = array_merge($res, $arguments[$paramName]);
+					$res = [...$res, ...$arguments[$paramName]];
 					unset($arguments[$paramName]);
 
 				} else {
-					$res = array_merge($res, $arguments);
+					$res = [...$res, ...$arguments];
 					$arguments = [];
 				}
 
 			} elseif (array_key_exists($key = $paramName, $arguments) || array_key_exists($key = $num, $arguments)) {
-				$val = $arguments[$key];
-				$res[$useName ? $paramName : $num] = is_scalar($val) && $param->getAttributes(\SensitiveParameter::class)
-					? ContainerBuilder::literal('/*sensitive{*/?/*}*/', [$val])
-					: $val;
+				$res[$useName ? $paramName : $num] = $arguments[$key];
 				unset($arguments[$key], $arguments[$num]); // unset $num to enable overwriting in configuration
 
 			} elseif (($aw = self::autowireArgument($param, $getter)) !== null) {
@@ -694,8 +724,8 @@ class Resolver
 			)
 			&& ($itemType = Reflection::expandClassName($m[1], $method->getDeclaringClass()))
 			&& (class_exists($itemType) || interface_exists($itemType))
-				? $itemType
-				: null;
+			? $itemType
+			: null;
 	}
 
 

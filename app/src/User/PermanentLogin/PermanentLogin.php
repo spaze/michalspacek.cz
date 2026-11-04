@@ -15,6 +15,7 @@ use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
+use Nette\Http\SameSite;
 use Nette\Http\Url;
 use Nette\Security\User;
 use Override;
@@ -112,7 +113,7 @@ final readonly class PermanentLogin implements UserAuthTokenLifetime
 	private function setCookie(string $value): void
 	{
 		// Uses the __Secure- cookie prefix because __Host- requires Path=/, but this cookie is intentionally path-scoped to the sign-in path
-		$this->cookies->set(CookieName::PermanentLogin, $value, $this->interval, $this->authCookiesPath, sameSite: 'Strict');
+		$this->cookies->set(CookieName::PermanentLogin, $value, $this->interval, $this->authCookiesPath, sameSite: SameSite::Strict);
 	}
 
 }

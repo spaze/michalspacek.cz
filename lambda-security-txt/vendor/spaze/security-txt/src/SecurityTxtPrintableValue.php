@@ -14,14 +14,18 @@ use Uri\WhatWg\Url;
 final readonly class SecurityTxtPrintableValue
 {
 
+	private const string TAB = "\u{2192}";
+
+
 	public function __construct(private string|Url|SecurityTxtHost $value)
 	{
 	}
 
 
 	/**
-	 * A `Url` and a `SecurityTxtHost` exist only because they parsed, and parsing rejects a host with a control character in it and percent encodes everything after the host, so
-	 * there is nothing left in one to encode and it is printed as it reads. Anything else is a string this library cannot vouch for, and is encoded down to printable ASCII.
+	 * A `Url` and a `SecurityTxtHost` exist only because they parsed, and parsing rejects a host with a control character in it and percent-encodes everything after the host, so
+	 * there is nothing left in one to encode and it is printed as it reads, unless the parser got that wrong, see `renderUrl()`. Anything else is a string this library cannot
+	 * vouch for, and is encoded down to printable ASCII, a tab to `TAB`.
 	 */
 	public function render(): string
 	{
@@ -46,6 +50,10 @@ final readonly class SecurityTxtPrintableValue
 		if (!in_array($url->getScheme(), ['http', 'https'], true)) {
 			return $this->encode($url->toAsciiString());
 		}
+		// A URL read out of a checked file reaches here as it parsed
+		if (SecurityTxtPhpUrlWorkarounds::hasRawBytes($url)) {
+			return $this->encode($url->toAsciiString());
+		}
 		// `toUnicodeString()` decodes every punycode label, and decoding one is not always reversible: `xn--khby` decodes to a pair that composes to a single character and
 		// encodes back as `xn--jgb`, so the readable URL would name a host the fetcher never went to. `SecurityTxtHost` settles which spelling a host reads as, and this asks
 		// it rather than keeping a second copy of the rule, so a URL and the host beside it in one message are never spelled two ways
@@ -61,7 +69,8 @@ final readonly class SecurityTxtPrintableValue
 	/**
 	 * A value is a URL, a host, an IP address or a field value read from a `security.txt`, none of which needs more than printable ASCII to be understood, while one control
 	 * character or bidirectional override in one changes what the whole message says, whether it is read on a terminal, in a log or on a page. Bytes rather than code points,
-	 * so a value that is not valid UTF-8 is encoded as well, and `rawurlencode()` is the notation `Uri\WhatWg\Url` uses for the same bytes.
+	 * so a value that is not valid UTF-8 is encoded as well, and `rawurlencode()` is the notation `Uri\WhatWg\Url` uses for the same bytes. A tab is shown as `TAB` instead,
+	 * which a string cannot spell itself because the character is encoded, while `%09` is what a file could have written.
 	 *
 	 * Formats are not encoded, they are written in this codebase, and neither are the values a caller can ask for separately, which are the ones a caller that knows what it
 	 * is rendering into should be escaping its own way.
@@ -71,7 +80,7 @@ final readonly class SecurityTxtPrintableValue
 		$encoded = preg_replace_callback(
 			'/[^\x20-\x7e]/',
 			function (array $matches): string {
-				return rawurlencode($matches[0]);
+				return $matches[0] === "\t" ? self::TAB : rawurlencode($matches[0]);
 			},
 			$value,
 		);

@@ -8,13 +8,14 @@
 namespace Nette\DI\Definitions;
 
 use Nette;
-use function array_keys, class_exists, explode, is_array, is_string, str_contains, str_starts_with, substr;
+use Nette\DI\Definition;
+use function is_array, is_string;
 
 
 /**
  * Assignment or calling statement.
  *
- * @property string|array{string|Reference|Statement,string}|Definition|Reference|null $entity
+ * @property string|array{string|Definition|Reference|Statement,string}|Definition|Reference|null $entity
  */
 final class Statement implements Nette\Schema\DynamicParameter
 {
@@ -36,7 +37,8 @@ final class Statement implements Nette\Schema\DynamicParameter
 					|| $entity[0] instanceof self
 					|| $entity[0] instanceof Reference
 					|| $entity[0] instanceof Definition)
-			)) {
+			)
+		) {
 			throw new Nette\InvalidArgumentException('Argument is not valid Statement entity.');
 		}
 
@@ -55,7 +57,7 @@ final class Statement implements Nette\Schema\DynamicParameter
 	}
 
 
-	/** @return string|array{string|Reference|Statement, string}|Definition|Reference|null */
+	/** @return string|array{string|Definition|Reference|Statement, string}|Definition|Reference|null */
 	public function getEntity(): string|array|Definition|Reference|null
 	{
 		return $this->entity;

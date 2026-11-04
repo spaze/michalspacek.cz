@@ -14,6 +14,7 @@ use Spaze\SecurityTxt\Fields\SecurityTxtContact;
 use Spaze\SecurityTxt\Fields\SecurityTxtCsaf;
 use Spaze\SecurityTxt\Fields\SecurityTxtEncryption;
 use Spaze\SecurityTxt\Fields\SecurityTxtExpires;
+use Spaze\SecurityTxt\Fields\SecurityTxtField;
 use Spaze\SecurityTxt\Fields\SecurityTxtFieldValue;
 use Spaze\SecurityTxt\Fields\SecurityTxtHiring;
 use Spaze\SecurityTxt\Fields\SecurityTxtPolicy;
@@ -46,6 +47,32 @@ use Uri\WhatWg\Url;
 
 final class SecurityTxt implements JsonSerializable
 {
+
+	private const string LANGUAGE_TAG = '/^([a-z]{2,3}(-[a-z0-9]+)*|[xi]-[a-z0-9]+)$/i';
+
+	/**
+	 * How people get the Czech language tag wrong: `cz`, the country code, or `cze`, the ISO 639-2 code, which RFC 5646 doesn't use because Czech has the two-letter code `cs`
+	 */
+	private const string CZECH_MISTAKE = '/^cze?(?=-|$)/i';
+
+	/**
+	 * Languages by the English names written instead of their tags, in lowercase
+	 */
+	private const array LANGUAGE_NAMES = [
+		'czech' => 'cs',
+		'dutch' => 'nl',
+		'english' => 'en',
+		'french' => 'fr',
+		'german' => 'de',
+		'hungarian' => 'hu',
+		'italian' => 'it',
+		'polish' => 'pl',
+		'portuguese' => 'pt',
+		'russian' => 'ru',
+		'slovak' => 'sk',
+		'spanish' => 'es',
+		'ukrainian' => 'uk',
+	];
 
 	private ?string $fileLocation = null;
 	private ?SecurityTxtExpires $expires = null;
@@ -89,11 +116,6 @@ final class SecurityTxt implements JsonSerializable
 	private array $csaf = [];
 
 	/**
-	 * @var list<array<string, SecurityTxtFieldValue>>
-	 */
-	private array $fieldsWithNames = [];
-
-	/**
 	 * @var list<SecurityTxtFieldValue>
 	 */
 	private array $fields = [];
@@ -115,7 +137,7 @@ final class SecurityTxt implements JsonSerializable
 				$this->fileLocation = $fileLocation;
 			},
 			function () use ($fileLocation): void {
-				$this->checkUri($fileLocation, SecurityTxtFileLocationNotUri::class, SecurityTxtFileLocationNotHttps::class);
+				$this->checkUri($fileLocation, SecurityTxtFileLocationNotUri::class, SecurityTxtFileLocationNotHttps::class, fetched: true);
 			},
 		);
 	}
@@ -134,9 +156,7 @@ final class SecurityTxt implements JsonSerializable
 	public function setExpires(SecurityTxtExpires $expires): void
 	{
 		$this->setFieldValue(
-			function () use ($expires): SecurityTxtExpires {
-				return $this->expires = $expires;
-			},
+			fn(): SecurityTxtExpires => $this->expires = $expires,
 			function () use ($expires): void {
 				if ($expires->isExpired()) {
 					throw new SecurityTxtError(new SecurityTxtExpired());
@@ -177,11 +197,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addCanonical(SecurityTxtCanonical $canonical): void
 	{
 		$this->setFieldValue(
-			function () use ($canonical): SecurityTxtCanonical {
-				return $this->canonical[] = $canonical;
-			},
+			fn(): SecurityTxtCanonical => $this->canonical[] = $canonical,
 			function () use ($canonical): void {
-				$this->checkUri($canonical->getUri(), SecurityTxtCanonicalNotUri::class, SecurityTxtCanonicalNotHttps::class);
+				$this->checkUri($canonical->getUri(), SecurityTxtCanonicalNotUri::class, SecurityTxtCanonicalNotHttps::class, SecurityTxtField::Canonical);
 			},
 		);
 	}
@@ -202,11 +220,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addContact(SecurityTxtContact $contact): void
 	{
 		$this->setFieldValue(
-			function () use ($contact): SecurityTxtContact {
-				return $this->contact[] = $contact;
-			},
+			fn(): SecurityTxtContact => $this->contact[] = $contact,
 			function () use ($contact): void {
-				$this->checkUri($contact->getUri(), SecurityTxtContactNotUri::class, SecurityTxtContactNotHttps::class);
+				$this->checkUri($contact->getUri(), SecurityTxtContactNotUri::class, SecurityTxtContactNotHttps::class, SecurityTxtField::Contact);
 			},
 		);
 	}
@@ -227,28 +243,33 @@ final class SecurityTxt implements JsonSerializable
 	public function setPreferredLanguages(SecurityTxtPreferredLanguages $preferredLanguages): void
 	{
 		$this->setFieldValue(
-			function () use ($preferredLanguages): SecurityTxtPreferredLanguages {
-				return $this->preferredLanguages = $preferredLanguages;
-			},
+			fn(): SecurityTxtPreferredLanguages => $this->preferredLanguages = $preferredLanguages,
 			function () use ($preferredLanguages): void {
 				if ($preferredLanguages->getLanguages() === []) {
 					throw new SecurityTxtError(new SecurityTxtPreferredLanguagesEmpty());
 				}
 				$wrongLanguages = [];
 				foreach ($preferredLanguages->getLanguages() as $key => $value) {
-					if (preg_match('/^([a-z]{2,3}(-[a-z0-9]+)*|[xi]-[a-z0-9]+)$/i', $value) !== 1) {
+					if (preg_match(self::LANGUAGE_TAG, $value) !== 1) {
 						$wrongLanguages[$key + 1] = $value;
 					}
 				}
+				// The value to use is there only when every tag can be corrected, or it would still be wrong. Each tag is in it once, however it's written, so `EN, English` becomes `EN`
+				$correctLanguages = array_filter(array_map($this->getLanguageTag(...), $preferredLanguages->getLanguages()), fn(?string $tag): bool => $tag !== null);
+				$correctValue = count($correctLanguages) === count($preferredLanguages->getLanguages())
+					? implode(', ', array_intersect_key($correctLanguages, array_unique(array_map(strtolower(...), $correctLanguages))))
+					: null;
 				if ($wrongLanguages !== []) {
-					throw new SecurityTxtError(new SecurityTxtPreferredLanguagesWrongLanguageTags($wrongLanguages));
+					throw new SecurityTxtError($correctValue === null
+						? new SecurityTxtPreferredLanguagesWrongLanguageTags($wrongLanguages)
+						: new SecurityTxtPreferredLanguagesWrongLanguageTags($wrongLanguages, $correctValue));
 				}
 				foreach ($preferredLanguages->getLanguages() as $key => $value) {
-					if (preg_match('/^cz-?/i', $value) === 1) {
+					if (preg_match(self::CZECH_MISTAKE, $value) === 1) {
 						throw new SecurityTxtError(new SecurityTxtPreferredLanguagesCommonMistake(
 							$key + 1,
 							$value,
-							preg_replace('/^cz$|cz(-)/i', 'cs$1', $value),
+							$correctValue,
 							SecurityTxtPreferredLanguagesCommonMistakeReason::CzechUsesCsNotCz,
 						));
 					}
@@ -270,11 +291,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addAcknowledgments(SecurityTxtAcknowledgments $acknowledgments): void
 	{
 		$this->setFieldValue(
-			function () use ($acknowledgments): SecurityTxtAcknowledgments {
-				return $this->acknowledgments[] = $acknowledgments;
-			},
+			fn(): SecurityTxtAcknowledgments => $this->acknowledgments[] = $acknowledgments,
 			function () use ($acknowledgments): void {
-				$this->checkUri($acknowledgments->getUri(), SecurityTxtAcknowledgmentsNotUri::class, SecurityTxtAcknowledgmentsNotHttps::class);
+				$this->checkUri($acknowledgments->getUri(), SecurityTxtAcknowledgmentsNotUri::class, SecurityTxtAcknowledgmentsNotHttps::class, SecurityTxtField::Acknowledgments);
 			},
 		);
 	}
@@ -295,11 +314,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addHiring(SecurityTxtHiring $hiring): void
 	{
 		$this->setFieldValue(
-			function () use ($hiring): SecurityTxtHiring {
-				return $this->hiring[] = $hiring;
-			},
+			fn(): SecurityTxtHiring => $this->hiring[] = $hiring,
 			function () use ($hiring): void {
-				$this->checkUri($hiring->getUri(), SecurityTxtHiringNotUri::class, SecurityTxtHiringNotHttps::class);
+				$this->checkUri($hiring->getUri(), SecurityTxtHiringNotUri::class, SecurityTxtHiringNotHttps::class, SecurityTxtField::Hiring);
 			},
 		);
 	}
@@ -320,11 +337,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addPolicy(SecurityTxtPolicy $policy): void
 	{
 		$this->setFieldValue(
-			function () use ($policy): SecurityTxtPolicy {
-				return $this->policy[] = $policy;
-			},
+			fn(): SecurityTxtPolicy => $this->policy[] = $policy,
 			function () use ($policy): void {
-				$this->checkUri($policy->getUri(), SecurityTxtPolicyNotUri::class, SecurityTxtPolicyNotHttps::class);
+				$this->checkUri($policy->getUri(), SecurityTxtPolicyNotUri::class, SecurityTxtPolicyNotHttps::class, SecurityTxtField::Policy);
 			},
 		);
 	}
@@ -345,11 +360,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addEncryption(SecurityTxtEncryption $encryption): void
 	{
 		$this->setFieldValue(
-			function () use ($encryption): SecurityTxtEncryption {
-				return $this->encryption[] = $encryption;
-			},
+			fn(): SecurityTxtEncryption => $this->encryption[] = $encryption,
 			function () use ($encryption): void {
-				$this->checkUri($encryption->getUri(), SecurityTxtEncryptionNotUri::class, SecurityTxtEncryptionNotHttps::class);
+				$this->checkUri($encryption->getUri(), SecurityTxtEncryptionNotUri::class, SecurityTxtEncryptionNotHttps::class, SecurityTxtField::Encryption);
 			},
 		);
 	}
@@ -370,11 +383,9 @@ final class SecurityTxt implements JsonSerializable
 	public function addCsaf(SecurityTxtCsaf $csaf): void
 	{
 		$this->setFieldValue(
-			function () use ($csaf): SecurityTxtCsaf {
-				return $this->csaf[] = $csaf;
-			},
+			fn(): SecurityTxtCsaf => $this->csaf[] = $csaf,
 			function () use ($csaf): void {
-				$this->checkUri($csaf->getUri(), SecurityTxtCsafNotUri::class, SecurityTxtCsafNotHttps::class);
+				$this->checkUri($csaf->getUri(), SecurityTxtCsafNotUri::class, SecurityTxtCsafNotHttps::class, SecurityTxtField::Csaf);
 				$url = Url::parse($csaf->getUri());
 				if ($url === null || !str_ends_with($url->getPath(), '/' . SecurityTxtCsaf::METADATA_FILENAME)) {
 					throw new SecurityTxtError(new SecurityTxtCsafWrongFile($csaf->getUri()));
@@ -396,9 +407,7 @@ final class SecurityTxt implements JsonSerializable
 	public function setBugBounty(SecurityTxtBugBounty $bugBounty): void
 	{
 		$this->setFieldValue(
-			function () use ($bugBounty): SecurityTxtBugBounty {
-				return $this->bugBounty = $bugBounty;
-			},
+			fn(): SecurityTxtBugBounty => $this->bugBounty = $bugBounty,
 			function (): void {
 			},
 		);
@@ -446,8 +455,7 @@ final class SecurityTxt implements JsonSerializable
 	{
 		$this->setValue(
 			function () use ($setValue): void {
-				$this->fields[] = $fieldValue = $setValue();
-				$this->fieldsWithNames[] = [$fieldValue->getField()->value => $fieldValue];
+				$this->fields[] = $setValue();
 			},
 			$validator,
 			$warnings,
@@ -456,19 +464,23 @@ final class SecurityTxt implements JsonSerializable
 
 
 	/**
+	 * The tag a value is, or is likely meant to be, the language's English name, `Czech`, or the tag with underscores, `cs_CZ`, with the Czech code put right too
+	 */
+	private function getLanguageTag(string $value): ?string
+	{
+		$tag = self::LANGUAGE_NAMES[strtolower($value)] ?? str_replace('_', '-', $value);
+		return preg_match(self::LANGUAGE_TAG, $tag) === 1 ? preg_replace(self::CZECH_MISTAKE, 'cs', $tag) : null;
+	}
+
+
+	/**
 	 * @param class-string<SecurityTxtAcknowledgmentsNotUri|SecurityTxtCanonicalNotUri|SecurityTxtContactNotUri|SecurityTxtCsafNotUri|SecurityTxtEncryptionNotUri|SecurityTxtHiringNotUri|SecurityTxtPolicyNotUri|SecurityTxtFileLocationNotUri> $notUriError
 	 * @param class-string<SecurityTxtAcknowledgmentsNotHttps|SecurityTxtCanonicalNotHttps|SecurityTxtContactNotHttps|SecurityTxtCsafNotHttps|SecurityTxtEncryptionNotHttps|SecurityTxtHiringNotHttps|SecurityTxtPolicyNotHttps|SecurityTxtFileLocationNotHttps> $notHttpsError
 	 * @throws SecurityTxtError
 	 */
-	private function checkUri(string $uri, string $notUriError, string $notHttpsError): void
+	private function checkUri(string $uri, string $notUriError, string $notHttpsError, ?SecurityTxtField $field = null, bool $fetched = false): void
 	{
-		$url = Url::parse($uri);
-		if ($url === null) {
-			throw new SecurityTxtError(new $notUriError($uri));
-		}
-		if ($url->getScheme() === 'http') {
-			throw new SecurityTxtError(new $notHttpsError($uri));
-		}
+		new SecurityTxtUriValidator()->validate($uri, $notUriError, $notHttpsError, $field, $fetched, $this->fileLocation);
 	}
 
 
@@ -489,7 +501,7 @@ final class SecurityTxt implements JsonSerializable
 	{
 		return [
 			'fileLocation' => $this->getFileLocation(),
-			'fields' => $this->fieldsWithNames,
+			'fields' => array_map(fn(SecurityTxtFieldValue $value): array => [$value->getField()->value => $value], $this->fields),
 			'signatureVerifyResult' => $this->getSignatureVerifyResult(),
 		];
 	}

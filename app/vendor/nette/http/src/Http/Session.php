@@ -8,8 +8,7 @@
 namespace Nette\Http;
 
 use Nette;
-use function array_keys, function_exists, headers_sent, ini_get, ini_get_all, ini_set, is_array, is_string, preg_match, preg_replace, preg_replace_callback, session_create_id, session_destroy, session_get_cookie_params, session_id, session_name, session_regenerate_id, session_set_cookie_params, session_set_save_handler, session_status, session_write_close, strncmp, strtolower, strtoupper, substr, time;
-use const PHP_SESSION_ACTIVE;
+use function function_exists, is_array, is_string;
 
 
 /**
@@ -17,7 +16,7 @@ use const PHP_SESSION_ACTIVE;
  */
 class Session
 {
-	/** Default file lifetime */
+	/** Default server-side idle timeout */
 	private const DefaultFileLifetime = 3 * Nette\Utils\DateTime::HOUR;
 
 	private const SecurityOptions = [
@@ -40,9 +39,9 @@ class Session
 
 	/** @var array<string, mixed> default configuration */
 	private array $options = [
-		'cookie_samesite' => IResponse::SameSiteLax,
-		'cookie_lifetime' => 0,   // for a maximum of 3 hours or until the browser is closed
-		'gc_maxlifetime' => self::DefaultFileLifetime, // 3 hours
+		'cookie_samesite' => SameSite::Lax->value,
+		'cookie_lifetime' => 0,   // session cookie - kept by the browser per its own policy
+		'gc_maxlifetime' => self::DefaultFileLifetime, // server-side idle timeout, independent of the cookie lifetime above
 	];
 	private ?\SessionHandlerInterface $handler = null;
 	private bool $readAndClose = false;
@@ -104,7 +103,7 @@ class Session
 		}
 
 		if ($e) {
-			@session_write_close(); // this is needed
+			session_write_close();
 			throw $e;
 		}
 
@@ -250,6 +249,7 @@ class Session
 			}
 
 			session_regenerate_id(delete_old_session: true);
+
 		} else {
 			session_id(session_create_id() ?: throw new Nette\InvalidStateException('Failed to create session ID.'));
 		}
@@ -481,23 +481,24 @@ class Session
 
 	/**
 	 * Sets the session lifetime as a time string (e.g. '20 minutes'), or null to revert to the default
-	 * (up to 3 hours or until the browser is closed).
+	 * (a 3-hour server-side idle timeout; the session cookie itself is kept by the browser per its own policy).
 	 */
 	public function setExpiration(?string $expire): static
 	{
-		if ($expire === null) {
+		$seconds = Helpers::expirationToSeconds($expire);
+		if ($seconds === null) {
 			return $this->setOptions([
 				'gc_maxlifetime' => self::DefaultFileLifetime,
 				'cookie_lifetime' => 0,
 			]);
-
-		} else {
-			$expire = Nette\Utils\DateTime::from($expire)->format('U') - time();
-			return $this->setOptions([
-				'gc_maxlifetime' => $expire,
-				'cookie_lifetime' => $expire,
-			]);
+		} elseif ($seconds <= 0) {
+			throw new Nette\InvalidArgumentException("Session expiration must be in the future, '$expire' given.");
 		}
+
+		return $this->setOptions([
+			'gc_maxlifetime' => $seconds,
+			'cookie_lifetime' => $seconds,
+		]);
 	}
 
 
@@ -508,14 +509,14 @@ class Session
 		string $path,
 		?string $domain = null,
 		?bool $secure = null,
-		?string $sameSite = null,
+		SameSite|string|null $sameSite = null,
 	): static
 	{
 		return $this->setOptions([
 			'cookie_path' => $path,
 			'cookie_domain' => $domain,
 			'cookie_secure' => $secure,
-			'cookie_samesite' => $sameSite,
+			'cookie_samesite' => $sameSite instanceof SameSite ? $sameSite->value : $sameSite,
 		]);
 	}
 
@@ -554,7 +555,7 @@ class Session
 		$this->response->setCookie(
 			session_name(),
 			session_id(),
-			$cookie['lifetime'] ? $cookie['lifetime'] + time() : 0,
+			$cookie['lifetime'] ?: null, // a relative number of seconds; setCookie() treats it as such
 			$cookie['path'],
 			$cookie['domain'],
 			$cookie['secure'],

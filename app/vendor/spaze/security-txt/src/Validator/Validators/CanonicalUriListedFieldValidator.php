@@ -7,6 +7,7 @@ use Override;
 use Spaze\SecurityTxt\Exceptions\SecurityTxtWarning;
 use Spaze\SecurityTxt\SecurityTxt;
 use Spaze\SecurityTxt\Violations\SecurityTxtCanonicalUriMismatch;
+use Spaze\SecurityTxt\Violations\SecurityTxtCanonicalUriMismatchReason;
 use Uri\UriComparisonMode;
 use Uri\WhatWg\Url;
 
@@ -34,13 +35,57 @@ final class CanonicalUriListedFieldValidator implements FieldValidator
 		}
 
 		$canonicalUris = array_map(fn($canonical): string => $canonical->getUri(), $canonicals);
-		foreach ($canonicalUris as $canonicalUri) {
-			$canonicalUrl = Url::parse($canonicalUri);
-			if ($canonicalUrl !== null && $url->equals($canonicalUrl, UriComparisonMode::IncludeFragment)) {
-				return;
+		$canonicalUrls = array_values(array_filter(array_map(Url::parse(...), $canonicalUris)));
+		if ($this->lists($canonicalUrls, $url)) {
+			return;
+		}
+		$reason = $this->getReason($canonicalUrls, $url, count($canonicalUrls) < count($canonicalUris));
+		// With the reason only when there's one, so a stored violation carries nothing more than before
+		throw new SecurityTxtWarning($reason !== SecurityTxtCanonicalUriMismatchReason::Unspecified
+			? new SecurityTxtCanonicalUriMismatch($uri, $canonicalUris, $reason)
+			: new SecurityTxtCanonicalUriMismatch($uri, $canonicalUris));
+	}
+
+
+	/**
+	 * @param list<Url> $canonicalUrls
+	 */
+	private function lists(array $canonicalUrls, Url $url): bool
+	{
+		foreach ($canonicalUrls as $canonicalUrl) {
+			if ($url->equals($canonicalUrl, UriComparisonMode::IncludeFragment)) {
+				return true;
 			}
 		}
-		throw new SecurityTxtWarning(new SecurityTxtCanonicalUriMismatch($uri, $canonicalUris));
+		return false;
+	}
+
+
+	/**
+	 * Only for a file fetched from one of the two places RFC 9116 section 3 puts it, not one a redirect took elsewhere
+	 *
+	 * @param list<Url> $canonicalUrls
+	 */
+	private function getReason(array $canonicalUrls, Url $url, bool $notUri): SecurityTxtCanonicalUriMismatchReason
+	{
+		if ($url->getQuery() !== null || $url->getFragment() !== null) {
+			return SecurityTxtCanonicalUriMismatchReason::Unspecified;
+		}
+		if ($url->getPath() === '/security.txt') {
+			return $this->lists($canonicalUrls, $url->withPath('/.well-known/security.txt')) ? SecurityTxtCanonicalUriMismatchReason::WellKnownListed : SecurityTxtCanonicalUriMismatchReason::Unspecified;
+		}
+		if ($url->getPath() !== '/.well-known/security.txt') {
+			return SecurityTxtCanonicalUriMismatchReason::Unspecified;
+		}
+		if ($this->lists($canonicalUrls, $url->withPath('/security.txt'))) {
+			return SecurityTxtCanonicalUriMismatchReason::TopLevelListed;
+		}
+		foreach ($canonicalUrls as $canonicalUrl) {
+			if ($canonicalUrl->getAsciiHost() === $url->getAsciiHost()) {
+				return SecurityTxtCanonicalUriMismatchReason::SameHost;
+			}
+		}
+		return $notUri ? SecurityTxtCanonicalUriMismatchReason::NotUri : SecurityTxtCanonicalUriMismatchReason::Unspecified;
 	}
 
 }

@@ -9,7 +9,7 @@ namespace Nette\DI;
 
 use Nette;
 use Nette\Schema;
-use function array_diff_key, array_filter, array_keys, array_merge, array_values, assert, count, implode, key, sprintf, strtolower;
+use function count, is_array, sprintf;
 
 
 /**
@@ -72,10 +72,10 @@ class Compiler
 
 
 	/**
-	 * Returns all registered extensions, optionally filtered by type.
-	 * @template T of CompilerExtension
+	 * Returns all registered extensions, optionally filtered by class or interface.
+	 * @template T of object
 	 * @param  class-string<T>|null  $type
-	 * @return ($type is null ? array<string, CompilerExtension> : array<string, T>)
+	 * @return ($type is null ? array<string, CompilerExtension> : array<string, CompilerExtension&T>)
 	 */
 	public function getExtensions(?string $type = null): array
 	{
@@ -228,7 +228,7 @@ class Compiler
 		}
 
 		$last = $this->getExtensions(Extensions\InjectExtension::class);
-		$this->extensions = array_merge(array_diff_key($this->extensions, $last), $last);
+		$this->extensions = [...array_diff_key($this->extensions, $last), ...$last];
 
 		if ($decorator = $this->getExtensions(Extensions\DecoratorExtension::class)) {
 			Nette\Utils\Arrays::insertBefore($this->extensions, key($decorator), $this->getExtensions(Extensions\SearchExtension::class));

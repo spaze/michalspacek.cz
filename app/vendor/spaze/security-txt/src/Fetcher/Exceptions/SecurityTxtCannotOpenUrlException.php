@@ -12,7 +12,7 @@ final class SecurityTxtCannotOpenUrlException extends SecurityTxtFetcherExceptio
 {
 
 	/**
-	 * @param string|null $error Must not contain anything the checked host controls; `curl_strerror()` is safe, `curl_error()` is not because it quotes strings like the certificate subject name. It reaches `getMessage()`, which encodes it down to printable ASCII, and `getMessageValues()` and the serialized `params`, which do not, so a consumer logging or rendering either one sees whatever was put here
+	 * @param string|null $error Must not contain anything the checked host controls; `curl_strerror()` is safe, `curl_error()` is not because it quotes strings like the certificate subject name. It reaches `getMessage()`, which encodes it, and `getMessageValues()` and the serialized `params`, which do not, so a consumer logging or rendering either one sees whatever was put here
 	 */
 	public function __construct(
 		Url $url,

@@ -5,10 +5,10 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-namespace Nette\DI\Definitions;
+namespace Nette\DI;
 
 use Nette;
-use function class_exists, interface_exists, is_array, is_string, sprintf;
+use function is_array, is_string, sprintf;
 
 
 /**
@@ -110,7 +110,7 @@ abstract class Definition
 
 
 	/**
-	 * Sets the autowiring mode. Pass false to disable, true to enable for all types, or one or more class names to restrict autowiring to specific types.
+	 * Sets the autowiring mode: false disables it, true enables it for all types, class names restrict it to those types.
 	 * @param  bool|class-string|class-string[]  $state
 	 */
 	final public function setAutowired(bool|string|array $state = true): static
@@ -203,3 +203,6 @@ abstract class Definition
 		return $this->autowired;
 	}
 }
+
+
+class_alias(Definition::class, Definitions\Definition::class);

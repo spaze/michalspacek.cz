@@ -13,10 +13,10 @@ final class SecurityTxtExpiresSoon extends SecurityTxtSpecViolation
 	public function __construct(int $inDays)
 	{
 		if ($inDays > 0) {
-			$format = 'The file will be considered stale in %s days';
+			$format = 'The file will be considered stale in %s ' . ($inDays === 1 ? 'day' : 'days');
 			$values = [(string)$inDays];
 		} else {
-			$format = 'The file will be considered stale later today';
+			$format = 'The file will be considered stale in less than a day';
 			$values = [];
 		}
 		parent::__construct(

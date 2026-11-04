@@ -9,11 +9,8 @@ namespace Tracy;
 
 use Dom;
 use Ds;
-use Tracy\Dumper\Describer;
-use Tracy\Dumper\Exposer;
-use Tracy\Dumper\Renderer;
-use function array_flip, array_map, file_get_contents, fwrite, str_replace;
-use const STDOUT;
+use Tracy\Dumper\{Describer, Exposer, Renderer};
+use Uri;
 
 
 /**
@@ -69,7 +66,6 @@ class Dumper
 	public static array $resources = [
 		'stream' => 'stream_get_meta_data',
 		'stream-context' => 'stream_context_get_options',
-		'curl' => 'curl_getinfo',
 	];
 
 	/** @var array<class-string, array{class-string, string}> */
@@ -82,6 +78,7 @@ class Dumper
 		\__PHP_Incomplete_Class::class => [Exposer::class, 'exposePhpIncompleteClass'],
 		\Generator::class => [Exposer::class, 'exposeGenerator'],
 		\Fiber::class => [Exposer::class, 'exposeFiber'],
+		\CurlHandle::class => [Exposer::class, 'exposeCurl'],
 		\DOMNode::class => [Exposer::class, 'exposeDOMNode'],
 		\DOMNodeList::class => [Exposer::class, 'exposeDOMNodeList'],
 		\DOMNamedNodeMap::class => [Exposer::class, 'exposeDOMNodeList'],
@@ -96,13 +93,16 @@ class Dumper
 		Ds\Heap::class => [Exposer::class, 'exposeDsCollection'],
 		Ds\Map::class => [Exposer::class, 'exposeDsMap'],
 		\WeakMap::class => [Exposer::class, 'exposeWeakMap'],
+		\WeakReference::class => [Exposer::class, 'exposeWeakReference'],
+		Uri\Rfc3986\Uri::class => [Exposer::class, 'exposeUri'],
+		Uri\WhatWg\Url::class => [Exposer::class, 'exposeUri'],
 	];
 
 	/** @var array<string, array{bool, string[]}> */
 	private static array $enumProperties = [];
 
-	private Describer $describer;
-	private Renderer $renderer;
+	private readonly Describer $describer;
+	private readonly Renderer $renderer;
 
 
 	/**

@@ -7,78 +7,78 @@ namespace Composer\Autoload;
 class ComposerStaticInita9a63cd08c9f38a5ebaa280f57ecea23
 {
     public static $prefixLengthsPsr4 = array (
-        'h' => 
+        'h' =>
         array (
             'hollodotme\\FastCGI\\' => 19,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Component\\Process\\' => 26,
             'Spaze\\SecurityTxt\\' => 18,
         ),
-        'R' => 
+        'R' =>
         array (
             'Riverline\\MultiPartParser\\' => 26,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Http\\Server\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
         ),
-        'N' => 
+        'N' =>
         array (
             'Nyholm\\Psr7\\' => 12,
         ),
-        'C' => 
+        'C' =>
         array (
             'Crwlr\\QueryString\\' => 18,
         ),
-        'B' => 
+        'B' =>
         array (
             'Bref\\' => 5,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'hollodotme\\FastCGI\\' => 
+        'hollodotme\\FastCGI\\' =>
         array (
             0 => __DIR__ . '/..' . '/hollodotme/fast-cgi-client/src',
         ),
-        'Symfony\\Component\\Process\\' => 
+        'Symfony\\Component\\Process\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
         ),
-        'Spaze\\SecurityTxt\\' => 
+        'Spaze\\SecurityTxt\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/security-txt/src',
         ),
-        'Riverline\\MultiPartParser\\' => 
+        'Riverline\\MultiPartParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/riverline/multipart-parser/src',
         ),
-        'Psr\\Http\\Server\\' => 
+        'Psr\\Http\\Server\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Nyholm\\Psr7\\' => 
+        'Nyholm\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/nyholm/psr7/src',
         ),
-        'Crwlr\\QueryString\\' => 
+        'Crwlr\\QueryString\\' =>
         array (
             0 => __DIR__ . '/..' . '/crwlr/query-string/src',
         ),
-        'Bref\\' => 
+        'Bref\\' =>
         array (
             0 => __DIR__ . '/..' . '/bref/bref/src',
         ),

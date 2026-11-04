@@ -13,10 +13,10 @@ final class SecurityTxtContentTypeInvalid extends SecurityTxtSpecViolation
 	{
 		if ($contentType !== null) {
 			$format = 'The file at %s has a %s of %s but it should be a %s of %s with the %s parameter set to %s';
-			$values = [$uri, 'Content-Type', $contentType, 'Content-Type', SecurityTxtContentType::CONTENT_TYPE, 'charset', SecurityTxtContentType::CHARSET_PARAMETER];
+			$values = [$uri, 'Content-Type', $contentType, 'Content-Type', SecurityTxtContentType::CONTENT_TYPE, 'charset', SecurityTxtContentType::CHARSET];
 		} else {
 			$format = 'The file at %s has no %s but it should be a %s of %s with the %s parameter set to %s';
-			$values = [$uri, 'Content-Type', 'Content-Type', SecurityTxtContentType::CONTENT_TYPE, 'charset', SecurityTxtContentType::CHARSET_PARAMETER];
+			$values = [$uri, 'Content-Type', 'Content-Type', SecurityTxtContentType::CONTENT_TYPE, 'charset', SecurityTxtContentType::CHARSET];
 		}
 		parent::__construct(
 			func_get_args(),
@@ -25,7 +25,7 @@ final class SecurityTxtContentTypeInvalid extends SecurityTxtSpecViolation
 			'draft-foudil-securitytxt-03',
 			SecurityTxtContentType::MEDIA_TYPE,
 			'Send a correct %s header value of %s with the %s parameter set to %s',
-			['Content-Type', SecurityTxtContentType::CONTENT_TYPE, 'charset', SecurityTxtContentType::CHARSET_PARAMETER],
+			['Content-Type', SecurityTxtContentType::CONTENT_TYPE, 'charset', SecurityTxtContentType::CHARSET],
 			'3',
 		);
 	}

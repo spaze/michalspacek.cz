@@ -24,13 +24,15 @@ use Tracy\Dumper;
 require __DIR__ . '/../bootstrap.php';
 
 /**
- * Tracy writes every stack frame's arguments into the exception log, and the encryption library hands both the key
- * and the not-yet-encrypted value around as objects, so anything that throws mid-encryption puts them in the log.
- * The `tracy: keysToHide` setting in common.neon is what stops it.
+ * Tracy writes every stack frame's arguments into the exception log and dumps `$_POST` there on its own, so what
+ * must not show in it is kept out three ways. The encryption library hands both the key and the not-yet-encrypted
+ * value around as objects, which the `tracy: keysToHide` setting in common.neon hides by class and property. An
+ * email or a name passed as a plain string is hidden by `#[SensitiveParameter]` on the parameter. And a form field
+ * holding one is hidden by the field's name, from the same `keysToHide` setting.
  *
  * @testCase
  */
-final class ExceptionLogSecretsTest extends TestCase
+final class ExceptionLogSensitiveDataTest extends TestCase
 {
 
 	private const string HTML_LOG = 'mock://bluescreen.html';
@@ -172,19 +174,28 @@ final class ExceptionLogSecretsTest extends TestCase
 	/**
 	 * The attribute only covers the value while it is a stack frame's argument. The blue screen also dumps `$_POST`
 	 * on its own, so a form submission that errors would log what was typed into it regardless, which the entries
-	 * in `keysToHide` are what stop. That section renders only on the web (`section-http.phtml` returns early
-	 * under CLI), so what is checked here is the dumper it hands each key and value to.
+	 * in `keysToHide` are what stop. That section renders only on the web, both log formats skip it under CLI, so
+	 * what is checked here is the dump it makes: the whole array, through Tracy's dumper with the blue screen's own
+	 * `keysToHide` and scrubber, as text for the .md log and as HTML for the .html one.
 	 */
-	public function testPersonalDataIsHiddenWhereverItIsDumpedByName(): void
+	public function testPostedPersonalDataIsHiddenInBothLogs(): void
 	{
-		$value = 'probe-' . bin2hex(random_bytes(8));
+		$post = [
+			'email' => 'probe-' . bin2hex(random_bytes(8)),
+			'attendeeName' => 'probe-' . bin2hex(random_bytes(8)),
+			'note' => 'probe-' . bin2hex(random_bytes(8)),
+		];
+		$options = [
+			Dumper::KEYS_TO_HIDE => $this->blueScreen->keysToHide,
+			Dumper::SCRUBBER => $this->blueScreen->scrubber,
+		];
 
-		$dumper = $this->blueScreen->getAgentDumper(); // the section dumps each entry as $dump($value, $key)
-
-		foreach (['email', 'attendeeName'] as $key) {
-			Assert::notContains($value, $dumper($value, $key), "a value dumped under a `{$key}` key leaked");
+		foreach (['md' => Dumper::toText($post, $options), 'html' => Dumper::toHtml($post, $options)] as $extension => $dump) {
+			foreach (['email', 'attendeeName'] as $key) {
+				Assert::notContains($post[$key], $dump, "a value posted as `{$key}` leaked into the {$extension} log");
+			}
+			Assert::contains($post['note'], $dump, "a value posted as another field vanished from the {$extension} log too, so this passes whatever the config says");
 		}
-		Assert::contains($value, $dumper($value, 'note'), 'the same value under another key vanished too, so this passes whatever the config says');
 	}
 
 
@@ -226,4 +237,4 @@ final class ExceptionLogSecretsTest extends TestCase
 
 }
 
-TestCaseRunner::run(ExceptionLogSecretsTest::class);
+TestCaseRunner::run(ExceptionLogSensitiveDataTest::class);

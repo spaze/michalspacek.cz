@@ -28,7 +28,7 @@ abstract class SecurityTxtSpecViolation implements JsonSerializable
 	/**
 	 * @param list<mixed> $constructorParams
 	 * @param literal-string $messageFormat Never build this from a field value or anything else read from the file, only the values are encoded when the message is printed. The analysers check this where the violation is constructed in code, they cannot check `SecurityTxtJson`, which replays whatever the serialized params hold
-	 * @param array<array-key, string|Url|SecurityTxtHost> $messageValues A value the library knows to be a URL or a host is passed as one, so it reads as itself instead of percent encoded. Stored as a list, see the constructor
+	 * @param array<array-key, string|Url|SecurityTxtHost> $messageValues A value the library knows to be a URL or a host is passed as one, so it reads as itself instead of percent-encoded. Stored as a list, see the constructor
 	 * @param literal-string $howToFixFormat Never build this from a field value or anything else read from the file, only the values are encoded when the message is printed
 	 * @param array<array-key, string|Url|SecurityTxtHost> $howToFixValues Stored as a list, see the constructor
 	 * @param list<string> $seeAlsoSections
@@ -66,7 +66,7 @@ abstract class SecurityTxtSpecViolation implements JsonSerializable
 
 
 	/**
-	 * A value the violation knows to be a URL, handed over as one so that it reads as itself rather than percent encoded. Stays a string when it will not parse, which is what a
+	 * A value the violation knows to be a URL, handed over as one so that it reads as itself rather than percent-encoded. Stays a string when it will not parse, which is what a
 	 * violation about a malformed URI carries, and keeps whatever a host wrote when parsing would rewrite it, because the rewrite is often the very thing being reported.
 	 *
 	 * @return ($value is null ? null : string|Url)

@@ -401,7 +401,7 @@ cookies:
 		permanentLogin: "Contains a permanent login identifier."
 		theme: "The value specifies the color mode in which the pages are displayed."
 		netteSession: "The cookie holds the session identifier."
-		netteSameSiteCheck: "Used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
+		netteSameSiteCheck: "Set only in browsers that don't send the `Sec-Fetch-Site` header, where it's used to detect \"//same-site//\":[blog:origin-site-etld-etld-plus-one-public-suffix-psl-what-are-they#same-site] requests."
 httpHeaders:
 	headerNotSent: "header not sent"
 # Reserved for Nette form validation; %label, %d, %value are Nette's, not vsprintf

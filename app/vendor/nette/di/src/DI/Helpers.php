@@ -8,11 +8,9 @@
 namespace Nette\DI;
 
 use Nette;
-use Nette\DI\Definitions\Reference;
-use Nette\DI\Definitions\Statement;
-use Nette\Utils\Reflection;
-use Nette\Utils\Type;
-use function array_key_exists, array_keys, array_shift, class_exists, explode, get_debug_type, implode, interface_exists, is_array, is_scalar, is_string, preg_match, preg_quote, preg_replace, preg_split, sprintf, str_replace, strlen, strncmp, substr, trim, ucfirst, var_export;
+use Nette\DI\Definitions\{Reference, Statement};
+use Nette\Utils\{Reflection, Type};
+use function array_key_exists, is_array, is_scalar, is_string, sprintf, strlen;
 
 
 /**
@@ -88,7 +86,11 @@ final class Helpers
 				} elseif ($val instanceof DynamicParameter || $val instanceof Statement) {
 					$dynamic = true;
 				} elseif (!is_scalar($val)) {
-					throw new Nette\InvalidArgumentException(sprintf("Unable to concatenate non-scalar parameter '%s' into '%s'.", $part, $string));
+					throw new Nette\InvalidArgumentException(sprintf(
+						"Unable to concatenate non-scalar parameter '%s' into '%s'.",
+						$part,
+						$string,
+					));
 				}
 			}
 		}
@@ -151,6 +153,7 @@ final class Helpers
 			}
 
 			return $res;
+
 		} elseif (is_string($value)) {
 			return preg_replace('#^@|%#', '$0$0', $value);
 		}
@@ -258,7 +261,12 @@ final class Helpers
 		if (!$type) {
 			throw new ServiceCreationException(sprintf('%s is not declared.', ucfirst($hint)));
 		} elseif (!$type->isClass() || (!$allowNullable && $type->allows('null'))) {
-			throw new ServiceCreationException(sprintf("%s is expected to not be %sbuilt-in/complex, '%s' given.", ucfirst($hint), $allowNullable ? '' : 'nullable/', $type));
+			throw new ServiceCreationException(sprintf(
+				"%s is expected to not be %sbuilt-in/complex, '%s' given.",
+				ucfirst($hint),
+				$allowNullable ? '' : 'nullable/',
+				$type,
+			));
 		}
 
 		$class = $type->getSingleName();

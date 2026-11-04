@@ -10,8 +10,9 @@ final class SecurityTxtPreferredLanguagesWrongLanguageTags extends SecurityTxtSp
 
 	/**
 	 * @param array<int, string> $wrongLanguages
+	 * @param string|null $correctValue The field with each wrong tag as the one it's likely meant to be, when every one has one
 	 */
-	public function __construct(array $wrongLanguages)
+	public function __construct(array $wrongLanguages, ?string $correctValue = null)
 	{
 		$tagsValues = [];
 		// `#%s` and not `#{$key}`, a runtime number written into the format would stop it being a `literal-string`
@@ -28,9 +29,9 @@ final class SecurityTxtPreferredLanguagesWrongLanguageTags extends SecurityTxtSp
 			$format,
 			[...$tagsValues, SecurityTxtField::PreferredLanguages->value],
 			'draft-foudil-securitytxt-05',
-			null,
-			'Use language tags as defined in RFC 5646, which usually means the shortest ISO 639 code like for example %s',
-			['en'],
+			$correctValue,
+			$correctValue !== null ? 'Use language tags as defined in RFC 5646, which usually means the shortest ISO 639 code' : 'Use language tags as defined in RFC 5646, which usually means the shortest ISO 639 code, for example %s',
+			$correctValue !== null ? [] : ['en'],
 			'2.5.8',
 		);
 	}

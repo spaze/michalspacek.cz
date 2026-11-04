@@ -8,7 +8,7 @@
 namespace Nette\Http;
 
 use Nette;
-use function array_change_key_case, base64_decode, count, explode, gethostbyaddr, implode, in_array, preg_match, preg_match_all, rsort, strcasecmp, strtr;
+use function count, is_array, strlen;
 
 
 /**
@@ -25,7 +25,7 @@ use function array_change_key_case, base64_decode, count, explode, gethostbyaddr
  * @property-read bool $secured
  * @property-read bool $ajax
  * @property-read ?string $remoteAddress
- * @property-read ?string $remoteHost
+ * @property-deprecated ?string $remoteHost
  * @property-read ?string $rawBody
  */
 class Request implements IRequest
@@ -54,7 +54,7 @@ class Request implements IRequest
 		array $headers = [],
 		private readonly string $method = 'GET',
 		private readonly ?string $remoteAddress = null,
-		private ?string $remoteHost = null,
+		?string $remoteHost = null,
 		?callable $rawBodyCallback = null,
 	) {
 		$this->headers = array_change_key_case($headers);
@@ -87,29 +87,25 @@ class Request implements IRequest
 
 	/**
 	 * Returns a URL query parameter, or all parameters as an array if no key is given.
+	 * @return ($key is null ? array<mixed> : mixed)
 	 */
 	public function getQuery(?string $key = null): mixed
 	{
-		if (func_num_args() === 0) {
-			return $this->url->getQueryParameters();
-		}
-
-		assert($key !== null);
-		return $this->url->getQueryParameter($key);
+		return $key === null
+			? $this->url->getQueryParameters()
+			: $this->url->getQueryParameter($key);
 	}
 
 
 	/**
 	 * Returns a POST parameter, or all POST parameters as an array if no key is given.
+	 * @return ($key is null ? array<mixed> : mixed)
 	 */
 	public function getPost(?string $key = null): mixed
 	{
-		if (func_num_args() === 0) {
-			return $this->post;
-		}
-
-		assert($key !== null);
-		return $this->post[$key] ?? null;
+		return $key === null
+			? $this->post
+			: $this->post[$key] ?? null;
 	}
 
 
@@ -138,7 +134,7 @@ class Request implements IRequest
 	/**
 	 * Returns a cookie or `null` if it does not exist.
 	 */
-	public function getCookie(string $key): mixed
+	public function getCookie(string $key): ?string
 	{
 		return $this->cookies[$key] ?? null;
 	}
@@ -230,11 +226,46 @@ class Request implements IRequest
 
 
 	/**
-	 * Checks whether the request is coming from the same site and was initiated by clicking on a link.
+	 * Checks whether the request originated from your own site (same-site), i.e. it was not
+	 * triggered from a foreign website. Serves as a CSRF-like protection for forms and signals.
+	 * @deprecated use isFrom()
 	 */
 	public function isSameSite(): bool
 	{
-		return isset($this->cookies[Helpers::StrictCookieName]);
+		return $this->isFrom([FetchSite::SameSite, FetchSite::SameOrigin]);
+	}
+
+
+	/**
+	 * Checks whether the request matches the given Sec-Fetch-Site, Sec-Fetch-Dest and Sec-Fetch-User values.
+	 * Falls back to the SameSite=Strict cookie in browsers without Sec-Fetch (Safari < 16.4)
+	 * @param  FetchSite|list<FetchSite>  $site
+	 * @param  FetchDest|list<FetchDest>|null  $dest
+	 */
+	public function isFrom(
+		FetchSite|array $site,
+		FetchDest|array|null $dest = null,
+		?bool $user = null,
+	): bool
+	{
+		$siteHeader = $this->headers['sec-fetch-site'] ?? null;
+		$actualDest = FetchDest::tryFrom($this->headers['sec-fetch-dest'] ?? '');
+		$actualUser = ($this->headers['sec-fetch-user'] ?? null) === '?1';
+		$site = is_array($site) ? $site : [$site];
+		$dest = $dest === null || is_array($dest) ? $dest : [$dest];
+
+		if ($siteHeader === null) { // fallback for browsers without Sec-Fetch (Safari < 16.4)
+			return $dest === null
+				&& $user === null
+				&& isset($this->cookies[Helpers::StrictCookieName])
+				&& array_filter($site, fn(FetchSite $s) => $s !== FetchSite::CrossSite) !== [];
+		}
+
+		$actualSite = FetchSite::tryFrom($siteHeader);
+		return $actualSite !== null
+			&& in_array($actualSite, $site, true)
+			&& ($dest === null || ($actualDest !== null && in_array($actualDest, $dest, true)))
+			&& ($user === null || $user === $actualUser);
 	}
 
 
@@ -256,16 +287,11 @@ class Request implements IRequest
 	}
 
 
-	/**
-	 * Returns the host of the remote client.
-	 */
+	#[\Deprecated]
 	public function getRemoteHost(): ?string
 	{
-		if ($this->remoteHost === null && $this->remoteAddress !== null) {
-			$this->remoteHost = gethostbyaddr($this->remoteAddress) ?: null;
-		}
-
-		return $this->remoteHost;
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+		return null;
 	}
 
 
@@ -309,25 +335,18 @@ class Request implements IRequest
 			return null;
 		}
 
-		$s = strtolower($header);  // case insensitive
-		$s = strtr($s, '_', '-');  // cs_CZ means cs-CZ
-		rsort($langs);             // first more specific
-		preg_match_all('#(' . implode('|', $langs) . ')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
+		usort($langs, fn($a, $b) => strlen($b) <=> strlen($a)); // more specific first
+		$accepted = Helpers::parseQualityList(strtr($header, '_', '-')); // cs_CZ means cs-CZ
 
-		if (!$matches[0]) {
-			return null;
-		}
-
-		$max = 0;
-		$lang = null;
-		foreach ($matches[1] as $key => $value) {
-			$q = $matches[2][$key] === '' ? 1.0 : (float) $matches[2][$key];
-			if ($q > $max) {
-				$max = $q;
-				$lang = $value;
+		foreach (array_keys($accepted) as $token) {
+			foreach ($langs as $lang) {
+				$l = strtolower($lang);
+				if ($token === '*' || $token === $l || str_starts_with($token, $l . '-')) {
+					return $lang;
+				}
 			}
 		}
 
-		return $lang;
+		return null;
 	}
 }

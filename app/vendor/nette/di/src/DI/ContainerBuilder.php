@@ -8,8 +8,7 @@
 namespace Nette\DI;
 
 use Nette;
-use Nette\DI\Definitions\Definition;
-use function array_diff, array_filter, array_walk_recursive, class_implements, class_parents, is_a, is_int, key, ksort, preg_match, sprintf, strtolower;
+use function is_int, sprintf;
 
 
 /**
@@ -32,6 +31,9 @@ class ContainerBuilder
 
 	/** @var array<string, Definition> */
 	private array $definitions = [];
+
+	/** @var array<string, string> lowercase name => service name */
+	private array $lowerNames = [];
 
 	/** @var array<string, string> alias => service name */
 	private array $aliases = [];
@@ -68,7 +70,19 @@ class ContainerBuilder
 			$name = '0' . $i; // prevents converting to integer in array key
 
 		} elseif (is_int(key([$name => 1])) || !preg_match('#^\w+(\.\w+)*$#D', $name)) {
-			throw new Nette\InvalidArgumentException(sprintf("Service name must be a alpha-numeric string and not a number, '%s' given.", $name));
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service name must be a alpha-numeric string and not a number, '%s' given.",
+				$name,
+			));
+
+		} elseif (str_contains($name, '__')) {
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service name '%s' must not contain '__', which is reserved for encoding dots in method names.",
+				$name,
+			));
+
+		} elseif ($name === self::ThisService) {
+			throw new Nette\InvalidArgumentException("Service name 'self' is reserved for references to the current service.");
 
 		} else {
 			$name = $this->aliases[$name] ?? $name;
@@ -76,15 +90,8 @@ class ContainerBuilder
 				throw new Nette\InvalidStateException(sprintf("Service '%s' has already been added.", $name));
 			}
 
-			$lname = strtolower($name);
-			foreach ($this->definitions as $nm => $foo) {
-				if ($lname === strtolower($nm)) {
-					throw new Nette\InvalidStateException(sprintf(
-						"Service '%s' has the same name as '%s' in a case-insensitive manner.",
-						$name,
-						$nm,
-					));
-				}
+			if ($similar = $this->lowerNames[strtolower($name)] ?? null) {
+				throw new Nette\InvalidStateException("Service '$name' has the same name as '$similar' in a case-insensitive manner.");
 			}
 		}
 
@@ -93,6 +100,7 @@ class ContainerBuilder
 		$definition->setNotifier(function (): void {
 			$this->needsResolve = true;
 		});
+		$this->lowerNames[strtolower($name)] = $name;
 		return $this->definitions[$name] = $definition;
 	}
 
@@ -128,7 +136,7 @@ class ContainerBuilder
 	{
 		$this->needsResolve = true;
 		$name = $this->aliases[$name] ?? $name;
-		unset($this->definitions[$name]);
+		unset($this->definitions[$name], $this->lowerNames[strtolower($name)]);
 	}
 
 
@@ -374,6 +382,10 @@ class ContainerBuilder
 		foreach ($defs as $name => $def) {
 			foreach ($def->getTags() as $tag => $value) {
 				$meta['tags'][$tag][$name] = $value;
+			}
+
+			if ($name !== lcfirst($name)) { // ucfirst() in getMethodName() is not reversible for such a name
+				$meta['names'][lcfirst($name)] = $name;
 			}
 		}
 

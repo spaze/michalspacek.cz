@@ -17,18 +17,18 @@ use RuntimeException;
 use SensitiveParameter;
 use Tester\Assert;
 use Tester\TestCase;
-use Throwable;
 use Tracy\BlueScreen;
 
 require __DIR__ . '/../bootstrap.php';
 
 /*
  * The secrets from config/secrets.neon must never be written into the container Nette compiles into temp/:
- * Tracy renders the source of every frame into the exception log, and `#[SensitiveParameter]` and `keysToHide`
- * both work on values, so neither reaches source code. Building an encryption service is where that bites,
- * its constructor rejects a bad key and the frame is the generated factory, with the key in the excerpt if it
- * was compiled in. Bootstrap passes the secrets as dynamic parameters, supplied at runtime and never written
- * to the container, and these tests hold that in place.
+ * Tracy renders the source of every frame into the exception log. Nette marks a `#[SensitiveParameter]` argument
+ * in the generated code and Tracy hides what is marked, but only for as long as whatever shows the file honours
+ * the marks, and a value that isn't in the file has nothing to rely on. Building an encryption service is where
+ * it would bite, its constructor rejects a bad key and the frame is the generated factory, with the key in the
+ * excerpt if it was compiled in. Bootstrap passes the secrets as dynamic parameters, supplied at runtime and never
+ * written to the container, and these tests hold that in place.
  */
 
 /** @testCase */
@@ -53,15 +53,6 @@ final class CompiledContainerSecretsTest extends TestCase
 		}
 		$this->tempDirs = [];
 		$this->blueScreen->scrubber = null; // the container's blue screen is shared, the scrubber isn't this test's to keep
-	}
-
-
-	public function testKeyIsNotInTheExceptionLogWhenTheEncryptionServiceFailsToBuild(): void
-	{
-		$key = 'msee_' . str_repeat('ab', 32);
-
-		Assert::false($this->keyInRenderedBlueScreen($key, dynamic: true), 'the key reached the exception log even as a dynamic parameter');
-		Assert::true($this->keyInRenderedBlueScreen($key, dynamic: false), 'a key written into the container was not found either, so this would pass whatever it rendered');
 	}
 
 
@@ -518,36 +509,6 @@ final class CompiledContainerSecretsTest extends TestCase
 			}
 		}
 		return $differences;
-	}
-
-
-	/**
-	 * @param string $key Marked, or it is dumped as an argument of this very method and the test measures its own harness
-	 */
-	private function keyInRenderedBlueScreen(#[SensitiveParameter] string $key, bool $dynamic): bool
-	{
-		// An active key id that doesn't exist, so the constructor throws the way a misconfigured key would
-		[$container, $tempDir] = $this->compile(['encryptionKeys' => ['email' => ['dev1' => $key]]], $dynamic, [
-			'factory' => 'Spaze\Encryption\SymmetricKeyEncryption',
-			'arguments' => ['%secrets.encryptionKeys.email%', 'nope', 'msee'],
-		]);
-
-		$thrown = null;
-		try {
-			$container->getService('probe');
-		} catch (Throwable $e) {
-			$thrown = $e;
-		}
-		Assert::notNull($thrown, 'building the service should have failed on the unknown active key id');
-		assert($thrown !== null); // Assert::notNull() doesn't narrow the type for phpstan and psalm
-
-		$log = $tempDir . '/bluescreen.html';
-		Assert::true($this->blueScreen->renderToFile($thrown, $log), 'Tracy refused to write the blue screen, it will not overwrite an existing file');
-		$agentLog = $tempDir . '/bluescreen.md';
-		Assert::true(is_file($agentLog), 'Tracy no longer writes the .md log, drop it here rather than silently checking less');
-		// Both, because the two hide values differently: the .md redaction leans on the SensitiveParameterValue
-		// entry in keysToHide, which is marked as removable once the fix lands in Tracy itself
-		return str_contains(FileSystem::read($log), $key) || str_contains(FileSystem::read($agentLog), $key);
 	}
 
 

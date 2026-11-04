@@ -12,14 +12,21 @@ final class ExpiresCheckMultipleFields implements FieldProcessor
 {
 
 	/**
+	 * The file the last Expires field was in, because the `SecurityTxt` object has no Expires value after one whose value isn't a date
+	 */
+	private ?SecurityTxt $securityTxt = null;
+
+
+	/**
 	 * @throws SecurityTxtError
 	 */
 	#[Override]
 	public function process(string $value, SecurityTxt $securityTxt): void
 	{
-		if ($securityTxt->getExpires() !== null) {
+		if ($this->securityTxt === $securityTxt) {
 			throw new SecurityTxtError(new SecurityTxtMultipleExpires());
 		}
+		$this->securityTxt = $securityTxt;
 	}
 
 }

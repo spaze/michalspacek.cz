@@ -11,10 +11,8 @@ use Nette;
 use Nette\DI\Config\Helpers;
 use Nette\DI\Definitions;
 use Nette\DI\Definitions\Statement;
-use Nette\Schema\Context;
-use Nette\Schema\Expect;
-use Nette\Schema\Schema;
-use function array_keys, end, interface_exists, is_array, is_string, method_exists, preg_match, substr;
+use Nette\Schema\{Context, Expect, Schema};
+use function array_key_exists, count, is_array, is_string, sprintf;
 
 
 /**
@@ -77,8 +75,16 @@ class DefinitionSchema implements Schema
 
 		} elseif ($def instanceof Statement && is_string($def->getEntity()) && interface_exists($def->getEntity())) {
 			$res = ['implement' => $def->getEntity()];
-			if (array_keys($def->arguments) === ['tagged']) {
-				$res += $def->arguments;
+			if (array_key_exists('tagged', $def->arguments)) {
+				if (count($def->arguments) > 1) {
+					throw new Nette\DI\InvalidConfigurationException(sprintf(
+						"Argument 'tagged' cannot be combined with other arguments in %s(...).",
+						$def->getEntity(),
+					));
+				}
+
+				$res['tagged'] = $def->arguments['tagged'];
+
 			} elseif (array_keys($def->arguments) === [0]) {
 				$res['create'] = $def->arguments[0];
 			} elseif ($def->arguments) {
@@ -113,10 +119,9 @@ class DefinitionSchema implements Schema
 
 
 	/**
-	 * @param  string|int  $key
 	 * @param  array<string, mixed>  $def
 	 */
-	private function sniffType($key, array $def): string
+	private function sniffType(string|int $key, array $def): string
 	{
 		if (is_string($key)) {
 			$name = preg_match('#^@[\w\\\]+$#D', $key)

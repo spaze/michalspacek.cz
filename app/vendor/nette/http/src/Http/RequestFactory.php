@@ -8,9 +8,8 @@
 namespace Nette\Http;
 
 use Nette;
-use Nette\Utils\Arrays;
-use Nette\Utils\Strings;
-use function array_filter, base64_encode, count, end, explode, file_get_contents, filter_input_array, filter_var, function_exists, get_debug_type, in_array, ini_get, is_array, is_string, key, min, preg_last_error, preg_match, preg_replace, preg_split, rtrim, sprintf, str_contains, strcasecmp, strlen, strncmp, strpos, strrpos, strtolower, strtr, substr, trim;
+use Nette\Utils\{Arrays, Strings};
+use function function_exists, in_array, ini_get, is_array, is_string, sprintf, strlen;
 use const PHP_SAPI;
 
 
@@ -34,9 +33,13 @@ class RequestFactory
 
 	private bool $binary = false;
 	private bool $forceHttps = false;
+	private ?Url $baseUrl = null;
 
 	/** @var list<string> */
 	private array $proxies = [];
+
+	private bool $forwarded = true;
+	private bool $xForwarded = true;
 
 
 	/**
@@ -50,12 +53,15 @@ class RequestFactory
 
 
 	/**
-	 * Sets the trusted proxy IP addresses or CIDR blocks used to resolve the real client IP and URL scheme.
+	 * Sets the trusted proxy IP addresses or CIDR blocks used to resolve the real client IP and URL scheme,
+	 * and which forwarding headers to trust from them ("Forwarded" and/or "X-Forwarded-*").
 	 * @param string|list<string>  $proxy
 	 */
-	public function setProxy($proxy): static
+	public function setProxy(string|array $proxy, bool $forwarded = true, bool $xForwarded = true): static
 	{
 		$this->proxies = (array) $proxy;
+		$this->forwarded = $forwarded;
+		$this->xForwarded = $xForwarded;
 		return $this;
 	}
 
@@ -71,6 +77,21 @@ class RequestFactory
 
 
 	/**
+	 * Sets the base URL of the application, used when it cannot be detected from the environment (CLI).
+	 */
+	public function setBaseUrl(string|Url $url): static
+	{
+		$this->baseUrl = new Url($url);
+		if ($this->baseUrl->getHost() === '') {
+			throw new Nette\InvalidArgumentException("Base URL '$url' must be absolute.");
+		}
+
+		$this->baseUrl->setPath(rtrim($this->baseUrl->getPath(), '/') . '/');
+		return $this;
+	}
+
+
+	/**
 	 * Returns new Request instance, using values from superglobals.
 	 */
 	public function fromGlobals(): Request
@@ -79,20 +100,31 @@ class RequestFactory
 		$this->getServer($url);
 		$this->getPathAndQuery($url);
 		[$post, $cookies] = $this->getGetPostCookie($url);
-		[$remoteAddr, $remoteHost] = $this->getClient($url);
+		$remoteAddr = $this->getClient($url);
+		if ($url->getHost() === '' && $this->baseUrl) {
+			$url->setScheme($this->baseUrl->getScheme())
+				->setHost($this->baseUrl->getHost())
+				->setPath($scriptPath = $this->baseUrl->getPath());
+			if (($port = $this->baseUrl->getPort()) && $port !== $this->baseUrl->getDefaultPort()) {
+				$url->setPort($port);
+			}
+		} else {
+			$scriptPath = $this->getScriptPath($url);
+		}
+
 		if ($this->forceHttps) {
 			$url->setScheme('https');
 		}
 
 		return new Request(
-			new UrlScript($url, $this->getScriptPath($url)),
+			new UrlScript($url, $scriptPath),
 			$post,
 			$this->getFiles(),
 			$cookies,
 			$this->getHeaders(),
 			$this->getMethod(),
 			$remoteAddr,
-			$remoteHost,
+			null,
 			fn() => (string) file_get_contents('php://input'),
 		);
 	}
@@ -154,7 +186,7 @@ class RequestFactory
 	/** @return array{mixed[], mixed[]} */
 	private function getGetPostCookie(Url $url): array
 	{
-		$useFilter = (!in_array((string) ini_get('filter.default'), ['', 'unsafe_raw'], strict: true) || ini_get('filter.default_flags'));
+		$useFilter = (!in_array((string) ini_get('filter.default'), ['', 'unsafe_raw'], true) || ini_get('filter.default_flags'));
 
 		$query = $url->getQueryParameters();
 		$post = $useFilter
@@ -181,7 +213,11 @@ class RequestFactory
 						$list[$key][$k] = (string) preg_replace('#[^' . self::ValidChars . ']+#u', '', $v);
 
 					} else {
-						throw new Nette\InvalidStateException(sprintf('Invalid value in $_POST/$_COOKIE in key %s, expected string, %s given.', "'$k'", get_debug_type($v)));
+						throw new Nette\InvalidStateException(sprintf(
+							'Invalid value in $_POST/$_COOKIE in key %s, expected string, %s given.',
+							"'$k'",
+							get_debug_type($v),
+						));
 					}
 				}
 			}
@@ -255,7 +291,7 @@ class RequestFactory
 	private function getHeaders(): array
 	{
 		if (function_exists('apache_request_headers')) {
-			$headers = apache_request_headers();
+			$headers = apache_request_headers() ?: [];
 		} else {
 			$headers = [];
 			foreach ($_SERVER as $k => $v) {
@@ -295,57 +331,64 @@ class RequestFactory
 	}
 
 
-	/** @return array{?string, ?string}  [remoteAddr, remoteHost] */
-	private function getClient(Url $url): array
+	private function getClient(Url $url): ?string
 	{
 		$remoteAddr = !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-		// use real client address and host if trusted proxy is used
-		$usingTrustedProxy = $remoteAddr && Arrays::some($this->proxies, fn(string $proxy): bool => Helpers::ipMatch($remoteAddr, $proxy));
+		// trust forwarding headers only when the request comes through a trusted proxy;
+		// the proxy in turn should strip any forwarding header it does not set itself
+		$client = $remoteAddr ? IPAddress::tryFrom($remoteAddr) : null;
+		$usingTrustedProxy = $client && Arrays::some($this->proxies, fn(string $proxy): bool => $client->isInRange($proxy));
 		if ($usingTrustedProxy) {
-			$remoteHost = null;
-			$remoteAddr = empty($_SERVER['HTTP_FORWARDED'])
-				? $this->useNonstandardProxy($url)
-				: $this->useForwardedProxy($url);
-
-		} else {
-			$remoteHost = !empty($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
+			return match (true) {
+				$this->forwarded && !empty($_SERVER['HTTP_FORWARDED']) => $this->useForwardedProxy($url),
+				$this->xForwarded => $this->useNonstandardProxy($url),
+				default => $remoteAddr,
+			};
 		}
 
-		return [$remoteAddr, $remoteHost];
+		return $remoteAddr;
 	}
 
 
 	private function useForwardedProxy(Url $url): ?string
 	{
-		$forwardParams = preg_split('/[,;]/', $_SERVER['HTTP_FORWARDED']);
-		foreach ($forwardParams as $forwardParam) {
-			[$key, $value] = explode('=', $forwardParam, 2) + [1 => ''];
-			$proxyParams[strtolower(trim($key))][] = trim($value, " \t\"");
+		// RFC 7239: split into hops (comma), each a set of params (semicolon)
+		$hops = $addresses = [];
+		foreach (explode(',', $_SERVER['HTTP_FORWARDED']) as $element) {
+			$hop = [];
+			foreach (explode(';', $element) as $pair) {
+				[$key, $value] = explode('=', $pair, 2) + [1 => ''];
+				$hop[strtolower(trim($key))] = trim($value, " \t\"");
+			}
+
+			$for = $hop['for'] ?? '';
+			$addresses[] = str_contains($for, '[')
+				? substr($for, 1, strpos($for, ']') - 1) // IPv6 "[addr]:port"
+				: explode(':', $for)[0]; // IPv4 "addr:port" or bare address
+			$hops[] = $hop;
 		}
 
-		if (isset($proxyParams['for'])) {
-			$address = $proxyParams['for'][0];
-			$remoteAddr = str_contains($address, '[')
-				? substr($address, 1, strpos($address, ']') - 1) // IPv6
-				: explode(':', $address)[0];  // IPv4
+		$clientHop = $this->findClientHop($addresses);
+		if ($clientHop === null) {
+			return null;
 		}
 
-		if (isset($proxyParams['proto']) && count($proxyParams['proto']) === 1) {
-			$url->setScheme(strcasecmp($proxyParams['proto'][0], 'https') === 0 ? 'https' : 'http');
+		// scheme and host from the client's own hop
+		$hop = $hops[$clientHop[0]];
+		if (isset($hop['proto'])) {
+			$url->setScheme(strcasecmp($hop['proto'], 'https') === 0 ? 'https' : 'http');
 			$url->setPort($url->getScheme() === 'https' ? 443 : 80);
 		}
 
-		if (
-			isset($proxyParams['host']) && count($proxyParams['host']) === 1
-			&& ($pair = $this->parseHostAndPort($proxyParams['host'][0]))
-		) {
+		if (isset($hop['host']) && ($pair = $this->parseHostAndPort($hop['host']))) {
 			$url->setHost($pair[0]);
 			if (isset($pair[1])) {
 				$url->setPort($pair[1]);
 			}
 		}
-		return $remoteAddr ?? null;
+
+		return $clientHop[1];
 	}
 
 
@@ -360,24 +403,18 @@ class RequestFactory
 			$url->setPort((int) $_SERVER['HTTP_X_FORWARDED_PORT']);
 		}
 
-		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$xForwardedForWithoutProxies = array_filter(
-				explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']),
-				fn(string $ip): bool => filter_var($ip = trim($ip), FILTER_VALIDATE_IP) === false
-					|| !Arrays::some($this->proxies, fn(string $proxy): bool => Helpers::ipMatch($ip, $proxy)),
-			);
-			if ($xForwardedForWithoutProxies) {
-				$remoteAddr = trim(end($xForwardedForWithoutProxies));
-				$xForwardedForRealIpKey = key($xForwardedForWithoutProxies);
-			}
+		if (empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			return null;
 		}
 
-		if (isset($xForwardedForRealIpKey) && !empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-			$xForwardedHost = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
-			if (
-				isset($xForwardedHost[$xForwardedForRealIpKey])
-				&& ($pair = $this->parseHostAndPort(trim($xForwardedHost[$xForwardedForRealIpKey])))
-			) {
+		$clientHop = $this->findClientHop(array_map(trim(...), explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+		if ($clientHop === null) {
+			return null;
+		}
+
+		if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+			if (isset($hosts[$clientHop[0]]) && ($pair = $this->parseHostAndPort(trim($hosts[$clientHop[0]])))) {
 				$url->setHost($pair[0]);
 				if (isset($pair[1])) {
 					$url->setPort($pair[1]);
@@ -385,7 +422,31 @@ class RequestFactory
 			}
 		}
 
-		return $remoteAddr ?? null;
+		return $clientHop[1];
+	}
+
+
+	/**
+	 * Returns [index, address] of the rightmost hop after stripping trailing trusted proxies,
+	 * or null when that hop is not a valid IP.
+	 * @param  list<string>  $addresses
+	 * @return array{int, string}|null
+	 */
+	private function findClientHop(array $addresses): ?array
+	{
+		$untrusted = array_filter(
+			$addresses,
+			fn(string $ip): bool => ($address = IPAddress::tryFrom($ip)) === null
+				|| !Arrays::some($this->proxies, fn(string $proxy): bool => $address->isInRange($proxy)),
+		);
+		if (!$untrusted) {
+			return null;
+		}
+
+		$index = array_key_last($untrusted);
+		return IPAddress::tryFrom($untrusted[$index]) === null
+			? null
+			: [$index, $untrusted[$index]];
 	}
 
 

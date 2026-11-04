@@ -8,7 +8,6 @@
 namespace Tracy;
 
 use function is_string;
-use const LOCK_EX, LOCK_UN;
 
 
 /**
@@ -53,23 +52,31 @@ class FileSession implements SessionStorage
 		if (
 			!is_string($id)
 			|| !preg_match('#^\w{10}\z#i', $id)
-			|| !($file = @fopen($path = $this->dir . '/' . self::FilePrefix . $id, 'r+')) // intentionally @
+			|| !($file = @fopen($path = $this->dir . '/' . self::FilePrefix . $id, 'r+')) // @ file may not exist
 		) {
 			$id = Helpers::createId();
-			setcookie($this->cookieName, $id, time() + self::CookieLifetime, '/', '', secure: false, httponly: true);
+			setcookie($this->cookieName, $id, [
+				'expires' => time() + self::CookieLifetime,
+				'path' => '/',
+				'secure' => Helpers::isHttps(),
+				'httponly' => true,
+				'samesite' => 'Lax',
+			]);
 
-			$file = @fopen($path = $this->dir . '/' . self::FilePrefix . $id, 'c+'); // intentionally @
+			$file = @fopen($path = $this->dir . '/' . self::FilePrefix . $id, 'c+'); // @ is escalated to exception
 			if ($file === false) {
 				throw new \RuntimeException("Unable to create file '$path'. " . (error_get_last()['message'] ?? ''));
 			}
+
+			@chmod($path, 0o600); // @ - may not be supported by the filesystem
 		}
 
-		if (!@flock($file, LOCK_EX)) { // intentionally @
+		if (!@flock($file, LOCK_EX)) { // @ is escalated to exception
 			throw new \RuntimeException("Unable to acquire exclusive lock on '$path'. " . (error_get_last()['message'] ?? ''));
 		}
 
 		$this->file = $file;
-		$this->data = @unserialize(stream_get_contents($this->file)) ?: []; // @ - file may be empty
+		$this->data = @unserialize(stream_get_contents($this->file), ['allowed_classes' => false]) ?: []; // @ - file may be empty; data contain no objects
 
 		if (mt_rand() / mt_getrandmax() < $this->gcProbability) {
 			$this->clean();
@@ -87,8 +94,8 @@ class FileSession implements SessionStorage
 	{
 		$old = strtotime('-1 week');
 		foreach (glob($this->dir . '/' . self::FilePrefix . '*') ?: [] as $file) {
-			if (filemtime($file) < $old) {
-				unlink($file);
+			if (@filemtime($file) < $old) { // @ - file may be deleted by concurrent GC
+				@unlink($file); // @ - file may be deleted by concurrent GC
 			}
 		}
 	}

@@ -6,6 +6,7 @@ namespace Spaze\SecurityTxt\Fetcher\HttpClients;
 use CurlHandle;
 use LogicException;
 use Override;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlContentEncodingException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
@@ -18,13 +19,28 @@ use Spaze\SecurityTxt\SecurityTxtHost;
 
 final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherHttpClient
 {
+	private const string DEFAULT_USER_AGENT = 'Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)';
+	private const int DEFAULT_MAX_RESPONSE_LENGTH = 10_000;
+	private const int DEFAULT_TIMEOUT = 10;
+	private const int DEFAULT_CONNECT_TIMEOUT = 5;
+	private const string STATUS_LINE = '~^HTTP/\S+ ([0-9]{3})~';
+
+	private string $userAgent;
+	private int $maxResponseLength;
+	private int $timeout;
+	private int $connectTimeout;
+
 
 	public function __construct(
-		private string $userAgent = 'Mozilla/5.0 (compatible; spaze/security-txt; +https://github.com/spaze/security-txt)',
-		private int $maxResponseLength = 10_000,
-		private int $timeout = 10,
-		private int $connectTimeout = 5,
+		?string $userAgent = null,
+		?int $maxResponseLength = null,
+		?int $timeout = null,
+		?int $connectTimeout = null,
 	) {
+		$this->userAgent = $userAgent ?? self::DEFAULT_USER_AGENT;
+		$this->maxResponseLength = $maxResponseLength ?? self::DEFAULT_MAX_RESPONSE_LENGTH;
+		$this->timeout = $timeout ?? self::DEFAULT_TIMEOUT;
+		$this->connectTimeout = $connectTimeout ?? self::DEFAULT_CONNECT_TIMEOUT;
 		if (strlen($this->userAgent) === 0) {
 			throw new LogicException('userAgent must not be an empty string');
 		}
@@ -45,6 +61,7 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 
 	/**
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlContentEncodingException
 	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtConnectedToWrongIpAddressException
@@ -113,6 +130,11 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 		$result = curl_exec($ch);
 		if ($result === false) {
 			$error = curl_errno($ch);
+			// What the server claimed to have encoded the body with, `utf8` say, which is a charset and not a content coding, is the thing to fix, more than that curl failed
+			$contentEncoding = $error === CURLE_BAD_CONTENT_ENCODING ? $this->getContentEncoding($rawHeaders) : null;
+			if ($contentEncoding !== null) {
+				throw new SecurityTxtCannotOpenUrlContentEncodingException($url->getUrl(), $url->getRedirects(), $ipAddress, $ipAddressType, $contentEncoding);
+			}
 			if ($error !== CURLE_WRITE_ERROR || !$truncated) {
 				// Deliberately not curl_error(), that one embeds server controlled strings, see the exception's $error docs
 				throw new SecurityTxtCannotOpenUrlException(
@@ -137,10 +159,57 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 			throw new SecurityTxtNoHttpCodeException($url->getUrl(), $url->getRedirects());
 		}
 
+		return new SecurityTxtFetcherResponse(
+			$code,
+			$this->getHeaders($rawHeaders),
+			$contents,
+			$truncated,
+			$ipAddress,
+			$ipAddressType,
+		);
+	}
+
+
+	/**
+	 * The `Content-Encoding` of the final response, its lines joined the way RFC 9110 combines a field, but only once all of that response's header lines have arrived:
+	 * curl reports a `Transfer-Encoding` it rejects while still reading them with the same error, and then it is not the content coding that failed.
+	 *
+	 * @param list<string> $rawHeaders
+	 */
+	private function getContentEncoding(array $rawHeaders): ?string
+	{
+		if ($rawHeaders === [] || $rawHeaders[array_key_last($rawHeaders)] !== '') {
+			return null;
+		}
+		$codings = [];
+		$final = false;
+		foreach ($rawHeaders as $line) {
+			// Each status line starts the header block of another response, and only the one after an informational 1xx response is the final one
+			if (preg_match(self::STATUS_LINE, $line, $matches) === 1) {
+				$codings = [];
+				$final = (int)$matches[1] >= 200;
+				continue;
+			}
+			$parts = explode(':', $line, 2);
+			if (count($parts) === 2 && strtolower(trim($parts[0])) === 'content-encoding' && trim($parts[1]) !== '') {
+				$codings[] = trim($parts[1]);
+			}
+		}
+		return $final && $codings !== [] ? implode(', ', $codings) : null;
+	}
+
+
+	/**
+	 * @param list<string> $rawHeaders
+	 * @return array<lowercase-string, string>
+	 */
+	private function getHeaders(array $rawHeaders): array
+	{
 		$headers = [];
-		foreach ($rawHeaders as $i => $line) {
-			if ($i === 0) {
-				// status line, already handled via curl_getinfo
+		foreach ($rawHeaders as $line) {
+			// Each status line starts another response's header lines, so only the final response's are kept, not those of a 1xx response before it
+			if (preg_match(self::STATUS_LINE, $line) === 1) {
+				$headers = [];
 				continue;
 			}
 			if ($line === '') {
@@ -151,15 +220,7 @@ final readonly class SecurityTxtFetcherCurlClient implements SecurityTxtFetcherH
 				$headers[strtolower(trim($parts[0]))] = trim($parts[1]);
 			}
 		}
-
-		return new SecurityTxtFetcherResponse(
-			$code,
-			$headers,
-			$contents,
-			$truncated,
-			$ipAddress,
-			$ipAddressType,
-		);
+		return $headers;
 	}
 
 

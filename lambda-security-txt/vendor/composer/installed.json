@@ -2,23 +2,23 @@
     "packages": [
         {
             "name": "bref/bref",
-            "version": "3.0.12",
-            "version_normalized": "3.0.12.0",
+            "version": "3.0.14",
+            "version_normalized": "3.0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brefphp/bref.git",
-                "reference": "6ee3f1bbfa7820889788cd1f79fa597736e73a17"
+                "reference": "3b1dbda5680930187bd44b7c863429e570b35692"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brefphp/bref/zipball/6ee3f1bbfa7820889788cd1f79fa597736e73a17",
-                "reference": "6ee3f1bbfa7820889788cd1f79fa597736e73a17",
+                "url": "https://api.github.com/repos/brefphp/bref/zipball/3b1dbda5680930187bd44b7c863429e570b35692",
+                "reference": "3b1dbda5680930187bd44b7c863429e570b35692",
                 "shasum": ""
             },
             "require": {
                 "crwlr/query-string": "^1.0.3",
                 "ext-curl": "*",
-                "hollodotme/fast-cgi-client": "^3.0.1",
+                "hollodotme/fast-cgi-client": "^4.0",
                 "nyholm/psr7": "^1.4.1",
                 "php": ">=8.2",
                 "psr/container": "^1.0|^2.0",
@@ -40,7 +40,8 @@
                 "symfony/console": "^5.4|^6.4|^7.0|^8.0",
                 "symfony/yaml": "^5.4|^6.4|^7.0|^8.0"
             },
-            "time": "2026-09-27T21:42:43+00:00",
+            "time": "2026-10-21T14:07:00+00:00",
+            "published-time": "2026-10-21T14:07:57+00:00",
             "bin": [
                 "src/bref-local"
             ],
@@ -66,7 +67,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brefphp/bref/issues",
-                "source": "https://github.com/brefphp/bref/tree/3.0.12"
+                "source": "https://github.com/brefphp/bref/tree/3.0.14"
             },
             "funding": [
                 {
@@ -142,27 +143,32 @@
         },
         {
             "name": "hollodotme/fast-cgi-client",
-            "version": "v3.1.7",
-            "version_normalized": "3.1.7.0",
+            "version": "v4.0.0",
+            "version_normalized": "4.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hollodotme/fast-cgi-client.git",
-                "reference": "062182d4eda73c161cc2839783acc83096ec0f37"
+                "reference": "b65cb9ba2f12ad456478813fe1550022b171dc9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hollodotme/fast-cgi-client/zipball/062182d4eda73c161cc2839783acc83096ec0f37",
-                "reference": "062182d4eda73c161cc2839783acc83096ec0f37",
+                "url": "https://api.github.com/repos/hollodotme/fast-cgi-client/zipball/b65cb9ba2f12ad456478813fe1550022b171dc9f",
+                "reference": "b65cb9ba2f12ad456478813fe1550022b171dc9f",
                 "shasum": ""
             },
             "require": {
+                "ext-fileinfo": "*",
                 "ext-json": "*",
-                "php": ">=7.1"
+                "php": ">=8.0"
             },
             "require-dev": {
-                "ext-xdebug": ">=2.6.0"
+                "ext-xdebug": ">=3.1",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "^4.0"
             },
-            "time": "2021-12-07T10:10:20+00:00",
+            "time": "2026-10-05T12:05:19+00:00",
+            "published-time": "2026-10-05T12:05:43+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -189,8 +195,14 @@
             ],
             "support": {
                 "issues": "https://github.com/hollodotme/fast-cgi-client/issues",
-                "source": "https://github.com/hollodotme/fast-cgi-client/tree/v3.1.7"
+                "source": "https://github.com/hollodotme/fast-cgi-client/tree/v4.0.0"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/hollodotme",
+                    "type": "github"
+                }
+            ],
             "install-path": "../hollodotme/fast-cgi-client"
         },
         {
@@ -564,17 +576,17 @@
         },
         {
             "name": "spaze/security-txt",
-            "version": "v3.2.0",
-            "version_normalized": "3.2.0.0",
+            "version": "v3.3.0",
+            "version_normalized": "3.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/security-txt.git",
-                "reference": "6bbaa056c6d4ce05f873eb63dc53db733cbc73c3"
+                "reference": "56b65f6635824e5f696a5e6cf8a66aa56891eb51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/security-txt/zipball/6bbaa056c6d4ce05f873eb63dc53db733cbc73c3",
-                "reference": "6bbaa056c6d4ce05f873eb63dc53db733cbc73c3",
+                "url": "https://api.github.com/repos/spaze/security-txt/zipball/56b65f6635824e5f696a5e6cf8a66aa56891eb51",
+                "reference": "56b65f6635824e5f696a5e6cf8a66aa56891eb51",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +608,8 @@
                 "ext-curl": "To validate security.txt on remote hosts",
                 "ext-gnupg": "Needed to verify and create signatures"
             },
-            "time": "2026-09-18T15:27:43+00:00",
+            "time": "2026-11-01T23:34:54+00:00",
+            "published-time": "2026-11-02T00:02:21+00:00",
             "bin": [
                 "bin/checksecuritytxt.php"
             ],
@@ -620,29 +633,30 @@
             "description": "security.txt (RFC 9116) generator, parser, validator",
             "support": {
                 "issues": "https://github.com/spaze/security-txt/issues",
-                "source": "https://github.com/spaze/security-txt/tree/v3.2.0"
+                "source": "https://github.com/spaze/security-txt/tree/v3.3.0"
             },
             "install-path": "../spaze/security-txt"
         },
         {
             "name": "symfony/process",
-            "version": "v8.1.7",
-            "version_normalized": "8.1.7.0",
+            "version": "v8.1.10",
+            "version_normalized": "8.1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "10823b09358e690df4ff943e24e8492bb1019fc3"
+                "reference": "08aa69fa0998bb65a089f9e148a2c0f8b391398e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/10823b09358e690df4ff943e24e8492bb1019fc3",
-                "reference": "10823b09358e690df4ff943e24e8492bb1019fc3",
+                "url": "https://api.github.com/repos/symfony/process/zipball/08aa69fa0998bb65a089f9e148a2c0f8b391398e",
+                "reference": "08aa69fa0998bb65a089f9e148a2c0f8b391398e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4.1"
             },
-            "time": "2026-09-02T12:40:29+00:00",
+            "time": "2026-10-25T14:40:25+00:00",
+            "published-time": "2026-10-28T18:25:20+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -670,7 +684,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v8.1.7"
+                "source": "https://github.com/symfony/process/tree/v8.1.10"
             },
             "funding": [
                 {

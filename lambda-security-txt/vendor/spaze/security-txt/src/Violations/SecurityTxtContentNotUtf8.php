@@ -17,8 +17,8 @@ final class SecurityTxtContentNotUtf8 extends SecurityTxtSpecViolation
 			[$utf8],
 			'draft-foudil-securitytxt-00',
 			null,
-			'Re-encode the file in %s',
-			[$utf8],
+			"Replace each byte the lines say isn't %s with the character it was meant to be, encoded in %s",
+			[$utf8, $utf8],
 			'4',
 		);
 	}

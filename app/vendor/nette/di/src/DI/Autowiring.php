@@ -7,7 +7,7 @@
 
 namespace Nette\DI;
 
-use function array_merge, class_exists, class_implements, class_parents, count, implode, interface_exists, is_a, is_array, natsort, sprintf, str_contains;
+use function count, is_array, sprintf;
 
 
 /**
@@ -45,7 +45,10 @@ class Autowiring
 		if (empty($types[$type])) {
 			if ($throw) {
 				if (!class_exists($type) && !interface_exists($type)) {
-					throw new MissingServiceException(sprintf("Service of type '%s' not found. Check the class name because it cannot be found.", $type));
+					throw new MissingServiceException(sprintf(
+						"Service of type '%s' not found. Check the class name because it cannot be found.",
+						$type,
+					));
 				}
 
 				throw new MissingServiceException(sprintf('Service of type %s not found. Did you add it to configuration file?', $type));
@@ -74,13 +77,13 @@ class Autowiring
 	/**
 	 * Gets the service names and definitions of the specified type.
 	 * @param class-string  $type
-	 * @return array<string, Definitions\Definition>  service name => definition
+	 * @return array<string, Definition>  service name => definition
 	 */
 	public function findByType(string $type): array
 	{
 		$type = Helpers::normalizeClass($type);
 		$definitions = $this->builder->getDefinitions();
-		$names = array_merge($this->highPriority[$type] ?? [], $this->lowPriority[$type] ?? []);
+		$names = [...$this->highPriority[$type] ?? [], ...$this->lowPriority[$type] ?? []];
 		$res = [];
 		foreach ($names as $name) {
 			$res[$name] = $definitions[$name];
@@ -150,7 +153,7 @@ class Autowiring
 					foreach ($autowired as $autowiredType) {
 						if (is_a($parent, $autowiredType, allow_string: true)) {
 							if (empty($preferred[$parent]) && isset($this->highPriority[$parent])) {
-								$this->lowPriority[$parent] = array_merge($this->lowPriority[$parent] ?? [], $this->highPriority[$parent]);
+								$this->lowPriority[$parent] = [...$this->lowPriority[$parent] ?? [], ...$this->highPriority[$parent]];
 								$this->highPriority[$parent] = [];
 							}
 
