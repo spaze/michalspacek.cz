@@ -859,21 +859,21 @@
         },
         {
             "name": "nette/command-line",
-            "version": "v1.9.2",
-            "version_normalized": "1.9.2.0",
+            "version": "v2.0.0",
+            "version_normalized": "2.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/command-line.git",
-                "reference": "42a6ea85f8b203ca1bd793327c526009c2525cc7"
+                "reference": "429068c2b64cae4260b1d07556b8c6460777cebb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/command-line/zipball/42a6ea85f8b203ca1bd793327c526009c2525cc7",
-                "reference": "42a6ea85f8b203ca1bd793327c526009c2525cc7",
+                "url": "https://api.github.com/repos/nette/command-line/zipball/429068c2b64cae4260b1d07556b8c6460777cebb",
+                "reference": "429068c2b64cae4260b1d07556b8c6460777cebb",
                 "shasum": ""
             },
             "require": {
-                "php": "8.2 - 8.5"
+                "php": "8.2 - 8.6"
             },
             "require-dev": {
                 "nette/phpstan-rules": "^1.0",
@@ -882,11 +882,12 @@
                 "phpstan/phpstan": "^2.1@stable",
                 "tracy/tracy": "^2.9"
             },
-            "time": "2026-04-15T18:30:31+00:00",
+            "time": "2026-10-21T03:24:41+00:00",
+            "published-time": "2026-10-21T03:27:39+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "installation-source": "dist",
@@ -923,7 +924,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/command-line/issues",
-                "source": "https://github.com/nette/command-line/tree/v1.9.2"
+                "source": "https://github.com/nette/command-line/tree/v2.0.0"
             },
             "install-path": "../nette/command-line"
         },
