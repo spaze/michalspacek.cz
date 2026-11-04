@@ -401,7 +401,7 @@ cookies:
 		permanentLogin: "Obsahuje identifikátor pro permanentní přihlášení."
 		theme: "Hodnota určuje barevný režim, ve kterém se stránky zobrazí."
 		netteSession: "Cookie představuje identifikátor sezení, //session id//."
-		netteSameSiteCheck: "Používá se pro detekci \"//same-site//\":[blog:co-znamena-origin-site-etld-etld-plus-1-public-suffix-a-psl#same-site] požadavků."
+		netteSameSiteCheck: "Nastavuje se jen v prohlížečích, které neposílají hlavičku `Sec-Fetch-Site`, a slouží v nich k detekci \"//same-site//\":[blog:co-znamena-origin-site-etld-etld-plus-1-public-suffix-a-psl#same-site] požadavků."
 httpHeaders:
 	headerNotSent: "hlavička neposlána"
 # Reserved for Nette form validation; %label, %d, %value are Nette's, not vsprintf
