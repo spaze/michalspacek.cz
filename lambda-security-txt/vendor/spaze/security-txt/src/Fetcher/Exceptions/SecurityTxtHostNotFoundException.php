@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Spaze\SecurityTxt\Fetcher\Exceptions;
 
+use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
 use Spaze\SecurityTxt\SecurityTxtHost;
 use Throwable;
 use Uri\WhatWg\Url;
@@ -10,9 +11,17 @@ use Uri\WhatWg\Url;
 final class SecurityTxtHostNotFoundException extends SecurityTxtFetcherException
 {
 
-	public function __construct(Url $url, SecurityTxtHost $host, ?Throwable $previous = null)
+	public function __construct(Url $url, SecurityTxtHost $host, ?SecurityTxtRedirects $redirects = null, ?Throwable $previous = null)
 	{
-		parent::__construct([$url, $host], "Can't open %s, can't resolve %s", [$url, $host], $url, previous: $previous);
+		$redirects ??= new SecurityTxtRedirects();
+		parent::__construct(
+			$this->withRedirectsParam([$url, $host], $redirects),
+			"Can't open %s" . $this->getRedirectsFormat($redirects) . ", can't resolve %s",
+			[$url, ...$redirects->getMessageValues(), $host],
+			$url,
+			$redirects,
+			previous: $previous,
+		);
 	}
 
 }

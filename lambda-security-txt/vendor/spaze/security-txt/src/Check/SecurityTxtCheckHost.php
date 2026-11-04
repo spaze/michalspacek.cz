@@ -4,11 +4,13 @@ declare(strict_types = 1);
 namespace Spaze\SecurityTxt\Check;
 
 use DateTimeImmutable;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlContentEncodingException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtConnectedToWrongIpAddressException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotPublicException;
@@ -17,6 +19,8 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtRedirectLoopException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtRedirectUrlTooLongException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlUnsupportedSchemeException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtFetcher;
@@ -28,18 +32,6 @@ use Uri\WhatWg\Url;
 
 final class SecurityTxtCheckHost
 {
-
-	/** @var list<callable(Url): void> */
-	private array $onUrl = [];
-
-	/** @var list<callable(Url): void> */
-	private array $onFinalUrl = [];
-
-	/** @var list<callable(Url, Url): void> */
-	private array $onRedirect = [];
-
-	/** @var list<callable(Url): void> */
-	private array $onUrlNotFound = [];
 
 	/** @var list<callable(positive-int, DateTimeImmutable): void> */
 	private array $onIsExpired = [];
@@ -78,7 +70,6 @@ final class SecurityTxtCheckHost
 		private readonly SecurityTxtCheckHostResultFactory $resultFactory,
 		private readonly SecurityTxtUrlParser $urlParser,
 	) {
-		$this->initFetcherCallbacks();
 	}
 
 
@@ -89,8 +80,11 @@ final class SecurityTxtCheckHost
 	 * @throws SecurityTxtCannotParseHostnameException
 	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtTooManyRedirectsException
+	 * @throws SecurityTxtRedirectLoopException
+	 * @throws SecurityTxtRedirectUrlTooLongException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlContentEncodingException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
@@ -149,31 +143,6 @@ final class SecurityTxtCheckHost
 	}
 
 
-	private function initFetcherCallbacks(): void
-	{
-		$this->fetcher->addOnUrl(
-			function (Url $url): void {
-				$this->callOnCallback($this->onUrl, $url);
-			},
-		);
-		$this->fetcher->addOnFinalUrl(
-			function (Url $url): void {
-				$this->callOnCallback($this->onFinalUrl, $url);
-			},
-		);
-		$this->fetcher->addOnRedirect(
-			function (Url $url, Url $destination): void {
-				$this->callOnCallback($this->onRedirect, $url, $destination);
-			},
-		);
-		$this->fetcher->addOnUrlNotFound(
-			function (Url $url): void {
-				$this->callOnCallback($this->onUrlNotFound, $url);
-			},
-		);
-	}
-
-
 	/**
 	 * @param list<callable(?int, SecurityTxtSpecViolation): void> $handlers
 	 */
@@ -186,7 +155,7 @@ final class SecurityTxtCheckHost
 	/**
 	 * @param list<callable> $onCallbacks
 	 */
-	private function callOnCallback(array $onCallbacks, string|int|DateTimeImmutable|Url|SecurityTxtHost|SecurityTxtSpecViolation|null ...$params): void
+	private function callOnCallback(array $onCallbacks, string|int|DateTimeImmutable|SecurityTxtHost|SecurityTxtSpecViolation|null ...$params): void
 	{
 		foreach ($onCallbacks as $onCallback) {
 			$onCallback(...$params);
@@ -199,7 +168,7 @@ final class SecurityTxtCheckHost
 	 */
 	public function addOnUrl(callable $onUrl): void
 	{
-		$this->onUrl[] = $onUrl;
+		$this->fetcher->addOnUrl($onUrl);
 	}
 
 
@@ -208,7 +177,7 @@ final class SecurityTxtCheckHost
 	 */
 	public function addOnFinalUrl(callable $onFinalUrl): void
 	{
-		$this->onFinalUrl[] = $onFinalUrl;
+		$this->fetcher->addOnFinalUrl($onFinalUrl);
 	}
 
 
@@ -217,16 +186,27 @@ final class SecurityTxtCheckHost
 	 */
 	public function addOnRedirect(callable $onRedirect): void
 	{
-		$this->onRedirect[] = $onRedirect;
+		$this->fetcher->addOnRedirect($onRedirect);
 	}
 
 
 	/**
-	 * @param callable(Url $url): void $onUrlNotFound
+	 * @param callable(Url $url, int $httpCode): void $onUrlNotFound
 	 */
 	public function addOnUrlNotFound(callable $onUrlNotFound): void
 	{
-		$this->onUrlNotFound[] = $onUrlNotFound;
+		$this->fetcher->addOnUrlNotFound($onUrlNotFound);
+	}
+
+
+	/**
+	 * Called only when the file at the other location is used, a failure that leaves no file anywhere is thrown instead
+	 *
+	 * @param callable(SecurityTxtFetcherException $exception): void $onUrlFailed
+	 */
+	public function addOnUrlFailed(callable $onUrlFailed): void
+	{
+		$this->fetcher->addOnUrlFailed($onUrlFailed);
 	}
 
 

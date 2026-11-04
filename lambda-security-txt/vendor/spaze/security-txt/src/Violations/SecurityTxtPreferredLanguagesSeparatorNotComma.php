@@ -30,7 +30,7 @@ final class SecurityTxtPreferredLanguagesSeparatorNotComma extends SecurityTxtSp
 			[SecurityTxtField::PreferredLanguages->value, ...$separatorsValues, ','],
 			'draft-foudil-securitytxt-05',
 			implode(', ', $languages),
-			'Use comma (%s) to list multiple languages in the %s field',
+			'Use a comma (%s) to list multiple languages in the %s field',
 			[',', SecurityTxtField::PreferredLanguages->value],
 			'2.5.8',
 		);

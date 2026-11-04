@@ -5,6 +5,7 @@ namespace Spaze\SecurityTxt\Json;
 
 use BackedEnum;
 use LogicException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\SecurityTxtRedirects;
 use Spaze\SecurityTxt\SecurityTxtHost;
 use Spaze\SecurityTxt\SecurityTxtPrintableValue;
@@ -55,6 +56,9 @@ final readonly class SecurityTxtJsonValueFactory
 			$value = new SecurityTxtPrintableValue($value)->render();
 		} elseif ($value instanceof SecurityTxtRedirects) {
 			$value = $value->toStrings();
+		} elseif ($value instanceof SecurityTxtFetcherException) {
+			// The class and the call that built it, the same as the exception stores itself
+			$value = $value->jsonSerialize();
 		} elseif ($value instanceof BackedEnum) {
 			$value = $value->value;
 		}

@@ -19,7 +19,7 @@ final class SecurityTxtPossibelFieldTypo extends SecurityTxtSpecViolation
 			'Field %s may be a typo, did you mean %s?',
 			[$fieldName, $suggestedField->value],
 			null,
-			str_replace($fieldName, $suggestedField->value, $line),
+			"{$suggestedField->value}: " . (preg_replace('/^(?:\s|' . SecurityTxtLineLeadingWhitespace::UNICODE_SPACES . ')++/', '', explode(':', $line, 2)[1] ?? '') ?? ltrim(explode(':', $line, 2)[1] ?? '')),
 			"Change %s to %s",
 			[$fieldName, $suggestedField->value],
 			null,

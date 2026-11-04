@@ -5,11 +5,13 @@ namespace Spaze\SecurityTxt\Fetcher;
 
 use LogicException;
 use Spaze\SecurityTxt\Fetcher\DnsLookup\SecurityTxtDnsProvider;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlContentEncodingException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlExtensionNotLoadedException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotOpenUrlUserAgentInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtCannotParseHostnameException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtConnectedToWrongIpAddressException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtFetcherException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressInvalidException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtHostIpAddressNotPublicException;
@@ -18,6 +20,8 @@ use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoHttpCodeException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNoLocationHeaderException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtOnlyIpv6HostButIpv6DisabledException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtRedirectLoopException;
+use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtRedirectUrlTooLongException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtTooManyRedirectsException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlNotFoundException;
 use Spaze\SecurityTxt\Fetcher\Exceptions\SecurityTxtUrlUnsupportedSchemeException;
@@ -26,9 +30,11 @@ use Spaze\SecurityTxt\Parser\SecurityTxtSplitLines;
 use Spaze\SecurityTxt\Parser\SecurityTxtUrlParser;
 use Spaze\SecurityTxt\SecurityTxtContentType;
 use Spaze\SecurityTxt\SecurityTxtHost;
+use Spaze\SecurityTxt\SecurityTxtPhpUrlWorkarounds;
 use Spaze\SecurityTxt\SecurityTxtPrintableValue;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeInvalid;
 use Spaze\SecurityTxt\Violations\SecurityTxtContentTypeWrongCharset;
+use Spaze\SecurityTxt\Violations\SecurityTxtRedirectNotHttps;
 use Spaze\SecurityTxt\Violations\SecurityTxtTopLevelDiffers;
 use Spaze\SecurityTxt\Violations\SecurityTxtTopLevelPathOnly;
 use Spaze\SecurityTxt\Violations\SecurityTxtWellKnownPathOnly;
@@ -38,6 +44,8 @@ use Uri\WhatWg\Url;
 
 final class SecurityTxtFetcher
 {
+	private const int DEFAULT_MAX_ALLOWED_REDIRECTS = 5;
+	private const int MAX_REDIRECT_URL_LENGTH = 1000;
 
 	/** @var array<string, SecurityTxtRedirects> Keyed by the URL a chain started at, which has to be a string; what the chain holds does not */
 	private array $redirects = [];
@@ -51,12 +59,18 @@ final class SecurityTxtFetcher
 	/** @var list<callable(Url, Url): void> */
 	private array $onRedirect = [];
 
-	/** @var list<callable(Url): void> */
+	/** @var list<callable(Url, int): void> */
 	private array $onUrlNotFound = [];
+
+	/** @var list<callable(SecurityTxtFetcherException): void> */
+	private array $onUrlFailed = [];
+
+	/** @var non-negative-int */
+	private readonly int $maxAllowedRedirects;
 
 
 	/**
-	 * @param non-negative-int $maxAllowedRedirects
+	 * @param non-negative-int|null $maxAllowedRedirects Pass null to use the built-in default (5)
 	 */
 	public function __construct(
 		private readonly SecurityTxtFetcherHttpClient $httpClient,
@@ -64,8 +78,9 @@ final class SecurityTxtFetcher
 		private readonly SecurityTxtSplitLines $splitLines,
 		private readonly SecurityTxtDnsProvider $dnsLookupProvider,
 		private readonly SecurityTxtIpAddressValidator $ipAddressValidator,
-		private readonly int $maxAllowedRedirects = 5,
+		?int $maxAllowedRedirects = null,
 	) {
+		$this->maxAllowedRedirects = $maxAllowedRedirects ?? self::DEFAULT_MAX_ALLOWED_REDIRECTS;
 		$this->validateMaxAllowedRedirects($this->maxAllowedRedirects);
 	}
 
@@ -73,9 +88,12 @@ final class SecurityTxtFetcher
 	/**
 	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlContentEncodingException
 	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtTooManyRedirectsException
+	 * @throws SecurityTxtRedirectLoopException
+	 * @throws SecurityTxtRedirectUrlTooLongException
 	 * @throws SecurityTxtHostNotFoundException
 	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 * @throws SecurityTxtNoHttpCodeException
@@ -102,8 +120,16 @@ final class SecurityTxtFetcher
 		} catch (InvalidUrlException $e) {
 			throw new LogicException("Can't set URL components: {$e->getMessage()}", previous: $e);
 		}
-		$wellKnown = $this->fetchUrl($wellKnownUrl, $host, $noIpv6, $maxAllowedRedirects);
-		$topLevel = $this->fetchUrl($topLevelUrl, $host, $noIpv6, $maxAllowedRedirects);
+		try {
+			$wellKnown = $this->fetchUrl($wellKnownUrl, $host, $noIpv6, $maxAllowedRedirects);
+		} catch (SecurityTxtFetcherException $e) {
+			$wellKnown = $e;
+		}
+		try {
+			$topLevel = $this->fetchUrl($topLevelUrl, $host, $noIpv6, $maxAllowedRedirects);
+		} catch (SecurityTxtFetcherException $e) {
+			$topLevel = $e;
+		}
 		return $this->getResult($wellKnown, $topLevel, $requireTopLevelLocation);
 	}
 
@@ -111,11 +137,13 @@ final class SecurityTxtFetcher
 	/**
 	 * @param non-negative-int|null $maxAllowedRedirects
 	 * @throws SecurityTxtTooManyRedirectsException
+	 * @throws SecurityTxtRedirectLoopException
+	 * @throws SecurityTxtRedirectUrlTooLongException
 	 * @throws SecurityTxtHostNotFoundException
 	 * @throws SecurityTxtHostIpAddressNotPublicException
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlContentEncodingException
 	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
-	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
@@ -128,15 +156,19 @@ final class SecurityTxtFetcher
 	 */
 	private function fetchUrl(Url $url, SecurityTxtHost $host, bool $noIpv6, ?int $maxAllowedRedirects): SecurityTxtFetcherFetchHostResult
 	{
-		$finalUrl = $url;
 		$this->callOnCallback($this->onUrl, $url);
+		$fetcherUrl = new SecurityTxtFetcherUrl($url, $this->getRedirects($url));
 		try {
-			$response = $this->getResponse(new SecurityTxtFetcherUrl($url, $this->getRedirects($url)), $host, $url, $finalUrl, $noIpv6, $maxAllowedRedirects);
+			$response = $this->getResponse($fetcherUrl, $host, $noIpv6);
+			while ($response->getHttpCode() >= 300) {
+				$fetcherUrl = $this->redirect($fetcherUrl->getUrl(), $url, $response, $maxAllowedRedirects);
+				$response = $this->getResponse($fetcherUrl, new SecurityTxtHost($fetcherUrl->getUrl()), $noIpv6);
+			}
 			$ipAddress = $response->getIpAddress();
 			$ipAddressType = $response->getIpAddressType();
 			$httpCode = $response->getHttpCode();
 		} catch (SecurityTxtUrlNotFoundException $e) {
-			$this->callOnCallback($this->onUrlNotFound, $finalUrl);
+			$this->callOnCallback($this->onUrlNotFound, $fetcherUrl->getUrl(), $e->getCode());
 			$response = null;
 			$ipAddress = $e->getIpAddress();
 			$ipAddressType = $e->getIpAddressType();
@@ -144,7 +176,7 @@ final class SecurityTxtFetcher
 		}
 		return new SecurityTxtFetcherFetchHostResult(
 			$url,
-			$finalUrl,
+			$fetcherUrl->getUrl(),
 			$ipAddress,
 			$ipAddressType,
 			$httpCode,
@@ -154,25 +186,20 @@ final class SecurityTxtFetcher
 
 
 	/**
-	 * @param non-negative-int|null $maxAllowedRedirects
-	 * @throws SecurityTxtTooManyRedirectsException
-	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtCannotOpenUrlException
+	 * @throws SecurityTxtCannotOpenUrlContentEncodingException
 	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
 	 * @throws SecurityTxtUrlNotFoundException
 	 * @throws SecurityTxtHostIpAddressNotFoundException
 	 * @throws SecurityTxtHostNotFoundException
 	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
 	 * @throws SecurityTxtHostIpAddressNotPublicException
-	 * @throws SecurityTxtCannotParseHostnameException
 	 * @throws SecurityTxtHostIpAddressInvalidException
 	 * @throws SecurityTxtNoHttpCodeException
-	 * @throws SecurityTxtNoLocationHeaderException
-	 * @throws SecurityTxtUrlUnsupportedSchemeException
 	 * @throws SecurityTxtConnectedToWrongIpAddressException
 	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	private function getResponse(SecurityTxtFetcherUrl $url, SecurityTxtHost $host, Url $originalUrl, Url &$finalUrl, bool $noIpv6, ?int $maxAllowedRedirects): SecurityTxtFetcherResponse
+	private function getResponse(SecurityTxtFetcherUrl $url, SecurityTxtHost $host, bool $noIpv6): SecurityTxtFetcherResponse
 	{
 		$ipRecord = $ipv6Record = null;
 		if (filter_var($host->getAscii(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
@@ -186,12 +213,17 @@ final class SecurityTxtFetcher
 			}
 		}
 		if ($ipRecord === null && $ipv6Record === null) {
-			$dnsRecords = $this->dnsLookupProvider->getRecords($url->getUrl(), $host);
+			try {
+				$dnsRecords = $this->dnsLookupProvider->getRecords($url->getUrl(), $host);
+			} catch (SecurityTxtHostNotFoundException $e) {
+				// The provider is asked about one URL and knows nothing of the redirects that led there, which are what makes a host nobody typed make sense
+				throw new SecurityTxtHostNotFoundException($url->getUrl(), $host, $url->getRedirects(), $e);
+			}
 			$ipRecord = $dnsRecords->getIpRecord();
 			$ipv6Record = $dnsRecords->getIpv6Record();
 		}
 		if ($noIpv6 && $ipv6Record !== null && $ipRecord === null) {
-			throw new SecurityTxtOnlyIpv6HostButIpv6DisabledException($host, $ipv6Record, $url->getUrl());
+			throw new SecurityTxtOnlyIpv6HostButIpv6DisabledException($host, $ipv6Record, $url->getUrl(), $url->getRedirects());
 		}
 		if (!$noIpv6 && $ipv6Record !== null) {
 			$ipAddress = $ipv6Record;
@@ -201,16 +233,13 @@ final class SecurityTxtFetcher
 			$ipAddressType = SecurityTxtIpAddressType::V4;
 		}
 		if (!isset($ipAddress) || !isset($ipAddressType)) {
-			throw new SecurityTxtHostIpAddressNotFoundException($url->getUrl(), $host);
+			throw new SecurityTxtHostIpAddressNotFoundException($url->getUrl(), $host, $url->getRedirects());
 		}
-		$this->ipAddressValidator->validate($ipAddress, $ipAddressType, $host, $url->getUrl());
+		$this->ipAddressValidator->validate($ipAddress, $ipAddressType, $host, $url->getUrl(), $url->getRedirects());
 
 		$response = $this->httpClient->getResponse($url, $host, $ipAddress, $ipAddressType);
 		if ($response->getHttpCode() >= 400) {
 			throw new SecurityTxtUrlNotFoundException($url->getUrl(), $response->getHttpCode(), $ipAddress, $ipAddressType);
-		}
-		if ($response->getHttpCode() >= 300) {
-			return $this->redirect($url->getUrl(), $originalUrl, $response, $finalUrl, $noIpv6, $maxAllowedRedirects);
 		}
 		return $response;
 	}
@@ -218,13 +247,53 @@ final class SecurityTxtFetcher
 
 	/**
 	 * @throws SecurityTxtNotFoundException
+	 * @throws SecurityTxtFetcherException
 	 */
-	private function getResult(SecurityTxtFetcherFetchHostResult $wellKnown, SecurityTxtFetcherFetchHostResult $topLevel, bool $requireTopLevelLocation): SecurityTxtFetchResult
-	{
+	private function getResult(
+		SecurityTxtFetcherFetchHostResult|SecurityTxtFetcherException $wellKnown,
+		SecurityTxtFetcherFetchHostResult|SecurityTxtFetcherException $topLevel,
+		bool $requireTopLevelLocation,
+	): SecurityTxtFetchResult {
 		$errors = $warnings = [];
-		$wellKnownContents = $wellKnown->isRegularHtmlPage() || $wellKnown->isTruncated() ? null : $wellKnown->getContents();
-		$topLevelContents = $topLevel->isRegularHtmlPage() || $topLevel->isTruncated() ? null : $topLevel->getContents();
-		if ($wellKnownContents === null && $topLevelContents === null) {
+		$wellKnownContents = $wellKnown instanceof SecurityTxtFetcherException || $wellKnown->isRegularHtmlPage() || $wellKnown->isTruncated() ? null : $wellKnown->getContents();
+		$topLevelContents = $topLevel instanceof SecurityTxtFetcherException || $topLevel->isRegularHtmlPage() || $topLevel->isTruncated() ? null : $topLevel->getContents();
+		if ($wellKnown instanceof SecurityTxtFetcherFetchHostResult && $wellKnownContents !== null) {
+			if ($topLevel instanceof SecurityTxtFetcherException) {
+				$this->callOnCallback($this->onUrlFailed, $topLevel);
+			}
+			if ($topLevel instanceof SecurityTxtFetcherException || $topLevelContents === null) {
+				if ($requireTopLevelLocation) {
+					$warnings[] = new SecurityTxtWellKnownPathOnly($topLevel instanceof SecurityTxtFetcherException ? $topLevel : null);
+				}
+			} elseif ($wellKnownContents !== $topLevelContents) {
+				// `equals()` ignores the fragment unless told otherwise, and a host picks the fragment of a final URL through its `Location` header
+				if (!$wellKnown->getFinalUrl()->equals($topLevel->getFinalUrl(), UriComparisonMode::IncludeFragment)) {
+					$warnings[] = new SecurityTxtTopLevelDiffers($wellKnownContents, $topLevelContents);
+				}
+			}
+			$result = $wellKnown;
+			$contents = $wellKnownContents;
+		} elseif ($topLevel instanceof SecurityTxtFetcherFetchHostResult && $topLevelContents !== null) {
+			if ($wellKnown instanceof SecurityTxtFetcherException) {
+				$this->callOnCallback($this->onUrlFailed, $wellKnown);
+			}
+			// A code other than one saying there is no file there, a 403 from a firewall say, is what needs fixing more than where the file is
+			$wellKnownHttpCode = $wellKnown instanceof SecurityTxtFetcherFetchHostResult ? $wellKnown->getHttpCode() : null;
+			$errors[] = new SecurityTxtTopLevelPathOnly(
+				$wellKnownHttpCode !== null && $wellKnownHttpCode >= 400 && $wellKnownHttpCode !== 404 && $wellKnownHttpCode !== 410 ? $wellKnownHttpCode : null,
+				$wellKnown instanceof SecurityTxtFetcherException ? $wellKnown : null,
+			);
+			$result = $topLevel;
+			$contents = $topLevelContents;
+		} else {
+			// A location that fails has no file there, so a failure is what gets reported only without a file at either location, the /.well-known/ one's first as RFC 9116
+			// has that location used
+			if ($wellKnown instanceof SecurityTxtFetcherException) {
+				throw $wellKnown;
+			}
+			if ($topLevel instanceof SecurityTxtFetcherException) {
+				throw $topLevel;
+			}
 			$wellKnownUrl = new SecurityTxtPrintableValue($wellKnown->getUrl())->render();
 			$topLevelUrl = new SecurityTxtPrintableValue($topLevel->getUrl())->render();
 			// The `'type' => ...->value` and the spelled out chains below are scalar on purpose: unlike the exceptions that take a case, a `Url` or a chain itself,
@@ -251,28 +320,18 @@ final class SecurityTxtFetcher
 				],
 				$wellKnown->getUrl(),
 			);
-		} elseif ($wellKnownContents !== null && $topLevelContents === null) {
-			if ($requireTopLevelLocation) {
-				$warnings[] = new SecurityTxtWellKnownPathOnly();
-			}
-			$result = $wellKnown;
-			$contents = $wellKnownContents;
-		} elseif ($wellKnownContents === null) {
-			$errors[] = new SecurityTxtTopLevelPathOnly();
-			$result = $topLevel;
-			$contents = $topLevelContents;
-		} elseif ($wellKnownContents !== $topLevelContents) {
-			// `equals()` ignores the fragment unless told otherwise, and a host picks the fragment of a final URL through its `Location` header
-			if (!$wellKnown->getFinalUrl()->equals($topLevel->getFinalUrl(), UriComparisonMode::IncludeFragment)) {
-				$warnings[] = new SecurityTxtTopLevelDiffers($wellKnownContents, $topLevelContents);
-			}
-			$result = $wellKnown;
-			$contents = $wellKnownContents;
-		} else {
-			$result = $wellKnown;
-			$contents = $wellKnownContents;
 		}
 		$this->callOnCallback($this->onFinalUrl, $result->getFinalUrl());
+
+		// The last hop is the final URL, and the file location check is what reports that one
+		$redirects = $this->redirects[new SecurityTxtPrintableValue($result->getUrl())->render()] ?? new SecurityTxtRedirects();
+		foreach (array_slice($redirects->toStrings(), 0, -1) as $redirect) {
+			$redirectUrl = Url::parse($redirect);
+			if ($redirectUrl !== null && $redirectUrl->getScheme() === 'http') {
+				$errors[] = new SecurityTxtRedirectNotHttps($result->getUrl(), $redirectUrl);
+				break;
+			}
+		}
 
 		$contentTypeHeader = $result->getContentType();
 		// The URL that answered, not the one the check was built from: a header comes from a response, and after a redirect that response is somewhere else
@@ -297,7 +356,7 @@ final class SecurityTxtFetcher
 	/**
 	 * @param list<callable> $onCallbacks
 	 */
-	private function callOnCallback(array $onCallbacks, Url ...$params): void
+	private function callOnCallback(array $onCallbacks, Url|int|SecurityTxtFetcherException ...$params): void
 	{
 		foreach ($onCallbacks as $onCallback) {
 			$onCallback(...$params);
@@ -333,7 +392,7 @@ final class SecurityTxtFetcher
 
 
 	/**
-	 * @param callable(Url $url): void $onUrlNotFound
+	 * @param callable(Url $url, int $httpCode): void $onUrlNotFound
 	 */
 	public function addOnUrlNotFound(callable $onUrlNotFound): void
 	{
@@ -342,49 +401,82 @@ final class SecurityTxtFetcher
 
 
 	/**
+	 * Called only when the file at the other location is used, a failure that leaves no file anywhere is thrown instead
+	 *
+	 * @param callable(SecurityTxtFetcherException $exception): void $onUrlFailed
+	 */
+	public function addOnUrlFailed(callable $onUrlFailed): void
+	{
+		$this->onUrlFailed[] = $onUrlFailed;
+	}
+
+
+	/**
 	 * @param non-negative-int|null $maxAllowedRedirects
-	 * @throws SecurityTxtCannotOpenUrlException
-	 * @throws SecurityTxtCannotOpenUrlExtensionNotLoadedException
-	 * @throws SecurityTxtConnectedToWrongIpAddressException
-	 * @throws SecurityTxtHostIpAddressInvalidException
-	 * @throws SecurityTxtHostIpAddressNotPublicException
-	 * @throws SecurityTxtHostIpAddressNotFoundException
-	 * @throws SecurityTxtHostNotFoundException
-	 * @throws SecurityTxtOnlyIpv6HostButIpv6DisabledException
-	 * @throws SecurityTxtNoHttpCodeException
 	 * @throws SecurityTxtNoLocationHeaderException
-	 * @throws SecurityTxtNotFoundException
 	 * @throws SecurityTxtTooManyRedirectsException
-	 * @throws SecurityTxtUrlNotFoundException
+	 * @throws SecurityTxtRedirectLoopException
+	 * @throws SecurityTxtRedirectUrlTooLongException
 	 * @throws SecurityTxtUrlUnsupportedSchemeException
 	 * @throws SecurityTxtCannotParseHostnameException
-	 * @throws SecurityTxtCannotOpenUrlUserAgentInvalidException
 	 */
-	private function redirect(Url $url, Url $originalUrl, SecurityTxtFetcherResponse $response, Url &$finalUrl, bool $noIpv6, ?int $maxAllowedRedirects): SecurityTxtFetcherResponse
+	private function redirect(Url $url, Url $originalUrl, SecurityTxtFetcherResponse $response, ?int $maxAllowedRedirects): SecurityTxtFetcherUrl
 	{
 		if ($maxAllowedRedirects === null) {
 			$maxAllowedRedirects = $this->maxAllowedRedirects;
 		}
 		$location = $response->getHeader('Location');
 		if ($location === null) {
-			throw new SecurityTxtNoLocationHeaderException($url, $response->getHttpCode());
+			throw new SecurityTxtNoLocationHeaderException($url, $response->getHttpCode(), $this->getRedirects($originalUrl));
 		} else {
 			$originalUrlString = new SecurityTxtPrintableValue($originalUrl)->render();
-			$locationUrl = $this->urlParser->getRedirectUrl($location, $url);
+			// A URL this long is suspicious for a security.txt, and it is refused before the header is parsed, see the method, which measuring the parsed URL replaces
+			if (SecurityTxtPhpUrlWorkarounds::getRedirectUrlMaxLength($location, $url) > self::MAX_REDIRECT_URL_LENGTH) {
+				throw new SecurityTxtRedirectUrlTooLongException($url, $this->getRedirects($originalUrl), self::MAX_REDIRECT_URL_LENGTH);
+			}
+			try {
+				$locationUrl = $this->urlParser->getRedirectUrl($location, $url);
+			} catch (SecurityTxtCannotParseHostnameException $e) {
+				// The parser is handed one header and knows nothing of the redirects that led to it
+				throw new SecurityTxtCannotParseHostnameException($location, $this->getRedirects($originalUrl), $e);
+			}
 			$this->callOnCallback($this->onRedirect, $url, $locationUrl);
+			$visited = $this->isVisited($locationUrl, $originalUrl, $this->redirects[$originalUrlString] ?? new SecurityTxtRedirects());
 			// Where the redirect led rather than the header that said so: a `Location` can be relative, or spell a host in punycode, and this is a record of the URLs a check
 			// went to and not of what a server typed
 			$this->redirects[$originalUrlString] = ($this->redirects[$originalUrlString] ?? new SecurityTxtRedirects())->withRedirect($locationUrl);
-			$finalUrl = $locationUrl;
-			if ($this->redirects[$originalUrlString]->count() > $maxAllowedRedirects) {
-				throw new SecurityTxtTooManyRedirectsException($url, $this->redirects[$originalUrlString], $maxAllowedRedirects);
+			// Before the count, so the hop that closes a loop is called a loop even when it is also one too many
+			if ($visited) {
+				throw new SecurityTxtRedirectLoopException($url, $this->getRedirects($originalUrl));
 			}
-			// The URL is built first on purpose: its constructor is where an unsupported scheme is refused, and a scheme with no host at all would otherwise be reported as
-			// a hostname that will not parse, losing the redirect chain that says where the host sent us. Settling comes after it for the same reason
-			$fetcherUrl = new SecurityTxtFetcherUrl($locationUrl, $this->getRedirects($originalUrl));
-			$settledUrl = $this->urlParser->normalize($fetcherUrl->getUrl());
-			return $this->getResponse(new SecurityTxtFetcherUrl($settledUrl, $this->getRedirects($originalUrl)), new SecurityTxtHost($settledUrl), $originalUrl, $settledUrl, $noIpv6, $maxAllowedRedirects);
+			if ($this->redirects[$originalUrlString]->count() > $maxAllowedRedirects) {
+				throw new SecurityTxtTooManyRedirectsException($url, $this->getRedirects($originalUrl), $maxAllowedRedirects);
+			}
+			// Settled before the scheme is checked, so an unsupported one is reported with the URL spelled the way this library writes one, which is what a stored result is
+			// read back with: `ftp://ex%41mple.com/` parses to `ftp://exAmple.com/`, which reading it back refuses
+			try {
+				$settledUrl = $this->urlParser->normalize($locationUrl);
+			} catch (SecurityTxtCannotParseHostnameException $e) {
+				throw new SecurityTxtCannotParseHostnameException($locationUrl->toAsciiString(), $this->getRedirects($originalUrl), $e);
+			}
+			return new SecurityTxtFetcherUrl($settledUrl, $this->getRedirects($originalUrl));
 		}
+	}
+
+
+	/**
+	 * Compared as it is going to be fetched, settled, because parsing leaves the case of a letter a percent escape uncovers in a host, and `equals()` ignores the fragment, which
+	 * never reaches the server.
+	 */
+	private function isVisited(Url $locationUrl, Url $originalUrl, SecurityTxtRedirects $redirects): bool
+	{
+		$settledUrl = Url::parse($locationUrl->toAsciiString()) ?? $locationUrl;
+		foreach ([$originalUrl, ...array_filter(array_map(Url::parse(...), $redirects->toStrings()))] as $visitedUrl) {
+			if ($visitedUrl->equals($settledUrl)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 

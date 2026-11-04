@@ -24,7 +24,8 @@ final readonly class PreferredLanguagesSetFieldValue implements FieldProcessor
 	{
 		$regexp = '/\s*([,.;:])\s*/';
 		$separators = preg_match_all($regexp, $value, $matches);
-		$languages = $this->splitProvider->split($regexp, $value);
+		// Splitting an empty value would give one empty language, not none
+		$languages = $value === '' ? [] : $this->splitProvider->split($regexp, $value);
 		if ($languages === false) {
 			throw new LogicException('This should not happen');
 		}

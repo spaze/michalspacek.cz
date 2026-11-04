@@ -134,9 +134,18 @@ final class SecurityTxtCheckHostCli
 			},
 		);
 		$this->checkHost->addOnUrlNotFound(
-			function (Url $url): void {
-				if ($this->verbose) {
+			function (Url $url, int $httpCode): void {
+				if ($this->verbose && ($httpCode === 404 || $httpCode === 410)) {
 					$this->consolePrinter->info('Not found <b>%s</b>', $url);
+				} elseif ($this->verbose) {
+					$this->consolePrinter->info('<b>%s</b> answered with HTTP code %s', $url, (string)$httpCode);
+				}
+			},
+		);
+		$this->checkHost->addOnUrlFailed(
+			function (SecurityTxtFetcherException $exception): void {
+				if ($this->verbose) {
+					$this->consolePrinter->info($exception->getMessageFormat(), ...$exception->getMessageValues());
 				}
 			},
 		);

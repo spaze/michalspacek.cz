@@ -8,19 +8,9 @@ use Spaze\SecurityTxt\Fields\SecurityTxtField;
 final class SecurityTxtContactNotUri extends SecurityTxtFieldNotUri
 {
 
-	public function __construct(string $uri)
+	public function __construct(string $uri, SecurityTxtNotUriReason $reason = SecurityTxtNotUriReason::Unspecified, ?string $correctValue = null, ?string $character = null)
 	{
-		if (filter_var($uri, FILTER_VALIDATE_EMAIL) !== false) {
-			$correctValue = "mailto:{$uri}";
-			$howToFix = 'The value looks like an email address, add the "mailto" schema';
-		} elseif (preg_match('/^\+?[0-9\-. ]+$/', $uri) === 1) {
-			$correctValue = "tel:{$uri}";
-			$howToFix = 'The value looks like a phone number, add the "tel" schema';
-		} else {
-			$correctValue = "https://{$uri}";
-			$howToFix = 'The value looks like a hostname, add the "https" schema';
-		}
-		parent::__construct(func_get_args(), SecurityTxtField::Contact, $uri, 'draft-foudil-securitytxt-03', self::asUrl($correctValue), $howToFix, '2.5.3');
+		parent::__construct(func_get_args(), SecurityTxtField::Contact, $uri, $reason, $correctValue, $character, 'draft-foudil-securitytxt-03', '2.5.3');
 	}
 
 }

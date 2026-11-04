@@ -17,6 +17,9 @@ final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 	/** @var array<string, list<string>> original URL => redirects */
 	private array $allRedirects = [];
 
+	/** @var array<string, array{ip:string, type:SecurityTxtIpAddressType, code:int, redirects:list<string>, html:bool, truncated:bool}> URL => IP address, IP address type, HTTP code, redirects, regular HTML page?, response too long? */
+	private array $securityTxtUrls = [];
+
 
 	/**
 	 * @param array<array-key, mixed>|non-empty-array<string, array{ip:string, type:value-of<SecurityTxtIpAddressType>, code:int, redirects:list<string>, html:bool, truncated:bool}> $securityTxtUrls URL => IP address, IP address type, HTTP code, redirects, regular HTML page?, response too long?
@@ -106,6 +109,14 @@ final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 				$messageValues[] = (string)$components['code'];
 			}
 			$this->ipAddresses[$components['ip']] = [$type, $components['code']];
+			$this->securityTxtUrls[$url] = [
+				'ip' => $components['ip'],
+				'type' => $type,
+				'code' => $components['code'],
+				'redirects' => $redirects,
+				'html' => $components['html'],
+				'truncated' => $components['truncated'],
+			];
 			if ($redirects !== []) {
 				$this->allRedirects[$url] = $redirects;
 				$message .= $components['html'] || $components['truncated'] ? ' (final page after redirects)' : ' (final code after redirects)';
@@ -130,6 +141,17 @@ final class SecurityTxtNotFoundException extends SecurityTxtFetcherException
 	public function getAllRedirects(): array
 	{
 		return $this->allRedirects;
+	}
+
+
+	/**
+	 * Each location as it answered, which `getIpAddresses()` cannot tell apart when both locations resolve to the same address
+	 *
+	 * @return array<string, array{ip:string, type:SecurityTxtIpAddressType, code:int, redirects:list<string>, html:bool, truncated:bool}> URL => IP address, IP address type, HTTP code, redirects, regular HTML page?, response too long?
+	 */
+	public function getSecurityTxtUrls(): array
+	{
+		return $this->securityTxtUrls;
 	}
 
 }
