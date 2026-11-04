@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
+use Nette\Http\SameSite;
 use Nette\Utils\DateTime;
 
 final readonly class Cookies
@@ -29,9 +30,6 @@ final readonly class Cookies
 	}
 
 
-	/**
-	 * @param Response::SameSite*|null $sameSite
-	 */
 	public function set(
 		CookieName $name,
 		string $value,
@@ -40,7 +38,7 @@ final readonly class Cookies
 		?string $domain = null,
 		?bool $secure = null,
 		?bool $httpOnly = null,
-		?string $sameSite = null,
+		?SameSite $sameSite = null,
 	): void {
 		/** @var Response $response Not IResponse, its native setCookie() has no `$sameSite` until nette/http 4.0, see https://github.com/nette/http/issues/200, and Psalm ignores the `@method` that adds it; can't use instanceof check because it's a different Response in tests */
 		$response = $this->response;
