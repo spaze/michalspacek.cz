@@ -162,7 +162,6 @@ parameters:
 			function: 'setcookie()'
 			message: 'use methods from MichalSpacekCz\Http\Cookies'
 			allowIn:
-				- vendor/nette/http/src/Http/Response.php
 				- vendor/paragonie/halite/src/Cookie.php # Unused
 				- vendor/tracy/tracy/src/Tracy/Session/FileSession.php
 	disallowedMethodCalls:
