@@ -32,7 +32,7 @@ final readonly class CrLfUrlInjections
 			$this->httpResponse->setCookie(
 				self::COOKIE_NAME,
 				$match,
-				time() - 31337 * 1337,
+				-31337 * 1337,
 				'/expired=31337*1337seconds/(1.3years)/ago',
 			);
 		}

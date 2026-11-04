@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test\Http;
 
 use DateTimeInterface;
+use Nette\Http\Helpers;
 use Nette\Http\IResponse;
 use Nette\Http\SameSite;
 use Override;
@@ -155,10 +156,11 @@ final class Response implements IResponse
 		?bool $httpOnly = null,
 		SameSite|string|null $sameSite = null,
 	): self {
+		$seconds = Helpers::expirationToSeconds($expire);
 		$this->cookies[$name][] = new Cookie(
 			$name,
 			$value,
-			$expire,
+			$seconds === null ? null : time() + $seconds,
 			$path ?? $this->cookiePath,
 			$domain ?? $this->cookieDomain,
 			$secure ?? $this->cookieSecure,

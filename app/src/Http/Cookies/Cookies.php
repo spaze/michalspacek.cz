@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\Cookies;
 
-use DateTimeInterface;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
 use Nette\Http\SameSite;
-use Nette\Utils\DateTime;
 
 final readonly class Cookies
 {
@@ -16,6 +15,7 @@ final readonly class Cookies
 	public function __construct(
 		private IRequest $request,
 		private IResponse $response,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -33,7 +33,7 @@ final readonly class Cookies
 	public function set(
 		CookieName $name,
 		string $value,
-		DateTimeInterface|int|string $expire,
+		string $expire,
 		?string $path = null,
 		?string $domain = null,
 		?bool $secure = null,
@@ -42,7 +42,7 @@ final readonly class Cookies
 	): void {
 		/** @var Response $response Not IResponse, its native setCookie() has no `$sameSite` until nette/http 4.0, see https://github.com/nette/http/issues/200, and Psalm ignores the `@method` that adds it; can't use instanceof check because it's a different Response in tests */
 		$response = $this->response;
-		$response->setCookie($name->value, $value, (int)DateTime::from($expire)->format('U'), $path, $domain, $secure, $httpOnly, $sameSite);
+		$response->setCookie($name->value, $value, $this->dateTimeFactory->create($expire), $path, $domain, $secure, $httpOnly, $sameSite);
 	}
 
 
