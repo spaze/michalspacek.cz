@@ -9,8 +9,6 @@ use Latte\Tools\LinterExtension;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\CommandLine\Command;
-use Nette\CommandLine\Console;
-use Nette\CommandLine\HelpRenderer;
 use Nette\CommandLine\Normalizers;
 use Override;
 
@@ -24,7 +22,6 @@ final readonly class LatteLinter implements CliArgsProvider
 	public function __construct(
 		private TemplateFactory $templateFactory,
 		private CliArgs $cliArgs,
-		private Console $console,
 	) {
 	}
 
@@ -34,7 +31,7 @@ final readonly class LatteLinter implements CliArgsProvider
 	 * to support custom filters by passing a configured engine to the Linter.
 	 *
 	 * @see https://github.com/nette/latte/issues/286
-	 * @return int The exit status: 0 every template compiles, 1 some do not, 2 bad arguments
+	 * @return int The exit status: 0 every template compiles, 1 some do not
 	 */
 	public function scan(): int
 	{
@@ -43,15 +40,6 @@ final readonly class LatteLinter implements CliArgsProvider
 		$customFilters = $this->templateFactory->getCustomFilters();
 		$this->echo('Custom filters: ' . ($customFilters !== [] ? implode(', ', $customFilters) : 'none installed'));
 
-		$cliArgsError = $this->cliArgs->getError();
-		if ($cliArgsError !== null) {
-			// The help drawn from the definition, so it never says anything else than what the script accepts; through the console, so a terminal
-			// gets it in color, though not with --colors, which a command line that failed to parse never gave
-			$renderer = new HelpRenderer($this->console);
-			$this->echo($renderer->formatText($cliArgsError->getMessage()));
-			echo "\n" . $renderer->renderToString($cliArgsError->command);
-			return 2;
-		}
 		$debug = $this->cliArgs->getFlag(CliArgs::DEBUG); // the flag every script has doubles as the linter's own debug switch
 		if ($debug) {
 			$this->echo('Debug mode enabled');

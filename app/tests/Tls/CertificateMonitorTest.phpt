@@ -84,18 +84,6 @@ final class CertificateMonitorTest extends TestCase
 	}
 
 
-	public function testBadArgumentsStopTheRunBeforeAnything(): void
-	{
-		$cliArgs = CliArgs::parse(CertificateMonitor::class, ['--frobnicate']);
-		$error = $cliArgs->getError();
-		assert($error !== null);
-		[$code, $output] = $this->runMonitor($this->issue(10), $cliArgs);
-		Assert::same(3, $code);
-		Assert::contains('ERROR: ' . $error->getMessage(), $output);
-		Assert::count(0, $this->httpClient->getRequests());
-	}
-
-
 	/**
 	 * @return array{0: int, 1: string} The exit status and the printed report
 	 */

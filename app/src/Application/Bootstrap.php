@@ -9,6 +9,7 @@ use Nette\Bootstrap\Configurator;
 use Nette\CommandLine\ColorDepth;
 use Nette\CommandLine\Console;
 use Nette\CommandLine\HelpRenderer;
+use Nette\CommandLine\ParseException;
 use Nette\DI\Compiler;
 use Nette\DI\Container;
 use Nette\Neon\Neon;
@@ -61,22 +62,28 @@ final class Bootstrap
 	public static function bootCli(string $argsProvider): Container
 	{
 		ServerEnv::setString('HTTPS', 'on');
-		$cliArgs = CliArgs::parse($argsProvider);
-		// A wrong command line still boots the container, the running service reports the error and picks the exit status;
-		// nothing was parsed then, so the shared flags stay off
-		$argsParsed = $cliArgs->getError() === null;
+		try {
+			$cliArgs = CliArgs::parse($argsProvider);
+		} catch (ParseException $e) {
+			// Reported here for the same reason --help is answered here: nothing is running yet that could, so no script or service
+			// has code for a wrong command line. The message with the help goes to STDERR, colored when that stream takes colors, a terminal
+			// or FORCE_COLOR; --colors cannot apply, it would come from the parse that failed. 2 is the usual status for a wrong command line,
+			// 1 being what a script reports it found
+			(new HelpRenderer())->renderError($e);
+			exit(2);
+		}
 		$console = new Console();
-		if ($argsParsed && $cliArgs->getFlag(CliArgs::COLORS) && !$console->hasColors()) {
+		if ($cliArgs->getFlag(CliArgs::COLORS) && !$console->hasColors()) {
 			// What FORCE_COLOR=1 gives, the sixteen colors every terminal and CI log draws; a deeper palette the environment announced stays as detected
 			$console->setColorDepth(ColorDepth::Ansi16);
 		}
-		if ($argsParsed && $cliArgs->getFlag(CliArgs::HELP)) {
+		if ($cliArgs->getFlag(CliArgs::HELP)) {
 			// Answered here like --debug is read, before the container, which the help does not need, so no script has any code for it;
 			// an exit() outside bin/ by design, nothing is running yet that could return a status instead
 			(new HelpRenderer($console))->render($cliArgs->getCommand());
 			exit(0);
 		}
-		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || ($argsParsed && $cliArgs->getFlag(CliArgs::DEBUG));
+		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || $cliArgs->getFlag(CliArgs::DEBUG);
 		$configurator = self::createConfigurator(
 			$debugMode,
 			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),

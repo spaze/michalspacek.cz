@@ -180,22 +180,6 @@ final class ReEncryptionTest extends TestCase
 		Assert::same([$exception], $this->logger->getLogged()); // the whole exception, a flattened message would lose the trace and the cause
 	}
 
-
-	public function testBadArgsAreReportedWithoutSweepingAnything(): void
-	{
-		$cliArgs = CliArgs::parse(ReEncryption::class, ['--frobnicate']);
-		$error = $cliArgs->getError();
-		assert($error !== null);
-		[$code, $output] = $this->runReEncryption(
-			[$this->storage('some storage', 'some_table', 'id_some', 'secret')],
-			$cliArgs,
-		);
-
-		Assert::same(3, $code);
-		Assert::notContains($error->getMessage(), $output); // the error output again, not the report
-		Assert::same([], $this->database->getParamsForQuery(self::SELECT_SQL)); // nothing was even read
-	}
-
 }
 
 TestCaseRunner::run(ReEncryptionTest::class);

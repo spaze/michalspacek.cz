@@ -10,7 +10,6 @@ use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
-use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
 use Nette\CommandLine\Command;
 use Override;
@@ -44,17 +43,11 @@ abstract readonly class PasskeyRegistrationUrl implements CliArgsProvider
 
 
 	/**
-	 * @throws PasskeyRegistrationUrlArgsException
 	 * @throws PasskeyRegistrationDisabledException
 	 * @throws PasskeyRegistrationUrlUserNotFoundException
 	 */
 	public function generate(): string
 	{
-		$error = $this->cliArgs->getError();
-		if ($error !== null) {
-			throw new PasskeyRegistrationUrlArgsException($error);
-		}
-
 		if (!$this->tokens->isEnabled()) {
 			throw new PasskeyRegistrationDisabledException();
 		}

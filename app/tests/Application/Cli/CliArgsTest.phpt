@@ -11,6 +11,7 @@ use Nette\CommandLine\Command;
 use Nette\CommandLine\HelpRenderer;
 use Nette\CommandLine\Normalizers;
 use Nette\CommandLine\Parameters\Parameter;
+use Nette\CommandLine\ParseException;
 use Nette\CommandLine\ParseFailure;
 use Override;
 use Tester\Assert;
@@ -22,19 +23,14 @@ require __DIR__ . '/../../bootstrap.php';
 final class CliArgsTest extends TestCase
 {
 
-	private const string DID_NOT_PARSE = 'The command line did not parse, check getError() first';
-
-
 	public function testSharedFlags(): void
 	{
 		$cliArgs = CliArgs::parse(NoCliArgs::class, []);
-		Assert::null($cliArgs->getError());
 		Assert::false($cliArgs->getFlag(CliArgs::HELP));
 		Assert::false($cliArgs->getFlag(CliArgs::DEBUG));
 		Assert::false($cliArgs->getFlag(CliArgs::COLORS));
 
 		$cliArgs = CliArgs::parse(NoCliArgs::class, ['--help', '--debug', '--colors']);
-		Assert::null($cliArgs->getError());
 		Assert::true($cliArgs->getFlag(CliArgs::HELP));
 		Assert::true($cliArgs->getFlag(CliArgs::DEBUG));
 		Assert::true($cliArgs->getFlag(CliArgs::COLORS));
@@ -44,13 +40,12 @@ final class CliArgsTest extends TestCase
 	public function testHelpIsStandalone(): void
 	{
 		$cliArgs = CliArgs::parse($this->getPathProvider(), ['--help']); // the required path is not demanded
-		Assert::null($cliArgs->getError());
 		Assert::true($cliArgs->getFlag(CliArgs::HELP));
 		Assert::true(CliArgs::parse($this->getPathProvider(), ['-h'])->getFlag(CliArgs::HELP));
 
-		$error = CliArgs::parse($this->getPathProvider(), ['--help', '--nope'])->getError(); // an unknown option is refused as always
-		assert($error !== null);
-		Assert::same('Unknown option `--nope`.', $error->getMessage());
+		Assert::exception(function (): void {
+			CliArgs::parse($this->getPathProvider(), ['--help', '--nope']); // an unknown option is refused as always
+		}, ParseException::class, 'Unknown option `--nope`.');
 	}
 
 
@@ -83,7 +78,6 @@ final class CliArgsTest extends TestCase
 	public function testProviderArgs(): void
 	{
 		$cliArgs = CliArgs::parse($this->getProvider(), ['--waldo', '--out', 'x', 'bar']);
-		Assert::null($cliArgs->getError());
 		Assert::true($cliArgs->getFlag('--waldo'));
 		Assert::same('x', $cliArgs->getArg('--out'));
 		Assert::same('bar', $cliArgs->getArg('foo'));
@@ -102,9 +96,7 @@ final class CliArgsTest extends TestCase
 
 	public function testSharedFlagsAreDefinedBeforeTheProviderArgs(): void
 	{
-		$cliArgs = CliArgs::parse($this->getProvider(), ['--nope']);
-		Assert::notNull($cliArgs->getError());
-		$names = array_map(static fn (Parameter $parameter): string => $parameter->name, $cliArgs->getCommand()->getParameters()); // the definition is there in the error state too
+		$names = array_map(static fn (Parameter $parameter): string => $parameter->name, CliArgs::parse($this->getProvider(), [])->getCommand()->getParameters());
 		Assert::same([CliArgs::HELP, CliArgs::DEBUG, CliArgs::COLORS, '--waldo', '--out', 'foo'], $names);
 	}
 
@@ -130,28 +122,20 @@ final class CliArgsTest extends TestCase
 	}
 
 
-	public function testErrorState(): void
+	public function testWrongCommandLineThrows(): void
 	{
-		$cliArgs = CliArgs::parse($this->getProvider(), ['--nope']);
-		$error = $cliArgs->getError();
-		assert($error !== null);
-		Assert::same('Unknown option `--nope`.', $error->getMessage());
-		Assert::same(ParseFailure::UnknownOption, $error->reason);
-		Assert::same('--nope', $error->token);
-
-		$e = Assert::throws(function () use ($cliArgs): void {
-			$cliArgs->getFlag(CliArgs::DEBUG);
-		}, LogicException::class, self::DID_NOT_PARSE);
-		assert($e instanceof LogicException);
-		Assert::same($error, $e->getPrevious());
-		Assert::throws(function () use ($cliArgs): void {
-			$cliArgs->getArg('foo');
-		}, LogicException::class, self::DID_NOT_PARSE);
+		$e = Assert::exception(function (): void {
+			CliArgs::parse($this->getProvider(), ['--nope']);
+		}, ParseException::class, 'Unknown option `--nope`.');
+		assert($e instanceof ParseException);
+		Assert::same(ParseFailure::UnknownOption, $e->reason);
+		Assert::same('--nope', $e->token);
+		Assert::count(6, $e->command->getParameters()); // the definition comes along, bootCli() draws the help from it
 	}
 
 
 	/**
-	 * The wording is the library's, pinned here once because the scripts print it as it is
+	 * The wording is the library's, pinned here once because bootCli() prints it as it is
 	 */
 	public function testErrorMessages(): void
 	{
@@ -168,7 +152,12 @@ final class CliArgsTest extends TestCase
 		$expected = $actual = [];
 		foreach ($cases as $case => [$provider, $argv, $message]) {
 			$expected[$case] = $message;
-			$actual[$case] = CliArgs::parse($provider, $argv)->getError()?->getMessage();
+			try {
+				CliArgs::parse($provider, $argv);
+				$actual[$case] = null; // shows up under its key below instead of stopping the loop at the first case that no longer throws
+			} catch (ParseException $e) {
+				$actual[$case] = $e->getMessage();
+			}
 		}
 		Assert::same($expected, $actual);
 	}
