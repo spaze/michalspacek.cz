@@ -5,18 +5,22 @@ test: composer-audit composer-validate npm-audit check-file-patterns check-makef
 composer-audit:
 	composer audit
 	composer --working-dir=../dev-tools/ audit
+	composer --working-dir=../lambda-security-txt/ audit
 
 composer-update:
 	composer update
 	composer --working-dir=../dev-tools/ update
+	composer --working-dir=../lambda-security-txt/ update
 
 composer-validate:
 	composer validate
 	composer --working-dir=../dev-tools/ validate --no-check-publish
+	composer --working-dir=../lambda-security-txt/ validate
 
 composer-outdated:
 	composer outdated
 	composer --working-dir=../dev-tools/ outdated
+	composer --working-dir=../lambda-security-txt/ outdated
 
 npm-audit:
 	npm audit
