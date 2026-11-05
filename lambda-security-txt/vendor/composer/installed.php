@@ -3,7 +3,7 @@
         'name' => 'spaze/lambda-security-txt',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '679b5431fa186726bbe799f155f30827a30ba01c',
+        'reference' => 'ab309980addab493fea39e41fcd9dbb170f17d6e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'bref/bref' => array(
-            'pretty_version' => '3.0.14',
-            'version' => '3.0.14.0',
-            'reference' => '3b1dbda5680930187bd44b7c863429e570b35692',
+            'pretty_version' => '3.0.15',
+            'version' => '3.0.15.0',
+            'reference' => '18776f2f9bcf6be47736a33b9dfa301085ee827e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../bref/bref',
             'aliases' => array(),
@@ -101,9 +101,9 @@
             'dev_requirement' => false,
         ),
         'riverline/multipart-parser' => array(
-            'pretty_version' => '2.2.2',
-            'version' => '2.2.2.0',
-            'reference' => 'fadbb1c1f8e66f96eaa36ab8ed13cbc451c6ded7',
+            'pretty_version' => '2.3.0',
+            'version' => '2.3.0.0',
+            'reference' => 'abec534bc0b17e5a5462f0705e2e331458405595',
             'type' => 'library',
             'install_path' => __DIR__ . '/../riverline/multipart-parser',
             'aliases' => array(),
@@ -112,7 +112,7 @@
         'spaze/lambda-security-txt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '679b5431fa186726bbe799f155f30827a30ba01c',
+            'reference' => 'ab309980addab493fea39e41fcd9dbb170f17d6e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
