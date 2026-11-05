@@ -10,6 +10,13 @@ final readonly class PasskeyAddUrl extends PasskeyRegistrationUrl
 {
 
 	#[Override]
+	public static function getDescription(): string
+	{
+		return "Generates a one-time link that adds a new passkey to the user's account, to be opened while signed in as that user";
+	}
+
+
+	#[Override]
 	protected function getDestination(): string
 	{
 		return 'Admin:Passkeys:add';

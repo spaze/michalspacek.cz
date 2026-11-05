@@ -71,6 +71,7 @@
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
 				<referencedMethod name="MichalSpacekCz\Formatter\TexyFormatter::translateText" /> <!-- Used in the passkeys UI, separate PR #737 -->
+				<referencedMethod name="MichalSpacekCz\Application\Bootstrap::bootCli" /> <!-- Used in bin/*.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
 			</errorLevel>
 		</PossiblyUnusedMethod>
 		<PossiblyUnusedReturnValue>

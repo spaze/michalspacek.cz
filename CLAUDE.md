@@ -51,7 +51,7 @@ The `src/*.php` files are handlers that require the autoloader and return a clos
 
 ### CLI scripts
 
-PHP scripts in `app/bin/` (e.g., `certmonitor.php`, `latte-lint.php`, `clean_sessions.php`) use `Bootstrap::bootCli()` to boot the DI container, then resolve and run a service. They have access to the same registered services as the web app. The directory also contains shell scripts for tasks that don't need the DI container.
+PHP scripts in `app/bin/` (e.g., `certmonitor.php`, `latte-lint.php`, `collect_garbage.php`) use `Bootstrap::bootCli()` to boot the DI container, then resolve and run a service. They have access to the same registered services as the web app. The directory also contains shell scripts for tasks that don't need the DI container.
 
 `bootCli()` takes a `CliArgsProvider` class as its argument — this can be the same class that does the work, or a different one. When the running service defines its own args, it's passed to both:
 
@@ -65,16 +65,34 @@ When the script needs no args, pass `NoCliArgs` to `bootCli()` and retrieve the 
 Bootstrap::bootCli(NoCliArgs::class)->getByType(Makefile::class)->checkAllTargetsArePhony(...);
 ```
 
-The class passed to `bootCli()` must implement `CliArgsProvider`, which declares what CLI arguments the script accepts via two static methods:
+The class passed to `bootCli()` must implement `CliArgsProvider`, which declares what the script accepts on a `Nette\CommandLine\Command` (nette/command-line 2.0) with its `addFlag()`/`addArgument()`/`addOption()` methods, the description as the second argument:
 
 ```php
-public static function getArgs(): array          // flag names, e.g. ['--no-ipv6']
-public static function getPositionalArgs(): array // positional args, using Nette\CommandLine\Parser constants
+public static function getDescription(): ?string
+{
+    return 'Checks that every site serves the certificate logged with the API';
+}
+
+public static function defineArgs(Command $command): void
+{
+    $command->addFlag('--no-ipv6', 'Check the certificates over IPv4 only');
+    $command->addArgument('path', 'The directory with the templates to lint', normalizer: Normalizers::realPath(...));
+}
 ```
 
-`bootCli()` automatically adds `--debug` and `--colors` to every script's arg list on top of whatever the provider declares. It parses `$argv` against these definitions and registers the result as a `CliArgs` instance in the DI container, available for injection into any service. `CliArgs` provides `getFlag(string $arg): bool`, `getArg(string $arg): string`, and `getError(): ?string`. `getError()` is non-null when `$argv` parsing failed (e.g. an unknown flag was passed); services should check it before using the args. Scripts that accept no arguments pass `NoCliArgs` (returns empty arrays from both methods).
+`CliArgs::parse()` builds the command with the provider's `getDescription()` as its description, defines `--help` (also `-h`), `--debug` and `--colors` first (`CliArgs::HELP`, `CliArgs::DEBUG` and `CliArgs::COLORS`, every script takes them), then calls the provider's `defineArgs()`, then parses `$argv`. A provider must not define those again: the command refuses a name it already has with an `InvalidArgumentException`, which is a bug, so nothing catches it and the boot dies.
 
-`exit()` belongs in the script file, not in the service class. Services return values or throw exceptions; the script file handles output and exit codes.
+`--help` is answered by `bootCli()` itself, before the container exists, like `--debug` is read: it prints the help `HelpRenderer` draws from the definitions, the descriptions included, and ends the process with status 0, so no script has any code for it. The flag is standalone, so `latte-lint.php --help` works without the required `<path>`. A script reporting a wrong command line can print the same help, `(new HelpRenderer($console))->renderToString($error->command)`, or `(new HelpRenderer())->renderError($error)` for the message and the help on STDERR at once; without a console the renderer writes to STDERR, with the `console` service it would write to STDOUT.
+
+`bootCli()` registers the result as the `cliArgs` service, a `CliArgs` instance available for injection into any service, with `getFlag(string $name): bool`, `getArg(string $name): string`, `getError(): ?ParseException` and `getCommand(): Command`, the definition for `HelpRenderer`. `getFlag()` and `getArg()` throw an `InvalidArgumentException` for a name the provider never defined or defined as another kind, so a typo cannot read as a flag that was not given.
+
+`bootCli()` also registers the `console` service, a `Nette\CommandLine\Console` writing to STDOUT. Color a script's output with its `color()` method, `$this->console->color('red', $text)`: the text comes back wrapped in escape codes when STDOUT is a terminal and `NO_COLOR` is not set, when `FORCE_COLOR` is set, or when `--colors` was given, which wins over `NO_COLOR`; as it is otherwise, and an unknown color name throws either way. Print with `echo`/`printf` like the rest of the script; the console's own `write()` goes straight to the stream, past the output buffering tests capture the output with. Tests pass `new Console(colorDepth: ColorDepth::None)` so the asserted text holds no escape codes.
+
+A wrong command line (an unknown option, a missing argument, a path that does not exist) is not thrown: `getError()` returns the library's `ParseException`, and the service prints its message and picks the exit status. In that state the getters throw a `LogicException`, so services check `getError()` first. Scripts that accept no arguments pass `NoCliArgs`.
+
+Tests never build `CliArgs` by hand, they parse an explicit command line against the real definition: `CliArgs::parse(CertificateMonitor::class, ['--no-ipv6'])`, or `CliArgs::parse(CertificateMonitor::class, ['--frobnicate'])` for the error state.
+
+`exit()` belongs in the script file, not in the service class. Services return values or throw exceptions; the script file handles output and exit codes. The exception is `bootCli()` answering `--help`, where nothing is running yet that could return a status.
 
 ### Config loading order
 

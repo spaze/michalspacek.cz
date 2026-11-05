@@ -9,11 +9,29 @@ namespace Nette\CommandLine;
 
 
 /**
- * Describes value requirement for command-line options and arguments.
+ * How many colors a stream takes; the values are the levels of FORCE_COLOR.
  */
-enum ValueType
+enum ColorDepth: int
 {
-	case None;      // --foo (no value, switch)
-	case Required;  // <file>, --foo <file> (value required)
-	case Optional;  // [file], --foo [file] (value optional)
+	case None = 0;
+	case Ansi16 = 1;
+	case Ansi256 = 2;
+	case TrueColor = 3;
+}
+
+
+/**
+ * What was wrong with the command line.
+ */
+enum ParseFailure
+{
+	case UnknownOption;
+	case UnknownCommand;
+	case MissingCommand;
+	case MissingValue;
+	case UnexpectedValue;
+	case MissingArgument;
+	case UnexpectedArgument;
+	case InvalidValue;
+	case CommandMismatch;
 }

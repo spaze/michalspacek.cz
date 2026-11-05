@@ -6,9 +6,9 @@ namespace MichalSpacekCz\Tls;
 use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
-use Nette\CommandLine\Parser;
+use Nette\CommandLine\Command;
+use Nette\CommandLine\Console;
 use Override;
-use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
 final class CertificateMonitor implements CliArgsProvider
 {
@@ -21,7 +21,7 @@ final class CertificateMonitor implements CliArgsProvider
 	public function __construct(
 		private readonly CertificateGatherer $certificateGatherer,
 		private readonly CertificatesApiClient $certificatesApiClient,
-		private readonly ConsoleColor $color,
+		private readonly Console $console,
 		private readonly CliArgs $cliArgs,
 	) {
 	}
@@ -34,7 +34,7 @@ final class CertificateMonitor implements CliArgsProvider
 	{
 		$cliArgsError = $this->cliArgs->getError();
 		if ($cliArgsError !== null) {
-			$this->error(null, $cliArgsError);
+			$this->error(null, $cliArgsError->getMessage());
 			return 3;
 		}
 		try {
@@ -141,7 +141,7 @@ final class CertificateMonitor implements CliArgsProvider
 	{
 		$this->message(
 			$certificate,
-			$this->color->apply('dark_gray', '%s') . ' ' . $this->color->apply(['light_red', 'bold'], '%s') . ' ' . $this->color->apply('light_red', 'ERROR:') . ' %s',
+			$this->console->color('gray', '%s') . ' ' . $this->console->color('red', '%s') . ' ' . $this->console->color('red', 'ERROR:') . ' %s',
 			$message,
 		);
 	}
@@ -151,7 +151,7 @@ final class CertificateMonitor implements CliArgsProvider
 	{
 		$this->message(
 			$certificate,
-			$this->color->apply('dark_gray', '%s') . ' ' . $this->color->apply(['light_green', 'bold'], '%s') . ' ' . $this->color->apply('light_green', 'INFO:') . ' %s',
+			$this->console->color('gray', '%s') . ' ' . $this->console->color('lime', '%s') . ' ' . $this->console->color('lime', 'INFO:') . ' %s',
 			$message,
 		);
 	}
@@ -169,9 +169,16 @@ final class CertificateMonitor implements CliArgsProvider
 
 
 	#[Override]
-	public static function defineArgs(Parser $parser): void
+	public static function getDescription(): string
 	{
-		$parser->addSwitch(self::NO_IPV6);
+		return 'Checks that every site serves the certificate logged with the API, on each address of its name, and that none is about to expire';
+	}
+
+
+	#[Override]
+	public static function defineArgs(Command $command): void
+	{
+		$command->addFlag(self::NO_IPV6, 'Check the certificates over IPv4 only, skip the AAAA records');
 	}
 
 }

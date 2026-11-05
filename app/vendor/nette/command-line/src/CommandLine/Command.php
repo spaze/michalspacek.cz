@@ -1,0 +1,439 @@
+<?php declare(strict_types=1);
+
+/**
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ */
+
+namespace Nette\CommandLine;
+
+use Nette\CommandLine\Help\{Section, Text};
+use Nette\CommandLine\Parameters\{Argument, Flag, NameSyntax, Option, Parameter};
+use function func_get_args, is_string;
+
+
+/**
+ * The definition of a command line: a program or one of its commands, with parameters, subcommands and the texts
+ * of its help. Commands form a tree whose root is the program.
+ */
+final class Command
+{
+	/** @var ?list<string>  the usage lines written by hand; null generates them from the definitions */
+	public readonly ?array $usage;
+
+	/** the command line has to name one of the commands below, unless a standalone flag answers */
+	public readonly bool $commandRequired;
+
+	/** what ParseResult::run() calls when the command line runs this command */
+	public readonly ?\Closure $handler;
+
+	private ?self $parent = null;
+
+	/** @var list<Flag|Option|Argument|self|Section|Text>  in the order the help shows them */
+	private array $items = [];
+
+
+	/**
+	 * @param  string|list<string>|null  $usage
+	 * @param  ?\Closure  $handler  what ParseResult::run() calls when the command line runs this command; it is only bound,
+	 *   an attribute on it is refused
+	 */
+	public function __construct(
+		public readonly ?string $name = null,
+		public readonly ?string $description = null,
+		string|array|null $usage = null,
+		bool $commandRequired = false,
+		?\Closure $handler = null,
+	) {
+		$this->usage = is_string($usage) ? [$usage] : $usage;
+		$this->commandRequired = $commandRequired;
+		$this->handler = $handler;
+		if ($handler !== null) {
+			HandlerBinding::checkSignature($handler, described: false);
+		}
+	}
+
+
+	/**
+	 * Creates the program the attributes of the handler describe: #[Command] and the inputs its parameters declare. Its
+	 * name is the one the attribute gives, never derived from the method; without it the help names the script.
+	 */
+	public static function from(\Closure $handler): self
+	{
+		$declared = HandlerBinding::findCommand($handler) ?? new Attributes\Command;
+		return self::createFromAttributes($handler, $declared, $declared->name);
+	}
+
+
+	/** A copy would share the subcommands and parameters, which know the original as their command. */
+	private function __clone()
+	{
+	}
+
+
+	/**
+	 * Adds a flag, a named parameter without a value such as --verbose. It parses as true when used, null when not.
+	 * @param  ?string  $alias  a short name such as -v
+	 * @param  bool  $standalone  answers on its own like --help: other flags as given, nothing else checked or converted
+	 * @param  bool  $negatable  --no-name turns a flag with a long name off, which parses as false
+	 * @param  ?string  $defaultDescription  the default in words for the help; a blank one leaves it out
+	 */
+	public function addFlag(
+		string $name,
+		?string $description = null,
+		?string $alias = null,
+		bool $standalone = false,
+		bool $negatable = false,
+		mixed $default = null,
+		?string $defaultDescription = null,
+		bool $repeatable = false,
+		bool $hidden = false,
+	): Flag
+	{
+		$flag = new Flag($this, ...func_get_args());
+		$this->assertNamesAvailable([$flag->name, $flag->alias, $flag->negation]);
+		return $this->items[] = $flag;
+	}
+
+
+	/**
+	 * Adds an option with a value such as --output <file>.
+	 * @param  ?string  $alias  a short name such as -o
+	 * @param  ?string  $valueName  names the value in the help, e.g. 'file' shows as --output <file>, and replaces the enum values there
+	 * @param  bool  $valueOptional  usable without its value, then true; the next token is its value only if it is an enum value
+	 * @param  list<non-empty-string>|class-string<\BackedEnum>|null  $enum  the allowed values, or a backed enum to parse the value into
+	 * @param  ?(\Closure(mixed): mixed)  $normalizer  converts the value and reports a bad one by throwing
+	 * @param  ?string  $defaultDescription  the default in words for the help; a blank one leaves it out
+	 */
+	public function addOption(
+		string $name,
+		?string $description = null,
+		?string $alias = null,
+		?string $valueName = null,
+		bool $valueOptional = false,
+		array|string|null $enum = null,
+		?\Closure $normalizer = null,
+		mixed $default = null,
+		?string $defaultDescription = null,
+		bool $repeatable = false,
+		bool $hidden = false,
+	): Option
+	{
+		$option = new Option($this, ...func_get_args());
+		$this->assertNamesAvailable([$option->name, $option->alias]);
+		if ($option->valueOptional) {
+			foreach ($this->collectDescendants() as $command) {
+				if (in_array($command->name, $option->enum ?? [], true)) {
+					throw new \InvalidArgumentException("Value '$command->name' of option $option->name is the name of command '{$command->getFullName()}', which it would take.");
+				}
+			}
+		}
+
+		return $this->items[] = $option;
+	}
+
+
+	/**
+	 * Adds a positional argument such as <input>.
+	 * @param  list<non-empty-string>|class-string<\BackedEnum>|null  $enum  the allowed values, or a backed enum to parse the value into
+	 * @param  ?(\Closure(mixed): mixed)  $normalizer  converts the value and reports a bad one by throwing
+	 * @param  ?string  $defaultDescription  the default in words for the help; a blank one leaves it out
+	 */
+	public function addArgument(
+		string $name,
+		?string $description = null,
+		bool $optional = false,
+		array|string|null $enum = null,
+		?\Closure $normalizer = null,
+		mixed $default = null,
+		?string $defaultDescription = null,
+		bool $repeatable = false,
+		bool $hidden = false,
+	): Argument
+	{
+		$argument = new Argument($this, ...func_get_args());
+
+		$arguments = $this->getArguments();
+		$previous = end($arguments) ?: null;
+		if ($this->getCommands()) {
+			throw new \InvalidArgumentException("{$this->getLabel()} has subcommands, so it cannot take argument '$name'.");
+		} elseif (array_filter($arguments, fn(Argument $other) => $other->name === $name)) {
+			throw new \InvalidArgumentException("Argument '$name' is already defined.");
+		} elseif (!$optional && $default !== null) {
+			throw new \InvalidArgumentException("Argument '$name' is required, so its default value would never be used. Mark it as optional.");
+		} elseif ($previous?->repeatable) {
+			throw new \InvalidArgumentException("Argument '$name' cannot follow repeatable argument '$previous->name', which consumes all remaining values.");
+		} elseif ($previous?->optional && !$optional) {
+			throw new \InvalidArgumentException("Required argument '$name' cannot follow optional argument '$previous->name'.");
+		}
+
+		return $this->items[] = $argument;
+	}
+
+
+	/**
+	 * Adds a command such as check in "tool check src". It inherits the options of this command.
+	 * @param  string|list<string>|null  $usage  the usage line(s) written by hand; null generates them from the definitions
+	 * @param  bool  $commandRequired  the command line has to name one of the commands below, unless a standalone flag answers
+	 * @param  ?\Closure  $handler  what ParseResult::run() calls when the command line runs this command; it is only bound,
+	 *   an attribute on it is refused
+	 */
+	public function addCommand(
+		string $name,
+		?string $description = null,
+		string|array|null $usage = null,
+		bool $commandRequired = false,
+		?\Closure $handler = null,
+	): self
+	{
+		return $this->attach(new self(...func_get_args()));
+	}
+
+
+	/**
+	 * Adds the command the attributes of the handler describe: #[Command] and the inputs its parameters declare; the
+	 * name is derived from the method unless the attribute gives it.
+	 */
+	public function addCommandFrom(\Closure $handler): self
+	{
+		$declared = HandlerBinding::findCommand($handler) ?? new Attributes\Command;
+		return $this->attach(self::createFromAttributes(
+			$handler,
+			$declared,
+			$declared->name ?? HandlerBinding::deriveCommandName($handler),
+		));
+	}
+
+
+	/**
+	 * Adds a command for every public method of the object with the attribute #[Command], in the order the class
+	 * declares them, each as addCommandFrom() given that method. One that is not public is refused, a method the class
+	 * keeps to itself it hands over by addCommandFrom().
+	 * @return list<self>
+	 */
+	public function addCommandsFrom(object $handlers): array
+	{
+		$commands = [];
+		foreach ((new \ReflectionObject($handlers))->getMethods() as $method) {
+			if (!$method->getAttributes(Attributes\Command::class)) {
+				continue;
+			} elseif (!$method->isPublic()) {
+				throw new \InvalidArgumentException("Method $method->class::$method->name() has the attribute #[Command] but is not public; addCommandsFrom() adds public methods only.");
+			}
+
+			$commands[] = $this->addCommandFrom($method->getClosure($method->isStatic() ? null : $handlers));
+		}
+
+		return $commands;
+	}
+
+
+	private static function createFromAttributes(\Closure $handler, Attributes\Command $declared, ?string $name): self
+	{
+		$command = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor(); // the constructor refuses the attributes
+		$command->name = $name;
+		$command->description = $declared->description;
+		$command->usage = is_string($declared->usage) ? [$declared->usage] : $declared->usage;
+		$command->commandRequired = $declared->commandRequired;
+		$command->handler = $handler;
+		HandlerBinding::checkSignature($handler, described: true);
+		HandlerBinding::addParameters($command, $handler);
+		return $command;
+	}
+
+
+	/**
+	 * Attaches a command created with the inputs of its handler, once its name and options pass the checks against the
+	 * path, so a refused one leaves the tree as it was.
+	 */
+	private function attach(self $command): self
+	{
+		if ($this->getArguments()) {
+			throw new \InvalidArgumentException("{$this->getLabel()} takes arguments, so it cannot have subcommands.");
+		}
+
+		$name = $command->name ?? throw new \InvalidArgumentException('A closure or __invoke() given to addCommandFrom() has no name to derive the command from; give it by name: of the attribute #[Command].');
+		NameSyntax::assertWordName($name, 'Command');
+		if (array_filter($this->getCommands(), fn(self $other) => $other->name === $name)) {
+			throw new \InvalidArgumentException("Command '$name' is already defined.");
+		}
+
+		foreach ($this->getPath() as $level) {
+			foreach ($level->getOptions() as $option) {
+				if ($option instanceof Option && $option->valueOptional && in_array($name, $option->enum ?? [], true)) {
+					throw new \InvalidArgumentException("Command '$name' is a value of option $option->name, which would take it.");
+				}
+
+				foreach ($command->getOptions() as $own) { // the inputs of the handler, checked against the command alone so far
+					foreach ([$own->name, $own->alias, $own instanceof Flag ? $own->negation : null] as $ownName) {
+						if ($ownName !== null && $option->hasName($ownName)) {
+							throw new \InvalidArgumentException("Option '$ownName' is already defined.");
+						}
+					}
+				}
+			}
+		}
+
+		$command->parent = $this;
+		$this->items[] = $command;
+		return $command;
+	}
+
+
+	/**
+	 * Adds a heading to the help; the definitions that follow belong under it.
+	 */
+	public function addSection(string $title): static
+	{
+		$this->items[] = new Section($title);
+		return $this;
+	}
+
+
+	/**
+	 * Adds a text at this place of the help, printed as it is: not wrapped or collapsed, only its code in backticks is colored.
+	 */
+	public function addText(string $text): static
+	{
+		$this->items[] = new Text($text);
+		return $this;
+	}
+
+
+	public function getParent(): ?self
+	{
+		return $this->parent;
+	}
+
+
+	public function getRoot(): self
+	{
+		return $this->parent?->getRoot() ?? $this;
+	}
+
+
+	/**
+	 * @return list<self>  the commands from the root down to this one
+	 */
+	public function getPath(): array
+	{
+		return [...($this->parent?->getPath() ?? []), $this];
+	}
+
+
+	/**
+	 * Returns the names of the commands below the root down to this one, e.g. 'remote add'; empty for the root.
+	 */
+	public function getFullName(): string
+	{
+		return implode(' ', array_map(fn(self $command) => (string) $command->name, array_slice($this->getPath(), 1)));
+	}
+
+
+	public function getCommand(string $name): self
+	{
+		foreach ($this->getCommands() as $command) {
+			if ($command->name === $name) {
+				return $command;
+			}
+		}
+
+		throw new \InvalidArgumentException("Command '$name' is not defined.");
+	}
+
+
+	/** @return list<self> */
+	public function getCommands(): array
+	{
+		return array_values(array_filter($this->items, fn($item) => $item instanceof self));
+	}
+
+
+	/**
+	 * Returns the parameter by its name; given a class, it also checks the parameter is of that kind.
+	 * @template T of Parameter
+	 * @param  class-string<T>  $type
+	 * @return T
+	 */
+	public function getParameter(string $name, string $type = Parameter::class): Parameter
+	{
+		foreach ($this->getParameters() as $parameter) {
+			if ($parameter->name === $name) {
+				return $parameter instanceof $type
+					? $parameter
+					: throw new \InvalidArgumentException("Parameter '$name' is " . $parameter::class . ", not $type.");
+			}
+		}
+
+		throw new \InvalidArgumentException("Parameter '$name' is not defined.");
+	}
+
+
+	/** @return list<Flag|Option|Argument> */
+	public function getParameters(): array
+	{
+		return array_values(array_filter($this->items, fn($item) => $item instanceof Parameter));
+	}
+
+
+	/** @return list<Flag|Option>  the named parameters, flags included */
+	public function getOptions(): array
+	{
+		return array_values(array_filter($this->items, fn($item) => $item instanceof Flag || $item instanceof Option));
+	}
+
+
+	/** @return list<Argument> */
+	public function getArguments(): array
+	{
+		return array_values(array_filter($this->items, fn($item) => $item instanceof Argument));
+	}
+
+
+	/**
+	 * @return list<Flag|Option|Argument|self|Section|Text>  in the order the help shows them
+	 * @internal
+	 */
+	public function getItems(): array
+	{
+		return $this->items;
+	}
+
+
+	/**
+	 * Refuses names, aliases or negations taken by an option of this command, of a command above it or of a command
+	 * below it. Commands beside it may reuse them.
+	 * @param  list<?string>  $names
+	 */
+	private function assertNamesAvailable(array $names): void
+	{
+		foreach ([...$this->getPath(), ...$this->collectDescendants()] as $command) {
+			foreach ($command->getOptions() as $other) {
+				foreach ($names as $name) {
+					if ($name !== null && $other->hasName($name)) {
+						throw new \InvalidArgumentException("Option '$name' is already defined.");
+					}
+				}
+			}
+		}
+	}
+
+
+	/** @return list<self> */
+	private function collectDescendants(): array
+	{
+		$descendants = [];
+		foreach ($this->getCommands() as $command) {
+			$descendants = [...$descendants, $command, ...$command->collectDescendants()];
+		}
+
+		return $descendants;
+	}
+
+
+	/** @internal */
+	public function getLabel(): string
+	{
+		return $this->parent ? "Command '{$this->getFullName()}'" : 'The program';
+	}
+}

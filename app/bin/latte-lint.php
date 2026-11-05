@@ -9,4 +9,4 @@ use MichalSpacekCz\Templating\LatteLinter;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-Bootstrap::bootCli(LatteLinter::class)->getByType(LatteLinter::class)->scan();
+exit(Bootstrap::bootCli(LatteLinter::class)->getByType(LatteLinter::class)->scan());

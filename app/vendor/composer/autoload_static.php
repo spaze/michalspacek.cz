@@ -16,21 +16,21 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' => 
+        'p' =>
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'W' => 
+        'W' =>
         array (
             'Webmozart\\Assert\\' => 17,
             'Webauthn\\' => 9,
         ),
-        'T' => 
+        'T' =>
         array (
             'Tracy\\' => 6,
             'Texy\\' => 5,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\DeepClone\\' => 27,
             'Symfony\\Contracts\\Translation\\' => 30,
@@ -60,7 +60,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\Encryption\\' => 17,
             'Spaze\\ContentSecurityPolicy\\' => 28,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Log\\' => 8,
             'Psr\\EventDispatcher\\' => 20,
@@ -70,41 +70,40 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
-            'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
         ),
-        'N' => 
+        'N' =>
         array (
             'Nette\\' => 6,
         ),
-        'M' => 
+        'M' =>
         array (
             'MichalSpacekCz\\' => 15,
         ),
-        'L' => 
+        'L' =>
         array (
             'Latte\\' => 6,
         ),
-        'I' => 
+        'I' =>
         array (
             'IPLib\\' => 6,
         ),
-        'D' => 
+        'D' =>
         array (
             'Doctrine\\Deprecations\\' => 22,
         ),
-        'C' => 
+        'C' =>
         array (
             'Cose\\' => 5,
             'Contributte\\Translation\\' => 24,
             'Composer\\Pcre\\' => 14,
             'CBOR\\' => 5,
         ),
-        'B' => 
+        'B' =>
         array (
             'Brick\\Math\\' => 11,
         ),
-        'A' => 
+        'A' =>
         array (
             'AsyncAws\\Lambda\\' => 16,
             'AsyncAws\\Core\\' => 14,
@@ -112,177 +111,173 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpDocumentor\\Reflection\\' => 
+        'phpDocumentor\\Reflection\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
         ),
-        'Webmozart\\Assert\\' => 
+        'Webmozart\\Assert\\' =>
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Webauthn\\' => 
+        'Webauthn\\' =>
         array (
             0 => __DIR__ . '/..' . '/web-auth/webauthn-lib/src',
         ),
-        'Tracy\\' => 
+        'Tracy\\' =>
         array (
             0 => __DIR__ . '/..' . '/tracy/tracy/src',
         ),
-        'Texy\\' => 
+        'Texy\\' =>
         array (
             0 => __DIR__ . '/..' . '/texy/texy/src/Texy',
         ),
-        'Symfony\\Polyfill\\DeepClone\\' => 
+        'Symfony\\Polyfill\\DeepClone\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-deepclone',
         ),
-        'Symfony\\Contracts\\Translation\\' => 
+        'Symfony\\Contracts\\Translation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
         ),
-        'Symfony\\Contracts\\Service\\' => 
+        'Symfony\\Contracts\\Service\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
-        'Symfony\\Contracts\\HttpClient\\' => 
+        'Symfony\\Contracts\\HttpClient\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
         ),
-        'Symfony\\Contracts\\Cache\\' => 
+        'Symfony\\Contracts\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/cache-contracts',
         ),
-        'Symfony\\Component\\VarExporter\\' => 
+        'Symfony\\Component\\VarExporter\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-exporter',
         ),
-        'Symfony\\Component\\Uid\\' => 
+        'Symfony\\Component\\Uid\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/uid',
         ),
-        'Symfony\\Component\\TypeInfo\\' => 
+        'Symfony\\Component\\TypeInfo\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/type-info',
         ),
-        'Symfony\\Component\\Translation\\' => 
+        'Symfony\\Component\\Translation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\String\\' => 
+        'Symfony\\Component\\String\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\Serializer\\' => 
+        'Symfony\\Component\\Serializer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/serializer',
         ),
-        'Symfony\\Component\\PropertyInfo\\' => 
+        'Symfony\\Component\\PropertyInfo\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/property-info',
         ),
-        'Symfony\\Component\\PropertyAccess\\' => 
+        'Symfony\\Component\\PropertyAccess\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/property-access',
         ),
-        'Symfony\\Component\\HttpClient\\' => 
+        'Symfony\\Component\\HttpClient\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/http-client',
         ),
-        'Symfony\\Component\\Filesystem\\' => 
+        'Symfony\\Component\\Filesystem\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
         ),
-        'Symfony\\Component\\Config\\' => 
+        'Symfony\\Component\\Config\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/config',
         ),
-        'Symfony\\Component\\Clock\\' => 
+        'Symfony\\Component\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
         ),
-        'Symfony\\Component\\Cache\\' => 
+        'Symfony\\Component\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
         ),
-        'SpomkyLabs\\Pki\\' => 
+        'SpomkyLabs\\Pki\\' =>
         array (
             0 => __DIR__ . '/..' . '/spomky-labs/pki-framework/src',
         ),
-        'Spaze\\SvgIcons\\' => 
+        'Spaze\\SvgIcons\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/svg-icons-latte/src',
         ),
-        'Spaze\\SubresourceIntegrity\\' => 
+        'Spaze\\SubresourceIntegrity\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/sri-macros/src',
         ),
-        'Spaze\\SecurityTxt\\' => 
+        'Spaze\\SecurityTxt\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/security-txt/src',
         ),
-        'Spaze\\PhpInfo\\' => 
+        'Spaze\\PhpInfo\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/phpinfo/src',
         ),
-        'Spaze\\NonceGenerator\\' => 
+        'Spaze\\NonceGenerator\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/nonce-generator/src',
         ),
-        'Spaze\\Exports\\' => 
+        'Spaze\\Exports\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/feed-exports/src',
         ),
-        'Spaze\\Encryption\\' => 
+        'Spaze\\Encryption\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/encryption/src',
         ),
-        'Spaze\\ContentSecurityPolicy\\' => 
+        'Spaze\\ContentSecurityPolicy\\' =>
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\EventDispatcher\\' => 
+        'Psr\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Clock\\' => 
+        'Psr\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
-        'Psr\\Cache\\' => 
+        'Psr\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'ParagonIE\\HiddenString\\' => 
+        'ParagonIE\\HiddenString\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/hidden-string/src',
         ),
-        'ParagonIE\\Halite\\' => 
+        'ParagonIE\\Halite\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/halite/src',
         ),
-        'ParagonIE\\ConstantTime\\' => 
+        'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'PHP_Parallel_Lint\\PhpConsoleColor\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
-        ),
-        'PHPStan\\PhpDocParser\\' => 
+        'PHPStan\\PhpDocParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
-        'Nette\\' => 
+        'Nette\\' =>
         array (
             0 => __DIR__ . '/..' . '/nette/security/src',
             1 => __DIR__ . '/..' . '/nette/mail/src',
@@ -302,47 +297,47 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             15 => __DIR__ . '/..' . '/nette/http/src',
             16 => __DIR__ . '/..' . '/nette/utils/src',
         ),
-        'MichalSpacekCz\\' => 
+        'MichalSpacekCz\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Latte\\' => 
+        'Latte\\' =>
         array (
             0 => __DIR__ . '/..' . '/latte/latte/src/Latte',
         ),
-        'IPLib\\' => 
+        'IPLib\\' =>
         array (
             0 => __DIR__ . '/..' . '/mlocati/ip-lib/src',
         ),
-        'Doctrine\\Deprecations\\' => 
+        'Doctrine\\Deprecations\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/deprecations/src',
         ),
-        'Cose\\' => 
+        'Cose\\' =>
         array (
             0 => __DIR__ . '/..' . '/web-auth/cose-lib/src',
         ),
-        'Contributte\\Translation\\' => 
+        'Contributte\\Translation\\' =>
         array (
             0 => __DIR__ . '/..' . '/contributte/translation/src',
         ),
-        'Composer\\Pcre\\' => 
+        'Composer\\Pcre\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
-        'CBOR\\' => 
+        'CBOR\\' =>
         array (
             0 => __DIR__ . '/..' . '/spomky-labs/cbor-php/src',
         ),
-        'Brick\\Math\\' => 
+        'Brick\\Math\\' =>
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-        'AsyncAws\\Lambda\\' => 
+        'AsyncAws\\Lambda\\' =>
         array (
             0 => __DIR__ . '/..' . '/async-aws/lambda/src',
         ),
-        'AsyncAws\\Core\\' => 
+        'AsyncAws\\Core\\' =>
         array (
             0 => __DIR__ . '/..' . '/async-aws/core/src',
         ),
@@ -1856,10 +1851,32 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Caching\\Storages\\MemoryStorage' => __DIR__ . '/..' . '/nette/caching/src/Caching/Storages/MemoryStorage.php',
         'Nette\\Caching\\Storages\\SQLiteJournal' => __DIR__ . '/..' . '/nette/caching/src/Caching/Storages/SQLiteJournal.php',
         'Nette\\Caching\\Storages\\SQLiteStorage' => __DIR__ . '/..' . '/nette/caching/src/Caching/Storages/SQLiteStorage.php',
+        'Nette\\CommandLine\\Ansi' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Ansi.php',
+        'Nette\\CommandLine\\Attributes\\Argument' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Attributes/Argument.php',
+        'Nette\\CommandLine\\Attributes\\Command' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Attributes/Command.php',
+        'Nette\\CommandLine\\Attributes\\Flag' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Attributes/Flag.php',
+        'Nette\\CommandLine\\Attributes\\Option' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Attributes/Option.php',
+        'Nette\\CommandLine\\Color' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Color.php',
+        'Nette\\CommandLine\\ColorDepth' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/enums.php',
+        'Nette\\CommandLine\\Command' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Command.php',
         'Nette\\CommandLine\\Console' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Console.php',
-        'Nette\\CommandLine\\Option' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Option.php',
+        'Nette\\CommandLine\\HandlerBinding' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/HandlerBinding.php',
+        'Nette\\CommandLine\\HelpRenderer' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/HelpRenderer.php',
+        'Nette\\CommandLine\\Help\\Section' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Help/Section.php',
+        'Nette\\CommandLine\\Help\\Text' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Help/Text.php',
+        'Nette\\CommandLine\\Normalizers' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Normalizers.php',
+        'Nette\\CommandLine\\Parameters\\Argument' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parameters/Argument.php',
+        'Nette\\CommandLine\\Parameters\\Flag' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parameters/Flag.php',
+        'Nette\\CommandLine\\Parameters\\NameSyntax' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parameters/NameSyntax.php',
+        'Nette\\CommandLine\\Parameters\\Option' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parameters/Option.php',
+        'Nette\\CommandLine\\Parameters\\Parameter' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parameters/Parameter.php',
+        'Nette\\CommandLine\\Parameters\\ValueParameter' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parameters/ValueParameter.php',
+        'Nette\\CommandLine\\ParseException' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/exceptions.php',
+        'Nette\\CommandLine\\ParseFailure' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/enums.php',
+        'Nette\\CommandLine\\ParseResult' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/ParseResult.php',
         'Nette\\CommandLine\\Parser' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parser.php',
-        'Nette\\CommandLine\\ValueType' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/enums.php',
+        'Nette\\CommandLine\\Prompt' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Prompt.php',
+        'Nette\\CommandLine\\UsageException' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/exceptions.php',
         'Nette\\ComponentModel\\ArrayAccess' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/ArrayAccess.php',
         'Nette\\ComponentModel\\Component' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/Component.php',
         'Nette\\ComponentModel\\Container' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/Container.php',
@@ -2267,8 +2284,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'PHPStan\\PhpDocParser\\Printer\\DiffElem' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Printer/DiffElem.php',
         'PHPStan\\PhpDocParser\\Printer\\Differ' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Printer/Differ.php',
         'PHPStan\\PhpDocParser\\Printer\\Printer' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Printer/Printer.php',
-        'PHP_Parallel_Lint\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src/ConsoleColor.php',
-        'PHP_Parallel_Lint\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src/InvalidStyleException.php',
         'ParagonIE\\ConstantTime\\Base32' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32.php',
         'ParagonIE\\ConstantTime\\Base32Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32Hex.php',
         'ParagonIE\\ConstantTime\\Base64' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64.php',

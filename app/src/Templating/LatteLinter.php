@@ -8,20 +8,23 @@ use Latte\Tools\Linter;
 use Latte\Tools\LinterExtension;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
-use Nette\CommandLine\Parser;
+use Nette\CommandLine\Command;
+use Nette\CommandLine\Console;
+use Nette\CommandLine\HelpRenderer;
+use Nette\CommandLine\Normalizers;
 use Override;
 
 final readonly class LatteLinter implements CliArgsProvider
 {
 
 	private const string ARG_PATH = 'path';
-	private const string ARG_DEBUG = '--debug';
 	private const string ARG_DISABLE_STRICT_PARSING = '--disable-strict-parsing';
 
 
 	public function __construct(
 		private TemplateFactory $templateFactory,
 		private CliArgs $cliArgs,
+		private Console $console,
 	) {
 	}
 
@@ -31,8 +34,9 @@ final readonly class LatteLinter implements CliArgsProvider
 	 * to support custom filters by passing a configured engine to the Linter.
 	 *
 	 * @see https://github.com/nette/latte/issues/286
+	 * @return int The exit status: 0 every template compiles, 1 some do not, 2 bad arguments
 	 */
-	public function scan(): never
+	public function scan(): int
 	{
 		$this->echo('Latte linter');
 		$this->echo('------------');
@@ -41,11 +45,14 @@ final readonly class LatteLinter implements CliArgsProvider
 
 		$cliArgsError = $this->cliArgs->getError();
 		if ($cliArgsError !== null) {
-			$this->echo(sprintf('Usage: latte-lint <%s> [%s] [%s]', self::ARG_PATH, self::ARG_DEBUG, self::ARG_DISABLE_STRICT_PARSING));
-			$this->echo($cliArgsError);
-			exit(2);
+			// The help drawn from the definition, so it never says anything else than what the script accepts; through the console, so a terminal
+			// gets it in color, though not with --colors, which a command line that failed to parse never gave
+			$renderer = new HelpRenderer($this->console);
+			$this->echo($renderer->formatText($cliArgsError->getMessage()));
+			echo "\n" . $renderer->renderToString($cliArgsError->command);
+			return 2;
 		}
-		$debug = $this->cliArgs->getFlag(self::ARG_DEBUG);
+		$debug = $this->cliArgs->getFlag(CliArgs::DEBUG); // the flag every script has doubles as the linter's own debug switch
 		if ($debug) {
 			$this->echo('Debug mode enabled');
 		}
@@ -63,8 +70,7 @@ final readonly class LatteLinter implements CliArgsProvider
 		$latteEngine->addFunction('isLinkCurrent', static fn(): bool => true);
 		$latteEngine->addFunction('isModuleCurrent', static fn(): bool => true);
 		$linter = new Linter($latteEngine, $debug);
-		$ok = $linter->scanDirectory($this->cliArgs->getArg(self::ARG_PATH));
-		exit($ok ? 0 : 1);
+		return $linter->scanDirectory($this->cliArgs->getArg(self::ARG_PATH)) ? 0 : 1;
 	}
 
 
@@ -75,14 +81,17 @@ final readonly class LatteLinter implements CliArgsProvider
 
 
 	#[Override]
-	public static function defineArgs(Parser $parser): void
+	public static function getDescription(): string
 	{
-		$parser->addSwitch(self::ARG_DEBUG);
-		$parser->addSwitch(self::ARG_DISABLE_STRICT_PARSING);
-		$parser->addArgument(self::ARG_PATH, normalizer: static function (mixed $path): string {
-			assert(is_string($path)); // a positional argument's value always arrives as a string from $argv
-			return Parser::normalizeRealPath($path);
-		});
+		return 'Compiles every Latte template under the directory with the filters and functions of the application installed, so a template using them is checked as well';
+	}
+
+
+	#[Override]
+	public static function defineArgs(Command $command): void
+	{
+		$command->addFlag(self::ARG_DISABLE_STRICT_PARSING, 'Let unknown Latte tags pass as HTML instead of failing the lint');
+		$command->addArgument(self::ARG_PATH, 'The directory with the templates to lint', normalizer: Normalizers::realPath(...));
 	}
 
 }

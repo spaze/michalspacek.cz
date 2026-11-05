@@ -4,6 +4,9 @@ services:
 	cliArgs:
 		type: MichalSpacekCz\Application\Cli\CliArgs
 		imported: true
+	console:
+		type: Nette\CommandLine\Console
+		imported: true
 	- MichalSpacekCz\Application\Error\AppError
 	- MichalSpacekCz\Application\LinkGenerator
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
@@ -262,7 +265,6 @@ services:
 	- Nette\Bridges\ApplicationLatte\TemplateFactory
 	- Nette\Schema\Processor
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
-	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
 	emailEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.email%, %encryption.activeKeyIds.email%, %encryption.keyPrefixes.email%)
 	sessionEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.session%, %encryption.activeKeyIds.session%, %encryption.keyPrefixes.session%)
 	securityEventEncryption: Spaze\Encryption\SymmetricKeyEncryption(%secrets.encryptionKeys.securityEvent%, %encryption.activeKeyIds.securityEvent%, %encryption.keyPrefixes.securityEvent%)
