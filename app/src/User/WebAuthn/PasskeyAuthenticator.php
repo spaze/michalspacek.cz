@@ -108,7 +108,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveRegChallenge());
 		try {
 			$credential = $this->serializer->deserialize($json, PublicKeyCredential::class, 'json');
-		} catch (ExceptionInterface $e) {
+		} catch (ExceptionInterface | WebauthnException $e) {
 			throw new PasskeyRegistrationCredentialDeserializationException(previous: $e);
 		}
 
@@ -198,7 +198,7 @@ final readonly class PasskeyAuthenticator implements WebAuthnAuthenticator
 		$challenge = $this->getValidChallenge($this->passkeySessionSection->getRemoveAuthChallenge());
 		try {
 			$credential = $this->serializer->deserialize($json, PublicKeyCredential::class, 'json');
-		} catch (ExceptionInterface $e) {
+		} catch (ExceptionInterface | WebauthnException $e) {
 			throw new PasskeyAuthenticationCredentialDeserializationException(previous: $e);
 		}
 
