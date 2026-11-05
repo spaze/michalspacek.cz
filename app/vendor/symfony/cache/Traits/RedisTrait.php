@@ -89,7 +89,7 @@ trait RedisTrait
      *
      * @throws InvalidArgumentException when the DSN is invalid
      */
-    public static function createConnection(#[\SensitiveParameter] string $dsn, array $options = []): \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|Relay|RelayCluster
+    public static function createConnection(#[\SensitiveParameter] string $dsn, #[\SensitiveParameter] array $options = []): \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|Relay|RelayCluster
     {
         $scheme = match (true) {
             str_starts_with($dsn, 'redis:') => 'redis',
@@ -579,12 +579,11 @@ trait RedisTrait
         if ($this->redis instanceof RelayCluster) {
             $prefix = Relay::SCAN_PREFIX & $this->redis->getOption(Relay::OPT_SCAN) ? '' : $this->redis->getOption(Relay::OPT_PREFIX);
             $prefixLen = \strlen($prefix ?? '');
-            $pattern = $prefix.$namespace.'*';
+            $pattern = addcslashes($prefix.$namespace, '*?[]\\').'*';
             foreach ($this->redis->_masters() as $ipAndPort) {
-                $address = implode(':', $ipAndPort);
                 $cursor = null;
                 do {
-                    $keys = $this->redis->scan($cursor, $address, $pattern, 1000);
+                    $keys = $this->redis->scan($cursor, $ipAndPort, $pattern, 1000);
                     if (isset($keys[1]) && \is_array($keys[1])) {
                         $cursor = $keys[0];
                         $keys = $keys[1];
@@ -634,7 +633,7 @@ trait RedisTrait
                 $prefix = \defined('Redis::SCAN_PREFIX') && (\Redis::SCAN_PREFIX & $host->getOption(\Redis::OPT_SCAN)) ? '' : $host->getOption(\Redis::OPT_PREFIX);
                 $prefixLen = \strlen($host->getOption(\Redis::OPT_PREFIX) ?? '');
             }
-            $pattern = $prefix.$namespace.'*';
+            $pattern = addcslashes($prefix.$namespace, '*?[]\\').'*';
 
             if (!version_compare($info['redis_version'], '2.8', '>=')) {
                 // As documented in Redis documentation (http://redis.io/commands/keys) using KEYS
@@ -677,25 +676,34 @@ trait RedisTrait
             static $del;
             $del ??= (class_exists(UNLINK::class) ? 'unlink' : 'del');
 
-            $this->pipeline(static function () use ($ids, $del) {
+            $results = $this->pipeline(static function () use ($ids, $del) {
                 foreach ($ids as $id) {
                     yield $del => [$id];
                 }
-            })->rewind();
+            });
+
+            foreach ($results as $result) {
+                if ($result instanceof ErrorInterface) {
+                    return false;
+                }
+            }
         } else {
             static $unlink = true;
 
             if ($unlink) {
                 try {
-                    $unlink = false !== $this->redis->unlink($ids);
+                    $result = $this->redis->unlink($ids);
+                    $unlink = false !== $result;
                 } catch (\Throwable) {
                     $unlink = false;
                 }
             }
 
             if (!$unlink) {
-                $this->redis->del($ids);
+                $result = $this->redis->del($ids);
             }
+
+            return false !== $result && !$result instanceof ErrorInterface;
         }
 
         return true;

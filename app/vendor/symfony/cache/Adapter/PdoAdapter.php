@@ -54,7 +54,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
      * @throws InvalidArgumentException When PDO error mode is not PDO::ERRMODE_EXCEPTION
      * @throws InvalidArgumentException When namespace contains invalid characters
      */
-    public function __construct(#[\SensitiveParameter] \PDO|string $connOrDsn, string $namespace = '', int $defaultLifetime = 0, array $options = [], ?MarshallerInterface $marshaller = null)
+    public function __construct(#[\SensitiveParameter] \PDO|string $connOrDsn, string $namespace = '', int $defaultLifetime = 0, #[\SensitiveParameter] array $options = [], ?MarshallerInterface $marshaller = null)
     {
         if (\is_string($connOrDsn) && str_contains($connOrDsn, '://')) {
             throw new InvalidArgumentException(\sprintf('Usage of Doctrine DBAL URL with "%s" is not supported. Use a PDO DSN or "%s" instead.', __CLASS__, DoctrineDbalAdapter::class));
@@ -223,13 +223,20 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
             } else {
                 $sql = "TRUNCATE TABLE $this->table";
             }
+            $params = [];
         } else {
-            $namespace = str_replace('_', '!_', $namespace);
-            $sql = "DELETE FROM $this->table WHERE $this->idCol LIKE '$namespace%' ESCAPE '!'";
+            // SQL Server also treats [ as a wildcard, while Oracle rejects an escape character followed by it
+            $namespace = preg_replace('sqlsrv' === $this->getDriver() ? '/[!%_[]/' : '/[!%_]/', '!$0', $namespace);
+            $sql = "DELETE FROM $this->table WHERE $this->idCol LIKE ? ESCAPE '!'";
+            $params = [$namespace.'%'];
         }
 
         try {
-            $conn->exec($sql);
+            if ($params) {
+                $conn->prepare($sql)->execute($params);
+            } else {
+                $conn->exec($sql);
+            }
         } catch (\PDOException) {
         }
 
