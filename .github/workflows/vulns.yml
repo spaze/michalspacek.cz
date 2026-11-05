@@ -19,6 +19,9 @@ jobs:
     - uses: symfonycorp/security-checker-action@258311ef7ac571f1310780ef3d79fc5abef642b5 # v5
       with:
           lock: app/composer.lock
+    - uses: symfonycorp/security-checker-action@258311ef7ac571f1310780ef3d79fc5abef642b5 # v5
+      with:
+          lock: lambda-security-txt/composer.lock
 
   composer-audit:
     runs-on: ubuntu-latest
@@ -36,6 +39,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
       - run: composer --working-dir=dev-tools install
       - run: make --directory=app composer-audit
+      - run: make --directory=lambda-security-txt composer-audit
 
   npm-audit:
     runs-on: ubuntu-latest
