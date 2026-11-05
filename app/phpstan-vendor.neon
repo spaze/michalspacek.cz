@@ -132,6 +132,7 @@ parameters:
 			message: 'it is not a cryptographically secure generator, use random_int() instead'
 			allowIn:
 				- vendor/nette/caching/src/Caching/Storages/FileStorage.php
+				- vendor/nette/caching/src/Caching/Storages/SQLiteStorage.php
 				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
 				- vendor/symfony/filesystem/Filesystem.php
 				- vendor/symfony/translation/PseudoLocalizationTranslator.php
@@ -141,6 +142,7 @@ parameters:
 			message: 'it is not a cryptographically secure generator, use random_bytes() instead'
 			allowIn:
 				- vendor/async-aws/core/src/Credentials/*.php
+				- vendor/nette/utils/src/Utils/FileSystem.php
 				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
 				- vendor/symfony/filesystem/Filesystem.php
 				- vendor/tracy/tracy/src/Tracy/Logger/FireLogger.php
