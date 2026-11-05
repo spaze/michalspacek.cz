@@ -20,11 +20,11 @@ final class ArticlePublishedElsewhereTest extends TestCase
 	{
 		$article = new ArticlePublishedElsewhere(
 			42,
-			Html::fromText('Title'),
+			Html::text('Title'),
 			'title-texy',
 			'https://example.com/article',
 			new DateTime('2024-01-01'),
-			Html::fromText('Excerpt'),
+			Html::text('Excerpt'),
 			'excerpt-texy',
 			'Source Name',
 			'https://example.com/source',

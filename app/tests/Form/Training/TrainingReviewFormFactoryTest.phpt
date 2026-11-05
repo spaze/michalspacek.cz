@@ -88,7 +88,7 @@ final class TrainingReviewFormFactoryTest extends TestCase
 				'John Deere',
 				'Comp Any',
 				'Team Le-ad',
-				Html::fromHtml('<strong>foo</strong>'),
+				Html::html('<strong>foo</strong>'),
 				'**foo**',
 				'https://example.com',
 				false,

@@ -54,7 +54,7 @@ final class FiltersTest extends TestCase
 			}
 
 		};
-		$html = Html::fromText('foo');
+		$html = Html::text('foo');
 		Assert::same('__toString', $this->filters->formatPossiblyUnsafeHtml($toString)->render());
 		Assert::same('<code>__toString</code>', $this->filters->formatPossiblyUnsafeHtml('`%s`', $toString)->render());
 		Assert::same('__toString', $this->filters->formatPossiblyUnsafeHtml($toStringNoInterface)->render());

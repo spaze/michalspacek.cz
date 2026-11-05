@@ -16,7 +16,7 @@ final class PhotoTest extends TestCase
 
 	public function testGetters(): void
 	{
-		$description = Html::fromText('A photo description');
+		$description = Html::text('A photo description');
 		$sizes = [new PhotoFile('photo-large.jpg', 1600, 1200), new PhotoFile('photo-small.jpg', 13, 37)];
 		$photo = new Photo('A Title', new PhotoFile('photo.jpg', 808, 303), $description, $sizes);
 		Assert::same('A Title', $photo->getTitle());

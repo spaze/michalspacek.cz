@@ -20,8 +20,8 @@ final class TalkSlidesCollectionTest extends TestCase
 
 	public function testAddCountGetByIdByNumberByAlias(): void
 	{
-		$slide1 = new TalkSlide(11, 'slide1', 1, 'slide1.jpg', 'slide1-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null);
-		$slide2 = new TalkSlide(22, 'slide2', 2, 'slide2.jpg', 'slide2-alt.jpg', null, 'Title 2', Html::fromText('Notes 2'), 'Notes 2', null, null, null);
+		$slide1 = new TalkSlide(11, 'slide1', 1, 'slide1.jpg', 'slide1-alt.jpg', null, 'Title 1', Html::text('Notes 1'), 'Notes 1', null, null, null);
+		$slide2 = new TalkSlide(22, 'slide2', 2, 'slide2.jpg', 'slide2-alt.jpg', null, 'Title 2', Html::text('Notes 2'), 'Notes 2', null, null, null);
 		$slides = new TalkSlideCollection(123);
 		$slides->add($slide1);
 		$slides->add($slide2);

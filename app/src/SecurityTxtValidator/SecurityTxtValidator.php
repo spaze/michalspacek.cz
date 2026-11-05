@@ -94,7 +94,7 @@ final readonly class SecurityTxtValidator
 		}
 		$host = $validatorUrl->getHost();
 		$template->host = $host;
-		$template->displayUrl = Html::fromText($host); // Initial value, checkHost() will set the URL, if there's no error
+		$template->displayUrl = Html::text($host); // Initial value, checkHost() will set the URL, if there's no error
 
 		try {
 			$this->checkHost($validatorUrl, $template);

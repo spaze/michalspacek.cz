@@ -65,7 +65,7 @@ final readonly class TrainingTestDataFactory
 			$dateId,
 			null,
 			$trainingAction,
-			Html::fromText($trainingName),
+			Html::text($trainingName),
 			$trainingStart,
 			$trainingEnd,
 			false,

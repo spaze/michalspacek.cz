@@ -35,7 +35,7 @@ final class TalkSlidesFormFactoryTest extends TestCase
 		$talkId = 123;
 		$onSuccessMessage = $onSuccessType = $onSuccessTalkId = $result = null;
 		$slides = new TalkSlideCollection($talkId);
-		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null));
+		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::text('Notes 1'), 'Notes 1', null, null, null));
 		$form = $this->talkSlidesFormFactory->create(
 			function (Html $message, string $type, int $talkId) use (&$onSuccessMessage, &$onSuccessType, &$onSuccessTalkId): void {
 				$onSuccessMessage = $message->render();
@@ -62,7 +62,7 @@ final class TalkSlidesFormFactoryTest extends TestCase
 	{
 		$talkId = 123;
 		$slides = new TalkSlideCollection($talkId);
-		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null));
+		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::text('Notes 1'), 'Notes 1', null, null, null));
 		$form = $this->talkSlidesFormFactory->create(function (): void {
 		}, $talkId, $slides, 0, new Request('foo'));
 		$this->applicationPresenter->anchorForm($form);

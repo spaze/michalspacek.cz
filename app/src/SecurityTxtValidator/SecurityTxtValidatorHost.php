@@ -26,7 +26,7 @@ final readonly class SecurityTxtValidatorHost
 			$parsedUrl = $this->securityTxtUrlParser->getUrl($url);
 			$validatorUrl = new SecurityTxtValidatorUrl($this->securityTxtUrlParser->getBaseUrl($parsedUrl));
 		} catch (SecurityTxtCannotParseHostnameException) {
-			throw new SecurityTxtValidatorHostException(Html::fromText('Invalid URL or hostname'));
+			throw new SecurityTxtValidatorHostException(Html::text('Invalid URL or hostname'));
 		}
 		// The fetcher takes these two and refuses everything else, but only once the request has been made, which for the
 		// Lambda means an invocation spent to be told no. Refused here instead, so a scheme nothing can be fetched over
@@ -49,7 +49,7 @@ final readonly class SecurityTxtValidatorHost
 				->addHtml(Html::el('code')->addText('(◔_◔)')));
 		}
 		if (strlen($validatorUrl->getAsciiHost()) > 253) {
-			throw new SecurityTxtValidatorHostException(Html::fromText('The hostname is too long, way too long ')
+			throw new SecurityTxtValidatorHostException(Html::text('The hostname is too long, way too long ')
 				->addHtml(Html::el('code')->addText('/┆\\')));
 		}
 		return $validatorUrl;

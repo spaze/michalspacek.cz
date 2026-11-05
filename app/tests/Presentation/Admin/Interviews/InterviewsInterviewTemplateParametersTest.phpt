@@ -35,7 +35,7 @@ final class InterviewsInterviewTemplateParametersTest extends TestCase
 			'Source Name',
 			'https://example.com/source',
 		);
-		$pageTitle = Html::fromText('Page Title');
+		$pageTitle = Html::text('Page Title');
 		$params = new InterviewsInterviewTemplateParameters($pageTitle, $interview);
 		Assert::same($pageTitle, $params->pageTitle);
 		Assert::same($interview, $params->interview);

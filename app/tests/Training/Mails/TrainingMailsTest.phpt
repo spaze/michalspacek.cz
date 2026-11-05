@@ -42,7 +42,7 @@ final class TrainingMailsTest extends TestCase
 			new DateTime(),
 			new DateTime(),
 			'Ing. Train',
-			Html::fromText('Ing. Train'),
+			Html::text('Ing. Train'),
 			true,
 			'Venue',
 			null,
