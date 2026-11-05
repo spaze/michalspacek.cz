@@ -89,6 +89,7 @@ parameters:
 			allowInMethods:
 				- 'Nette\Utils\Process::terminate' # Executes taskkill on Windows
 				- 'Tracy\DevelopmentStrategy::renderExceptionCli'  # can run a browser if configured
+				- 'Nette\CommandLine\Console::measureTerminalWidth' # Runs stty or mode to measure the terminal the help is wrapped to
 		-
 			function: 'proc_open()'
 			allowInMethods:
