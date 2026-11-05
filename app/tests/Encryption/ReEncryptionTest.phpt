@@ -61,7 +61,7 @@ final class ReEncryptionTest extends TestCase
 	 */
 	private function runReEncryption(array $storages, ?CliArgs $cliArgs = null): array
 	{
-		$reEncryption = new ReEncryption($storages, $this->columnReEncryptor, $cliArgs ?? new CliArgs([], null), new ConsoleColor());
+		$reEncryption = new ReEncryption($storages, $this->columnReEncryptor, $cliArgs ?? CliArgs::parse(ReEncryption::class, []), new ConsoleColor());
 		ob_start();
 		$code = $reEncryption->run();
 		$output = ob_get_clean();
@@ -109,7 +109,7 @@ final class ReEncryptionTest extends TestCase
 
 		[$code, $output] = $this->runReEncryption(
 			[$this->storage('some storage', 'some_table', 'id_some', 'secret')],
-			new CliArgs(['--dry-run' => true], null),
+			CliArgs::parse(ReEncryption::class, ['--dry-run']),
 		);
 
 		Assert::same(0, $code);
@@ -182,13 +182,16 @@ final class ReEncryptionTest extends TestCase
 
 	public function testBadArgsAreReportedWithoutSweepingAnything(): void
 	{
+		$cliArgs = CliArgs::parse(ReEncryption::class, ['--frobnicate']);
+		$error = $cliArgs->getError();
+		assert($error !== null);
 		[$code, $output] = $this->runReEncryption(
 			[$this->storage('some storage', 'some_table', 'id_some', 'secret')],
-			new CliArgs([], 'Unknown option --frobnicate'),
+			$cliArgs,
 		);
 
 		Assert::same(3, $code);
-		Assert::notContains('Unknown option --frobnicate', $output); // the error output again, not the report
+		Assert::notContains($error->getMessage(), $output); // the error output again, not the report
 		Assert::same([], $this->database->getParamsForQuery(self::SELECT_SQL)); // nothing was even read
 	}
 

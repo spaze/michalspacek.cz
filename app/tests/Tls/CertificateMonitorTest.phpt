@@ -76,7 +76,7 @@ final class CertificateMonitorTest extends TestCase
 	{
 		$this->httpClient->setStatusCode(403);
 		$this->httpClient->setResponse('{"message":"Invalid credentials"}');
-		[$code, $output] = $this->runMonitor($this->issue(10), new CliArgs([], null));
+		[$code, $output] = $this->runMonitor($this->issue(10), CliArgs::parse(CertificateMonitor::class, []));
 		Assert::same(2, $code);
 		Assert::contains('ERROR: Response from', $output);
 		Assert::contains('not ok, HTTP 403: Invalid credentials', $output);
@@ -85,9 +85,12 @@ final class CertificateMonitorTest extends TestCase
 
 	public function testBadArgumentsStopTheRunBeforeAnything(): void
 	{
-		[$code, $output] = $this->runMonitor($this->issue(10), new CliArgs([], 'Unknown option --frobnicate'));
+		$cliArgs = CliArgs::parse(CertificateMonitor::class, ['--frobnicate']);
+		$error = $cliArgs->getError();
+		assert($error !== null);
+		[$code, $output] = $this->runMonitor($this->issue(10), $cliArgs);
 		Assert::same(3, $code);
-		Assert::contains('ERROR: Unknown option --frobnicate', $output);
+		Assert::contains('ERROR: ' . $error->getMessage(), $output);
 		Assert::count(0, $this->httpClient->getRequests());
 	}
 
@@ -99,7 +102,7 @@ final class CertificateMonitorTest extends TestCase
 	{
 		$logged = new Certificate(self::NAME, null, self::NAME, [self::NAME], $loggedNotAfter->modify('-6 days'), $loggedNotAfter, null, new DateTimeImmutable());
 		$this->httpClient->setResponse(Json::encode(['message' => 'OK', 'certificates' => [$logged]]));
-		return $this->runMonitor($served, new CliArgs(['--no-ipv6' => true], null));
+		return $this->runMonitor($served, CliArgs::parse(CertificateMonitor::class, ['--no-ipv6']));
 	}
 
 

@@ -12,7 +12,7 @@ use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
-use Nette\CommandLine\Parser;
+use Nette\CommandLine\Command;
 use Override;
 
 abstract readonly class PasskeyRegistrationUrl implements CliArgsProvider
@@ -72,9 +72,9 @@ abstract readonly class PasskeyRegistrationUrl implements CliArgsProvider
 
 
 	#[Override]
-	public static function defineArgs(Parser $parser): void
+	public static function defineArgs(Command $command): void
 	{
-		$parser->addArgument(self::ARG_USERNAME);
+		$command->addArgument(self::ARG_USERNAME, 'The user the link is generated for');
 	}
 
 }

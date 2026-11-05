@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\WebAuthn\Registration;
 
-use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
@@ -17,7 +16,6 @@ use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
-use Nette\CommandLine\Parser;
 use Nette\Http\IRequest;
 use Override;
 use Tester\Assert;
@@ -57,16 +55,21 @@ final class PasskeyAddUrlTest extends TestCase
 
 	public function testGenerateThrowsOnArgsError(): void
 	{
-		Assert::exception(function (): void {
-			$this->getPasskeyAddUrl(new CliArgs(['username' => 'waldo'], 'Unknown argument --foo'), false)->generate();
-		}, PasskeyRegistrationUrlArgsException::class, 'Unknown argument --foo');
+		$cliArgs = CliArgs::parse(PasskeyAddUrl::class, ['waldo', '--foo']);
+		$error = $cliArgs->getError();
+		assert($error !== null);
+		$e = Assert::exception(function () use ($cliArgs): void {
+			$this->getPasskeyAddUrl($cliArgs, false)->generate();
+		}, PasskeyRegistrationUrlArgsException::class, $error->getMessage());
+		assert($e instanceof PasskeyRegistrationUrlArgsException);
+		Assert::same($error, $e->getPrevious());
 	}
 
 
 	public function testGenerateThrowsWhenDisabled(): void
 	{
 		Assert::exception(function (): void {
-			$this->getPasskeyAddUrl(new CliArgs(['username' => 'waldo'], null), false)->generate();
+			$this->getPasskeyAddUrl(CliArgs::parse(PasskeyAddUrl::class, ['waldo']), false)->generate();
 		}, PasskeyRegistrationDisabledException::class);
 	}
 
@@ -74,7 +77,7 @@ final class PasskeyAddUrlTest extends TestCase
 	public function testGenerateThrowsWhenUserNotFound(): void
 	{
 		$e = Assert::exception(function (): void {
-			$this->getPasskeyAddUrl(new CliArgs(['username' => 'nobody'], null), true)->generate();
+			$this->getPasskeyAddUrl(CliArgs::parse(PasskeyAddUrl::class, ['nobody']), true)->generate();
 		}, PasskeyRegistrationUrlUserNotFoundException::class);
 		assert($e instanceof PasskeyRegistrationUrlUserNotFoundException);
 		Assert::same('nobody', $e->getUsername());
@@ -84,7 +87,7 @@ final class PasskeyAddUrlTest extends TestCase
 	public function testGenerateReturnsUrl(): void
 	{
 		$this->database->addFetchFieldResult(1337);
-		$url = $this->getPasskeyAddUrl(new CliArgs(['username' => 'leet'], null), true)->generate();
+		$url = $this->getPasskeyAddUrl(CliArgs::parse(PasskeyAddUrl::class, ['leet']), true)->generate();
 		Assert::contains('/passkeys/add#', $url);
 		Assert::same('passkey.add.initiated', $this->database->getParamsArrayForQuery('INSERT INTO security_events')[0]['action']);
 	}
@@ -92,12 +95,10 @@ final class PasskeyAddUrlTest extends TestCase
 
 	public function testDefineArgs(): void
 	{
-		$parser = new Parser();
-		PasskeyAddUrl::defineArgs($parser);
-		Assert::same(['username' => 'leet'], $parser->parse(['leet']));
-		Assert::exception(function () use ($parser): void {
-			$parser->parse([]);
-		}, Exception::class, 'Missing required argument <username>.');
+		Assert::same('leet', CliArgs::parse(PasskeyAddUrl::class, ['leet'])->getArg('username'));
+		$error = CliArgs::parse(PasskeyAddUrl::class, [])->getError();
+		assert($error !== null);
+		Assert::contains('<username>', $error->getMessage());
 	}
 
 }

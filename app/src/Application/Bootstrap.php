@@ -3,11 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\Bootstrap\Configurator;
-use Nette\CommandLine\Parser;
 use Nette\DI\Compiler;
 use Nette\DI\Container;
 use Nette\Neon\Neon;
@@ -22,8 +20,6 @@ final class Bootstrap
 
 	private const string MODE_DEVELOPMENT = 'development';
 	private const string SITE_DIR = __DIR__ . '/../..';
-	private const string DEBUG = '--debug';
-	private const string COLORS = '--colors';
 
 
 	public static function boot(): Container
@@ -63,15 +59,18 @@ final class Bootstrap
 	public static function bootCli(string $argsProvider): Container
 	{
 		ServerEnv::setString('HTTPS', 'on');
-		$cliArgs = self::getCliArgs($argsProvider);
-		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || $cliArgs->getFlag(self::DEBUG);
+		$cliArgs = CliArgs::parse($argsProvider);
+		// A wrong command line still boots the container, the running service reports the error and picks the exit status;
+		// nothing was parsed then, so the two shared flags stay off
+		$argsParsed = $cliArgs->getError() === null;
+		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || ($argsParsed && $cliArgs->getFlag(CliArgs::DEBUG));
 		$configurator = self::createConfigurator(
 			$debugMode,
 			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
 		);
 		$secrets = self::addSecrets($configurator, false);
 		$container = self::createContainer($configurator, $secrets);
-		if ($cliArgs->getFlag(self::COLORS)) {
+		if ($argsParsed && $cliArgs->getFlag(CliArgs::COLORS)) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
 		}
 		$container->addService('cliArgs', $cliArgs);
@@ -207,30 +206,6 @@ final class Bootstrap
 			$compiler->addExtension('containerSecretsChecker', new ContainerSecretsChecker($secrets ?? []));
 		};
 		return $configurator->createContainer();
-	}
-
-
-	/**
-	 * @param class-string<CliArgsProvider> $argsProvider
-	 */
-	private static function getCliArgs(string $argsProvider): CliArgs
-	{
-		$cliArgsParser = new Parser();
-		$argsProvider::defineArgs($cliArgsParser);
-		$cliArgsParser->addSwitch(self::DEBUG); // --debug and --colors are available to every script, but can be readded there for readability
-		$cliArgsParser->addSwitch(self::COLORS);
-		$cliArgsParsed = [];
-		$cliArgsError = null;
-		try {
-			foreach ($cliArgsParser->parse() as $key => $value) {
-				if (is_string($value) || $value === true || $value === null) {
-					$cliArgsParsed[$key] = $value;
-				}
-			}
-		} catch (Exception $e) {
-			$cliArgsError = $e->getMessage();
-		}
-		return new CliArgs($cliArgsParsed, $cliArgsError);
 	}
 
 }

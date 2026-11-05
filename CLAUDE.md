@@ -51,7 +51,7 @@ The `src/*.php` files are handlers that require the autoloader and return a clos
 
 ### CLI scripts
 
-PHP scripts in `app/bin/` (e.g., `certmonitor.php`, `latte-lint.php`, `clean_sessions.php`) use `Bootstrap::bootCli()` to boot the DI container, then resolve and run a service. They have access to the same registered services as the web app. The directory also contains shell scripts for tasks that don't need the DI container.
+PHP scripts in `app/bin/` (e.g., `certmonitor.php`, `latte-lint.php`, `collect_garbage.php`) use `Bootstrap::bootCli()` to boot the DI container, then resolve and run a service. They have access to the same registered services as the web app. The directory also contains shell scripts for tasks that don't need the DI container.
 
 `bootCli()` takes a `CliArgsProvider` class as its argument — this can be the same class that does the work, or a different one. When the running service defines its own args, it's passed to both:
 
@@ -65,14 +65,23 @@ When the script needs no args, pass `NoCliArgs` to `bootCli()` and retrieve the 
 Bootstrap::bootCli(NoCliArgs::class)->getByType(Makefile::class)->checkAllTargetsArePhony(...);
 ```
 
-The class passed to `bootCli()` must implement `CliArgsProvider`, which declares what CLI arguments the script accepts via two static methods:
+The class passed to `bootCli()` must implement `CliArgsProvider`, which declares what the script accepts on a `Nette\CommandLine\Command` (nette/command-line 2.0) with its `addFlag()`/`addArgument()`/`addOption()` methods, the description as the second argument:
 
 ```php
-public static function getArgs(): array          // flag names, e.g. ['--no-ipv6']
-public static function getPositionalArgs(): array // positional args, using Nette\CommandLine\Parser constants
+public static function defineArgs(Command $command): void
+{
+    $command->addFlag('--no-ipv6', 'Check the certificates over IPv4 only');
+    $command->addArgument('path', 'The directory with the templates to lint', normalizer: Normalizers::realPath(...));
+}
 ```
 
-`bootCli()` automatically adds `--debug` and `--colors` to every script's arg list on top of whatever the provider declares. It parses `$argv` against these definitions and registers the result as a `CliArgs` instance in the DI container, available for injection into any service. `CliArgs` provides `getFlag(string $arg): bool`, `getArg(string $arg): string`, and `getError(): ?string`. `getError()` is non-null when `$argv` parsing failed (e.g. an unknown flag was passed); services should check it before using the args. Scripts that accept no arguments pass `NoCliArgs` (returns empty arrays from both methods).
+`CliArgs::parse()` builds the command: it defines `--debug` and `--colors` first (`CliArgs::DEBUG` and `CliArgs::COLORS`, every script takes them), then calls the provider's `defineArgs()`, then parses `$argv`. A provider must not define those two again: the command refuses a name it already has with an `InvalidArgumentException`, which is a bug, so nothing catches it and the boot dies.
+
+`bootCli()` registers the result as the `cliArgs` service, a `CliArgs` instance available for injection into any service, with `getFlag(string $name): bool`, `getArg(string $name): string` and `getError(): ?ParseException`. Both getters throw a `LogicException` for a name the provider never defined or defined as another kind, so a typo cannot read as a flag that was not given.
+
+A wrong command line (an unknown option, a missing argument, a path that does not exist) is not thrown: `getError()` returns the library's `ParseException`, and the service prints its message and picks the exit status. In that state both getters throw too, so services check `getError()` first. Scripts that accept no arguments pass `NoCliArgs`.
+
+Tests never build `CliArgs` by hand, they parse an explicit command line against the real definition: `CliArgs::parse(CertificateMonitor::class, ['--no-ipv6'])`, or `CliArgs::parse(CertificateMonitor::class, ['--frobnicate'])` for the error state.
 
 `exit()` belongs in the script file, not in the service class. Services return values or throw exceptions; the script file handles output and exit codes.
 

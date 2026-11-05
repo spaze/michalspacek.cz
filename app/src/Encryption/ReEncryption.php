@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Encryption;
 
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
-use Nette\CommandLine\Parser;
+use Nette\CommandLine\Command;
 use Override;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 use Throwable;
@@ -33,7 +33,7 @@ final readonly class ReEncryption implements CliArgsProvider
 	{
 		$cliArgsError = $this->cliArgs->getError();
 		if ($cliArgsError !== null) {
-			fprintf(STDERR, "%s\n", $this->color->apply('light_red', $cliArgsError));
+			fprintf(STDERR, "%s\n", $this->color->apply('light_red', $cliArgsError->getMessage()));
 			return 3;
 		}
 		$dryRun = $this->cliArgs->getFlag(self::DRY_RUN);
@@ -82,9 +82,9 @@ final readonly class ReEncryption implements CliArgsProvider
 
 
 	#[Override]
-	public static function defineArgs(Parser $parser): void
+	public static function defineArgs(Command $command): void
 	{
-		$parser->addSwitch(self::DRY_RUN);
+		$command->addFlag(self::DRY_RUN, 'Only report what would be re-encrypted, write nothing');
 	}
 
 }

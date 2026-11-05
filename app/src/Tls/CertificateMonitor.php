@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Tls;
 use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
-use Nette\CommandLine\Parser;
+use Nette\CommandLine\Command;
 use Override;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
@@ -34,7 +34,7 @@ final class CertificateMonitor implements CliArgsProvider
 	{
 		$cliArgsError = $this->cliArgs->getError();
 		if ($cliArgsError !== null) {
-			$this->error(null, $cliArgsError);
+			$this->error(null, $cliArgsError->getMessage());
 			return 3;
 		}
 		try {
@@ -169,9 +169,9 @@ final class CertificateMonitor implements CliArgsProvider
 
 
 	#[Override]
-	public static function defineArgs(Parser $parser): void
+	public static function defineArgs(Command $command): void
 	{
-		$parser->addSwitch(self::NO_IPV6);
+		$command->addFlag(self::NO_IPV6, 'Check the certificates over IPv4 only, skip the AAAA records');
 	}
 
 }
