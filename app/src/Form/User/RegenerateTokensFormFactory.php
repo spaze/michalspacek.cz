@@ -32,6 +32,8 @@ final readonly class RegenerateTokensFormFactory
 
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$values = $form->getValues();
+			assert(is_bool($values->session));
+			assert(is_bool($values->permanent));
 			if ($values->session) {
 				$this->sessionHandler->regenerateId();
 			}

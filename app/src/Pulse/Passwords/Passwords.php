@@ -297,7 +297,7 @@ final readonly class Passwords
 	/**
 	 * Add password storage.
 	 *
-	 * @param ArrayHash<int|string> $values
+	 * @param ArrayHash<mixed> $values
 	 */
 	public function addStorage(ArrayHash $values): void
 	{
