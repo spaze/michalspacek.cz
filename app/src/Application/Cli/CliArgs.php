@@ -16,7 +16,8 @@ use Nette\CommandLine\ParseResult;
 final readonly class CliArgs
 {
 
-	/** Every script takes these two, on top of what its provider defines */
+	/** Every script takes these, on top of what its provider defines */
+	public const string HELP = '--help';
 	public const string DEBUG = '--debug';
 	public const string COLORS = '--colors';
 
@@ -33,8 +34,10 @@ final readonly class CliArgs
 	 */
 	public static function parse(string $provider, ?array $argv = null): self
 	{
-		$command = new Command();
-		// Defined before the provider's own, so a provider that defines one of them again fails in its own defineArgs() frame
+		$command = new Command(description: $provider::getDescription());
+		// Defined before the provider's own, so a provider that defines one of them again fails in its own defineArgs() frame.
+		// Standalone, --help answers even when the required arguments are missing: nothing else is demanded or converted then
+		$command->addFlag(self::HELP, 'Print this help', alias: '-h', standalone: true);
 		$command->addFlag(self::DEBUG, 'Boot with the development config and Tracy in development mode');
 		$command->addFlag(self::COLORS, 'Color the output even when it is not a terminal');
 		$provider::defineArgs($command);
@@ -80,6 +83,15 @@ final readonly class CliArgs
 	public function getError(): ?ParseException
 	{
 		return $this->outcome instanceof ParseException ? $this->outcome : null;
+	}
+
+
+	/**
+	 * @return Command The definition the command line was read against, whether it parsed or not, for `HelpRenderer` to draw the help from
+	 */
+	public function getCommand(): Command
+	{
+		return $this->outcome->command;
 	}
 
 

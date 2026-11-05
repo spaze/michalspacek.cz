@@ -10,6 +10,13 @@ final class NoCliArgs implements CliArgsProvider
 {
 
 	#[Override]
+	public static function getDescription(): ?string
+	{
+		return null;
+	}
+
+
+	#[Override]
 	public static function defineArgs(Command $command): void
 	{
 	}

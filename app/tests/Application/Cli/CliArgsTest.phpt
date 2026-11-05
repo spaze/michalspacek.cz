@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use LogicException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\CommandLine\Command;
+use Nette\CommandLine\HelpRenderer;
 use Nette\CommandLine\Normalizers;
 use Nette\CommandLine\Parameters\Parameter;
 use Nette\CommandLine\ParseFailure;
@@ -28,13 +29,54 @@ final class CliArgsTest extends TestCase
 	{
 		$cliArgs = CliArgs::parse(NoCliArgs::class, []);
 		Assert::null($cliArgs->getError());
+		Assert::false($cliArgs->getFlag(CliArgs::HELP));
 		Assert::false($cliArgs->getFlag(CliArgs::DEBUG));
 		Assert::false($cliArgs->getFlag(CliArgs::COLORS));
 
-		$cliArgs = CliArgs::parse(NoCliArgs::class, ['--debug', '--colors']);
+		$cliArgs = CliArgs::parse(NoCliArgs::class, ['--help', '--debug', '--colors']);
 		Assert::null($cliArgs->getError());
+		Assert::true($cliArgs->getFlag(CliArgs::HELP));
 		Assert::true($cliArgs->getFlag(CliArgs::DEBUG));
 		Assert::true($cliArgs->getFlag(CliArgs::COLORS));
+	}
+
+
+	public function testHelpIsStandalone(): void
+	{
+		$cliArgs = CliArgs::parse($this->getPathProvider(), ['--help']); // the required path is not demanded
+		Assert::null($cliArgs->getError());
+		Assert::true($cliArgs->getFlag(CliArgs::HELP));
+		Assert::true(CliArgs::parse($this->getPathProvider(), ['-h'])->getFlag(CliArgs::HELP));
+
+		$error = CliArgs::parse($this->getPathProvider(), ['--help', '--nope'])->getError(); // an unknown option is refused as always
+		assert($error !== null);
+		Assert::same('Unknown option `--nope`.', $error->getMessage());
+	}
+
+
+	/**
+	 * The layout is the library's, pinned here once because bootCli() prints it as it is; the program is named after the running script
+	 */
+	public function testHelp(): void
+	{
+		$help = (new HelpRenderer(width: 80))->renderToString(CliArgs::parse($this->getPathProvider(), ['--help'])->getCommand());
+		Assert::match(
+			"Usage: %S% [options] <path>\n"
+			. "\n"
+			. "Does something with a path\n"
+			. "\n"
+			. "Options:\n"
+			. "  -h, --help  Print this help\n"
+			. "  --debug     Boot with the development config and Tracy in development mode\n"
+			. "  --colors    Color the output even when it is not a terminal\n"
+			. "\n"
+			. "Arguments:\n"
+			. "  <path>      An existing path\n",
+			$help,
+		);
+
+		$help = (new HelpRenderer(width: 80))->renderToString(CliArgs::parse(NoCliArgs::class, [])->getCommand());
+		Assert::match("Usage: %S% [options]\n\nOptions:\n%A%", $help); // no description, so no blank block for it
 	}
 
 
@@ -60,10 +102,10 @@ final class CliArgsTest extends TestCase
 
 	public function testSharedFlagsAreDefinedBeforeTheProviderArgs(): void
 	{
-		$error = CliArgs::parse($this->getProvider(), ['--nope'])->getError();
-		assert($error !== null);
-		$names = array_map(static fn (Parameter $parameter): string => $parameter->name, $error->command->getParameters());
-		Assert::same([CliArgs::DEBUG, CliArgs::COLORS, '--waldo', '--out', 'foo'], $names);
+		$cliArgs = CliArgs::parse($this->getProvider(), ['--nope']);
+		Assert::notNull($cliArgs->getError());
+		$names = array_map(static fn (Parameter $parameter): string => $parameter->name, $cliArgs->getCommand()->getParameters()); // the definition is there in the error state too
+		Assert::same([CliArgs::HELP, CliArgs::DEBUG, CliArgs::COLORS, '--waldo', '--out', 'foo'], $names);
 	}
 
 
@@ -137,6 +179,13 @@ final class CliArgsTest extends TestCase
 		$provider = new class implements CliArgsProvider {
 
 			#[Override]
+			public static function getDescription(): ?string
+			{
+				return null;
+			}
+
+
+			#[Override]
 			public static function defineArgs(Command $command): void
 			{
 				$command->addFlag(CliArgs::DEBUG);
@@ -157,6 +206,13 @@ final class CliArgsTest extends TestCase
 		$provider = new class implements CliArgsProvider {
 
 			#[Override]
+			public static function getDescription(): string
+			{
+				return 'Does something';
+			}
+
+
+			#[Override]
 			public static function defineArgs(Command $command): void
 			{
 				$command->addFlag('--waldo', 'A flag');
@@ -175,6 +231,13 @@ final class CliArgsTest extends TestCase
 	private function getPathProvider(): string
 	{
 		$provider = new class implements CliArgsProvider {
+
+			#[Override]
+			public static function getDescription(): string
+			{
+				return 'Does something with a path';
+			}
+
 
 			#[Override]
 			public static function defineArgs(Command $command): void

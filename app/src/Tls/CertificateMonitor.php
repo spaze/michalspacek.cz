@@ -169,6 +169,13 @@ final class CertificateMonitor implements CliArgsProvider
 
 
 	#[Override]
+	public static function getDescription(): string
+	{
+		return 'Checks that every site serves the certificate logged with the API, on each address of its name, and that none is about to expire';
+	}
+
+
+	#[Override]
 	public static function defineArgs(Command $command): void
 	{
 		$command->addFlag(self::NO_IPV6, 'Check the certificates over IPv4 only, skip the AAAA records');

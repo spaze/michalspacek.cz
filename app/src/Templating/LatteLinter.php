@@ -9,6 +9,8 @@ use Latte\Tools\LinterExtension;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\CommandLine\Command;
+use Nette\CommandLine\Console;
+use Nette\CommandLine\HelpRenderer;
 use Nette\CommandLine\Normalizers;
 use Override;
 
@@ -22,6 +24,7 @@ final readonly class LatteLinter implements CliArgsProvider
 	public function __construct(
 		private TemplateFactory $templateFactory,
 		private CliArgs $cliArgs,
+		private Console $console,
 	) {
 	}
 
@@ -42,8 +45,11 @@ final readonly class LatteLinter implements CliArgsProvider
 
 		$cliArgsError = $this->cliArgs->getError();
 		if ($cliArgsError !== null) {
-			$this->echo(sprintf('Usage: latte-lint <%s> [%s] [%s]', self::ARG_PATH, CliArgs::DEBUG, self::ARG_DISABLE_STRICT_PARSING));
-			$this->echo($cliArgsError->getMessage());
+			// The help drawn from the definition, so it never says anything else than what the script accepts; through the console, so a terminal
+			// gets it in color, though not with --colors, which a command line that failed to parse never gave
+			$renderer = new HelpRenderer($this->console);
+			$this->echo($renderer->formatText($cliArgsError->getMessage()));
+			echo "\n" . $renderer->renderToString($cliArgsError->command);
 			return 2;
 		}
 		$debug = $this->cliArgs->getFlag(CliArgs::DEBUG); // the flag every script has doubles as the linter's own debug switch
@@ -71,6 +77,13 @@ final readonly class LatteLinter implements CliArgsProvider
 	private function echo(string $message): void
 	{
 		echo "{$message}\n";
+	}
+
+
+	#[Override]
+	public static function getDescription(): string
+	{
+		return 'Compiles every Latte template under the directory with the filters and functions of the application installed, so a template using them is checked as well';
 	}
 
 

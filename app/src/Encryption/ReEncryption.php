@@ -82,6 +82,13 @@ final readonly class ReEncryption implements CliArgsProvider
 
 
 	#[Override]
+	public static function getDescription(): string
+	{
+		return 'Re-encrypts the stored values the encryption library reports as needing it, those encrypted with a key that is no longer the active one or written in a format it has since moved on from';
+	}
+
+
+	#[Override]
 	public static function defineArgs(Command $command): void
 	{
 		$command->addFlag(self::DRY_RUN, 'Only report what would be re-encrypted, write nothing');

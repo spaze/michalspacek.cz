@@ -8,6 +8,7 @@ use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\Bootstrap\Configurator;
 use Nette\CommandLine\ColorDepth;
 use Nette\CommandLine\Console;
+use Nette\CommandLine\HelpRenderer;
 use Nette\DI\Compiler;
 use Nette\DI\Container;
 use Nette\Neon\Neon;
@@ -68,6 +69,12 @@ final class Bootstrap
 		if ($argsParsed && $cliArgs->getFlag(CliArgs::COLORS) && !$console->hasColors()) {
 			// What FORCE_COLOR=1 gives, the sixteen colors every terminal and CI log draws; a deeper palette the environment announced stays as detected
 			$console->setColorDepth(ColorDepth::Ansi16);
+		}
+		if ($argsParsed && $cliArgs->getFlag(CliArgs::HELP)) {
+			// Answered here like --debug is read, before the container, which the help does not need, so no script has any code for it;
+			// an exit() outside bin/ by design, nothing is running yet that could return a status instead
+			(new HelpRenderer($console))->render($cliArgs->getCommand());
+			exit(0);
 		}
 		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || ($argsParsed && $cliArgs->getFlag(CliArgs::DEBUG));
 		$configurator = self::createConfigurator(

@@ -63,6 +63,7 @@ final class PasskeyResetUrlTest extends TestCase
 		}, PasskeyRegistrationUrlArgsException::class, $error->getMessage());
 		assert($e instanceof PasskeyRegistrationUrlArgsException);
 		Assert::same($error, $e->getPrevious());
+		Assert::same($error, $e->getParseException());
 	}
 
 

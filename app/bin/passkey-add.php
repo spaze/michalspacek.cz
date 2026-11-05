@@ -9,6 +9,7 @@ use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisa
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyAddUrl;
+use Nette\CommandLine\HelpRenderer;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -17,7 +18,7 @@ try {
 	echo "To add a new passkey, open this link while signed in:\n" . $addUrl->generate() . "\n";
 	exit(0);
 } catch (PasskeyRegistrationUrlArgsException $e) {
-	fprintf(STDERR, "Usage: passkey-add.php <username>\nGenerates a one-time link to add a new passkey for <username>, open it while signed in as that user.\n%s\n", $e->getMessage());
+	(new HelpRenderer())->renderError($e->getParseException());
 	exit(1);
 } catch (PasskeyRegistrationDisabledException) {
 	fprintf(STDERR, "Error: passkey registration is disabled. To enable it, set authentication.passkeys.registrationEnabled: true in local.neon\n");
