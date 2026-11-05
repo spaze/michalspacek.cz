@@ -3,9 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\User;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Http\Session;
 use Nette\Utils\Html;
 
@@ -13,7 +12,6 @@ final readonly class RegenerateTokensFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private Session $sessionHandler,
 		private PermanentLogin $permanentLogin,
 	) {
@@ -25,7 +23,7 @@ final readonly class RegenerateTokensFormFactory
 	 */
 	public function create(callable $onSuccess): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addCheckbox('session', 'Session id')->setDefaultValue(true);
 		$form->addCheckbox('permanent', 'Permanent login token')->setDefaultValue(true);
 		$form->addSubmit('regenerate', 'Přegenerovat');

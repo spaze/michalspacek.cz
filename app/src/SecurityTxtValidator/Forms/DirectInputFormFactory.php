@@ -3,20 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\SecurityTxtValidator\Forms;
 
-use MichalSpacekCz\Form\FormFactory;
+use Nette\Application\UI\Form;
 use Nette\Forms\Control;
-use Nette\Forms\Form;
 
-final readonly class DirectInputFormFactory
+final class DirectInputFormFactory
 {
 
 	private const int MAX_BYTES = 10_000; // The same as the fetcher's default `maxResponseLength`
-
-
-	public function __construct(
-		private FormFactory $factory,
-	) {
-	}
 
 
 	/**
@@ -24,7 +17,7 @@ final readonly class DirectInputFormFactory
 	 */
 	public function create(callable $onSuccess): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->getElementPrototype()->id = 'form-direct-input';
 		$form->addTextArea('input', 'Enter the contents of your security.txt file')
 			->setHtmlId('direct-input')

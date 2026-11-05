@@ -4,13 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\UpcKeys\UpcKeys;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
 final readonly class UpcKeysSsidFormFactory
 {
 
 	public function __construct(
-		private UnprotectedFormFactory $factory,
 		private UpcKeys $upcKeys,
 	) {
 	}
@@ -21,7 +20,7 @@ final readonly class UpcKeysSsidFormFactory
 	 */
 	public function create(callable $onSuccess, ?string $ssid): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addText('ssid', 'SSID:')
 			->setHtmlAttribute('placeholder', $this->upcKeys->getSsidPlaceholder())
 			->setHtmlAttribute('title', '"UPC" and 7 digits')

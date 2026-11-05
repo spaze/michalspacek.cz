@@ -4,20 +4,18 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 final readonly class TrainingMultipleApplicationsFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private TrainingApplicationStorage $trainingApplicationStorage,
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
@@ -31,7 +29,7 @@ final readonly class TrainingMultipleApplicationsFormFactory
 	 */
 	public function create(callable $onSuccess, TrainingDate $trainingDate): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$applicationsContainer = $form->addContainer('applications');
 		$applications = $this->httpInput->getPostArray('applications');
 		$count = max($applications !== null ? count($applications) : 1, 1);

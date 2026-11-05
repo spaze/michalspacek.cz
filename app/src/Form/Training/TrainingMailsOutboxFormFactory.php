@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Training;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
@@ -12,8 +11,8 @@ use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
+use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
-use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 
@@ -21,7 +20,6 @@ final readonly class TrainingMailsOutboxFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingApplicationStorage $trainingApplicationStorage,
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingMails $trainingMails,
@@ -37,7 +35,7 @@ final readonly class TrainingMailsOutboxFormFactory
 	 */
 	public function create(callable $onSuccess, array $applications): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 
 		$applicationsContainer = $form->addContainer('applications');
 		$additionalInputs = [];

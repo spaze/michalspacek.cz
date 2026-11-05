@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullLogger;
@@ -36,7 +35,6 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 
 
 	public function __construct(
-		private readonly FormFactory $formFactory,
 		private readonly PasskeyAuthenticationControls $controls,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
@@ -164,7 +162,7 @@ final class PasskeyAuthenticationControlsTest extends TestCase
 
 	private function createForm(ReauthKind $kind, ?SecurityEventType $operation = null): Form
 	{
-		$form = $this->formFactory->create();
+		$form = new Form();
 		$this->controls->addReauthTo($form, $kind, $operation);
 		$this->applicationPresenter->anchorForm($form);
 		$field = $form->getComponent('credential');

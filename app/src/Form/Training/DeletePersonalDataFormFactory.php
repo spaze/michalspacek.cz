@@ -4,12 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use Exception;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Trainings\Trainings;
+use Nette\Application\UI\Form;
 use Nette\Database\Explorer;
-use Nette\Forms\Form;
 use Tracy\Debugger;
 
 final readonly class DeletePersonalDataFormFactory
@@ -17,7 +16,6 @@ final readonly class DeletePersonalDataFormFactory
 
 	public function __construct(
 		private Explorer $database,
-		private FormFactory $factory,
 		private Trainings $trainings,
 		private TrainingDates $trainingDates,
 		private TrainingFiles $files,
@@ -27,7 +25,7 @@ final readonly class DeletePersonalDataFormFactory
 
 	public function create(callable $onSuccess): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addSubmit('delete', 'Smazat osobní údaje');
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$this->database->beginTransaction();

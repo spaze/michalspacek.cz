@@ -4,21 +4,19 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Pulse;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Sites;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 final readonly class PasswordsStorageAlgorithmFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Companies $companies,
 		private Sites $sites,
@@ -34,7 +32,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 	 */
 	public function create(callable $onSuccess, int $newDisclosures): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 
 		// Company
 		$companyContainer = $form->addContainer('company');

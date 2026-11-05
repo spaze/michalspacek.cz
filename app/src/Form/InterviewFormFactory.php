@@ -8,15 +8,14 @@ use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 
 final readonly class InterviewFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private FormValidatorRuleTexy $ruleTexy,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Interviews $interviews,
@@ -30,7 +29,7 @@ final readonly class InterviewFormFactory
 	 */
 	public function create(callable $onSuccess, ?Interview $interview = null): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addText('action', 'Akce:')
 			->setRequired('Zadejte prosím akci')
 			->addRule(Form::MaxLength, 'Maximální délka akce je %d znaků', 200);

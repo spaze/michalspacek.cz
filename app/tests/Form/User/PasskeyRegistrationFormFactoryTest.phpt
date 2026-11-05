@@ -7,7 +7,6 @@ namespace MichalSpacekCz\Form\User;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Database\ResultSet;
@@ -49,7 +48,6 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly FormFactory $factory,
 		private readonly PasskeyFormControls $passkeyFormControls,
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly PasskeyAuthenticatorMock $passkeyAuthenticator,
@@ -158,7 +156,6 @@ final class PasskeyRegistrationFormFactoryTest extends TestCase
 	private function getForm(PasskeyRegistration $registration, string $tokenString): Form
 	{
 		$factory = new PasskeyRegistrationFormFactory(
-			$this->factory,
 			$registration,
 			$this->passkeyFormControls,
 			$this->translator,

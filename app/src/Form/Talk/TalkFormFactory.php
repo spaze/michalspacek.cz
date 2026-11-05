@@ -5,15 +5,14 @@ namespace MichalSpacekCz\Form\Talk;
 
 use MichalSpacekCz\Application\Locale\Locales;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
@@ -22,7 +21,6 @@ final readonly class TalkFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private FormValidators $validators,
 		private FormValidatorRuleTexy $ruleTexy,
 		private TrainingControlsFactory $trainingControlsFactory,
@@ -39,7 +37,7 @@ final readonly class TalkFormFactory
 	 */
 	public function create(callable $onSuccess, ?Talk $talk = null): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$allTalks = $this->getAllTalksExcept($talk?->getId());
 
 		$form->addInteger('translationGroup', 'Skupina překladů:')

@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\SecurityTxtValidator\Forms;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\SecurityTxtValidator\SecurityTxtValidator;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
 final readonly class ClearCacheFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private SecurityTxtValidator $validator,
 	) {
 	}
@@ -22,7 +20,7 @@ final readonly class ClearCacheFormFactory
 	 */
 	public function create(callable $onSuccess, ?string $host): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addSubmit('clear', 'check again');
 		$form->onSuccess[] = function () use ($onSuccess, $host): void {
 			if ($host !== null) {

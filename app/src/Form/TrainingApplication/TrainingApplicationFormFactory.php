@@ -5,23 +5,21 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 final readonly class TrainingApplicationFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private Translator $translator,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private TrainingDates $trainingDates,
@@ -44,7 +42,7 @@ final readonly class TrainingApplicationFormFactory
 		array $dates,
 		TrainingApplicationSessionSection $sessionSection,
 	): Form {
-		$form = $this->factory->create();
+		$form = new Form();
 
 		$inputDates = [];
 		$multipleDates = count($dates) > 1;

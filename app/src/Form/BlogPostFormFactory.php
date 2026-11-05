@@ -21,11 +21,11 @@ use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use MichalSpacekCz\Twitter\TwitterCards;
+use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -38,7 +38,6 @@ final readonly class BlogPostFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private FormValidators $validators,
 		private FormValidatorRuleTexy $ruleTexy,
 		private Translator $translator,
@@ -59,7 +58,7 @@ final readonly class BlogPostFormFactory
 
 	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
 			->setRequired(false)
 			->setDefaultValue($post === null ? $this->blogPostTranslation->getNextTranslationId() : null);

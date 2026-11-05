@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\Notifications\UserSecurityNotifier;
@@ -20,7 +19,6 @@ final readonly class AccountNotificationEmailFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private UserAccounts $userAccounts,
 		private User $user,
 		private Manager $manager,
@@ -38,7 +36,7 @@ final readonly class AccountNotificationEmailFormFactory
 	 */
 	public function create(callable $onSuccess): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$email = $form->addEmail('notificationEmail', $this->translator->translate('messages.account.notificationEmail.label'))
 			->setRequired($this->translator->translate('messages.account.notificationEmail.required'));
 		$userId = $this->manager->getUserId($this->user);

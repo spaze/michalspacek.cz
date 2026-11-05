@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
@@ -13,16 +12,15 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 
 final readonly class TrainingApplicationAdminFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingApplicationStorage $trainingApplicationStorage,
 		private TrainingDates $trainingDates,
 		private UpcomingTrainingDates $upcomingTrainingDates,
@@ -39,7 +37,7 @@ final readonly class TrainingApplicationAdminFormFactory
 	 */
 	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 
 		$attendeeInputs = $this->trainingControlsFactory->addAttendee($form);
 		$form->addCheckbox('familiar', 'Tykání:');

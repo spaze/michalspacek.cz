@@ -5,17 +5,15 @@ namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyCredentialNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Passkeys;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class PasskeyRenameFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private Passkeys $passkeys,
 		private Translator $translator,
 		private PasskeyFormControls $passkeyFormControls,
@@ -29,7 +27,7 @@ final readonly class PasskeyRenameFormFactory
 	 */
 	public function create(callable $onSuccess, callable $onNotFound, Uuid $id, string $currentName): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$this->passkeyFormControls->addNameField($form, $currentName);
 		$form->addSubmit('rename', $this->translator->translate('messages.passkeys.rename.rename'));
 		$form->onSuccess[] = function (Form $form) use ($id, $onSuccess, $onNotFound): void {

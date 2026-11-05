@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
-use MichalSpacekCz\Form\UnprotectedFormFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Application\UI\Form;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -23,14 +23,13 @@ final class TrainingControlsFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly UnprotectedFormFactory $formFactory,
 	) {
 	}
 
 
 	public function testAttendeeControlsAreNamedAsTheConfigExpects(): void
 	{
-		$form = $this->formFactory->create();
+		$form = new Form();
 
 		$attendee = $this->trainingControlsFactory->addAttendee($form);
 

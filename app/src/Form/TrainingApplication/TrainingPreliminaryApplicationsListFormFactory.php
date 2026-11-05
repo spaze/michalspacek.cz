@@ -3,13 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\TrainingApplication;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTraining;
 use MichalSpacekCz\Utils\Arrays;
+use Nette\Application\UI\Form;
 use Nette\Database\Explorer;
-use Nette\Forms\Form;
 use PDOException;
 use Tracy\Debugger;
 
@@ -18,7 +17,6 @@ final readonly class TrainingPreliminaryApplicationsListFormFactory
 
 	public function __construct(
 		private Explorer $database,
-		private FormFactory $factory,
 		private TrainingApplications $trainingApplications,
 		private TrainingApplicationStatusHistory $statusHistory,
 	) {
@@ -31,7 +29,7 @@ final readonly class TrainingPreliminaryApplicationsListFormFactory
 	 */
 	public function create(array $trainings, callable $onSuccess): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$container = $form->addContainer('applications');
 		foreach ($trainings as $training) {
 			foreach ($training->getApplications() as $application) {

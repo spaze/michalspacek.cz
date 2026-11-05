@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyAuthenticationControls;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\PermanentLogin\PermanentLogin;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
@@ -22,7 +21,6 @@ final readonly class PasskeyAuthenticateFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private PasskeyAuthenticationControls $passkeyAuthenticationControls,
 		private WebAuthnAuthenticator $passkeyAuthenticator,
 		private Manager $authenticator,
@@ -40,7 +38,7 @@ final readonly class PasskeyAuthenticateFormFactory
 	 */
 	public function create(callable $onSuccess, string $errorUrl, string $canceledUrl): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$this->passkeyAuthenticationControls->addOptionsTo($form);
 		$form->setHtmlAttribute('data-error-url', $errorUrl);
 		$form->setHtmlAttribute('data-canceled-url', $canceledUrl);
