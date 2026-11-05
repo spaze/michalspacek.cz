@@ -231,8 +231,9 @@ final class GuzzleHttpHandler
                         } catch (\Throwable $e) {
                             [$guzzleRequest, , $promise] = $this->pending[$response];
                             unset($this->pending[$response], $this->psr7Responses[$response]);
+                            $e = $this->createRequestException('An error was encountered during the on_headers event', $guzzleRequest, $psrResponse, $e);
                             $this->fireOnStats($guzzleOpts, $guzzleRequest, $psrResponse, $e, $response);
-                            $promise->reject($this->createRequestException($e->getMessage(), $guzzleRequest, $psrResponse, $e));
+                            $promise->reject($e);
 
                             $response->cancel();
                         }
@@ -672,6 +673,11 @@ final class GuzzleHttpHandler
             // CURLOPT_UNIX_SOCKET_PATH is conditionally defined; maps to bindto.
             if (\defined('CURLOPT_UNIX_SOCKET_PATH') && \CURLOPT_UNIX_SOCKET_PATH === $opt) {
                 $options['bindto'] = $value;
+                continue;
+            }
+
+            // curl reads -1 as "no limit" and Symfony as "no redirects", so 'allow_redirects' decides instead
+            if (\CURLOPT_MAXREDIRS === $opt && 0 > $value) {
                 continue;
             }
 

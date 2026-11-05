@@ -185,7 +185,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 	 * - existing company, another algo without "from" when there's one already
 	 * - existing company, existing site => check if the combination already exists
 	 *
-	 * @param ArrayHash<int|string> $values
+	 * @param ArrayHash<mixed> $values
 	 */
 	private function validatePasswordsStorages(Form $form, ArrayHash $values): void
 	{

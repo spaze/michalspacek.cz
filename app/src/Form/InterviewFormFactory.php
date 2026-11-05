@@ -93,8 +93,8 @@ final readonly class InterviewFormFactory
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values->videoThumbnail);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values->videoThumbnailAlternative);
 			if ($interview !== null) {
-				$removeVideoThumbnail = $hasVideoThumbnail && $values->removeVideoThumbnail;
-				$removeVideoThumbnailAlternative = $hasAlternativeVideoThumbnail && $values->removeVideoThumbnailAlternative;
+				$removeVideoThumbnail = $hasVideoThumbnail && $values->removeVideoThumbnail === true;
+				$removeVideoThumbnailAlternative = $hasAlternativeVideoThumbnail && $values->removeVideoThumbnailAlternative === true;
 				$thumbnailFilename = $interview->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $interview->getVideo()->getThumbnailAlternativeFilename();
 				$this->interviews->update(

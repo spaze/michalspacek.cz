@@ -92,7 +92,15 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
         $endOfLine = $context[self::END_OF_LINE] ?? $this->defaultContext[self::END_OF_LINE];
 
         if (!($context[self::NO_HEADERS_KEY] ?? $this->defaultContext[self::NO_HEADERS_KEY])) {
-            fputcsv($handle, $headers, $delimiter, $enclosure, '');
+            $headerRow = $headers;
+            if ($escapeFormulas) {
+                foreach ($headerRow as $i => $header) {
+                    if (\in_array(substr((string) $header, 0, 1), self::FORMULAS_START_CHARACTERS, true)) {
+                        $headerRow[$i] = "'".$header;
+                    }
+                }
+            }
+            fputcsv($handle, $headerRow, $delimiter, $enclosure, '');
             if ("\n" !== $endOfLine && 0 === fseek($handle, -1, \SEEK_CUR)) {
                 fwrite($handle, $endOfLine);
             }
@@ -143,7 +151,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
         [$delimiter, $enclosure, $keySeparator, , , , $asCollection] = $this->getCsvOptions($context);
 
-        while (false !== ($cols = fgetcsv($handle, 0, $delimiter, $enclosure, ''))) {
+        foreach ($this->readRows($handle, $delimiter, $enclosure) as $cols) {
             $nbCols = \count($cols);
 
             if (null === $headers) {
@@ -289,5 +297,29 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
         }
 
         return $headers;
+    }
+
+    /**
+     * @param resource $handle
+     */
+    private function readRows($handle, string $delimiter, string $enclosure): \Generator
+    {
+        $emptyLines = 0;
+        while ([null] === $cols = fgetcsv($handle, 0, $delimiter, $enclosure, '')) {
+            ++$emptyLines;
+        }
+
+        // fgetcsv() returns [null] for an empty line: it is a record with an empty value in a single-column document, and carries no data otherwise
+        $skipEmptyLines = false !== $cols && 1 < \count($cols);
+
+        if (!$skipEmptyLines) {
+            yield from array_fill(0, $emptyLines, [null]);
+        }
+
+        for (; false !== $cols; $cols = fgetcsv($handle, 0, $delimiter, $enclosure, '')) {
+            if (!$skipEmptyLines || [null] !== $cols) {
+                yield $cols;
+            }
+        }
     }
 }

@@ -61,9 +61,9 @@ return function (array $event): array {
 	$dnsProvider = new SecurityTxtPhpDnsProvider();
 	$ipAddressValidator = new SecurityTxtIpAddressValidator();
 	$fetcher = new SecurityTxtFetcher($curlClient, $urlParser, $splitLines, $dnsProvider, $ipAddressValidator);
-	$requireTopLevelLocation = isset($event['requireTopLevelLocation']) && $event['requireTopLevelLocation'];
-	$noIpv6 = isset($event['noIpv6']) && $event['noIpv6'];
-	$fetchResultOnly = !isset($event['checkHost']) || !$event['checkHost'];
+	$requireTopLevelLocation = isset($event['requireTopLevelLocation']) && is_bool($event['requireTopLevelLocation']) && $event['requireTopLevelLocation'];
+	$noIpv6 = isset($event['noIpv6']) && is_bool($event['noIpv6']) && $event['noIpv6'];
+	$fetchResultOnly = !isset($event['checkHost']) || !is_bool($event['checkHost']) || !$event['checkHost'];
 
 	$libVersion = [
 		'libVersion' => InstalledVersions::getVersion('spaze/security-txt'),

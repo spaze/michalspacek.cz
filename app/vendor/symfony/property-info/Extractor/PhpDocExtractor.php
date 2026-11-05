@@ -23,7 +23,12 @@ use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Util\PhpDocTypeHelper;
 use Symfony\Component\TypeInfo\Exception\LogicException;
 use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\CollectionType;
+use Symfony\Component\TypeInfo\Type\GenericType;
+use Symfony\Component\TypeInfo\Type\NullableType;
 use Symfony\Component\TypeInfo\Type\ObjectType;
+use Symfony\Component\TypeInfo\Type\UnionType;
+use Symfony\Component\TypeInfo\TypeContext\TypeContext;
 use Symfony\Component\TypeInfo\TypeContext\TypeContextFactory;
 
 /**
@@ -134,7 +139,7 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
     {
         $types = [];
 
-        if ($docBlock = $this->getDocBlockFromConstructor($class, $property)) {
+        if ([$docBlock] = $this->getDocBlockFromConstructor($class, $property)) {
             /** @var DocBlock\Tags\Var_|DocBlock\Tags\Return_|DocBlock\Tags\Param $tag */
             foreach ($docBlock->getTagsByName('param') as $tag) {
                 if ($tag instanceof InvalidTag || !$tagType = $tag->getType()) {
@@ -158,7 +163,10 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
         return $this->findDocBlock($class, $property)[0];
     }
 
-    private function getDocBlockFromConstructor(string $class, string $property): ?DocBlock
+    /**
+     * @return array{DocBlock, string}|null
+     */
+    private function getDocBlockFromConstructor(string $class, string $property): ?array
     {
         try {
             $reflectionClass = new \ReflectionClass($class);
@@ -172,7 +180,7 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
         try {
             $docBlock = $this->docBlockFactory->create($reflectionConstructor, $this->contextFactory->createFromReflector($reflectionConstructor));
 
-            return $this->filterDocBlockParams($docBlock, $property);
+            return [$this->filterDocBlockParams($docBlock, $property), $reflectionConstructor->class];
         } catch (\InvalidArgumentException) {
             return null;
         }
@@ -205,8 +213,8 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
 
         $ucFirstProperty = ucfirst($property);
 
-        if ($reflectionProperty?->isPromoted() && $docBlock = $this->getDocBlockFromConstructor($reflectionProperty->class, $property)) {
-            $data = [$docBlock, self::MUTATOR, null, $reflectionProperty->class];
+        if ($reflectionProperty?->isPromoted() && [$docBlock, $declaringClass] = $this->getDocBlockFromConstructor($reflectionProperty->class, $property)) {
+            $data = [$docBlock, self::MUTATOR, null, $declaringClass];
         } elseif ([$docBlock, $declaringClass] = $this->getDocBlockFromProperty($class, $property)) {
             $data = [$docBlock, self::PROPERTY, null, $declaringClass];
         } else {
@@ -381,6 +389,58 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
         return $this->promotedPropertyDocBlocks[$propertyHash] = $data;
     }
 
+    private function resolveClassKeywords(Type $type, TypeContext $typeContext): Type
+    {
+        if ($type instanceof NullableType || $type instanceof CollectionType) {
+            $wrappedType = $this->resolveClassKeywords($type->getWrappedType(), $typeContext);
+
+            if ($wrappedType === $type->getWrappedType()) {
+                return $type;
+            }
+
+            return $type instanceof NullableType ? Type::nullable($wrappedType) : new CollectionType($wrappedType, $type->isList());
+        }
+
+        if ($type instanceof GenericType) {
+            $wrappedType = $this->resolveClassKeywords($type->getWrappedType(), $typeContext);
+            $variableTypes = array_map(fn (Type $variableType): Type => $this->resolveClassKeywords($variableType, $typeContext), $type->getVariableTypes());
+
+            if ($wrappedType === $type->getWrappedType() && $variableTypes === $type->getVariableTypes()) {
+                return $type;
+            }
+
+            return new GenericType($wrappedType, ...$variableTypes);
+        }
+
+        if ($type instanceof UnionType) {
+            $types = array_map(fn (Type $unionType): Type => $this->resolveClassKeywords($unionType, $typeContext), $type->getTypes());
+
+            if ($types === $type->getTypes()) {
+                return $type;
+            }
+
+            $types = array_values(array_unique($types));
+
+            return 1 === \count($types) ? $types[0] : Type::union(...$types);
+        }
+
+        if (!$type instanceof ObjectType) {
+            return $type;
+        }
+
+        try {
+            return match ($type->getClassName()) {
+                'self' => Type::object($typeContext->getDeclaringClass()),
+                'static' => Type::object($typeContext->getCalledClass()),
+                'parent' => Type::object($typeContext->getParentClass()),
+                default => $type,
+            };
+        } catch (LogicException) {
+            // if there is no parent for the current class, we keep the "parent" raw string
+            return $type;
+        }
+    }
+
     private function getTypeFromDocBlock(DocBlock $docBlock, int $source, string $class, ?string $declaringClass, ?string $prefix): ?Type
     {
         $tag = match ($source) {
@@ -399,28 +459,7 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
             }
 
             $type = $this->phpDocTypeHelper->getType($tagType);
-
-            if (!$type instanceof ObjectType) {
-                $types[] = $type;
-
-                continue;
-            }
-
-            $normalizedClassName = match ($type->getClassName()) {
-                'self' => $typeContext->getDeclaringClass(),
-                'static' => $typeContext->getCalledClass(),
-                default => $type->getClassName(),
-            };
-
-            if ('parent' === $normalizedClassName) {
-                try {
-                    $normalizedClassName = $typeContext->getParentClass();
-                } catch (LogicException) {
-                    // if there is no parent for the current class, we keep the "parent" raw string
-                }
-            }
-
-            $types[] = $type->isNullable() ? Type::nullable(Type::object($normalizedClassName)) : Type::object($normalizedClassName);
+            $types[] = $type ? $this->resolveClassKeywords($type, $typeContext) : null;
         }
 
         if (!$type = $types[0] ?? null) {

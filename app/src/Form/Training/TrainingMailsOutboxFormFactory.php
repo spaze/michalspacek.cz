@@ -152,6 +152,7 @@ final readonly class TrainingMailsOutboxFormFactory
 			foreach ($values->applications as $id => $data) {
 				assert($data instanceof ArrayHash);
 				assert(is_string($data->additional));
+				assert(is_bool($data->send));
 				if (!$data->send || !isset($applications[$id])) {
 					continue;
 				}
