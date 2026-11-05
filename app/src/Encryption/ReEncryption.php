@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Encryption;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\CommandLine\Command;
+use Nette\CommandLine\Console;
 use Override;
-use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 use Throwable;
 use Tracy\Debugger;
 
@@ -24,7 +24,7 @@ final readonly class ReEncryption implements CliArgsProvider
 		private iterable $storages,
 		private ColumnReEncryptor $columnReEncryptor,
 		private CliArgs $cliArgs,
-		private ConsoleColor $color,
+		private Console $console,
 	) {
 	}
 
@@ -33,7 +33,7 @@ final readonly class ReEncryption implements CliArgsProvider
 	{
 		$cliArgsError = $this->cliArgs->getError();
 		if ($cliArgsError !== null) {
-			fprintf(STDERR, "%s\n", $this->color->apply('light_red', $cliArgsError->getMessage()));
+			fprintf(STDERR, "%s\n", $this->console->color('red', $cliArgsError->getMessage()));
 			return 3;
 		}
 		$dryRun = $this->cliArgs->getFlag(self::DRY_RUN);
@@ -48,7 +48,7 @@ final readonly class ReEncryption implements CliArgsProvider
 					$result = $this->columnReEncryptor->reEncrypt($column, $dryRun);
 				} catch (Throwable $e) {
 					Debugger::log($e);
-					fprintf(STDERR, "%s: %s\n", $label, $this->color->apply('light_red', $e->getMessage()));
+					fprintf(STDERR, "%s: %s\n", $label, $this->console->color('red', $e->getMessage()));
 					$hasFailures = true;
 					continue;
 				}
@@ -69,7 +69,7 @@ final readonly class ReEncryption implements CliArgsProvider
 				$parts = [
 					sprintf($dryRun ? '%d would be re-encrypted' : '%d re-encrypted', $result->reEncrypted),
 					sprintf('%d up to date', $result->upToDate),
-					$failedCount > 0 ? $this->color->apply('light_red', $failed) : $failed,
+					$failedCount > 0 ? $this->console->color('red', $failed) : $failed,
 				];
 				if (!$dryRun) {
 					$parts[] = sprintf('%d changed meanwhile', $result->changedMeanwhile);

@@ -11,10 +11,11 @@ use MichalSpacekCz\Test\Http\Client\HttpClientMock;
 use MichalSpacekCz\Test\Net\DnsResolverMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Tls\SelfSignedCertificate;
+use Nette\CommandLine\ColorDepth;
+use Nette\CommandLine\Console;
 use Nette\Utils\Json;
 use OpenSSLCertificate;
 use Override;
-use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -114,7 +115,7 @@ final class CertificateMonitorTest extends TestCase
 		$this->httpClient->setTlsCertificate($served);
 		$dnsResolver = new DnsResolverMock();
 		$dnsResolver->setRecords(self::NAME, [new DnsRecord(self::NAME, 'IN', 300, 'A', self::ADDRESS)]);
-		$monitor = new CertificateMonitor(new CertificateGatherer($this->certificateFactory, $this->httpClient, $dnsResolver), $this->certificatesApiClient, new ConsoleColor(), $cliArgs);
+		$monitor = new CertificateMonitor(new CertificateGatherer($this->certificateFactory, $this->httpClient, $dnsResolver), $this->certificatesApiClient, new Console(colorDepth: ColorDepth::None), $cliArgs);
 		ob_start();
 		$code = $monitor->run();
 		$output = ob_get_clean();

@@ -70,7 +70,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
-            'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
         ),
         'N' =>
@@ -273,10 +272,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
-        ),
-        'PHP_Parallel_Lint\\PhpConsoleColor\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
         ),
         'PHPStan\\PhpDocParser\\' =>
         array (
@@ -2289,8 +2284,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'PHPStan\\PhpDocParser\\Printer\\DiffElem' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Printer/DiffElem.php',
         'PHPStan\\PhpDocParser\\Printer\\Differ' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Printer/Differ.php',
         'PHPStan\\PhpDocParser\\Printer\\Printer' => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src/Printer/Printer.php',
-        'PHP_Parallel_Lint\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src/ConsoleColor.php',
-        'PHP_Parallel_Lint\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src/InvalidStyleException.php',
         'ParagonIE\\ConstantTime\\Base32' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32.php',
         'ParagonIE\\ConstantTime\\Base32Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base32Hex.php',
         'ParagonIE\\ConstantTime\\Base64' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Base64.php',

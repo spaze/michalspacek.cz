@@ -1946,8 +1946,6 @@ return array(
     'PHPStan\\PhpDocParser\\Printer\\DiffElem' => $vendorDir . '/phpstan/phpdoc-parser/src/Printer/DiffElem.php',
     'PHPStan\\PhpDocParser\\Printer\\Differ' => $vendorDir . '/phpstan/phpdoc-parser/src/Printer/Differ.php',
     'PHPStan\\PhpDocParser\\Printer\\Printer' => $vendorDir . '/phpstan/phpdoc-parser/src/Printer/Printer.php',
-    'PHP_Parallel_Lint\\PhpConsoleColor\\ConsoleColor' => $vendorDir . '/php-parallel-lint/php-console-color/src/ConsoleColor.php',
-    'PHP_Parallel_Lint\\PhpConsoleColor\\InvalidStyleException' => $vendorDir . '/php-parallel-lint/php-console-color/src/InvalidStyleException.php',
     'ParagonIE\\ConstantTime\\Base32' => $vendorDir . '/paragonie/constant_time_encoding/src/Base32.php',
     'ParagonIE\\ConstantTime\\Base32Hex' => $vendorDir . '/paragonie/constant_time_encoding/src/Base32Hex.php',
     'ParagonIE\\ConstantTime\\Base64' => $vendorDir . '/paragonie/constant_time_encoding/src/Base64.php',

@@ -79,6 +79,8 @@ public static function defineArgs(Command $command): void
 
 `bootCli()` registers the result as the `cliArgs` service, a `CliArgs` instance available for injection into any service, with `getFlag(string $name): bool`, `getArg(string $name): string` and `getError(): ?ParseException`. Both getters throw a `LogicException` for a name the provider never defined or defined as another kind, so a typo cannot read as a flag that was not given.
 
+`bootCli()` also registers the `console` service, a `Nette\CommandLine\Console` writing to STDOUT. Color a script's output with its `color()` method, `$this->console->color('red', $text)`: the text comes back wrapped in escape codes when STDOUT is a terminal and `NO_COLOR` is not set, when `FORCE_COLOR` is set, or when `--colors` was given, which wins over `NO_COLOR`; as it is otherwise, and an unknown color name throws either way. Print with `echo`/`printf` like the rest of the script; the console's own `write()` goes straight to the stream, past the output buffering tests capture the output with. Tests pass `new Console(colorDepth: ColorDepth::None)` so the asserted text holds no escape codes.
+
 A wrong command line (an unknown option, a missing argument, a path that does not exist) is not thrown: `getError()` returns the library's `ParseException`, and the service prints its message and picks the exit status. In that state both getters throw too, so services check `getError()` first. Scripts that accept no arguments pass `NoCliArgs`.
 
 Tests never build `CliArgs` by hand, they parse an explicit command line against the real definition: `CliArgs::parse(CertificateMonitor::class, ['--no-ipv6'])`, or `CliArgs::parse(CertificateMonitor::class, ['--frobnicate'])` for the error state.

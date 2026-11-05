@@ -6,10 +6,11 @@ namespace MichalSpacekCz\Application;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\Bootstrap\Configurator;
+use Nette\CommandLine\ColorDepth;
+use Nette\CommandLine\Console;
 use Nette\DI\Compiler;
 use Nette\DI\Container;
 use Nette\Neon\Neon;
-use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 use RuntimeException;
 use SensitiveParameter;
 use Throwable;
@@ -61,8 +62,13 @@ final class Bootstrap
 		ServerEnv::setString('HTTPS', 'on');
 		$cliArgs = CliArgs::parse($argsProvider);
 		// A wrong command line still boots the container, the running service reports the error and picks the exit status;
-		// nothing was parsed then, so the two shared flags stay off
+		// nothing was parsed then, so the shared flags stay off
 		$argsParsed = $cliArgs->getError() === null;
+		$console = new Console();
+		if ($argsParsed && $cliArgs->getFlag(CliArgs::COLORS) && !$console->hasColors()) {
+			// What FORCE_COLOR=1 gives, the sixteen colors every terminal and CI log draws; a deeper palette the environment announced stays as detected
+			$console->setColorDepth(ColorDepth::Ansi16);
+		}
 		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || ($argsParsed && $cliArgs->getFlag(CliArgs::DEBUG));
 		$configurator = self::createConfigurator(
 			$debugMode,
@@ -70,10 +76,8 @@ final class Bootstrap
 		);
 		$secrets = self::addSecrets($configurator, false);
 		$container = self::createContainer($configurator, $secrets);
-		if ($argsParsed && $cliArgs->getFlag(CliArgs::COLORS)) {
-			$container->getByType(ConsoleColor::class)->setForceStyle(true);
-		}
 		$container->addService('cliArgs', $cliArgs);
+		$container->addService('console', $console);
 		return $container;
 	}
 

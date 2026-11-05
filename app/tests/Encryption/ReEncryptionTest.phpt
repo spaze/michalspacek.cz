@@ -11,9 +11,10 @@ use MichalSpacekCz\Test\Database\ResultSet;
 use MichalSpacekCz\Test\Encryption\EncryptedStorageMock;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\CommandLine\ColorDepth;
+use Nette\CommandLine\Console;
 use Nette\Database\DriverException;
 use Override;
-use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 use Spaze\Encryption\SymmetricKeyEncryption;
 use Tester\Assert;
 use Tester\TestCase;
@@ -61,7 +62,7 @@ final class ReEncryptionTest extends TestCase
 	 */
 	private function runReEncryption(array $storages, ?CliArgs $cliArgs = null): array
 	{
-		$reEncryption = new ReEncryption($storages, $this->columnReEncryptor, $cliArgs ?? CliArgs::parse(ReEncryption::class, []), new ConsoleColor());
+		$reEncryption = new ReEncryption($storages, $this->columnReEncryptor, $cliArgs ?? CliArgs::parse(ReEncryption::class, []), new Console(colorDepth: ColorDepth::None));
 		ob_start();
 		$code = $reEncryption->run();
 		$output = ob_get_clean();

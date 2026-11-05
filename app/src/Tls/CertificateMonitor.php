@@ -7,8 +7,8 @@ use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\CommandLine\Command;
+use Nette\CommandLine\Console;
 use Override;
-use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
 final class CertificateMonitor implements CliArgsProvider
 {
@@ -21,7 +21,7 @@ final class CertificateMonitor implements CliArgsProvider
 	public function __construct(
 		private readonly CertificateGatherer $certificateGatherer,
 		private readonly CertificatesApiClient $certificatesApiClient,
-		private readonly ConsoleColor $color,
+		private readonly Console $console,
 		private readonly CliArgs $cliArgs,
 	) {
 	}
@@ -141,7 +141,7 @@ final class CertificateMonitor implements CliArgsProvider
 	{
 		$this->message(
 			$certificate,
-			$this->color->apply('dark_gray', '%s') . ' ' . $this->color->apply(['light_red', 'bold'], '%s') . ' ' . $this->color->apply('light_red', 'ERROR:') . ' %s',
+			$this->console->color('gray', '%s') . ' ' . $this->console->color('red', '%s') . ' ' . $this->console->color('red', 'ERROR:') . ' %s',
 			$message,
 		);
 	}
@@ -151,7 +151,7 @@ final class CertificateMonitor implements CliArgsProvider
 	{
 		$this->message(
 			$certificate,
-			$this->color->apply('dark_gray', '%s') . ' ' . $this->color->apply(['light_green', 'bold'], '%s') . ' ' . $this->color->apply('light_green', 'INFO:') . ' %s',
+			$this->console->color('gray', '%s') . ' ' . $this->console->color('lime', '%s') . ' ' . $this->console->color('lime', 'INFO:') . ' %s',
 			$message,
 		);
 	}

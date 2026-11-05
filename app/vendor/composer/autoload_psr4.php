@@ -46,7 +46,6 @@ return array(
     'ParagonIE\\HiddenString\\' => array($vendorDir . '/paragonie/hidden-string/src'),
     'ParagonIE\\Halite\\' => array($vendorDir . '/paragonie/halite/src'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
-    'PHP_Parallel_Lint\\PhpConsoleColor\\' => array($vendorDir . '/php-parallel-lint/php-console-color/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'Nette\\' => array($vendorDir . '/nette/security/src', $vendorDir . '/nette/mail/src', $vendorDir . '/nette/forms/src', $vendorDir . '/nette/command-line/src', $vendorDir . '/nette/bootstrap/src', $vendorDir . '/nette/database/src', $vendorDir . '/nette/caching/src', $vendorDir . '/nette/application/src', $vendorDir . '/nette/routing/src', $vendorDir . '/nette/component-model/src', $vendorDir . '/nette/di/src', $vendorDir . '/nette/robot-loader/src', $vendorDir . '/nette/php-generator/src', $vendorDir . '/nette/neon/src', $vendorDir . '/nette/schema/src', $vendorDir . '/nette/http/src', $vendorDir . '/nette/utils/src'),
     'MichalSpacekCz\\' => array($baseDir . '/src'),
