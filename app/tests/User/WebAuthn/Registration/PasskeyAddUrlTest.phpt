@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\Application\Cli\CliArgs;
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Test\Database\Database;
@@ -15,6 +14,7 @@ use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
+use Nette\Application\LinkGenerator;
 use Nette\CommandLine\ParseException;
 use Nette\CommandLine\ParseFailure;
 use Nette\Http\IRequest;

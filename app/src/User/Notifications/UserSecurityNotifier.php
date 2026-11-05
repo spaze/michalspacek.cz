@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\Notifications;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\WebApplication;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\User\UserAccounts;
+use Nette\Application\LinkGenerator;
 use Nette\Http\IRequest;
 use Nette\Mail\Mailer;
 use Nette\Mail\Message;

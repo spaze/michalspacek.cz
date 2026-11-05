@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User\PermanentLogin;
 
 use Exception;
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
@@ -15,6 +14,7 @@ use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
+use Nette\Application\LinkGenerator;
 use Nette\Http\SameSite;
 use Nette\Http\Url;
 use Nette\Security\User;

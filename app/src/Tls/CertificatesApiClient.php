@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\ServerEnv;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\Http\Client\HttpClient;
@@ -11,6 +10,7 @@ use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\Http\Exceptions\HttpClientResponseStatusLineMissingException;
 use MichalSpacekCz\Tls\Exceptions\CertificatesApiException;
+use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Nette\Schema\Expect;

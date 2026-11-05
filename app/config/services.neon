@@ -8,7 +8,6 @@ services:
 		type: Nette\CommandLine\Console
 		imported: true
 	- MichalSpacekCz\Application\Error\AppError
-	- MichalSpacekCz\Application\LinkGenerator
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
 	- @MichalSpacekCz\Application\Routing\LocaleRouter::getRouteList

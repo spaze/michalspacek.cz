@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Talk;
 
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\Locale\Locales;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
@@ -12,6 +11,7 @@ use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
+use Nette\Application\LinkGenerator;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\PermanentLogin;
 
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Http\Cookies\CookieName;
@@ -20,6 +19,7 @@ use MichalSpacekCz\User\AuthTokens\UserAuthTokenType;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
+use Nette\Application\LinkGenerator;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
