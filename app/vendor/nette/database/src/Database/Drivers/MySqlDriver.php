@@ -8,7 +8,7 @@
 namespace Nette\Database\Drivers;
 
 use Nette;
-use function addcslashes, array_change_key_case, array_values, in_array, str_replace, strtoupper, substr;
+use function in_array;
 
 
 /**
@@ -60,13 +60,13 @@ class MySqlDriver implements Nette\Database\Driver
 	public function convertException(\PDOException $e): Nette\Database\DriverException
 	{
 		$code = $e->errorInfo[1] ?? null;
-		if (in_array($code, [1216, 1217, 1451, 1452, 1701], strict: true)) {
+		if (in_array($code, [1216, 1217, 1451, 1452, 1701], true)) {
 			return Nette\Database\ForeignKeyConstraintViolationException::from($e);
 
-		} elseif (in_array($code, [1062, 1557, 1569, 1586], strict: true)) {
+		} elseif (in_array($code, [1062, 1557, 1569, 1586], true)) {
 			return Nette\Database\UniqueConstraintViolationException::from($e);
 
-		} elseif ($code === 3819) {
+		} elseif ($code === 3819 || $code === 4025) { // 3819 = MySQL, 4025 = MariaDB
 			return Nette\Database\CheckConstraintViolationException::from($e);
 
 		} elseif ($code === 1213) {
@@ -75,13 +75,18 @@ class MySqlDriver implements Nette\Database\Driver
 		} elseif ($code === 1205) {
 			return Nette\Database\LockTimeoutException::from($e);
 
-		} elseif ($code === 2006 || $code === 2013) {
+		} elseif (
+			$code === 2006
+			|| $code === 2013
+			// ER_CLIENT_INTERACTION_TIMEOUT (MySQL 8.0.24+); on MariaDB 4031 is an unrelated trigger error
+			|| ($code === 4031 && str_contains($e->getMessage(), 'disconnected'))
+		) {
 			return Nette\Database\ConnectionLostException::from($e);
 
 		} elseif ($code >= 2001 && $code <= 2028) {
 			return Nette\Database\ConnectionException::from($e);
 
-		} elseif (in_array($code, [1048, 1121, 1138, 1171, 1252, 1263, 1566], strict: true)) {
+		} elseif (in_array($code, [1048, 1121, 1138, 1171, 1252, 1263, 1566], true)) {
 			return Nette\Database\NotNullConstraintViolationException::from($e);
 
 		} else {
@@ -149,7 +154,7 @@ class MySqlDriver implements Nette\Database\Driver
 			$tables[] = [
 				'name' => (string) $row['TABLE_NAME'],
 				'view' => $row['TABLE_TYPE'] === 'VIEW',
-				'comment' => (string) $row['TABLE_COMMENT'],
+				'comment' => $row['TABLE_TYPE'] === 'VIEW' ? '' : (string) $row['TABLE_COMMENT'], // views have the literal comment 'VIEW'
 			];
 		}
 
@@ -168,7 +173,7 @@ class MySqlDriver implements Nette\Database\Driver
 				'name' => $row['field'],
 				'table' => $table,
 				'nativetype' => strtoupper($typeInfo['type'] ?? ''),
-				'size' => $typeInfo['length'],
+				'size' => $typeInfo['size'],
 				'nullable' => $row['null'] === 'YES',
 				'default' => $row['default'],
 				'autoincrement' => $row['extra'] === 'auto_increment',
@@ -194,7 +199,9 @@ class MySqlDriver implements Nette\Database\Driver
 				'primary' => $id === 'PRIMARY',
 				'columns' => [],
 			];
-			$indexes[$id]['columns'][(int) $row['Seq_in_index'] - 1] = (string) $row['Column_name'];
+			$indexes[$id]['columns'][(int) $row['Seq_in_index'] - 1] = $row['Column_name'] === null
+				? (string) ($row['Expression'] ?? '') // functional index part
+				: (string) $row['Column_name'];
 		}
 
 		foreach ($indexes as &$index) {
@@ -215,6 +222,7 @@ class MySqlDriver implements Nette\Database\Driver
 			WHERE TABLE_SCHEMA = DATABASE()
 			  AND REFERENCED_TABLE_NAME IS NOT NULL
 			  AND TABLE_NAME = ?
+			ORDER BY CONSTRAINT_NAME, ORDINAL_POSITION
 			X, $table);
 
 		while ($row = $rows->fetch()) {

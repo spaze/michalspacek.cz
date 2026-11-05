@@ -1,17 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte;
 
 use Latte;
 use Nette;
-use function version_compare;
 
 
 /**
@@ -36,21 +33,25 @@ abstract class Template implements Nette\Application\UI\Template
 
 	/**
 	 * Renders template to output.
+	 * @param  array<string, mixed>  $params
 	 */
 	public function render(?string $file = null, array $params = []): void
 	{
 		Nette\Utils\Arrays::toObject($params, $this);
-		$this->latte->render($file ?? $this->file, $this);
+		$file ??= $this->file ?? throw new Nette\InvalidStateException('Template file name was not set.');
+		$this->latte->render($file, $this);
 	}
 
 
 	/**
-	 * Renders template to output.
+	 * Renders template to string.
+	 * @param  array<string, mixed>  $params
 	 */
 	public function renderToString(?string $file = null, array $params = []): string
 	{
 		Nette\Utils\Arrays::toObject($params, $this);
-		return $this->latte->renderToString($file ?? $this->file, $this);
+		$file ??= $this->file ?? throw new Nette\InvalidStateException('Template file name was not set.');
+		return $this->latte->renderToString($file, $this);
 	}
 
 
@@ -59,7 +60,8 @@ abstract class Template implements Nette\Application\UI\Template
 	 */
 	public function __toString(): string
 	{
-		return $this->latte->renderToString($this->file, $this->getParameters());
+		$file = $this->file ?? throw new Nette\InvalidStateException('Template file name was not set.');
+		return $this->latte->renderToString($file, $this->getParameters());
 	}
 
 
@@ -69,7 +71,7 @@ abstract class Template implements Nette\Application\UI\Template
 	/**
 	 * Registers run-time filter.
 	 */
-	public function addFilter(?string $name, callable $callback): static
+	public function addFilter(string $name, callable $callback): static
 	{
 		$this->latte->addFilter($name, $callback);
 		return $this;
@@ -91,16 +93,7 @@ abstract class Template implements Nette\Application\UI\Template
 	 */
 	public function setTranslator(?Nette\Localization\Translator $translator, ?string $language = null): static
 	{
-		if (version_compare(Latte\Engine::VERSION, '3', '<')) {
-			$this->latte->addFilter(
-				'translate',
-				fn(Latte\Runtime\FilterInfo $fi, ...$args): string => $translator === null
-						? $args[0]
-						: $translator->translate(...$args),
-			);
-		} else {
-			$this->latte->addExtension(new Latte\Essential\TranslatorExtension($translator, $language));
-		}
+		$this->latte->addExtension(new Latte\Essential\TranslatorExtension($translator, $language));
 		return $this;
 	}
 
@@ -126,6 +119,7 @@ abstract class Template implements Nette\Application\UI\Template
 
 	/**
 	 * Returns array of all parameters.
+	 * @return array<string, mixed>
 	 */
 	final public function getParameters(): array
 	{
@@ -142,8 +136,9 @@ abstract class Template implements Nette\Application\UI\Template
 
 	/**
 	 * Prevents unserialization.
+	 * @param  array<mixed>  $_
 	 */
-	final public function __unserialize($_)
+	final public function __unserialize(array $_)
 	{
 		throw new Nette\NotImplementedException('Object unserialization is not supported by class ' . static::class);
 	}

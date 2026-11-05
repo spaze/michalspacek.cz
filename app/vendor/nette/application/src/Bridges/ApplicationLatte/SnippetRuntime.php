@@ -1,18 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte;
 
+use Latte\Runtime\Block;
 use Nette;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Renderable;
-use function array_pop, array_shift, end, ob_end_clean, ob_get_clean, ob_start, reset, trigger_error;
 
 
 /**
@@ -30,8 +27,7 @@ final class SnippetRuntime
 	private array $stack = [];
 	private int $nestingLevel = 0;
 	private bool $renderingSnippets = false;
-
-	private ?\stdClass $payload;
+	private \stdClass $payload;
 
 
 	public function __construct(
@@ -65,7 +61,7 @@ final class SnippetRuntime
 
 		$this->stack[] = [$name, $obStarted];
 		if ($name !== '') {
-			$this->control->redrawControl($name, false);
+			$this->control->redrawControl($name, redraw: false);
 		}
 	}
 
@@ -96,7 +92,7 @@ final class SnippetRuntime
 
 
 	/**
-	 * @param  Block[]  $blocks
+	 * @param  array<string, Block>  $blocks
 	 * @param  mixed[]  $params
 	 */
 	public function renderSnippets(array $blocks, array $params): bool
@@ -129,7 +125,7 @@ final class SnippetRuntime
 		$queue = [$this->control];
 		do {
 			foreach (array_shift($queue)->getComponents() as $child) {
-				if ($child instanceof Renderable) {
+				if ($child instanceof Control) {
 					if ($child->isControlInvalid()) {
 						$child->snippetMode = true;
 						$child->render();

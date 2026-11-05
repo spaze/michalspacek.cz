@@ -10,12 +10,13 @@ namespace Nette\Forms;
 use Nette;
 use Nette\Utils\ArrayHash;
 use Stringable;
-use function array_combine, array_key_exists, array_map, array_merge, array_unique, explode, func_get_args, in_array, is_object, iterator_to_array, str_contains;
+use function array_key_exists, func_get_args, is_object;
 
 
 /**
  * Container for form controls.
  *
+ * @property-read string $name
  * @property   ArrayHash<mixed> $values
  * @property-read \Iterator $controls
  * @property-read ?Form $form
@@ -23,6 +24,9 @@ use function array_combine, array_key_exists, array_map, array_merge, array_uniq
  */
 class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 {
+	use Nette\SmartObject {
+		__call as private callEvent;
+	}
 	use Nette\ComponentModel\ArrayAccess;
 
 	public const Array = 'array';
@@ -34,7 +38,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	public array $onValidate = [];
 	protected ?ControlGroup $currentGroup = null;
 
-	/** @var array<string, callable(static): mixed> */
+	/** @var array<string, callable(static, never, never, never, never, never, never, never, never, never): mixed> */
 	private static array $extMethods = [];
 	private ?bool $validated = false;
 	private ?string $mappedType = null;
@@ -45,7 +49,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Populates controls with default values. Has no effect on submitted forms.
-	 * @param mixed[]|object  $values
+	 * @param iterable<mixed>|\stdClass  $values
 	 */
 	public function setDefaults(array|object $values, bool $erase = false): static
 	{
@@ -57,11 +61,18 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Fills controls with values.
-	 * @param mixed[]|object  $values
+	 * @param iterable<mixed>|\stdClass  $values
 	 * @internal
 	 */
 	public function setValues(array|object $values, bool $erase = false, bool $onlyDisabled = false): static
 	{
+		if (is_object($values) && !($values instanceof \Traversable || $values instanceof \stdClass)) {
+			trigger_error(
+				__METHOD__ . ': argument should be array|Traversable|stdClass, ' . get_debug_type($values) . ' given.',
+				E_USER_DEPRECATED,
+			);
+		}
+
 		$values = $values instanceof \Traversable
 			? iterator_to_array($values)
 			: (array) $values;
@@ -85,11 +96,11 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/**
 	 * Returns the values submitted by the form.
 	 * @template T of object
-	 * @param  class-string<T>|T|'array'|true|null  $returnType
+	 * @param  class-string<T>|T|'array'|null  $returnType
 	 * @param  ?list<Control|self>  $controls
-	 * @return ($returnType is class-string<T>|T ? T : ($returnType is 'array'|true ? mixed[] : ArrayHash<mixed>))
+	 * @return ($returnType is class-string<T>|T ? T : ($returnType is 'array' ? mixed[] : ArrayHash<mixed>))
 	 */
-	public function getValues(string|object|bool|null $returnType = null, ?array $controls = null): object|array
+	public function getValues(string|object|null $returnType = null, ?array $controls = null): object|array
 	{
 		$form = $this->getForm(throw: false);
 		if ($form && ($submitter = $form->isSubmitted())) {
@@ -102,21 +113,16 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 			if ($controls === null && $submitter instanceof SubmitterControl) {
 				$controls = $submitter->getValidationScope();
-				if ($controls !== null && !in_array($this, $controls, strict: true)) {
+				if ($controls !== null && !in_array($this, $controls, true)) {
 					$scope = $this;
 					while (($scope = $scope->getParent()) instanceof self) {
-						if (in_array($scope, $controls, strict: true)) {
+						if (in_array($scope, $controls, true)) {
 							$controls[] = $this;
 							break;
 						}
 					}
 				}
 			}
-		}
-
-		if ($returnType === true) {
-			trigger_error(static::class . '::' . __FUNCTION__ . "(true) is deprecated, use getValues('array').", E_USER_DEPRECATED);
-			$returnType = self::Array;
 		}
 
 		return $this->getUntrustedValues($returnType, $controls);
@@ -154,7 +160,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		$properties = array_combine(array_map(fn($p) => $p->getName(), $properties), $properties);
 
 		foreach ($this->getComponents() as $name => $control) {
-			$allowed = $controls === null || in_array($this, $controls, strict: true) || in_array($control, $controls, strict: true);
+			$allowed = $controls === null || in_array($this, $controls, true) || in_array($control, $controls, true);
 			$name = (string) $name;
 			$property = $properties[$name] ?? null;
 			if (
@@ -241,13 +247,34 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		$this->validated = true;
 
 		foreach ($this->onValidate as $handler) {
-			$params = Nette\Utils\Callback::toReflection($handler)->getParameters();
-			$types = array_map(Helpers::getSingleType(...), $params);
-			$args = isset($types[0]) && !$this instanceof $types[0]
-				? [$this->getUntrustedValues($types[0])]
-				: [$this, isset($params[1]) ? $this->getUntrustedValues($types[1]) : null];
-			$handler(...$args);
+			$handler(...$this->resolveHandlerArguments($handler, untrusted: true));
 		}
+	}
+
+
+	/**
+	 * Resolves arguments of an event handler by the types of its first two parameters.
+	 * @return list<mixed>
+	 */
+	protected function resolveHandlerArguments(
+		callable $handler,
+		?SubmitterControl $button = null,
+		bool $untrusted = false,
+	): array
+	{
+		$args = [];
+		foreach (array_slice(Nette\Utils\Callback::toReflection($handler)->getParameters(), 0, 2) as $i => $param) {
+			$type = Helpers::getSingleType($param);
+			$args[] = match (true) {
+				!$type && !$i => $button ?? $this,
+				$type && $this instanceof $type => $this,
+				$type && $button instanceof $type => $button,
+				$untrusted => $this->getUntrustedValues($type),
+				default => $this->getValues($type),
+			};
+		}
+
+		return $args;
 	}
 
 
@@ -259,7 +286,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	{
 		$errors = [];
 		foreach ($this->getControls() as $control) {
-			$errors = array_merge($errors, $control->getErrors());
+			$errors = [...$errors, ...$control->getErrors()];
 		}
 
 		return array_values(array_unique($errors));
@@ -306,11 +333,17 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Iterates over all form controls.
-	 * @return \Iterator<Control>
+	 * @return iterable<Control>
 	 */
-	public function getControls(): \Iterator
+	public function getControls(): iterable
 	{
-		return $this->getComponents(true, Control::class);
+		return Nette\Utils\Iterables::repeatable(function () {
+			foreach ($this->getComponentTree() as $component) {
+				if ($component instanceof Control) {
+					yield $component->getName() => $component;
+				}
+			}
+		});
 	}
 
 
@@ -369,7 +402,8 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	): Controls\TextArea
 	{
 		return $this[$name] = (new Controls\TextArea($label))
-			->setHtmlAttribute('cols', $cols)->setHtmlAttribute('rows', $rows);
+			->setHtmlAttribute('cols', $cols)
+			->setHtmlAttribute('rows', $rows);
 	}
 
 
@@ -451,7 +485,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addUpload(string $name, string|Stringable|null $label = null): Controls\UploadControl
 	{
-		return $this[$name] = new Controls\UploadControl($label, multiple: false);
+		return $this[$name] = new Controls\UploadControl($label);
 	}
 
 
@@ -554,10 +588,19 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Adds button used to submit form.
+	 * @param (\Closure(Controls\SubmitButton, mixed[]|object): void | \Closure(static, mixed[]|object): void | \Closure(mixed[]|object): void)  $onSubmit
 	 */
-	public function addSubmit(string $name, string|Stringable|null $caption = null): Controls\SubmitButton
+	public function addSubmit(
+		string $name,
+		string|Stringable|null $caption = null,
+		?\Closure $onSubmit = null,
+	): Controls\SubmitButton
 	{
-		return $this[$name] = new Controls\SubmitButton($caption);
+		$control = $this[$name] = new Controls\SubmitButton($caption);
+		if ($onSubmit) {
+			$control->onClick[] = $onSubmit;
+		}
+		return $control;
 	}
 
 
@@ -603,18 +646,22 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/********************* extension methods ****************d*g**/
 
 
-	/** @param mixed[] $args */
-	public function __call(string $name, array $args): mixed
+	/**
+	 * @param  mixed[]  $args
+	 * @return mixed
+	 */
+	public function __call(string $name, array $args)
 	{
 		if (isset(self::$extMethods[$name])) {
+			/** @var never[] $args */
 			return (self::$extMethods[$name])($this, ...$args);
 		}
 
-		return parent::__call($name, $args);
+		return $this->callEvent($name, $args);
 	}
 
 
-	/** @param callable(static): mixed  $callback */
+	/** @param callable(static, never, never, never, never, never, never, never, never, never): mixed  $callback */
 	public static function extensionMethod(string $name, callable $callback): void
 	{
 		if (str_contains($name, '::')) { // back compatibility

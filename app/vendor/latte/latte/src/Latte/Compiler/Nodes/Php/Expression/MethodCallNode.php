@@ -7,13 +7,10 @@
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
-use Latte\CompileException;
+use Latte\{CompileException, Helpers};
 use Latte\Compiler\Nodes\Php;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\IdentifierNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
-use Latte\Helpers;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, IdentifierNode};
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -28,12 +25,13 @@ class MethodCallNode extends ExpressionNode
 		public array $args = [],
 		public bool $nullsafe = false,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (Php\ArgumentNode|Php\VariadicPlaceholderNode ...$args) {})(...$args);
 	}
 
 
-	public function isPartialFunction(): bool
+	public function isPartialApplication(): bool
 	{
 		return ($this->args[0] ?? null) instanceof Php\VariadicPlaceholderNode;
 	}
@@ -41,7 +39,7 @@ class MethodCallNode extends ExpressionNode
 
 	public function print(PrintContext $context): string
 	{
-		if ($this->nullsafe && $this->isPartialFunction()) {
+		if ($this->nullsafe && $this->isPartialApplication()) {
 			throw new CompileException('Cannot combine nullsafe operator with Closure creation', $this->position);
 		}
 		return $context->dereferenceExpr($this->object)

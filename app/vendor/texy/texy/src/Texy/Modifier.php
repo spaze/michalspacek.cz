@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy;
 
-use function array_flip, explode, is_array, preg_match, settype, str_replace, str_starts_with, strlen, strpos, strtolower, substr, trim;
+use function is_array, strlen;
 
 
 /**
@@ -151,6 +151,7 @@ final class Modifier
 				}
 
 				$attrs['id'] = $this->id;
+
 			} elseif (is_array($allowedClasses)) {
 				foreach ($this->classes as $value => $foo) {
 					if (isset($allowedClasses[$value])) {

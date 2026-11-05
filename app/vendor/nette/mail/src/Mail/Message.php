@@ -8,8 +8,8 @@
 namespace Nette\Mail;
 
 use Nette;
-use Nette\Utils\Strings;
-use function addcslashes, basename, date, finfo_buffer, finfo_open, is_array, is_numeric, is_string, ltrim, php_uname, preg_match, preg_replace, str_replace, strcasecmp, stripslashes, substr;
+use Nette\Utils\{Strings, Validators};
+use function is_array, is_string;
 
 
 /**
@@ -155,7 +155,8 @@ class Message extends MimePart
 
 	public function setReturnPath(string $email): static
 	{
-		$this->setHeader('Return-Path', $email);
+		// stored as a plain string, so it does not pass through the address normalization in setHeader()
+		$this->setHeader('Return-Path', self::toAsciiEmail($email));
 		return $this;
 	}
 
@@ -164,6 +165,35 @@ class Message extends MimePart
 	{
 		$value = $this->getHeader('Return-Path');
 		return is_string($value) ? $value : null;
+	}
+
+
+	/**
+	 * Sets the one-click unsubscribe headers (RFC 2369 and RFC 8058) that Gmail and Yahoo require from
+	 * bulk senders. The URL must unsubscribe the recipient on a bare HTTP POST; the email address is
+	 * the fallback for clients that cannot POST.
+	 */
+	public function setUnsubscribe(?string $url = null, ?string $email = null): static
+	{
+		$targets = [];
+		if ($url !== null) {
+			Validators::assert($url, 'url', 'unsubscribe URL');
+			$targets[] = "<$url>";
+		}
+
+		if ($email !== null) {
+			Validators::assert($email, 'email', 'unsubscribe address');
+			$targets[] = '<mailto:' . self::toAsciiEmail($email) . '>';
+		}
+
+		if (!$targets) {
+			throw new Nette\InvalidArgumentException('Provide an unsubscribe URL, an email address, or both.');
+		}
+
+		$this->setHeader('List-Unsubscribe', implode(', ', $targets));
+		// one-click requires an endpoint that takes a POST, so it is only announced together with a URL
+		$this->setHeader('List-Unsubscribe-Post', $url === null ? null : 'List-Unsubscribe=One-Click');
+		return $this;
 	}
 
 

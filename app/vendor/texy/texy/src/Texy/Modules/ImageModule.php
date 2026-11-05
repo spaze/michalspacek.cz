@@ -1,17 +1,15 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use Texy\Helpers;
-use Texy\Image;
-use Texy\Patterns;
-use function explode, getimagesize, is_file, is_int, min, round, rtrim, str_contains, trim;
+use Texy\{Helpers, Image, Patterns};
+use function is_int;
 
 
 /**
@@ -159,7 +157,6 @@ final class ImageModule extends Texy\Module
 			$image = new Image;
 
 			// dimensions
-			$matches = null;
 			if ($matches = Texy\Regexp::match($content[0], '#^(.*) (\d+|\?) *(X|x) *(\d+|\?) *()$#U')) {
 				$image->URL = trim($matches[1]);
 				$image->asMax = $matches[3] === 'X';
@@ -259,7 +256,7 @@ final class ImageModule extends Texy\Module
 		}
 
 		$file = rtrim((string) $this->fileRoot, '/\\') . '/' . $image->URL;
-		if (!@is_file($file) || !($size = @getimagesize($file))) { // intentionally @
+		if (!@is_file($file) || !($size = @getimagesize($file))) { // @ the path may be outside open_basedir, the image unreadable
 			return;
 		}
 

@@ -8,15 +8,15 @@
 namespace Nette\Routing;
 
 use Nette;
-use function array_column, array_filter, array_keys, array_reverse, array_splice, count, explode, ip2long, is_scalar, rtrim, strtr;
+use function count, is_scalar;
 
 
 /**
- * The router broker.
+ * Router collection that tries each router in sequence and caches URL construction lookups.
  */
 class RouteList implements Router
 {
-	protected ?self $parent;
+	protected ?self $parent = null;
 
 	/** @var list<array{Router, int}> */
 	private array $list = [];
@@ -27,18 +27,29 @@ class RouteList implements Router
 	private ?string $domain = null;
 	private ?string $path = null;
 
-	/** @var \SplObjectStorage<Nette\Http\UrlScript, Nette\Http\UrlScript> */
-	private \SplObjectStorage $refUrlCache;
+	/**
+	 * Created lazily so that an unused list stays serializable.
+	 * @var \WeakMap<Nette\Http\UrlScript, Nette\Http\UrlScript>|null
+	 */
+	private ?\WeakMap $refUrlCache = null;
 
 
 	public function __construct()
 	{
-		$this->refUrlCache = new \SplObjectStorage;
+		// intentionally empty; must exist because subclasses in nette/application call parent::__construct()
+	}
+
+
+	/** @return array<string, mixed> */
+	public function __serialize(): array
+	{
+		$data = (array) $this;
+		unset($data["\0" . self::class . "\0refUrlCache"]); // WeakMap cannot be serialized
+		return $data;
 	}
 
 
 	/**
-	 * Maps HTTP request to an array.
 	 * @return ?array<string, mixed>
 	 * @final
 	 */
@@ -95,28 +106,17 @@ class RouteList implements Router
 	}
 
 
-	/**
-	 * Constructs absolute URL from array.
-	 * @param array<string, mixed>  $params
-	 */
+	/** @param array<string, mixed>  $params */
 	public function constructUrl(array $params, Nette\Http\UrlScript $refUrl): ?string
 	{
 		if ($this->domain) {
-			if (!$this->refUrlCache->offsetExists($refUrl)) {
-				$this->refUrlCache->offsetSet($refUrl, $refUrl->withHost(
-					$this->expandDomain($refUrl->getHost()),
-				));
-			}
-
-			$refUrl = $this->refUrlCache->offsetGet($refUrl);
+			$this->refUrlCache ??= new \WeakMap;
+			$refUrl = $this->refUrlCache[$refUrl] ??= $refUrl->withHost($this->expandDomain($refUrl->getHost()));
 		}
 
 		if ($this->path) {
-			if (!$this->refUrlCache->offsetExists($refUrl)) {
-				$this->refUrlCache->offsetSet($refUrl, $refUrl->withPath($refUrl->getBasePath() . $this->path));
-			}
-
-			$refUrl = $this->refUrlCache->offsetGet($refUrl);
+			$this->refUrlCache ??= new \WeakMap;
+			$refUrl = $this->refUrlCache[$refUrl] ??= $refUrl->withPath($refUrl->getBasePath() . $this->path);
 		}
 
 		if ($this->ranks === null) {
@@ -141,6 +141,10 @@ class RouteList implements Router
 	}
 
 
+	/**
+	 * Builds an internal lookup index of routers grouped by their most discriminating constant parameter.
+	 * Call this before URL generation to improve performance; called automatically on first use.
+	 */
 	public function warmupCache(): void
 	{
 		// find best key
@@ -232,6 +236,7 @@ class RouteList implements Router
 
 
 	/**
+	 * Creates a Route from the mask and adds it to the list.
 	 * @param string  $mask e.g. '<presenter>/<action>/<id \d{1,3}>'
 	 * @param array<string, mixed>  $metadata default values or metadata
 	 * @return static
@@ -244,30 +249,34 @@ class RouteList implements Router
 
 
 	/**
-	 * Returns an iterator over all routers.
+	 * Creates a child RouteList scoped to the given domain and adds it to this list.
 	 */
 	public function withDomain(string $domain): static
 	{
 		$router = new static;
 		$router->domain = $domain;
-		$router->refUrlCache = new \SplObjectStorage;
 		$router->parent = $this;
 		$this->add($router);
 		return $router;
 	}
 
 
+	/**
+	 * Creates a child RouteList scoped to the given path prefix and adds it to this list.
+	 */
 	public function withPath(string $path): static
 	{
 		$router = new static;
 		$router->path = rtrim($path, '/') . '/';
-		$router->refUrlCache = new \SplObjectStorage;
 		$router->parent = $this;
 		$this->add($router);
 		return $router;
 	}
 
 
+	/**
+	 * Returns the parent RouteList, used to end a withDomain()/withPath() chain.
+	 */
 	public function end(): ?self
 	{
 		return $this->parent;
@@ -275,6 +284,7 @@ class RouteList implements Router
 
 
 	/**
+	 * Returns all routers in this list.
 	 * @return list<Router>
 	 */
 	public function getRouters(): array
@@ -284,6 +294,7 @@ class RouteList implements Router
 
 
 	/**
+	 * Returns the flags (e.g. ONE_WAY) for each router in this list.
 	 * @return list<int>
 	 */
 	public function getFlags(): array
@@ -307,7 +318,7 @@ class RouteList implements Router
 	private function expandDomain(string $host): string
 	{
 		assert($this->domain !== null);
-		$parts = ip2long($host) ? [$host] : array_reverse(explode('.', $host));
+		$parts = Route::hostParts($host);
 		return strtr($this->domain, [
 			'%tld%' => $parts[0],
 			'%domain%' => isset($parts[1]) ? "$parts[1].$parts[0]" : $parts[0],

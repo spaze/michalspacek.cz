@@ -1,32 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte\Nodes;
 
 use Latte\CompileException;
-use Latte\Compiler\Block;
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\AuxiliaryNode;
+use Latte\Compiler\{Block, PrintContext, Tag, TemplateParser};
+use Latte\Compiler\Nodes\{AreaNode, AuxiliaryNode, Php, StatementNode};
 use Latte\Compiler\Nodes\Html\ElementNode;
-use Latte\Compiler\Nodes\Php;
-use Latte\Compiler\Nodes\Php\Expression;
-use Latte\Compiler\Nodes\Php\Scalar;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TemplateParser;
+use Latte\Compiler\Nodes\Php\{Expression, Scalar};
 use Latte\Runtime\Template;
 use Nette\Bridges\ApplicationLatte\SnippetRuntime;
 
 
 /**
- * {snippet [name]}
+ * {snippet [name]} ... {/snippet}
+ * Defines AJAX snippet for partial page redrawing.
  */
 class SnippetNode extends StatementNode
 {
@@ -36,7 +28,7 @@ class SnippetNode extends StatementNode
 	public ?ElementNode $htmlElement;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag, TemplateParser $parser): \Generator
 	{
 		$tag->outputMode = $tag::OutputKeepIndentation;
@@ -63,6 +55,7 @@ class SnippetNode extends StatementNode
 		}
 
 		if ($tag->isNAttribute()) {
+			assert($tag->htmlElement !== null);
 			if ($tag->prefix !== $tag::PrefixNone) {
 				throw new CompileException("Use n:snippet instead of {$tag->getNotation()}", $tag->position);
 
@@ -97,8 +90,8 @@ class SnippetNode extends StatementNode
 		}
 
 		if ($this->htmlElement) {
+			$inner = $this->htmlElement->content;
 			try {
-				$inner = $this->htmlElement->content;
 				$this->htmlElement->content = new AuxiliaryNode(fn() => $this->printContent($context, $inner));
 				return $this->content->print($context);
 			} finally {

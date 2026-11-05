@@ -8,7 +8,6 @@
 namespace Nette\Database\Drivers;
 
 use Nette;
-use function preg_replace, str_replace, strtr;
 
 
 /**
@@ -38,7 +37,7 @@ class OdbcDriver implements Nette\Database\Driver
 
 	public function delimite(string $name): string
 	{
-		return '[' . str_replace(['[', ']'], ['[[', ']]'], $name) . ']';
+		return '[' . str_replace(']', ']]', $name) . ']'; // only ] is escaped by doubling in bracketed identifiers
 	}
 
 

@@ -9,8 +9,7 @@ namespace Latte\Tools;
 
 use Latte;
 use Nette;
-use function in_array, strlen;
-use const DIRECTORY_SEPARATOR, PHP_BINARY, STDERR;
+use function function_exists, strlen;
 
 
 /**
@@ -97,16 +96,6 @@ final class Linter
 
 	public function lintLatte(string $file): bool
 	{
-		set_error_handler(function (int $severity, string $message, string $errFile = '', int $errLine = 0) use ($file): bool {
-			if (in_array($severity, [E_USER_DEPRECATED, E_USER_WARNING, E_USER_NOTICE], strict: true)) {
-				$pos = preg_match('~on line (\d+)~', $message, $m) ? ':' . $m[1] : '';
-				$label = $severity === E_USER_DEPRECATED ? 'DEPRECATED' : 'WARNING';
-				$this->writeError($label, $file . $pos, $message);
-				return true;
-			}
-			return false;
-		});
-
 		if ($this->debug) {
 			echo $file, "\n";
 		}
@@ -118,6 +107,16 @@ final class Linter
 		if (str_starts_with($s, "\xEF\xBB\xBF")) {
 			$this->writeError('WARNING', $file, 'contains BOM');
 		}
+
+		set_error_handler(function (int $severity, string $message, string $errFile = '', int $errLine = 0) use ($file): bool {
+			if (in_array($severity, [E_USER_DEPRECATED, E_USER_WARNING, E_USER_NOTICE], true)) {
+				$pos = preg_match('~on line (\d+)~', $message, $m) ? ':' . $m[1] : '';
+				$label = $severity === E_USER_DEPRECATED ? 'DEPRECATED' : 'WARNING';
+				$this->writeError($label, $file . $pos, $message);
+				return true;
+			}
+			return false;
+		});
 
 		try {
 			$this->getEngine()
@@ -194,6 +193,6 @@ final class Linter
 
 	private function writeError(string $label, string $file, string $message): void
 	{
-		fwrite(STDERR, str_pad("[$label]", 13) . ' ' . $file . '    ' . $message . "\n");
+		file_put_contents('php://stderr', str_pad("[$label]", 13) . ' ' . $file . '    ' . $message . "\n");
 	}
 }

@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette;
-use function array_shift, class_exists, count, explode, is_array, is_string, preg_match, strtr;
+use function count, is_array, is_string;
 
 
 /**
@@ -18,25 +16,30 @@ use function array_shift, class_exists, count, explode, is_array, is_string, pre
  */
 class PresenterFactory implements IPresenterFactory
 {
-	/** @var array[] of module => splited mask */
+	/** @var array<string, array{string, string, string}>  module => splited mask */
 	private array $mapping = [
-		'*' => ['', '*Module\\', '*Presenter'],
+		'*' => ['App\Presentation\\', '*\\', '**Presenter'],
 		'Nette' => ['NetteModule\\', '*\\', '*Presenter'],
 	];
 
+	/** @var array<string, string> */
 	private array $aliases = [];
+
+	/** @var array<string, class-string<IPresenter>> */
 	private array $cache = [];
 
-	/** @var callable */
-	private $factory;
+	/** @var \Closure(class-string<IPresenter>): IPresenter */
+	private \Closure $factory;
 
 
 	/**
-	 * @param  ?callable(string): IPresenter  $factory
+	 * @param  ?callable(class-string<IPresenter>): IPresenter  $factory
 	 */
 	public function __construct(?callable $factory = null)
 	{
-		$this->factory = $factory ?? fn(string $class): IPresenter => new $class;
+		$this->factory = $factory
+			? $factory(...)
+			: fn(string $class): IPresenter => new $class;
 	}
 
 
@@ -51,6 +54,7 @@ class PresenterFactory implements IPresenterFactory
 
 	/**
 	 * Generates and checks presenter class name.
+	 * @return class-string<IPresenter>
 	 * @throws InvalidPresenterException
 	 */
 	public function getPresenterClass(string &$name): string
@@ -66,7 +70,7 @@ class PresenterFactory implements IPresenterFactory
 
 		$reflection = new \ReflectionClass($class);
 		$class = $reflection->getName();
-		if (!$reflection->implementsInterface(IPresenter::class)) {
+		if (!is_subclass_of($class, IPresenter::class)) {
 			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor.");
 		} elseif ($reflection->isAbstract()) {
 			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is abstract.");
@@ -78,6 +82,7 @@ class PresenterFactory implements IPresenterFactory
 
 	/**
 	 * Sets mapping as pairs [module => mask]
+	 * @param array<string, string|array{string, string, string}>  $mapping
 	 */
 	public function setMapping(array $mapping): static
 	{
@@ -88,6 +93,7 @@ class PresenterFactory implements IPresenterFactory
 				}
 
 				$this->mapping[$module] = [$m[1], $m[2] ?: '*Module\\', $m[3]];
+
 			} elseif (is_array($mask) && count($mask) === 3) {
 				$this->mapping[$module] = [$mask[0] ? $mask[0] . '\\' : '', $mask[1] . '\\', $mask[2]];
 			} else {
@@ -123,6 +129,7 @@ class PresenterFactory implements IPresenterFactory
 
 	/**
 	 * Sets pairs [alias => destination]
+	 * @param array<string, string>  $aliases
 	 */
 	public function setAliases(array $aliases): static
 	{
@@ -131,6 +138,9 @@ class PresenterFactory implements IPresenterFactory
 	}
 
 
+	/**
+	 * Returns the destination registered under the given alias, or throws if not found.
+	 */
 	public function getAlias(string $alias): string
 	{
 		return $this->aliases[$alias] ?? throw new Nette\InvalidStateException("Link alias '$alias' was not found.");

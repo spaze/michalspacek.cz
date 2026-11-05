@@ -9,9 +9,7 @@ namespace Latte\Compiler\Nodes\Php\Scalar;
 
 use Latte\CompileException;
 use Latte\Compiler\Nodes\Php\ScalarNode;
-use Latte\Compiler\PhpHelpers;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{PhpHelpers, Position, PrintContext};
 use const PHP_INT_MAX;
 
 
@@ -30,17 +28,15 @@ class IntegerNode extends ScalarNode
 		public int $value,
 		public int $kind = self::KindDecimal,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 
 
-	public static function parse(string $str, ?Position $position): static
+	public static function parse(string $str, ?Position $start, ?Position $end = null): static
 	{
-		$num = PhpHelpers::decodeNumber($str, $base);
-		if ($num === null) {
-			throw new CompileException('Invalid numeric literal', $position);
-		}
-		return new static($num, $base, $position);
+		$num = PhpHelpers::decodeNumber($str, $base) ?? throw new CompileException('Invalid numeric literal', $start);
+		return new static($num, $base, $start, $end);
 	}
 
 

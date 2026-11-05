@@ -7,17 +7,11 @@
 
 namespace Latte\Essential\Nodes;
 
-use Latte\Compiler\NodeHelpers;
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\NopNode;
-use Latte\Compiler\Nodes\Php;
+use Latte\Compiler\{NodeHelpers, PrintContext, Tag};
+use Latte\Compiler\Nodes\{AreaNode, NopNode, Php, StatementNode, TextNode};
 use Latte\Compiler\Nodes\Php\ModifierNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Nodes\TextNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
 use Latte\Essential\TranslatorExtension;
-use function array_unshift, is_array, is_string;
+use function is_array, is_string;
 
 
 /**
@@ -64,8 +58,8 @@ class TranslateNode extends StatementNode
 
 	public function print(PrintContext $context): string
 	{
-		if ($this->content instanceof TextNode) {
-			return $context->format(
+		return $this->content instanceof TextNode
+			? $context->format(
 				<<<'XX'
 					$ʟ_fi = new LR\FilterInfo(%dump);
 					echo %modifyContent(%dump) %line;
@@ -74,10 +68,8 @@ class TranslateNode extends StatementNode
 				$this->modifier,
 				$this->content->content,
 				$this->position,
-			);
-
-		} else {
-			return $context->format(
+			)
+			: $context->format(
 				<<<'XX'
 					ob_start(fn() => ''); try {
 						%node
@@ -92,7 +84,6 @@ class TranslateNode extends StatementNode
 				$this->modifier,
 				$this->position,
 			);
-		}
 	}
 
 

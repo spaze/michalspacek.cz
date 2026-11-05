@@ -10,8 +10,7 @@ namespace Latte\Essential\Nodes;
 use Latte;
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
 use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 use Latte\Runtime as LR;
 use function is_array;
 
@@ -68,12 +67,15 @@ final class NAttrNode extends StatementNode
 	{
 		LR\HtmlHelpers::validateAttributeName($name);
 		$type = LR\HtmlHelpers::classifyAttributeType($name);
-		if ($value === null || ($value === false && $type !== 'data' && $type !== 'aria')) {
+		if ($value === null || ($value === false && $type !== 'data' && $type !== 'aria' && $type !== 'tristate')) {
 			return '';
 		} elseif ($value === true && $type === '') {
 			return $name;
 		} elseif ($migrationWarnings && is_array($value) && $type === 'data') {
-			LR\HtmlHelpers::triggerMigrationWarning($name, "array value: previously it rendered as $name=\"val1 val2 ...\", now the attribute is JSON-encoded");
+			LR\HtmlHelpers::triggerMigrationWarning(
+				$name,
+				"array value: previously it rendered as $name=\"val1 val2 ...\", now the attribute is JSON-encoded",
+			);
 		}
 		return LR\HtmlHelpers::{"format{$type}Attribute"}($name, $value, $migrationWarnings);
 	}

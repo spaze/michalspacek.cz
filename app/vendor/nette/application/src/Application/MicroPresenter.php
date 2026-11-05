@@ -1,19 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace NetteModule;
 
 use Latte;
 use Nette;
-use Nette\Application;
+use Nette\{Application, Http};
 use Nette\Application\Responses;
-use Nette\Http;
 use Nette\Routing\Router;
 use function is_array, is_object, is_string;
 
@@ -23,7 +20,7 @@ use function is_array, is_object, is_string;
  */
 final class MicroPresenter implements Application\IPresenter
 {
-	private ?Application\Request $request;
+	private ?Application\Request $request = null;
 
 
 	public function __construct(
@@ -34,9 +31,6 @@ final class MicroPresenter implements Application\IPresenter
 	}
 
 
-	/**
-	 * Gets the context.
-	 */
 	public function getContext(): ?Nette\DI\Container
 	{
 		return $this->context;
@@ -84,7 +78,7 @@ final class MicroPresenter implements Application\IPresenter
 			$this->error($e->getMessage());
 		}
 
-		$response = $callback(...array_values($params));
+		$response = $callback(...$params);
 
 		if (is_string($response)) {
 			$response = [$response, []];
@@ -100,22 +94,24 @@ final class MicroPresenter implements Application\IPresenter
 			$response->setFile((string) $templateSource);
 		}
 
-		if ($response instanceof Application\UI\Template) {
-			return new Responses\TextResponse($response);
-		} else {
-			return $response ?: new Responses\VoidResponse;
-		}
+		return $response instanceof Application\UI\Template
+			? new Responses\TextResponse($response)
+			: ($response ?: new Responses\VoidResponse);
 	}
 
 
 	/**
-	 * Template factory.
+	 * Creates a template instance with default variables pre-populated.
+	 * @param  ?class-string<Application\UI\Template>  $class
+	 * @param  ?callable(): Latte\Engine  $latteFactory
 	 */
 	public function createTemplate(?string $class = null, ?callable $latteFactory = null): Application\UI\Template
 	{
 		$latte = $latteFactory
 			? $latteFactory()
-			: $this->getContext()->getByType(Nette\Bridges\ApplicationLatte\LatteFactory::class)->create();
+			: ($this->context ?? throw new Nette\InvalidStateException('Unable to create template, provide the $latteFactory parameter or DI container.'))
+				->getByType(Nette\Bridges\ApplicationLatte\LatteFactory::class)
+				->create();
 		$template = $class
 			? new $class
 			: new Nette\Bridges\ApplicationLatte\DefaultTemplate($latte);
@@ -146,7 +142,7 @@ final class MicroPresenter implements Application\IPresenter
 	 * Throws HTTP error.
 	 * @throws Nette\Application\BadRequestException
 	 */
-	public function error(string $message = '', int $httpCode = Http\IResponse::S404_NotFound): void
+	public function error(string $message = '', int $httpCode = Http\IResponse::S404_NotFound): never
 	{
 		throw new Application\BadRequestException($message, $httpCode);
 	}

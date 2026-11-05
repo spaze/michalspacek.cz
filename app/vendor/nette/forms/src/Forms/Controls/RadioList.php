@@ -10,7 +10,7 @@ namespace Nette\Forms\Controls;
 use Nette;
 use Nette\Utils\Html;
 use Stringable;
-use function array_merge, func_num_args, in_array, is_array, key;
+use function func_num_args, is_array;
 
 
 /**
@@ -57,12 +57,13 @@ class RadioList extends ChoiceControl
 		return $this->container->setHtml(
 			Nette\Forms\Helpers::createInputList(
 				$this->translate($items),
-				array_merge($input->attrs, [
+				[
+					...$input->attrs,
 					'id:' => $ids,
 					'checked?' => $this->value,
 					'disabled:' => $this->disabled,
 					'data-nette-rules:' => [array_key_first($items) => $input->attrs['data-nette-rules']],
-				]),
+				],
 				['for:' => $ids] + $this->itemLabel->attrs,
 				$this->separator,
 			),
@@ -81,10 +82,10 @@ class RadioList extends ChoiceControl
 	 */
 	public function getControlPart($key = null): Html
 	{
-		$key = key([(string) $key => null]);
+		$this->getItem($key);
 		return parent::getControl()->addAttributes([
 			'id' => $this->getHtmlId() . '-' . $key,
-			'checked' => in_array($key, (array) $this->value, strict: true),
+			'checked' => in_array($key, (array) $this->value, true),
 			'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
 			'value' => $key,
 		]);
@@ -98,7 +99,7 @@ class RadioList extends ChoiceControl
 	{
 		$itemLabel = clone $this->itemLabel;
 		return func_num_args()
-			? $itemLabel->setText($this->translate($this->getItems()[$key]))->for($this->getHtmlId() . '-' . $key)
+			? $itemLabel->setText($this->translate($this->getItem($key)))->for($this->getHtmlId() . '-' . $key)
 			: $this->getLabel();
 	}
 

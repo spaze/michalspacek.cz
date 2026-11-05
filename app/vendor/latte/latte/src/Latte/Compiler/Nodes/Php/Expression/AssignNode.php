@@ -8,11 +8,8 @@
 namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\CompileException;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\ListNode;
-use Latte\Compiler\Nodes\Php\OperatorNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, ListNode, OperatorNode};
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -28,6 +25,7 @@ class AssignNode extends ExpressionNode implements OperatorNode
 		public ExpressionNode $expr,
 		public bool $byRef = false,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		$this->validate();
 	}
@@ -53,7 +51,10 @@ class AssignNode extends ExpressionNode implements OperatorNode
 		if ($this->var instanceof ExpressionNode && !$this->var->isWritable()) {
 			throw new CompileException('Cannot write to the expression: ' . $this->var->print(new PrintContext), $this->var->position);
 		} elseif ($this->byRef && !$this->expr->isWritable()) {
-			throw new CompileException('Cannot take reference to the expression: ' . $this->expr->print(new PrintContext), $this->expr->position);
+			throw new CompileException(
+				'Cannot take reference to the expression: ' . $this->expr->print(new PrintContext),
+				$this->expr->position,
+			);
 		}
 	}
 

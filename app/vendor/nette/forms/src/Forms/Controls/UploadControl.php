@@ -13,7 +13,7 @@ use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Arrays;
 use Stringable;
-use function implode, ini_get, is_array;
+use function ini_get, is_array;
 
 
 /**
@@ -69,7 +69,7 @@ class UploadControl extends BaseControl
 	 * @return static
 	 * @internal
 	 */
-	public function setValue($value)
+	public function setValue(mixed $value)
 	{
 		return $this;
 	}
@@ -125,7 +125,7 @@ class UploadControl extends BaseControl
 
 
 	/**
-	 * @param  (callable(Nette\Forms\Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 * @return static
 	 */
 	public function addRule(

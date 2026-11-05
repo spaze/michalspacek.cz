@@ -8,8 +8,7 @@
 namespace Latte\Essential;
 
 use Latte;
-use Latte\Engine;
-use Latte\Helpers;
+use Latte\{Engine, Helpers};
 use Latte\Runtime\Template;
 use function count, is_string;
 
@@ -48,7 +47,7 @@ final class Tracer
 	private static function generateTrace(array $trace): array
 	{
 		$res = [];
-		foreach ($trace as $i => $item) {
+		foreach ($trace as $item) {
 			$object = $item['object'] ?? null;
 			if ($object instanceof Template) {
 				$method = $item['function'] ?? '';
@@ -57,7 +56,7 @@ final class Tracer
 					// begin of block
 					$comment = (new \ReflectionMethod($object, $method))->getDocComment() ?: '';
 					$res[] = [
-						'function' => preg_match('~(\{.+\})~', $comment, $m) ? $m[1] : '?',
+						'function' => preg_match('~(\{.+})~', $comment, $m) ? $m[1] : '?',
 						'file' => $object->getName(),
 						'line' => preg_match('~ on line (\d+)~', $comment, $m) ? (int) $m[1] : 0,
 						'args' => [], // $L_args is not true, will be added in next step

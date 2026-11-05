@@ -1,22 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte\Nodes;
 
 use Latte;
-use Latte\Compiler\PhpHelpers;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{PhpHelpers, PrintContext};
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
 
+
 /**
  * {templatePrint [ClassName]}
+ * Generates template class extending Nette\Bridges\ApplicationLatte\Template.
  */
 class TemplatePrintNode extends Latte\Essential\Nodes\TemplatePrintNode
 {
@@ -26,13 +25,10 @@ class TemplatePrintNode extends Latte\Essential\Nodes\TemplatePrintNode
 	}
 
 
+	/** @param  array<string, mixed>  $params */
 	public static function printClass(array $params, string $parentClass): void
 	{
 		$bp = new Latte\Essential\Blueprint;
-		if (!method_exists($bp, 'generateTemplateClass')) {
-			throw new \LogicException("Please update 'latte/latte' to version 3.0.15 or newer.");
-		}
-
 		$control = $params['control'] ?? $params['presenter'] ?? null;
 		$name = 'Template';
 		if ($control instanceof UI\Control) {
@@ -46,7 +42,9 @@ class TemplatePrintNode extends Latte\Essential\Nodes\TemplatePrintNode
 		$bp->printCode($code);
 
 		if ($control instanceof UI\Control) {
-			$file = dirname((new \ReflectionClass($control))->getFileName()) . '/' . $class->getName() . '.php';
+			$controlFile = (new \ReflectionClass($control))->getFileName()
+				?: throw new \LogicException('Cannot determine file of class ' . $control::class . '.');
+			$file = dirname($controlFile) . '/' . $class->getName() . '.php';
 			if (file_exists($file)) {
 				echo "unsaved, file {$bp->clickableFile($file)} already exists";
 			} else {

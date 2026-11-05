@@ -7,7 +7,7 @@
 
 namespace Latte\Essential;
 
-use function get_debug_type, is_array, max, method_exists, sprintf;
+use function is_array, sprintf;
 
 
 /**
@@ -46,7 +46,10 @@ class CachingIterator extends \CachingIterator implements \Countable
 				$iterator = new \IteratorIterator($iterator);
 			}
 		} else {
-			throw new \InvalidArgumentException(sprintf('Invalid argument passed to foreach; array or Traversable expected, %s given.', get_debug_type($iterator)));
+			throw new \InvalidArgumentException(sprintf(
+				'Invalid argument passed to foreach; array or Traversable expected, %s given.',
+				get_debug_type($iterator),
+			));
 		}
 
 		parent::__construct($iterator, 0);
@@ -192,6 +195,16 @@ class CachingIterator extends \CachingIterator implements \Countable
 	public function getParent(): ?self
 	{
 		return $this->parent;
+	}
+
+
+	/**
+	 * Stops \CachingIterator from forwarding unknown methods to the inner iterator, past the sandbox policy.
+	 * @param  mixed[]  $args
+	 */
+	public function __call(string $name, array $args): never
+	{
+		throw new \Error('Call to undefined method ' . static::class . "::$name()");
 	}
 
 

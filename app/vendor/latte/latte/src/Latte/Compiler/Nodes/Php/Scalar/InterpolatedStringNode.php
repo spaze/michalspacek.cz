@@ -7,14 +7,9 @@
 
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\InterpolatedStringPartNode;
-use Latte\Compiler\Nodes\Php\ScalarNode;
-use Latte\Compiler\PhpHelpers;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, InterpolatedStringPartNode, ScalarNode};
+use Latte\Compiler\{PhpHelpers, Position, PrintContext};
 use Latte\Helpers;
-use function substr;
 
 
 /**
@@ -26,12 +21,13 @@ class InterpolatedStringNode extends ScalarNode
 		/** @var array<ExpressionNode|InterpolatedStringPartNode> */
 		public array $parts,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 
 
 	/** @param array<ExpressionNode|InterpolatedStringPartNode>  $parts */
-	public static function parse(array $parts, ?Position $position): static
+	public static function parse(array $parts, ?Position $start, ?Position $end = null): static
 	{
 		foreach ($parts as $part) {
 			if ($part instanceof InterpolatedStringPartNode) {
@@ -39,7 +35,7 @@ class InterpolatedStringNode extends ScalarNode
 			}
 		}
 
-		return new static($parts, $position);
+		return new static($parts, $start, $end);
 	}
 
 

@@ -8,10 +8,9 @@
 namespace Nette\Forms;
 
 use Nette;
-use Nette\Utils\Html;
-use Nette\Utils\Image;
-use Nette\Utils\Strings;
-use function array_fill_keys, array_map, array_values, explode, html_entity_decode, htmlspecialchars, in_array, ini_get, is_a, is_array, is_numeric, is_scalar, is_string, str_ends_with, str_replace, strip_tags, strpos, strtolower, strtr, substr, substr_replace;
+use Nette\Utils\{Html, Image, Strings};
+use function is_array, is_scalar, is_string;
+use const ENT_HTML5, ENT_QUOTES;
 
 
 /**
@@ -61,6 +60,7 @@ final class Helpers
 			}
 
 			return array_values($data);
+
 		} else {
 			return static::sanitize($itype, $data);
 		}
@@ -100,7 +100,7 @@ final class Helpers
 			$name = substr_replace($name, '', $pos, 1) . ']';
 		}
 
-		if (is_numeric($name) || in_array($name, self::UnsafeNames, strict: true)) {
+		if (is_numeric($name) || in_array($name, self::UnsafeNames, true)) {
 			$name = '_' . $name;
 		}
 
@@ -149,7 +149,11 @@ final class Helpers
 				$item = ['op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => $msg];
 			}
 
-			if (is_array($rule->arg)) {
+			if ($op === Form::Enum && is_string($rule->arg) && is_a($rule->arg, \BackedEnum::class, allow_string: true)) {
+				// the enum validator has no JS counterpart; export as membership check against the case values
+				$item['op'] = ($rule->isNegative ? '~' : '') . Form::Equal;
+				$item['arg'] = array_column(($rule->arg)::cases(), 'value');
+			} elseif (is_array($rule->arg)) {
 				$item['arg'] = [];
 				foreach ($rule->arg as $key => $value) {
 					$item['arg'][$key] = self::exportArgument($value, $rule->control);
@@ -334,15 +338,21 @@ final class Helpers
 		\ReflectionParameter|\ReflectionProperty|null $reflection,
 	): mixed
 	{
-		if ($value !== null
-			&& $reflection
-			&& ($type = Nette\Utils\Type::fromReflection($reflection)?->getSingleName())
-			&& is_a($type, \BackedEnum::class, allow_string: true)
+		if ($value === null
+			|| !$reflection
+			|| !($type = Nette\Utils\Type::fromReflection($reflection)?->getSingleName())
+			|| !is_a($type, \BackedEnum::class, allow_string: true)
 		) {
-			return $type::from($value);
+			return $value;
 		}
 
-		return $value;
+		// form values arrive as strings, so int-backed enums need explicit conversion
+		if ((new \ReflectionEnum($type))->getBackingType()?->getName() === 'int') {
+			$int = filter_var($value, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+			return $int === null ? $value : ($type::tryFrom($int) ?? $value);
+		}
+
+		return is_string($value) ? ($type::tryFrom($value) ?? $value) : $value;
 	}
 
 

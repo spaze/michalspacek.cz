@@ -1,17 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application\UI;
 
 use Nette;
 use Nette\Utils\Reflection;
-use function array_key_exists, explode, get_debug_type, is_array, is_scalar, ltrim, preg_replace, settype, sprintf;
+use function array_key_exists, is_array, is_scalar, sprintf;
 
 
 /**
@@ -22,15 +20,19 @@ final class ParameterConverter
 {
 	use Nette\StaticClass;
 
+	/**
+	 * @param  array<string, mixed>  $args
+	 * @return list<mixed>
+	 */
 	public static function toArguments(\ReflectionFunctionAbstract $method, array $args): array
 	{
 		$res = [];
-		foreach ($method->getParameters() as $i => $param) {
+		foreach ($method->getParameters() as $param) {
 			$name = $param->getName();
 			$type = self::getType($param);
 			if (isset($args[$name])) {
-				$res[$i] = $args[$name];
-				if (!self::convertType($res[$i], $type)) {
+				$value = $args[$name];
+				if (!self::convertType($value, $type)) {
 					throw new Nette\InvalidArgumentException(sprintf(
 						'Argument $%s passed to %s must be %s, %s given.',
 						$name,
@@ -40,11 +42,11 @@ final class ParameterConverter
 					));
 				}
 			} elseif ($param->isDefaultValueAvailable()) {
-				$res[$i] = $param->getDefaultValue();
+				$value = $param->getDefaultValue();
 			} elseif ($type === 'scalar' || $param->allowsNull()) {
-				$res[$i] = null;
+				$value = null;
 			} elseif ($type === 'array' || $type === 'iterable') {
-				$res[$i] = [];
+				$value = [];
 			} else {
 				throw new Nette\InvalidArgumentException(sprintf(
 					'Missing parameter $%s required by %s',
@@ -52,6 +54,8 @@ final class ParameterConverter
 					Reflection::toString($method),
 				));
 			}
+
+			$res[] = $value;
 		}
 
 		return $res;
@@ -60,7 +64,9 @@ final class ParameterConverter
 
 	/**
 	 * Converts list of arguments to named parameters & check types.
-	 * @param  \ReflectionParameter[]  $missing arguments
+	 * @param  mixed[]  $args
+	 * @param  array<string, mixed>  $supplemental
+	 * @param  \ReflectionParameter[]|null  $missing  collects parameters with missing values
 	 * @throws InvalidLinkException
 	 * @internal
 	 */
@@ -75,6 +81,7 @@ final class ParameterConverter
 		foreach ($method->getParameters() as $param) {
 			$type = self::getType($param);
 			$name = $param->getName();
+			$fromSupplemental = false;
 
 			if (array_key_exists($i, $args)) {
 				$args[$name] = $args[$i];
@@ -86,6 +93,7 @@ final class ParameterConverter
 
 			} elseif (array_key_exists($name, $supplemental)) {
 				$args[$name] = $supplemental[$name];
+				$fromSupplemental = true;
 			}
 
 			if (!isset($args[$name])) {
@@ -104,13 +112,16 @@ final class ParameterConverter
 			}
 
 			if (!self::convertType($args[$name], $type)) {
-				throw new InvalidLinkException(sprintf(
+				$message = sprintf(
 					'Argument $%s passed to %s must be %s, %s given.',
 					$name,
 					Reflection::toString($method),
 					$type,
 					get_debug_type($args[$name]),
-				));
+				);
+				throw $fromSupplemental
+					? new InvalidRequestParameterException($message)
+					: new InvalidLinkException($message);
 			}
 
 			$def = $param->isDefaultValueAvailable()
@@ -142,7 +153,8 @@ final class ParameterConverter
 				$type === 'scalar' => !is_array($val), // special type due to historical reasons
 				$type === 'mixed' => true,
 				$type === 'callable' => false, // intentionally disabled for security reasons
-				default => $val instanceof $type,
+				default => $val instanceof $type
+					|| (is_subclass_of($type, \BackedEnum::class) && self::castEnum($val, $type)),
 			}) {
 				return true;
 			}
@@ -174,6 +186,29 @@ final class ParameterConverter
 		}
 
 		$val = $tmp;
+		return true;
+	}
+
+
+	/**
+	 * Lossless conversion of scalar to backed enum case.
+	 * @param  class-string<\BackedEnum>  $type
+	 */
+	private static function castEnum(mixed &$val, string $type): bool
+	{
+		if (!is_scalar($val)) {
+			return false;
+		}
+
+		$tmp = $val;
+		if (
+			!self::castScalar($tmp, (string) (new \ReflectionEnum($type))->getBackingType())
+			|| !($case = $type::tryFrom($tmp))
+		) {
+			return false;
+		}
+
+		$val = $case;
 		return true;
 	}
 

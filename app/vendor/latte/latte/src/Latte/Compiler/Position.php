@@ -7,18 +7,20 @@
 
 namespace Latte\Compiler;
 
-use function strlen, strrpos, substr_count;
+use function strlen;
 
 
 /**
  * Source position (line, column, byte offset) within a template.
- * @phpstan-sealed Range
  */
-readonly class Position
+final readonly class Position
 {
 	public function __construct(
+		/** 1-based line number */
 		public int $line = 1,
+		/** 1-based column number, counted in bytes */
 		public int $column = 1,
+		/** 0-based offset, counted in bytes */
 		public int $offset = 0,
 	) {
 	}
@@ -29,19 +31,17 @@ readonly class Position
 	 */
 	public function advance(string $str): self
 	{
-		if ($lines = substr_count($str, "\n")) {
-			return new self(
+		return ($lines = substr_count($str, "\n"))
+			? new self(
 				$this->line + $lines,
 				strlen($str) - strrpos($str, "\n"),
 				$this->offset + strlen($str),
-			);
-		} else {
-			return new self(
+			)
+			: new self(
 				$this->line,
 				$this->column + strlen($str),
 				$this->offset + strlen($str),
 			);
-		}
 	}
 
 

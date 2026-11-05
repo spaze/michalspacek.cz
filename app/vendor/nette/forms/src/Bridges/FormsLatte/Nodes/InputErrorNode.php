@@ -9,8 +9,7 @@ namespace Nette\Bridges\FormsLatte\Nodes;
 
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**
@@ -36,7 +35,7 @@ class InputErrorNode extends StatementNode
 	public function print(PrintContext $context): string
 	{
 		return $context->format(
-			'echo %escape(Nette\Bridges\FormsLatte\Runtime::item(%node, $this->global)->getError()) %line;',
+			'echo %escape($this->global->forms->get(%node)->getError()) %line;',
 			$this->name,
 			$this->position,
 		);

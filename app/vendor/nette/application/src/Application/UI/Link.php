@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Application\UI;
 
@@ -19,6 +17,7 @@ final class Link
 	public function __construct(
 		private readonly Component $component,
 		private readonly string $destination,
+		/** @var array<string, mixed> */
 		private array $params = [],
 	) {
 	}
@@ -63,6 +62,7 @@ final class Link
 
 	/**
 	 * Returns link parameters.
+	 * @return array<string, mixed>
 	 */
 	public function getParameters(): array
 	{

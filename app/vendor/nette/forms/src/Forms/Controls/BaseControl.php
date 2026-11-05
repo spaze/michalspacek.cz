@@ -8,36 +8,39 @@
 namespace Nette\Forms\Controls;
 
 use Nette;
-use Nette\Forms\Control;
-use Nette\Forms\Form;
-use Nette\Forms\Rules;
+use Nette\Forms\{Control, Form, Rules};
 use Nette\Utils\Html;
 use Stringable;
-use function array_unique, explode, func_get_arg, func_num_args, get_parent_class, implode, is_array, sprintf, str_contains;
+use function is_array;
 
 
 /**
  * Base implementation for form controls with HTML rendering, validation, translation, and option support.
  *
+ * @property-read string $name
  * @property-read Form $form
- * @property-read string $htmlName
+ * @property-deprecated string $htmlName
  * @property   string|bool|null $htmlId
  * @property   mixed $value
- * @property   string|Stringable $caption
+ * @property-deprecated   string|Stringable $caption
  * @property   bool $disabled
- * @property   bool $omitted
+ * @property-deprecated   bool $omitted
  * @property-read Html $control
  * @property-read Html $label
  * @property-read Html $controlPrototype
  * @property-read Html $labelPrototype
  * @property   bool $required
- * @property-read bool $filled
+ * @property-deprecated bool $filled
  * @property-read string[] $errors
- * @property-read array<string,mixed> $options
+ * @property-deprecated array<string,mixed> $options
  * @property-read string $error
  */
 abstract class BaseControl extends Nette\ComponentModel\Component implements Control
 {
+	use Nette\SmartObject {
+		__call as private callEvent;
+	}
+
 	public static string $idMask = 'frm-%s';
 
 	protected mixed $value = null;
@@ -47,9 +50,8 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 	/** @var bool|bool[] */
 	protected bool|array $disabled = false;
 
-	/** @var array<string, array<class-string, callable(static): mixed>> */
+	/** @var array<string, array<class-string, callable(static, never, never, never, never, never, never, never, never, never): mixed>> */
 	private static array $extMethods = [];
-	private string|Stringable|null $caption;
 
 	/** @var list<string|Stringable> */
 	private array $errors = [];
@@ -57,17 +59,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 	private Rules $rules;
 
 	/** true means autodetect */
-	private Nette\Localization\Translator|bool|null $translator = true;
+	private Nette\Localization\Translator|true|null $translator = true;
 
 	/** @var array<string, mixed> */
 	private array $options = [];
 
 
-	public function __construct(string|Stringable|null $caption = null)
-	{
+	public function __construct(
+		private string|Stringable|null $caption = null,
+	) {
 		$this->control = Html::el('input', ['type' => null, 'name' => null]);
 		$this->label = Html::el('label');
-		$this->caption = $caption;
 		$this->rules = new Rules($this);
 		$this->setValue(null);
 		$this->monitor(Form::class, function (Form $form): void {
@@ -250,7 +252,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 		$label->for = $this->getHtmlId();
 		$caption ??= $this->caption;
 		$translator = $this->getForm()->getTranslator();
-		$label->setText($translator && $caption !== null && !$caption instanceof Nette\HtmlStringable ? $translator->translate($caption) : $caption);
+		$label->setText(
+			$translator && $caption !== null && !$caption instanceof Nette\HtmlStringable ? $translator->translate($caption) : $caption,
+		);
 		return $label;
 	}
 
@@ -369,7 +373,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 
 
 	/**
-	 * Translates a string or array of strings using the configured translator, or returns the value unchanged if no translator is set or the value is HtmlStringable.
+	 * Translates a string or array of strings, or returns the value unchanged without a translator or when it is HtmlStringable.
 	 */
 	public function translate(mixed $value, mixed ...$parameters): mixed
 	{
@@ -391,7 +395,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 
 	/**
 	 * Adds a validation rule.
-	 * @param  (callable(Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 * @return static
 	 */
 	public function addRule(
@@ -406,7 +410,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 
 	/**
 	 * Adds a validation condition and returns a new branch.
-	 * @param  (callable(Control): bool)|string|bool  $validator
+	 * @param  (callable(never, never): bool)|string|bool  $validator
 	 */
 	public function addCondition($validator, mixed $value = null): Rules
 	{
@@ -416,7 +420,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 
 	/**
 	 * Adds a validation condition based on another control and returns a new branch.
-	 * @param  (callable(Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 */
 	public function addConditionOn(Control $control, $validator, mixed $value = null): Rules
 	{
@@ -537,11 +541,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 	 */
 	public function getOption(string $key): mixed
 	{
-		if (func_num_args() > 1) {
-			trigger_error(__METHOD__ . '() parameter $default is deprecated, use operator ??', E_USER_DEPRECATED);
-			$default = func_get_arg(1);
-		}
-		return $this->options[$key] ?? $default ?? null;
+		return $this->options[$key] ?? null;
 	}
 
 
@@ -558,23 +558,27 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements Con
 	/********************* extension methods ****************d*g**/
 
 
-	/** @param mixed[] $args */
+	/**
+	 * @param  mixed[]  $args
+	 * @return mixed
+	 */
 	public function __call(string $name, array $args)
 	{
 		$class = static::class;
 		do {
 			if (isset(self::$extMethods[$name][$class])) {
+				/** @var never[] $args */
 				return (self::$extMethods[$name][$class])($this, ...$args);
 			}
 
 			$class = get_parent_class($class);
 		} while ($class);
 
-		return parent::__call($name, $args);
+		return $this->callEvent($name, $args);
 	}
 
 
-	/** @param callable(static): mixed  $callback */
+	/** @param callable(static, never, never, never, never, never, never, never, never, never): mixed  $callback */
 	public static function extensionMethod(string $name, callable $callback): void
 	{
 		if (str_contains($name, '::')) { // back compatibility

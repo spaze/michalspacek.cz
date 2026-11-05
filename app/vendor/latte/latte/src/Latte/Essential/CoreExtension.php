@@ -10,12 +10,10 @@ namespace Latte\Essential;
 use Latte;
 use Latte\Compiler\Nodes\Php\Scalar;
 use Latte\Compiler\Nodes\TextNode;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TemplateParser;
-use Latte\Runtime;
-use Latte\RuntimeException;
+use Latte\Compiler\{Tag, TemplateParser};
+use Latte\{Runtime, RuntimeException};
 use Nette;
-use function array_keys, class_exists, extension_loaded, preg_match;
+use function extension_loaded;
 
 
 /**
@@ -157,6 +155,7 @@ final class CoreExtension extends Latte\Extension
 			'lower' => extension_loaded('mbstring')
 				? $this->filters->lower(...)
 				: fn() => throw new RuntimeException('Filter |lower requires mbstring extension.'),
+			'map' => $this->filters->map(...),
 			'number' => $this->filters->number(...),
 			'padLeft' => $this->filters->padLeft(...),
 			'padRight' => $this->filters->padRight(...),
@@ -170,9 +169,9 @@ final class CoreExtension extends Latte\Extension
 			'round' => $this->filters->round(...),
 			'slice' => $this->filters->slice(...),
 			'sort' => $this->filters->sort(...),
-			'spaceless' => $this->filters->strip(...),
+			'spaceless' => $this->filters->spaceless(...),
 			'split' => $this->filters->explode(...),
-			'strip' => $this->filters->strip(...), // obsolete
+			'strip' => $this->filters->spaceless(...), // obsolete
 			'stripHtml' => $this->filters->stripHtml(...),
 			'striphtml' => $this->filters->stripHtml(...),
 			'stripTags' => $this->filters->stripTags(...),
@@ -219,6 +218,7 @@ final class CoreExtension extends Latte\Extension
 				}
 			},
 			'customFunctions' => $passes->customFunctionsPass(...),
+			'firstLastSep' => Nodes\FirstLastSepNode::outsideForeachPass(...),
 			'moveTemplatePrintToHead' => Nodes\TemplatePrintNode::moveToHeadPass(...),
 			'nElse' => Nodes\NElseNode::processPass(...),
 			'scriptTagQuotes' => $passes->scriptTagQuotesPass(...),
@@ -283,7 +283,7 @@ final class CoreExtension extends Latte\Extension
 	{
 		try {
 			$name = $this->engine->getLoader()->getReferredName($name, $referringName);
-			$this->engine->createTemplate($name, [], clearCache: false);
+			$this->engine->createTemplate($name, clearCache: false);
 			return true;
 		} catch (Latte\TemplateNotFoundException) {
 			return false;

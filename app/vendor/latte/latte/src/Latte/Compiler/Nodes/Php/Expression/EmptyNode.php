@@ -8,8 +8,7 @@
 namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -20,6 +19,7 @@ class EmptyNode extends ExpressionNode
 	public function __construct(
 		public ExpressionNode $expr,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

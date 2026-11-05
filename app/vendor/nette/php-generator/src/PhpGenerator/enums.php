@@ -9,6 +9,17 @@ namespace Nette\PhpGenerator;
 
 
 /**
+ * Member visibility.
+ */
+enum Visibility: string
+{
+	case Public = 'public';
+	case Protected = 'protected';
+	case Private = 'private';
+}
+
+
+/**
  * Property access mode.
  */
 enum PropertyAccessMode: string

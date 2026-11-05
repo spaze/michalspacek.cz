@@ -9,7 +9,7 @@ namespace Latte\Compiler\Nodes;
 
 use Latte\Compiler\PrintContext;
 use Latte\Helpers;
-use function array_merge, count;
+use function count;
 
 
 /**
@@ -36,12 +36,29 @@ final class FragmentNode extends AreaNode
 	public function append(AreaNode $node): static
 	{
 		if ($node instanceof self) {
-			$this->children = array_merge($this->children, $node->children);
+			$this->children = [...$this->children, ...$node->children];
 		} elseif (!$node instanceof NopNode) {
 			$this->children[] = $node;
 		}
-		$this->position ??= $node->position;
 		return $this;
+	}
+
+
+	/**
+	 * Recomputes the extent to span the children (lowest start, highest end). Called by the
+	 * parser once the tree is built; a fragment has no extent of its own until then.
+	 */
+	public function updateExtent(): void
+	{
+		$this->position = $this->end = null;
+		foreach ($this->children as $child) {
+			if ($child->position && (!$this->position || $child->position->offset < $this->position->offset)) {
+				$this->position = $child->position;
+			}
+			if ($child->end && (!$this->end || $child->end->offset > $this->end->offset)) {
+				$this->end = $child->end;
+			}
+		}
 	}
 
 

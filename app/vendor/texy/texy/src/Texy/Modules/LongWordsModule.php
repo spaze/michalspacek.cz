@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use function array_flip, array_pop, array_splice, count, end, iconv_strlen, implode, ord, preg_match_all;
+use function count;
 
 
 /**
@@ -42,19 +42,19 @@ final class LongWordsModule extends Texy\Module
 	];
 
 	/** @var array<string, int>|string[] */
-	private array $before_r = [
+	private array $beforeR = [
 		'b', 'B', 'c', 'C', 'd', 'D', 'f', 'F', 'g', 'G', 'k', 'K', 'p', 'P', 'r', 'R', 't', 'T', 'v', 'V',
 		"\u{10D}", "\u{10C}", "\u{10F}", "\u{10E}", "\u{159}", "\u{158}", "\u{165}", "\u{164}", // Czech UTF-8
 	];
 
 	/** @var array<string, int>|string[] */
-	private array $before_l = [
+	private array $beforeL = [
 		'b', 'B', 'c', 'C', 'd', 'D', 'f', 'F', 'g', 'G', 'k', 'K', 'l', 'L', 'p', 'P', 't', 'T', 'v', 'V',
 		"\u{10D}", "\u{10C}", "\u{10F}", "\u{10E}", "\u{165}", "\u{164}", // Czech UTF-8
 	];
 
 	/** @var array<string, int>|string[] */
-	private array $before_h = ['c', 'C', 's', 'S'];
+	private array $beforeH = ['c', 'C', 's', 'S'];
 
 	/** @var array<string, int>|string[] */
 	private array $doubleVowels = ['a', 'A', 'o', 'O'];
@@ -66,9 +66,9 @@ final class LongWordsModule extends Texy\Module
 
 		$this->consonants = array_flip($this->consonants);
 		$this->vowels = array_flip($this->vowels);
-		$this->before_r = array_flip($this->before_r);
-		$this->before_l = array_flip($this->before_l);
-		$this->before_h = array_flip($this->before_h);
+		$this->beforeR = array_flip($this->beforeR);
+		$this->beforeL = array_flip($this->beforeL);
+		$this->beforeH = array_flip($this->beforeH);
 		$this->doubleVowels = array_flip($this->doubleVowels);
 
 		$texy->registerPostLine($this->postLine(...), 'longwords');
@@ -183,13 +183,13 @@ final class LongWordsModule extends Texy\Module
 
 			} elseif (isset($this->consonants[$next], $this->vowels[$prev])) {
 				if ($next === 'r') {
-					return isset($this->before_r[$ch]) ? self::Here : self::After;
+					return isset($this->beforeR[$ch]) ? self::Here : self::After;
 
 				} elseif ($next === 'l') {
-					return isset($this->before_l[$ch]) ? self::Here : self::After;
+					return isset($this->beforeL[$ch]) ? self::Here : self::After;
 
 				} elseif ($next === 'h') { // CH
-					return isset($this->before_h[$ch])
+					return isset($this->beforeH[$ch])
 						? self::Dont
 						: self::After;
 				}

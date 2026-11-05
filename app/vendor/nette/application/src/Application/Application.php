@@ -1,18 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette;
 use Nette\Routing\Router;
 use Nette\Utils\Arrays;
-use function count, is_string, str_starts_with, strcasecmp;
+use function count, is_string;
 
 
 /**
@@ -27,62 +25,56 @@ class Application
 	public ?string $errorPresenter = null;
 	public ?string $error4xxPresenter = null;
 
-	/** @var array<callable(self): void>  Occurs before the application loads presenter */
+	/** @var array<callable(static): void>  Occurs before the application loads presenter */
 	public array $onStartup = [];
 
-	/** @var array<callable(self, ?\Throwable): void>  Occurs before the application shuts down */
+	/** @var array<callable(static, ?\Throwable): void>  Occurs before the application shuts down */
 	public array $onShutdown = [];
 
-	/** @var array<callable(self, Request): void>  Occurs when a new request is received */
+	/** @var array<callable(static, Request): void>  Occurs when a new request is received */
 	public array $onRequest = [];
 
-	/** @var array<callable(self, IPresenter): void>  Occurs when a presenter is created */
+	/** @var array<callable(static, IPresenter): void>  Occurs when a presenter is created */
 	public array $onPresenter = [];
 
-	/** @var array<callable(self, Response): void>  Occurs when a new response is ready for dispatch */
+	/** @var array<callable(static, Response): void>  Occurs when a new response is ready for dispatch */
 	public array $onResponse = [];
 
-	/** @var array<callable(self, \Throwable): void>  Occurs when an unhandled exception occurs in the application */
+	/** @var array<callable(static, \Throwable): void>  Occurs when an unhandled exception occurs in the application */
 	public array $onError = [];
 
-	/** @var Request[] */
+	/** @var list<Request> */
 	private array $requests = [];
 	private ?IPresenter $presenter = null;
-	private Nette\Http\IRequest $httpRequest;
-	private Nette\Http\IResponse $httpResponse;
-	private IPresenterFactory $presenterFactory;
-	private Router $router;
 
 
 	public function __construct(
-		IPresenterFactory $presenterFactory,
-		Router $router,
-		Nette\Http\IRequest $httpRequest,
-		Nette\Http\IResponse $httpResponse,
+		private readonly IPresenterFactory $presenterFactory,
+		private readonly Router $router,
+		private readonly Nette\Http\IRequest $httpRequest,
+		private readonly Nette\Http\IResponse $httpResponse,
 	) {
-		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
-		$this->presenterFactory = $presenterFactory;
-		$this->router = $router;
 	}
 
 
 	/**
-	 * Dispatch a HTTP request to a front controller.
+	 * Dispatches an HTTP request to a front controller.
 	 */
 	public function run(): void
 	{
 		try {
 			Arrays::invoke($this->onStartup, $this);
-			$this->processRequest($this->createInitialRequest());
-			Arrays::invoke($this->onShutdown, $this);
+			$this->processRequest($this->createInitialRequest())
+				->send($this->httpRequest, $this->httpResponse);
+			Arrays::invoke($this->onShutdown, $this, null);
 
 		} catch (\Throwable $e) {
 			$this->sendHttpCode($e);
 			Arrays::invoke($this->onError, $this, $e);
 			if ($this->catchExceptions && ($req = $this->createErrorRequest($e))) {
 				try {
-					$this->processRequest($req);
+					$this->processRequest($req)
+						->send($this->httpRequest, $this->httpResponse);
 					Arrays::invoke($this->onShutdown, $this, $e);
 					return;
 
@@ -97,8 +89,16 @@ class Application
 	}
 
 
+	/**
+	 * Creates request from the current HTTP request via router.
+	 * @throws BadRequestException
+	 */
 	public function createInitialRequest(): Request
 	{
+		if ($this->httpRequest->isMethod(Request::Forward)) {
+			throw new BadRequestException('Invalid request. Method FORWARD is reserved for internal use.');
+		}
+
 		$params = $this->router->match($this->httpRequest);
 		$presenter = $params[UI\Presenter::PresenterKey] ?? null;
 
@@ -121,7 +121,10 @@ class Application
 	}
 
 
-	public function processRequest(Request $request): void
+	/**
+	 * Processes a presenter request and dispatches the response.
+	 */
+	public function processRequest(Request $request): Response
 	{
 		process:
 		if (count($this->requests) > $this->maxLoop) {
@@ -132,7 +135,7 @@ class Application
 		Arrays::invoke($this->onRequest, $this, $request);
 
 		if (
-			!$request->isMethod($request::FORWARD)
+			!$request->isMethod($request::Forward)
 			&& (!strcasecmp($request->getPresenterName(), (string) $this->errorPresenter)
 				|| !strcasecmp($request->getPresenterName(), (string) $this->error4xxPresenter))
 		) {
@@ -156,10 +159,13 @@ class Application
 		}
 
 		Arrays::invoke($this->onResponse, $this, $response);
-		$response->send($this->httpRequest, $this->httpResponse);
+		return $response;
 	}
 
 
+	/**
+	 * Creates a forward request to the error presenter, or returns null if not configured.
+	 */
 	public function createErrorRequest(\Throwable $e): ?Request
 	{
 		$errorPresenter = $e instanceof BadRequestException
@@ -176,10 +182,12 @@ class Application
 				$this->presenter->forward(":$errorPresenter:", $args);
 			} catch (AbortException) {
 				return $this->presenter->getLastCreatedRequest();
+			} catch (\Throwable) {
+				// a misconfigured error presenter must not replace $e, it fails in a controlled way inside processRequest()
 			}
 		}
 
-		return new Request($errorPresenter, Request::FORWARD, $args);
+		return new Request($errorPresenter, Request::Forward, $args);
 	}
 
 
@@ -197,7 +205,7 @@ class Application
 
 	/**
 	 * Returns all processed requests.
-	 * @return Request[]
+	 * @return list<Request>
 	 */
 	final public function getRequests(): array
 	{
@@ -217,18 +225,12 @@ class Application
 	/********************* services ****************d*g**/
 
 
-	/**
-	 * Returns router.
-	 */
 	public function getRouter(): Router
 	{
 		return $this->router;
 	}
 
 
-	/**
-	 * Returns presenter factory.
-	 */
 	public function getPresenterFactory(): IPresenterFactory
 	{
 		return $this->presenterFactory;

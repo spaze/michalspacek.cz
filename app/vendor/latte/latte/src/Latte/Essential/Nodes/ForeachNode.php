@@ -7,22 +7,12 @@
 
 namespace Latte\Essential\Nodes;
 
-use Latte\CompileException;
-use Latte\Compiler\Node;
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\AuxiliaryNode;
-use Latte\Compiler\Nodes\NopNode;
+use Latte\{CompileException, Feature};
+use Latte\Compiler\{Node, NodeTraverser, PrintContext, Tag, TagParser};
+use Latte\Compiler\Nodes\{AreaNode, AuxiliaryNode, NopNode, StatementNode, TemplateNode};
 use Latte\Compiler\Nodes\Php\Expression\VariableNode;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\ListNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Nodes\TemplateNode;
-use Latte\Compiler\NodeTraverser;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TagParser;
-use Latte\Feature;
-use function array_map, array_unshift, implode, is_string, preg_match;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, ListNode};
+use function is_string;
 
 
 /**
@@ -111,11 +101,21 @@ class ForeachNode extends StatementNode
 		if (
 			$context->hasFeature(Feature::ScopedLoopVariables)
 			&& !$this->byRef
-			&& ($vars = array_merge($this->key ? $this->collectVariables($this->key) : [], $this->collectVariables($this->value)))
+			&& ($vars = [...$this->key ? $this->collectVariables($this->key) : [], ...$this->collectVariables($this->value)])
 		) {
 			$backup = '$ʟ_fe_' . $context->generateId();
 			$unsetList = implode(', ', array_map(fn($var) => $var->print($context), $vars));
-			$restoreCode = implode('', array_map(fn($var) => $context->format("if (array_key_exists(%dump, $backup)) { %node = &{$backup}[%0.dump]; }\n", $var->name, $var), $vars));
+			$restoreCode = implode(
+				'',
+				array_map(
+					fn($var) => $context->format(
+						"if (array_key_exists(%dump, $backup)) { %node = &{$backup}[%0.dump]; }\n",
+						$var->name,
+						$var,
+					),
+					$vars,
+				),
+			);
 			$code = <<<XX
 				try {
 					$backup = get_defined_vars();
@@ -154,7 +154,7 @@ class ForeachNode extends StatementNode
 			$res[] = $node;
 		} elseif ($node instanceof ListNode) {
 			foreach ($node->items as $item) {
-				$res = array_merge($res, $item ? $this->collectVariables($item->value) : []);
+				$res = [...$res, ...$item ? $this->collectVariables($item->value) : []];
 			}
 		}
 		return $res;

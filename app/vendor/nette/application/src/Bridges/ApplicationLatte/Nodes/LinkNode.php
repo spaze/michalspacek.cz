@@ -1,26 +1,23 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte\Nodes;
 
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\ModifierNode;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, ModifierNode};
 use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**
  * {link destination [,] [params]}
  * {plink destination [,] [params]}
  * n:href="destination [,] [params]"
+ * Generates URL to presenter action or signal.
  */
 class LinkNode extends StatementNode
 {
@@ -40,10 +37,10 @@ class LinkNode extends StatementNode
 		$node->args = $tag->parser->parseArguments();
 		$node->modifier = $tag->parser->parseModifier();
 		$node->modifier->escape = true;
-		$node->modifier->check = false;
 		$node->mode = $tag->name;
 
 		if ($tag->isNAttribute()) {
+			assert($tag->htmlElement !== null);
 			// move at the beginning
 			$node->position = $tag->position;
 			array_unshift($tag->htmlElement->attributes->children, $node);
@@ -57,7 +54,7 @@ class LinkNode extends StatementNode
 	public function print(PrintContext $context): string
 	{
 		if ($this->mode === 'href') {
-			$context->beginEscape()->enterHtmlAttribute(null);
+			$context->beginEscape()->enterHtmlAttribute();
 			$res = $context->format(
 				<<<'XX'
 						echo ' href="'; echo %modify($this->global->uiControl->link(%node, %node?)) %line; echo '"';

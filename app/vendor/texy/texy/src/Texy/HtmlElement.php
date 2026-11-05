@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy;
 
-use function array_splice, count, http_build_query, implode, is_array, is_object, is_string, str_replace, str_starts_with;
+use function count, is_array, is_object, is_string;
 
 
 /**
@@ -412,7 +412,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 			} elseif (is_array($value)) {
 				$tmp = null;
 				foreach ($value as $k => $v) {
-					if ($v == null) { // skip nulls & empty string; composite 'style' vs. 'others'
+					if ($v == null) { // intentionally ==, skips null and empty string; composite 'style' vs. 'others'
 						continue;
 					} elseif (is_string($k)) {
 						$tmp[] = $k . ':' . $v;
@@ -502,6 +502,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 			}
 
 			return $child !== null && isset($dtd[$this->name][1][$child]);
+
 		} else {
 			return true; // unknown element
 		}

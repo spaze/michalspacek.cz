@@ -8,10 +8,8 @@
 namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php;
-use Latte\Compiler\Nodes\Php\ClosureUseNode;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ClosureUseNode, ExpressionNode};
+use Latte\Compiler\{Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -29,6 +27,7 @@ class ClosureNode extends ExpressionNode
 		public Php\IdentifierNode|Php\NameNode|Php\ComplexTypeNode|null $returnType = null,
 		public ?ExpressionNode $expr = null,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (Php\ParameterNode ...$args) {})(...$params);
 		(function (ClosureUseNode ...$args) {})(...$uses);

@@ -1,17 +1,15 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use Texy\HtmlElement;
-use Texy\Patterns;
-use function array_flip, count, explode, is_array, is_string, preg_match, preg_match_all, str_contains, str_ends_with, strtolower, strtoupper, strtr, substr, trim;
-use const PREG_SET_ORDER;
+use Texy\{HtmlElement, Patterns};
+use function count, is_array, is_string;
 
 
 /**
@@ -32,7 +30,13 @@ final class HtmlModule extends Texy\Module
 
 		$texy->registerLinePattern(
 			$this->patternTag(...),
-			'#<(/?)([a-z][a-z0-9_:-]{0,50})((?:\s++[a-z0-9\_:-]++|=\s*+"[^"' . Patterns::MARK . ']*+"|=\s*+\'[^\'' . Patterns::MARK . ']*+\'|=[^\s>' . Patterns::MARK . ']++)*)\s*+(/?)>#isu',
+			'#<(/?)([a-z][a-z0-9_:-]{0,50})((?:\s++[a-z0-9\_:-]++|=\s*+"[^"'
+			. Patterns::MARK
+			. ']*+"|=\s*+\'[^\''
+			. Patterns::MARK
+			. ']*+\'|=[^\s>'
+			. Patterns::MARK
+			. ']++)*)\s*+(/?)>#isu',
 			'html/tag',
 		);
 
@@ -326,7 +330,7 @@ final class HtmlModule extends Texy\Module
 		foreach ($matches as $m) {
 			$key = strtolower($m[1]);
 			$value = $m[2];
-			if ($value == null) {
+			if ($value === '') {
 				$res[$key] = true;
 			} elseif ($value[0] === '\'' || $value[0] === '"') {
 				$res[$key] = Texy\Helpers::unescapeHtml(substr($value, 1, -1));

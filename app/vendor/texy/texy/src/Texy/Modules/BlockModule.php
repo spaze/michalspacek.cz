@@ -1,17 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use Texy\Helpers;
-use Texy\HtmlElement;
-use function assert, htmlspecialchars, preg_split, str_replace, trim;
-use const ENT_NOQUOTES;
+use Texy\{Helpers, HtmlElement};
 
 
 /**
@@ -23,7 +20,7 @@ final class BlockModule extends Texy\Module
 	{
 		$this->texy = $texy;
 
-		//$texy->allowed['blocks'] = true;
+		// $texy->allowed['blocks'] = true;
 		$texy->allowed['block/default'] = true;
 		$texy->allowed['block/pre'] = true;
 		$texy->allowed['block/code'] = true;

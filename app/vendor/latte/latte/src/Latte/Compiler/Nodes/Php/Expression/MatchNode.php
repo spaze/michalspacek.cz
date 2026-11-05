@@ -9,8 +9,7 @@ namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php;
 use Latte\Compiler\Nodes\Php\MatchArmNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -24,6 +23,7 @@ class MatchNode extends Php\ExpressionNode
 		/** @var MatchArmNode[] */
 		public array $arms = [],
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (MatchArmNode ...$args) {})(...$arms);
 	}

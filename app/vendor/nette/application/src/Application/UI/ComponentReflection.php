@@ -1,36 +1,40 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application\UI;
 
 use Nette\Application\Attributes;
 use Nette\Utils\Reflection;
-use function array_fill_keys, array_filter, array_key_exists, array_merge, class_exists, end, preg_match_all, preg_quote, preg_split, strtolower;
-use const PREG_SPLIT_NO_EMPTY;
+use function array_key_exists;
+use const PHP_VERSION_ID;
 
 
 /**
  * Helpers for Presenter & Component.
+ * @extends \ReflectionClass<object>
  * @property-read class-string<Control> $name
  * @property-read string $fileName
  * @internal
  */
 final class ComponentReflection extends \ReflectionClass
 {
+	/** @var array<string, array<string, array{def: mixed, type: string, since: ?class-string}|array{def: mixed, type: string, required: bool}>> */
 	private static array $ppCache = [];
+
+	/** @var array<string, array<string, array{since: class-string}>> */
 	private static array $pcCache = [];
+
+	/** @var array<string, array<string, ?\ReflectionMethod>> */
 	private static array $armCache = [];
 
 
 	/**
-	 * Returns array of class properties that are public and have attribute #[Persistent] or #[Parameter] or annotation @persistent.
-	 * @return array<string, array{def: mixed, type: string, since: ?class-string}>
+	 * Returns array of class properties that are public and have attribute #[Persistent] or #[Parameter].
+	 * @return array<string, array{def: mixed, type: string, since: ?class-string}|array{def: mixed, type: string, required: bool}>
 	 */
 	public function getParameters(): array
 	{
@@ -54,9 +58,14 @@ final class ComponentReflection extends \ReflectionClass
 					'since' => $isPresenter ? Reflection::getPropertyDeclaringClass($prop)->getName() : null,
 				];
 			} elseif ($prop->getAttributes(Attributes\Parameter::class)) {
+				$type = (string) ($prop->getType() ?? 'mixed');
+				$def = $prop->hasDefaultValue()
+					? $prop->getDefaultValue()
+					: ($type === 'array' || $type === 'iterable' ? [] : null);
 				$params[$prop->getName()] = [
-					'def' => $prop->hasDefaultValue() ? $prop->getDefaultValue() : null,
-					'type' => (string) ($prop->getType() ?? 'mixed'),
+					'def' => $def,
+					'type' => $type,
+					'required' => $def === null && $prop->getType()?->allowsNull() === false,
 				];
 			}
 		}
@@ -77,8 +86,8 @@ final class ComponentReflection extends \ReflectionClass
 
 
 	/**
-	 * Returns array of persistent properties. They are public and have attribute #[Persistent] or annotation @persistent.
-	 * @return array<string, array{def: mixed, type: string, since: class-string}>
+	 * Returns array of persistent properties. They are public and have attribute #[Persistent].
+	 * @return array<string, array{def: mixed, type: string, since: ?class-string}>
 	 */
 	public function getPersistentParams(): array
 	{
@@ -103,7 +112,7 @@ final class ComponentReflection extends \ReflectionClass
 		$names = $attrs
 			? $attrs[0]->getArguments()
 			: (array) self::parseAnnotation($this, 'persistent');
-		$names = array_merge($names, $class::getPersistentComponents());
+		$names = [...$names, ...$class::getPersistentComponents()];
 		$components = array_fill_keys($names, ['since' => $class]);
 
 		if ($this->isSubclassOf(Presenter::class)) {
@@ -115,6 +124,9 @@ final class ComponentReflection extends \ReflectionClass
 	}
 
 
+	/**
+	 * @return list<string>  names of public properties with #[TemplateVariable] attribute
+	 */
 	public function getTemplateVariables(Control $control): array
 	{
 		$res = [];
@@ -149,11 +161,15 @@ final class ComponentReflection extends \ReflectionClass
 	public function getActionRenderMethod(string $action): ?\ReflectionMethod
 	{
 		$class = $this->name;
-		return self::$armCache[$class][$action] ??=
-			$this->hasCallableMethod($name = $class::formatActionMethod($action))
-			|| $this->hasCallableMethod($name = $class::formatRenderMethod($action))
-				? parent::getMethod($name)
-				: null;
+		if (!array_key_exists($action, self::$armCache[$class] ?? [])) {
+			self::$armCache[$class][$action] =
+				$this->hasCallableMethod($name = $class::formatActionMethod($action))
+				|| $this->hasCallableMethod($name = $class::formatRenderMethod($action))
+					? parent::getMethod($name)
+					: null;
+		}
+
+		return self::$armCache[$class][$action];
 	}
 
 
@@ -169,6 +185,8 @@ final class ComponentReflection extends \ReflectionClass
 
 	/**
 	 * Returns an annotation value.
+	 * @deprecated
+	 * @return ?list<mixed>
 	 */
 	public static function parseAnnotation(\Reflector $ref, string $name): ?array
 	{
@@ -186,22 +204,25 @@ final class ComponentReflection extends \ReflectionClass
 			}
 		}
 
+		$alt = match ($name) {
+			'persistent' => '#[Nette\Application\Attributes\Persistent]',
+			'deprecated' => '#[Nette\Application\Attributes\Deprecated]',
+			'crossOrigin' => '#[Nette\Application\Attributes\Requires(sameOrigin: false)]',
+			default => 'alternative',
+		};
+		trigger_error("Annotation @$name is deprecated, use $alt (used in " . Reflection::toString($ref) . ')', E_USER_DEPRECATED);
 		return $res;
 	}
 
 
-	/**
-	 * Has class specified annotation?
-	 */
+	#[\Deprecated]
 	public function hasAnnotation(string $name): bool
 	{
 		return (bool) self::parseAnnotation($this, $name);
 	}
 
 
-	/**
-	 * Returns an annotation value.
-	 */
+	#[\Deprecated]
 	public function getAnnotation(string $name): mixed
 	{
 		$res = self::parseAnnotation($this, $name);
@@ -216,7 +237,7 @@ final class ComponentReflection extends \ReflectionClass
 
 
 	/**
-	 * @return MethodReflection[]
+	 * @return list<MethodReflection>
 	 */
 	public function getMethods($filter = -1): array
 	{
@@ -228,12 +249,14 @@ final class ComponentReflection extends \ReflectionClass
 	}
 
 
-	/** @deprecated  */
+	/**
+	 * @deprecated
+	 * @param  array<string, mixed>  $args
+	 * @return list<mixed>
+	 */
+	#[\Deprecated]
 	public static function combineArgs(\ReflectionFunctionAbstract $method, array $args): array
 	{
 		return ParameterConverter::toArguments($method, $args);
 	}
 }
-
-
-class_exists(PresenterComponentReflection::class);

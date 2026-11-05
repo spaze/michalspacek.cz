@@ -7,9 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Node, Position, PrintContext};
 
 
 /**
@@ -23,6 +21,7 @@ class ArgumentNode extends Node
 		public bool $unpack = false,
 		public ?IdentifierNode $name = null,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

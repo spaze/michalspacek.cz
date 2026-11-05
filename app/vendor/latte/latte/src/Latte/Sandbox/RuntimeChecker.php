@@ -8,11 +8,11 @@
 namespace Latte\Sandbox;
 
 use Latte;
-use function count, explode, is_array, is_callable, is_object, is_string;
+use function count, is_array, is_object, is_string;
 
 
 /** @internal */
-final class RuntimeChecker
+final readonly class RuntimeChecker
 {
 	public function __construct(
 		public Latte\Policy $policy,
@@ -33,26 +33,21 @@ final class RuntimeChecker
 
 
 	/**
-	 * Calls a method on an object after verifying it is allowed by the policy.
-	 * @param  array<mixed>  $args
+	 * Validates that calling the method is allowed by the policy and returns the object.
 	 */
-	public function callMethod(mixed $object, mixed $method, array $args, bool $nullsafe = false): mixed
+	public function method(mixed $object, mixed $method): mixed
 	{
-		if ($object === null) {
-			if ($nullsafe) {
-				throw new \Error("Call to a member function $method() on null");
-			}
-			return null;
+		if (!is_object($object)) {
+			return $object;
 
-		} elseif (!is_object($object) || !is_string($method)) {
+		} elseif (!is_string($method)) {
 			throw new Latte\SecurityViolationException('Invalid callable.');
 
 		} elseif (!$this->policy->isMethodAllowed($class = $object::class, $method)) {
 			throw new Latte\SecurityViolationException("Calling $class::$method() is not allowed.");
 		}
 
-		self::args(...$args);
-		return $object->$method(...$args);
+		return $object;
 	}
 
 
@@ -68,7 +63,7 @@ final class RuntimeChecker
 
 	/**
 	 * Validates that no array argument is a disallowed callable and returns the arguments.
-	 * @return list<mixed>
+	 * @return mixed[]
 	 */
 	public function args(mixed ...$args): array
 	{
@@ -100,6 +95,45 @@ final class RuntimeChecker
 	}
 
 
+	/**
+	 * Casts the value to array, which is not allowed for an object, as it would reveal its non-public state.
+	 * @return mixed[]
+	 */
+	public function castToArray(mixed $value): array
+	{
+		if (is_object($value)) {
+			throw new Latte\SecurityViolationException('Casting a ' . $value::class . ' object to array is not allowed.');
+		}
+
+		return (array) $value;
+	}
+
+
+	/**
+	 * Validates that iterating the value is allowed by the policy and returns it. Iterating a plain object reads its properties.
+	 */
+	public function iterable(mixed $value): mixed
+	{
+		if (is_object($value) && !$value instanceof \Traversable) {
+			foreach (array_keys(get_object_vars($value)) as $property) {
+				$this->prop($value, $property);
+			}
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 * Same as iterable() for foreach by reference.
+	 */
+	public function &iterableByRef(mixed &$value): mixed
+	{
+		$this->iterable($value);
+		return $value;
+	}
+
+
 	private function checkCallable(mixed $callable): void
 	{
 		if (!is_callable($callable)) {
@@ -115,9 +149,7 @@ final class RuntimeChecker
 			$allowed = $this->policy->isMethodAllowed(is_object($callable[0]) ? $callable[0]::class : $callable[0], $callable[1]);
 
 		} elseif (is_object($callable)) {
-			$allowed = $callable instanceof \Closure
-				? true
-				: $this->policy->isMethodAllowed($callable::class, '__invoke');
+			$allowed = $callable instanceof \Closure || $this->policy->isMethodAllowed($callable::class, '__invoke');
 
 		} else {
 			$allowed = false;

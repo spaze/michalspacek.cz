@@ -8,7 +8,7 @@
 namespace Nette\Database;
 
 use Nette;
-use function array_keys, array_map, array_slice, current, is_int, strval;
+use function is_int;
 
 
 /**
@@ -26,7 +26,8 @@ class Row extends Nette\Utils\ArrayHash implements IRow
 
 	public function __isset(string $key): bool
 	{
-		return isset($this->key);
+		// called only for non-existent properties, so that `$row->missing ?? …` does not invoke throwing __get
+		return false;
 	}
 
 
@@ -56,7 +57,8 @@ class Row extends Nette\Utils\ArrayHash implements IRow
 	public function offsetExists($key): bool
 	{
 		if (is_int($key)) {
-			return (bool) current(array_slice((array) $this, $key, 1));
+			$arr = array_slice((array) $this, $key, 1);
+			return $arr && current($arr) !== null; // null value → false, consistently with string keys
 		}
 
 		return parent::offsetExists($key);

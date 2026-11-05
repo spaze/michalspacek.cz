@@ -1,14 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy;
 
-use function array_flip, base_convert, class_exists, count, explode, htmlspecialchars, implode, is_array, link, ltrim, preg_match, str_contains, str_repeat, str_replace, strip_tags, strlen, strtr;
-use const ENT_NOQUOTES;
+use function count, is_array, strlen;
 
 
 /**
@@ -22,7 +21,7 @@ use const ENT_NOQUOTES;
 class Texy
 {
 	// Texy version
-	public const VERSION = '3.2.8';
+	public const VERSION = '3.2.10';
 
 	// configuration directives
 	public const
@@ -119,7 +118,7 @@ class Texy
 	private array $linePatterns = [];
 
 	/** @var array<string, array{handler: \Closure(LineParser, array<string>, string): (HtmlElement|string|null), pattern: string, again: ?string}> */
-	private array $_linePatterns;
+	private array $activeLinePatterns;
 
 	/**
 	 * Registered regexps and associated handlers for block parsing.
@@ -128,22 +127,22 @@ class Texy
 	private array $blockPatterns = [];
 
 	/** @var array<string, array{handler: \Closure(BlockParser, array<string>, string): (HtmlElement|string|null), pattern: string}> */
-	private array $_blockPatterns;
+	private array $activeBlockPatterns;
 
 	/** @var array<string, \Closure(string): string> */
 	private array $postHandlers = [];
 
 	/** DOM structure for parsed text */
-	private HtmlElement $DOM;
+	private HtmlElement $dom;
 
 	/** @var array<string, string>  Texy protect markup table */
 	private array $marks = [];
 
 	/** @var array<string, int>|bool  for internal usage */
-	private bool|array $_classes;
+	private bool|array $classes;
 
 	/** @var array<string, int>|bool  for internal usage */
-	private bool|array $_styles;
+	private bool|array $styles;
 
 	private bool $processing = false;
 
@@ -168,7 +167,7 @@ class Texy
 		$this->initDTD();
 
 		// examples of link references ;-)
-		$link = new Link('https://texy.nette.org/');
+		$link = new Link('https://texy.deegee.dev/');
 		$link->modifier->title = 'The best text -> HTML converter and formatter';
 		$link->label = 'Texy!';
 		$this->linkModule->addReference('texy', $link);
@@ -290,10 +289,10 @@ class Texy
 		$this->processing = true;
 
 		// speed-up
-		$this->_classes = is_array($this->allowedClasses)
+		$this->classes = is_array($this->allowedClasses)
 			? array_flip($this->allowedClasses)
 			: $this->allowedClasses;
-		$this->_styles = is_array($this->allowedStyles)
+		$this->styles = is_array($this->allowedStyles)
 			? array_flip($this->allowedStyles)
 			: $this->allowedStyles;
 
@@ -319,33 +318,33 @@ class Texy
 		$this->invokeHandlers('beforeParse', [$this, &$text, $singleLine]);
 
 		// select patterns
-		$this->_linePatterns = $this->linePatterns;
-		$this->_blockPatterns = $this->blockPatterns;
-		foreach ($this->_linePatterns as $name => $foo) {
+		$this->activeLinePatterns = $this->linePatterns;
+		$this->activeBlockPatterns = $this->blockPatterns;
+		foreach ($this->activeLinePatterns as $name => $foo) {
 			if (empty($this->allowed[$name])) {
-				unset($this->_linePatterns[$name]);
+				unset($this->activeLinePatterns[$name]);
 			}
 		}
 
-		foreach ($this->_blockPatterns as $name => $foo) {
+		foreach ($this->activeBlockPatterns as $name => $foo) {
 			if (empty($this->allowed[$name])) {
-				unset($this->_blockPatterns[$name]);
+				unset($this->activeBlockPatterns[$name]);
 			}
 		}
 
 		// parse Texy! document into internal DOM structure
-		$this->DOM = new HtmlElement;
+		$this->dom = new HtmlElement;
 		if ($singleLine) {
-			$this->DOM->parseLine($this, $text);
+			$this->dom->parseLine($this, $text);
 		} else {
-			$this->DOM->parseBlock($this, $text);
+			$this->dom->parseBlock($this, $text);
 		}
 
 		// user after handler
-		$this->invokeHandlers('afterParse', [$this, $this->DOM, $singleLine]);
+		$this->invokeHandlers('afterParse', [$this, $this->dom, $singleLine]);
 
 		// converts internal DOM structure to final HTML code
-		$html = $this->DOM->toHtml($this);
+		$html = $this->dom->toHtml($this);
 
 		// created by ParagraphModule and then protected
 		$html = str_replace("\r", "\n", $html);
@@ -388,11 +387,11 @@ class Texy
 	 */
 	public function toText(): string
 	{
-		if (!isset($this->DOM)) {
+		if (!isset($this->dom)) {
 			throw new \RuntimeException('Call $texy->process() first.');
 		}
 
-		return $this->DOM->toText($this);
+		return $this->dom->toText($this);
 	}
 
 
@@ -543,20 +542,20 @@ class Texy
 	/** @return array<string, array{handler: \Closure(LineParser, string[], string): (HtmlElement|string|null), pattern: string, again: ?string}> */
 	final public function getLinePatterns(): array
 	{
-		return $this->_linePatterns;
+		return $this->activeLinePatterns;
 	}
 
 
 	/** @return array<string, array{handler: \Closure(BlockParser, string[], string): (HtmlElement|string|null), pattern: string}> */
 	final public function getBlockPatterns(): array
 	{
-		return $this->_blockPatterns;
+		return $this->activeBlockPatterns;
 	}
 
 
 	final public function getDOM(): HtmlElement
 	{
-		return $this->DOM;
+		return $this->dom;
 	}
 
 
@@ -576,7 +575,7 @@ class Texy
 	 */
 	final public function getAllowedProps(): array
 	{
-		return [$this->_classes, $this->_styles];
+		return [$this->classes, $this->styles];
 	}
 
 

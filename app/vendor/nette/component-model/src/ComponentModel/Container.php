@@ -8,13 +8,11 @@
 namespace Nette\ComponentModel;
 
 use Nette;
-use function array_filter, array_keys, array_map, array_merge, assert, explode, func_get_args, get_class_methods, method_exists, preg_filter, preg_match, reset, strval, ucfirst;
+use function func_get_args;
 
 
 /**
  * Manages a collection of child components.
- *
- * @property-deprecated IComponent[] $components
  */
 class Container extends Component implements IContainer
 {
@@ -22,7 +20,6 @@ class Container extends Component implements IContainer
 
 	/** @var IComponent[] */
 	private array $components = [];
-	private ?Container $cloning = null;
 
 
 	/********************* interface IContainer ****************d*g**/
@@ -30,16 +27,12 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Adds a child component to the container.
-	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
-	public function addComponent(IComponent $component, ?string $name, ?string $insertBefore = null)
+	public function addComponent(IComponent $component, ?string $name, ?string $insertBefore = null): static
 	{
 		if ($name === null) {
-			$name = $component->getName();
-			if ($name === null) {
-				throw new Nette\InvalidStateException("Missing component's name.");
-			}
+			$name = $component->getName() ?? throw new Nette\InvalidStateException("Missing component's name.");
 		}
 
 		if (!preg_match(self::NameRegexp, $name)) {
@@ -71,6 +64,7 @@ class Container extends Component implements IContainer
 			}
 
 			$this->components = $tmp;
+
 		} else {
 			$this->components[$name] = $component;
 		}
@@ -78,7 +72,12 @@ class Container extends Component implements IContainer
 		try {
 			$component->setParent($this, $name);
 		} catch (\Throwable $e) {
-			unset($this->components[$name]); // undo
+			if (($this->getComponents()[$name] ?? null) === $component
+				&& ($component->getParent() !== $this || $component->getName() !== $name) // unless a listener has put it back
+			) {
+				unset($this->components[$name]); // undo
+			}
+
 			throw $e;
 		}
 
@@ -96,8 +95,10 @@ class Container extends Component implements IContainer
 			throw new Nette\InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
-		unset($this->components[$name]);
 		$component->setParent(null);
+		if ($component->getParent() === null && ($this->getComponents()[$name] ?? null) === $component) { // unless a listener has put it back, or another one in its place
+			unset($this->components[$name]);
+		}
 	}
 
 
@@ -135,10 +136,10 @@ class Container extends Component implements IContainer
 				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$parts[1]' component.");
 			}
 		} elseif ($throw) {
-			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
-				array_map(strval(...), array_keys($this->components)),
-				array_map(lcfirst(...), preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
-			), $name);
+			$hint = Nette\Utils\ObjectHelpers::getSuggestion([
+				...array_map(strval(...), array_keys($this->components)),
+				...array_map(lcfirst(...), preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
+			], $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
 
@@ -173,23 +174,17 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns all immediate child components.
-	 * @return array<int|string, IComponent>
+	 * @return IComponent[]
 	 */
-	final public function getComponents(): iterable
+	final public function getComponents(): array
 	{
-		$filterType = func_get_args()[1] ?? null;
-		if (func_get_args()[0] ?? null) { // back compatibility
-			$iterator = new RecursiveComponentIterator($this->components);
-			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-			if ($filterType) {
-				$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
-			}
-			return $iterator;
+		if (func_get_args()[0] ?? null) {
+			throw new Nette\DeprecatedException(__METHOD__ . '() with recursive flag is deprecated. Use getComponentTree() instead.');
 		}
-
-		return $filterType
-			? array_filter($this->components, fn($item) => $item instanceof $filterType)
-			: $this->components;
+		if (func_get_args()[1] ?? null) {
+			throw new Nette\DeprecatedException('Using Container::getComponents() with filter type is deprecated.');
+		}
+		return $this->components;
 	}
 
 
@@ -203,7 +198,7 @@ class Container extends Component implements IContainer
 		foreach ($this->components as $component) {
 			$res[] = $component;
 			if ($component instanceof self) {
-				$res = array_merge($res, $component->getComponentTree());
+				$res = [...$res, ...$component->getComponentTree()];
 			}
 		}
 		return $res;
@@ -231,24 +226,16 @@ class Container extends Component implements IContainer
 		if ($this->components) {
 			$oldMyself = reset($this->components)->getParent();
 			assert($oldMyself instanceof self);
-			$oldMyself->cloning = $this;
-			foreach ($this->components as $name => $component) {
-				$this->components[$name] = clone $component;
+			\Closure::bind(fn(Container $clone) => $this->cloning = $clone, $oldMyself, Component::class)($this);
+			try {
+				foreach ($this->components as $name => $component) {
+					$this->components[$name] = clone $component;
+				}
+			} finally {
+				\Closure::bind(fn() => $this->cloning = null, $oldMyself, Component::class)();
 			}
-
-			$oldMyself->cloning = null;
 		}
 
 		parent::__clone();
-	}
-
-
-	/**
-	 * Is container cloning now?
-	 * @internal
-	 */
-	final public function _isCloning(): ?self
-	{
-		return $this->cloning;
 	}
 }

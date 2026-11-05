@@ -1,14 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Default error page.
- * @param  int  $code
+ * @var int $code
  */
-
-declare(strict_types=1);
 
 namespace NetteModule;
 
+$code ??= 0;
 $messages = [
 	0 => ['Oops...', 'Your browser sent a request that this server could not understand or process.'],
 	403 => ['Access Denied', 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'],

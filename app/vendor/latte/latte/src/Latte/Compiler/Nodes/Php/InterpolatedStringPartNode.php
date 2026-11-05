@@ -7,9 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Node, Position, PrintContext};
 
 
 /**
@@ -20,6 +18,7 @@ class InterpolatedStringPartNode extends Node
 	public function __construct(
 		public string $value,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

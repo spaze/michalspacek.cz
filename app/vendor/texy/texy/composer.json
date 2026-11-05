@@ -1,8 +1,8 @@
 {
 	"name": "texy/texy",
-	"description": "Texy converts plain text in easy to read Texy syntax into structurally valid (X)HTML. It supports adding of images, links, nested lists, tables and has full support for CSS. Texy supports hyphenation of long words (which reflects language rules), clickable emails and URL (emails are obfuscated against spambots), national typographic single and double quotation marks, ellipses, em dashes, dimension sign, nonbreakable spaces (e.g. in phone numbers), acronyms, arrows and many others. Texy code can optionally contain HTML tags.",
-	"keywords": ["texy", "text", "wiki", "plain text", "html", "markup language", "markdown", "textile"],
-	"homepage": "https://texy.nette.org",
+	"description": "📜 Texy: a text-to-HTML engine with its own easy-to-read markup, which you can change or extend, and real typography with proper quotes, dashes and non-breaking spaces. Always valid, sanitized HTML.",
+	"keywords": ["texy", "markup", "markup language", "lightweight markup", "text to html", "typography", "wiki", "markdown"],
+	"homepage": "https://texy.deegee.dev",
 	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
@@ -11,13 +11,13 @@
 		}
 	],
 	"require": {
-		"php": "8.1 - 8.5"
+		"php": "8.1 - 8.6"
 	},
 	"require-dev": {
 		"nette/tester": "^2.5",
 		"tracy/tracy": "^2.9",
 		"latte/latte": "^3.0.14",
-		"phpstan/phpstan": "^2.1@stable",
+		"phpstan/phpstan": "^2.3@stable",
 		"phpstan/extension-installer": "^1.4@stable",
 		"nette/phpstan-rules": "^1.0"
 	},

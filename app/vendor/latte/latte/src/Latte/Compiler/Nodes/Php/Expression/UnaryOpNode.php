@@ -7,10 +7,8 @@
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\OperatorNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, OperatorNode};
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -25,6 +23,7 @@ class UnaryOpNode extends ExpressionNode implements OperatorNode
 		public ExpressionNode $expr,
 		public string $operator,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		if (!isset(self::Ops[$this->operator])) {
 			throw new \InvalidArgumentException("Unexpected operator '$this->operator'");

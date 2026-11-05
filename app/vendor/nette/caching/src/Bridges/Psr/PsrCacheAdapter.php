@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Tracy (https://tracy.nette.org)
+ * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
@@ -29,11 +29,17 @@ class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 	}
 
 
-	public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
+	public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
 	{
+		$ttl = self::ttlToSeconds($ttl);
+		if ($ttl !== null && $ttl <= 0) { // according to PSR-16, zero or negative TTL means immediate deletion
+			$this->storage->remove($key);
+			return true;
+		}
+
 		$dependencies = [];
 		if ($ttl !== null) {
-			$dependencies[Nette\Caching\Cache::Expire] = self::ttlToSeconds($ttl);
+			$dependencies[Nette\Caching\Cache::Expire] = $ttl;
 		}
 
 		$this->storage->write($key, $value, $dependencies);
@@ -68,9 +74,9 @@ class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 
 
 	/**
-	 * @param iterable<int|string, mixed>  $values
+	 * @param iterable<mixed, mixed>  $values
 	 */
-	public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
+	public function setMultiple(iterable $values, int|DateInterval|null $ttl = null): bool
 	{
 		$ttl = self::ttlToSeconds($ttl);
 
@@ -82,7 +88,7 @@ class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 	}
 
 
-	/** @param  iterable<int|string, string>  $keys */
+	/** @param  iterable<string>  $keys */
 	public function deleteMultiple(iterable $keys): bool
 	{
 		foreach ($keys as $value) {
@@ -99,20 +105,13 @@ class PsrCacheAdapter implements Psr\SimpleCache\CacheInterface
 	}
 
 
-	private static function ttlToSeconds(null|int|DateInterval $ttl = null): ?int
+	private static function ttlToSeconds(int|DateInterval|null $ttl = null): ?int
 	{
 		if ($ttl instanceof DateInterval) {
-			return self::dateIntervalToSeconds($ttl);
+			$now = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
+			return $now->add($ttl)->getTimestamp() - $now->getTimestamp();
 		}
 
 		return $ttl;
-	}
-
-
-	private static function dateIntervalToSeconds(DateInterval $dateInterval): int
-	{
-		$now = new \DateTimeImmutable;
-		$expiresAt = $now->add($dateInterval);
-		return $expiresAt->getTimestamp() - $now->getTimestamp();
 	}
 }

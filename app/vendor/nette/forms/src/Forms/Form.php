@@ -8,11 +8,9 @@
 namespace Nette\Forms;
 
 use Nette;
-use Nette\Utils\Arrays;
-use Nette\Utils\Html;
+use Nette\Utils\{Arrays, Html};
 use Stringable;
-use function array_key_first, array_merge, array_search, array_unique, count, headers_sent, in_array, is_array, is_scalar, is_string, sprintf, strcasecmp, strtolower;
-use const PHP_SAPI;
+use function count, is_array, is_scalar, is_string;
 
 
 /**
@@ -21,9 +19,9 @@ use const PHP_SAPI;
  * @property-read string[] $errors
  * @property-read array<string|Stringable> $ownErrors
  * @property-read Html $elementPrototype
- * @property-read FormRenderer $renderer
- * @property string $action
- * @property string $method
+ * @property-deprecated FormRenderer $renderer
+ * @property-deprecated string $action
+ * @property-deprecated string $method
  */
 class Form extends Container implements Nette\HtmlStringable
 {
@@ -49,6 +47,7 @@ class Form extends Container implements Nette\HtmlStringable
 		URL = ':url',
 		Pattern = ':pattern',
 		PatternInsensitive = ':patternCaseInsensitive',
+		Enum = ':enum',
 		Integer = ':integer',
 		Numeric = ':numeric',
 		Float = ':float',
@@ -125,7 +124,7 @@ class Form extends Container implements Nette\HtmlStringable
 	/** @deprecated use Form::Pattern */
 	public const PATTERN = self::Pattern;
 
-	/** @deprecated use Form::PatternCI */
+	/** @deprecated use Form::PatternInsensitive */
 	public const PATTERN_ICASE = self::PatternInsensitive;
 
 	/** @deprecated use Form::Integer */
@@ -303,13 +302,17 @@ class Form extends Container implements Nette\HtmlStringable
 
 
 	/**
-	 * Adds a CSRF protection token field using a SameSite cookie.
+	 * @deprecated default protection is sufficient
 	 */
 	public function addProtection(?string $errorMessage = null): Controls\CsrfProtection
 	{
 		$control = new Controls\CsrfProtection($errorMessage);
-		$children = $this->getComponents();
-		$first = $children ? (string) array_key_first($children) : null;
+		$first = null;
+		foreach ($this->getComponents() as $name => $component) {
+			$first = (string) $name;
+			break;
+		}
+
 		$this->addComponent($control, self::ProtectorId, $first);
 		return $control;
 	}
@@ -342,7 +345,7 @@ class Form extends Container implements Nette\HtmlStringable
 		if (is_string($name) && isset($this->groups[$name])) {
 			$group = $this->groups[$name];
 
-		} elseif ($name instanceof ControlGroup && in_array($name, $this->groups, strict: true)) {
+		} elseif ($name instanceof ControlGroup && in_array($name, $this->groups, true)) {
 			$group = $name;
 			$name = array_search($group, $this->groups, strict: true);
 
@@ -439,7 +442,7 @@ class Form extends Container implements Nette\HtmlStringable
 
 	/**
 	 * Returns raw submitted HTTP data for a control, or all form data when called without arguments.
-	 * @return string|string[]|Nette\Http\FileUpload|null
+	 * @return ($htmlName is null ? mixed[] : string|string[]|Nette\Http\FileUpload|Nette\Http\FileUpload[]|null)
 	 */
 	public function getHttpData(?int $type = null, ?string $htmlName = null): string|array|Nette\Http\FileUpload|null
 	{
@@ -508,22 +511,7 @@ class Form extends Container implements Nette\HtmlStringable
 	private function invokeHandlers(iterable $handlers, ?SubmitterControl $button = null): void
 	{
 		foreach ($handlers as $handler) {
-			$params = Nette\Utils\Callback::toReflection($handler)->getParameters();
-			$args = [];
-			if ($params) {
-				$type = Helpers::getSingleType($params[0]);
-				$args[] = match (true) {
-					!$type => $button ?? $this,
-					$this instanceof $type => $this,
-					$button instanceof $type => $button,
-					default => $this->getValues($type),
-				};
-				if (isset($params[1])) {
-					$args[] = $this->getValues(Helpers::getSingleType($params[1]));
-				}
-			}
-
-			$handler(...$args);
+			$handler(...$this->resolveHandlerArguments($handler, $button));
 
 			if (!$this->isValid()) {
 				return;
@@ -555,11 +543,12 @@ class Form extends Container implements Nette\HtmlStringable
 		}
 
 		if ($httpRequest->isMethod('post')) {
-			if (!$this->crossOrigin && !$httpRequest->isSameSite()) {
+			if (!$this->crossOrigin && !$httpRequest->isFrom(Nette\Http\FetchSite::SameOrigin)) {
 				return null;
 			}
 
 			$data = Nette\Utils\Arrays::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+
 		} else {
 			$data = $httpRequest->getQuery();
 			if (!$data) {
@@ -602,7 +591,7 @@ class Form extends Container implements Nette\HtmlStringable
 
 		$maxSize = Helpers::iniGetSize('post_max_size');
 		if ($maxSize > 0 && $maxSize < $_SERVER['CONTENT_LENGTH']) {
-			$this->addError(sprintf(Validator::$messages[self::MaxFileSize], $maxSize));
+			$this->addError(sprintf(Validator::$messages[self::MaxPostSize], $maxSize));
 		}
 	}
 
@@ -626,7 +615,7 @@ class Form extends Container implements Nette\HtmlStringable
 	 */
 	public function getErrors(): array
 	{
-		return array_values(array_unique(array_merge($this->errors, parent::getErrors())));
+		return array_values(array_unique([...$this->errors, ...parent::getErrors()]));
 	}
 
 
@@ -742,29 +731,13 @@ class Form extends Container implements Nette\HtmlStringable
 	/**
 	 * Initializes HTTP request and SameSite CSRF cookie for standalone (non-DI) usage.
 	 */
-	public static function initialize(bool $reinit = false): void
+	public static function initialize(bool|Nette\Http\IRequest $reinit = false): void
 	{
-		if ($reinit) {
-			self::$defaultHttpRequest = null;
-			return;
-		} elseif (self::$defaultHttpRequest) {
-			return;
-		}
-
-		self::$defaultHttpRequest = (new Nette\Http\RequestFactory)->fromGlobals();
-
-		if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], strict: true)) {
-			if (headers_sent($file, $line)) {
-				throw new Nette\InvalidStateException(
-					'Create a form or call Nette\Forms\Form::initialize() before the headers are sent to initialize CSRF protection.'
-					. ($file ? " (output started at $file:$line)" : '') . '. ',
-				);
-			}
-
-			$response = new Nette\Http\Response;
-			$response->cookieSecure = self::$defaultHttpRequest->isSecured();
-			Nette\Http\Helpers::initCookie(self::$defaultHttpRequest, $response);
-		}
+		self::$defaultHttpRequest = match ($reinit) {
+			true => null,
+			false => self::$defaultHttpRequest ?? (new Nette\Http\RequestFactory)->fromGlobals(),
+			default => $reinit,
+		};
 	}
 
 

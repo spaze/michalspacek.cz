@@ -10,7 +10,7 @@ namespace Latte\Runtime;
 use Latte;
 use Latte\Compiler\Escaper;
 use Latte\Engine;
-use function array_keys, array_merge, array_pop, end, in_array, is_array, next, ob_end_clean, ob_get_clean, ob_start, prev, reset, sprintf, strtoupper;
+use function in_array, is_array;
 
 
 /**
@@ -30,6 +30,9 @@ class Template
 	/** @internal */
 	protected string|false|null $parentName = null;
 
+	/** @var mixed[]  variables passed explicitly to the parent template @internal */
+	protected array $parentArgs = [];
+
 	/** @var mixed[][] */
 	protected array $varStack = [];
 
@@ -38,6 +41,9 @@ class Template
 
 	/** @var mixed[][] */
 	private array $blockStack = [];
+
+	/** @var string[]  names of blocks being currently rendered */
+	private array $renderingBlocks = [];
 	private ?Template $referringTemplate = null;
 	private ?string $referenceType = null;
 
@@ -62,30 +68,37 @@ class Template
 	 */
 	public function render(?string $block = null): void
 	{
-		foreach ($this->engine->getExtensions() as $extension) {
-			$extension->beforeRender($this);
-		}
-
-		$params = $this->prepare();
-
-		if ($this->parentName === null && !$this->referringTemplate && isset($this->global->coreParentFinder)) {
-			$this->parentName = ($this->global->coreParentFinder)($this);
-		}
-
-		if ($this->referenceType === 'import') {
-			if ($this->parentName) {
-				throw new Latte\RuntimeException('Imported template cannot use {extends} or {layout}, use {import}');
+		$extensions = $this->engine->getExtensions();
+		try {
+			foreach ($extensions as $extension) {
+				$extension->beforeRender($this);
 			}
 
-		} elseif ($this->parentName) { // extends
-			$this->params = $params;
-			$this->createTemplate($this->parentName, $params, 'extends')->render($block);
+			$params = $this->prepare();
 
-		} elseif ($block !== null) { // single block rendering
-			$this->renderBlock($block, $this->params);
+			if ($this->parentName === null && !$this->referringTemplate && isset($this->global->coreParentFinder)) {
+				$this->parentName = ($this->global->coreParentFinder)($this);
+			}
 
-		} else {
-			$this->main($params);
+			if ($this->referenceType === 'import') {
+				if ($this->parentName) {
+					throw new Latte\RuntimeException('Imported template cannot use {extends} or {layout}, use {import}');
+				}
+
+			} elseif ($this->parentName) { // extends
+				$this->params = $params;
+				$this->createTemplate($this->parentName, $this->parentArgs + $params, 'extends')->render($block);
+
+			} elseif ($block !== null) { // single block rendering
+				$this->renderBlock($block, $this->params);
+
+			} else {
+				$this->main($params);
+			}
+		} finally {
+			foreach ($extensions as $extension) {
+				$extension->afterRender($this);
+			}
 		}
 	}
 
@@ -97,12 +110,13 @@ class Template
 	 * @internal
 	 */
 	public function renderBlock(
-		string $name,
+		?string $name,
 		array $params,
 		string|\Closure|null $mod = null,
 		int|string|null $layer = null,
 	): void
 	{
+		$name ??= end($this->renderingBlocks) ?: throw new Latte\RuntimeException('Cannot include this block outside of any block.');
 		$block = $layer
 			? ($this->blocks[$layer][$name] ?? null)
 			: ($this->blocks[self::LayerLocal][$name] ?? $this->blocks[self::LayerTop][$name] ?? null);
@@ -115,14 +129,20 @@ class Template
 			throw new Latte\RuntimeException("Cannot include undefined block '$name'$hint");
 		}
 
-		$fn = reset($block->functions);
-		assert($fn !== false);
-		$this->filter(
-			fn() => $fn($params),
-			$mod,
-			$block->contentType ?? static::ContentType,
-			"block $name",
-		);
+		$this->renderingBlocks[] = $name;
+		$level = $block->level;
+		$block->level = 0;
+		try {
+			$this->filter(
+				fn() => $block->functions[0]($params),
+				$mod,
+				$block->contentType ?? static::ContentType,
+				"block $name",
+			);
+		} finally {
+			$block->level = $level;
+			array_pop($this->renderingBlocks);
+		}
 	}
 
 
@@ -131,14 +151,20 @@ class Template
 	 * @param  mixed[]  $params
 	 * @internal
 	 */
-	public function renderParentBlock(string $name, array $params): void
+	public function renderParentBlock(?string $name, array $params): void
 	{
+		$name ??= end($this->renderingBlocks) ?: throw new Latte\RuntimeException('Cannot include parent block outside of any block.');
 		$block = $this->blocks[self::LayerLocal][$name] ?? $this->blocks[self::LayerTop][$name] ?? null;
-		if (!$block || ($function = next($block->functions)) === false) {
+		if (!$block || !isset($block->functions[$block->level + 1])) {
 			throw new Latte\RuntimeException("Cannot include undefined parent block '$name'.");
 		}
-		$function($params);
-		prev($block->functions);
+
+		$block->level++;
+		try {
+			$block->functions[$block->level]($params);
+		} finally {
+			$block->level--;
+		}
 	}
 
 
@@ -173,7 +199,7 @@ class Template
 		$child->referenceType = $relation;
 		$child->global = $this->global;
 
-		if (in_array($relation, ['extends', 'includeblock', 'import', 'embed'], strict: true)) {
+		if (in_array($relation, ['extends', 'includeblock', 'import', 'embed'], true)) {
 			foreach ($child->blocks[self::LayerTop] as $nm => $block) {
 				$this->addBlock($nm, $block->contentType ?? static::ContentType, $block->functions);
 			}
@@ -182,6 +208,8 @@ class Template
 
 			$this->blocks[self::LayerSnippet] += $child->blocks[self::LayerSnippet];
 			$child->blocks[self::LayerSnippet] = &$this->blocks[self::LayerSnippet];
+
+			$child->renderingBlocks = &$this->renderingBlocks;
 		}
 
 		return $child;
@@ -290,7 +318,7 @@ class Template
 
 	/**
 	 * Creates block if doesn't exist and checks if content type is the same.
-	 * @param  \Closure[]  $functions
+	 * @param  list<\Closure>  $functions
 	 * @internal
 	 */
 	protected function addBlock(
@@ -313,7 +341,7 @@ class Template
 			));
 		}
 
-		$block->functions = array_merge($block->functions, $functions);
+		$block->functions = [...$block->functions, ...$functions];
 	}
 
 

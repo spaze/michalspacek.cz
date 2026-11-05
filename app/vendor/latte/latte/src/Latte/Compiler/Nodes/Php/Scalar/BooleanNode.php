@@ -8,8 +8,7 @@
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
 use Latte\Compiler\Nodes\Php\ScalarNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -20,6 +19,7 @@ class BooleanNode extends ScalarNode
 	public function __construct(
 		public bool $value,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

@@ -7,10 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
-use function array_flip, str_starts_with, strtolower, substr;
+use Latte\Compiler\{Node, Position, PrintContext};
 
 
 /**
@@ -27,6 +24,7 @@ class NameNode extends Node
 		public string $name,
 		public int $kind = self::KindNormal,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		if ($name === '') {
 			throw new \InvalidArgumentException('Name cannot be empty');
@@ -36,9 +34,6 @@ class NameNode extends Node
 			$this->kind = self::KindFullyQualified;
 			$this->name = substr($name, 1);
 		} else {
-			if ($kind === -1 && !str_starts_with($name, '__')) {
-				trigger_error("Using unqualified constant '$name' is deprecated. Use '\\$name' with a leading backslash $position", E_USER_DEPRECATED);
-			}
 			$this->kind = self::KindNormal;
 		}
 	}

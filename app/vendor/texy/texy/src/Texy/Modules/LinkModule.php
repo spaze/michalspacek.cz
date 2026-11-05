@@ -1,18 +1,15 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use Texy\HandlerInvocation;
-use Texy\LineParser;
-use Texy\Link;
-use Texy\Patterns;
-use function iconv_strlen, iconv_substr, link, preg_match, str_contains, str_replace, strlen, strncasecmp, strpos, substr, trim, urlencode;
+use Texy\{HandlerInvocation, LineParser, Link, Patterns};
+use function strlen;
 
 
 /**
@@ -38,7 +35,7 @@ final class LinkModule extends Texy\Module
 	/** @var array<string, true> */
 	private static array $livelock;
 
-	private static string $EMAIL;
+	private static string $emailPattern;
 
 
 	public function __construct(Texy\Texy $texy)
@@ -62,18 +59,32 @@ final class LinkModule extends Texy\Module
 		// direct url; charaters not allowed in URL <>[\]^`{|}
 		$texy->registerLinePattern(
 			$this->patternUrlEmail(...),
-			'#(?<=^|[\s([<:\x17])(?:https?://|www\.|ftp://)[0-9.' . Patterns::CHAR . '-][/\d' . Patterns::CHAR . '+\.~%&?@=_:;\#$!,*()\x{ad}-]{1,1000}[/\d' . Patterns::CHAR . '+~?@=_\#$*]#u',
+			'#(?<=^|[\s([<:\x17])(?:https?://|www\.|ftp://)[0-9.'
+			. Patterns::CHAR
+			. '-][/\d'
+			. Patterns::CHAR
+			. '+\.~%&?@=_:;\#$!,*()\x{ad}-]{1,1000}[/\d'
+			. Patterns::CHAR
+			. '+~?@=_\#$*]#u',
 			'link/url',
 			'#(?:https?://|www\.|ftp://)#u',
 		);
 
 		// direct email
-		self::$EMAIL = '[' . Patterns::CHAR . '][0-9.+_' . Patterns::CHAR . '-]{0,63}@[0-9.+_' . Patterns::CHAR . '\x{ad}-]{1,252}\.[' . Patterns::CHAR . '\x{ad}]{2,19}';
+		self::$emailPattern = '['
+			. Patterns::CHAR
+			. '][0-9.+_'
+			. Patterns::CHAR
+			. '-]{0,63}@[0-9.+_'
+			. Patterns::CHAR
+			. '\x{ad}-]{1,252}\.['
+			. Patterns::CHAR
+			. '\x{ad}]{2,19}';
 		$texy->registerLinePattern(
 			$this->patternUrlEmail(...),
-			'#(?<=^|[\s([<\x17])' . self::$EMAIL . '#u',
+			'#(?<=^|[\s([<\x17])' . self::$emailPattern . '#u',
 			'link/email',
-			'#' . self::$EMAIL . '#u',
+			'#' . self::$emailPattern . '#u',
 		);
 	}
 
@@ -136,7 +147,7 @@ final class LinkModule extends Texy\Module
 
 		$link->type = $link::BRACKET;
 
-		if ($link->label != '') { // null or ''
+		if ($link->label != '') { // intentionally !=, skips null and empty string
 			// prevent circular references
 			assert($link->name !== null);
 			if (isset(self::$livelock[$link->name])) {
@@ -222,14 +233,12 @@ final class LinkModule extends Texy\Module
 		$texy = $this->texy;
 		$type = Link::COMMON;
 
-		// [ref]
-		if (strlen($dest) > 1 && $dest[0] === '[' && $dest[1] !== '*') {
+		if (strlen($dest) > 1 && $dest[0] === '[' && $dest[1] !== '*') { // [ref]
 			$type = Link::BRACKET;
 			$dest = substr($dest, 1, -1);
 			$link = $this->getReference($dest);
 
-		// [* image *]
-		} elseif (strlen($dest) > 1 && $dest[0] === '[' && $dest[1] === '*') {
+		} elseif (strlen($dest) > 1 && $dest[0] === '[' && $dest[1] === '*') { // [* image *]
 			$type = Link::IMAGE;
 			$dest = trim(substr($dest, 2, -2));
 			$image = $texy->imageModule->getReference($dest);
@@ -245,7 +254,7 @@ final class LinkModule extends Texy\Module
 		}
 
 		if (str_contains((string) $link->URL, '%s')) {
-			$link->URL = str_replace('%s', urlencode($texy->stringToText($label ?? '')), $link->URL);
+			$link->URL = str_replace('%s', urlencode($texy->stringToText($label ?? '')), $link->URL ?? '');
 		}
 
 		$link->modifier->setProperties($mMod);
@@ -342,7 +351,7 @@ final class LinkModule extends Texy\Module
 			// special supported case
 			$link->URL = 'http://' . $link->URL;
 
-		} elseif (preg_match('#' . self::$EMAIL . '$#Au', $link->URL)) {
+		} elseif (preg_match('#' . self::$emailPattern . '$#Au', $link->URL)) {
 			// email
 			$link->URL = 'mailto:' . $link->URL;
 
@@ -360,7 +369,7 @@ final class LinkModule extends Texy\Module
 	 */
 	private function textualUrl(Link $link): string
 	{
-		if ($this->texy->obfuscateEmail && preg_match('#^' . self::$EMAIL . '$#u', $link->raw)) { // email
+		if ($this->texy->obfuscateEmail && preg_match('#^' . self::$emailPattern . '$#u', $link->raw)) { // email
 			return str_replace('@', '&#64;<!-- -->', $link->raw);
 		}
 
@@ -370,7 +379,11 @@ final class LinkModule extends Texy\Module
 				: $link->raw;
 
 			// parse_url() in PHP damages UTF-8 - use regular expression
-			if (!preg_match('~^(?:(?P<scheme>[a-z]+):)?(?://(?P<host>[^/?#]+))?(?P<path>(?:/|^)(?!/)[^?#]*)?(?:\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?()$~', $raw, $parts)) {
+			if (!preg_match(
+				'~^(?:(?P<scheme>[a-z]+):)?(?://(?P<host>[^/?#]+))?(?P<path>(?:/|^)(?!/)[^?#]*)?(?:\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?()$~',
+				$raw,
+				$parts,
+			)) {
 				return $link->raw;
 			}
 
@@ -384,7 +397,9 @@ final class LinkModule extends Texy\Module
 			}
 
 			if ($parts['path'] !== '') {
-				$res .= (iconv_strlen($parts['path'], 'UTF-8') > 16 ? ("/\u{2026}" . iconv_substr($parts['path'], -12, 12, 'UTF-8')) : $parts['path']);
+				$res .= (iconv_strlen($parts['path'], 'UTF-8') > 16
+					? ("/\u{2026}" . iconv_substr($parts['path'], -12, 12, 'UTF-8'))
+					: $parts['path']);
 			}
 
 			if ($parts['query'] !== '') {

@@ -1,14 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy;
 
 use function is_array, strlen;
-
 
 
 /**
@@ -20,14 +19,15 @@ class BlockParser extends Parser
 	public array $patterns;
 	private string $text;
 	private int $offset;
-	private bool $indented;
 
 
-	public function __construct(Texy $texy, HtmlElement $element, bool $indented)
-	{
+	public function __construct(
+		Texy $texy,
+		HtmlElement $element,
+		private readonly bool $indented,
+	) {
 		$this->texy = $texy;
 		$this->element = $element;
-		$this->indented = $indented;
 		$this->patterns = $texy->getBlockPatterns();
 	}
 

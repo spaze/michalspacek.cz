@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Application\Responses;
 
@@ -16,16 +14,12 @@ use Nette\Http;
 /**
  * Redirects to new URI.
  */
-final class RedirectResponse implements Nette\Application\Response
+final readonly class RedirectResponse implements Nette\Application\Response
 {
-	private string $url;
-	private int $httpCode;
-
-
-	public function __construct(string $url, int $httpCode = Http\IResponse::S302_Found)
-	{
-		$this->url = $url;
-		$this->httpCode = $httpCode;
+	public function __construct(
+		private string $url,
+		private int $httpCode = Http\IResponse::S302_Found,
+	) {
 	}
 
 

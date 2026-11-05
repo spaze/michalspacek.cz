@@ -38,8 +38,8 @@ class SelectBox extends ChoiceControl
 		$this->setOption('type', 'select');
 		$this->addCondition(
 			fn() => $this->prompt === false
-			&& $this->options
-			&& $this->control->size < 2,
+				&& $this->options
+				&& $this->control->size < 2,
 		)->addRule(Nette\Forms\Form::Filled, Nette\Forms\Validator::$messages[self::Valid]);
 	}
 
@@ -95,7 +95,7 @@ class SelectBox extends ChoiceControl
 	{
 		$items = [];
 		foreach ($this->options as $key => $value) {
-			$items[is_array($value) ? $this->translate($key) : $key] = $this->translate($value);
+			$items[is_array($value) ? (string) $this->translate($key) : $key] = $this->translate($value);
 		}
 
 		$attrs = $this->optionAttributes;

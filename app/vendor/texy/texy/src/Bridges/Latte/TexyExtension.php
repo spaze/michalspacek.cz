@@ -1,19 +1,17 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Bridges\Latte;
 
 use Latte;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TemplateParser;
+use Latte\Compiler\{Tag, TemplateParser};
 use Latte\ContentType;
 use Latte\Runtime\FilterInfo;
-use Texy\Helpers;
-use Texy\Texy;
+use Texy\{Helpers, Texy};
 
 
 /**
@@ -22,7 +20,7 @@ use Texy\Texy;
 class TexyExtension extends Latte\Extension
 {
 	/** @var \Closure(string, mixed...): string */
-	private \Closure $processor;
+	private readonly \Closure $processor;
 
 
 	/** @param  Texy|callable(string, mixed...): string  $texy */

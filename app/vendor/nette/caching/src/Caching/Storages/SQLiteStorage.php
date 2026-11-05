@@ -9,7 +9,7 @@ namespace Nette\Caching\Storages;
 
 use Nette;
 use Nette\Caching\Cache;
-use function array_merge, count, is_file, serialize, str_repeat, time, touch, unserialize;
+use function count;
 
 
 /**
@@ -17,6 +17,12 @@ use function array_merge, count, is_file, serialize, str_repeat, time, touch, un
  */
 class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 {
+	/** keys per query, SQLite before 3.32 allows at most 999 query parameters */
+	private const BulkChunkSize = 500;
+
+	/** Probability (0-1) that the garbage collector runs on each instantiation. */
+	public static float $gcProbability = 0.001;
+
 	private readonly \PDO $pdo;
 
 
@@ -44,6 +50,10 @@ class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 			CREATE INDEX IF NOT EXISTS tags_tag ON tags(tag);
 			PRAGMA synchronous = OFF;
 		');
+
+		if (mt_rand() / mt_getrandmax() < static::$gcProbability) {
+			$this->clean([]);
+		}
 	}
 
 
@@ -65,21 +75,23 @@ class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 
 	public function bulkRead(array $keys): array
 	{
-		$stmt = $this->pdo->prepare('SELECT key, data, slide FROM cache WHERE key IN (?' . str_repeat(',?', count($keys) - 1) . ') AND (expire IS NULL OR expire >= ?)');
-		$stmt->execute(array_merge($keys, [time()]));
 		$result = [];
-		$updateSlide = [];
-		foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-			if ($row['slide'] !== null) {
-				$updateSlide[] = $row['key'];
+		foreach (array_chunk($keys, self::BulkChunkSize) as $chunk) {
+			$stmt = $this->pdo->prepare('SELECT key, data, slide FROM cache WHERE key IN (?' . str_repeat(',?', count($chunk) - 1) . ') AND (expire IS NULL OR expire >= ?)');
+			$stmt->execute([...$chunk, time()]);
+			$updateSlide = [];
+			foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+				if ($row['slide'] !== null) {
+					$updateSlide[] = $row['key'];
+				}
+
+				$result[$row['key']] = unserialize($row['data']);
 			}
 
-			$result[$row['key']] = unserialize($row['data']);
-		}
-
-		if (!empty($updateSlide)) {
-			$stmt = $this->pdo->prepare('UPDATE cache SET expire = ? + slide WHERE key IN(?' . str_repeat(',?', count($updateSlide) - 1) . ')');
-			$stmt->execute(array_merge([time()], $updateSlide));
+			if (!empty($updateSlide)) {
+				$stmt = $this->pdo->prepare('UPDATE cache SET expire = ? + slide WHERE key IN(?' . str_repeat(',?', count($updateSlide) - 1) . ')');
+				$stmt->execute([time(), ...$updateSlide]);
+			}
 		}
 
 		return $result;
@@ -96,26 +108,37 @@ class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 		$expire = isset($dependencies[Cache::Expire])
 			? $dependencies[Cache::Expire] + time()
 			: null;
-		$slide = isset($dependencies[Cache::Sliding])
+		$slide = $expire !== null && !empty($dependencies[Cache::Sliding])
 			? $dependencies[Cache::Expire]
 			: null;
 
 		$this->pdo->exec('BEGIN TRANSACTION');
-		$this->pdo->prepare('REPLACE INTO cache (key, data, expire, slide) VALUES (?, ?, ?, ?)')
-			->execute([$key, serialize($data), $expire, $slide]);
+		try {
+			$this->pdo->prepare('REPLACE INTO cache (key, data, expire, slide) VALUES (?, ?, ?, ?)')
+				->execute([$key, serialize($data), $expire, $slide]);
 
-		if (!empty($dependencies[Cache::Tags])) {
-			$arr = [];
-			foreach ($dependencies[Cache::Tags] as $tag) {
-				$arr[] = $key;
-				$arr[] = $tag;
+			if (!empty($dependencies[Cache::Tags])) {
+				$arr = [];
+				foreach ($dependencies[Cache::Tags] as $tag) {
+					$arr[] = $key;
+					$arr[] = $tag;
+				}
+
+				$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', intdiv(count($arr), 2) - 1))
+					->execute($arr);
 			}
 
-			$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', intdiv(count($arr), 2) - 1))
-				->execute($arr);
-		}
+			$this->pdo->exec('COMMIT');
 
-		$this->pdo->exec('COMMIT');
+		} catch (\Throwable $e) {
+			try {
+				$this->pdo->exec('ROLLBACK');
+			} catch (\Throwable) {
+				// the transaction may have been rolled back automatically
+			}
+
+			throw $e;
+		}
 	}
 
 
@@ -138,7 +161,7 @@ class SQLiteStorage implements Nette\Caching\Storage, Nette\Caching\BulkReader
 			if (!empty($conditions[Cache::Tags])) {
 				$tags = $conditions[Cache::Tags];
 				$sql .= ' OR key IN (SELECT key FROM tags WHERE tag IN (?' . str_repeat(',?', count($tags) - 1) . '))';
-				$args = array_merge($args, $tags);
+				$args = [...$args, ...$tags];
 			}
 
 			$this->pdo->prepare($sql)->execute($args);

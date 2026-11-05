@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Application\Routers;
 
@@ -22,6 +20,7 @@ final class SimpleRouter extends Nette\Routing\SimpleRouter implements Nette\Rou
 	private const PresenterKey = 'presenter';
 
 
+	/** @param  array<string, mixed>|string  $defaults */
 	public function __construct(array|string $defaults = [])
 	{
 		if (is_string($defaults)) {
@@ -39,6 +38,3 @@ final class SimpleRouter extends Nette\Routing\SimpleRouter implements Nette\Rou
 		parent::__construct($defaults);
 	}
 }
-
-
-interface_exists(Nette\Application\IRouter::class);

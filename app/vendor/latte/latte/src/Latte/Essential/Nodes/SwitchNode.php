@@ -8,13 +8,11 @@
 namespace Latte\Essential\Nodes;
 
 use Latte\CompileException;
-use Latte\Compiler\Nodes\FragmentNode;
+use Latte\Compiler\Nodes\{FragmentNode, StatementNode, TextNode};
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Nodes\TextNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
+use function count;
 
 
 /**
@@ -72,11 +70,9 @@ class SwitchNode extends StatementNode
 
 	public function print(PrintContext $context): string
 	{
-		$res = $context->format(
-			'$ʟ_switch = (%node) %line;',
-			$this->expression,
-			$this->position,
-		);
+		$res = $this->expression
+			? $context->format('$ʟ_switch = (%node) %line;', $this->expression, $this->position)
+			: $context->format('$ʟ_switch = true %line;', $this->position);
 		$first = true;
 		$default = null;
 		foreach ($this->cases as $i => [$case, $content]) {

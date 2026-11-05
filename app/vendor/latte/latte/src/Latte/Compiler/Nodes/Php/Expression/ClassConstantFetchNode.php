@@ -7,11 +7,8 @@
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\IdentifierNode;
-use Latte\Compiler\Nodes\Php\NameNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, IdentifierNode, NameNode};
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -23,6 +20,7 @@ class ClassConstantFetchNode extends ExpressionNode
 		public NameNode|ExpressionNode $class,
 		public IdentifierNode|ExpressionNode $name,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

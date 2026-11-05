@@ -10,7 +10,6 @@ namespace Latte\Compiler;
 use Latte\CompileException;
 use Latte\Compiler\Nodes\AreaNode;
 use Latte\Compiler\Nodes\Html\ElementNode;
-use function array_search, in_array;
 
 
 /**
@@ -36,7 +35,8 @@ final class Tag
 	public function __construct(
 		public readonly string $name,
 		array $tokens,
-		public readonly Range $position,
+		public readonly Position $position,
+		public readonly Position $end,
 		public readonly bool $void = false,
 		public readonly bool $closing = false,
 		public readonly bool $inHead = false,
@@ -82,7 +82,7 @@ final class Tag
 				. ($this->closing ? '/' : '')
 				. $this->name
 				. ($withArgs ? $this->parser->text : '')
-			. '}';
+				. '}';
 	}
 
 
@@ -95,9 +95,10 @@ final class Tag
 	{
 		$tag = $this->parent;
 		while ($tag && (
-			!in_array($tag->node ? $tag->node::class : null, $classes, strict: true)
+			!array_filter($classes, fn($class) => $tag->node instanceof $class)
 			|| ($condition && !$condition($tag))
-		)) {
+		)
+		) {
 			$tag = $tag->parent;
 		}
 

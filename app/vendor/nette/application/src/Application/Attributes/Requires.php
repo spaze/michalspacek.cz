@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Nette\Application\Attributes;
 
@@ -15,10 +13,17 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Requires
 {
+	/** @var ?list<string> */
 	public ?array $methods = null;
+
+	/** @var ?list<string> */
 	public ?array $actions = null;
 
 
+	/**
+	 * @param  list<string>|string|null  $methods
+	 * @param  list<string>|string|null  $actions
+	 */
 	public function __construct(
 		string|array|null $methods = null,
 		string|array|null $actions = null,
@@ -26,7 +31,7 @@ class Requires
 		public ?bool $sameOrigin = null,
 		public ?bool $ajax = null,
 	) {
-		$this->methods = $methods === null ? null : (array) $methods;
+		$this->methods = $methods === null ? null : array_map(strtoupper(...), (array) $methods);
 		$this->actions = $actions === null ? null : (array) $actions;
 	}
 }

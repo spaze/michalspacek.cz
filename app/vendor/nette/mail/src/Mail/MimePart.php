@@ -8,8 +8,8 @@
 namespace Nette\Mail;
 
 use Nette;
-use Nette\Utils\Strings;
-use function addcslashes, base64_encode, chunk_split, iconv_mime_encode, is_array, is_string, ltrim, preg_match, preg_replace, quoted_printable_encode, rtrim, str_ends_with, str_repeat, str_replace, stripslashes, strlen, strrpos, strspn, substr;
+use Nette\Utils\Arrays;
+use function function_exists, is_array, is_string, sprintf, strlen;
 
 
 /**
@@ -47,6 +47,38 @@ class MimePart
 
 
 	/**
+	 * Converts an internationalized domain in the address to its ASCII (punycode) form; a UTF-8 domain
+	 * on the wire requires SMTPUTF8 (RFC 6531). Needs ext-intl. The local part is never touched.
+	 */
+	protected static function toAsciiEmail(string $email): string
+	{
+		$pos = strrpos($email, '@');
+		if (
+			$pos === false
+			|| !preg_match('#[\x80-\xFF]#', substr($email, $pos + 1))
+			|| !function_exists('idn_to_ascii')
+		) {
+			return $email;
+		}
+
+		$domain = idn_to_ascii(substr($email, $pos + 1), IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+		return $domain === false
+			? $email
+			: substr($email, 0, $pos + 1) . $domain;
+	}
+
+
+	/**
+	 * Returns the spelling under which the header is already stored; names are case-insensitive (RFC 5322).
+	 */
+	private function resolveName(string $name): string
+	{
+		return Arrays::first(array_keys($this->headers), fn($key) => strcasecmp($key, $name) === 0)
+			?? $name;
+	}
+
+
+	/**
 	 * Sets a header.
 	 * @param  string|array<string, ?string>|null  $value  value or pair email => name
 	 */
@@ -55,6 +87,8 @@ class MimePart
 		if (!$name || preg_match('#[^a-z0-9-]#i', $name)) {
 			throw new Nette\InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
 		}
+
+		$name = $this->resolveName($name);
 
 		if ($value == null) { // intentionally ==
 			if (!$append) {
@@ -69,18 +103,17 @@ class MimePart
 			foreach ($value as $email => $recipient) {
 				if ($recipient === null) {
 					// continue
-				} elseif (!Strings::checkEncoding($recipient)) {
+				} elseif (!Nette\Utils\Validators::isUnicode($recipient)) {
 					Nette\Utils\Validators::assert($recipient, 'unicode', "header '$name'");
 				} elseif (preg_match('#[\r\n]#', $recipient)) {
 					throw new Nette\InvalidArgumentException('Name must not contain line separator.');
 				}
 
 				Nette\Utils\Validators::assert($email, 'email', "header '$name'");
-				$tmp[$email] = $recipient;
+				$tmp[self::toAsciiEmail($email)] = $recipient;
 			}
 		} else {
-			$value = (string) $value;
-			if (!Strings::checkEncoding($value)) {
+			if (!Nette\Utils\Validators::isUnicode($value)) {
 				throw new Nette\InvalidArgumentException('Header is not valid UTF-8 string.');
 			}
 
@@ -97,13 +130,13 @@ class MimePart
 	 */
 	public function getHeader(string $name): string|array|null
 	{
-		return $this->headers[$name] ?? null;
+		return $this->headers[$this->resolveName($name)] ?? null;
 	}
 
 
 	public function clearHeader(string $name): static
 	{
-		unset($this->headers[$name]);
+		unset($this->headers[$this->resolveName($name)]);
 		return $this;
 	}
 
@@ -113,16 +146,18 @@ class MimePart
 	 */
 	public function getEncodedHeader(string $name): ?string
 	{
+		$name = $this->resolveName($name);
+		$value = $this->headers[$name] ?? null;
 		$offset = strlen($name) + 2; // colon + space
 
-		if (!isset($this->headers[$name])) {
+		if ($value === null) {
 			return null;
 
-		} elseif (is_array($this->headers[$name])) {
+		} elseif (is_array($value)) {
 			$s = '';
-			foreach ($this->headers[$name] as $email => $name) {
-				if ($name != null) { // intentionally ==
-					$s .= self::encodeSequence($name, $offset, self::SequenceWord);
+			foreach ($value as $email => $recipient) {
+				if ($recipient != null) { // intentionally ==
+					$s .= self::encodeSequence($recipient, $offset, self::SequenceWord);
 					$email = " <$email>";
 				}
 
@@ -131,12 +166,12 @@ class MimePart
 
 			return ltrim(substr($s, 0, -1)); // last comma
 
-		} elseif (preg_match('#^(\S+; (?:file)?name=)"(.*)"$#D', $this->headers[$name], $m)) { // Content-Disposition
+		} elseif (preg_match('#^(\S+; (?:file)?name=)"(.*)"$#D', $value, $m)) { // Content-Disposition
 			$offset += strlen($m[1]);
 			return $m[1] . self::encodeSequence(stripslashes($m[2]), $offset, self::SequenceValue);
 
 		} else {
-			return ltrim(self::encodeSequence($this->headers[$name], $offset));
+			return ltrim(self::encodeSequence($value, $offset));
 		}
 	}
 
@@ -207,7 +242,8 @@ class MimePart
 
 		foreach ($this->headers as $name => $value) {
 			$output .= $name . ': ' . $this->getEncodedHeader($name);
-			if ($this->parts && $name === 'Content-Type') {
+			// the name is stored as it was first written, which need not be the canonical spelling
+			if ($this->parts && strcasecmp($name, 'Content-Type') === 0) {
 				$output .= ';' . self::EOL . "\tboundary=\"$boundary\"";
 			}
 
@@ -266,16 +302,15 @@ class MimePart
 	 */
 	private static function encodeSequence(string $s, int &$offset = 0, ?int $type = null): string
 	{
-		$escape = fn($s) => preg_match('#[^ a-zA-Z0-9!\#$%&\'*+/?^_`{|}~-]#', $s) === 1 // RFC 2822 atext except =
-			? sprintf('"%s"', addcslashes($s, '"\\'))
-			: $s;
-
 		if (
 			(strlen($s) < self::LineLength - 3) && // 3 is tab + quotes
-			strspn($s, "!\"#$%&\\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}~=? _\r\n\t") === strlen($s)
+			strspn(
+				$s,
+				"!\"#$%&\\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}~=? _\r\n\t",
+			) === strlen($s)
 		) {
-			if ($type !== null) {
-				$s = $escape($s);
+			if ($type !== null && preg_match('#[^ a-zA-Z0-9!\#$%&\'*+/?^_`{|}~-]#', $s) === 1) { // RFC 2822 atext except =
+				$s = sprintf('"%s"', addcslashes($s, '"\\'));
 			}
 
 			return self::append($s, $offset);
@@ -287,8 +322,11 @@ class MimePart
 			$offset = 1;
 		}
 
-		if ($type === self::SequenceWord) {
-			$s = $escape($s);
+		if ( // could split the address list when decoded before parsing
+			$type === self::SequenceWord
+			&& strpbrk($s, ',;:<>@"\\') !== false
+		) {
+			$s = sprintf('"%s"', addcslashes($s, '"\\'));
 		}
 
 		$s = iconv_mime_encode(str_repeat(' ', $old = $offset), $s, [

@@ -1,30 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte\Nodes;
 
 use Latte\CompileException;
-use Latte\Compiler\Node;
-use Latte\Compiler\NodeHelpers;
+use Latte\Compiler\{Node, NodeHelpers, NodeTraverser, PrintContext, Tag};
 use Latte\Compiler\Nodes\Php\Expression\AuxiliaryNode;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Nodes\TemplateNode;
-use Latte\Compiler\NodeTraverser;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\Nodes\{StatementNode, TemplateNode};
 use Nette\Application\LinkGenerator;
 
 
 /**
  * {linkBase module}
+ * Sets base path prepended to relative link destinations.
  */
 class LinkBaseNode extends StatementNode
 {
@@ -58,11 +52,12 @@ class LinkBaseNode extends StatementNode
 
 	public static function applyLinkBasePass(TemplateNode $node): void
 	{
-		$base = NodeHelpers::findFirst($node, fn(Node $node) => $node instanceof self)?->base;
-		if ($base === null) {
+		$found = NodeHelpers::findFirst($node, fn(Node $node) => $node instanceof self);
+		if (!$found instanceof self) {
 			return;
 		}
 
+		$base = $found->base;
 		(new NodeTraverser)->traverse($node, function (Node $link) use ($base) {
 			if ($link instanceof LinkNode) {
 				if ($link->destination instanceof StringNode && $base instanceof StringNode) {

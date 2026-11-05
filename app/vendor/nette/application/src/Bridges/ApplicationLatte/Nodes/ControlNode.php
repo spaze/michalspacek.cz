@@ -1,29 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte\Nodes;
 
 use Latte;
-use Latte\Compiler\Escaper;
-use Latte\Compiler\Nodes\Php\ArrayItemNode;
+use Latte\Compiler\{Escaper, PrintContext, Tag};
+use Latte\Compiler\Nodes\Php\{ArrayItemNode, ExpressionNode, ModifierNode};
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\ModifierNode;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
 use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
 use Nette\Utils\Strings;
 
 
 /**
- * {control name[:method] [params]}
+ * {control name[:method] [, params]}
+ * Renders a component by calling its render() method.
  */
 class ControlNode extends StatementNode
 {
@@ -44,11 +39,12 @@ class ControlNode extends StatementNode
 			$node->method = $tag->parser->parseExpression();
 		}
 
-		$stream->tryConsume(',');
+		$tag->parser->consumeCommaBeforeArguments(strict: false);
 		$start = $stream->getIndex();
 		$node->args = $tag->parser->parseArguments();
 		$start -= $stream->getIndex();
-		$depth = $wrap = null;
+		$depth = 0;
+		$wrap = null;
 		for (; $start < 0; $start++) {
 			$token = $stream->peek($start);
 			match (true) {
@@ -64,11 +60,9 @@ class ControlNode extends StatementNode
 		}
 
 		$modifier = $tag->parser->parseModifier();
-		foreach ($modifier->filters as $filter) {
-			match ($filter->name->name) {
-				'noescape' => $node->escape = false,
-				default => throw new Latte\CompileException('Only modifier |noescape is allowed here.', $tag->position),
-			};
+		$node->escape = $modifier->removeFilter('noescape') ? false : null;
+		if ($modifier->filters) {
+			throw new Latte\CompileException('Only modifier |noescape is allowed here.', reset($modifier->filters)->position);
 		}
 
 		return $node;
@@ -83,7 +77,8 @@ class ControlNode extends StatementNode
 
 		$method = match (true) {
 			!$this->method => 'render',
-			$this->method instanceof StringNode && Strings::match($this->method->value, '#^\w*$#D') => 'render' . ucfirst($this->method->value),
+			$this->method instanceof StringNode && Strings::match($this->method->value, '#^\w*$#D') => 'render'
+				. ucfirst($this->method->value),
 			default => "{'render' . " . $this->method->print($context) . '}',
 		};
 
@@ -94,8 +89,8 @@ class ControlNode extends StatementNode
 			$this->name,
 		);
 
-		if ($this->escape) {
-			return $context->format(
+		return $this->escape
+			? $context->format(
 				<<<'XX'
 					%raw
 					if ($ʟ_tmp instanceof Nette\Application\UI\Renderable) $ʟ_tmp->redrawControl(null, false);
@@ -111,10 +106,8 @@ class ControlNode extends StatementNode
 				$this->position,
 				Latte\ContentType::Html,
 				new ModifierNode([], $this->escape),
-			);
-
-		} else {
-			return $context->format(
+			)
+			: $context->format(
 				<<<'XX'
 					%raw
 					if ($ʟ_tmp instanceof Nette\Application\UI\Renderable) $ʟ_tmp->redrawControl(null, false);
@@ -127,7 +120,6 @@ class ControlNode extends StatementNode
 				$this->args,
 				$this->position,
 			);
-		}
 	}
 
 

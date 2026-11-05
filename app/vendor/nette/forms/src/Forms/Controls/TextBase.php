@@ -11,7 +11,7 @@ use Nette;
 use Nette\Forms\Form;
 use Nette\Utils\Strings;
 use Stringable;
-use function get_debug_type, is_array, is_scalar, min, sprintf;
+use function is_array, is_scalar, sprintf;
 
 
 /**
@@ -28,12 +28,16 @@ abstract class TextBase extends BaseControl
 	 * @return static
 	 * @internal
 	 */
-	public function setValue($value)
+	public function setValue(mixed $value)
 	{
 		if ($value === null) {
 			$value = '';
 		} elseif (!is_scalar($value) && !$value instanceof Stringable) {
-			throw new Nette\InvalidArgumentException(sprintf("Value must be scalar or null, %s given in field '%s'.", get_debug_type($value), $this->getName()));
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Value must be scalar or null, %s given in field '%s'.",
+				get_debug_type($value),
+				$this->getName(),
+			));
 		}
 
 		$this->value = $value;
@@ -44,11 +48,10 @@ abstract class TextBase extends BaseControl
 
 	/**
 	 * Returns the value, substituting empty string when it matches the empty value. Returns null when nullable is set and value is empty.
-	 * @return mixed
 	 */
 	public function getValue(): mixed
 	{
-		$value = $this->value === Strings::trim($this->translate($this->emptyValue))
+		$value = $this->value === Strings::trim((string) $this->translate($this->emptyValue))
 			? ''
 			: $this->value;
 		return $this->nullable && $value === '' ? null : $value;
@@ -104,7 +107,7 @@ abstract class TextBase extends BaseControl
 	{
 		$el = parent::getControl();
 		if ($this->emptyValue !== '') {
-			$el->attrs['data-nette-empty-value'] = Strings::trim($this->translate($this->emptyValue));
+			$el->attrs['data-nette-empty-value'] = Strings::trim((string) $this->translate($this->emptyValue));
 		}
 
 		if (isset($el->placeholder)) {
@@ -124,7 +127,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * @param  (callable(Nette\Forms\Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 * @return static
 	 */
 	public function addRule(

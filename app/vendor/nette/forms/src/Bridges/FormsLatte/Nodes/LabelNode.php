@@ -8,14 +8,11 @@
 namespace Nette\Bridges\FormsLatte\Nodes;
 
 use Latte\CompileException;
-use Latte\Compiler\Nodes\AreaNode;
+use Latte\Compiler\Nodes\{AreaNode, StatementNode};
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**
@@ -30,7 +27,6 @@ class LabelNode extends StatementNode
 	public ArrayNode $attributes;
 	public AreaNode $content;
 	public bool $void;
-	public ?Position $endLine;
 
 
 	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
@@ -54,8 +50,7 @@ class LabelNode extends StatementNode
 		$tag->parser->stream->tryConsume(',');
 		$node->attributes = $tag->parser->parseArguments();
 		$node->void = $tag->void;
-		[$node->content, $endTag] = yield;
-		$node->endLine = $endTag?->position;
+		[$node->content] = yield;
 		return $node;
 	}
 
@@ -63,7 +58,7 @@ class LabelNode extends StatementNode
 	public function print(PrintContext $context): string
 	{
 		return $context->format(
-			'echo ($ʟ_label = Nette\Bridges\FormsLatte\Runtime::item(%node, $this->global)->'
+			'echo ($ʟ_label = $this->global->forms->get(%node)->'
 			. ($this->part ? 'getLabelPart(%node)' : 'getLabel()')
 			. ')'
 			. ($this->attributes->items ? '?->addAttributes(%2.node)' : '')
@@ -73,7 +68,7 @@ class LabelNode extends StatementNode
 			$this->attributes,
 			$this->position,
 			$this->content,
-			$this->endLine,
+			end($this->tagRanges),
 		);
 	}
 

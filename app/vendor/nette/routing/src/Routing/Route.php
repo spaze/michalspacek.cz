@@ -9,12 +9,11 @@ namespace Nette\Routing;
 
 use Nette;
 use Nette\Utils\Strings;
-use function array_flip, array_key_exists, array_pop, array_reverse, array_unshift, count, explode, http_build_query, ini_get, ip2long, is_array, is_scalar, is_string, ltrim, preg_match, preg_quote, preg_replace_callback, rawurldecode, rawurlencode, str_starts_with, strlen, strpbrk, strtr, substr, trim;
+use function array_key_exists, count, ini_get, is_array, is_object, is_scalar, is_string, strlen;
 
 
 /**
- * The bidirectional route is responsible for mapping
- * HTTP request to an array for dispatch and vice-versa.
+ * Bidirectional route mapping between HTTP requests and parameter arrays using a URL mask.
  */
 class Route implements Router
 {
@@ -71,8 +70,6 @@ class Route implements Router
 		],
 	];
 
-	private string $mask;
-
 	/** @var list<string> */
 	private array $sequence;
 
@@ -96,20 +93,18 @@ class Route implements Router
 
 
 	/**
-	 * @param string  $mask e.g. '<presenter>/<action>/<id \d{1,3}>'
 	 * @param array<string, mixed>  $metadata default values or metadata
 	 */
-	public function __construct(string $mask, array $metadata = [])
-	{
-		$this->mask = $mask;
+	public function __construct(
+		/** e.g. '<presenter>/<action>/<id \d{1,3}>' */
+		private string $mask,
+		array $metadata = [],
+	) {
 		$this->metadata = $this->normalizeMetadata($metadata);
 		$this->parseMask($this->detectMaskType());
 	}
 
 
-	/**
-	 * Returns mask.
-	 */
 	public function getMask(): string
 	{
 		return $this->mask;
@@ -126,10 +121,7 @@ class Route implements Router
 	}
 
 
-	/**
-	 * Returns default values.
-	 * @return array<string, mixed>
-	 */
+	/** @return array<string, mixed> */
 	public function getDefaults(): array
 	{
 		$defaults = [];
@@ -144,6 +136,7 @@ class Route implements Router
 
 
 	/**
+	 * Returns parameters that must have a specific fixed value for the route to match.
 	 * @internal
 	 * @return array<string, mixed>
 	 */
@@ -160,10 +153,7 @@ class Route implements Router
 	}
 
 
-	/**
-	 * Maps HTTP request to an array.
-	 * @return ?array<string, mixed>
-	 */
+	/** @return ?array<string, mixed> */
 	public function match(Nette\Http\IRequest $httpRequest): ?array
 	{
 		// combine with precedence: mask (params in URL-path), fixity, query, (post,) defaults
@@ -175,9 +165,7 @@ class Route implements Router
 		if ($this->type === self::Host) {
 			$host = $url->getHost();
 			$path = '//' . $host . $url->getPath();
-			$parts = ip2long($host)
-				? [$host]
-				: array_reverse(explode('.', $host));
+			$parts = self::hostParts($host);
 			$re = strtr($re, [
 				'/%basePath%/' => preg_quote($url->getBasePath(), '#'),
 				'%tld%' => preg_quote($parts[0], '#'),
@@ -258,10 +246,7 @@ class Route implements Router
 	}
 
 
-	/**
-	 * Constructs absolute URL from array.
-	 * @param array<string, mixed>  $params
-	 */
+	/** @param array<string, mixed>  $params */
 	public function constructUrl(array $params, Nette\Http\UrlScript $refUrl): ?string
 	{
 		if (!$this->preprocessParams($params)) {
@@ -282,9 +267,7 @@ class Route implements Router
 
 		} else {
 			$host = $refUrl->getHost();
-			$parts = ip2long($host)
-				? [$host]
-				: array_reverse(explode('.', $host));
+			$parts = self::hostParts($host);
 			$url = strtr($url, [
 				'/%basePath%/' => $refUrl->getBasePath(),
 				'%tld%' => $parts[0],
@@ -299,7 +282,7 @@ class Route implements Router
 		// build query string
 		$params = self::renameKeys($params, $this->xlat);
 		$sep = ini_get('arg_separator.input');
-		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
+		$query = http_build_query(self::objectsToArrays($params), '', $sep ? $sep[0] : '&');
 		if ($query !== '') {
 			$url .= '?' . $query;
 		}
@@ -349,12 +332,17 @@ class Route implements Router
 				return false;
 
 			} elseif (isset($meta[self::FilterOut])) {
+				if (!is_scalar($params[$name]) && $meta[self::FilterOut] === ($this->defaultMeta['#'][self::FilterOut] ?? null)) {
+					return false; // the default filter cannot convert a non-scalar value to a path segment
+				}
+
 				$params[$name] = $meta[self::FilterOut]($params[$name]);
 			}
 
 			if (
 				isset($meta[self::Pattern])
-				&& !preg_match("#(?:{$meta[self::Pattern]})$#DA", rawurldecode((string) $params[$name]))
+				&& (!is_scalar($params[$name])
+					|| !preg_match("#(?:{$meta[self::Pattern]})$#DA", rawurldecode((string) $params[$name])))
 			) {
 				return false; // pattern not match
 			}
@@ -462,7 +450,7 @@ class Route implements Router
 	private function parseMask(string $path): void
 	{
 		// <parameter-name[=default] [pattern]> or [ or ] or ?...
-		$parts = Strings::split($path, '/<([^<>= ]+)(=[^<> ]*)? *([^<>]*)>|(\[!?|\]|\s*\?.*)/');
+		$parts = Strings::split($path, '/<([^<>= ]+)(=[^<> ]*)? *([^<>]*)>|(\[!?|]|\s*\?.*)/');
 
 		$i = count($parts) - 1;
 		if ($i === 0) {
@@ -620,7 +608,7 @@ class Route implements Router
 
 
 	/**
-	 * Rename keys in array.
+	 * Renames keys in array according to the translation table.
 	 * @param array<string, mixed>  $arr
 	 * @param array<string, string>  $xlat
 	 * @return array<string, mixed>
@@ -647,13 +635,47 @@ class Route implements Router
 
 
 	/**
-	 * Url encode.
+	 * Converts objects to arrays of their public properties, as http_build_query() did on its own before PHP 8.6.
+	 * @internal
+	 * @param array<mixed>  $arr
+	 * @return array<mixed>
+	 */
+	public static function objectsToArrays(array $arr): array
+	{
+		foreach ($arr as &$v) {
+			if (is_object($v)) {
+				$v = get_object_vars($v);
+			}
+			if (is_array($v)) {
+				$v = self::objectsToArrays($v);
+			}
+		}
+
+		return $arr;
+	}
+
+
+	/**
+	 * Splits a host into parts for %tld%/%domain%/%sld% wildcards; IP addresses are kept whole.
+	 * @internal
+	 * @return non-empty-list<string>
+	 */
+	public static function hostParts(string $host): array
+	{
+		return str_starts_with($host, '[') || ip2long($host) !== false // [IPv6] or IPv4
+			? [$host]
+			: array_reverse(explode('.', $host));
+	}
+
+
+	/**
+	 * Encodes a parameter value for use in a URL path segment, leaving allowed characters unencoded.
 	 */
 	public static function param2path(string $s): string
 	{
 		// segment + "/", see https://datatracker.ietf.org/doc/html/rfc3986#appendix-A
 		return (string) preg_replace_callback(
-			'#[^\w.~!$&\'()*+,;=:@"/-]#',
+			'#[^\w.~!$&\'()*+,;=:@/-]#',
 			fn($m) => rawurlencode($m[0]),
 			$s,
 		);

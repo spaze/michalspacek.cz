@@ -10,8 +10,7 @@ namespace Nette\Forms\Rendering;
 use Nette;
 use Nette\HtmlStringable;
 use Nette\Utils\Html;
-use function array_merge, count, explode, implode, parse_url, preg_split, str_replace, strtolower, urldecode;
-use const PHP_URL_QUERY;
+use function count;
 
 
 /**
@@ -175,7 +174,7 @@ class DefaultFormRenderer implements Nette\Forms\FormRenderer
 				$name = urldecode($parts[0]);
 				$prefix = explode('[', $name, 2)[0];
 				if (!isset($this->form[$prefix])) {
-					$s .= Html::el('input', ['type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])]);
+					$s .= Html::el('input', ['type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1] ?? '')]);
 				}
 			}
 
@@ -486,15 +485,16 @@ class DefaultFormRenderer implements Nette\Forms\FormRenderer
 		}
 
 		$els[] = $el;
-		$errors = array_merge($errors, $control->getErrors());
+		$errors = [...$errors, ...$control->getErrors()];
 
 		if ($nextTo = $control->getOption('nextTo')) {
 			$control = $control->getForm()->getComponent($nextTo);
+			assert($control instanceof Nette\Forms\Control);
 			$body->class($this->getValue('control .multi'), true);
 			goto renderControl;
 		}
 
-		return $body->setHtml(implode('', $els) . $description . $this->doRenderErrors($errors, true));
+		return $body->setHtml(implode('', $els) . $description . $this->doRenderErrors($errors, control: true));
 	}
 
 

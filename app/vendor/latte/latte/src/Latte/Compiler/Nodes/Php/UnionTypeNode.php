@@ -7,8 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -21,6 +20,7 @@ class UnionTypeNode extends ComplexTypeNode
 		/** @var array<IdentifierNode|NameNode> */
 		public array $types,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (IdentifierNode|NameNode ...$args) {})(...$types);
 	}

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
@@ -9,7 +9,7 @@ namespace Texy\Modules;
 
 use Texy;
 use Texy\Modifier;
-use function array_flip, array_values, asort, count, is_array, max, min, reset, rtrim, strlen, trim;
+use function count, is_array, strlen;
 
 
 /**
@@ -84,7 +84,7 @@ final class HeadingModule extends Texy\Module
 	}
 
 
-	private function afterParse(Texy\Texy $texy, Texy\HtmlElement $DOM, bool $isSingleLine): void
+	private function afterParse(Texy\Texy $texy, Texy\HtmlElement $dom, bool $isSingleLine): void
 	{
 		if ($isSingleLine) {
 			return;

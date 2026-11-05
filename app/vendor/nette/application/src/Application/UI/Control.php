@@ -1,28 +1,28 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application\UI;
 
 use Nette;
-use function array_shift, class_exists, count, is_a, preg_replace, sprintf, trigger_error;
+use function sprintf;
 
 
 /**
  * Control is renderable Presenter component.
  *
- * @property-read Template|Nette\Bridges\ApplicationLatte\DefaultTemplate|\stdClass $template
+ * @property-read Nette\Bridges\ApplicationLatte\DefaultTemplate $template
  */
 abstract class Control extends Component implements Renderable
 {
 	public bool $snippetMode = false;
 	private TemplateFactory $templateFactory;
 	private Template $template;
+
+	/** @var array<string, bool> */
 	private array $invalidSnippets = [];
 
 
@@ -46,6 +46,11 @@ abstract class Control extends Component implements Renderable
 	}
 
 
+	/**
+	 * @template T of Template
+	 * @param ?class-string<T>  $class
+	 * @return ($class is null ? Template : T)
+	 */
 	protected function createTemplate(?string $class = null): Template
 	{
 		$class ??= $this->formatTemplateClass();
@@ -54,13 +59,17 @@ abstract class Control extends Component implements Renderable
 	}
 
 
+	/** @return ?class-string<Template> */
 	public function formatTemplateClass(): ?string
 	{
 		return $this->checkTemplateClass(preg_replace('#Control$#', '', static::class) . 'Template');
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @return ?class-string<Template>
+	 */
 	protected function checkTemplateClass(string $class): ?string
 	{
 		if (!class_exists($class)) {
@@ -79,10 +88,7 @@ abstract class Control extends Component implements Renderable
 	}
 
 
-	/**
-	 * Descendant can override this method to customize template compile-time filters.
-	 * @deprecated
-	 */
+	#[\Deprecated]
 	public function templatePrepareFilters(Template $template): void
 	{
 	}
@@ -134,7 +140,7 @@ abstract class Control extends Component implements Renderable
 		if ($snippet !== null) {
 			return $this->invalidSnippets[$snippet] ?? isset($this->invalidSnippets["\0"]);
 
-		} elseif (count($this->invalidSnippets) > 0) {
+		} elseif ($this->invalidSnippets !== []) {
 			return true;
 		}
 

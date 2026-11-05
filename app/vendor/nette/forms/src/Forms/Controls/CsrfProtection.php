@@ -10,11 +10,10 @@ namespace Nette\Forms\Controls;
 use Nette;
 use Nette\Application\UI\Presenter;
 use Stringable;
-use function base64_encode, sha1, substr;
 
 
 /**
- * CSRF protection field.
+ * @deprecated default protection is sufficient
  */
 class CsrfProtection extends HiddenField
 {
@@ -35,9 +34,7 @@ class CsrfProtection extends HiddenField
 
 		$this->monitor(Presenter::class, function (Presenter $presenter): void {
 			if (!$this->session) {
-				$session = $presenter->getSession();
-				assert($session instanceof Nette\Http\Session);
-				$this->session = $session;
+				$this->session = $presenter->getSession();
 				$this->session->start();
 			}
 		});
@@ -54,7 +51,7 @@ class CsrfProtection extends HiddenField
 	/**
 	 * @internal
 	 */
-	public function setValue($value): static
+	public function setValue(mixed $value): static
 	{
 		return $this;
 	}
@@ -83,7 +80,7 @@ class CsrfProtection extends HiddenField
 
 	private function generateToken(?string $random = null): string
 	{
-		$random ??= Nette\Utils\Random::generate(10);
+		$random ??= Nette\Utils\Random::generate();
 		return $random . base64_encode(sha1($this->getToken() . $random, binary: true));
 	}
 

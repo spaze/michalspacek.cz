@@ -8,10 +8,7 @@
 namespace Latte\Compiler\Nodes\Php\Scalar;
 
 use Latte\Compiler\Nodes\Php\ScalarNode;
-use Latte\Compiler\PhpHelpers;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
-use function is_finite, preg_match, sprintf, str_replace, strpbrk;
+use Latte\Compiler\{PhpHelpers, Position, PrintContext};
 use const INF;
 
 
@@ -23,15 +20,16 @@ class FloatNode extends ScalarNode
 	public function __construct(
 		public float $value,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 
 
-	public static function parse(string $str, ?Position $position): static
+	public static function parse(string $str, ?Position $start, ?Position $end = null): static
 	{
 		return strpbrk($str, '.eE') === false
-			? new static((float) PhpHelpers::decodeNumber($str), $position)
-			: new static((float) str_replace('_', '', $str), $position);
+			? new static((float) PhpHelpers::decodeNumber($str), $start, $end)
+			: new static((float) str_replace('_', '', $str), $start, $end);
 	}
 
 

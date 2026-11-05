@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy;
 
-use function array_keys, strlen, substr_replace;
+use function strlen;
 
 
 /**
@@ -65,12 +65,7 @@ class LineParser extends Parser
 			}
 
 			$len = strlen($matches[$first][0]);
-			$text = substr_replace(
-				$text,
-				(string) $res,
-				$start,
-				$len,
-			);
+			$text = substr_replace($text, $res, $start, $len);
 
 			$delta = strlen($res) - $len;
 			foreach ($names as $name) {
@@ -127,7 +122,7 @@ class LineParser extends Parser
 					$offset + $delta,
 				)) {
 					/** @var non-empty-array<array{string, int}> $m */
-					if (!strlen($m[0][0])) {
+					if ($m[0][0] === '') {
 						continue;
 					}
 

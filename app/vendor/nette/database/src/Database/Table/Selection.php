@@ -8,9 +8,8 @@
 namespace Nette\Database\Table;
 
 use Nette;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
-use function array_filter, array_intersect_key, array_keys, array_map, array_merge, array_values, ceil, count, current, explode, func_num_args, hash, implode, is_array, is_int, iterator_to_array, key, next, reset, serialize, str_contains, substr_count;
+use Nette\Database\{Conventions, Explorer};
+use function count, func_num_args, is_array, is_int;
 
 
 /**
@@ -26,7 +25,6 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/** back compatibility */
 	protected Explorer $context;
-	protected readonly Conventions $conventions;
 	protected readonly ?Nette\Caching\Cache $cache;
 	protected SqlBuilder $sqlBuilder;
 
@@ -54,7 +52,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	protected ?string $generalCacheKey = null;
 	protected ?string $specificCacheKey = null;
 
-	/** @var array<string, array<int|string, Nette\Database\Row|ActiveRow>> of [conditions => [group value => row]]; used by GroupedSelection */
+	/** @var array<string, array<Nette\Database\Row|ActiveRow>> [conditions => [group value => row]] for GroupedSelection */
 	protected array $aggregation = [];
 
 	/** @var array<string, bool>|false|null column => selected */
@@ -75,12 +73,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 */
 	public function __construct(
 		Explorer $explorer,
-		Conventions $conventions,
+		protected readonly Conventions $conventions,
 		string $tableName,
 		?Nette\Caching\Storage $cacheStorage = null,
 	) {
 		$this->explorer = $this->context = $explorer;
-		$this->conventions = $conventions;
 		$this->name = $tableName;
 
 		$this->cache = $cacheStorage
@@ -154,7 +151,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 */
 	public function getPreviousAccessedColumns(): array
 	{
-		if ($this->cache && $this->previousAccessedColumns === null) {
+		if ($this->cache && $this->primary !== null && $this->previousAccessedColumns === null) {
 			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load($this->getGeneralCacheKey());
 			$this->previousAccessedColumns ??= [];
 		}
@@ -382,7 +379,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 				}
 
 				$columns[] = $key;
-				$values = array_merge($values, $qNumber > 1 ? $val : [$val]);
+				$values = [...$values, ...$qNumber > 1 ? $val : [$val]];
 			}
 		}
 
@@ -419,6 +416,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 */
 	public function page(int $page, int $itemsPerPage, ?int &$numOfPages = null): static
 	{
+		if ($itemsPerPage < 1) {
+			throw new Nette\InvalidArgumentException('Items per page must be at least 1.');
+		}
+
 		if (func_num_args() > 2) {
 			$numOfPages = (int) ceil($this->count('*') / $itemsPerPage);
 		}
@@ -681,6 +682,15 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/**
+	 * Invalidates the cache of referencing selections after a manipulation that added rows.
+	 */
+	private function clearReferencingCache(): void
+	{
+		unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
+	}
+
+
+	/**
 	 * Returns general cache key independent of query parameters or SQL limit.
 	 * Used e.g. for previously accessed columns caching.
 	 */
@@ -724,7 +734,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 */
 	public function accessColumn(?string $key, bool $selectColumn = true): bool
 	{
-		if (!$this->cache) {
+		if (!$this->cache || $this->primary === null) { // narrowing needs the primary key to re-query missing columns
 			return false;
 		}
 
@@ -810,31 +820,40 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Inserts one or more rows into the table.
-	 * Returns the inserted ActiveRow for single-row inserts, or the number of affected rows otherwise.
-	 * @param  iterable<string, mixed>|Selection<ActiveRow>  $data
-	 * @return ($data is array<string, mixed> ? T|array<string, mixed> : int)
+	 * A single associative array inserts one row and returns the inserted ActiveRow;
+	 * a list of rows or a Selection performs a bulk insert and returns the number of affected rows.
+	 * @param  iterable<string, mixed>|iterable<int, array<string, mixed>>|Selection<ActiveRow>  $data
+	 * @return ($data is list<mixed>|Selection<ActiveRow> ? int : T|array<mixed>|int)
 	 */
 	public function insert(iterable $data): ActiveRow|array|int
 	{
-		//should be called before query for not to spoil PDO::lastInsertId
+		if ($data instanceof self) { // INSERT ... SELECT identifies no row, it only reports the count
+			$return = $this->explorer->query(
+				$this->sqlBuilder->buildInsertQuery() . ' ' . $data->getSql(),
+				...$data->getSqlBuilder()->getParameters(),
+			);
+			$this->loadRefCache();
+			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
+			return $return->getRowCount()
+				?? throw new Nette\InvalidStateException('Cannot determine the number of affected rows.');
+		}
+
+		// should be called before query for not to spoil PDO::lastInsertId
 		$primarySequenceName = $this->getPrimarySequence();
 		$primaryAutoincrementKey = $this->explorer->getStructure()->getPrimaryAutoincrementKey($this->name);
 
-		if ($data instanceof self) {
-			$return = $this->explorer->query($this->sqlBuilder->buildInsertQuery() . ' ' . $data->getSql(), ...$data->getSqlBuilder()->getParameters());
-
-		} else {
-			if ($data instanceof \Traversable) {
-				$data = iterator_to_array($data);
-			}
-
-			$return = $this->explorer->query($this->sqlBuilder->buildInsertQuery() . ' ?values', $data);
+		// an empty array is a single row of database defaults, not a bulk insert
+		$data = Nette\Database\Helpers::materializeRows($data);
+		$bulk = Nette\Database\Helpers::isRowList($data);
+		if ($bulk) {
+			$data = array_values($data); // keys may have gaps, ?values needs a list
 		}
 
+		$return = $this->explorer->query($this->sqlBuilder->buildInsertQuery() . ' ?values', $data);
 		$this->loadRefCache();
 
-		if ($data instanceof self || $this->primary === null) {
-			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
+		if ($bulk || $this->primary === null) {
+			$this->clearReferencingCache();
 			return $return->getRowCount()
 				?? throw new Nette\InvalidStateException('Cannot determine the number of affected rows.');
 		}
@@ -848,7 +867,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 		// First check sequence
 		if (!empty($primarySequenceName) && $primaryAutoincrementKey) {
-			$primaryKey[$primaryAutoincrementKey] = $this->explorer->getInsertId($this->explorer->getConnection()->getDriver()->delimite($primarySequenceName));
+			$primaryKey[$primaryAutoincrementKey] = $this->explorer->getInsertId(
+				$this->explorer->getConnection()->getDriver()->delimite($primarySequenceName),
+			);
 
 		// Autoincrement primary without sequence
 		} elseif ($primaryAutoincrementKey) {
@@ -858,6 +879,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		} elseif (is_array($this->primary)) {
 			foreach ($this->primary as $key) {
 				if (!isset($data[$key])) {
+					$this->clearReferencingCache();
 					return $data;
 				}
 			}
@@ -868,7 +890,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 		// If primaryKey cannot be prepared, return inserted rows count
 		} else {
-			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
+			$this->clearReferencingCache();
 			return $return->getRowCount()
 				?? throw new Nette\InvalidStateException('Cannot determine the number of affected rows.');
 		}
@@ -881,7 +903,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 			?? throw new Nette\ShouldNotHappenException;
 
 		if ($this->rows !== null) {
-			if ($signature = $row->getSignature(false)) {
+			if ($signature = $row->getSignature(throw: false)) {
 				$this->rows[$signature] = $row;
 				$this->data[$signature] = $row;
 			} else {
@@ -910,7 +932,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		}
 
 		return $this->explorer
-			->query($this->sqlBuilder->buildUpdateQuery(), ...array_merge([$data], $this->sqlBuilder->getParameters()))
+			->query($this->sqlBuilder->buildUpdateQuery(), ...[$data, ...$this->sqlBuilder->getParameters()])
 			->getRowCount()
 			?? throw new Nette\InvalidStateException('Cannot determine the number of affected rows.');
 	}
@@ -933,7 +955,6 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Returns a referenced (parent) row for a belongs-to relationship.
 	 * Returns null if the referenced row does not exist, false if the relationship is not defined.
-	 * @return ActiveRow|false|null
 	 */
 	public function getReferencedTable(ActiveRow $row, ?string $table, ?string $column = null): ActiveRow|false|null
 	{

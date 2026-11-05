@@ -9,7 +9,7 @@ namespace Nette\Forms;
 
 use Nette;
 use Stringable;
-use function array_merge, end, is_array, is_bool, is_callable, is_scalar, is_string, ltrim, ord, strncmp, strtoupper;
+use function is_array, is_bool, is_scalar, is_string;
 
 
 /**
@@ -65,7 +65,7 @@ final class Rules implements \IteratorAggregate
 
 	/**
 	 * Adds a validation rule for the current control.
-	 * @param  (callable(Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 */
 	public function addRule(
 		callable|string $validator,
@@ -95,7 +95,7 @@ final class Rules implements \IteratorAggregate
 
 	/**
 	 * Removes a validation rule for the current control.
-	 * @param  (callable(Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 */
 	public function removeRule(callable|string $validator): static
 	{
@@ -115,7 +115,7 @@ final class Rules implements \IteratorAggregate
 
 	/**
 	 * Adds a validation condition and returns new branch.
-	 * @param  (callable(Control): bool)|string|bool  $validator
+	 * @param  (callable(never, never): bool)|string|bool  $validator
 	 */
 	public function addCondition(callable|string|bool $validator, mixed $arg = null): static
 	{
@@ -132,7 +132,7 @@ final class Rules implements \IteratorAggregate
 
 	/**
 	 * Adds a validation condition on a specified control and returns new branch.
-	 * @param  (callable(Control): bool)|string  $validator
+	 * @param  (callable(never, never): bool)|string  $validator
 	 */
 	public function addConditionOn(Control $control, callable|string $validator, mixed $arg = null): static
 	{
@@ -328,13 +328,7 @@ final class Rules implements \IteratorAggregate
 				$name = strncmp($rule->validator, ':', 1)
 					? $rule->validator
 					: 'Form:' . strtoupper($rule->validator);
-				trigger_error("Negative validation rules such as ~$name are deprecated.", E_USER_DEPRECATED);
-			}
-
-			if (isset(self::NegRules[$rule->validator])) {
-				$rule->validator = self::NegRules[$rule->validator];
-				$rule->isNegative = false;
-				trigger_error('Replace negative validation rule ~Form::Filled with Form::Blank and vice versa.', E_USER_DEPRECATED);
+				throw new Nette\InvalidArgumentException("Negative validation rules such as ~$name are deprecated.");
 			}
 		}
 

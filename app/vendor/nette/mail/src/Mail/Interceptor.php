@@ -7,8 +7,7 @@
 
 namespace Nette\Mail;
 
-use Nette\Utils\Arrays;
-use Nette\Utils\Validators;
+use Nette\Utils\{Arrays, Validators};
 use function is_array, is_string;
 
 
@@ -19,14 +18,14 @@ class Interceptor implements Mailer
 {
 	private const LeakyHeaders = ['To', 'Cc', 'Bcc', 'Disposition-Notification-To', 'X-Confirm-Reading-To'];
 
-	/** @var list<callable(self, Message, ?\Throwable): void> */
+	/** @var array<callable(static, Message, ?\Throwable): void> */
 	public array $onSent = [];
 
 
 	public function __construct(
-		private Mailer $mailer,
-		private ?string $redirectTo = null,
-		private string $subjectPrefix = '',
+		private readonly Mailer $mailer,
+		private readonly ?string $redirectTo = null,
+		private readonly string $subjectPrefix = '',
 	) {
 		Validators::assert($redirectTo, 'email|null', 'redirect address');
 	}

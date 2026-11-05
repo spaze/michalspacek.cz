@@ -7,11 +7,8 @@
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
-use Latte\Compiler\Nodes\Php\ArgumentNode;
-use Latte\Compiler\Nodes\Php\ArrayItemNode;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ArgumentNode, ArrayItemNode, ExpressionNode};
+use Latte\Compiler\{Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -24,6 +21,7 @@ class ArrayNode extends ExpressionNode
 		/** @var array<ArrayItemNode> */
 		public array $items = [],
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (ArrayItemNode ...$args) {})(...$items);
 	}

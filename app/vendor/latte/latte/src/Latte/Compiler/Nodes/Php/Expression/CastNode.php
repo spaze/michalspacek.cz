@@ -7,10 +7,8 @@
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\OperatorNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, OperatorNode};
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -25,6 +23,7 @@ class CastNode extends ExpressionNode implements OperatorNode
 		public string $type,
 		public ExpressionNode $expr,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		if (!isset(self::Types[strtolower($this->type)])) {
 			throw new \InvalidArgumentException("Unexpected type '$this->type'");

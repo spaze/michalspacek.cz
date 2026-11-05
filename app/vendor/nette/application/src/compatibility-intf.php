@@ -1,24 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
-
-use Nette;
-
-if (false) {
-	/** @deprecated use Nette\Routing\Router */
-	interface IRouter extends Nette\Routing\Router
-	{
-	}
-} elseif (!interface_exists(IRouter::class)) {
-	class_alias(Nette\Routing\Router::class, IRouter::class);
-}
 
 if (false) {
 	/** @deprecated use Nette\Application\Response */

@@ -8,12 +8,8 @@
 namespace Latte\Compiler;
 
 use Latte\Compiler\Nodes\Php as Nodes;
-use Latte\Compiler\Nodes\Php\Expression;
-use Latte\Compiler\Nodes\Php\OperatorNode;
-use Latte\Compiler\Nodes\Php\Scalar;
-use Latte\ContentType;
-use Latte\Feature;
-use function addcslashes, array_pop, end, implode, preg_replace, preg_replace_callback, strtolower, substr, trim, ucfirst;
+use Latte\Compiler\Nodes\Php\{Expression, OperatorNode, Scalar};
+use Latte\{ContentType, Feature};
 
 
 /**
@@ -35,7 +31,7 @@ final class PrintContext
 	public function __construct(
 		string $contentType = ContentType::Html,
 		/** @var array<string, bool> */
-		private array $features = [],
+		private readonly array $features = [],
 		?Escaper $escaper = null,
 	) {
 		$this->escaperStack[] = $escaper ?? new Escaper($contentType);
@@ -63,12 +59,15 @@ final class PrintContext
 			function ($m) use ($args) {
 				[, $pos, $fn, $var] = $m;
 				$var = substr($var, 1, -1);
-				/** @var Nodes\ModifierNode[] $args */
-				return match ($fn) {
-					'modify' => $args[$pos]->printSimple($this, $var),
-					'modifyContent' => $args[$pos]->printContentAware($this, $var),
-					'escape' => $this->getEscaper()->escape($var),
-				};
+				if ($fn === 'escape') {
+					return $this->getEscaper()->escape($var);
+				}
+
+				$arg = $args[$pos];
+				assert($arg instanceof Nodes\ModifierNode);
+				return $fn === 'modify'
+					? $arg->printSimple($this, $var)
+					: $arg->printContentAware($this, $var);
 			},
 			$mask,
 		);
@@ -83,12 +82,15 @@ final class PrintContext
 					'dump' => PhpHelpers::dump($arg),
 					'node' => match (true) {
 						!$arg => '',
-						$arg instanceof OperatorNode && $arg->getOperatorPrecedence() < Expression\AssignNode::Precedence => '(' . $arg->print($this) . ')',
+						$arg instanceof OperatorNode && $arg->getOperatorPrecedence() < Expression\AssignNode::Precedence => '('
+							. $arg->print($this) . ')',
 						default => $arg->print($this),
 					},
 					'raw' => (string) $arg,
 					'args' => $this->implode($arg instanceof Expression\ArrayNode ? $arg->toArguments() : $arg),
-					'line' => $arg?->line ? "/* pos $arg->line" . ($arg->column ? ":$arg->column" : '') . ' */' : '',
+					'line' => ($pos = $arg instanceof Range ? $arg->start : $arg)?->line
+						? "/* pos $pos->line" . ($pos->column ? ":$pos->column" : '') . ' */'
+						: '',
 				};
 
 				if ($cond && ($code === '[]' || $code === '' || $code === 'null')) {
@@ -222,11 +224,7 @@ final class PrintContext
 	{
 		$pNodes = [];
 		foreach ($nodes as $node) {
-			if ($node === null) {
-				$pNodes[] = '';
-			} else {
-				$pNodes[] = $node->print($this);
-			}
+			$pNodes[] = $node === null ? '' : $node->print($this);
 		}
 
 		return implode($glue, $pNodes);

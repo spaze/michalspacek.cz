@@ -7,18 +7,11 @@
 
 namespace Nette\Bridges\FormsLatte\Nodes;
 
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\AuxiliaryNode;
-use Latte\Compiler\Nodes\Html\AttributeNode;
-use Latte\Compiler\Nodes\Html\ElementNode;
-use Latte\Compiler\Nodes\Html\ExpressionAttributeNode;
-use Latte\Compiler\Nodes\NopNode;
+use Latte\Compiler\Nodes\{AreaNode, AuxiliaryNode, NopNode, StatementNode, TextNode};
+use Latte\Compiler\Nodes\Html\{AttributeNode, ElementNode, ExpressionAttributeNode};
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Nodes\TextNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**
@@ -65,7 +58,7 @@ final class FieldNNameNode extends StatementNode
 		$elName = strtolower($el->name);
 
 		$tag->replaceNAttribute(new AuxiliaryNode(fn(PrintContext $context) => $context->format(
-			'echo ($ʟ_elem = Nette\Bridges\FormsLatte\Runtime::item(%node, $this->global)'
+			'echo ($ʟ_elem = $this->global->forms->get(%node)'
 			. ($elName === 'label' ? '->getLabelPart(%node))' : '->getControlPart(%node))')
 			. ($usedAttributes ? '->addAttributes(%dump)' : '')
 			. '->attributes() %3.line;',
@@ -105,7 +98,7 @@ final class FieldNNameNode extends StatementNode
 	public static function findUsedAttributes(ElementNode $el): array
 	{
 		$res = [];
-		foreach ($el->attributes?->children as $child) {
+		foreach ($el->attributes->children as $child) {
 			if ($child instanceof AttributeNode && $child->name instanceof TextNode) {
 				$res[] = $child->name->content;
 			} elseif ($child instanceof ExpressionAttributeNode) {

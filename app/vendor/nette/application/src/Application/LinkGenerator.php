@@ -1,18 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette\Http\UrlScript;
-use Nette\Routing\Router;
+use Nette\Routing\{Route, Router};
 use Nette\Utils\Reflection;
-use function array_intersect_key, array_key_exists, http_build_query, is_string, is_subclass_of, parse_str, preg_match, rtrim, str_contains, str_ends_with, strcasecmp, strlen, strncmp, strtr, substr, trigger_error, urldecode;
+use function array_key_exists, is_scalar, is_string, strlen;
 
 
 /**
@@ -35,6 +33,8 @@ final class LinkGenerator
 	/**
 	 * Generates URL to presenter.
 	 * @param  string  $destination  in format "[//] [[[module:]presenter:]action | signal! | this | @alias] [#fragment]"
+	 * @param  mixed[]  $args
+	 * @return ($mode is 'forward'|'test' ? null : string)
 	 * @throws UI\InvalidLinkException
 	 */
 	public function link(
@@ -46,16 +46,25 @@ final class LinkGenerator
 	{
 		$parts = self::parseDestination($destination);
 		$args = $parts['args'] ?? $args;
+		$hash = $args['#'] ?? null;
+		unset($args['#']);
+		if ($hash !== null && !is_scalar($hash)) {
+			throw new UI\InvalidLinkException("Value of '#' must be scalar, " . get_debug_type($hash) . ' given.');
+		}
+		$fragment = (string) $hash !== ''
+			? '#' . rawurlencode((string) $hash)
+			: $parts['fragment'];
 		$request = $this->createRequest($component, $parts['path'] . ($parts['signal'] ? '!' : ''), $args, $mode ?? 'link');
 		$relative = $mode === 'link' && !$parts['absolute'] && !$component?->getPresenter()->absoluteUrls;
 		return $mode === 'forward' || $mode === 'test'
 			? null
-			: $this->requestToUrl($request, $relative) . $parts['fragment'];
+			: $this->requestToUrl($request, $relative) . $fragment;
 	}
 
 
 	/**
 	 * @param  string  $destination  in format "[[[module:]presenter:]action | signal! | this | @alias]"
+	 * @param  mixed[]  $args
 	 * @param  string  $mode  forward|redirect|link
 	 * @throws UI\InvalidLinkException
 	 * @internal
@@ -74,9 +83,16 @@ final class LinkGenerator
 		$path = $destination;
 
 		if (($component && !$component instanceof UI\Presenter) || str_ends_with($destination, '!')) {
+			if ($component === null) {
+				throw new UI\InvalidLinkException("Signal '$destination' requires component context.");
+			}
 			[$cname, $signal] = Helpers::splitName(rtrim($destination, '!'));
 			if ($cname !== '') {
-				$component = $component->getComponent(strtr($cname, ':', '-'));
+				$subcomponent = $component->getComponent(strtr($cname, ':', '-'));
+				if (!$subcomponent instanceof UI\Component) {
+					throw new UI\InvalidLinkException("Component '$cname' in '{$component->getUniqueId()}' is not " . UI\Component::class . '.');
+				}
+				$component = $subcomponent;
 			}
 
 			if ($signal === '') {
@@ -100,7 +116,7 @@ final class LinkGenerator
 				throw new \LogicException("Presenter must be specified in '$destination'.");
 			}
 			$action = $path === 'this' ? $refPresenter->getAction() : $action;
-			$presenter = $refPresenter->getName();
+			$presenter = (string) $refPresenter->getName();
 			$presenterClass = $refPresenter::class;
 
 		} else {
@@ -110,7 +126,7 @@ final class LinkGenerator
 					throw new UI\InvalidLinkException("Missing presenter name in '$destination'.");
 				}
 			} elseif ($refPresenter) { // relative
-				[$module, , $sep] = Helpers::splitName($refPresenter->getName());
+				[$module, , $sep] = Helpers::splitName((string) $refPresenter->getName());
 				$presenter = $module . $sep . $presenter;
 			}
 
@@ -123,6 +139,7 @@ final class LinkGenerator
 
 		// PROCESS SIGNAL ARGUMENTS
 		if (isset($signal)) { // $component must be StatePersistent
+			assert($component !== null);
 			$reflection = new UI\ComponentReflection($component::class);
 			if ($signal === 'this') { // means "no signal"
 				$signal = '';
@@ -137,7 +154,12 @@ final class LinkGenerator
 					throw new UI\InvalidLinkException("Unknown signal '$signal', missing handler {$reflection->getName()}::{$component::formatSignalMethod($signal)}()");
 				}
 
-				$this->validateLinkTarget($refPresenter, $method, "signal '$signal'" . ($component === $refPresenter ? '' : ' in ' . $component::class), $mode);
+				$this->validateLinkTarget(
+					$refPresenter,
+					$method,
+					"signal '$signal'" . ($component === $refPresenter ? '' : ' in ' . $component::class),
+					$mode,
+				);
 
 				// convert indexed parameters to named
 				UI\ParameterConverter::toParameters($method, $args, [], $missing);
@@ -158,12 +180,14 @@ final class LinkGenerator
 		}
 
 		// PROCESS ARGUMENTS
-		if (is_subclass_of($presenterClass, UI\Presenter::class)) {
+		if ($presenterClass !== null && is_subclass_of($presenterClass, UI\Presenter::class)) {
 			if ($action === '') {
 				$action = UI\Presenter::DefaultAction;
 			}
 
-			$current = $refPresenter && ($action === '*' || strcasecmp($action, $refPresenter->getAction()) === 0) && $presenterClass === $refPresenter::class;
+			$current = $refPresenter
+				&& ($action === '*' || strcasecmp($action, $refPresenter->getAction()) === 0)
+				&& $presenterClass === $refPresenter::class;
 
 			$reflection = new UI\ComponentReflection($presenterClass);
 			$this->validateLinkTarget($refPresenter, $reflection, "presenter '$presenter'", $mode);
@@ -178,7 +202,12 @@ final class LinkGenerator
 			if ($method = $reflection->getActionRenderMethod($action)) {
 				$this->validateLinkTarget($refPresenter, $method, "action '$presenter:$action'", $mode);
 
-				UI\ParameterConverter::toParameters($method, $args, $path === 'this' ? $refPresenter->getParameters() : [], $missing);
+				UI\ParameterConverter::toParameters(
+					$method,
+					$args,
+					$path === 'this' ? ($refPresenter?->getParameters() ?? []) : [],
+					$missing,
+				);
 
 			} elseif (array_key_exists(0, $args)) {
 				throw new UI\InvalidLinkException("Unable to pass parameters to action '$presenter:$action', missing corresponding method $presenterClass::{$presenterClass::formatRenderMethod($action)}().");
@@ -193,8 +222,9 @@ final class LinkGenerator
 				$globalState = $refPresenter->getGlobalState($path === 'this' ? null : $presenterClass);
 				if ($current && $args) {
 					$tmp = $globalState + $refPresenter->getParameters();
+					$serialize = fn($val) => http_build_query(Route::objectsToArrays([$val instanceof \BackedEnum ? $val->value : $val]));
 					foreach ($args as $key => $val) {
-						if (http_build_query([$val]) !== (isset($tmp[$key]) ? http_build_query([$tmp[$key]]) : '')) {
+						if ($serialize($val) !== (isset($tmp[$key]) ? $serialize($tmp[$key]) : '')) {
 							$current = false;
 							break;
 						}
@@ -219,32 +249,44 @@ final class LinkGenerator
 		}
 
 		if (!empty($signal)) {
+			assert($component !== null);
 			$args[UI\Presenter::SignalKey] = $component->getParameterId($signal);
 			$current = $current && $args[UI\Presenter::SignalKey] === $refPresenter->getParameter(UI\Presenter::SignalKey);
 		}
 
-		if (($mode === 'redirect' || $mode === 'forward') && $refPresenter->hasFlashSession()) {
+		if (($mode === 'redirect' || $mode === 'forward') && $refPresenter?->hasFlashSession()) {
 			$flashKey = $refPresenter->getParameter(UI\Presenter::FlashKey);
 			$args[UI\Presenter::FlashKey] = is_string($flashKey) && $flashKey !== '' ? $flashKey : null;
 		}
 
-		return $this->lastRequest = new Request($presenter, Request::FORWARD, $args, flags: ['current' => $current]);
+		foreach ($args as $key => $val) {
+			if ($val instanceof \BackedEnum) { // URL carries the case value
+				$args[$key] = $val->value;
+			}
+		}
+
+		return $this->lastRequest = new Request($presenter, Request::Forward, $args, flags: ['current' => $current]);
 	}
 
 
 	/**
 	 * Parse destination in format "[//] [[[module:]presenter:]action | signal! | this | @alias] [?query] [#fragment]"
 	 * @throws UI\InvalidLinkException
-	 * @return array{absolute: bool, path: string, signal: bool, args: ?array, fragment: string}
+	 * @return array{absolute: bool, path: string, signal: bool, args: mixed[]|null, fragment: string}
 	 * @internal
 	 */
 	public static function parseDestination(string $destination): array
 	{
-		if (!preg_match('~^ (?<absolute>//)?+ (?<path>[^!?#]++) (?<signal>!)?+ (?<query>\?[^#]*)?+ (?<fragment>\#.*)?+ $~x', $destination, $matches)) {
+		if (!preg_match(
+			'~^ (?<absolute>//)?+ (?<path>[^!?#]++) (?<signal>!)?+ (?<query>\?[^#]*)?+ (?<fragment>\#.*)?+ $~x',
+			$destination,
+			$matches,
+		)) {
 			throw new UI\InvalidLinkException("Invalid destination '$destination'.");
 		}
 
 		if (!empty($matches['query'])) {
+			trigger_error("Link format is obsolete, use arguments instead of query string in '$destination'.", E_USER_DEPRECATED);
 			parse_str(substr($matches['query'], 1), $args);
 		}
 
@@ -267,13 +309,13 @@ final class LinkGenerator
 		if ($url === null) {
 			$params = $request->getParameters();
 			unset($params[UI\Presenter::ActionKey], $params[UI\Presenter::PresenterKey]);
-			$params = urldecode(http_build_query($params, '', ', '));
+			$params = urldecode(http_build_query(Route::objectsToArrays($params), '', ', '));
 			throw new UI\InvalidLinkException("No route for {$request->getPresenterName()}:{$request->getParameter('action')}($params)");
 		}
 
 		if ($relative) {
 			$hostUrl = $this->refUrl->getHostUrl() . '/';
-			if (strncmp($url, $hostUrl, strlen($hostUrl)) === 0) {
+			if (str_starts_with($url, $hostUrl)) {
 				$url = substr($url, strlen($hostUrl) - 1);
 			}
 		}
@@ -292,6 +334,7 @@ final class LinkGenerator
 	}
 
 
+	/** @param  \ReflectionClass<object>|\ReflectionMethod  $element */
 	private function validateLinkTarget(
 		?UI\Presenter $presenter,
 		\ReflectionClass|\ReflectionMethod $element,
@@ -299,12 +342,15 @@ final class LinkGenerator
 		string $mode,
 	): void
 	{
-		if ($mode !== 'forward' && !(new UI\AccessPolicy($element))->isLinkable()) {
-			throw new UI\InvalidLinkException("Link to forbidden $message from '{$presenter->getName()}:{$presenter->getAction()}'.");
+		$message .= $presenter === null
+			? ''
+			: " from '{$presenter->getName()}:{$presenter->getAction()}'";
+		if ($mode !== 'forward' && $mode !== 'test' && !(new UI\AccessPolicy($element))->isLinkable()) {
+			throw new UI\InvalidLinkException("Link to forbidden $message.");
 		} elseif ($presenter?->invalidLinkMode
-			&& (UI\ComponentReflection::parseAnnotation($element, 'deprecated') || $element->getAttributes(Attributes\Deprecated::class))
+			&& (UI\ComponentReflection::parseAnnotation($element, 'deprecated') || $element->getAttributes(Attributes\Deprecated::class)) // dresscode:ignore upgrading.declarations.deprecatedMember -- @deprecated is still supported
 		) {
-			trigger_error("Link to deprecated $message from '{$presenter->getName()}:{$presenter->getAction()}'.", E_USER_DEPRECATED);
+			trigger_error("Link to deprecated $message.", E_USER_DEPRECATED);
 		}
 	}
 
