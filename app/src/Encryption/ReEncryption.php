@@ -31,11 +31,6 @@ final readonly class ReEncryption implements CliArgsProvider
 
 	public function run(): int
 	{
-		$cliArgsError = $this->cliArgs->getError();
-		if ($cliArgsError !== null) {
-			fprintf(STDERR, "%s\n", $this->console->color('red', $cliArgsError->getMessage()));
-			return 3;
-		}
 		$dryRun = $this->cliArgs->getFlag(self::DRY_RUN);
 		$hasFailures = false;
 		foreach ($this->storages as $storage) {

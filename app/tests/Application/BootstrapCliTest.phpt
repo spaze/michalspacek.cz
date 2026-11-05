@@ -15,21 +15,33 @@ require __DIR__ . '/../bootstrap.php';
 final class BootstrapCliTest extends TestCase
 {
 
-	/**
-	 * A wrong command line has to reach the script, which reports it and picks the exit status, instead of stopping the boot
-	 */
-	public function testWrongCommandLineStillBootsSoTheScriptCanReportIt(): void
+	public function testWrongCommandLineIsReportedBeforeTheContainerBoots(): void
 	{
-		$process = $this->runLatteLint(['--frobnicate']);
+		$process = $this->runScript('latte-lint.php', ['--frobnicate']);
 		Assert::same(2, $process->getExitCode());
-		Assert::contains('Unknown option `--frobnicate`.', $process->getStdOutput());
-		Assert::contains('Usage: latte-lint.php [options] <path>', $process->getStdOutput());
+		Assert::same('', $process->getStdOutput()); // the script itself never ran
+		Assert::contains('Error: Unknown option `--frobnicate`.', $process->getStdError());
+		Assert::contains('Usage: latte-lint.php [options] <path>', $process->getStdError());
+	}
+
+
+	/**
+	 * The scripts with NoCliArgs have no service that could report a wrong command line, the boot is the only place that can;
+	 * check-makefile.php prints a line whenever it runs, so an empty STDOUT says it did not
+	 */
+	public function testWrongCommandLineIsRefusedByAScriptWithoutArgumentsOfItsOwn(): void
+	{
+		$process = $this->runScript('check-makefile.php', ['--frobnicate']);
+		Assert::same(2, $process->getExitCode());
+		Assert::same('', $process->getStdOutput());
+		Assert::contains('Error: Unknown option `--frobnicate`.', $process->getStdError());
+		Assert::contains('Usage: check-makefile.php [options]', $process->getStdError());
 	}
 
 
 	public function testHelpIsAnsweredBeforeTheContainerBoots(): void
 	{
-		$process = $this->runLatteLint(['--help']); // without the required path, which a standalone flag does not demand
+		$process = $this->runScript('latte-lint.php', ['--help']); // without the required path, which a standalone flag does not demand
 		Assert::same(0, $process->getExitCode());
 		Assert::same('', $process->getStdError());
 		$output = $process->getStdOutput();
@@ -43,22 +55,22 @@ final class BootstrapCliTest extends TestCase
 
 	public function testColorsFlagColorsTheHelpEvenWhenPiped(): void
 	{
-		$process = $this->runLatteLint(['--help', '--colors']); // the output is a pipe here, and the child gets NO_COLOR too
+		$process = $this->runScript('latte-lint.php', ['--help', '--colors']); // the output is a pipe here, and the child gets NO_COLOR too
 		Assert::same(0, $process->getExitCode());
 		Assert::contains("\e[", $process->getStdOutput());
 	}
 
 
 	/**
-	 * Runs the real script in a child process, the only way to hand bootCli() a command line of its own. NO_COLOR keeps
+	 * Runs a real script in a child process, the only way to hand bootCli() a command line of its own. NO_COLOR keeps
 	 * the escape codes out of the output and COLUMNS fixes the width the help is wrapped to, whatever the environment
 	 * of the test run says.
 	 *
 	 * @param list<string> $args
 	 */
-	private function runLatteLint(array $args): Process
+	private function runScript(string $script, array $args): Process
 	{
-		return Process::runExecutable(PHP_BINARY, [__DIR__ . '/../../bin/latte-lint.php', ...$args], ['NO_COLOR' => '1', 'COLUMNS' => '80'] + getenv());
+		return Process::runExecutable(PHP_BINARY, [__DIR__ . '/../../bin/' . $script, ...$args], ['NO_COLOR' => '1', 'COLUMNS' => '80'] + getenv());
 	}
 
 }

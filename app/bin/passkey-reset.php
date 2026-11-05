@@ -6,10 +6,8 @@ namespace MichalSpacekCz\Bin;
 
 use MichalSpacekCz\Application\Bootstrap;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
-use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyResetUrl;
-use Nette\CommandLine\HelpRenderer;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -17,9 +15,6 @@ $resetUrl = Bootstrap::bootCli(PasskeyResetUrl::class)->getByType(PasskeyResetUr
 try {
 	echo 'To register a passkey and revoke the user\'s other passkeys, tokens, and sessions, go to ' . $resetUrl->generate() . "\n";
 	exit(0);
-} catch (PasskeyRegistrationUrlArgsException $e) {
-	(new HelpRenderer())->renderError($e->getParseException());
-	exit(1);
 } catch (PasskeyRegistrationDisabledException) {
 	fprintf(STDERR, "Error: passkey reset is disabled. To enable it, set authentication.passkeys.registrationEnabled: true in local.neon\n");
 	exit(1);

@@ -28,15 +28,10 @@ final class CertificateMonitor implements CliArgsProvider
 
 
 	/**
-	 * @return int The exit status: 0 every certificate matches, 1 some do not or are about to expire, 2 the check could not run, 3 bad arguments
+	 * @return int The exit status: 0 every certificate matches, 1 some do not or are about to expire, 2 the check could not run
 	 */
 	public function run(): int
 	{
-		$cliArgsError = $this->cliArgs->getError();
-		if ($cliArgsError !== null) {
-			$this->error(null, $cliArgsError->getMessage());
-			return 3;
-		}
 		try {
 			// Not running in parallel because those sites are hosted on just a few tiny servers
 			foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {

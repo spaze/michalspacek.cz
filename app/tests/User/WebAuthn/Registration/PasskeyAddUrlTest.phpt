@@ -14,8 +14,9 @@ use MichalSpacekCz\User\AuthTokens\UserAuthTokens;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
-use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlArgsException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
+use Nette\CommandLine\ParseException;
+use Nette\CommandLine\ParseFailure;
 use Nette\Http\IRequest;
 use Override;
 use Tester\Assert;
@@ -53,20 +54,6 @@ final class PasskeyAddUrlTest extends TestCase
 	}
 
 
-	public function testGenerateThrowsOnArgsError(): void
-	{
-		$cliArgs = CliArgs::parse(PasskeyAddUrl::class, ['waldo', '--foo']);
-		$error = $cliArgs->getError();
-		assert($error !== null);
-		$e = Assert::exception(function () use ($cliArgs): void {
-			$this->getPasskeyAddUrl($cliArgs, false)->generate();
-		}, PasskeyRegistrationUrlArgsException::class, $error->getMessage());
-		assert($e instanceof PasskeyRegistrationUrlArgsException);
-		Assert::same($error, $e->getPrevious());
-		Assert::same($error, $e->getParseException());
-	}
-
-
 	public function testGenerateThrowsWhenDisabled(): void
 	{
 		Assert::exception(function (): void {
@@ -97,9 +84,12 @@ final class PasskeyAddUrlTest extends TestCase
 	public function testDefineArgs(): void
 	{
 		Assert::same('leet', CliArgs::parse(PasskeyAddUrl::class, ['leet'])->getArg('username'));
-		$error = CliArgs::parse(PasskeyAddUrl::class, [])->getError();
-		assert($error !== null);
-		Assert::contains('<username>', $error->getMessage());
+		$e = Assert::exception(function (): void {
+			CliArgs::parse(PasskeyAddUrl::class, []);
+		}, ParseException::class);
+		assert($e instanceof ParseException);
+		Assert::same(ParseFailure::MissingArgument, $e->reason);
+		Assert::same('username', $e->parameter?->name);
 	}
 
 }
