@@ -8,8 +8,8 @@ Unless noted otherwise, all commands run from the `app/` directory.
 
 ```sh
 make test                    # full suite: audits, checks, all linters, phpcs, phpstan (+ vendor), tester, psalm, dependency analysis
-make composer-update         # update packages in both app/vendor/ and dev-tools/
-make composer-outdated       # check outdated packages in both app/vendor/ and dev-tools/
+make composer-update         # update packages in every Composer project of the repository, the Makefile target lists them
+make composer-outdated       # check outdated packages in every Composer project of the repository
 make phpstan                 # static analysis (level max)
 make phpcs                   # code style check
 make cs-fix                  # auto-fix code style
@@ -25,6 +25,8 @@ Dev tools (PHPStan, Psalm, phpcs, Nette Tester, etc.) live in `dev-tools/` at th
 composer --working-dir=../dev-tools/ install
 ```
 
+The repository holds more than one Composer project; the `composer-*` targets in `app/Makefile` are the list of them. A new one goes into every place that enumerates them, or its packages are never audited or updated: the `composer-*` targets in `app/Makefile`, a `lock:` step of the Symfony security checker in `.github/workflows/vulns.yml`, a `composer` entry in `.github/dependabot.yml` when Dependabot is to update it, and a workflow running its `make test` when it has one.
+
 Run a single test file (from `app/`):
 ```sh
 ../dev-tools/vendor/nette/tester/src/tester -s -c tests/php-unix.ini -d zend.assertions=1 tests/Path/To/FooTest.phpt
@@ -37,7 +39,7 @@ make tester-include-skipped
 
 ## `lambda-security-txt/`
 
-`lambda-security-txt/` is a separate, much smaller Composer project: the security.txt fetching and validation proxy deployed to AWS Lambda with Bref. It has its own `composer.json`, its own committed production `vendor/`, and its own `Makefile` with a reduced target list (`make test` runs `composer audit`, `composer validate`, `lint-php`, `phpcs` and `phpstan`). Its commands run from `lambda-security-txt/`, and it shares the same `dev-tools/`, so it declares no dev dependencies of its own.
+`lambda-security-txt/` is a separate, much smaller Composer project: the security.txt fetching and validation proxy deployed to AWS Lambda with Bref. It has its own `composer.json`, its own committed production `vendor/`, and its own `Makefile` with a reduced target list (`make test` runs `composer audit`, `composer validate`, `lint-php`, `phpcs` and `phpstan`). Its commands run from `lambda-security-txt/`, and it shares the same `dev-tools/`, so it declares no dev dependencies of its own. The `composer-*` targets of `app/Makefile` cover every Composer project of the repository, this one included, so `make composer-update` and the other `composer-*` targets from `app/` take them all at once.
 
 `serverless.yml` ships only an allow-listed subset of `vendor/`, so most of the tree (`symfony/process`, `nyholm/psr7` and the rest of Bref's dependencies) never reaches Lambda. It also excludes `vendor/composer/autoload_files.php`; no production dependency uses `files` autoloading, so Composer doesn't generate that file at all now and the exclusion is currently a no-op. It would need revisiting if a production dependency ever adds a `files` autoload entry, because then the deployed package would quietly skip it.
 
