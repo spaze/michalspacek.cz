@@ -29,7 +29,7 @@ final class ForbiddenPresenter extends BasePresenter
 	protected function startup(): void
 	{
 		parent::startup();
-		if ($this->getRequest()?->getMethod() !== Request::FORWARD) {
+		if ($this->getRequest()->getMethod() !== Request::Forward) {
 			throw new BadRequestException("Direct access to '{$this->getName()}' is forbidden");
 		}
 	}

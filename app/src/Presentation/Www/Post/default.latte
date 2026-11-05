@@ -11,7 +11,7 @@
 
 {define #content}
 <div class="column-content">
-	{control articleHeaderIcons $post}
+	{control articleHeaderIcons, $post}
 	<em n:if="$post->getSummary()">{$post->getSummary()}</em>
 	{$post->getText()}
 	{$post->getOriginally()}

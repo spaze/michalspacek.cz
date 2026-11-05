@@ -112,7 +112,23 @@ final class SignPresenterTest extends TestCase
 	}
 
 
-	public function testSameSiteLogoutSignsUserOut(): void
+	public function testSameSiteLogoutIsBlocked(): void
+	{
+		// Another subdomain of the site is not the same origin, so Nette treats it like a foreign site
+		$this->user->login(new SimpleIdentity(42));
+		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, FetchSite::SameSite->value);
+		$presenter = $this->applicationPresenter->createUiPresenter('Admin:Sign', 'Sign', 'out');
+		$presenter->autoCanonicalize = false;
+		$response = $presenter->run(new Request('Admin:Sign', IRequest::Get, ['action' => 'out']));
+
+		Assert::true($this->user->isLoggedIn());
+		Assert::type(RedirectResponse::class, $response);
+		assert($response instanceof RedirectResponse);
+		Assert::same('https://admin.rizek.test/', $response->getUrl());
+	}
+
+
+	public function testSameOriginLogoutSignsUserOut(): void
 	{
 		$this->user->login(new SimpleIdentity(42));
 		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, FetchSite::SameOrigin->value);

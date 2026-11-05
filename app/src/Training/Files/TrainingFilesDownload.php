@@ -71,7 +71,7 @@ final readonly class TrainingFilesDownload
 			throw new BadRequestException(sprintf('No file %s for application id %s', $filename, $applicationId));
 		}
 		$pathname = $file->getFileInfo()->getPathname();
-		return new FileResponse($pathname, null, MimeType::detectMimeType($pathname));
+		return new FileResponse($pathname, null, MimeType::detectMimeType($pathname) ?? 'application/octet-stream');
 	}
 
 

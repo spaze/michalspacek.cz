@@ -4,10 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test\Http;
 
 use MichalSpacekCz\Http\FetchMetadata\FetchMetadataHeader;
+use Nette\Http\FetchDest;
 use Nette\Http\FetchSite;
 use Nette\Http\FileUpload;
 use Nette\Http\IRequest;
 use Nette\Http\UrlScript;
+use Nette\Utils\Arrays;
 use Override;
 
 final class Request implements IRequest
@@ -161,16 +163,24 @@ final class Request implements IRequest
 
 
 	/**
-	 * Nette's AccessPolicy calls isSameSite() on the request for `#[Requires(sameOrigin: true)]`, and IRequest doesn't
-	 * declare it, so there is no #[Override] and the dead-code detector can't see the call. Same-site is what the
-	 * Sec-Fetch-Site header says, the way a browser says it.
+	 * Nette's AccessPolicy calls isFrom() on the request for `#[Requires(sameOrigin: true)]` and UI\Form for a submit,
+	 * and IRequest doesn't declare it, so there is no #[Override] and the dead-code detector can't see the call.
+	 * The answer is what the Sec-Fetch-* headers say, the way a browser says it; the real request also takes the `_nss`
+	 * cookie from a browser that sends no Sec-Fetch-Site, a fallback no test needs.
 	 *
+	 * @param FetchSite|list<FetchSite> $site
+	 * @param FetchDest|list<FetchDest>|null $dest
 	 * @phpstan-ignore shipmonk.deadMethod
 	 */
-	public function isSameSite(): bool
+	public function isFrom(FetchSite|array $site, FetchDest|array|null $dest = null, ?bool $user = null): bool
 	{
-		$site = FetchSite::tryFrom($this->getHeader(FetchMetadataHeader::Site->value) ?? '');
-		return $site === FetchSite::SameOrigin || $site === FetchSite::SameSite;
+		$actualSite = FetchSite::tryFrom($this->getHeader(FetchMetadataHeader::Site->value) ?? '');
+		$actualDest = FetchDest::tryFrom($this->getHeader(FetchMetadataHeader::Dest->value) ?? '');
+		$actualUser = $this->getHeader(FetchMetadataHeader::User->value) === '?1';
+		return $actualSite !== null
+			&& Arrays::contains(is_array($site) ? $site : [$site], $actualSite)
+			&& ($dest === null || ($actualDest !== null && Arrays::contains(is_array($dest) ? $dest : [$dest], $actualDest)))
+			&& ($user === null || $user === $actualUser);
 	}
 
 

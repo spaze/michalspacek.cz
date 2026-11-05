@@ -13,7 +13,7 @@
 <hr>
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">
-	{control articleSummary $article}
+	{control articleSummary, $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 <hr>
@@ -26,13 +26,13 @@
 </ul>
 <h3>{_messages.label.upcomingtalks}</h3>
 {if $upcomingTalks}
-	{control talksList $upcomingTalks}
+	{control talksList, $upcomingTalks}
 	<p>{_messages.talks.atyourevent.upcoming|formatPossiblyUnsafeHtml:'mail@michalspacek.cz'}</p>
 {else}
 	<p>{_messages.talks.atyourevent.noupcoming|formatPossiblyUnsafeHtml:'mail@michalspacek.cz'}</p>
 {/if}
 <h3>{_messages.label.pasttalks}</h3>
-{control talksList $talks}
+{control talksList, $talks}
 <p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
 <hr>
 <h2 id="{_html.id.interviews}">{_messages.label.myinterviews}</h2>

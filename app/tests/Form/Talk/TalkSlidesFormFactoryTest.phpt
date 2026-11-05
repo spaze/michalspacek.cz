@@ -104,7 +104,7 @@ final class TalkSlidesFormFactoryTest extends TestCase
 	{
 		$files = [];
 		for ($i = 0; $i < $maxFiles; $i++) {
-			$files[] = new FileUpload([
+			$files["slide{$i}"] = new FileUpload([
 				'name' => 'test',
 				'size' => 123,
 				'tmp_name' => 'test.temp',
@@ -112,7 +112,7 @@ final class TalkSlidesFormFactoryTest extends TestCase
 			]);
 		}
 		// FileUploads with UPLOAD_ERR_NO_FILE are not counted as uploaded files
-		$files[] = new FileUpload([
+		$files['noFile'] = new FileUpload([
 			'name' => 'no.file',
 			'size' => 123,
 			'tmp_name' => 'no.file.temp',

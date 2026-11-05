@@ -8,6 +8,7 @@ use MichalSpacekCz\Form\User\PasskeyReauthenticateFormFactory;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
 use MichalSpacekCz\Presentation\Admin\BasePresenter;
+use Nette\Application\Attributes\Persistent;
 use Nette\Forms\Form;
 
 /**
@@ -18,7 +19,7 @@ use Nette\Forms\Form;
 final class ReauthPresenter extends BasePresenter
 {
 
-	/** @persistent */
+	#[Persistent]
 	public string $backlink = '';
 
 
