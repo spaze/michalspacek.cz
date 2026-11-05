@@ -228,7 +228,7 @@ final readonly class TrainingDateFormFactory
 			'feedbackHref' => $date->getFeedbackHref(),
 		];
 		$form->setDefaults($values);
-		$submit->caption = 'Upravit';
+		$submit->setCaption('Upravit');
 	}
 
 }

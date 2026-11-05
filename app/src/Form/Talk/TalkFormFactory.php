@@ -254,7 +254,7 @@ final readonly class TalkFormFactory
 			'publishSlides' => $talk->isPublishSlides(),
 		];
 		$form->setDefaults($values);
-		$submit->caption = 'Upravit';
+		$submit->setCaption('Upravit');
 	}
 
 

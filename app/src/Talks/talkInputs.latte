@@ -5,7 +5,7 @@
 <a href="{plink :Www:Talks:talk $talk->getAction()}" n:if="$talk?->getAction()">{icon desktop class => space-after}Zobrazit přednášku</a>
 • <a n:if="$talk?->getId()" href="{plink :Admin:Talks:slides $talk->getId()}">{icon documents class => space-after}Upravit slajdy</a>
 </p>
-{form talk class => "aligned wide"}
+{form talk, class => "aligned wide"}
 	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
 		<legend><strong>{_messages.label.errors}</strong></legend>
 		<ul>

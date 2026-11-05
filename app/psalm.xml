@@ -55,6 +55,12 @@
 				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->
 			</errorLevel>
 		</InternalMethod>
+		<PossiblyInvalidArgument>
+			<errorLevel type="suppress">
+				<referencedFunction name="Nette\Forms\Controls\TextInput::addRule" /> <!-- nette/forms types a validator as callable(never, never) so that it takes a callable with any parameter types, Psalm reads that as a mismatch with the callable(Control) we pass -->
+				<referencedFunction name="Nette\Forms\Controls\TextArea::addRule" /> <!-- the same -->
+			</errorLevel>
+		</PossiblyInvalidArgument>
 		<PossiblyUnusedMethod>
 			<errorLevel type="suppress">
 				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->

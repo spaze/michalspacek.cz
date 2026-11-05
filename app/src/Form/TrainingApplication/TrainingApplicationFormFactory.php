@@ -94,7 +94,7 @@ final readonly class TrainingApplicationFormFactory
 			if (!$input instanceof TextInput) {
 				throw new ShouldNotHappenException(sprintf("The 'companyTaxId' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
 			}
-			$input->caption = "{$caption}:";
+			$input->setCaption("{$caption}:");
 		}
 	}
 

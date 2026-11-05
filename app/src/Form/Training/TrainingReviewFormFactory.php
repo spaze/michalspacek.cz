@@ -122,7 +122,7 @@ final readonly class TrainingReviewFormFactory
 			'note' => $review->getNote(),
 		];
 		$form->setDefaults($values);
-		$submit->caption = 'Upravit';
+		$submit->setCaption('Upravit');
 	}
 
 

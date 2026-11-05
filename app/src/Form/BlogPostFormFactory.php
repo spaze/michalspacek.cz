@@ -272,7 +272,7 @@ final readonly class BlogPostFormFactory
 		}
 		$form->setDefaults($values);
 		$editSummaryInput->setDisabled($post->needsPreviewKey());
-		$submitButton->caption = 'Upravit';
+		$submitButton->setCaption('Upravit');
 	}
 
 }

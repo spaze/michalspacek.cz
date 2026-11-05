@@ -5,7 +5,7 @@
 {/define}
 
 {define #content}
-{form post class => "aligned wide blocking"}
+{form post, class => "aligned wide blocking"}
 	<div n:foreach="$form->errors as $error" class="flash error"><strong>{$error}</strong></div>
 	<table>
 		<tbody><tr><th>{label translationGroup /}</th><td class="short">{input translationGroup}</td></tr></tbody>

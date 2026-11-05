@@ -160,7 +160,7 @@ final readonly class InterviewFormFactory
 			'sourceHref' => $interview->getSourceHref(),
 		];
 		$form->setDefaults($values);
-		$submit->caption = 'Upravit';
+		$submit->setCaption('Upravit');
 	}
 
 }
