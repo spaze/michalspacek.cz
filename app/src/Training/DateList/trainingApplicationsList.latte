@@ -12,7 +12,7 @@
 		<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()->value}</code></small></td>
 		<td>
 			<small><code title="Zdroj {$application->getSourceName()}">{$application->getSourceNameInitials()}</code></small>
-			{capture $title}
+			{capture $title|spaceless}
 				{if $application->getPriceVatWithCurrency()}{$application->getPriceVatWithCurrency()} s DPH, {/if}
 				faktura č. {if $application->getInvoiceId()}{$application->getInvoiceId()},
 					{if $application->getPaid()}
@@ -23,7 +23,7 @@
 					{/if}
 				{else}–{/if}
 			{/capture}
-			<small title="{(string)$title|strip}">
+			<small title="{$title}">
 				{if $application->getPriceWithCurrency()}{$application->getPriceWithCurrency()}{if $application->getPrice() > 0 && !$application->getPaid()} <strong>!</strong>{/if}{else}–{/if}
 			</small>
 		</td>
