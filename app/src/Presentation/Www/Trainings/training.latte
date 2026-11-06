@@ -154,7 +154,7 @@
 </div>
 <p n:if="!$dates">
 	{capture $anchor}#{_html.id.application}{/capture}
-	{_messages.trainings.nodateyet.long|format:(string)$anchor}
+	{_messages.trainings.nodateyet.long|format:$anchor}
 	{_messages.trainings.companythistraining|formatPossiblyUnsafeHtml:"link:Www:CompanyTrainings:training {$training->getAction()}"}
 </p>
 <p><small>{_messages.trainings.regularlyeveryquarter}</small></p>

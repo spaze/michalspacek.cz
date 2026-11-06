@@ -121,7 +121,7 @@ In the right-side template, `*` is the module name and `**` expands the presente
 
 Presenters live in `app/src/Presentation/{Module}/{Presenter}/`, alongside their Latte templates (`*.latte`). Components (reusable UI pieces) extend `UiControl` and live alongside their domain service classes (e.g., `app/src/Talks/TalkInputs.php` + `talkInputs.latte`).
 
-The preferred way to pass variables to a template is via a typed parameters class: create a final class (e.g., `InterviewsDefaultTemplateParameters`) with public constructor-promoted properties in the same directory as the presenter, then call `$this->template->setParameters(new InterviewsDefaultTemplateParameters(...))` in the render/action method. The template declares `{templateType ClassName}` at the top (see Latte templates section), which gives PHPStan full type visibility into template variables. Direct `$this->template->varName = value` assignment still works but is not the preferred approach for new code.
+The preferred way to pass variables to a template is via a typed parameters class: create a final class (e.g., `InterviewsDefaultTemplateParameters`) with public constructor-promoted properties in the same directory as the presenter, then call `$this->template->setParameters(new InterviewsDefaultTemplateParameters(...))` in the render/action method. The template declares `{templateType ClassName}` at the top (see Latte templates section). PHPStan checks the types where the presenter builds the parameters object; nothing analyses the templates themselves, so the declaration is there for whoever reads or edits the template. Direct `$this->template->varName = value` assignment still works but is not the preferred approach for new code.
 
 ### Translated routes
 
@@ -241,7 +241,7 @@ PHPStan at level max with strict rules. Project-specific restrictions:
 
 ### Latte templates
 
-`strictParsing` (unknown Latte tags throw a parse error rather than passing through as HTML — catches tag typos) and `strictTypes` (compiled templates include `declare(strict_types=1)`) are enabled. With `strictTypes`, template variables must be declared: use `{varType Type $var}` for individual variables inline, or `{templateType ClassName}` to declare all template parameters in a dedicated class (used in more complex templates). Objects implementing `Nette\HtmlStringable` are output raw (unescaped) by Latte — only pass `HtmlStringable` when the content is already safe HTML. Plain strings and `Stringable` objects are always escaped.
+`strictParsing` (unknown Latte tags throw a parse error rather than passing through as HTML — catches tag typos) and `strictTypes` (compiled templates include `declare(strict_types=1)`) are enabled. Declare the variables a template uses, with `{varType Type $var}` for individual variables inline or `{templateType ClassName}` for all template parameters in a dedicated class (used in more complex templates); Latte doesn't require it, the declarations document the types for whoever edits the template. Objects implementing `Nette\HtmlStringable` are output raw (unescaped) by Latte — only pass `HtmlStringable` when the content is already safe HTML. Plain strings and `Stringable` objects are always escaped.
 
 ### Translations
 
