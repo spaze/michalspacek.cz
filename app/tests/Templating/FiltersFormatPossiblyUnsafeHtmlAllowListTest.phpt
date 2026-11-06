@@ -133,10 +133,10 @@ final class FiltersFormatPossiblyUnsafeHtmlAllowListTest extends TestCase
 				'|formatPossiblyUnsafeHtml:$talk->getSupersededByTitle(),"link:Www:Talks:talk {$talk->getSupersededByAction()}"' => 'admin-edited talks.title (raw Texy ?string) + talks.action slug',
 			],
 			'Presentation/Www/Trainings/common/discontinued.latte' => [
-				'{_$training->getDescription()|formatPossiblyUnsafeHtml:(string)$names, $training->getNewHref()}' => 'format string is admin-edited discontinued-training description (Texy); $names is a captured Texy fragment of bold training names; $newHref is admin URL',
+				'{_$training->getDescription()|formatPossiblyUnsafeHtml:$names, $training->getNewHref()}' => 'format string is admin-edited discontinued-training description (Texy); $names is a captured Texy fragment of bold training names; $newHref is admin URL',
 			],
 			'Presentation/Www/Trainings/files.latte' => [
-				'|formatPossiblyUnsafeHtml:$trainingTitle, (string)$date' => '$trainingTitle is admin-edited training name (Html), $date is captured formatted date range',
+				'|formatPossiblyUnsafeHtml:$trainingTitle, $date' => '$trainingTitle is admin-edited training name (Html), $date is captured formatted date range',
 				'"messages.trainings.moretrainings.$familiar"|formatPossiblyUnsafeHtml' => 'the $ is in the translation key ($familiar selects formal/informal), not in args; args are a literal Texy directive',
 			],
 			'Presentation/Www/Trainings/reviews.latte' => [
