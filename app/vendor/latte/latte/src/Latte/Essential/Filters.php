@@ -9,11 +9,10 @@ namespace Latte\Essential;
 
 use Latte;
 use Latte\ContentType;
-use Latte\Runtime\FilterInfo;
-use Latte\Runtime\Html;
+use Latte\Runtime\{FilterInfo, Html};
 use Stringable;
-use function abs, array_combine, array_fill_keys, array_key_last, array_map, array_rand, array_reverse, array_search, array_slice, base64_encode, ceil, count, end, explode, extension_loaded, finfo_buffer, finfo_open, floor, func_num_args, htmlspecialchars, http_build_query, iconv, iconv_strlen, iconv_substr, implode, is_array, is_int, is_numeric, is_string, iterator_count, iterator_to_array, key, ltrim, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, min, nl2br, number_format, preg_last_error, preg_last_error_msg, preg_match, preg_quote, preg_replace, preg_replace_callback, preg_split, reset, round, rtrim, str_repeat, str_replace, strip_tags, strlen, strrev, strtr, substr, trim, uasort, uksort, urlencode, utf8_decode;
-use const ENT_NOQUOTES, ENT_SUBSTITUTE, FILEINFO_MIME_TYPE, MB_CASE_TITLE, PHP_OUTPUT_HANDLER_FINAL, PHP_OUTPUT_HANDLER_START, PREG_SPLIT_NO_EMPTY;
+use function array_key_exists, count, extension_loaded, func_num_args, is_array, is_int, is_string, strlen;
+use const ENT_NOQUOTES, ENT_SUBSTITUTE;
 
 
 /**
@@ -48,67 +47,11 @@ final class Filters
 
 
 	/**
-	 * Replaces all repeated white spaces with a single space.
+	 * Minifies whitespace: collapses runs to a single space, removes it around whitespace-insensitive tags entirely.
 	 */
-	public static function strip(FilterInfo $info, string $s): string
+	public static function spaceless(FilterInfo $info, string $s): string
 	{
-		return $info->contentType === ContentType::Html
-			? trim(self::spacelessHtml($s))
-			: trim(self::spacelessText($s));
-	}
-
-
-	/**
-	 * Replaces all repeated white spaces with a single space.
-	 */
-	public static function spacelessHtml(string $s, bool &$strip = true): string
-	{
-		return preg_replace_callback(
-			'#[ \t\r\n]+|<(/)?(textarea|pre|script)(?=\W)#si',
-			function ($m) use (&$strip) {
-				if (empty($m[2])) {
-					return $strip ? ' ' : $m[0];
-				} else {
-					$strip = !empty($m[1]);
-					return $m[0];
-				}
-			},
-			$s,
-		);
-	}
-
-
-	/**
-	 * Output buffering handler for spacelessHtml.
-	 */
-	public static function spacelessHtmlHandler(string $s, ?int $phase = null): string
-	{
-		static $strip;
-		$left = $right = '';
-
-		if ($phase & PHP_OUTPUT_HANDLER_START) {
-			$strip = true;
-			$tmp = ltrim($s);
-			$left = substr($s, 0, strlen($s) - strlen($tmp));
-			$s = $tmp;
-		}
-
-		if ($phase & PHP_OUTPUT_HANDLER_FINAL) {
-			$tmp = rtrim($s);
-			$right = substr($s, strlen($tmp));
-			$s = $tmp;
-		}
-
-		return $left . self::spacelessHtml($s, $strip) . $right;
-	}
-
-
-	/**
-	 * Replaces all repeated white spaces with a single space.
-	 */
-	public static function spacelessText(string $s): string
-	{
-		return preg_replace('#[ \t\r\n]+#', ' ', $s);
+		return (new WhitespaceMinifier($info->contentType ?? ContentType::Text))->minify($s);
 	}
 
 
@@ -117,6 +60,7 @@ final class Filters
 	 */
 	public static function indent(FilterInfo $info, string $s, int $level = 1, string $chars = "\t"): string
 	{
+		$indent = str_repeat(addcslashes($chars, '$\\'), max(0, $level));
 		if ($level < 1) {
 			// do nothing
 		} elseif ($info->contentType === ContentType::Html) {
@@ -125,10 +69,10 @@ final class Filters
 				throw new Latte\RuntimeException(preg_last_error_msg());
 			}
 
-			$s = preg_replace('#(?:^|[\r\n]+)(?=[^\r\n])#', '$0' . str_repeat($chars, $level), $s);
+			$s = preg_replace('#(?:^|[\r\n]+)(?=[^\r\n])#', '$0' . $indent, $s);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		} else {
-			$s = preg_replace('#(?:^|[\r\n]+)(?=[^\r\n])#', '$0' . str_repeat($chars, $level), $s);
+			$s = preg_replace('#(?:^|[\r\n]+)(?=[^\r\n])#', '$0' . $indent, $s);
 		}
 
 		return $s;
@@ -136,21 +80,22 @@ final class Filters
 
 
 	/**
-	 * Join array of text or HTML elements with a string.
-	 * @param  string[]  $arr
+	 * Join iterable of text or HTML elements with a string.
+	 * @param  iterable<string>  $arr
 	 */
-	public static function implode(array $arr, string $glue = ''): string
+	public static function implode(iterable $arr, string $glue = ''): string
 	{
-		return implode($glue, $arr);
+		return implode($glue, iterator_to_array($arr, preserve_keys: false));
 	}
 
 
 	/**
-	 * Join array elements with a comma and space.
-	 * @param  string[]  $arr
+	 * Join iterable elements with a comma and space.
+	 * @param  iterable<string>  $arr
 	 */
-	public static function commas(array $arr, ?string $lastGlue = null): string
+	public static function commas(iterable $arr, ?string $lastGlue = null): string
 	{
+		$arr = iterator_to_array($arr, preserve_keys: false);
 		if ($lastGlue === null || count($arr) < 2) {
 			return implode(', ', $arr);
 		}
@@ -166,9 +111,16 @@ final class Filters
 	 */
 	public static function explode(string $value, string $separator = ''): array
 	{
-		return $separator === ''
-			? preg_split('//u', $value, -1, PREG_SPLIT_NO_EMPTY)
-			: explode($separator, $value);
+		if ($separator !== '') {
+			return explode($separator, $value);
+		}
+
+		$parts = preg_split('//u', $value, -1, PREG_SPLIT_NO_EMPTY);
+		if (preg_last_error()) { // e.g. malformed UTF-8
+			throw new Latte\RuntimeException(preg_last_error_msg());
+		}
+
+		return $parts;
 	}
 
 
@@ -192,6 +144,9 @@ final class Filters
 		if ($time == null) { // intentionally ==
 			return null;
 		} elseif ($time instanceof \DateInterval) {
+			if (func_num_args() < 2) {
+				throw new Latte\RuntimeException("Filter |date: DateInterval requires an explicit format with %-placeholders like |date:'%d days'.");
+			}
 			return $time->format($format);
 		} elseif (is_numeric($time)) {
 			$time = (new \DateTime)->setTimestamp((int) $time);
@@ -228,13 +183,18 @@ final class Filters
 		}
 
 		if ($format === null) {
-			$xlt = ['' => \IntlDateFormatter::NONE, 'full' => \IntlDateFormatter::FULL, 'long' => \IntlDateFormatter::LONG, 'medium' => \IntlDateFormatter::MEDIUM, 'short' => \IntlDateFormatter::SHORT,
-				'relative-full' => \IntlDateFormatter::RELATIVE_FULL, 'relative-long' => \IntlDateFormatter::RELATIVE_LONG, 'relative-medium' => \IntlDateFormatter::RELATIVE_MEDIUM, 'relative-short' => \IntlDateFormatter::RELATIVE_SHORT];
+			$xlt = ['' => \IntlDateFormatter::NONE, 'full' => \IntlDateFormatter::FULL, 'long' => \IntlDateFormatter::LONG,
+				'medium' => \IntlDateFormatter::MEDIUM, 'short' => \IntlDateFormatter::SHORT,
+				'relative-full' => \IntlDateFormatter::RELATIVE_FULL, 'relative-long' => \IntlDateFormatter::RELATIVE_LONG,
+				'relative-medium' => \IntlDateFormatter::RELATIVE_MEDIUM, 'relative-short' => \IntlDateFormatter::RELATIVE_SHORT];
 			$time ??= '';
 			$date ??= $time === '' ? 'long' : '';
 			$formatter = new \IntlDateFormatter($this->locale, $xlt[$date], $xlt[$time]);
 		} else {
-			$formatter = new \IntlDateFormatter($this->locale, pattern: (new \IntlDatePatternGenerator($this->locale))->getBestPattern($format));
+			$formatter = new \IntlDateFormatter(
+				$this->locale,
+				pattern: (new \IntlDatePatternGenerator($this->locale))->getBestPattern($format),
+			);
 		}
 
 		$res = $formatter->format($value);
@@ -469,7 +429,7 @@ final class Filters
 		return match (true) {
 			extension_loaded('mbstring') => mb_strlen($s, 'UTF-8'),
 			extension_loaded('iconv') => (int) iconv_strlen($s, 'UTF-8'),
-			default => strlen(@utf8_decode($s)), // deprecated
+			default => strlen(@utf8_decode($s)), // @ utf8_decode() is deprecated
 		};
 	}
 
@@ -480,7 +440,7 @@ final class Filters
 	public static function trim(FilterInfo $info, string $s, string $charlist = " \t\n\r\0\x0B\u{A0}"): string
 	{
 		$charlist = preg_quote($charlist, '#');
-		$s = preg_replace('#^[' . $charlist . ']+|[' . $charlist . ']+$#Du', '', (string) $s);
+		$s = preg_replace('#^[' . $charlist . ']+|[' . $charlist . ']+$#Du', '', $s);
 		if (preg_last_error() || $s === null) {
 			throw new Latte\RuntimeException(preg_last_error_msg());
 		}
@@ -494,6 +454,10 @@ final class Filters
 	 */
 	public static function padLeft(string|Stringable|int|float|null $s, int $length, string $append = ' '): string
 	{
+		if ($append === '') {
+			throw new \InvalidArgumentException('Filter |padLeft: pad string cannot be empty.');
+		}
+
 		$s = (string) $s;
 		$length = max(0, $length - self::strLength($s));
 		$l = self::strLength($append);
@@ -506,6 +470,10 @@ final class Filters
 	 */
 	public static function padRight(string|Stringable|int|float|null $s, int $length, string $append = ' '): string
 	{
+		if ($append === '') {
+			throw new \InvalidArgumentException('Filter |padRight: pad string cannot be empty.');
+		}
+
 		$s = (string) $s;
 		$length = max(0, $length - self::strLength($s));
 		$l = self::strLength($append);
@@ -524,7 +492,7 @@ final class Filters
 	{
 		return is_string($val)
 			? (string) iconv('UTF-32LE', 'UTF-8', strrev((string) iconv('UTF-8', 'UTF-32BE', $val)))
-			: array_reverse(iterator_to_array($val), $preserveKeys);
+			: array_reverse(iterator_to_array($val, preserve_keys: $preserveKeys), $preserveKeys);
 	}
 
 
@@ -535,7 +503,7 @@ final class Filters
 	 */
 	public static function column(iterable $data, string|int|null $columnKey, string|int|null $indexKey = null): array
 	{
-		return array_column(iterator_to_array($data), $columnKey, $indexKey);
+		return array_column(iterator_to_array($data, preserve_keys: false), $columnKey, $indexKey);
 	}
 
 
@@ -548,7 +516,11 @@ final class Filters
 	{
 		$batch = [];
 		foreach ($list as $key => $value) {
-			$batch[$key] = $value;
+			if (array_key_exists($key, $batch)) { // an iterator may repeat keys
+				$batch[] = $value;
+			} else {
+				$batch[$key] = $value;
+			}
 			if (count($batch) >= $length) {
 				yield $batch;
 				$batch = [];
@@ -572,7 +544,7 @@ final class Filters
 	 * @template K
 	 * @template V
 	 * @param  iterable<K, V>  $data
-	 * @param  ?(\Closure(V, V): int)  $comparison
+	 * @param  ?(\Closure(mixed, mixed): int)  $comparison
 	 * @param  string|int|(\Closure(V): mixed)|null  $by
 	 * @param  string|int|(\Closure(K): mixed)|bool  $byKey
 	 * @return iterable<K, V>
@@ -634,6 +606,8 @@ final class Filters
 	{
 		$fn = $by instanceof \Closure ? $by : fn($a) => is_array($a) ? $a[$by] : $a->$by;
 		$keys = $groups = [];
+		$index = 0;
+		$prevKey = null;
 
 		foreach ($data as $k => $v) {
 			$groupKey = $fn($v, $k);
@@ -675,6 +649,23 @@ final class Filters
 
 
 	/**
+	 * Transforms elements using the given $transformer. Maintains original keys.
+	 * @template K
+	 * @template V
+	 * @template R
+	 * @param  iterable<K, V>  $iterable
+	 * @param  callable(V, K, iterable<K, V>): R  $transformer
+	 * @return iterable<K, R>
+	 */
+	public static function map(iterable $iterable, callable $transformer): iterable
+	{
+		foreach ($iterable as $k => $v) {
+			yield $k => $transformer($v, $k, $iterable);
+		}
+	}
+
+
+	/**
 	 * Returns value clamped to the inclusive range of min and max.
 	 */
 	public static function clamp(int|float $value, int|float $min, int|float $max): int|float
@@ -704,6 +695,10 @@ final class Filters
 	 */
 	public static function divisibleBy(int $value, int $by): bool
 	{
+		if ($by === 0) {
+			throw new \InvalidArgumentException('Cannot check divisibility by zero.');
+		}
+
 		return $value % $by === 0;
 	}
 
@@ -746,15 +741,18 @@ final class Filters
 
 
 	/**
-	 * Returns the last element in an array or character in a string, or null if none.
-	 * @param  string|array<mixed>  $value
+	 * Returns the last element in an iterable or character in a string, or null if none.
+	 * @param  string|iterable<mixed>  $value
 	 * @return ($value is string ? string : mixed)
 	 */
-	public static function last(string|array $value): mixed
+	public static function last(string|iterable $value): mixed
 	{
-		return is_array($value)
-			? ($value ? $value[array_key_last($value)] : null)
-			: self::substring($value, -1);
+		if (is_string($value)) {
+			return self::substring($value, -1);
+		}
+
+		$value = iterator_to_array($value, preserve_keys: false);
+		return $value ? $value[array_key_last($value)] : null;
 	}
 
 
@@ -779,6 +777,17 @@ final class Filters
 		return (function () use ($value, $start, $length, $preserveKeys) {
 			$i = 0;
 			$count = 0;
+			if ($start < 0 || $length < 0) { // counting from the end requires reading the whole iterator
+				$pairs = [];
+				foreach ($value as $key => $val) {
+					$pairs[] = [$key, $val];
+				}
+				foreach (array_slice($pairs, $start, $length) as [$key, $val]) {
+					yield ($preserveKeys ? $key : $count++) => $val;
+				}
+				return;
+			}
+
 			foreach ($value as $key => $val) {
 				if ($i++ < $start) {
 					continue;
@@ -786,11 +795,7 @@ final class Filters
 				if ($length !== null && $count >= $length) {
 					break;
 				}
-				if ($preserveKeys) {
-					yield $key => $val;
-				} else {
-					yield $val;
-				}
+				yield ($preserveKeys ? $key : $count) => $val;
 				$count++;
 			}
 		})();
@@ -826,17 +831,17 @@ final class Filters
 
 	/**
 	 * Picks random element/char.
-	 * @param  string|array<mixed>  $values
+	 * @param  string|iterable<mixed>  $values
 	 * @return ($values is string ? string : mixed)
 	 */
-	public static function random(string|array $values): mixed
+	public static function random(string|iterable $values): mixed
 	{
-		if (is_string($values)) {
-			$values = preg_split('//u', $values, -1, PREG_SPLIT_NO_EMPTY);
-		}
+		$values = is_string($values)
+			? self::explode($values)
+			: iterator_to_array($values, preserve_keys: false);
 
 		return $values
-			? $values[array_rand($values, 1)]
+			? $values[array_rand($values)]
 			: null;
 	}
 

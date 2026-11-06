@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
@@ -12,8 +11,8 @@ use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use MichalSpacekCz\Utils\Arrays;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 
 final readonly class TrainingDateFormFactory
 {
@@ -25,7 +24,6 @@ final readonly class TrainingDateFormFactory
 
 
 	public function __construct(
-		private FormFactory $factory,
 		private Trainings $trainings,
 		private TrainingDates $trainingDates,
 		private TrainingDateStatuses $trainingDateStatuses,
@@ -42,7 +40,7 @@ final readonly class TrainingDateFormFactory
 	 */
 	public function create(callable $onSuccessAdd, callable $onSuccessEdit, ?TrainingDate $date = null): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 
 		$trainings = [
 			self::STANDARD => [],
@@ -228,7 +226,7 @@ final readonly class TrainingDateFormFactory
 			'feedbackHref' => $date->getFeedbackHref(),
 		];
 		$form->setDefaults($values);
-		$submit->caption = 'Upravit';
+		$submit->setCaption('Upravit');
 	}
 
 }

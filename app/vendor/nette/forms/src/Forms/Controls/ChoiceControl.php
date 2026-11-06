@@ -8,7 +8,7 @@
 namespace Nette\Forms\Controls;
 
 use Nette;
-use function array_combine, array_fill_keys, array_key_exists, array_keys, array_map, implode, is_array, key, var_export;
+use function array_key_exists, is_array;
 
 
 /**
@@ -16,7 +16,7 @@ use function array_combine, array_fill_keys, array_key_exists, array_keys, array
  *
  * @property   mixed[] $items
  * @property   bool|array<bool> $disabled
- * @property-read mixed $selectedItem
+ * @property-deprecated mixed $selectedItem
  */
 abstract class ChoiceControl extends BaseControl
 {
@@ -56,7 +56,11 @@ abstract class ChoiceControl extends BaseControl
 		}
 
 		if ($this->checkDefaultValue && $value !== null && !array_key_exists((string) $value, $this->items)) {
-			$set = Nette\Utils\Strings::truncate(implode(', ', array_map(fn($s) => var_export($s, return: true), array_keys($this->items))), 70, '...');
+			$set = Nette\Utils\Strings::truncate(
+				implode(', ', array_map(fn($s) => var_export($s, return: true), array_keys($this->items))),
+				70,
+				'...',
+			);
 			throw new Nette\InvalidArgumentException("Value '$value' is out of allowed set [$set] in field '{$this->getName()}'.");
 		}
 
@@ -131,16 +135,16 @@ abstract class ChoiceControl extends BaseControl
 
 	/**
 	 * Disables or enables control or items.
-	 * @param bool|array<int|string>  $value
+	 * @param bool|array<int|string>  $state
 	 */
-	public function setDisabled(bool|array $value = true): static
+	public function setDisabled(bool|array $state = true): static
 	{
-		if (!is_array($value)) {
-			return parent::setDisabled($value);
+		if (!is_array($state)) {
+			return parent::setDisabled($state);
 		}
 
 		parent::setDisabled(false);
-		$this->disabled = array_fill_keys($value, value: true);
+		$this->disabled = array_fill_keys($state, value: true);
 		return $this;
 	}
 
@@ -152,5 +156,17 @@ abstract class ChoiceControl extends BaseControl
 	{
 		$this->checkDefaultValue = $value;
 		return $this;
+	}
+
+
+	/**
+	 * Returns the item label for the given key, or throws an exception if the key does not exist.
+	 */
+	protected function getItem(mixed &$key): mixed
+	{
+		$key = key([(string) $key => null]);
+		return array_key_exists($key, $this->items)
+			? $this->items[$key]
+			: throw new Nette\InvalidArgumentException("Item '$key' does not exist in field '{$this->getName()}'.");
 	}
 }

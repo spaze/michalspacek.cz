@@ -7,11 +7,9 @@
 
 namespace Nette\Bridges\FormsLatte\Nodes;
 
-use Latte\Compiler\Nodes\AreaNode;
+use Latte\Compiler\Nodes\{AreaNode, StatementNode};
 use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**
@@ -40,10 +38,12 @@ class FormContainerNode extends StatementNode
 	public function print(PrintContext $context): string
 	{
 		return $context->format(
-			'$this->global->formsStack[] = $formContainer = Nette\Bridges\FormsLatte\Runtime::item(%node, $this->global) %line; '
-			. '%node '
-			. 'array_pop($this->global->formsStack); $formContainer = end($this->global->formsStack);'
-			. "\n\n",
+			<<<'XX'
+				$this->global->forms->begin($formContainer = $this->global->forms->get(%node, Nette\Forms\Container::class), bindsForm: false) %line;
+				%node
+				$this->global->forms->end(); $formContainer = $this->global->forms->getScope();
+
+				XX,
 			$this->name,
 			$this->position,
 			$this->content,

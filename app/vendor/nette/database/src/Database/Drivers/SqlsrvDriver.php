@@ -8,7 +8,6 @@
 namespace Nette\Database\Drivers;
 
 use Nette;
-use function array_values, str_replace, strtr;
 
 
 /**
@@ -27,14 +26,29 @@ class SqlsrvDriver implements Nette\Database\Driver
 
 	public function isSupported(string $feature): bool
 	{
-		return false;
+		return $feature === self::SupportDefaultValues;
 	}
 
 
 	public function convertException(\PDOException $e): Nette\Database\DriverException
 	{
 		$code = $e->errorInfo[1] ?? null;
-		if ($code === 1205) {
+		if ($code === 2627 || $code === 2601) {
+			return Nette\Database\UniqueConstraintViolationException::from($e);
+
+		} elseif ($code === 515) {
+			return Nette\Database\NotNullConstraintViolationException::from($e);
+
+		} elseif ($code === 547) {
+			return match (true) {
+				str_contains($e->getMessage(), 'CHECK constraint') => Nette\Database\CheckConstraintViolationException::from($e),
+				str_contains($e->getMessage(), 'FOREIGN KEY constraint'),
+				str_contains($e->getMessage(), 'REFERENCE constraint') => Nette\Database\ForeignKeyConstraintViolationException::from($e),
+				// the message is localized per login language and cannot be classified further
+				default => Nette\Database\ConstraintViolationException::from($e),
+			};
+
+		} elseif ($code === 1205) {
 			return Nette\Database\DeadlockException::from($e);
 
 		} elseif ($code === 1222) {
@@ -81,10 +95,15 @@ class SqlsrvDriver implements Nette\Database\Driver
 		if ($limit < 0 || $offset < 0) {
 			throw new Nette\InvalidArgumentException('Negative offset or limit.');
 
+		} elseif ($limit === 0) { // FETCH NEXT 0 is rejected by the server
+			$sql = preg_replace('#^\s*(SELECT(\s+DISTINCT|\s+ALL)?)#i', '$0 TOP 0', $sql, 1, $count);
+			if (!$count) {
+				throw new Nette\InvalidArgumentException('SQL query must begin with SELECT command.');
+			}
 		} elseif ($limit !== null || $offset) {
 			// requires ORDER BY, see https://technet.microsoft.com/en-us/library/gg699618(v=sql.110).aspx
-			$sql .= ' OFFSET ' . (int) $offset . ' ROWS '
-				. 'FETCH NEXT ' . (int) $limit . ' ROWS ONLY';
+			$sql .= ' OFFSET ' . (int) $offset . ' ROWS'
+				. ($limit !== null ? " FETCH NEXT $limit ROWS ONLY" : '');
 		}
 	}
 

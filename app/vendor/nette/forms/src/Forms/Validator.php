@@ -8,9 +8,8 @@
 namespace Nette\Forms;
 
 use Nette;
-use Nette\Utils\Strings;
-use Nette\Utils\Validators;
-use function array_map, count, explode, in_array, is_array, is_float, is_int, is_object, is_string, preg_replace, preg_replace_callback, rtrim, str_replace, strtolower;
+use Nette\Utils\{Strings, Validators};
+use function count, is_array, is_float, is_int, is_object, is_string;
 
 
 /**
@@ -32,7 +31,9 @@ final class Validator
 		Form::Length => 'Please enter a value between %d and %d characters long.',
 		Form::Email => 'Please enter a valid email address.',
 		Form::URL => 'Please enter a valid URL.',
+		Form::Enum => 'Please select a valid option.',
 		Form::Integer => 'Please enter a valid integer.',
+		Form::Numeric => 'Please enter a non-negative integer.',
 		Form::Float => 'Please enter a valid number.',
 		Form::Min => 'Please enter a value greater than or equal to %d.',
 		Form::Max => 'Please enter a value less than or equal to %d.',
@@ -87,9 +88,10 @@ final class Validator
 					}
 
 					return '';
+
 				case 'value': return $withValue
-						? $rule->control->getValue()
-						: $m[0];
+					? self::formatValue($rule->control, $rule->control->getValue())
+					: $m[0];
 				default:
 					$args = is_array($rule->arg) ? $rule->arg : [$rule->arg];
 					$i = (int) $m[1] ? (int) $m[1] - 1 : $i + 1;
@@ -97,15 +99,30 @@ final class Validator
 					if ($arg === null) {
 						return '';
 					} elseif ($arg instanceof Control) {
-						return $withValue ? $args[$i]->getValue() : "%$i";
+						return $withValue ? self::formatValue($arg, $arg->getValue()) : "%$i";
 					} elseif ($rule->control instanceof Controls\DateTimeControl) {
 						return $rule->control->formatLocaleText($arg);
 					} else {
 						return $arg;
 					}
 			}
-		}, $message);
+		}, (string) $message);
 		return $message;
+	}
+
+
+	/**
+	 * Formats a control value for a human-readable error message.
+	 */
+	private static function formatValue(Control $control, mixed $value): string
+	{
+		return match (true) {
+			is_array($value) => implode(', ', array_map(fn($item) => self::formatValue($control, $item), $value)),
+			$value instanceof Nette\Http\FileUpload => $value->getUntrustedName(),
+			$value instanceof \DateTimeInterface && $control instanceof Controls\DateTimeControl => $control->formatLocaleText($value),
+			$value instanceof \DateTimeInterface => $value->format('Y-m-d H:i:s'),
+			default => (string) $value,
+		};
 	}
 
 
@@ -160,7 +177,7 @@ final class Validator
 	/**
 	 * Checks whether the control is filled.
 	 */
-	public static function validateFilled(Controls\BaseControl $control): bool
+	public static function validateFilled(Control $control): bool
 	{
 		return $control->isFilled();
 	}
@@ -169,7 +186,7 @@ final class Validator
 	/**
 	 * Checks whether the control is not filled.
 	 */
-	public static function validateBlank(Controls\BaseControl $control): bool
+	public static function validateBlank(Control $control): bool
 	{
 		return !$control->isFilled();
 	}
@@ -178,7 +195,7 @@ final class Validator
 	/**
 	 * Checks whether the control passes all its validation rules (used in conditions).
 	 */
-	public static function validateValid(Controls\BaseControl $control): bool
+	public static function validateValid(Control $control): bool
 	{
 		return $control->getRules()->validate();
 	}
@@ -307,6 +324,32 @@ final class Validator
 	public static function validatePatternCaseInsensitive(Control $control, string $pattern): bool
 	{
 		return self::validatePattern($control, $pattern, caseInsensitive: true);
+	}
+
+
+	/**
+	 * Checks whether the control's value is a valid case of the given backed enum.
+	 * @param  class-string  $enum  backed enum class
+	 */
+	public static function validateEnum(Control $control, string $enum): bool
+	{
+		if (!is_a($enum, \BackedEnum::class, allow_string: true)) {
+			throw new Nette\InvalidArgumentException("The Enum validator requires a backed enum class, '$enum' given.");
+		}
+
+		$intBacked = (new \ReflectionEnum($enum))->getBackingType()?->getName() === 'int';
+		foreach (static::toArray($control->getValue()) as $value) {
+			if ($intBacked) {
+				$value = filter_var($value, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+				if ($value === null || $enum::tryFrom($value) === null) {
+					return false;
+				}
+			} elseif (!is_string($value) || $enum::tryFrom($value) === null) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 

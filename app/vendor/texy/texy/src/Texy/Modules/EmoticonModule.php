@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use function getimagesize, implode, is_array, is_file, krsort, preg_quote, rtrim, str_contains;
+use function is_array;
 
 
 /**
@@ -111,8 +111,8 @@ final class EmoticonModule extends Texy\Module
 
 		// file path
 		$file = rtrim($this->fileRoot ?? (string) $texy->imageModule->fileRoot, '/\\') . '/' . $file;
-		if (@is_file($file)) { // intentionally @
-			$size = @getimagesize($file); // intentionally @
+		if (@is_file($file)) { // @ the path may be too long or outside open_basedir
+			$size = @getimagesize($file); // @ a file smaller than 12 bytes triggers a read error
 			if (is_array($size)) {
 				$el->attrs['width'] = $size[0];
 				$el->attrs['height'] = $size[1];

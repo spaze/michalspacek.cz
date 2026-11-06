@@ -7,9 +7,8 @@
 
 namespace Latte\Compiler;
 
-use Latte\ContentType;
-use Latte\Engine;
-use function array_filter, compact, implode, is_int, preg_match, str_contains, str_replace, trim;
+use Latte\{ContentType, Engine};
+use function is_int;
 
 
 /**
@@ -44,7 +43,7 @@ final class TemplateGenerator
 	 */
 	public function generateCode(string $className, ?string $templateName, bool $strictMode): string
 	{
-		$templateName = $templateName === null || preg_match('#\n|\?#', $templateName) ? null : $templateName;
+		$templateName = $templateName === null || preg_match('#[\n?]#', $templateName) ? null : $templateName;
 		$members = [];
 		foreach ($this->constants as $name => $value) {
 			$members[] = "\tpublic const $name = " . PhpHelpers::dump($value, multiline: true) . ';';
@@ -123,7 +122,7 @@ final class TemplateGenerator
 				$body,
 				'array $ʟ_args',
 				'void',
-				$block->tag->getNotation(true) . ' on line ' . $block->tag->position->line,
+				$block->tag->getNotation(withArgs: true) . ' on line ' . $block->tag->position->line,
 			);
 		}
 

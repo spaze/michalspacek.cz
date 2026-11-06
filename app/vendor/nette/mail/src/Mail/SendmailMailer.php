@@ -8,6 +8,7 @@
 namespace Nette\Mail;
 
 use Nette;
+use function function_exists;
 
 
 /**
@@ -52,9 +53,9 @@ class SendmailMailer implements Mailer
 			: $mail->generateMessage();
 		[$headers, $body] = explode(Message::EOL . Message::EOL, $data, 2);
 
-		// mail() adds 'To' and 'Subject' itself, remove them from the header block (after DKIM signing)
+		// mail() adds 'To' and 'Subject' itself, remove them (in any spelling) from the header block (after DKIM signing)
 		$lines = preg_split('#\r\n(?![ \t])#', $headers);
-		$lines = array_filter($lines, fn($line) => !preg_match('#^(?:To|Subject):#', $line));
+		$lines = array_filter($lines, fn($line) => !preg_match('#^(?:To|Subject):#i', $line));
 		$headers = implode(Message::EOL, $lines);
 
 		$cmd = $this->commandArgs;
@@ -76,9 +77,13 @@ class SendmailMailer implements Mailer
 	protected function invokeMail(string $to, string $subject, string $body, string $headers, string $cmd): void
 	{
 		$info = '';
-		$res = Nette\Utils\Callback::invokeSafe('mail', [$to, $subject, $body, $headers, $cmd], function (string $message) use (&$info): void {
-			$info = ": $message";
-		});
+		$res = Nette\Utils\Callback::invokeSafe(
+			'mail',
+			[$to, $subject, $body, $headers, $cmd],
+			function (string $message) use (&$info): void {
+				$info = ": $message";
+			},
+		);
 		if ($res === false) {
 			throw new SendException("Unable to send email$info.");
 		}

@@ -8,7 +8,7 @@
 namespace Latte\Sandbox;
 
 use Latte;
-use function array_flip, array_map, assert, is_a, is_bool, strtolower;
+use function is_bool;
 
 
 /**
@@ -127,8 +127,18 @@ class SecurityPolicy implements Latte\Policy
 	public function allowProperties(string $class, array $properties): self
 	{
 		$this->propertyCache = [];
-		$this->properties[$class] = array_flip(array_map(strtolower(...), $properties));
+		$this->properties[$class] = array_flip($properties);
 		return $this;
+	}
+
+
+	/**
+	 * Returns a value representing the policy rules. When it changes, cached templates compiled
+	 * under this policy are invalidated, because part of the sandbox enforcement happens at compile time.
+	 */
+	public function getCacheSignature(): mixed
+	{
+		return [$this->tags, $this->filters, $this->functions, $this->methods, $this->properties];
 	}
 
 
@@ -171,7 +181,6 @@ class SecurityPolicy implements Latte\Policy
 
 	public function isPropertyAllowed(string $class, string $property): bool
 	{
-		$property = strtolower($property);
 		$res = &$this->propertyCache[$class][$property];
 		assert(is_bool($res) || $res === null);
 		if (isset($res)) {

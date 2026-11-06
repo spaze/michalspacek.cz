@@ -7,8 +7,7 @@
 
 namespace Latte\Sandbox\Nodes;
 
-use Latte\Compiler\Nodes\Php\ArgumentNode;
-use Latte\Compiler\Nodes\Php\Expression;
+use Latte\Compiler\Nodes\Php\{ArgumentNode, Expression};
 use Latte\Compiler\PrintContext;
 
 
@@ -25,7 +24,7 @@ class StaticMethodCallNode extends Expression\StaticMethodCallNode
 
 	public function print(PrintContext $context): string
 	{
-		if ($this->isPartialFunction()) {
+		if ($this->isPartialApplication()) {
 			return '$this->global->sandbox->closure(['
 				. $context->memberAsString($this->class) . ', '
 				. $context->memberAsString($this->name) . '])';

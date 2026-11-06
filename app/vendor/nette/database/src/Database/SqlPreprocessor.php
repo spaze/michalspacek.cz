@@ -8,7 +8,7 @@
 namespace Nette\Database;
 
 use Nette;
-use function array_key_exists, array_keys, array_map, array_values, count, explode, get_debug_type, implode, in_array, is_array, is_bool, is_float, is_int, is_resource, is_scalar, is_string, iterator_to_array, ltrim, number_format, rtrim, str_contains, str_ends_with, stream_get_contents, strtoupper, substr;
+use function array_key_exists, count, in_array, is_array, is_bool, is_float, is_int, is_resource, is_scalar, is_string;
 
 
 /**
@@ -46,7 +46,6 @@ class SqlPreprocessor
 		'EXPLAIN' => 1,
 	];
 
-	private readonly Connection $connection;
 	private readonly Driver $driver;
 
 	/** @var list<mixed> */
@@ -57,13 +56,13 @@ class SqlPreprocessor
 	private int $counter;
 	private bool $useParams;
 
-	/** values|set|and|order|items */
+	/** values|set|and|or|order|list|name */
 	private ?string $arrayMode;
 
 
-	public function __construct(Connection $connection)
-	{
-		$this->connection = $connection;
+	public function __construct(
+		private readonly Connection $connection,
+	) {
 		$this->driver = $connection->getDriver();
 	}
 
@@ -126,7 +125,7 @@ class SqlPreprocessor
 	private function parsePart(array $match): string
 	{
 		$match = $match[0];
-		if (in_array($match[0], ["'", '"', '/', '-'], strict: true)) { // string or comment
+		if (in_array($match[0], ["'", '"', '/', '-'], true)) { // string or comment
 			return $match;
 
 		} elseif (!str_contains($match, '?')) { // command
@@ -167,7 +166,9 @@ class SqlPreprocessor
 
 		return match ($mode) {
 			null => $this->formatValue($value),
-			self::ModeValues => array_key_exists(0, $check($value, 'iterable')) ? $this->formatMultiInsert($value) : $this->formatInsert($value),
+			self::ModeValues => array_key_exists(0, $check($value, 'iterable'))
+				? $this->formatMultiInsert($value)
+				: $this->formatInsert($value),
 			self::ModeSet => $this->formatSet($check($value, 'iterable')),
 			self::ModeList => $this->formatList($check($value, 'iterable')),
 			self::ModeAnd, self::ModeOr => $this->formatWhere($check($value, 'iterable'), $mode),
@@ -191,7 +192,7 @@ class SqlPreprocessor
 		return match (true) {
 			is_int($value) => (string) $value,
 			is_bool($value) => (string) (int) $value,
-			is_float($value) => rtrim(rtrim(number_format($value, 10, '.', ''), '0'), '.'),
+			is_float($value) => Helpers::formatFloat($value),
 			is_resource($value) => $this->connection->quote(stream_get_contents($value)),
 			is_string($value) => $this->connection->quote($value),
 			$value === null => 'NULL',
@@ -201,7 +202,7 @@ class SqlPreprocessor
 			$value instanceof \DateInterval => $this->driver->formatDateInterval($value),
 			$value instanceof \BackedEnum => $this->formatValue($value->value),
 			$value instanceof \Stringable => $this->formatValue((string) $value),
-			default => throw new Nette\InvalidArgumentException('Unexpected type of parameter: ' . get_debug_type($value))
+			default => throw new Nette\InvalidArgumentException('Unexpected type of parameter: ' . get_debug_type($value)),
 		};
 	}
 
@@ -231,6 +232,12 @@ class SqlPreprocessor
 	 */
 	private function formatInsert(array $items): string
 	{
+		if (!$items) {
+			return $this->driver->isSupported(Driver::SupportDefaultValues)
+				? 'DEFAULT VALUES'
+				: '() VALUES ()';
+		}
+
 		$cols = $vals = [];
 		foreach ($items as $k => $v) {
 			$cols[] = $this->delimit($k);
@@ -248,7 +255,7 @@ class SqlPreprocessor
 	private function formatMultiInsert(array $groups): string
 	{
 		if (!is_array($groups[0]) && !$groups[0] instanceof Row) {
-			throw new Nette\InvalidArgumentException('Automaticaly detected multi-insert, but values aren\'t array. If you need try to change ?mode.');
+			throw new Nette\InvalidArgumentException("Automatically detected multi-insert, but values aren't array. Use an explicit ?mode placeholder if needed.");
 		}
 
 		$cols = array_keys(is_array($groups[0]) ? $groups[0] : iterator_to_array($groups[0]));
@@ -300,6 +307,7 @@ class SqlPreprocessor
 	{
 		$default = '1=1';
 		$res = [];
+		$begin = count($this->remaining);
 		foreach ($items as $k => $v) {
 			if (is_int($k)) {
 				$res[] = $this->formatValue($v);
@@ -311,11 +319,17 @@ class SqlPreprocessor
 			if (is_array($v)) {
 				$kind = ['' => true, 'IN' => true, 'NOT' => false, 'NOT IN' => false][$operator] ?? null;
 				if ($v || $kind === null) {
-					$res[] = $k . ' ' . ($kind === null ? $operator : ($kind ? 'IN' : 'NOT IN')) . ' (' . $this->formatList(array_values($v)) . ')';
+					$res[] = $k
+						. ' '
+						. ($kind === null ? $operator : ($kind ? 'IN' : 'NOT IN'))
+						. ' ('
+						. $this->formatList(array_values($v))
+						. ')';
 
 				} else {
 					$default = $kind ? '1=0' : '1=1';
 					if ($kind === ($mode === self::ModeAnd)) {
+						$this->remaining = array_slice($this->remaining, 0, $begin); // drops params of discarded conditions
 						return "($default)";
 					}
 				}

@@ -11,8 +11,8 @@ use Nette\Application\Attributes\Requires;
  *
  * Extends Requires with a preset sameOrigin: true, like Nette's own CrossOrigin presets false, so Nette
  * enforces the check itself. A failed check normally redirects back to the same action, a recovery for
- * same-site requests that don't have the `_nss` cookie yet, but a loop for a genuinely cross-origin
- * request, so Www\BasePresenter::detectedCsrf() sends those to the destination instead.
+ * a browser that sends no Sec-Fetch-Site and doesn't have the `_nss` cookie yet, but a loop for a genuinely
+ * cross-origin request, so Www\BasePresenter::detectedCsrf() sends those to the destination instead.
  *
  * The destination must be an absolute action, like ':Admin:Homepage:', and must not require same origin
  * itself, or the loop would only move there.

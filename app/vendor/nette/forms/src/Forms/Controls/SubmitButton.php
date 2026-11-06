@@ -8,8 +8,7 @@
 namespace Nette\Forms\Controls;
 
 use Nette;
-use Nette\Forms\Container;
-use Nette\Forms\Control;
+use Nette\Forms\{Container, Control};
 use Stringable;
 use function is_string;
 
@@ -17,7 +16,7 @@ use function is_string;
 /**
  * Submittable button control.
  *
- * @property-read bool $submittedBy
+ * @property-deprecated bool $submittedBy
  */
 class SubmitButton extends Button implements Nette\Forms\SubmitterControl
 {

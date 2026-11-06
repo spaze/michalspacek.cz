@@ -8,7 +8,6 @@
 namespace Nette\Database\Drivers;
 
 use Nette;
-use function array_values, explode, preg_replace, str_replace, strtoupper, strtr;
 
 
 /**
@@ -27,14 +26,29 @@ class MsSqlDriver implements Nette\Database\Driver
 
 	public function isSupported(string $feature): bool
 	{
-		return false;
+		return $feature === self::SupportDefaultValues;
 	}
 
 
 	public function convertException(\PDOException $e): Nette\Database\DriverException
 	{
 		$code = $e->errorInfo[1] ?? null;
-		if ($code === 1205) {
+		if ($code === 2627 || $code === 2601) {
+			return Nette\Database\UniqueConstraintViolationException::from($e);
+
+		} elseif ($code === 515) {
+			return Nette\Database\NotNullConstraintViolationException::from($e);
+
+		} elseif ($code === 547) {
+			return match (true) {
+				str_contains($e->getMessage(), 'CHECK constraint') => Nette\Database\CheckConstraintViolationException::from($e),
+				str_contains($e->getMessage(), 'FOREIGN KEY constraint'),
+				str_contains($e->getMessage(), 'REFERENCE constraint') => Nette\Database\ForeignKeyConstraintViolationException::from($e),
+				// the message is localized per login language and cannot be classified further
+				default => Nette\Database\ConstraintViolationException::from($e),
+			};
+
+		} elseif ($code === 1205) {
 			return Nette\Database\DeadlockException::from($e);
 
 		} elseif ($code === 1222) {
@@ -51,7 +65,7 @@ class MsSqlDriver implements Nette\Database\Driver
 	public function delimite(string $name): string
 	{
 		// @see https://msdn.microsoft.com/en-us/library/ms176027.aspx
-		return '[' . str_replace(['[', ']'], ['[[', ']]'], $name) . ']';
+		return '[' . str_replace(']', ']]', $name) . ']';
 	}
 
 
@@ -125,7 +139,7 @@ class MsSqlDriver implements Nette\Database\Driver
 
 	public function getColumns(string $table): array
 	{
-		[$table_schema, $table_name] = explode('.', $table);
+		[$tableSchema, $tableName] = $this->splitTableName($table);
 		$columns = [];
 
 		$rows = $this->connection->query(<<<'X'
@@ -136,10 +150,22 @@ class MsSqlDriver implements Nette\Database\Driver
 				c.NUMERIC_PRECISION,
 				c.IS_NULLABLE,
 				c.COLUMN_DEFAULT,
-				c.DOMAIN_NAME,
+				COLUMNPROPERTY(OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') AS autoincrement,
+				CASE WHEN pk.COLUMN_NAME IS NULL THEN 0 ELSE 1 END AS [primary],
 				CAST(p.value AS NVARCHAR(4000)) AS comment
 			FROM
 				INFORMATION_SCHEMA.COLUMNS c
+				LEFT JOIN (
+					SELECT kcu.TABLE_SCHEMA, kcu.TABLE_NAME, kcu.COLUMN_NAME
+					FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+					JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu ON
+						tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME AND
+						tc.CONSTRAINT_SCHEMA = kcu.CONSTRAINT_SCHEMA
+					WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+				) pk ON
+					pk.TABLE_SCHEMA = c.TABLE_SCHEMA AND
+					pk.TABLE_NAME = c.TABLE_NAME AND
+					pk.COLUMN_NAME = c.COLUMN_NAME
 				LEFT JOIN sys.extended_properties p ON
 					p.major_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND
 					p.minor_id = COLUMNPROPERTY(OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME), c.COLUMN_NAME, 'ColumnId') AND
@@ -147,7 +173,7 @@ class MsSqlDriver implements Nette\Database\Driver
 			WHERE
 				c.TABLE_SCHEMA = ?
 				AND c.TABLE_NAME = ?
-			X, $table_schema, $table_name);
+			X, $tableSchema, $tableName);
 
 		while ($row = $rows->fetch()) {
 			$columns[] = [
@@ -155,11 +181,11 @@ class MsSqlDriver implements Nette\Database\Driver
 				'table' => $table,
 				'nativetype' => strtoupper($row['DATA_TYPE']),
 				'size' => $row['CHARACTER_MAXIMUM_LENGTH'] ?? $row['NUMERIC_PRECISION'],
-				'unsigned' => false,
 				'nullable' => $row['IS_NULLABLE'] === 'YES',
 				'default' => $row['COLUMN_DEFAULT'],
-				'autoincrement' => $row['DOMAIN_NAME'] === 'COUNTER',
-				'primary' => $row['COLUMN_NAME'] === 'ID',
+				// the query returns ints on purpose: pdo_dblib gives BIT as 'True'/'False' and (bool) 'False' is true
+				'autoincrement' => (bool) $row['autoincrement'],
+				'primary' => (bool) $row['primary'],
 				'comment' => $row['comment'] ?? '',
 				'vendor' => (array) $row,
 			];
@@ -171,7 +197,7 @@ class MsSqlDriver implements Nette\Database\Driver
 
 	public function getIndexes(string $table): array
 	{
-		[, $table_name] = explode('.', $table);
+		[, $tableName] = $this->splitTableName($table);
 		$indexes = [];
 
 		$rows = $this->connection->query(<<<'X'
@@ -189,7 +215,7 @@ class MsSqlDriver implements Nette\Database\Driver
 				t.name = ?
 			ORDER BY
 				ind.name, ic.index_column_id
-			X, $table_name);
+			X, $tableName);
 
 		while ($row = $rows->fetch()) {
 			$id = (string) $row['name'];
@@ -208,7 +234,7 @@ class MsSqlDriver implements Nette\Database\Driver
 
 	public function getForeignKeys(string $table): array
 	{
-		[$table_schema, $table_name] = explode('.', $table);
+		[$tableSchema, $tableName] = $this->splitTableName($table);
 		$keys = [];
 
 		$rows = $this->connection->query(<<<'X'
@@ -233,13 +259,13 @@ class MsSqlDriver implements Nette\Database\Driver
 					ON col2.column_id = referenced_column_id AND col2.object_id = tab2.object_id
 			WHERE
 				tab1.name = ?
-			X, $table_name);
+			X, $tableName);
 
 		while ($row = $rows->fetch()) {
 			$keys[] = [
 				'name' => (string) $row['name'],
 				'local' => (string) $row['local'],
-				'table' => $table_schema . '.' . $row['table'],
+				'table' => $tableSchema . '.' . $row['table'],
 				'foreign' => (string) $row['foreign'],
 			];
 		}
@@ -251,5 +277,17 @@ class MsSqlDriver implements Nette\Database\Driver
 	public function getColumnTypes(\PDOStatement $statement): array
 	{
 		return Nette\Database\Helpers::detectTypes($statement);
+	}
+
+
+	/** @return array{string, string} schema and table name */
+	private function splitTableName(string $table): array
+	{
+		if (str_contains($table, '.')) {
+			[$schema, $name] = explode('.', $table, 2);
+			return [$schema, $name];
+		}
+
+		return [(string) $this->connection->query('SELECT SCHEMA_NAME()')->fetchField(), $table];
 	}
 }

@@ -8,7 +8,7 @@
 namespace Nette\Forms\Controls;
 
 use Nette;
-use function array_combine, array_diff, array_fill_keys, array_flip, array_keys, array_map, count, get_debug_type, implode, is_array, is_scalar, sprintf, var_export;
+use function array_key_exists, count, is_array, is_scalar, sprintf;
 
 
 /**
@@ -16,7 +16,7 @@ use function array_combine, array_diff, array_fill_keys, array_flip, array_keys,
  *
  * @property   mixed[] $items
  * @property   bool|array<bool> $disabled
- * @property-read mixed[] $selectedItems
+ * @property-deprecated mixed[] $selectedItems
  */
 abstract class MultiChoiceControl extends BaseControl
 {
@@ -46,12 +46,16 @@ abstract class MultiChoiceControl extends BaseControl
 	 * @return static
 	 * @internal
 	 */
-	public function setValue($values)
+	public function setValue(mixed $values)
 	{
 		if (is_scalar($values) || $values === null) {
 			$values = (array) $values;
 		} elseif (!is_array($values)) {
-			throw new Nette\InvalidArgumentException(sprintf("Value must be array or null, %s given in field '%s'.", get_debug_type($values), $this->getName()));
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Value must be array or null, %s given in field '%s'.",
+				get_debug_type($values),
+				$this->getName(),
+			));
 		}
 
 		$flip = [];
@@ -59,7 +63,11 @@ abstract class MultiChoiceControl extends BaseControl
 			if ($value instanceof \BackedEnum) {
 				$value = $value->value;
 			} elseif (!is_scalar($value) && !$value instanceof \Stringable) {
-				throw new Nette\InvalidArgumentException(sprintf("Values must be scalar, %s given in field '%s'.", get_debug_type($value), $this->getName()));
+				throw new Nette\InvalidArgumentException(sprintf(
+					"Values must be scalar, %s given in field '%s'.",
+					get_debug_type($value),
+					$this->getName(),
+				));
 			}
 
 			$flip[(string) $value] = true;
@@ -67,7 +75,11 @@ abstract class MultiChoiceControl extends BaseControl
 
 		$values = array_keys($flip);
 		if ($this->checkDefaultValue && ($diff = array_diff($values, array_keys($this->items)))) {
-			$set = Nette\Utils\Strings::truncate(implode(', ', array_map(fn($s) => var_export($s, return: true), array_keys($this->items))), 70, '...');
+			$set = Nette\Utils\Strings::truncate(
+				implode(', ', array_map(fn($s) => var_export($s, return: true), array_keys($this->items))),
+				70,
+				'...',
+			);
 			$vals = (count($diff) > 1 ? 's' : '') . " '" . implode("', '", $diff) . "'";
 			throw new Nette\InvalidArgumentException("Value$vals are out of allowed set [$set] in field '{$this->getName()}'.");
 		}
@@ -137,16 +149,16 @@ abstract class MultiChoiceControl extends BaseControl
 
 	/**
 	 * Disables or enables control or items.
-	 * @param bool|array<int|string>  $value
+	 * @param bool|array<int|string>  $state
 	 */
-	public function setDisabled(bool|array $value = true): static
+	public function setDisabled(bool|array $state = true): static
 	{
-		if (!is_array($value)) {
-			return parent::setDisabled($value);
+		if (!is_array($state)) {
+			return parent::setDisabled($state);
 		}
 
 		parent::setDisabled(false);
-		$this->disabled = array_fill_keys($value, value: true);
+		$this->disabled = array_fill_keys($state, value: true);
 		return $this;
 	}
 
@@ -167,5 +179,17 @@ abstract class MultiChoiceControl extends BaseControl
 	{
 		$this->checkDefaultValue = $value;
 		return $this;
+	}
+
+
+	/**
+	 * Returns the item label for the given key, or throws an exception if the key does not exist.
+	 */
+	protected function getItem(mixed &$key): mixed
+	{
+		$key = key([(string) $key => null]);
+		return array_key_exists($key, $this->items)
+			? $this->items[$key]
+			: throw new Nette\InvalidArgumentException("Item '$key' does not exist in field '{$this->getName()}'.");
 	}
 }

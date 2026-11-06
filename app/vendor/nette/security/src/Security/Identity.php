@@ -7,7 +7,7 @@
 
 namespace Nette\Security;
 
-use function in_array, is_float, is_numeric, iterator_to_array;
+use function in_array, is_string;
 
 
 /**
@@ -46,7 +46,7 @@ class Identity implements IIdentity
 	 */
 	public function setId(string|int $id): static
 	{
-		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
+		$this->id = is_string($id) && ctype_digit($id) && (string) ($tmp = (int) $id) === $id ? $tmp : $id;
 		return $this;
 	}
 
@@ -110,7 +110,7 @@ class Identity implements IIdentity
 	 */
 	public function &__get(string $key): mixed
 	{
-		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
+		if (in_array($key, ['id', 'roles', 'data'], true)) {
 			$res = $this->{'get' . ucfirst($key)}();
 			return $res;
 
@@ -122,6 +122,6 @@ class Identity implements IIdentity
 
 	public function __isset(string $key): bool
 	{
-		return isset($this->data[$key]) || in_array($key, ['id', 'roles', 'data'], strict: true);
+		return isset($this->data[$key]) || in_array($key, ['id', 'roles', 'data'], true);
 	}
 }

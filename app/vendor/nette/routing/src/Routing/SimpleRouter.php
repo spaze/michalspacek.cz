@@ -8,7 +8,7 @@
 namespace Nette\Routing;
 
 use Nette;
-use function http_build_query, ini_get, is_scalar;
+use function ini_get, is_scalar;
 
 
 /**
@@ -23,10 +23,7 @@ class SimpleRouter implements Router
 	}
 
 
-	/**
-	 * Maps HTTP request to an array.
-	 * @return ?array<string, mixed>
-	 */
+	/** @return ?array<string, mixed> */
 	public function match(Nette\Http\IRequest $httpRequest): ?array
 	{
 		return $httpRequest->getUrl()->getPathInfo() === ''
@@ -35,10 +32,7 @@ class SimpleRouter implements Router
 	}
 
 
-	/**
-	 * Constructs absolute URL from array.
-	 * @param array<string, mixed>  $params
-	 */
+	/** @param array<string, mixed>  $params */
 	public function constructUrl(array $params, Nette\Http\UrlScript $refUrl): ?string
 	{
 		// remove default values; null values are retain
@@ -52,7 +46,7 @@ class SimpleRouter implements Router
 
 		$url = $refUrl->getHostUrl() . $refUrl->getPath();
 		$sep = ini_get('arg_separator.input');
-		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
+		$query = http_build_query(Route::objectsToArrays($params), '', $sep ? $sep[0] : '&');
 		if ($query !== '') {
 			$url .= '?' . $query;
 		}
@@ -61,10 +55,7 @@ class SimpleRouter implements Router
 	}
 
 
-	/**
-	 * Returns default values.
-	 * @return array<string, mixed>
-	 */
+	/** @return array<string, mixed> */
 	public function getDefaults(): array
 	{
 		return $this->defaults;

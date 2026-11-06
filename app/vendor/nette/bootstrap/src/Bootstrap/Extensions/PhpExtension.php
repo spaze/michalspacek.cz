@@ -9,6 +9,7 @@ namespace Nette\Bootstrap\Extensions;
 
 use Nette;
 use Nette\Schema\Expect;
+use function function_exists;
 
 
 /**
@@ -27,7 +28,7 @@ final class PhpExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		foreach ($this->getConfig() as $name => $value) {
+		foreach ((array) $this->config as $name => $value) {
 			if (!function_exists('ini_set')) {
 				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 			}

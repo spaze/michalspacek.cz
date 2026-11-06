@@ -7,10 +7,8 @@
 
 namespace Latte\Runtime;
 
-use Latte\Engine;
-use Latte\RuntimeException;
-use function array_map, defined, dirname, file_put_contents, filemtime, flock, fopen, fseek, ftell, ftruncate, function_exists, fwrite, is_dir, is_file, mkdir, preg_match, preg_replace, rename, serialize, stream_get_contents, strlen, substr, unlink;
-use const LOCK_EX, LOCK_SH, LOCK_UN;
+use Latte\{Engine, RuntimeException};
+use function defined, function_exists, strlen;
 
 
 /**
@@ -123,7 +121,7 @@ final class Cache
 	 */
 	public static function isCacheFile(string $file): bool
 	{
-		return (bool) preg_match('/latte--\w{10}\.php$/', $file);
+		return (bool) preg_match('/latte--\w+\.php$/', $file);
 	}
 
 

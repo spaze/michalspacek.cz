@@ -12,7 +12,7 @@ use Nette;
 use Nette\Utils\Arrays;
 use PDO;
 use PDOException;
-use function str_replace, ucfirst;
+use function func_get_args;
 
 
 /**
@@ -20,10 +20,10 @@ use function str_replace, ucfirst;
  */
 class Connection
 {
-	/** @var array<callable(self): void>  Occurs after connection is established */
+	/** @var array<callable(static): void>  Occurs after connection is established */
 	public array $onConnect = [];
 
-	/** @var array<callable(self, ResultSet|DriverException): void>  Occurs after query is executed */
+	/** @var array<callable(static, ResultSet|DriverException): void>  Occurs after query is executed */
 	public array $onQuery = [];
 	private Driver $driver;
 	private SqlPreprocessor $preprocessor;
@@ -35,13 +35,13 @@ class Connection
 	private int $transactionDepth = 0;
 
 
-	/** @param array<mixed> $options */
 	public function __construct(
 		private readonly string $dsn,
 		#[\SensitiveParameter]
 		private readonly ?string $user = null,
 		#[\SensitiveParameter]
 		private readonly ?string $password = null,
+		/** @var array<mixed> */
 		private readonly array $options = [],
 	) {
 		$this->rowNormalizer = !empty($options['newDateTime'])
@@ -72,6 +72,11 @@ class Connection
 		$class = empty($this->options['driverClass'])
 			? 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver'
 			: $this->options['driverClass'];
+		if (!class_exists($class)) {
+			throw new Nette\InvalidStateException(empty($this->options['driverClass'])
+				? "Driver class '$class' not found, specify it using the 'driverClass' option."
+				: "Driver class '$class' not found.");
+		}
 		$driver = new $class;
 		if (!$driver instanceof Driver) {
 			throw new Nette\InvalidStateException("Driver class '$class' does not implement " . Driver::class . '.');
@@ -152,8 +157,9 @@ class Connection
 	 */
 	public function getInsertId(?string $sequence = null): string
 	{
+		$pdo = $this->getPdo(); // ConnectionException is a PDOException, the catch below must not see it
 		try {
-			$res = $this->getPdo()->lastInsertId($sequence);
+			$res = $pdo->lastInsertId($sequence);
 			return $res === false ? '0' : $res;
 		} catch (PDOException $e) {
 			throw $this->driver->convertException($e);
@@ -166,10 +172,11 @@ class Connection
 	 */
 	public function quote(string $string, int $type = PDO::PARAM_STR): string
 	{
+		$pdo = $this->getPdo(); // ConnectionException is a PDOException, the catch below must not see it
 		try {
-			return $this->getPdo()->quote($string, $type);
+			return $pdo->quote($string, $type);
 		} catch (PDOException $e) {
-			throw DriverException::from($e);
+			throw $this->driver->convertException($e);
 		}
 	}
 
@@ -205,6 +212,7 @@ class Connection
 	/**
 	 * Rolls back current transaction.
 	 * @throws \LogicException  when called inside a transaction
+	 * @throws DriverException
 	 */
 	public function rollBack(): void
 	{
@@ -232,7 +240,11 @@ class Connection
 		} catch (\Throwable $e) {
 			$this->transactionDepth--;
 			if ($this->transactionDepth === 0) {
-				$this->rollBack();
+				try {
+					$this->rollBack();
+				} catch (\Throwable) {
+					// e.g. after a deadlock the server has already rolled back; the original exception matters more
+				}
 			}
 
 			throw $e;

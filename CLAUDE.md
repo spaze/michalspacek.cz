@@ -173,7 +173,7 @@ interface ArticleHeaderIconsFactory
 
 ### Forms
 
-`FormFactory::create()` returns a `Nette\Application\UI\Form` with CSRF protection always added. `UnprotectedFormFactory` exists for forms that intentionally omit CSRF (e.g. GET search/sort forms, theme toggles, honeypot traps). Domain-specific form factory classes (`*FormFactory`) inject one of these and add their own controls. Use `Form::getValues()` in `onSuccess` handlers and `getUntrustedValues()` in `onValidate` handlers.
+Domain-specific form factory classes (`*FormFactory`) build a `Nette\Application\UI\Form` and add their own controls. The forms carry no CSRF token on purpose: before any handler runs, Nette refuses a form submit, which is the form's `submit` signal whatever the form's method, GET search and sort forms included, when the request is not same-origin, going by the `Sec-Fetch-Site` header with the `_nss` SameSite=Strict cookie as the fallback for a browser that doesn't send it. The refusal is `detectedCsrf()`, a redirect back to the same action without the signal, or to the destination of a `CrossOriginRedirectsTo` attribute when the action has one. A form that has to take submits from elsewhere opts out with `allowCrossOrigin()`, so such a call needs its reason next to it. Use `Form::getValues()` in `onSuccess` handlers and `getUntrustedValues()` in `onValidate` handlers.
 
 ### Passkey reauthentication
 

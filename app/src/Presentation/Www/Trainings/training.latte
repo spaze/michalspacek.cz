@@ -1,7 +1,7 @@
 {varType array<int, MichalSpacekCz\Training\Dates\TrainingDate> $dates}
 {varType MichalSpacekCz\Training\Trainings\Training $training}
 {define #form}
-{form application class => aligned}
+{form application, class => aligned}
 <fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
 	<legend><strong>{_messages.label.errors}</strong></legend>
 	<strong>{_messages.trainings.signuperrors}</strong>
@@ -68,7 +68,7 @@
 {/define}
 
 {define #formPreliminary}
-{form applicationPreliminary class => aligned}
+{form applicationPreliminary, class => aligned}
 <fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
 	<legend><strong>{_messages.label.errors}</strong></legend>
 	<strong>{_messages.trainings.signuperrors}</strong>

@@ -8,8 +8,7 @@
 namespace Nette\Bridges\DatabaseTracy;
 
 use Nette;
-use Nette\Database\Connection;
-use Nette\Database\Helpers;
+use Nette\Database\{Connection, Helpers};
 use Tracy;
 use function is_string;
 
@@ -29,7 +28,6 @@ class ConnectionPanel implements Tracy\IBarPanel
 
 	/** @var list<array{Connection, string, ?array<mixed>, list<array<string, mixed>>, ?float, ?int, ?string}> */
 	private array $queries = [];
-	private Tracy\BlueScreen $blueScreen;
 
 
 	/**
@@ -45,7 +43,12 @@ class ConnectionPanel implements Tracy\IBarPanel
 	): ?self
 	{
 		$blueScreen ??= Tracy\Debugger::getBlueScreen();
-		$blueScreen->addPanel(self::renderException(...));
+		static $registered = null;
+		$registered ??= new \WeakMap;
+		if (!isset($registered[$blueScreen])) { // multiple connections must not register multiple identical panels
+			$registered[$blueScreen] = true;
+			$blueScreen->addPanel(self::renderException(...));
+		}
 
 		if ($addBarPanel) {
 			$panel = new self($connection, $blueScreen);
@@ -59,10 +62,11 @@ class ConnectionPanel implements Tracy\IBarPanel
 	}
 
 
-	public function __construct(Connection $connection, Tracy\BlueScreen $blueScreen)
-	{
+	public function __construct(
+		Connection $connection,
+		private readonly Tracy\BlueScreen $blueScreen,
+	) {
 		$connection->onQuery[] = $this->logQuery(...);
-		$this->blueScreen = $blueScreen;
 	}
 
 
@@ -73,6 +77,13 @@ class ConnectionPanel implements Tracy\IBarPanel
 		}
 
 		$this->count++;
+		if ($result instanceof Nette\Database\ResultSet) {
+			$this->totalTime += $result->getTime();
+		}
+
+		if ($this->count > $this->maxQueries) { // count/time are still tracked, only the query detail is dropped
+			return;
+		}
 
 		$trace = $result instanceof \PDOException
 			? array_map(fn($row) => array_diff_key($row, ['args' => null]), $result->getTrace())
@@ -90,14 +101,9 @@ class ConnectionPanel implements Tracy\IBarPanel
 			array_shift($trace);
 		}
 
-		if ($result instanceof Nette\Database\ResultSet) {
-			$this->totalTime += $result->getTime();
-			if ($this->count < $this->maxQueries) {
-				$this->queries[] = [$connection, $result->getQueryString(), $result->getParameters(), $trace, $result->getTime(), $result->getRowCount(), null];
-			}
-		} elseif ($result instanceof \PDOException && $this->count < $this->maxQueries) {
-			$this->queries[] = [$connection, $result->queryString, null, $trace, null, null, $result->getMessage()];
-		}
+		$this->queries[] = $result instanceof Nette\Database\ResultSet
+			? [$connection, $result->getQueryString(), $result->getParameters(), $trace, $result->getTime(), $result->getRowCount(), null]
+			: [$connection, $result->queryString, null, $trace, null, null, $result->getMessage()];
 	}
 
 
@@ -115,10 +121,12 @@ class ConnectionPanel implements Tracy\IBarPanel
 			$sql = $item['args'][0];
 		}
 
-		return isset($sql) ? [
-			'tab' => 'SQL',
-			'panel' => Helpers::dumpSql($sql, $e->params ?? []),
-		] : null;
+		return isset($sql)
+			? [
+				'tab' => 'SQL',
+				'panel' => Helpers::dumpSql($sql, $e->params ?? []),
+			]
+			: null;
 	}
 
 

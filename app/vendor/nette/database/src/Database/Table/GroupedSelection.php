@@ -8,9 +8,8 @@
 namespace Nette\Database\Table;
 
 use Nette;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
-use function array_keys, count, iterator_to_array, preg_match, reset;
+use Nette\Database\{Conventions, Explorer};
+use function count;
 
 
 /**
@@ -30,7 +29,6 @@ class GroupedSelection extends Selection
 
 	/**
 	 * Creates filtered and grouped table representation.
-	 * @param Selection<ActiveRow> $refTable
 	 */
 	public function __construct(
 		Explorer $explorer,
@@ -38,7 +36,7 @@ class GroupedSelection extends Selection
 		string $tableName,
 		/** grouping column name */
 		protected readonly string $column,
-		/** referenced table */
+		/** @var Selection<ActiveRow> referenced table */
 		protected readonly Selection $refTable,
 		?Nette\Caching\Storage $cacheStorage = null,
 	) {
@@ -116,7 +114,9 @@ class GroupedSelection extends Selection
 			if ($groupFunction && $selection->getSqlBuilder()->importGroupConditions($this->getSqlBuilder())) {
 				$selection->select("$function AS aggregate, $this->name.$this->column AS groupname");
 				$selection->group($selection->getSqlBuilder()->getGroup() . ", $this->name.$this->column");
-				$query = "SELECT $groupFunction(aggregate) AS groupaggregate, groupname FROM (" . $selection->getSql() . ') AS aggregates GROUP BY groupname';
+				$query = "SELECT $groupFunction(aggregate) AS groupaggregate, groupname FROM ("
+					. $selection->getSql()
+					. ') AS aggregates GROUP BY groupname';
 				foreach ($this->explorer->query($query, ...$selection->getSqlBuilder()->getParameters()) as $row) {
 					$aggregation[$row->groupname] = $row;
 				}
@@ -140,12 +140,6 @@ class GroupedSelection extends Selection
 	}
 
 
-	public function count(?string $column = null): int
-	{
-		return parent::count($column);
-	}
-
-
 	/********************* internal ****************d*g**/
 
 
@@ -164,24 +158,29 @@ class GroupedSelection extends Selection
 			$this->accessedColumns = $accessedColumns;
 
 			$limit = $this->sqlBuilder->getLimit();
+			$offset = $this->sqlBuilder->getOffset();
 			$rows = count($this->refTable->rows ?? []);
 			if ($limit && $rows > 1) {
 				$this->sqlBuilder->setLimit(null, null);
 			}
 
-			parent::execute();
-			$this->sqlBuilder->setLimit($limit, null);
+			try {
+				parent::execute();
+			} finally {
+				$this->sqlBuilder->setLimit($limit, $offset);
+			}
+
 			$data = [];
-			$offset = [];
+			$skips = [];
 			$this->accessColumn($this->column);
 			foreach ((array) $this->rows as $key => $row) {
 				$ref = &$data[$row[$this->column]];
-				$skip = &$offset[$row[$this->column]];
+				$skip = &$skips[$row[$this->column]];
 				if (
 					$limit === null
 					|| $rows <= 1
 					|| (count($ref ?? []) < $limit
-						&& $skip >= $this->sqlBuilder->getOffset())
+						&& $skip >= $offset)
 				) {
 					$ref[$key] = $row;
 				} else {
@@ -254,6 +253,7 @@ class GroupedSelection extends Selection
 
 	/**
 	 * @param  iterable<mixed>|Selection<ActiveRow>  $data
+	 * @return ($data is list<mixed>|Selection<ActiveRow> ? int : T|array<mixed>|int)
 	 */
 	public function insert(iterable $data): ActiveRow|array|int
 	{
@@ -261,13 +261,15 @@ class GroupedSelection extends Selection
 			return parent::insert($data);
 		}
 
-		$data = $data instanceof \Traversable ? iterator_to_array($data) : $data;
-		if (array_is_list($data)) {
-			foreach (array_keys($data) as $key) {
-				$data[$key][$this->column] = $this->active;
+		$data = Nette\Database\Helpers::materializeRows($data);
+		if (Nette\Database\Helpers::isRowList($data)) {
+			foreach ($data as $key => $row) {
+				$row = $row instanceof Nette\Database\Row ? clone $row : $row; // must not modify the caller's row
+				$row[$this->column] = $this->active;
+				$data[$key] = $row;
 			}
 		} else {
-			$data[$this->column] = $this->active;
+			$data[$this->column] = $this->active; // a single row (an empty one too)
 		}
 
 		return parent::insert($data);

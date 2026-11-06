@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Talk;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexyTalkSlidesFactory;
 use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -12,11 +11,10 @@ use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
+use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Control;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -25,7 +23,6 @@ final readonly class TalkSlidesFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private FormValidators $validators,
 		private FormValidatorRuleTexyTalkSlidesFactory $talkSlidesTexyRuleFactory,
 		private TalkSlides $talkSlides,
@@ -40,7 +37,7 @@ final readonly class TalkSlidesFormFactory
 	 */
 	public function create(callable $onSuccess, int $talkId, TalkSlideCollection $slides, int $newCount, Request $request): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$slidesContainer = $form->addContainer('slides');
 		foreach ($slides as $slide) {
 			$slideIdContainer = $slidesContainer->addContainer($slide->getId());
@@ -145,9 +142,7 @@ final readonly class TalkSlidesFormFactory
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$aliasInput = $container->addText('alias', 'Alias:')
-			->addRule(function (Control $input): bool {
-				return !$input instanceof BaseControl || is_string($input->getValue()) && !$this->talkSlides->isNumberSlideAlias($input->getValue());
-			}, "Alias slajdu '%value' nesmí být číslo")
+			->addRule($this->isNotNumberAlias(...), "Alias slajdu '%value' nesmí být číslo")
 			->setRequired('Zadejte prosím alias');
 		$this->validators->addValidateSlugRules($aliasInput);
 		$container->addInteger('number', 'Slajd:')
@@ -174,6 +169,13 @@ final readonly class TalkSlidesFormFactory
 		$container->addTextArea('speakerNotes', 'Poznámky:')
 			->addRule($ruleTexyTalkSlides->getRule())
 			->setRequired('Zadejte prosím poznámky');
+	}
+
+
+	private function isNotNumberAlias(Control $input): bool
+	{
+		$value = $input->getValue();
+		return is_string($value) && !$this->talkSlides->isNumberSlideAlias($value);
 	}
 
 

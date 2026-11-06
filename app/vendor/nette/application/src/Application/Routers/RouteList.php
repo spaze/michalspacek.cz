@@ -1,21 +1,20 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application\Routers;
 
 use JetBrains\PhpStorm\Language;
 use Nette;
-use function count, interface_exists, is_int, is_string, strlen, strncmp, substr;
+use function count, is_int, is_string, strlen;
 
 
 /**
  * The router broker.
+ * @implements \ArrayAccess<int, Nette\Routing\Router>
  */
 class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router, \ArrayAccess
 {
@@ -33,6 +32,8 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 
 	/**
 	 * Support for modules.
+	 * @param  array<string, mixed>  $params
+	 * @return ?array<string, mixed>
 	 */
 	protected function completeParameters(array $params): ?array
 	{
@@ -47,21 +48,24 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 
 	/**
 	 * Constructs absolute URL from array.
+	 * @param  array<string, mixed>  $params
 	 */
 	public function constructUrl(array $params, Nette\Http\UrlScript $refUrl): ?string
 	{
-		if ($this->module) {
-			if (strncmp($params[self::PresenterKey], $this->module, strlen($this->module)) !== 0) {
+		$presenter = $params[self::PresenterKey] ?? null;
+		if ($this->module && is_string($presenter) && strncmp($presenter, 'Nette:', 6)) { // mirrors completeParameters()
+			if (!str_starts_with($presenter, $this->module)) {
 				return null;
 			}
 
-			$params[self::PresenterKey] = substr($params[self::PresenterKey], strlen($this->module));
+			$params[self::PresenterKey] = substr($presenter, strlen($this->module));
 		}
 
 		return parent::constructUrl($params, $refUrl);
 	}
 
 
+	/** @param  array<string, mixed>|string|\Closure(Nette\Http\IRequest, Nette\Http\IResponse): Nette\Application\Response  $metadata */
 	public function addRoute(
 		#[Language('TEXT')]
 		string $mask,
@@ -74,6 +78,9 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 	}
 
 
+	/**
+	 * Creates a sub-router scoped to the given module and attaches it to this list.
+	 */
 	public function withModule(string $module): static
 	{
 		$router = new static;
@@ -96,6 +103,13 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 	 */
 	public function offsetSet($index, $router): void
 	{
+		if ($router instanceof Route) {
+			trigger_error('Usage `$router[] = new Route(...)` is deprecated, use `$router->addRoute(...)`.', E_USER_DEPRECATED);
+		} else {
+			$class = $router::class;
+			trigger_error("Usage `\$router[] = new $class` is deprecated, use `\$router->add(new $class)`.", E_USER_DEPRECATED);
+		}
+
 		if ($index === null) {
 			$this->add($router);
 		} else {
@@ -110,6 +124,7 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 	 */
 	public function offsetGet($index): Nette\Routing\Router
 	{
+		trigger_error('Usage `$route = $router[...]` is deprecated, use `$router->getRouters()`.', E_USER_DEPRECATED);
 		if (!$this->offsetExists($index)) {
 			throw new Nette\OutOfRangeException('Offset invalid or out of range');
 		}
@@ -123,6 +138,7 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 	 */
 	public function offsetExists($index): bool
 	{
+		trigger_error('Usage `isset($router[...])` is deprecated.', E_USER_DEPRECATED);
 		return is_int($index) && $index >= 0 && $index < count($this->getRouters());
 	}
 
@@ -133,6 +149,7 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 	 */
 	public function offsetUnset($index): void
 	{
+		trigger_error('Usage `unset($router[$index])` is deprecated, use `$router->modify($index, null)`.', E_USER_DEPRECATED);
 		if (!$this->offsetExists($index)) {
 			throw new Nette\OutOfRangeException('Offset invalid or out of range');
 		}
@@ -140,6 +157,3 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router,
 		$this->modify($index, null);
 	}
 }
-
-
-interface_exists(Nette\Application\IRouter::class);

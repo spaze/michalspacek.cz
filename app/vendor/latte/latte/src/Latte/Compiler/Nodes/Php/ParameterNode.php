@@ -8,9 +8,7 @@
 namespace Latte\Compiler\Nodes\Php;
 
 use Latte\CompileException;
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Node, Position, PrintContext};
 
 
 /**
@@ -25,6 +23,7 @@ class ParameterNode extends Node
 		public bool $byRef = false,
 		public bool $variadic = false,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		if ($variadic && $default !== null) {
 			throw new CompileException('Variadic parameter cannot have a default value', $position);

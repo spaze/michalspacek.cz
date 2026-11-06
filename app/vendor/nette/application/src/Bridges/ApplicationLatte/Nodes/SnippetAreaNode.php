@@ -1,29 +1,22 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Latte (https://latte.nette.org)
  * Copyright (c) 2008 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte\Nodes;
 
-use Latte\Compiler\Block;
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\Php;
-use Latte\Compiler\Nodes\Php\Expression;
-use Latte\Compiler\Nodes\Php\Scalar;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TemplateParser;
+use Latte\Compiler\{Block, PrintContext, Tag, TemplateParser};
+use Latte\Compiler\Nodes\{AreaNode, Php, StatementNode};
+use Latte\Compiler\Nodes\Php\{Expression, Scalar};
 use Latte\Runtime\Template;
 use Nette\Bridges\ApplicationLatte\SnippetRuntime;
 
 
 /**
- * {snippetArea [name]}
+ * {snippetArea name} ... {/snippetArea}
+ * Container for dynamic snippets in loops.
  */
 class SnippetAreaNode extends StatementNode
 {
@@ -31,7 +24,7 @@ class SnippetAreaNode extends StatementNode
 	public AreaNode $content;
 
 
-	/** @return \Generator<int, ?array, array{AreaNode, ?Tag}, static> */
+	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
 	public static function create(Tag $tag, TemplateParser $parser): \Generator
 	{
 		$node = $tag->node = new static;

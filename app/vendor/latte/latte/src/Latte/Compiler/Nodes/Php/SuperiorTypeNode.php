@@ -7,8 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -19,6 +18,7 @@ class SuperiorTypeNode extends ComplexTypeNode
 	public function __construct(
 		public string $type,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

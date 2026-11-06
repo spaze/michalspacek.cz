@@ -1,21 +1,17 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Bridges\Latte;
 
 use Latte;
-use Latte\Compiler\NodeHelpers;
-use Latte\Compiler\Nodes\AreaNode;
+use Latte\Compiler\{NodeHelpers, PrintContext, Tag, TemplateParser};
+use Latte\Compiler\Nodes\{AreaNode, StatementNode};
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
 use Latte\Compiler\Nodes\Php\IdentifierNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TemplateParser;
 
 
 /**

@@ -28,7 +28,7 @@ final readonly class SecurityTxtValidatorUrl
 		try {
 			$this->host = new SecurityTxtHost($baseUrl);
 		} catch (SecurityTxtCannotParseHostnameException $e) {
-			throw new SecurityTxtValidatorHostException(Html::fromText('No hostname'), previous: $e);
+			throw new SecurityTxtValidatorHostException(Html::text('No hostname'), previous: $e);
 		}
 	}
 

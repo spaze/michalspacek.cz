@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy;
 
-use function array_unshift, count, is_string;
+use function count, is_string;
 
 
 /**
@@ -24,7 +24,7 @@ final class HandlerInvocation
 	/** @param mixed[] $args */
 	public function __construct(
 		/** @var list<\Closure(mixed...): mixed> */
-		private array $handlers,
+		private readonly array $handlers,
 		private readonly Parser $parser,
 		array $args,
 	) {

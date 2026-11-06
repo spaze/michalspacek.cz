@@ -1,23 +1,19 @@
 {
 	"name": "nette/robot-loader",
-	"description": "🍀 Nette RobotLoader: high performance and comfortable autoloader that will search and autoload classes within your application.",
-	"keywords": ["nette", "autoload", "class", "trait", "interface"],
-	"homepage": "https://nette.org",
+	"description": "🍀 Nette RobotLoader: autoloads every class, interface, trait and enum in your directories, with no PSR-4 and no naming rules, and remembers where it found them.",
+	"keywords": ["nette", "autoload", "autoloader", "class loader", "classmap"],
+	"homepage": "https://doc.nette.org/robot-loader",
 	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
 			"name": "David Grudl",
 			"homepage": "https://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "https://nette.org/contributors"
 		}
 	],
 	"require": {
-		"php": "8.1 - 8.5",
+		"php": "8.1 - 8.6",
 		"ext-tokenizer": "*",
-		"nette/utils": "^4.0"
+		"nette/utils": "^4.0.6"
 	},
 	"require-dev": {
 		"nette/tester": "^2.6",

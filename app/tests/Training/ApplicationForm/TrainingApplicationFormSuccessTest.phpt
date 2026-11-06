@@ -202,7 +202,7 @@ final class TrainingApplicationFormSuccessTest extends TestCase
 				$this->onErrorMessage = $message;
 			},
 			self::TRAINING_ACTION,
-			Html::fromText('name'),
+			Html::text('name'),
 			$dates,
 			$multipleDates,
 			$this->sessionSection,

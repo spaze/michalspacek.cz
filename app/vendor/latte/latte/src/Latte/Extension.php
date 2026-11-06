@@ -7,8 +7,6 @@
 
 namespace Latte;
 
-use function get_defined_vars;
-
 
 /**
  * Latte extension.
@@ -86,6 +84,15 @@ abstract class Extension
 	 * Initializes before template is rendered.
 	 */
 	public function beforeRender(Runtime\Template $template): void
+	{
+	}
+
+
+	/**
+	 * Cleans up after template is rendered. Called even when rendering ends early via {exitIf}
+	 * or is interrupted by an exception.
+	 */
+	public function afterRender(Runtime\Template $template): void
 	{
 	}
 

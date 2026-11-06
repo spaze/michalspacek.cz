@@ -10,7 +10,7 @@ namespace Latte\Runtime;
 use Latte;
 use Latte\ContentType;
 use Nette;
-use function get_debug_type, html_entity_decode, htmlspecialchars, in_array, is_array, is_bool, is_float, is_int, is_string, ord, preg_match, preg_replace, preg_replace_callback, str_replace, strip_tags, strtolower, strtr;
+use function in_array, is_array, is_bool, is_float, is_int, is_string;
 use const ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES, ENT_SUBSTITUTE, JSON_INVALID_UTF8_SUBSTITUTE, JSON_THROW_ON_ERROR, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE;
 
 
@@ -22,10 +22,19 @@ final class HtmlHelpers
 {
 	private const BooleanAttributes = [
 		'allowfullscreen' => 1, 'async' => 1, 'autofocus' => 1, 'autoplay' => 1, 'checked' => 1, 'controls' => 1,
-		'contenteditable' => 1, 'default' => 1, 'defer' => 1, 'disabled' => 1, 'draggable' => 1, 'formnovalidate' => 1,
-		'hidden' => 1, 'inert' => 1, 'ismap' => 1, 'itemscope' => 1, 'loop' => 1, 'multiple' => 1, 'muted' => 1,
-		'nomodule' => 1, 'novalidate' => 1, 'open' => 1, 'playsinline' => 1, 'readonly' => 1, 'required' => 1,
-		'reversed' => 1, 'selected' => 1, 'spellcheck' => 1,
+		'default' => 1, 'defer' => 1, 'disabled' => 1, 'formnovalidate' => 1, 'inert' => 1, 'ismap' => 1,
+		'itemscope' => 1, 'loop' => 1, 'multiple' => 1, 'muted' => 1, 'nomodule' => 1, 'novalidate' => 1,
+		'open' => 1, 'playsinline' => 1, 'readonly' => 1, 'required' => 1, 'reversed' => 1, 'selected' => 1,
+	];
+
+	/** enumerated attributes whose keywords are 'true' and 'false' */
+	private const TristateAttributes = [
+		'contenteditable' => 1, 'draggable' => 1, 'spellcheck' => 1, 'writingsuggestions' => 1,
+	];
+
+	/** boolean-like attributes accepting an optional keyword, e.g. hidden="until-found" */
+	private const ValuedBooleanAttributes = [
+		'hidden' => 1, 'popover' => 1,
 	];
 
 	private const SpaceSeparatedAttributes = [
@@ -166,13 +175,15 @@ final class HtmlHelpers
 
 
 	/**
-	 * Returns the type category of an HTML attribute: 'bool', 'list', 'data', 'aria', 'style', or ''.
+	 * Returns the type category of an HTML attribute: 'bool', 'tristate', 'valuedBool', 'list', 'data', 'aria', 'style', or ''.
 	 */
 	public static function classifyAttributeType(string $name): string
 	{
 		$name = strtolower($name);
 		return match (true) {
 			isset(self::BooleanAttributes[$name]) => 'bool',
+			isset(self::TristateAttributes[$name]) => 'tristate',
+			isset(self::ValuedBooleanAttributes[$name]) => 'valuedBool',
 			isset(self::SpaceSeparatedAttributes[$name]) => 'list',
 			str_starts_with($name, 'data-') => 'data',
 			str_starts_with($name, 'aria-') => 'aria',
@@ -195,7 +206,8 @@ final class HtmlHelpers
 			}
 		}
 		return match (true) {
-			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart . '="' . self::escapeAttr($value) . '"',
+			is_string($value), is_int($value), is_float($value), $value instanceof \Stringable => $namePart
+				. '="' . self::escapeAttr($value) . '"',
 			$value === null => '',
 			default => self::triggerInvalidValue(trim($namePart), $value) ?? '',
 		};
@@ -208,6 +220,34 @@ final class HtmlHelpers
 	public static function formatBoolAttribute(string $namePart, mixed $value): string
 	{
 		return $value ? $namePart : '';
+	}
+
+
+	/**
+	 * Formats HTML attribute whose keywords are 'true' and 'false'.
+	 */
+	public static function formatTristateAttribute(string $namePart, mixed $value, bool $migrationWarnings = false): string
+	{
+		if ($migrationWarnings && is_bool($value)) {
+			self::triggerMigrationWarning(trim($namePart), $value);
+		}
+		return match (true) {
+			is_bool($value) => $namePart . '="' . ($value ? 'true' : 'false') . '"',
+			default => self::formatAttribute($namePart, $value),
+		};
+	}
+
+
+	/**
+	 * Formats boolean HTML attribute accepting an optional keyword.
+	 */
+	public static function formatValuedBoolAttribute(string $namePart, mixed $value): string
+	{
+		return match (true) {
+			!$value => '', // falsy values are not keywords; hidden="0" would map back to the hidden state
+			$value === true => $namePart,
+			default => self::formatAttribute($namePart, $value),
+		};
 	}
 
 
@@ -243,14 +283,23 @@ final class HtmlHelpers
 		if ($migrationWarnings && (is_bool($value) || $value === null)) {
 			self::triggerMigrationWarning(trim($namePart), $value);
 		}
-		$escape = fn($value) => str_contains($value, '"')
-			? "'" . str_replace(['&', "'"], ['&amp;', '&apos;'], $value) . "'"
-			: '"' . str_replace(['&', '"'], ['&amp;', '&quot;'], $value) . '"';
 		return match (true) {
 			is_bool($value) => $namePart . '="' . ($value ? 'true' : 'false') . '"',
-			is_array($value) || $value instanceof \stdClass => $namePart . '=' . $escape(json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR)),
+			is_array($value) || $value instanceof \stdClass => self::formatJsonAttribute($namePart, $value),
 			default => self::formatAttribute($namePart, $value),
 		};
+	}
+
+
+	/**
+	 * Formats HTML attribute with JSON-encoded value.
+	 */
+	public static function formatJsonAttribute(string $namePart, mixed $value): string
+	{
+		$json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR);
+		return $namePart . '=' . (str_contains($json, '"')
+			? "'" . str_replace(['&', "'"], ['&amp;', '&apos;'], $json) . "'"
+			: '"' . str_replace(['&', '"'], ['&amp;', '&quot;'], $json) . '"');
 	}
 
 
@@ -259,14 +308,9 @@ final class HtmlHelpers
 	 */
 	public static function formatAriaAttribute(string $namePart, mixed $value, bool $migrationWarnings = false): string
 	{
-		if ($migrationWarnings && is_bool($value)) {
-			self::triggerMigrationWarning(trim($namePart), $value);
-		}
-		return match (true) {
-			is_bool($value) => $namePart . '="' . ($value ? 'true' : 'false') . '"',
-			is_array($value) => self::formatArrayAttribute($namePart, $value, fn($v, $k) => $v === true ? $k : $v, ' '),
-			default => self::formatAttribute($namePart, $value),
-		};
+		return is_array($value)
+			? self::formatArrayAttribute($namePart, $value, fn($v, $k) => $v === true ? $k : $v, ' ')
+			: self::formatTristateAttribute($namePart, $value, $migrationWarnings);
 	}
 
 
@@ -316,8 +360,9 @@ final class HtmlHelpers
 	public static function isVoidElement(string $name): bool
 	{
 		static $names = [
-			'img' => 1, 'hr' => 1, 'br' => 1, 'input' => 1, 'meta' => 1, 'area' => 1, 'embed' => 1, 'keygen' => 1, 'source' => 1, 'base' => 1,
-			'col' => 1, 'link' => 1, 'param' => 1, 'basefont' => 1, 'frame' => 1, 'isindex' => 1, 'wbr' => 1, 'command' => 1, 'track' => 1,
+			'img' => 1, 'hr' => 1, 'br' => 1, 'input' => 1, 'meta' => 1, 'area' => 1, 'embed' => 1,
+			'keygen' => 1, 'source' => 1, 'base' => 1, 'col' => 1, 'link' => 1, 'param' => 1,
+			'basefont' => 1, 'frame' => 1, 'isindex' => 1, 'wbr' => 1, 'command' => 1, 'track' => 1,
 		];
 		return isset($names[strtolower($name)]);
 	}
@@ -329,24 +374,29 @@ final class HtmlHelpers
 	public static function isUrlAttribute(string $tag, string $attr): bool
 	{
 		$attr = strtolower($attr);
-		return in_array($attr, ['href', 'src', 'action', 'formaction'], strict: true)
+		return in_array($attr, ['href', 'src', 'action', 'formaction', 'xlink:href'], true)
 			|| ($attr === 'data' && strtolower($tag) === 'object');
 	}
 
 
 	/**
-	 * Classifies script content type based on the MIME type.
+	 * Classifies script content type based on the MIME type. Whatever is not plainly a data block
+	 * counts as JavaScript, because escaping a data block as JS is harmless, while the opposite is not.
 	 */
 	public static function classifyScriptType(string $type): string
 	{
-		if (preg_match('#((application|text)/(((x-)?java|ecma|j|live)script|json)|application/.+\+json|text/plain|module|importmap|)$#Ai', $type)) {
-			return ContentType::JavaScript;
-
-		} elseif (preg_match('#text/((x-)?template|html)$#Ai', $type)) {
+		$type = trim($type, " \t\n\f\r"); // browsers strip ASCII whitespace before matching
+		if (preg_match('#text/((x-)?template|html)$#Ai', $type)) {
 			return ContentType::Html;
+
+		} elseif (
+			preg_match('#[a-z0-9.+-]+/[a-z0-9.+-]+$#Ai', $type)
+			&& !preg_match('#.*(script|json)|text/plain$#Ai', $type)
+		) {
+			return ContentType::Text;
 		}
 
-		return ContentType::Text;
+		return ContentType::JavaScript;
 	}
 
 
@@ -363,7 +413,8 @@ final class HtmlHelpers
 			throw new Latte\RuntimeException("Invalid tag name '$name'");
 
 		} elseif (self::isVoidElement($name) !== self::isVoidElement($origName ?? 'div') // non-void is default
-			|| in_array(strtolower($name), ['style', 'script'], strict: true)) {
+			|| in_array(strtolower($name), ['style', 'script'], true)
+		) {
 			throw new Latte\RuntimeException("Forbidden: Cannot change element to <$name>");
 		}
 		return $name;

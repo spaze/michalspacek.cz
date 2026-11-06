@@ -26,14 +26,6 @@ final class AppRequestTest extends TestCase
 	}
 
 
-	public function testGetOriginalRequestNoRequest(): void
-	{
-		Assert::exception(function (): void {
-			$this->appRequest->getOriginalRequest(null);
-		}, ShouldNotHappenException::class, 'Request should be set before this method is called in UI\Presenter::run()');
-	}
-
-
 	public function testGetOriginalRequestNoOriginalRequest(): void
 	{
 		$request = new Request('name');

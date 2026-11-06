@@ -3,16 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Pulse;
 
-use MichalSpacekCz\Form\UnprotectedFormFactory;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
 final readonly class PasswordsStoragesSearchSortFormFactory
 {
 
 	public function __construct(
-		private UnprotectedFormFactory $factory,
 		private Rating $rating,
 		private PasswordsSorting $sorting,
 	) {
@@ -21,7 +19,7 @@ final readonly class PasswordsStoragesSearchSortFormFactory
 
 	public function create(?string $rating, ?string $sort, ?string $search): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->setMethod('get');
 		$items = ['all' => 'all'] + $this->rating->getRatings();
 		$form->addSelect('rating', 'Rating:', $items)->setDefaultValue($rating !== null && array_key_exists($rating, $items) ? $rating : 'all');

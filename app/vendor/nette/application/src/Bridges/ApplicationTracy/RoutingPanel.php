@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Bridges\ApplicationTracy;
 
@@ -13,6 +11,7 @@ use Nette;
 use Nette\Application\UI\Presenter;
 use Nette\Routing;
 use Tracy;
+use function is_string;
 
 
 /**
@@ -20,7 +19,10 @@ use Tracy;
  */
 final class RoutingPanel implements Tracy\IBarPanel
 {
+	/** @var array{path: string, domain: ?string, module: string, routes: array<mixed>} */
 	private array $routes;
+
+	/** @var ?array<string, mixed> */
 	private ?array $matched = null;
 
 
@@ -66,6 +68,7 @@ final class RoutingPanel implements Tracy\IBarPanel
 	}
 
 
+	/** @return array{path: string, domain: ?string, module: string, routes: array<mixed>} */
 	private function analyse(Routing\RouteList $router, ?Nette\Http\IRequest $httpRequest): array
 	{
 		$res = [
@@ -85,7 +88,7 @@ final class RoutingPanel implements Tracy\IBarPanel
 				continue;
 			}
 
-			$matched = $flags[$i] & $router::ONE_WAY ? 'oneway' : 'no';
+			$matched = $flags[$i] ? 'oneway' : 'no';
 			$params = $e = null;
 			try {
 				if (
@@ -106,7 +109,9 @@ final class RoutingPanel implements Tracy\IBarPanel
 			$res['routes'][] = (object) [
 				'matched' => $matched,
 				'class' => $innerRouter::class,
-				'defaults' => $innerRouter instanceof Routing\Route || $innerRouter instanceof Routing\SimpleRouter ? $innerRouter->getDefaults() : [],
+				'defaults' => $innerRouter instanceof Routing\Route || $innerRouter instanceof Routing\SimpleRouter
+					? $innerRouter->getDefaults()
+					: [],
 				'mask' => $innerRouter instanceof Routing\Route ? $innerRouter->getMask() : null,
 				'params' => $params,
 				'error' => $e,
@@ -116,10 +121,14 @@ final class RoutingPanel implements Tracy\IBarPanel
 	}
 
 
+	/** @return \ReflectionClass<Nette\Application\IPresenter>|\ReflectionMethod|string|null */
 	private function findSource(): \ReflectionClass|\ReflectionMethod|string|null
 	{
 		$params = $this->matched;
 		$presenter = $params['presenter'] ?? '';
+		if (!is_string($presenter)) {
+			return null;
+		}
 		try {
 			$class = $this->presenterFactory->getPresenterClass($presenter);
 		} catch (Nette\Application\InvalidPresenterException) {
@@ -131,9 +140,10 @@ final class RoutingPanel implements Tracy\IBarPanel
 
 		if (is_a($class, Nette\Application\UI\Presenter::class, allow_string: true)) {
 			$rc = $class::getReflection();
-			if (isset($params[Presenter::SignalKey])) {
+			if (isset($params[Presenter::SignalKey]) && is_string($params[Presenter::SignalKey])) {
 				return $rc->getSignalMethod($params[Presenter::SignalKey]);
 			} elseif (isset($params[Presenter::ActionKey])
+				&& is_string($params[Presenter::ActionKey])
 				&& ($method = $rc->getActionRenderMethod($params[Presenter::ActionKey]))
 			) {
 				return $method;

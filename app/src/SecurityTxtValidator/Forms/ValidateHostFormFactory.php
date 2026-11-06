@@ -3,21 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\SecurityTxtValidator\Forms;
 
-use MichalSpacekCz\Form\UnprotectedFormFactory;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
-final readonly class ValidateHostFormFactory
+final class ValidateHostFormFactory
 {
-
-	public function __construct(
-		private UnprotectedFormFactory $factory,
-	) {
-	}
-
 
 	public function create(callable $onSuccess, ?string $host, string $formAction): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->setAction($formAction);
 		$form->addText('host')
 			->setHtmlId('host')

@@ -4,17 +4,15 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
 final readonly class TrainingPreliminaryApplicationFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private TrainingApplicationStorage $trainingApplicationStorage,
 		private TrainingApplicationFormSpam $formSpam,
@@ -24,7 +22,7 @@ final readonly class TrainingPreliminaryApplicationFormFactory
 
 	public function create(callable $onSuccess, callable $onError, int $trainingId, string $action): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$this->trainingControlsFactory->addAttendee($form);
 		$form->addSubmit('signUp', 'Odeslat');
 		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $trainingId, $action): void {

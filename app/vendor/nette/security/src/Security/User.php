@@ -67,7 +67,7 @@ class User
 
 
 	public function __construct(
-		private UserStorage $storage,
+		private readonly UserStorage $storage,
 		private ?IAuthenticator $authenticator = null,
 		private ?Authorizator $authorizator = null,
 	) {
@@ -123,9 +123,13 @@ class User
 	{
 		$clearIdentity = $clearIdentity || !$this->persistIdentity;
 		$logged = $this->isLoggedIn();
-		$this->storage->clearAuthentication($clearIdentity);
+		// the last condition covers a stored authentication vetoed by wakeupIdentity(); otherwise there is nothing to change
+		if ($logged || $clearIdentity || $this->storage->getState()[0]) {
+			$this->storage->clearAuthentication($clearIdentity);
+			$this->logoutReason = self::LogoutManual;
+		}
+
 		$this->authenticated = false;
-		$this->logoutReason = self::LogoutManual;
 		if ($logged) {
 			Arrays::invoke($this->onLoggedOut, $this);
 		}
@@ -161,11 +165,7 @@ class User
 			return;
 		}
 
-		(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
-			$identity = $id;
-			$this->authenticated = $state;
-			$this->logoutReason = $reason;
-		})(...$this->storage->getState());
+		[$this->authenticated, $identity, $this->logoutReason] = $this->storage->getState();
 
 		$identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
@@ -180,7 +180,8 @@ class User
 	{
 		if (!$this->guestIdentityResolved) {
 			$this->guestIdentityResolved = true;
-			$this->guestIdentity = $this->authenticator instanceof IdentityHandler && method_exists($this->authenticator, 'getGuestIdentity')
+			$this->guestIdentity = $this->authenticator instanceof IdentityHandler
+				&& method_exists($this->authenticator, 'getGuestIdentity')
 				? $this->authenticator->getGuestIdentity()
 				: null;
 		}
@@ -196,7 +197,7 @@ class User
 	public function getId(): string|int|null
 	{
 		$identity = $this->getIdentity();
-		return $identity ? $identity->getId() : null;
+		return $identity?->getId();
 	}
 
 

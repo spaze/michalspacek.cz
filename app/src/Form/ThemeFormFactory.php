@@ -5,13 +5,12 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Application\Theme\Theme;
 use MichalSpacekCz\Application\Theme\ThemeMode;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
 final readonly class ThemeFormFactory
 {
 
 	public function __construct(
-		private UnprotectedFormFactory $factory,
 		private Theme $theme,
 	) {
 	}
@@ -22,7 +21,7 @@ final readonly class ThemeFormFactory
 	 */
 	public function create(callable $onSuccess): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addSubmit(ThemeMode::Light->value)->onClick[] = function () use ($onSuccess): void {
 			$this->theme->setLightMode();
 			$onSuccess();

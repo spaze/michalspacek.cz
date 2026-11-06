@@ -7,20 +7,12 @@
 
 namespace Latte\Essential;
 
-use Latte\CompileException;
-use Latte\Compiler\Node;
-use Latte\Compiler\Nodes\Html\ElementNode;
-use Latte\Compiler\Nodes\Html\ExpressionAttributeNode;
-use Latte\Compiler\Nodes\Php;
+use Latte\{CompileException, ContentType, Engine, Feature};
+use Latte\Compiler\{Node, NodeTraverser};
+use Latte\Compiler\Nodes\Html\{ElementNode, ExpressionAttributeNode};
+use Latte\Compiler\Nodes\{Php, PrintNode, TemplateNode, TextNode};
 use Latte\Compiler\Nodes\Php\Expression;
 use Latte\Compiler\Nodes\Php\Expression\VariableNode;
-use Latte\Compiler\Nodes\PrintNode;
-use Latte\Compiler\Nodes\TemplateNode;
-use Latte\Compiler\Nodes\TextNode;
-use Latte\Compiler\NodeTraverser;
-use Latte\ContentType;
-use Latte\Engine;
-use Latte\Feature;
 use Latte\Runtime\HtmlHelpers;
 use function is_string;
 
@@ -28,7 +20,7 @@ use function is_string;
 /**
  * Built-in compiler passes.
  */
-final class Passes
+final readonly class Passes
 {
 	public function __construct(
 		private Engine $engine,
@@ -47,8 +39,11 @@ final class Passes
 				&& $node->name instanceof Php\NameNode
 				&& isset($functions[$node->name->name])
 			) {
-				if ($node->isPartialFunction()) {
-					throw new CompileException("Custom function '{$node->name->name}' cannot be used as partial function.", $node->position);
+				if ($node->isPartialApplication()) {
+					throw new CompileException(
+						"Custom function '{$node->name->name}' cannot be used as partial function.",
+						$node->position,
+					);
 				}
 
 				/** @var array<Php\ArgumentNode> $args */
@@ -97,7 +92,10 @@ final class Passes
 					foreach ($node->content ?? [] as $child) {
 						if ($prev instanceof PrintNode && $child instanceof TextNode) {
 							if (preg_match('/^["\']/', $child->content)) {
-								throw new CompileException('Do not place print statement {...} inside quotes in JavaScript.', $prev->position);
+								throw new CompileException(
+									'Do not place print statement {...} inside quotes in JavaScript.',
+									$prev->position,
+								);
 							}
 						}
 						$prev = $child;

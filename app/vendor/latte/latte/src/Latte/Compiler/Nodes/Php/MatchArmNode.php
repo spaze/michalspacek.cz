@@ -7,9 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Node, Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -23,6 +21,7 @@ class MatchArmNode extends Node
 		public ?array $conds,
 		public ExpressionNode $body,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

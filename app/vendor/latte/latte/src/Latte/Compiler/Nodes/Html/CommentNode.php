@@ -8,8 +8,7 @@
 namespace Latte\Compiler\Nodes\Html;
 
 use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -20,6 +19,7 @@ class CommentNode extends AreaNode
 	public function __construct(
 		public AreaNode $content,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

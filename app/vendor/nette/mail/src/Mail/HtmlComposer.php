@@ -9,7 +9,7 @@ namespace Nette\Mail;
 
 use Nette;
 use Nette\Utils\Strings;
-use function array_map, array_reverse, explode, implode, is_string, rtrim, strlen, substr, substr_replace, trim, urldecode;
+use function is_string, strlen;
 
 
 /**
@@ -23,7 +23,7 @@ class HtmlComposer
 
 
 	public function __construct(
-		private string $html,
+		private readonly string $html,
 	) {
 	}
 
@@ -31,7 +31,8 @@ class HtmlComposer
 	/**
 	 * Enables embedding of local images referenced in HTML. The path is the base directory
 	 * for resolving relative image references in <img src>, <body background>, url(...) in
-	 * style attributes/<style> tags, and the [[file]] placeholder.
+	 * style attributes/<style> tags, and the [[file]] placeholder. The placeholder embeds only
+	 * an image inside the base directory, otherwise it is left as text.
 	 */
 	public function embedImages(string $basePath): static
 	{
@@ -118,12 +119,16 @@ class HtmlComposer
 					(["\'])(?![a-z]+:|[/\#])([^"\'>]+)
 					|()(?![a-z]+:|[/\#])([^"\'>)\s]+)
 				)
-				|\[\[ ([\w()+./@~-]+) \]\]
+				|\[\[ ([\w()+./@~-]+) ]]
 			#ix',
 			captureOffset: true,
 		);
 		foreach (array_reverse($matches) as $m) {
 			$file = rtrim($basePath, '/\\') . '/' . (isset($m[4]) ? $m[4][0] : urldecode($m[3][0]));
+			if (isset($m[4]) && !self::isPlaceholderImage($m[4][0], $file)) { // [[...]] may be plain text
+				continue;
+			}
+
 			if (!isset($cids[$file])) {
 				$contentId = $mail->addEmbeddedFile($file)->getHeader('Content-ID');
 				$cids[$file] = is_string($contentId) ? substr($contentId, 1, -1) : '';
@@ -137,5 +142,13 @@ class HtmlComposer
 			);
 		}
 		return $html;
+	}
+
+
+	private static function isPlaceholderImage(string $name, string $file): bool
+	{
+		return !str_contains("/$name/", '/../')
+			&& is_file($file)
+			&& str_starts_with((string) mime_content_type($file), 'image/');
 	}
 }

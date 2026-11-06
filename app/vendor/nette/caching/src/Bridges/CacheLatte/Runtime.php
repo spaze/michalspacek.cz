@@ -9,9 +9,8 @@ namespace Nette\Bridges\CacheLatte;
 
 use Latte;
 use Nette;
-use Nette\Caching\Cache;
-use Nette\Caching\OutputHelper;
-use function array_intersect_key, array_key_exists, array_merge, array_pop, count, end, is_file, is_string, range;
+use Nette\Caching\{Cache, OutputHelper};
+use function array_key_exists, count, is_string;
 
 
 /**
@@ -53,7 +52,7 @@ class Runtime
 				return true;
 			}
 
-			$key = array_merge([$key], array_intersect_key($args, range(0, count($args))));
+			$key = [$key, ...array_intersect_key($args, range(0, count($args)))];
 		}
 
 		if ($this->stack) {

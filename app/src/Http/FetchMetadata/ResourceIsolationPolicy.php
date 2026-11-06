@@ -46,7 +46,7 @@ final readonly class ResourceIsolationPolicy
 	 */
 	public function isRequestAllowed(Presenter $presenter): bool
 	{
-		if ($presenter->getRequest()?->getMethod() === AppRequest::FORWARD) {
+		if ($presenter->getRequest()->getMethod() === AppRequest::Forward) {
 			return true;
 		}
 		// Allow requests from browsers which don't send Fetch Metadata

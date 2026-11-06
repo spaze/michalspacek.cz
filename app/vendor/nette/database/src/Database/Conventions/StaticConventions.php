@@ -8,7 +8,6 @@
 namespace Nette\Database\Conventions;
 
 use Nette\Database\Conventions;
-use function preg_match, preg_quote, sprintf, str_replace;
 
 
 /**
@@ -16,14 +15,12 @@ use function preg_match, preg_quote, sprintf, str_replace;
  */
 class StaticConventions implements Conventions
 {
-	/**
-	 * @param  string  $primary  %s stands for table name
-	 * @param  string  $foreign  %1$s stands for key used after ->, %2$s for table name
-	 * @param  string  $table  %1$s stands for key used after ->, %2$s for table name
-	 */
 	public function __construct(
+		/** %s stands for table name */
 		protected readonly string $primary = 'id',
+		/** %1$s stands for the referenced table (the key after -> in belongs-to, the parent table in has-many), %2$s for the other side */
 		protected readonly string $foreign = '%s_id',
+		/** %1$s stands for key used after ->, %2$s for table name */
 		protected readonly string $table = '%s',
 	) {
 	}

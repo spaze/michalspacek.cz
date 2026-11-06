@@ -10,7 +10,7 @@ namespace Nette\Database;
 use Nette;
 use Nette\Utils\Arrays;
 use PDO;
-use function array_values, count, gettype, is_int, iterator_to_array, microtime, reset, str_starts_with, substr;
+use function count, gettype, is_float, is_int;
 
 
 /**
@@ -22,6 +22,7 @@ class ResultSet implements \Iterator, IRowContainer
 	private ?\PDOStatement $pdoStatement = null;
 	private Row|false|null $lastRow = null;
 	private int $lastRowKey = -1;
+	private bool $duplicatesChecked = false;
 
 	/** @var list<Row> */
 	private array $rows;
@@ -39,7 +40,7 @@ class ResultSet implements \Iterator, IRowContainer
 		/** @var ?\Closure(array<string, mixed>, self): array<string, mixed> */
 		private readonly ?\Closure $normalizer = null,
 	) {
-		$time = microtime(true);
+		$time = microtime(as_float: true);
 		$types = ['boolean' => PDO::PARAM_BOOL, 'integer' => PDO::PARAM_INT, 'resource' => PDO::PARAM_LOB, 'NULL' => PDO::PARAM_NULL];
 
 		try {
@@ -48,8 +49,11 @@ class ResultSet implements \Iterator, IRowContainer
 			} else {
 				$this->pdoStatement = $connection->getPdo()->prepare($queryString);
 				foreach ($params as $key => $value) {
-					$type = gettype($value);
-					$this->pdoStatement->bindValue(is_int($key) ? $key + 1 : $key, $value, $types[$type] ?? PDO::PARAM_STR);
+					if (is_float($value)) { // PDO has no float type and would stringify the value with the precision ini
+						$value = Helpers::formatFloat($value);
+					}
+
+					$this->pdoStatement->bindValue(is_int($key) ? $key + 1 : $key, $value, $types[gettype($value)] ?? PDO::PARAM_STR);
 				}
 
 				$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
@@ -206,9 +210,12 @@ class ResultSet implements \Iterator, IRowContainer
 			$this->pdoStatement?->closeCursor();
 			return null;
 
-		} elseif ($this->lastRow === null && count($data) !== $this->pdoStatement->columnCount()) {
-			$duplicates = Helpers::findDuplicates($this->pdoStatement);
-			trigger_error("Found duplicate columns in database result set: $duplicates.");
+		} elseif (!$this->duplicatesChecked) {
+			$this->duplicatesChecked = true;
+			if (count($data) !== $this->pdoStatement->columnCount()) {
+				$duplicates = Helpers::findDuplicates($this->pdoStatement);
+				trigger_error("Found duplicate columns in database result set: $duplicates.");
+			}
 		}
 
 		return $this->normalizeRow($data);

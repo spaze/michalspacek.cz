@@ -10,9 +10,7 @@ namespace Latte\Essential\Nodes;
 use Latte\CompileException;
 use Latte\Compiler\Nodes\Html\TagNode;
 use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
-use function preg_match;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**

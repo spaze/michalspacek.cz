@@ -5,18 +5,16 @@ namespace MichalSpacekCz\Form\User;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\PasskeyFormControls;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyException;
 use MichalSpacekCz\User\WebAuthn\Exceptions\PasskeyServerException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyRegistration;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Tracy\Debugger;
 
 final readonly class PasskeyRegistrationFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private PasskeyRegistration $passkeyRegistration,
 		private PasskeyFormControls $passkeyFormControls,
 		private Translator $translator,
@@ -29,7 +27,7 @@ final readonly class PasskeyRegistrationFormFactory
 	 */
 	public function create(callable $onSuccess, string $optionsUrl, string $errorUrl, string $canceledUrl, string $notSupportedUrl): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->setHtmlAttribute('id', 'passkeyRegistration'); // passkey-register.js finds the form by this id
 		$form->setHtmlAttribute('data-options-url', $optionsUrl);
 		$form->setHtmlAttribute('data-error-url', $errorUrl);

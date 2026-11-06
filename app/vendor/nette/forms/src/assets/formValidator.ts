@@ -138,9 +138,12 @@ export class FormValidator {
 				}
 				if (!onlyCheck) {
 					let arr = Array.isArray(rule.arg) ? rule.arg : [rule.arg],
+						toDisplay = (val: FormElementValue | undefined): string => val instanceof FileList
+							? Array.from(val, (file) => file.name).join(', ')
+							: val as string,
 						message = rule.msg.replace(
 							/%(value|\d+)/g,
-							(foo, m) => this.getValue(m === 'value' ? curElem : elem.form.elements.namedItem(arr[m].control) as FormElement | RadioNodeList) as string,
+							(foo, m) => toDisplay(this.getValue(m === 'value' ? curElem : elem.form.elements.namedItem(arr[m].control) as FormElement | RadioNodeList)),
 						);
 					this.addError(curElem, message);
 				}
@@ -157,7 +160,7 @@ export class FormValidator {
 	 */
 	validateForm(sender: HTMLFormElement | FormElement, onlyCheck: boolean = false): boolean {
 		let form: HTMLFormElement = sender.form ?? sender,
-			scope;
+			scope: RegExp | undefined;
 
 		this.formErrors = [];
 
@@ -171,16 +174,20 @@ export class FormValidator {
 			}
 		}
 
+		let inScope = (elem: FormElement) => !scope || scope.test(elem.name.replace(/]\[|\[|]|$/g, '-'));
+
 		for (let elem of form.elements as any as FormElement[]) {
-			if (elem.willValidate && elem.validity.badInput) {
-				elem.reportValidity();
+			if (elem.willValidate && elem.validity.badInput && inScope(elem)) {
+				if (!onlyCheck) {
+					elem.reportValidity();
+				}
 				return false;
 			}
 		}
 
 		for (let elem of form.elements as any as FormElement[]) {
 			if (elem.getAttribute('data-nette-rules')
-				&& (!scope || elem.name.replace(/]\[|\[|]|$/g, '-').match(scope))
+				&& inScope(elem)
 				&& !this.isDisabled(elem)
 				&& !this.validateControl(elem, undefined, onlyCheck)
 				&& !this.formErrors.length
@@ -284,6 +291,10 @@ export class FormValidator {
 		method = method.replace('::', '_').replaceAll('\\', '');
 
 		let args = Array.isArray(arg) ? arg : [arg];
+		if (args.some((arg) => arg?.control && !this.#getFormElement(elem.form, arg.control))) {
+			return null; // the referenced control is not rendered
+		}
+
 		args = args.map((arg) => {
 			if (arg?.control) {
 				let control = this.#getFormElement(elem.form, arg.control)!;

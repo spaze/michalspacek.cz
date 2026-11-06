@@ -10,7 +10,7 @@ namespace Nette\Bridges\DatabaseDI;
 use Nette;
 use Nette\Schema\Expect;
 use Tracy;
-use function is_array, is_string;
+use function array_key_exists, is_array, is_string;
 
 
 /**
@@ -38,9 +38,9 @@ class DatabaseExtension extends Nette\DI\CompilerExtension
 				'conventions' => Expect::string('discovered'), // Nette\Database\Conventions\DiscoveredConventions
 				'autowired' => Expect::bool(),
 			]),
-		)->before(fn($val) => is_array(reset($val)) || reset($val) === null
-				? $val
-				: ['default' => $val]);
+		)->before(fn($val) => is_array($val) && $val && !array_key_exists('dsn', $val)
+			? $val // a set of named connections; a single connection always has the mandatory 'dsn' key
+			: ['default' => $val]);
 	}
 
 
@@ -78,51 +78,45 @@ class DatabaseExtension extends Nette\DI\CompilerExtension
 
 		foreach ($config->options as $key => $value) {
 			if (is_string($value) && preg_match('#^PDO::\w+$#D', $value)) {
-				$config->options[$key] = $value = constant($value);
+				$config->options[$key] = $value = $this->resolveConstant($value, "$name.options.$key");
 			}
 
 			if (preg_match('#^PDO::\w+$#D', $key)) {
 				unset($config->options[$key]);
-				$config->options[constant($key)] = $value;
+				$config->options[$this->resolveConstant($key, "$name.options")] = $value;
 			}
 		}
 
 		$connection = $builder->addDefinition($this->prefix("$name.connection"))
-			->setFactory(Nette\Database\Connection::class, [$config->dsn, $config->user, $config->password, $config->options])
+			->setCreator(Nette\Database\Connection::class, [$config->dsn, $config->user, $config->password, $config->options])
 			->setAutowired($config->autowired);
 
 		$structure = $builder->addDefinition($this->prefix("$name.structure"))
-			->setFactory(Nette\Database\Structure::class)
+			->setCreator(Nette\Database\Structure::class)
 			->setArguments([$connection])
 			->setAutowired($config->autowired);
 
 		if (!empty($config->reflection)) {
 			$conventionsServiceName = 'reflection';
 			$config->conventions = $config->reflection;
-			if (is_string($config->conventions) && strtolower($config->conventions) === 'conventional') {
+			if (strtolower($config->conventions) === 'conventional') {
 				$config->conventions = 'Static';
 			}
 		} else {
 			$conventionsServiceName = 'conventions';
 		}
 
-		if (!$config->conventions) {
-			$conventions = null;
-
-		} elseif (is_string($config->conventions)) {
-			$conventions = $builder->addDefinition($this->prefix("$name.$conventionsServiceName"))
-				->setFactory(preg_match('#^[a-z]+$#Di', $config->conventions)
+		$conventions = $config->conventions
+			? $builder->addDefinition($this->prefix("$name.$conventionsServiceName"))
+				->setCreator(preg_match('#^[a-z]+$#Di', $config->conventions)
 					? 'Nette\Database\Conventions\\' . ucfirst($config->conventions) . 'Conventions'
 					: $config->conventions)
 				->setArguments(strtolower($config->conventions) === 'discovered' ? [$structure] : [])
-				->setAutowired($config->autowired);
-
-		} else {
-			$conventions = Nette\DI\Helpers::filterArguments([$config->conventions])[0];
-		}
+				->setAutowired($config->autowired)
+			: null;
 
 		$builder->addDefinition($this->prefix("$name.explorer"))
-			->setFactory(Nette\Database\Explorer::class, [$connection, $structure, $conventions])
+			->setCreator(Nette\Database\Explorer::class, [$connection, $structure, $conventions])
 			->setAutowired($config->autowired);
 
 		$builder->addAlias($this->prefix("$name.context"), $this->prefix("$name.explorer"));
@@ -132,5 +126,16 @@ class DatabaseExtension extends Nette\DI\CompilerExtension
 			$builder->addAlias("nette.database.$name", $this->prefix($name));
 			$builder->addAlias("nette.database.$name.context", $this->prefix("$name.explorer"));
 		}
+	}
+
+
+	/** @throws Nette\DI\InvalidConfigurationException */
+	private function resolveConstant(string $name, string $path): mixed
+	{
+		if (!defined($name)) {
+			throw new Nette\DI\InvalidConfigurationException("Unknown constant '$name' in the '{$this->prefix($path)}' option.");
+		}
+
+		return constant($name);
 	}
 }

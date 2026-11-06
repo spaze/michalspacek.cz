@@ -4,12 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\TrainingApplication;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
@@ -17,7 +16,6 @@ final readonly class TrainingApplicationsListFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private TrainingApplications $trainingApplications,
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
@@ -31,7 +29,7 @@ final readonly class TrainingApplicationsListFormFactory
 	 */
 	public function create(callable $onSuccess, array $applications): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$container = $form->addContainer('applications');
 		foreach ($applications as $application) {
 			$statuses = [];

@@ -7,11 +7,8 @@
 
 namespace Latte\Compiler\Nodes\Php\Expression;
 
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\NameNode;
-use Latte\Compiler\Nodes\Php\OperatorNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, NameNode, OperatorNode};
+use Latte\Compiler\{Position, PrintContext};
 
 
 /**
@@ -23,6 +20,7 @@ class InstanceofNode extends ExpressionNode implements OperatorNode
 		public ExpressionNode $expr,
 		public NameNode|ExpressionNode $class,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

@@ -44,10 +44,10 @@ final class TalkSlidesTest extends TestCase
 		Assert::null($this->talkSlides->getOgImage('foo', null));
 		Assert::null($this->talkSlides->getOgImage(null, $slides));
 		Assert::null($this->talkSlides->getOgImage('foo', $slides));
-		$slides->add(new TalkSlide(1, 'foo', 1, null, null, null, 'Title 1', Html::fromText('Notes'), 'Notes', null, null, null));
+		$slides->add(new TalkSlide(1, 'foo', 1, null, null, null, 'Title 1', Html::text('Notes'), 'Notes', null, null, null));
 		Assert::null($this->talkSlides->getOgImage('foo', $slides));
 		Assert::null($this->talkSlides->getOgImage('bar', $slides));
-		$slides->add(new TalkSlide(1, 'foo', 1, null, null, null, 'Title 1', Html::fromText('Notes'), 'Notes', 'image', null, null));
+		$slides->add(new TalkSlide(1, 'foo', 1, null, null, null, 'Title 1', Html::text('Notes'), 'Notes', 'image', null, null));
 		Assert::same('image', $this->talkSlides->getOgImage('foo', $slides));
 		Assert::same('image', $this->talkSlides->getOgImage('bar', $slides));
 	}
@@ -56,8 +56,8 @@ final class TalkSlidesTest extends TestCase
 	public function testSaveSlides(): void
 	{
 		$slides = new TalkSlideCollection(303);
-		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::fromText('Notes 1'), 'Notes 1', null, null, null));
-		$slides->add(new TalkSlide(2, 'slide2', 2, 'slide2.jpg', 'slide-alt.jpg', null, 'Title 2', Html::fromText('Notes 2'), 'Notes 2', null, null, null));
+		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::text('Notes 1'), 'Notes 1', null, null, null));
+		$slides->add(new TalkSlide(2, 'slide2', 2, 'slide2.jpg', 'slide-alt.jpg', null, 'Title 2', Html::text('Notes 2'), 'Notes 2', null, null, null));
 		$updateSlides = new ArrayHash();
 		$updateSlides[1] = $this->buildSlideArrayHash(1, 'foo1', 'Title 1', 'Speaker notes 1', 'slide1.jpg', null, 'slide-alt1.jpg', null);
 		$updateSlides[2] = $this->buildSlideArrayHash(2, 'foo2', 'Title 2', 'Speaker notes 2', 'slide2.jpg', null, 'slide-alt2.jpg', null);
@@ -228,7 +228,7 @@ final class TalkSlidesTest extends TestCase
 			null,
 			null,
 			null,
-			Html::fromText('title'),
+			Html::text('title'),
 			'title',
 			null,
 			null,
@@ -242,7 +242,7 @@ final class TalkSlidesTest extends TestCase
 			null,
 			$video,
 			null,
-			Html::fromText('event'),
+			Html::text('event'),
 			'event',
 			null,
 			null,

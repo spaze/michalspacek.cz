@@ -68,11 +68,11 @@ final class BlogPostTest extends TestCase
 	{
 		$publishedAt = new DateTime('2024-01-01');
 		$editedAt = new DateTime('2024-02-01');
-		$title = Html::fromText('Title');
-		$lead = Html::fromText('Lead');
-		$text = Html::fromText('Text');
-		$originally = Html::fromText('Originally');
-		$edit = new ArticleEdit($editedAt, Html::fromText('Edit summary'), 'edit-summary');
+		$title = Html::text('Title');
+		$lead = Html::text('Lead');
+		$text = Html::text('Text');
+		$originally = Html::text('Originally');
+		$edit = new ArticleEdit($editedAt, Html::text('Edit summary'), 'edit-summary');
 		$tags = ['tag1', 'tag2'];
 		$slugTags = ['slug-tag-1', 'slug-tag-2'];
 		$post = new BlogPost(
@@ -192,11 +192,11 @@ final class BlogPostTest extends TestCase
 			2,
 			'en_US',
 			null,
-			Html::fromText($title),
+			Html::text($title),
 			$title,
 			null,
 			null,
-			Html::fromText($text),
+			Html::text($text),
 			$text,
 			new DateTime(),
 			false,

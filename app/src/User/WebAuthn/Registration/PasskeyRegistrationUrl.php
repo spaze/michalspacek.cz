@@ -5,12 +5,12 @@ namespace MichalSpacekCz\User\WebAuthn\Registration;
 
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
-use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventLogger;
 use MichalSpacekCz\User\SecurityActivity\SecurityEventType;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisabledException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUrlUserNotFoundException;
+use Nette\Application\LinkGenerator;
 use Nette\CommandLine\Command;
 use Override;
 

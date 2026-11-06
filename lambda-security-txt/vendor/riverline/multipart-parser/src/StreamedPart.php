@@ -17,14 +17,69 @@ namespace Riverline\MultiPartParser;
 class StreamedPart
 {
     /**
+     * Maximum number of options parsed in a header, the others are ignored
+     */
+    const MAX_HEADER_OPTIONS = 100;
+
+    /**
+     * Default maximum number of parts in a whole content, nested parts included
+     */
+    const DEFAULT_MAX_PARTS = 1000;
+
+    /**
+     * Default maximum number of nested multipart levels
+     */
+    const DEFAULT_MAX_DEPTH = 16;
+
+    /**
+     * @var int|null null for no limit
+     */
+    private static $maxParts = self::DEFAULT_MAX_PARTS;
+
+    /**
+     * @var int|null null for no limit
+     */
+    private static $maxDepth = self::DEFAULT_MAX_DEPTH;
+
+    /**
+     * Nesting level of the part being parsed
+     *
+     * @var int
+     */
+    private static $depth = 0;
+
+    /**
+     * Number of parts found in the content being parsed
+     *
+     * @var int
+     */
+    private static $partsCount = 0;
+
+    /**
      * @var resource
      */
     private $stream;
 
     /**
+     * Raw header values, decoded on read
+     *
      * @var array
      */
     private $headers;
+
+    /**
+     * Decoded header values, by key
+     *
+     * @var array
+     */
+    private $decodedHeaders = array();
+
+    /**
+     * Last parsed header contents
+     *
+     * @var array
+     */
+    private static $parsedHeaderContents = array();
 
     /**
      * @var int
@@ -37,9 +92,33 @@ class StreamedPart
     private $parts = array();
 
     /**
+     * Maximum number of parts in a whole content, nested parts included
+     *
+     * @param int|null $maxParts null for no limit
+     */
+    public static function setMaxParts($maxParts)
+    {
+        self::$maxParts = (null === $maxParts) ? null : (int) $maxParts;
+    }
+
+    /**
+     * Maximum number of nested multipart levels
+     *
+     * @param int|null $maxDepth null for no limit
+     */
+    public static function setMaxDepth($maxDepth)
+    {
+        self::$maxDepth = (null === $maxDepth) ? null : (int) $maxDepth;
+    }
+
+    /**
      * StreamParser constructor.
      *
      * @param resource $stream
+     *
+     * @throws \InvalidArgumentException if the content is not valid
+     * @throws \LogicException if the multipart content is not valid
+     * @throws LimitExceededException if the content has too many parts or nesting levels
      */
     public function __construct($stream)
     {
@@ -104,7 +183,8 @@ class StreamedPart
             if (2 === count($lineSplit)) {
                 list($key, $value) = $lineSplit;
                 // Decode value
-                $value = mb_decode_mimeheader(trim($value));
+                // Decoded on read, only the headers used cost anything
+                $value = trim($value);
             } else {
                 // Bogus header
                 $key = $lineSplit[0];
@@ -129,6 +209,15 @@ class StreamedPart
         // Is MultiPart ?
         if ($this->isMultiPart()) {
             // MultiPart !
+            if (0 === self::$depth) {
+                // New content
+                self::$partsCount = 0;
+            }
+
+            if (null !== self::$maxDepth && self::$depth >= self::$maxDepth) {
+                throw new LimitExceededException('Too many nested multipart levels, the limit is '.self::$maxDepth);
+            }
+
             $boundary = self::getHeaderOption($this->getHeader('Content-Type'), 'boundary');
 
             if (null === $boundary) {
@@ -150,10 +239,25 @@ class StreamedPart
                         $currentOffset = ftell($this->stream);
                         $partLength = $currentOffset - $partOffset - strlen($line) - $eofLength;
 
-                        // Copy part in a new stream
-                        $partStream = fopen('php://temp', 'rw');
-                        stream_copy_to_stream($this->stream, $partStream, $partLength, $partOffset);
-                        $this->parts[] = new self($partStream);
+                        // Negative length: two adjacent separators, there is no part
+                        // ( stream_copy_to_stream() would copy until the end of the stream )
+                        if ($partLength >= 0) {
+                            if (null !== self::$maxParts && ++self::$partsCount > self::$maxParts) {
+                                throw new LimitExceededException('Too many parts, the limit is '.self::$maxParts);
+                            }
+
+                            // Copy part in a new stream
+                            $partStream = fopen('php://temp', 'rw');
+                            stream_copy_to_stream($this->stream, $partStream, $partLength, $partOffset);
+
+                            self::$depth++;
+                            try {
+                                $this->parts[] = new self($partStream);
+                            } finally {
+                                self::$depth--;
+                            }
+                        }
+
                         // Reset current stream offset
                         fseek($this->stream, $currentOffset);
                     }
@@ -218,21 +322,22 @@ class StreamedPart
                 break;
         }
 
-        $contentType = $this->getHeader('Content-Type');
-        $isBinary = strtolower((string) $contentType) === 'application/octet-stream';
-
         // Convert to UTF-8 ( Not if binary or 7bit ( aka Ascii ) )
-        if (! $isBinary && false === in_array($encoding, array('binary', '7bit'))) {
+        if (false === in_array($encoding, array('binary', '7bit'))) {
             // Charset
+            $contentType = $this->getHeader('Content-Type');
             $charset = self::getHeaderOption($contentType, 'charset');
-            if (null === $charset) {
-                // Try to detect
+            if (null === $charset && $this->isText()) {
+                // Try to detect, only on text: binary data could be detected as ASCII and corrupted
                 $charset = mb_detect_encoding($body) ?: 'utf-8';
             }
 
-            // Only convert if not UTF-8
-            if ('utf-8' !== strtolower($charset)) {
-                $body = mb_convert_encoding($body, 'utf-8', $charset);
+            // Only convert if not UTF-8, keep the body as is if the charset is not supported
+            if (null !== $charset && 'utf-8' !== strtolower($charset)) {
+                $converted = self::convertToUtf8($body, $charset);
+                if (false !== $converted) {
+                    $body = $converted;
+                }
             }
         }
 
@@ -240,11 +345,28 @@ class StreamedPart
     }
 
     /**
+     * Text content: "text/*", no Content-Type at all ( text/plain by default, RFC 2045 and RFC 7578 )
+     * or a malformed one, to keep the previous behaviour
+     *
+     * @return bool
+     */
+    private function isText()
+    {
+        $mimeType = strtolower(trim(self::getHeaderValue($this->getHeader('Content-Type'))));
+
+        return false === strpos($mimeType, '/') || 0 === strpos($mimeType, 'text/');
+    }
+
+    /**
      * @return array
      */
     public function getHeaders()
     {
-        return $this->headers;
+        foreach (array_keys($this->headers) as $key) {
+            $this->getHeader($key);
+        }
+
+        return $this->decodedHeaders;
     }
 
     /**
@@ -263,7 +385,14 @@ class StreamedPart
             return $default;
         }
 
-        return $this->headers[$key];
+        if (false === array_key_exists($key, $this->decodedHeaders)) {
+            $value = $this->headers[$key];
+            $this->decodedHeaders[$key] = is_array($value)
+                ? array_map(array(__CLASS__, 'decodeHeaderValue'), $value)
+                : self::decodeHeaderValue($value);
+        }
+
+        return $this->decodedHeaders[$key];
     }
 
     /**
@@ -302,11 +431,18 @@ class StreamedPart
     {
         $options = self::getHeaderOptions($header);
 
-        if (false === isset($options[$key])) {
-            return $default;
+        if (isset($options[$key])) {
+            return $options[$key];
         }
 
-        return $options[$key];
+        // Case-insensitive key
+        foreach ($options as $optionKey => $value) {
+            if (0 === strcasecmp($optionKey, $key)) {
+                return $value;
+            }
+        }
+
+        return $default;
     }
 
     /**
@@ -385,44 +521,303 @@ class StreamedPart
     }
 
     /**
+     * Decode RFC 2047 encoded-words and return a valid UTF-8 string
+     *
+     * Text outside encoded-words is kept as is: browsers send non-ASCII names as raw UTF-8 ( RFC 7578 )
+     * and mb_decode_mimeheader() would replace each of their bytes with "?".
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    private static function decodeHeaderValue($value)
+    {
+        // Bare CR or LF left in an unfolded header line
+        $value = str_replace(array("\r", "\n"), ' ', $value);
+
+        if (false !== strpos($value, '=?')) {
+            // Decoded in PHP, mb_decode_mimeheader() results vary with PHP versions ( "_" in Q encoding before PHP 8.3 )
+            // As tolerant as mb_decode_mimeheader(): spaces or "?" in the encoded text, missing "?=" at the end
+            // Whitespace between adjacent encoded-words is kept, like mb_decode_mimeheader() did
+            $value = preg_replace_callback(
+                // Charset may be followed by an RFC 2231 language ( =?UTF-8*fr?Q?...?= )
+                '/=\?([^?\s*]+)(?:\*[^?\s]*)?\?([BbQq])\?(.*?)(?:\?=|$)/',
+                function ($matches) {
+                    if ('b' === strtolower($matches[2])) {
+                        $text = base64_decode(preg_replace('/\s+/', '', $matches[3]));
+                    } else {
+                        $text = quoted_printable_decode(str_replace('_', ' ', $matches[3]));
+                    }
+
+                    if (false !== $text) {
+                        $text = self::convertToUtf8($text, $matches[1]);
+                    }
+
+                    // Keep the encoded-word as is if it can't be decoded
+                    return (false === $text) ? $matches[0] : $text;
+                },
+                $value
+            );
+        }
+
+        // Invalid UTF-8 bytes are replaced with "?"
+        if (false === mb_check_encoding($value, 'utf-8')) {
+            $value = self::convertToUtf8($value, 'utf-8');
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param string $text
+     * @param string $charset
+     *
+     * @return string|false false if the charset is not supported
+     */
+    private static function convertToUtf8($text, $charset)
+    {
+        // PHP < 8 doesn't fail on an unknown charset, it converts from another one
+        // PHP >= 8 throws a ValueError
+        if (false === self::isSupportedCharset($charset)) {
+            return false;
+        }
+
+        return mb_convert_encoding($text, 'utf-8', $charset);
+    }
+
+    /**
+     * @param string $charset
+     *
+     * @return bool
+     */
+    private static function isSupportedCharset($charset)
+    {
+        static $charsets = null;
+
+        if (null === $charsets) {
+            // Not charsets: transfer encodings and mbstring internals ( some are deprecated since PHP 8.2 )
+            $excluded = array(
+                'pass', 'auto', 'wchar', 'byte2be', 'byte2le', 'byte4be', 'byte4le',
+                'base64', 'qprint', 'quoted-printable', 'html-entities', 'uuencode', '7bit', '8bit',
+            );
+
+            // Some encodings have no MIME name and emit a warning, don't let it reach the application error handler
+            set_error_handler(function () {
+                return true;
+            });
+
+            $list = array();
+            try {
+                foreach (mb_list_encodings() as $encoding) {
+                    if (in_array(strtolower($encoding), $excluded, true)) {
+                        continue;
+                    }
+
+                    $names = mb_encoding_aliases($encoding);
+                    $names = is_array($names) ? $names : array();
+                    $names[] = $encoding;
+                    // Shift_JIS, BIG5, ISO-2022-JP...
+                    $names[] = mb_preferred_mime_name($encoding);
+
+                    foreach ($names as $name) {
+                        if (is_string($name) && '' !== $name) {
+                            $list[strtolower($name)] = true;
+                        }
+                    }
+                }
+            } finally {
+                restore_error_handler();
+            }
+
+            $charsets = $list;
+        }
+
+        return isset($charsets[strtolower($charset)]);
+    }
+
+    /**
+     * Parse a header value and its parameters ( RFC 2045, RFC 2231, RFC 5987 )
+     *
      * @param string $content
      *
      * @return array
      */
     private static function parseHeaderContent($content)
     {
-        $parts = explode(';', (string) $content);
-        $headerValue = array_shift($parts);
+        $content = (string) $content;
+
+        // The same header is often parsed several times in a row ( isFile(), getName(), getFileName() )
+        if (isset(self::$parsedHeaderContents[$content])) {
+            return self::$parsedHeaderContents[$content];
+        }
+        if (count(self::$parsedHeaderContents) >= 8) {
+            array_shift(self::$parsedHeaderContents);
+        }
+
+        return self::$parsedHeaderContents[$content] = self::doParseHeaderContent($content);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return array
+     */
+    private static function doParseHeaderContent($content)
+    {
+        $segments = self::splitHeaderContent($content);
+        $headerValue = trim(array_shift($segments));
         $options = array();
+        $extendedOptions = array();
+
+        // Legitimate headers have a few options, even with RFC 2231 continuations, ignore the rest
+        if (count($segments) > self::MAX_HEADER_OPTIONS) {
+            $segments = array_slice($segments, 0, self::MAX_HEADER_OPTIONS);
+        }
+
         // Parse options
-        foreach ($parts as $part) {
-            if (false === empty($part)) {
-                $partSplit = explode('=', $part, 2);
-                if (2 === count($partSplit)) {
-                    list ($key, $value) = $partSplit;
-                    if ('*' === substr($key, -1)) {
-                        // RFC 5987
-                        $key = substr($key, 0, -1);
-                        if (preg_match(
-                            "/(?P<charset>[\w!#$%&+^_`{}~-]+)'(?P<language>[\w-]*)'(?P<value>.*)$/",
-                            $value,
-                            $matches
-                        )) {
-                            $value = mb_convert_encoding(
-                                rawurldecode($matches['value']),
-                                'utf-8',
-                                $matches['charset']
-                            );
-                        }
-                    }
-                    $options[trim($key)] = trim($value, ' "');
+        foreach ($segments as $segment) {
+            if ('' === trim($segment)) {
+                continue;
+            }
+
+            $partSplit = explode('=', $segment, 2);
+            $key = trim($partSplit[0]);
+
+            if (1 === count($partSplit)) {
+                // Bogus option
+                $options[$key] = '';
+                continue;
+            }
+
+            $value = trim($partSplit[1]);
+
+            if (false !== strpos($key, '*')
+                && preg_match('/^(?P<key>[^*]+)\*(?:(?P<section>\d+)(?P<encoded>\*)?)?$/', $key, $matches)
+            ) {
+                // Extended option ( key*=, key*0=, key*0*= )
+                if (isset($matches['section']) && '' !== $matches['section']) {
+                    $section = (int) $matches['section'];
+                    $encoded = isset($matches['encoded']) && '' !== $matches['encoded'];
                 } else {
-                    // Bogus option
-                    $options[$partSplit[0]] = '';
+                    $section = 0;
+                    $encoded = true;
                 }
+                $extendedKey = strtolower($matches['key']);
+                if (false === isset($extendedOptions[$extendedKey])) {
+                    $extendedOptions[$extendedKey] = array('key' => $matches['key'], 'sections' => array());
+                }
+                // Not trimmed, continuations may be split on a space
+                $extendedOptions[$extendedKey]['sections'][$section] = array(self::unquote($value, false), $encoded);
+            } else {
+                $options[$key] = self::unquote($value);
+            }
+        }
+
+        // Extended options take precedence over regular ones ( RFC 6266 )
+        if (count($extendedOptions) > 0) {
+            $keysByLowercase = array();
+            foreach (array_keys($options) as $key) {
+                $keysByLowercase[strtolower($key)][] = $key;
+            }
+
+            foreach ($extendedOptions as $extendedKey => $extendedOption) {
+                if (isset($keysByLowercase[$extendedKey])) {
+                    foreach ($keysByLowercase[$extendedKey] as $key) {
+                        unset($options[$key]);
+                    }
+                }
+                $options[$extendedOption['key']] = self::decodeExtendedOption($extendedOption['sections']);
             }
         }
 
         return array($headerValue, $options);
+    }
+
+    /**
+     * Split a header content on semicolons, except inside quoted strings
+     *
+     * @param string $content
+     *
+     * @return string[]
+     */
+    private static function splitHeaderContent($content)
+    {
+        if (false === strpos($content, '"')) {
+            return explode(';', $content);
+        }
+
+        // Only quoted strings ( with \x quoted pairs ) and other characters, possessive to avoid backtracking
+        if (1 !== preg_match('/^(?:[^"]++|"(?:[^"\\\\]++|\\\\.)*+")*+$/s', $content)) {
+            // Unclosed quote ( or a path ending with a backslash ), split as before
+            return explode(';', $content);
+        }
+
+        // Split on semicolons outside of quoted strings
+        $segments = preg_split('/"(?:[^"\\\\]++|\\\\.)*+"(*SKIP)(*FAIL)|;/s', $content);
+
+        // PCRE limit reached, split as before
+        return is_array($segments) ? $segments : explode(';', $content);
+    }
+
+    /**
+     * @param string $value
+     * @param bool   $trim
+     *
+     * @return string
+     */
+    private static function unquote($value, $trim = true)
+    {
+        if (strlen($value) < 2 || '"' !== $value[0] || '"' !== substr($value, -1)) {
+            // Not a quoted string, trim as before
+            return trim($value, ' "');
+        }
+
+        // Only unescape \" so Windows and UNC paths sent by old clients are kept
+        $value = str_replace('\\"', '"', substr($value, 1, -1));
+
+        // Spaces are trimmed as before
+        return $trim ? trim($value, ' ') : $value;
+    }
+
+    /**
+     * Join RFC 2231 continuations and decode the charset of an extended option
+     *
+     * @param array $sections [section => [value, encoded]]
+     *
+     * @return string
+     */
+    private static function decodeExtendedOption(array $sections)
+    {
+        ksort($sections);
+
+        $charset = null;
+        $value = '';
+        $first = true;
+        foreach ($sections as $section) {
+            list($text, $encoded) = $section;
+
+            // The charset is only in the first section
+            if ($first && $encoded) {
+                if (preg_match("/^(?P<charset>[\w!#$%&+^_`{}~-]*)'(?P<language>[\w-]*)'(?P<value>.*)$/s", $text, $matches)) {
+                    $charset = $matches['charset'];
+                    $text = $matches['value'];
+                } else {
+                    // Malformed, keep it as is as before
+                    $encoded = false;
+                }
+            }
+
+            if ($encoded && null !== $charset) {
+                $text = rawurldecode($text);
+            }
+
+            $value .= $text;
+            $first = false;
+        }
+
+        $converted = ('' !== (string) $charset) ? self::convertToUtf8($value, $charset) : false;
+
+        // Unsupported or missing charset, keep the bytes but as valid UTF-8
+        return (false !== $converted) ? $converted : self::convertToUtf8($value, 'utf-8');
     }
 }

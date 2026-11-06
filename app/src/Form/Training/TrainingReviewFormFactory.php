@@ -3,20 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Training;
 
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 final readonly class TrainingReviewFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private FormValidatorRuleTexy $ruleTexy,
 		private TrainingApplications $trainingApplications,
 		private TrainingReviews $trainingReviews,
@@ -29,7 +27,7 @@ final readonly class TrainingReviewFormFactory
 	 */
 	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 
 		if ($review === null) {
 			$form->addSelect('application', 'Šablona:', $this->getApplications($dateId))
@@ -122,7 +120,7 @@ final readonly class TrainingReviewFormFactory
 			'note' => $review->getNote(),
 		];
 		$form->setDefaults($values);
-		$submit->caption = 'Upravit';
+		$submit->setCaption('Upravit');
 	}
 
 

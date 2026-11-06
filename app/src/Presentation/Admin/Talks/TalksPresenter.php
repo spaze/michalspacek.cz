@@ -101,8 +101,7 @@ final class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(): Form
 	{
-		$request = $this->getRequest();
-		if ($this->talk === null || $this->slides === null || $request === null) {
+		if ($this->talk === null || $this->slides === null) {
 			throw new ShouldNotHappenException('actionSlides() will be called first');
 		}
 		$talkId = $this->talk->getId();
@@ -114,7 +113,7 @@ final class TalksPresenter extends BasePresenter
 			$talkId,
 			$this->slides,
 			$this->newCount,
-			$request,
+			$this->getRequest(),
 		);
 	}
 

@@ -15,16 +15,16 @@ use Nette;
  */
 class FallbackMailer implements Mailer
 {
-	/** @var array<callable(self, SendException, Mailer, Message): void> */
+	/** @var array<callable(static, SendException, Mailer, Message): void> */
 	public array $onFailure = [];
 
 
 	public function __construct(
 		/** @var list<Mailer> */
 		private array $mailers,
-		private int $retryCount = 3,
+		private readonly int $retryCount = 3,
 		/** in milliseconds */
-		private int $retryWaitTime = 1000,
+		private readonly int $retryWaitTime = 1000,
 	) {
 	}
 
@@ -40,12 +40,14 @@ class FallbackMailer implements Mailer
 		}
 
 		$failures = [];
-		for ($i = 0; $i < $this->retryCount; $i++) {
+		$candidates = $this->mailers; // mailers still worth another attempt
+
+		for ($i = 0; $i < $this->retryCount && $candidates; $i++) {
 			if ($i > 0) {
 				usleep($this->retryWaitTime * 1000);
 			}
 
-			foreach ($this->mailers as $mailer) {
+			foreach ($candidates as $key => $mailer) {
 				try {
 					$mailer->send($mail);
 					return;
@@ -53,6 +55,12 @@ class FallbackMailer implements Mailer
 				} catch (SendException $e) {
 					$failures[] = $e;
 					Nette\Utils\Arrays::invoke($this->onFailure, $this, $e, $mailer, $mail);
+
+					if ($e->isPermanent()) {
+						// the server has already made up its mind (a 5xx reply, bad credentials);
+						// asking it the same thing again only delays the fallback
+						unset($candidates[$key]);
+					}
 				}
 			}
 		}

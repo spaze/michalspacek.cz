@@ -8,11 +8,9 @@
 namespace Nette\Bridges\SecurityHttp;
 
 use Nette;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
-use Nette\Security\IIdentity;
-use Nette\Security\User;
-use function is_bool, time;
+use Nette\Http\{Session, SessionSection};
+use Nette\Security\{IIdentity, User};
+use function is_bool;
 
 
 /**
@@ -68,9 +66,9 @@ final class SessionStorage implements Nette\Security\UserStorage
 	}
 
 
-	public function setExpiration(?string $time, bool $clearIdentity = false): void
+	public function setExpiration(?string $expire, bool $clearIdentity = false): void
 	{
-		$this->expireTime = $time ? (int) Nette\Utils\DateTime::from($time)->format('U') : null;
+		$this->expireTime = $expire ? (int) Nette\Utils\DateTime::from($expire)->format('U') : null;
 		$this->expireIdentity = $clearIdentity;
 
 		if ($this->sessionSection && $this->sessionSection->get('authenticated')) {
@@ -91,7 +89,9 @@ final class SessionStorage implements Nette\Security\UserStorage
 		}
 
 		$section->set('expireIdentity', $this->expireIdentity);
-		$section->setExpiration((string) $this->expireTime, 'foo'); // time check
+		// expiration is bound to a dummy variable 'foo', so nette/http checks the time against session.gc_maxlifetime
+		// but never wipes the section itself; expiration is handled manually in getSessionSection()
+		$section->setExpiration($this->expireTime === null ? null : '@' . $this->expireTime, 'foo');
 	}
 
 

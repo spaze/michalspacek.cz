@@ -7,11 +7,8 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\CompileException;
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
-use Latte\Helpers;
+use Latte\{CompileException, Helpers};
+use Latte\Compiler\{Node, Position, PrintContext};
 
 
 /**
@@ -25,6 +22,7 @@ class FilterNode extends Node
 		public array $args = [],
 		public bool $nullsafe = false,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		if ($name->name === 'escape') {
 			throw new CompileException("Filter 'escape' is not allowed.", $position);

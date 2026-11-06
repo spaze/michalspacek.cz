@@ -203,7 +203,7 @@ final class ResourceIsolationPolicyTest extends TestCase
 	{
 		return Helpers::capture(function () use ($presenterName, $params): void {
 			$request = new NetteRequest($presenterName, $this->httpRequest->getMethod(), params: $params);
-			$this->application->processRequest($request);
+			$this->application->processRequest($request)->send($this->httpRequest, $this->httpResponse);
 		});
 	}
 

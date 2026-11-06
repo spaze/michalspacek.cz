@@ -7,8 +7,8 @@
 
 namespace Nette\Database\Conventions;
 
-use Nette\Database\Conventions;
-use Nette\Database\IStructure;
+use Nette\Database\{Conventions, IStructure};
+use function count, sprintf;
 
 
 /**
@@ -32,11 +32,11 @@ class DiscoveredConventions implements Conventions
 	 * Finds the referencing table and column for a has-many relationship by searching structure metadata.
 	 * Triggers structure rebuild if needed. Throws on ambiguous match.
 	 */
-	public function getHasManyReference(string $nsTable, string $key): ?array
+	public function getHasManyReference(string $table, string $key): ?array
 	{
 		$candidates = $columnCandidates = [];
-		$targets = $this->structure->getHasManyReference($nsTable) ?? [];
-		$table = preg_replace('#^(.*\.)?(.*)$#', '$2', $nsTable);
+		$targets = $this->structure->getHasManyReference($table) ?? [];
+		$shortTable = preg_replace('#^(.*\.)?(.*)$#', '$2', $table);
 
 		foreach ($targets as $targetNsTable => $targetColumns) {
 			$targetTable = preg_replace('#^(.*\.)?(.*)$#', '$2', $targetNsTable);
@@ -45,7 +45,7 @@ class DiscoveredConventions implements Conventions
 			}
 
 			foreach ($targetColumns as $targetColumn) {
-				if (stripos($targetColumn, $table) !== false) {
+				if (stripos($targetColumn, $shortTable) !== false) {
 					$columnCandidates[] = $candidate = [$targetNsTable, $targetColumn];
 					if (strcmp($targetTable, $key) === 0 || strcmp($targetNsTable, $key) === 0) {
 						return $candidate;
@@ -69,7 +69,12 @@ class DiscoveredConventions implements Conventions
 		}
 
 		if (!empty($candidates)) {
-			throw new AmbiguousReferenceKeyException('Ambiguous joining column in related call.');
+			throw new AmbiguousReferenceKeyException(sprintf(
+				"Ambiguous joining column in related('%s') called on table '%s', candidates: %s.",
+				$key,
+				$table,
+				implode(', ', array_map(fn($c) => "{$c[1][0]}.{$c[1][1]}", $candidates)),
+			));
 		}
 
 		if ($this->structure->isRebuilt()) {
@@ -77,7 +82,7 @@ class DiscoveredConventions implements Conventions
 		}
 
 		$this->structure->rebuild();
-		return $this->getHasManyReference($nsTable, $key);
+		return $this->getHasManyReference($table, $key);
 	}
 
 

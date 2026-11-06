@@ -8,28 +8,28 @@
 namespace Nette\Bridges\FormsLatte\Nodes;
 
 use Latte\CompileException;
-use Latte\Compiler\Nodes\AreaNode;
+use Latte\Compiler\Nodes\{AreaNode, StatementNode};
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\Nodes\Php\Scalar\StringNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
+use Latte\Compiler\{PrintContext, Tag};
 
 
 /**
- * {form name [, attributes]} ... {/form}
+ * {form [scope|detached] name [, attributes]} ... {/form}
  * {formContext name} ... {/formContext}
  * Renders form tags and initializes form context.
  */
 class FormNode extends StatementNode
 {
+	private const ModeLegacyScope = 'context';
+	private const ModeScope = 'scope';
+	private const ModeDetached = 'detached';
+
 	public ExpressionNode $name;
 	public ArrayNode $attributes;
 	public AreaNode $content;
-	public bool $print;
-	public ?Position $endLine;
+	public ?string $mode = null;
 
 
 	/** @return \Generator<int, ?list<string>, array{AreaNode, ?Tag}, static> */
@@ -42,13 +42,24 @@ class FormNode extends StatementNode
 		$tag->outputMode = $tag::OutputKeepIndentation;
 		$tag->expectArguments();
 		$node = $tag->node = new static;
+		$node->mode = match (true) {
+			$tag->name === 'formContext' => self::ModeLegacyScope,
+			in_array(
+				$tag->parser->stream->tryPeek()?->text,
+				[self::ModeScope, self::ModeDetached],
+				true,
+			) => $tag->parser->stream->consume()->text,
+			default => null,
+		};
 		$node->name = $tag->parser->parseUnquotedStringOrExpression();
-		$tag->parser->stream->tryConsume(',');
+		$tag->parser->consumeCommaBeforeArguments(strict: false);
 		$node->attributes = $tag->parser->parseArguments();
-		$node->print = $tag->name === 'form';
+		if ($node->mode !== null && $node->mode !== self::ModeDetached && $node->attributes->items) {
+			$label = '{' . $tag->name . ($node->mode === self::ModeScope ? ' scope' : '') . '}';
+			throw new CompileException("Arguments are not allowed in $label because it does not render a <form> tag.", $tag->position);
+		}
 
 		[$node->content, $endTag] = yield;
-		$node->endLine = $endTag?->position;
 		if ($endTag && $node->name instanceof StringNode) {
 			$endTag->parser->stream->tryConsume($node->name->value);
 		}
@@ -59,26 +70,30 @@ class FormNode extends StatementNode
 
 	public function print(PrintContext $context): string
 	{
+		$renderBegin = 'echo $this->global->forms->renderFormBegin(%node) %1.line;';
+		$renderEnd = 'echo $this->global->forms->renderFormEnd() %4.line;';
+
 		return $context->format(
-			'$form = $this->global->formsStack[] = '
-			. ($this->name instanceof StringNode
-				? '$this->global->uiControl[%node]'
-				: 'is_object($ʟ_tmp = %node) ? $ʟ_tmp : $this->global->uiControl[$ʟ_tmp]')
-			. ' %line;'
-			. 'Nette\Bridges\FormsLatte\Runtime::initializeForm($form);'
-			. ($this->print
-				? 'echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form, %node) %1.line;'
-				: '')
-			. ' %3.node '
-			. ($this->print
-				? 'echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack))'
-				: 'array_pop($this->global->formsStack)')
-			. " %4.line;\n\n",
+			'$this->global->forms->begin($form = '
+			. (match (true) {
+				$this->mode === self::ModeScope => '(is_object($ʟ_tmp = %node) ? $ʟ_tmp : ($this->global->forms->isNested() ? $this->global->forms->get($ʟ_tmp, Nette\Forms\Container::class) : $this->global->uiControl[$ʟ_tmp]))',
+				$this->name instanceof StringNode => '$this->global->uiControl[%node]',
+				default => '(is_object($ʟ_tmp = %node) ? $ʟ_tmp : $this->global->uiControl[$ʟ_tmp])',
+			})
+			. ($this->mode === self::ModeDetached ? ', detached: true' : '')
+			. ', global: $this->global) %line;'
+			. (match ($this->mode) {
+				self::ModeScope, self::ModeLegacyScope => ' %3.node ',
+				self::ModeDetached => $renderBegin . $renderEnd . ' %3.node ',
+				default => $renderBegin . ' %3.node ' . $renderEnd,
+			})
+			. '$form = $this->global->forms->end() ?? $form;'
+			. "\n\n",
 			$this->name,
 			$this->position,
 			$this->attributes,
 			$this->content,
-			$this->endLine,
+			end($this->tagRanges),
 		);
 	}
 

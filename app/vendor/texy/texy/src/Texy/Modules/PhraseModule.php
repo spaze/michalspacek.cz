@@ -1,18 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use Texy\LineParser;
-use Texy\Modifier;
-use Texy\Patterns;
-use function htmlspecialchars, str_replace, trim;
-use const ENT_NOQUOTES;
+use Texy\{LineParser, Modifier, Patterns};
 
 
 /**
@@ -62,35 +58,57 @@ final class PhraseModule extends Texy\Module
 		// ***strong+emphasis***
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<![*\\\])\*\*\*(?![\s*])((?:[^ *]++|[ *])+)' . Patterns::MODIFIER . '?(?<![\s*\\\])\*\*\*(?!\*)(?::(' . Patterns::LINK_URL . '))??()#Uus',
+			'#(?<![*\\\])\*\*\*(?![\s*])((?:[^ *]++|[ *])+)'
+			. Patterns::MODIFIER
+			. '?(?<![\s*\\\])\*\*\*(?!\*)(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uus',
 			'phrase/strong+em',
 		);
 
 		// **strong**
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<![*\\\])\*\*(?![\s*])((?:[^ *]++|[ *])+)' . Patterns::MODIFIER . '?(?<![\s*\\\])\*\*(?!\*)(?::(' . Patterns::LINK_URL . '))??()#Uus',
+			'#(?<![*\\\])\*\*(?![\s*])((?:[^ *]++|[ *])+)'
+			. Patterns::MODIFIER
+			. '?(?<![\s*\\\])\*\*(?!\*)(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uus',
 			'phrase/strong',
 		);
 
 		// //emphasis//
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<![/:])\/\/(?![\s/])((?:[^ /]++|[ /])+)' . Patterns::MODIFIER . '?(?<![\s/:])\/\/(?!\/)(?::(' . Patterns::LINK_URL . '))??()#Uus',
+			'#(?<![/:])\/\/(?![\s/])((?:[^ /]++|[ /])+)'
+			. Patterns::MODIFIER
+			. '?(?<![\s/:])\/\/(?!\/)(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uus',
 			'phrase/em',
 		);
 
 		// *emphasisAlt*
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<![*\\\])\*(?![\s*])((?:[^\s*]++|[*])+)' . Patterns::MODIFIER . '?(?<![\s*\\\])\*(?!\*)(?::(' . Patterns::LINK_URL . '))??()#Uus',
+			'#(?<![*\\\])\*(?![\s*])((?:[^\s*]++|[*])+)'
+			. Patterns::MODIFIER
+			. '?(?<![\s*\\\])\*(?!\*)(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uus',
 			'phrase/em-alt',
 		);
 
 		// *emphasisAlt2*
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<![^\s.,;:<>()"\'' . Patterns::MARK . '-])\*(?![\s*])((?:[^ *]++|[ *])+)' . Patterns::MODIFIER . '?(?<![\s*\\\])\*(?![^\s.,;:<>()"?!\'-])(?::(' . Patterns::LINK_URL . '))??()#Uus',
+			'#(?<![^\s.,;:<>()"\''
+			. Patterns::MARK
+			. '-])\*(?![\s*])((?:[^ *]++|[ *])+)'
+			. Patterns::MODIFIER
+			. '?(?<![\s*\\\])\*(?![^\s.,;:<>()"?!\'-])(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uus',
 			'phrase/em-alt2',
 		);
 
@@ -153,7 +171,11 @@ final class PhraseModule extends Texy\Module
 		// >>quote<<
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<!\>)\>\>(?![\s>])((?:[^\r\n <]++|[ <])+)' . Patterns::MODIFIER . '?(?<![\s<])\<\<(?!\<)(?::(' . Patterns::LINK_URL . '))??()#Uu',
+			'#(?<!\>)\>\>(?![\s>])((?:[^\r\n <]++|[ <])+)'
+			. Patterns::MODIFIER
+			. '?(?<![\s<])\<\<(?!\<)(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uu',
 			'phrase/quote',
 		);
 
@@ -181,7 +203,13 @@ final class PhraseModule extends Texy\Module
 		// `code`
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#\`(\S(?:[^' . Patterns::MARK . '\r\n `]++|[ `])*)' . Patterns::MODIFIER . '?(?<!\s)\`(?::(' . Patterns::LINK_URL . '))??()#Uu',
+			'#\`(\S(?:[^'
+			. Patterns::MARK
+			. '\r\n `]++|[ `])*)'
+			. Patterns::MODIFIER
+			. '?(?<!\s)\`(?::('
+			. Patterns::LINK_URL
+			. '))??()#Uu',
 			'phrase/code',
 		);
 
@@ -195,14 +223,22 @@ final class PhraseModule extends Texy\Module
 		// [text |link]
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<!\[)\[(?![\s*])([^|\r\n\]]++)\|((?:[^' . Patterns::MARK . '|\r\n \]]++|[ ])+)' . Patterns::MODIFIER . '?(?<!\s)\](?!\])()#Uu',
+			'#(?<!\[)\[(?![\s*])([^|\r\n\]]++)\|((?:[^'
+			. Patterns::MARK
+			. '|\r\n \]]++|[ ])+)'
+			. Patterns::MODIFIER
+			. '?(?<!\s)\](?!\])()#Uu',
 			'phrase/wikilink',
 		);
 
 		// [text](link)
 		$texy->registerLinePattern(
 			$this->patternPhrase(...),
-			'#(?<![[.])\[(?![\s*])((?:[^|\r\n \]]++|[ ])+)' . Patterns::MODIFIER . '?(?<!\s)\]\(((?:[^' . Patterns::MARK . '\r )]++|[ ])+)\)()#Uu',
+			'#(?<![[.])\[(?![\s*])((?:[^|\r\n \]]++|[ ])+)'
+			. Patterns::MODIFIER
+			. '?(?<!\s)\]\(((?:[^'
+			. Patterns::MARK
+			. '\r )]++|[ ])+)\)()#Uu',
 			'phrase/markdown',
 		);
 
@@ -245,7 +281,7 @@ final class PhraseModule extends Texy\Module
 		$parser->again = $phrase !== 'phrase/code' && $phrase !== 'phrase/quicklink';
 
 		if ($phrase === 'phrase/span' || $phrase === 'phrase/span-alt') {
-			if ($mLink == null) {
+			if ($mLink === '') {
 				if (!$mMod) {
 					return null; // means "..."
 				}
@@ -255,7 +291,7 @@ final class PhraseModule extends Texy\Module
 		} elseif ($phrase === 'phrase/acronym' || $phrase === 'phrase/acronym-alt') {
 			$mod->title = trim(Texy\Helpers::unescapeHtml($mLink));
 
-		} elseif ($mLink != null) {
+		} elseif ($mLink !== '') {
 			$link = $texy->linkModule->factoryLink($mLink, null, $mContent);
 		}
 

@@ -1,47 +1,58 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette;
-use function func_num_args, strcasecmp;
+use function func_num_args;
 
 
 /**
  * Presenter request.
  *
- * @property string $presenterName
- * @property array $parameters
- * @property array $post
- * @property array $files
- * @property string|null $method
+ * @property-deprecated string $presenterName
+ * @property-deprecated array<string,mixed> $parameters
+ * @property-deprecated array<string,mixed> $post
+ * @property-deprecated array<string,mixed> $files
+ * @property-deprecated ?string $method
  */
 final class Request
 {
 	use Nette\SmartObject;
 
 	/** method */
-	public const FORWARD = 'FORWARD';
+	public const Forward = 'FORWARD';
 
 	/** flag */
-	public const RESTORED = 'restored';
+	public const Restored = 'restored';
 
 	/** flag */
-	public const VARYING = 'varying';
+	public const Varying = 'varying';
+
+	/** @deprecated use Request::Forward */
+	public const FORWARD = self::Forward;
+
+	/** @deprecated use Request::Restored */
+	public const RESTORED = self::Restored;
+
+	/** @deprecated use Request::Varying */
+	public const VARYING = self::Varying;
 
 
 	public function __construct(
 		private string $name,
 		private ?string $method = null,
+		/** @var array<string, mixed> */
 		private array $params = [],
+		/** @var array<string, mixed> */
 		private array $post = [],
+		/** @var array<string, mixed> */
 		private array $files = [],
+		/** @var array<string, bool> */
 		private array $flags = [],
 	) {
 	}
@@ -58,7 +69,7 @@ final class Request
 
 
 	/**
-	 * Retrieve the presenter name.
+	 * Returns the presenter name.
 	 */
 	public function getPresenterName(): string
 	{
@@ -68,6 +79,7 @@ final class Request
 
 	/**
 	 * Sets variables provided to the presenter.
+	 * @param  array<string, mixed>  $params
 	 */
 	public function setParameters(array $params): static
 	{
@@ -78,6 +90,7 @@ final class Request
 
 	/**
 	 * Returns all variables provided to the presenter (usually via URL).
+	 * @return array<string, mixed>
 	 */
 	public function getParameters(): array
 	{
@@ -96,6 +109,7 @@ final class Request
 
 	/**
 	 * Sets variables provided to the presenter via POST.
+	 * @param  array<string, mixed>  $params
 	 */
 	public function setPost(array $params): static
 	{
@@ -112,12 +126,13 @@ final class Request
 	{
 		return func_num_args() === 0
 			? $this->post
-			: ($this->post[$key] ?? null);
+			: ($this->post[(string) $key] ?? null);
 	}
 
 
 	/**
 	 * Sets all uploaded files.
+	 * @param  array<string, mixed>  $files
 	 */
 	public function setFiles(array $files): static
 	{
@@ -128,6 +143,7 @@ final class Request
 
 	/**
 	 * Returns all uploaded files.
+	 * @return array<string, mixed>
 	 */
 	public function getFiles(): array
 	{
@@ -182,6 +198,7 @@ final class Request
 	}
 
 
+	/** @return array<string, mixed> */
 	public function toArray(): array
 	{
 		$params = $this->params;

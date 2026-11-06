@@ -4,15 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 
 final readonly class TrainingInvoiceFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingApplications $trainingApplications,
 		private TrainingControlsFactory $trainingControlsFactory,
 	) {
@@ -26,7 +24,7 @@ final readonly class TrainingInvoiceFormFactory
 	 */
 	public function create(callable $onSuccess, callable $onError, array $unpaidInvoiceIds): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$form->addText('invoice', 'Faktura:')
 			->setRequired('Zadejte prosím číslo faktury')
 			->addRule(Form::IsIn, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);

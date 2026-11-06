@@ -8,16 +8,10 @@
 namespace Latte\Essential\Nodes;
 
 use Latte\CompileException;
-use Latte\Compiler\Block;
+use Latte\Compiler\{Block, PhpHelpers, PrintContext, Tag, TemplateParser};
 use Latte\Compiler\Nodes\Php\Expression\ArrayNode;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\ModifierNode;
-use Latte\Compiler\Nodes\Php\Scalar;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, ModifierNode, Scalar};
 use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PhpHelpers;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
-use Latte\Compiler\TemplateParser;
 use Latte\Runtime\Template;
 
 
@@ -26,7 +20,8 @@ use Latte\Runtime\Template;
  */
 class IncludeBlockNode extends StatementNode
 {
-	public ExpressionNode $name;
+	/** null in {include parent}/{include this} inside a dynamically named block; the name is taken from the runtime */
+	public ?ExpressionNode $name = null;
 	public ?ExpressionNode $from = null;
 	public ArrayNode $args;
 	public ModifierNode $modifier;
@@ -64,14 +59,16 @@ class IncludeBlockNode extends StatementNode
 			$item = $tag->closestTag(
 				[BlockNode::class, DefineNode::class],
 				fn($item) => ($item->node instanceof BlockNode || $item->node instanceof DefineNode)
-					&& $item->node->block && !$item->node->block->isDynamic(),
+					&& $item->node->block && (!$item->node->block->isDynamic() || !$node->from),
 			);
 			if (!$item || !($item->node instanceof BlockNode || $item->node instanceof DefineNode)) {
 				throw new CompileException("Cannot include $tokenName->text block outside of any block.", $tag->position);
 			}
 
 			assert($item->node->block !== null);
-			$node->name = $item->node->block->name;
+			$node->name = $item->node->block->isDynamic()
+				? null // the name of the enclosing block is known only at runtime
+				: $item->node->block->name;
 		}
 
 		$node->modifier->escape = !$node->modifier->removeFilter('noescape') && !$node->parent;
@@ -100,15 +97,17 @@ class IncludeBlockNode extends StatementNode
 	{
 		if ($this->name instanceof Scalar\StringNode || $this->name instanceof Scalar\IntegerNode) {
 			$staticName = (string) $this->name->value;
-			$block = ($this->layer !== null ? $this->blocks[$this->layer][$staticName] ?? null : null) ?? $this->blocks[Template::LayerLocal][$staticName] ?? null;
+			$block = ($this->layer !== null
+				? $this->blocks[$this->layer][$staticName] ?? null
+				: null) ?? $this->blocks[Template::LayerLocal][$staticName] ?? null;
 		}
 
 		return $context->format(
 			'$this->render' . ($this->parent ? 'ParentBlock' : 'Block')
 			. '(%raw, %node? + '
-			. (isset($block) && !$block->parameters ? 'get_defined_vars()' : '[]')
+			. ($this->name === null || (isset($block) && !$block->parameters) ? 'get_defined_vars()' : '[]')
 			. '%raw) %line;',
-			$context->ensureString($this->name, 'Block name'),
+			$this->name === null ? 'null' : $context->ensureString($this->name, 'Block name'),
 			$this->args,
 			$contentFilter ? ", $contentFilter" : '',
 			$this->position,
@@ -118,7 +117,7 @@ class IncludeBlockNode extends StatementNode
 
 	private function printBlockFrom(PrintContext $context, string $contentFilter): string
 	{
-		assert($this->from !== null);
+		assert($this->from !== null && $this->name !== null);
 		return $context->format(
 			'$this->createTemplate(%raw, %node? + $this->params, "include")->renderToContentType(%raw, %raw) %line;',
 			$context->ensureString($this->from, 'Template name'),
@@ -132,7 +131,9 @@ class IncludeBlockNode extends StatementNode
 
 	public function &getIterator(): \Generator
 	{
-		yield $this->name;
+		if ($this->name) {
+			yield $this->name;
+		}
 		if ($this->from) {
 			yield $this->from;
 		}

@@ -8,14 +8,9 @@
 namespace Latte\Compiler;
 
 use Latte;
-use Latte\CompileException;
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\FragmentNode;
-use Latte\Compiler\Nodes\Html;
-use Latte\ContentType;
-use Latte\Helpers;
-use Latte\SecurityViolationException;
-use function array_keys, array_pop, end, implode, in_array, key, preg_replace, str_starts_with, strlen, substr;
+use Latte\{CompileException, ContentType, Helpers, SecurityViolationException};
+use Latte\Compiler\Nodes\{AreaNode, FragmentNode, Html};
+use function strlen;
 
 
 /**
@@ -25,7 +20,7 @@ final class TemplateParserHtml
 {
 	private ?Html\ElementNode $element = null;
 
-	/** @var array{string, ?Nodes\Php\ExpressionNode, ?Range}|null */
+	/** @var array{string, ?Nodes\Php\ExpressionNode, ?Position}|null */
 	private ?array $endName = null;
 
 	/** @var \WeakMap<Html\ElementNode, object{tag: mixed, textualName: string, unclosedTags?: array<string>}> */
@@ -96,7 +91,7 @@ final class TemplateParserHtml
 				return null; // go to parseElement() one level up to close the element
 			}
 			$stream->seek($save);
-			if (!in_array($endText, $this->elementData[$this->element]->unclosedTags ?? [], strict: true)) {
+			if (!in_array($endText, $this->elementData[$this->element]->unclosedTags ?? [], true)) {
 				return null; // go to parseElement() one level up to collapse
 			}
 		}
@@ -130,7 +125,7 @@ final class TemplateParserHtml
 			}
 			$content = new FragmentNode;
 			if ($token = $stream->tryConsume(Token::Newline)) {
-				$content->append(new Nodes\TextNode($token->text, $token->position));
+				$content->append(new Nodes\TextNode($token->text, $token->position, $token->end));
 			}
 
 			$innerNodes = $this->openNAttrNodes($attrs[Tag::PrefixInner] ?? []);
@@ -146,7 +141,7 @@ final class TemplateParserHtml
 			if ($endText && ($this->element->is($endText) || $this->elementData[$this->element]->textualName === $endText)) {
 				$elem->content = $content;
 				$elem->content->append($this->extractIndentation());
-				$elem->position = Range::span($elem->position, $endRange);
+				$elem->end = $endRange ?? $elem->end;
 
 			} elseif ($outerNodes || $innerNodes
 				|| $elem->dynamicTag
@@ -169,7 +164,7 @@ final class TemplateParserHtml
 		}
 
 		if ($token = $stream->tryConsume(Token::Newline)) {
-			$res->append(new Nodes\TextNode($token->text, $token->position));
+			$res->append(new Nodes\TextNode($token->text, $token->position, $token->end));
 		}
 
 		$res = $this->finishNAttrNodes($res, $outerNodes);
@@ -182,7 +177,7 @@ final class TemplateParserHtml
 	{
 		if ($this->parser->lastIndentation) {
 			$dolly = clone $this->parser->lastIndentation;
-			$this->parser->lastIndentation->content = '';
+			$this->parser->lastIndentation->clear();
 			return $dolly;
 		} else {
 			return new Nodes\NopNode;
@@ -202,7 +197,7 @@ final class TemplateParserHtml
 		if (($this->parser->strict || $variable)
 			&& !$stream->is(Token::Whitespace, Token::Slash, Token::Html_TagClose)
 		) {
-			throw $stream->throwUnexpectedException();
+			$stream->throwUnexpectedException();
 		}
 
 		$this->parser->lastIndentation = null;
@@ -222,13 +217,13 @@ final class TemplateParserHtml
 		if ($variable) {
 			$elem->dynamicTag = new Nodes\Html\TagNode($elem, $variable);
 		}
-		$elem->position = Range::span($openToken->position, $stream->consume(Token::Html_TagClose)->position);
+		$elem->end = $stream->consume(Token::Html_TagClose)->end;
 		$lexer->popState();
 		return $elem;
 	}
 
 
-	/** @return array{string, ?Nodes\Php\ExpressionNode, ?Range} */
+	/** @return array{string, ?Nodes\Php\ExpressionNode, ?Position} */
 	private function parseEndTag(): array
 	{
 		$stream = $this->parser->getStream();
@@ -243,7 +238,7 @@ final class TemplateParserHtml
 		$stream->tryConsume(Token::Whitespace);
 		$closeToken = $stream->consume(Token::Html_TagClose);
 		$lexer->popState();
-		return [$text, $variable, $closeToken->position];
+		return [$text, $variable, $closeToken->end];
 	}
 
 
@@ -273,11 +268,11 @@ final class TemplateParserHtml
 				$variable = true;
 
 			} elseif ($token = $stream->tryConsume(Token::Html_Name)) {
-				$parts[] = new Latte\Compiler\Nodes\Php\Scalar\StringNode($token->text, $token->position);
+				$parts[] = new Latte\Compiler\Nodes\Php\Scalar\StringNode($token->text, $token->position, $token->end);
 				$text .= $token->text;
 
 			} elseif (!$parts) {
-				throw $stream->throwUnexpectedException([Token::Html_Name, Token::Latte_TagOpen]);
+				$stream->throwUnexpectedException([Token::Html_Name, Token::Latte_TagOpen]);
 			} else {
 				break;
 			}
@@ -303,9 +298,10 @@ final class TemplateParserHtml
 		$closeToken = $stream->consume(Token::Html_TagClose);
 		$node = new Html\BogusTagNode(
 			openDelimiter: $openDelimiter,
-			content: new Nodes\TextNode($wsToken->text ?? '', $wsToken?->position),
+			content: new Nodes\TextNode($wsToken->text ?? '', $wsToken?->position, $wsToken?->end),
 			endDelimiter: $closeToken->text,
-			position: Range::span($openToken->position, $closeToken->position),
+			position: $openToken->position,
+			end: $closeToken->end,
 		);
 		$lexer->popState();
 		return $node;
@@ -327,7 +323,8 @@ final class TemplateParserHtml
 			openDelimiter: $openToken->text,
 			content: $content,
 			endDelimiter: $closeToken->text,
-			position: Range::span($openToken->position, $closeToken->position),
+			position: $openToken->position,
+			end: $closeToken->end,
 		);
 	}
 
@@ -358,7 +355,7 @@ final class TemplateParserHtml
 		$token = $stream->consume(Token::Whitespace);
 		return $stream->is(Token::Html_Name) && str_starts_with($stream->peek()->text, TemplateLexer::NPrefix)
 			? new Nodes\NopNode
-			: new Nodes\TextNode($token->text, $token->position);
+			: new Nodes\TextNode($token->text, $token->position, $token->end);
 	}
 
 
@@ -375,7 +372,7 @@ final class TemplateParserHtml
 		}
 
 		[$value, $quote] = $this->parseAttributeValue() ?? [null, null];
-		$range = Range::span($name->position, $this->parser->getStream()->peek(-1)->position);
+		$attrEnd = $this->parser->getStream()->peek(-1)->end;
 		if ($name instanceof Nodes\TextNode && $value instanceof Nodes\PrintNode && $value->modifier->escape) {
 			if (($indent = end($fragment->children)) instanceof Nodes\TextNode && $indent->isWhitespace()) {
 				array_pop($fragment->children);
@@ -386,7 +383,8 @@ final class TemplateParserHtml
 				value: $value->expression,
 				modifier: $value->modifier,
 				indentation: $indent->content ?? null,
-				position: $range,
+				position: $name->position,
+				end: $attrEnd,
 			);
 		}
 
@@ -394,7 +392,8 @@ final class TemplateParserHtml
 			name: $name,
 			value: $value,
 			quote: $quote,
-			position: $range,
+			position: $name->position,
+			end: $attrEnd,
 		);
 	}
 
@@ -416,7 +415,11 @@ final class TemplateParserHtml
 			$lexer->pushState(TemplateLexer::StateHtmlQuotedValue, $quoteToken->text);
 			$value = $this->parser->parseFragment($this->parser->inTextResolve(...))->simplify(allowsNull: false);
 			assert($value !== null);
-			$stream->tryConsume(Token::Quote) || $stream->throwUnexpectedException([$quoteToken->text], addendum: ", end of HTML attribute started $quoteToken->position");
+			$stream->tryConsume(Token::Quote)
+				|| $stream->throwUnexpectedException(
+					[$quoteToken->text],
+					addendum: ", end of HTML attribute started $quoteToken->position",
+				);
 			$lexer->popState();
 			return [$value, $quoteToken->text];
 		}
@@ -458,14 +461,20 @@ final class TemplateParserHtml
 				$lexer->pushState(TemplateLexer::StateHtmlQuotedNAttrValue, $quoteToken->text);
 				$valueToken = $stream->tryConsume(Token::Text);
 				$pos = $stream->peek()->position;
-				$endToken = $stream->tryConsume(Token::Quote) ?? $stream->throwUnexpectedException([$quoteToken->text], addendum: ", end of n:attribute started $quoteToken->position");
+				$endToken = $stream->tryConsume(Token::Quote) ?? $stream->throwUnexpectedException(
+					[$quoteToken->text],
+					addendum: ", end of n:attribute started $quoteToken->position",
+				);
 				$lexer->popState();
 				$tokens = $valueToken ? (new TagLexer)->tokenize($valueToken->text, $valueToken->position) : null;
 
 			} elseif ($openToken = $stream->tryConsume(Token::Latte_TagOpen)) {
 				$lexer->pushState(TemplateLexer::StateLatteContent);
 				$tokens = $this->parser->consumeTag();
-				$endToken = $stream->tryConsume(Token::Latte_TagClose) ?? $stream->throwUnexpectedException([Token::Latte_TagClose], addendum: " started $openToken->position");
+				$endToken = $stream->tryConsume(Token::Latte_TagClose) ?? $stream->throwUnexpectedException(
+					[Token::Latte_TagClose],
+					addendum: " started $openToken->position",
+				);
 				$lexer->popState();
 
 			} else {
@@ -478,9 +487,10 @@ final class TemplateParserHtml
 		$tokens ??= [new Token(Token::End, '', $pos)];
 
 		$elem->nAttributes[$name] = new Tag(
-			name: preg_replace('~(inner-|tag-|)~', '', $name),
+			name: preg_replace('~^(inner-|tag-)~', '', $name),
 			tokens: $tokens,
-			position: Range::span($nameToken->position, $endToken->position),
+			position: $nameToken->position,
+			end: $endToken->end,
 			prefix: $this->getPrefix($name),
 			inTag: true,
 			htmlElement: $elem,
@@ -502,8 +512,11 @@ final class TemplateParserHtml
 			position: $openToken->position,
 			content: $this->parser->parseFragment($this->parser->inTextResolve(...)),
 		);
-		$closeToken = $stream->tryConsume(Token::Html_CommentClose) ?? $stream->throwUnexpectedException([Token::Html_CommentClose], addendum: " started $openToken->position");
-		$node->position = Range::span($openToken->position, $closeToken->position);
+		$closeToken = $stream->tryConsume(Token::Html_CommentClose) ?? $stream->throwUnexpectedException(
+			[Token::Html_CommentClose],
+			addendum: " started $openToken->position",
+		);
+		$node->end = $closeToken->end;
 		$lexer->popState();
 		return $node;
 	}
@@ -519,7 +532,7 @@ final class TemplateParserHtml
 			}
 			if ($stream->tryConsume(Token::Latte_CommentOpen)) {
 				$lexer->pushState(TemplateLexer::StateLatteComment);
-				$stream->consume(Token::Text);
+				$stream->tryConsume(Token::Text);
 				$stream->consume(Token::Latte_CommentClose);
 				$lexer->popState();
 				$stream->tryConsume(Token::Newline);
@@ -574,6 +587,7 @@ final class TemplateParserHtml
 			} elseif ($res instanceof AreaNode) {
 				$this->parser->ensureIsConsumed($tag);
 				$res->position = $tag->position;
+				$res->end ??= $tag->end;
 				$tag->replaceNAttribute($res);
 				$this->parser->popTag();
 
@@ -595,10 +609,17 @@ final class TemplateParserHtml
 	{
 		while ([$gen, $tag] = array_pop($toClose)) {
 			$gen->send([$node, null]);
+			$gen->valid()
+				&& throw new \LogicException("Incorrect behavior of {$tag->getNotation()} parser, more yield calls than expected (on line {$tag->position->line})");
 			$node = $gen->getReturn();
+			if (!$node instanceof AreaNode) {
+				throw new CompileException("Unexpected value returned by {$tag->getNotation()} parser.", $tag->position);
+			}
+
 			$node->position = $tag->position;
-			$this->parser->popTag();
+			$node->end ??= $tag->end;
 			$this->parser->ensureIsConsumed($tag);
+			$this->parser->popTag();
 		}
 
 		return $node;

@@ -8,12 +8,8 @@
 namespace Nette\Database\Table;
 
 use Nette;
-use Nette\Database\Conventions;
-use Nette\Database\Driver;
-use Nette\Database\Explorer;
-use Nette\Database\IStructure;
-use Nette\Database\SqlLiteral;
-use function array_flip, array_keys, array_map, array_merge, array_pop, array_shift, array_unshift, array_values, count, end, explode, hash, implode, is_array, iterator_to_array, json_encode, key, preg_match, preg_match_all, preg_replace, preg_replace_callback, rtrim, str_contains, str_repeat, strlen, strtoupper, substr, substr_count, substr_replace, trim;
+use Nette\Database\{Conventions, Driver, Explorer, IStructure, SqlLiteral};
+use function count, is_array, strlen;
 
 
 /**
@@ -21,7 +17,6 @@ use function array_flip, array_keys, array_map, array_merge, array_pop, array_sh
  */
 class SqlBuilder
 {
-	protected readonly string $tableName;
 	protected readonly Conventions $conventions;
 	protected readonly string $delimitedTable;
 
@@ -60,6 +55,9 @@ class SqlBuilder
 	/** @var array<string, string> alias => chain */
 	protected array $aliases = [];
 	protected string $currentAlias = '';
+
+	/** distinguishes WHERE vs JOIN conditions in the dedup hash; a subclass calling addCondition() directly gets the WHERE scope */
+	private string $conditionScope = '';
 	private readonly Driver $driver;
 	private readonly IStructure $structure;
 
@@ -70,9 +68,10 @@ class SqlBuilder
 	private array $expandingJoins = [];
 
 
-	public function __construct(string $tableName, Explorer $explorer)
-	{
-		$this->tableName = $tableName;
+	public function __construct(
+		protected readonly string $tableName,
+		Explorer $explorer,
+	) {
 		$this->driver = $explorer->getConnection()->getDriver();
 		$this->conventions = $explorer->getConventions();
 		$this->structure = $explorer->getStructure();
@@ -138,13 +137,13 @@ class SqlBuilder
 			$parts[] = $this->select;
 		} elseif ($columns) {
 			$parts[] = [$this->delimitedTable, $columns];
-		} elseif ($this->group && !$this->driver->isSupported(Driver::SupportSelectUngroupedColumns)) {
+		} elseif ($this->isRestrictedToGroupColumns()) {
 			$parts[] = [$this->group];
 		} else {
 			$parts[] = "{$this->delimitedTable}.*";
 		}
 
-		return $this->getConditionHash(json_encode($parts), [
+		return $this->getConditionHash(serialize($parts), [
 			$this->parameters['select'],
 			$this->parameters['joinCondition'],
 			$this->parameters['where'],
@@ -161,6 +160,7 @@ class SqlBuilder
 	 */
 	public function buildSelectQuery(?array $columns = null): string
 	{
+		$order = $this->order;
 		if (!$this->order && ($this->limit !== null || $this->offset)) {
 			$this->order = array_map(
 				fn($col) => "$this->tableName.$col",
@@ -168,6 +168,17 @@ class SqlBuilder
 			);
 		}
 
+		try {
+			return $this->doBuildSelectQuery($columns);
+		} finally {
+			$this->order = $order; // the implicit ORDER BY must not persist in the builder state
+		}
+	}
+
+
+	/** @param  list<string>|null  $columns */
+	private function doBuildSelectQuery(?array $columns): string
+	{
 		$queryJoinConditions = $this->buildJoinConditions();
 		$queryCondition = $this->buildConditions();
 		$queryEnd = $this->buildQueryEnd();
@@ -183,14 +194,9 @@ class SqlBuilder
 
 		} elseif ($columns) {
 			$prefix = $joins ? "{$this->delimitedTable}." : '';
-			$cols = [];
-			foreach ($columns as $col) {
-				$cols[] = $prefix . $col;
-			}
+			$querySelect = $this->buildSelect(array_map(fn($col) => $prefix . $col, $columns));
 
-			$querySelect = $this->buildSelect($cols);
-
-		} elseif ($this->group && !$this->driver->isSupported(Driver::SupportSelectUngroupedColumns)) {
+		} elseif ($this->isRestrictedToGroupColumns()) {
 			$querySelect = $this->buildSelect([$this->group]);
 			$this->parseJoins($joins, $querySelect);
 
@@ -208,21 +214,34 @@ class SqlBuilder
 	}
 
 
+	/**
+	 * Some engines can only select the columns listed in GROUP BY.
+	 */
+	private function isRestrictedToGroupColumns(): bool
+	{
+		return (bool) $this->group && !$this->driver->isSupported(Driver::SupportSelectUngroupedColumns);
+	}
+
+
 	/** @return list<mixed> */
 	public function getParameters(): array
 	{
 		if (!isset($this->parameters['joinConditionSorted'])) {
-			$this->buildSelectQuery();
+			if ($this->joinCondition) {
+				$this->buildSelectQuery();
+			} else {
+				$this->parameters['joinConditionSorted'] = [];
+			}
 		}
 
-		return array_values(array_merge(
-			$this->parameters['select'],
-			$this->parameters['joinConditionSorted'] ? array_merge(...array_values($this->parameters['joinConditionSorted'])) : [],
-			$this->parameters['where'],
-			$this->parameters['group'],
-			$this->parameters['having'],
-			$this->parameters['order'],
-		));
+		return array_values([
+			...$this->parameters['select'],
+			...$this->parameters['joinConditionSorted'] ? array_merge(...array_values($this->parameters['joinConditionSorted'])) : [],
+			...$this->parameters['where'],
+			...$this->parameters['group'],
+			...$this->parameters['having'],
+			...$this->parameters['order'],
+		]);
 	}
 
 
@@ -267,7 +286,7 @@ class SqlBuilder
 	public function addSelect(string $columns, mixed ...$params): void
 	{
 		$this->select[] = $columns;
-		$this->parameters['select'] = array_merge($this->parameters['select'], $params);
+		$this->parameters['select'] = [...$this->parameters['select'], ...$params];
 	}
 
 
@@ -306,7 +325,17 @@ class SqlBuilder
 			$this->joinCondition[$tableChain] = $this->parameters['joinCondition'][$tableChain] = [];
 		}
 
-		return $this->addCondition($condition, $params, $this->joinCondition[$tableChain], $this->parameters['joinCondition'][$tableChain]);
+		$this->conditionScope = "join:$tableChain\x00";
+		try {
+			return $this->addCondition(
+				$condition,
+				$params,
+				$this->joinCondition[$tableChain],
+				$this->parameters['joinCondition'][$tableChain],
+			);
+		} finally {
+			$this->conditionScope = '';
+		}
 	}
 
 
@@ -332,7 +361,7 @@ class SqlBuilder
 			return $this->addConditionComposition($condition, $params[0], $conditions, $conditionsParameters);
 		}
 
-		$hash = $this->getConditionHash($condition, $params);
+		$hash = $this->getConditionHash($this->conditionScope . $condition, $params);
 		if (isset($this->conditions[$hash])) {
 			return false;
 		}
@@ -414,7 +443,11 @@ class SqlBuilder
 
 					$arg = null;
 					$subSelectPlaceholderCount = substr_count($clone->getSql(), '?');
-					$replace = $match[2][0] . '(' . $clone->getSql() . (!$subSelectPlaceholderCount && count($clone->getSqlBuilder()->getParameters()) === 1 ? ' ?' : '') . ')';
+					$replace = $match[2][0]
+						. '('
+						. $clone->getSql()
+						. (!$subSelectPlaceholderCount && count($clone->getSqlBuilder()->getParameters()) === 1 ? ' ?' : '')
+						. ')';
 					if (count($clone->getSqlBuilder()->getParameters())) {
 						array_unshift($params, ...$clone->getSqlBuilder()->getParameters());
 					}
@@ -512,7 +545,7 @@ class SqlBuilder
 	public function addOrder(string $columns, mixed ...$params): void
 	{
 		$this->order[] = $columns;
-		$this->parameters['order'] = array_merge($this->parameters['order'], $params);
+		$this->parameters['order'] = [...$this->parameters['order'], ...$params];
 	}
 
 
@@ -610,19 +643,23 @@ class SqlBuilder
 			$tableAlias = substr($fooQuery, 0, -4);
 			$tableJoins[$tableAlias] = $requiredJoins;
 			$leftJoinDependency[$tableAlias] = [];
-			$finalJoinConditions[$tableAlias] = preg_replace_callback($this->getColumnChainsRegxp(), function (array $match) use ($tableAlias, &$tableJoins, &$leftJoinDependency): string {
-				$requiredJoins = [];
-				$query = $this->parseJoinsCb($requiredJoins, $match);
-				$queryParts = explode('.', $query);
-				$tableJoins[$queryParts[0]] = $requiredJoins;
-				if ($queryParts[0] !== $tableAlias) {
-					foreach (array_keys($requiredJoins) as $requiredTable) {
-						$leftJoinDependency[$tableAlias][$requiredTable] = $requiredTable;
+			$finalJoinConditions[$tableAlias] = preg_replace_callback(
+				$this->getColumnChainsRegxp(),
+				function (array $match) use ($tableAlias, &$tableJoins, &$leftJoinDependency): string {
+					$requiredJoins = [];
+					$query = $this->parseJoinsCb($requiredJoins, $match);
+					$queryParts = explode('.', $query);
+					$tableJoins[$queryParts[0]] = $requiredJoins;
+					if ($queryParts[0] !== $tableAlias) {
+						foreach (array_keys($requiredJoins) as $requiredTable) {
+							$leftJoinDependency[$tableAlias][$requiredTable] = $requiredTable;
+						}
 					}
-				}
 
-				return $query;
-			}, $joinCondition);
+					return $query;
+				},
+				$joinCondition,
+			);
 		}
 
 		$this->parameters['joinConditionSorted'] = [];
@@ -651,7 +688,7 @@ class SqlBuilder
 		if (isset($this->expandingJoins[$table])) {
 			$path = implode("' => '", array_map(
 				fn(string $value): string => $this->reservedTableNames[$value],
-				array_merge(array_keys($this->expandingJoins), [$table]),
+				[...array_keys($this->expandingJoins), $table],
 			));
 			throw new Nette\InvalidArgumentException("Circular reference detected at left join conditions (tables '$path').");
 		}
@@ -843,9 +880,9 @@ class SqlBuilder
 		$return = '';
 		foreach ($joins as [$joinTable, $joinAlias, $table, $tableColumn, $joinColumn]) {
 			$return .=
-				" LEFT JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " {$joinAlias}" : '') .
-				" ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}" .
-				(isset($leftJoinConditions[$joinAlias]) ? " {$leftJoinConditions[$joinAlias]}" : '');
+				" LEFT JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " {$joinAlias}" : '')
+				. " ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}"
+				. (isset($leftJoinConditions[$joinAlias]) ? " {$leftJoinConditions[$joinAlias]}" : '');
 		}
 
 		return $return;
@@ -949,7 +986,7 @@ class SqlBuilder
 			}
 		}
 
-		return hash('xxh128', $condition . json_encode($parameters));
+		return hash('xxh128', $condition . serialize($parameters)); // serialize() unlike json_encode() does not fail on binary strings
 	}
 
 

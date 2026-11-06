@@ -5,8 +5,7 @@ namespace MichalSpacekCz\Form\User;
 
 use Composer\Pcre\Regex;
 use MichalSpacekCz\Form\Controls\FormControlsFactory;
-use MichalSpacekCz\Form\UnprotectedFormFactory;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Http\IRequest;
 use Nette\Utils\Html;
 use Tracy\Debugger;
@@ -15,7 +14,6 @@ final readonly class SignInHoneypotFormFactory
 {
 
 	public function __construct(
-		private UnprotectedFormFactory $factory,
 		private FormControlsFactory $controlsFactory,
 		private IRequest $httpRequest,
 	) {
@@ -24,7 +22,7 @@ final readonly class SignInHoneypotFormFactory
 
 	public function create(): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$this->controlsFactory->addSignIn($form);
 		$form->onSuccess[] = function (Form $form): void {
 			$values = $form->getValues();

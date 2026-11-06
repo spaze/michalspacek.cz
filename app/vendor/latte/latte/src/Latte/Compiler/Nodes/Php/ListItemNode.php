@@ -7,9 +7,7 @@
 
 namespace Latte\Compiler\Nodes\Php;
 
-use Latte\Compiler\Node;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Node, Position, PrintContext};
 
 
 /**
@@ -22,6 +20,7 @@ class ListItemNode extends Node
 		public ExpressionNode|IdentifierNode|null $key = null,
 		public bool $byRef = false,
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 	}
 

@@ -8,11 +8,8 @@
 namespace Latte\Compiler\Nodes\Php\Expression;
 
 use Latte\Compiler\Nodes\Php;
-use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\Php\NameNode;
-use Latte\Compiler\Nodes\Php\OperatorNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\Nodes\Php\{ExpressionNode, NameNode, OperatorNode};
+use Latte\Compiler\{Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -26,6 +23,7 @@ class NewNode extends ExpressionNode implements OperatorNode
 		/** @var Php\ArgumentNode[] */
 		public array $args = [],
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (Php\ArgumentNode ...$args) {})(...$args);
 	}

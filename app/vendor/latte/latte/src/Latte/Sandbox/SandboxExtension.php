@@ -8,16 +8,12 @@
 namespace Latte\Sandbox;
 
 use Latte;
-use Latte\Compiler\Node;
-use Latte\Compiler\Nodes\Php;
+use Latte\Compiler\{Node, NodeTraverser, PrintContext};
+use Latte\Compiler\Nodes\{Php, TemplateNode};
 use Latte\Compiler\Nodes\Php\Expression;
-use Latte\Compiler\Nodes\TemplateNode;
-use Latte\Compiler\NodeTraverser;
-use Latte\Compiler\PrintContext;
-use Latte\Engine;
+use Latte\{Engine, SecurityViolationException};
 use Latte\Runtime\Template;
-use Latte\SecurityViolationException;
-use function is_string, strrchr;
+use function is_string;
 
 
 /**
@@ -61,7 +57,19 @@ final class SandboxExtension extends Latte\Extension
 
 	public function getCacheKey(Engine $engine): mixed
 	{
-		return (bool) $engine->getPolicy(effective: true);
+		$policy = $engine->getPolicy(effective: true);
+		if (!$policy) {
+			return false;
+		} elseif (method_exists($policy, 'getCacheSignature')) {
+			return [$policy::class, $policy->getCacheSignature()];
+		}
+
+		trigger_error(
+			$policy::class
+			. ' should implement getCacheSignature(), otherwise its instances with different rules share compiled templates.',
+			E_USER_DEPRECATED,
+		);
+		return $policy::class;
 	}
 
 
@@ -92,7 +100,7 @@ final class SandboxExtension extends Latte\Extension
 		} elseif (
 			$node instanceof Expression\FunctionCallNode
 			&& $node->name instanceof Php\NameNode
-			&& !$node->isPartialFunction()
+			&& !$node->isPartialApplication()
 		) {
 			if (!$this->policy->isFunctionAllowed((string) $node->name)) {
 				throw new SecurityViolationException("Function $node->name() is not allowed.", $node->position);
@@ -120,6 +128,20 @@ final class SandboxExtension extends Latte\Extension
 				$node->args = [new Php\ArgumentNode($arg, unpack: true)];
 			}
 
+			return $node;
+
+		} elseif ($node instanceof Expression\CastNode && strtolower($node->type) === 'array') {
+			return new Expression\AuxiliaryNode(
+				fn(PrintContext $context, Node $expr) => '$this->global->sandbox->castToArray(' . $expr->print($context) . ')',
+				[$node->expr],
+			);
+
+		} elseif ($node instanceof Latte\Essential\Nodes\ForeachNode) {
+			$method = $node->byRef && $node->expression->isWritable() ? 'iterableByRef' : 'iterable';
+			$node->expression = new Expression\AuxiliaryNode(
+				fn(PrintContext $context, Node $expr) => '$this->global->sandbox->' . $method . '(' . $expr->print($context) . ')',
+				[$node->expression],
+			);
 			return $node;
 
 		} elseif ($node instanceof Expression\PropertyFetchNode

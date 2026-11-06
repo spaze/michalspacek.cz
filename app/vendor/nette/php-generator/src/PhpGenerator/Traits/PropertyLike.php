@@ -7,11 +7,8 @@
 
 namespace Nette\PhpGenerator\Traits;
 
-use Nette\PhpGenerator\PropertyAccessMode;
-use Nette\PhpGenerator\PropertyHook;
-use Nette\PhpGenerator\PropertyHookType;
-use Nette\PhpGenerator\Visibility;
-use function array_filter, in_array, is_string;
+use Nette\PhpGenerator\{PropertyAccessMode, PropertyHook, Visibility};
+use function is_string;
 
 
 /**
@@ -29,6 +26,7 @@ trait PropertyLike
 
 
 	/**
+	 * Sets asymmetric visibility for get and set access modes.
 	 * @param  Visibility|'public'|'protected'|'private'|null  $get
 	 * @param  Visibility|'public'|'protected'|'private'|null  $set
 	 */
@@ -63,7 +61,7 @@ trait PropertyLike
 	public function isPublic(PropertyAccessMode|string $mode = PropertyAccessMode::Get): bool
 	{
 		$mode = is_string($mode) ? PropertyAccessMode::from($mode) : $mode;
-		return in_array($this->visibility[$mode->value], [Visibility::Public, null], strict: true);
+		return in_array($this->visibility[$mode->value], [Visibility::Public, null], true);
 	}
 
 
@@ -129,12 +127,17 @@ trait PropertyLike
 
 	/**
 	 * Replaces all hooks.
-	 * @param  array<string, PropertyHook>  $hooks
+	 * @param  array<string, PropertyHook>  $hooks  indexed by hook type ('set'|'get')
 	 */
 	public function setHooks(array $hooks): static
 	{
 		(function (PropertyHook ...$hooks) {})(...$hooks);
-		$this->hooks = $hooks;
+		$this->hooks = [];
+		foreach ($hooks as $type => $hook) { // preserves caller order of hooks
+			$this->hooks[PropertyAccessMode::from((string) $type)->value] = $hook;
+		}
+
+		$this->hooks += ['set' => null, 'get' => null];
 		return $this;
 	}
 
@@ -146,27 +149,30 @@ trait PropertyLike
 	}
 
 
-	/** @param  PropertyHookType|'set'|'get'  $type */
-	public function addHook(PropertyHookType|string $type, string $shortBody = ''): PropertyHook
+	/**
+	 * Adds a get or set hook. When $shortBody is provided, it is used as an arrow-function-style body.
+	 * @param  PropertyAccessMode|'set'|'get'  $type
+	 */
+	public function addHook(PropertyAccessMode|string $type, string $shortBody = ''): PropertyHook
 	{
-		$type = is_string($type) ? PropertyHookType::from($type) : $type;
+		$type = is_string($type) ? PropertyAccessMode::from($type) : $type;
 		return $this->hooks[$type->value] = (new PropertyHook)
 			->setBody($shortBody, short: true);
 	}
 
 
-	/** @param  PropertyHookType|'set'|'get'  $type */
-	public function getHook(PropertyHookType|string $type): ?PropertyHook
+	/** @param  PropertyAccessMode|'set'|'get'  $type */
+	public function getHook(PropertyAccessMode|string $type): ?PropertyHook
 	{
-		$type = is_string($type) ? PropertyHookType::from($type) : $type;
+		$type = is_string($type) ? PropertyAccessMode::from($type) : $type;
 		return $this->hooks[$type->value] ?? null;
 	}
 
 
-	/** @param  PropertyHookType|'set'|'get'  $type */
-	public function hasHook(PropertyHookType|string $type): bool
+	/** @param  PropertyAccessMode|'set'|'get'  $type */
+	public function hasHook(PropertyAccessMode|string $type): bool
 	{
-		$type = is_string($type) ? PropertyHookType::from($type) : $type;
+		$type = is_string($type) ? PropertyAccessMode::from($type) : $type;
 		return isset($this->hooks[$type->value]);
 	}
 }

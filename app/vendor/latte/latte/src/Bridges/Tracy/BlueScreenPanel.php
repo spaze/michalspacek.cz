@@ -9,9 +9,7 @@ namespace Latte\Bridges\Tracy;
 
 use Latte;
 use Tracy;
-use Tracy\BlueScreen;
-use Tracy\Helpers;
-use const ENT_IGNORE;
+use Tracy\{BlueScreen, Helpers};
 
 
 /**
@@ -39,8 +37,8 @@ class BlueScreenPanel
 		) {
 			Tracy\Debugger::addSourceMapper(self::mapLatteSourceCode(...));
 			$blueScreen->addFileGenerator(fn(string $file) => str_ends_with($file, '.latte')
-					? "{block content}\n\$END\$"
-					: null);
+				? "{block content}\n\$END\$"
+				: null);
 		}
 	}
 
@@ -51,15 +49,20 @@ class BlueScreenPanel
 		if ($e instanceof Latte\CompileException && $e->sourceName) {
 			return [
 				'tab' => 'Template',
-				'panel' => (preg_match('#\n|\?#', $e->sourceName)
-						? ''
-						: '<p>'
-							. (@is_file($e->sourceName) // @ - may trigger error
-								? '<b>File:</b> ' . Helpers::editorLink($e->sourceName, $e->position?->line)
-								: '<b>' . htmlspecialchars($e->sourceName . ($e->position?->line ? ':' . $e->position->line : '')) . '</b>')
-							. '</p>')
+				'panel' => (preg_match('#[\n?]#', $e->sourceName)
+					? ''
+					: '<p>'
+						. (@is_file($e->sourceName) // @ - may trigger error
+							? '<b>File:</b> ' . Helpers::editorLink($e->sourceName, $e->position?->line)
+							: '<b>' . htmlspecialchars($e->sourceName . ($e->position?->line ? ':' . $e->position->line : '')) . '</b>')
+						. '</p>')
 					. '<pre class="code tracy-code"><div>'
-					. BlueScreen::highlightLine(htmlspecialchars($e->sourceCode ?? '', ENT_IGNORE, 'UTF-8'), $e->position->line ?? 0, 15, $e->position->column ?? 0)
+					. BlueScreen::highlightLine(
+						htmlspecialchars($e->sourceCode ?? '', ENT_IGNORE, 'UTF-8'),
+						$e->position->line ?? 0,
+						15,
+						$e->position->column ?? 0,
+					)
 					. '</div></pre>',
 			];
 		}
@@ -75,7 +78,7 @@ class BlueScreenPanel
 			$e instanceof Latte\CompileException
 			&& $e->sourceName
 			&& @is_file($e->sourceName) // @ - may trigger error
-			&& (preg_match('#Unknown tag (\{\w+)\}, did you mean (\{\w+)\}\?#A', $e->getMessage(), $m)
+			&& (preg_match('#Unknown tag (\{\w+)}, did you mean (\{\w+)}\?#A', $e->getMessage(), $m)
 				|| preg_match('#Unknown attribute (n:\w+), did you mean (n:\w+)\?#A', $e->getMessage(), $m))
 		) {
 			return [
@@ -92,7 +95,13 @@ class BlueScreenPanel
 	public static function mapLatteSourceCode(string $file, int $line): ?array
 	{
 		return ($source = Latte\Helpers::mapCompiledToSource($file, $line)) && $source['name'] !== null && @is_file($source['name']) // @ - may trigger error
-			? ['file' => $source['name'], 'line' => $source['line'] ?? 0, 'column' => $source['column'] ?? 0, 'label' => 'Latte', 'active' => true]
+			? [
+				'file' => $source['name'],
+				'line' => $source['line'] ?? 0,
+				'column' => $source['column'] ?? 0,
+				'label' => 'Latte',
+				'active' => true,
+			]
 			: null;
 	}
 }

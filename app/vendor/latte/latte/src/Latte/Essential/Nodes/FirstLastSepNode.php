@@ -7,11 +7,9 @@
 
 namespace Latte\Essential\Nodes;
 
-use Latte\Compiler\Nodes\AreaNode;
+use Latte\Compiler\{Node, NodeTraverser, PrintContext, Tag};
+use Latte\Compiler\Nodes\{AreaNode, StatementNode, TemplateNode};
 use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Nodes\StatementNode;
-use Latte\Compiler\PrintContext;
-use Latte\Compiler\Tag;
 
 
 /**
@@ -71,5 +69,20 @@ class FirstLastSepNode extends StatementNode
 		if ($this->else) {
 			yield $this->else;
 		}
+	}
+
+
+	/**
+	 * Warns when {first}, {last} or {sep} is used outside {foreach}. Becomes an error in Latte 3.2.
+	 */
+	public static function outsideForeachPass(TemplateNode $node): void
+	{
+		(new NodeTraverser)->traverse($node, function (Node $node) {
+			if ($node instanceof ForeachNode) { // everything below is inside a loop
+				return NodeTraverser::DontTraverseChildren;
+			} elseif ($node instanceof self) {
+				trigger_error("Tag {{$node->name}} outside {foreach} is deprecated ($node->position)", E_USER_DEPRECATED);
+			}
+		});
 	}
 }

@@ -21,6 +21,7 @@ use function is_array;
  *     users: array<string, string|array{password: string, roles?: string|list<string>, data?: array<string, mixed>}>,
  *     roles: array<string, string|list<string>|null>,
  *     resources: array<string, string|null>,
+ *     rules: object{allow: list<string|list<string|list<string>|null>>, deny: list<string|list<string|list<string>|null>>},
  *     authentication: object{
  *         storage: 'session'|'cookie',
  *         expiration: string|null,
@@ -41,11 +42,12 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 	public function getConfigSchema(): Nette\Schema\Schema
 	{
+		$rule = Expect::anyOf(Expect::string(), Expect::listOf('string|array|null')->max(3));
 		return Expect::structure([
 			'debugger' => Expect::bool(),
 			'users' => Expect::arrayOf(
 				Expect::anyOf(
-					Expect::string()->dynamic(), // user => password
+					Expect::string()->dynamic(), // user => password (plain or hash)
 					Expect::structure([ // user => password + roles + data
 						'password' => Expect::string()->dynamic(),
 						'roles' => Expect::anyOf(Expect::string(), Expect::listOf('string')),
@@ -55,6 +57,10 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			),
 			'roles' => Expect::arrayOf('string|array|null'), // role => parent(s)
 			'resources' => Expect::arrayOf('string|null'), // resource => parent
+			'rules' => Expect::structure([ // [role(s), resource(s), privilege(s)] or just role(s)
+				'allow' => Expect::listOf($rule),
+				'deny' => Expect::listOf($rule),
+			]),
 			'authentication' => Expect::structure([
 				'storage' => Expect::anyOf('session', 'cookie')->default('session'),
 				'expiration' => Expect::string()->dynamic(),
@@ -112,7 +118,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))
-				->setType(Nette\Security\IAuthenticator::class)
+				->setType(Nette\Security\Authenticator::class)
 				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles, $usersData]);
 
 			if ($this->name === 'security') {
@@ -120,7 +126,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 		}
 
-		if ($config->roles || $config->resources) {
+		if ($config->roles || $config->resources || $config->rules->allow || $config->rules->deny) {
 			$authorizator = $builder->addDefinition($this->prefix('authorizator'))
 				->setType(Nette\Security\Authorizator::class)
 				->setFactory(Nette\Security\Permission::class);
@@ -131,6 +137,12 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 			foreach ($config->resources as $resource => $parents) {
 				$authorizator->addSetup('addResource', [$resource, $parents]);
+			}
+
+			foreach (['allow', 'deny'] as $type) {
+				foreach ($config->rules->$type as $rule) {
+					$authorizator->addSetup($type, array_pad(is_array($rule) ? $rule : [$rule], 3, null));
+				}
 			}
 
 			if ($this->name === 'security') {
@@ -150,8 +162,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		if (
-			$this->debugMode &&
-			($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
+			$this->debugMode
+			&& ($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
 		) {
 			$definition = $builder->getDefinition($this->prefix('user'));
 			assert($definition instanceof Nette\DI\Definitions\ServiceDefinition);

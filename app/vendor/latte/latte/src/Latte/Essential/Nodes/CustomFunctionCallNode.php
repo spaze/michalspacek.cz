@@ -9,8 +9,7 @@ namespace Latte\Essential\Nodes;
 
 use Latte\Compiler\Nodes\Php;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
-use Latte\Compiler\Position;
-use Latte\Compiler\PrintContext;
+use Latte\Compiler\{Position, PrintContext};
 use Latte\Helpers;
 
 
@@ -24,6 +23,7 @@ class CustomFunctionCallNode extends ExpressionNode
 		/** @var array<Php\ArgumentNode> */
 		public array $args = [],
 		public ?Position $position = null,
+		public ?Position $end = null,
 	) {
 		(function (Php\ArgumentNode ...$args) {})(...$args);
 	}

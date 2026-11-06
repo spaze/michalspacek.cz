@@ -8,7 +8,7 @@
 namespace Latte;
 
 use Latte\Compiler\Nodes\TemplateNode;
-use function array_map, array_merge, class_exists, extension_loaded, get_debug_type, preg_match, serialize, substr;
+use function extension_loaded;
 
 
 /**
@@ -16,8 +16,8 @@ use function array_map, array_merge, class_exists, extension_loaded, get_debug_t
  */
 class Engine
 {
-	public const Version = '3.1.4';
-	public const VersionId = 30104;
+	public const Version = '3.1.7';
+	public const VersionId = 30107;
 
 	/** @deprecated use Engine::Version */
 	public const
@@ -60,7 +60,7 @@ class Engine
 	private ?Policy $policy = null;
 	private bool $sandboxed = false;
 	private ?string $phpBinary = null;
-	private ?string $configurationHash;
+	private ?string $configurationHash = null;
 	private ?string $locale = null;
 	private ?string $syntax = null;
 
@@ -179,7 +179,7 @@ class Engine
 	{
 		$passes = [];
 		foreach ($this->extensions as $extension) {
-			$passes = array_merge($passes, $extension->getPasses());
+			$passes = [...$passes, ...$extension->getPasses()];
 		}
 
 		$passes = Helpers::sortBeforeAfter($passes);
@@ -219,14 +219,16 @@ class Engine
 	private function loadTemplate(string $name): string
 	{
 		$class = $this->getTemplateClass($name);
-		if (class_exists($class, autoload: false)) {
+		if (class_exists($class, false)) {
 			// nothing
 		} elseif ($this->cache->directory) {
 			$this->cache->loadOrCreate($this, $name);
 		} else {
 			$compiled = $this->compile($name);
-			if (@eval(substr($compiled, 5)) === false) { // @ is escalated to exception, substr removes <?php
-				throw (new CompileException('Error in template: ' . (error_get_last()['message'] ?? '')))
+			try {
+				eval(substr($compiled, 5)); // substr removes <?php
+			} catch (\ParseError $e) {
+				throw (new CompileException('Error in template: ' . $e->getMessage(), previous: $e))
 					->setSource($compiled, "$name (compiled)");
 			}
 		}
@@ -259,9 +261,9 @@ class Engine
 	 */
 	public function generateTemplateHash(string $name): string
 	{
-		$hash = $this->configurationHash ?? hash('xxh128', serialize($this->generateConfigurationSignature()));
+		$hash = $this->configurationHash ??= hash('xxh128', serialize($this->generateConfigurationSignature()));
 		$hash .= $this->getLoader()->getUniqueId($name);
-		return substr(hash('xxh128', $hash), 0, 10);
+		return substr(hash('xxh128', $hash), 0, 16); // 64 bits, a collision would silently render a different template
 	}
 
 
@@ -294,6 +296,7 @@ class Engine
 		}
 
 		$this->filters->add($name, $callback);
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -344,6 +347,8 @@ class Engine
 		foreach ($extension->getProviders() as $name => $value) {
 			$this->providers->$name = $value;
 		}
+
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -365,6 +370,7 @@ class Engine
 		}
 
 		$this->functions->add($name, $callback);
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -416,6 +422,7 @@ class Engine
 	public function setPolicy(?Policy $policy): static
 	{
 		$this->policy = $policy;
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -441,6 +448,7 @@ class Engine
 	public function setSandboxMode(bool $state = true): static
 	{
 		$this->sandboxed = $state;
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -448,6 +456,7 @@ class Engine
 	public function setContentType(string $type): static
 	{
 		$this->contentType = $type;
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -485,6 +494,7 @@ class Engine
 	public function setFeature(Feature $feature, bool $state = true): static
 	{
 		$this->features[$feature->name] = $state;
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -531,6 +541,7 @@ class Engine
 			throw new RuntimeException("Setting a locale requires the 'intl' extension to be installed.");
 		}
 		$this->locale = $locale;
+		$this->configurationHash = null;
 		return $this;
 	}
 
@@ -570,6 +581,7 @@ class Engine
 	public function setSyntax(string $syntax): static
 	{
 		$this->syntax = $syntax;
+		$this->configurationHash = null;
 		return $this;
 	}
 

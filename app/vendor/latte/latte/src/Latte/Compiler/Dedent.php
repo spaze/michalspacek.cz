@@ -8,9 +8,8 @@
 namespace Latte\Compiler;
 
 use Latte\CompileException;
-use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\FragmentNode;
-use function count, explode, implode, preg_match, str_ends_with, str_starts_with, strlen, substr, trim;
+use Latte\Compiler\Nodes\{AreaNode, FragmentNode};
+use function count, strlen;
 
 
 /**
@@ -131,7 +130,10 @@ final class Dedent
 					$line = substr($line, 0, $tagIndentLen) . substr($line, strlen($baseIndent));
 					$modified = true;
 				} elseif (trim($line) !== '') {
-					throw new CompileException('Inconsistent indentation.', $node->position ? new Position($node->position->line + $j, 1) : null);
+					throw new CompileException(
+						'Inconsistent indentation.',
+						$node->position ? new Position($node->position->line + $j) : null,
+					);
 				}
 			}
 

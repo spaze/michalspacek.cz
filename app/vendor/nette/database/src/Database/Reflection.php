@@ -8,7 +8,6 @@
 namespace Nette\Database;
 
 use Nette\Database\Reflection\Table;
-use function array_values;
 
 
 /**
@@ -51,8 +50,9 @@ final class Reflection
 	{
 		try {
 			$table = new Table($this, $name);
-			$table->columns;
-			return $table;
+			return $table->columns
+				? $table
+				: null; // some drivers (SQLite) report no columns instead of failing for an unknown table
 		} catch (DriverException) {
 		}
 		return null;
@@ -83,7 +83,13 @@ final class Reflection
 	{
 		$res = [];
 		foreach ($this->driver->getTables() as $row) {
-			$res[$row['fullName'] ?? $row['name']] = new Table($this, $row['name'], $row['view'], $row['fullName'] ?? null, $row['comment'] ?? null);
+			$res[$row['fullName'] ?? $row['name']] = new Table(
+				$this,
+				$row['name'],
+				$row['view'],
+				$row['fullName'] ?? null,
+				$row['comment'] ?? null,
+			);
 		}
 		$this->tables = $res;
 	}

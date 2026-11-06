@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Presentation\Www;
 
 use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Http\Redirections;
-use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 use Nette\Http\IResponse;
 use Override;
@@ -52,10 +51,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 	{
 		parent::startup();
 		$request = $this->getRequest();
-		if ($request === null) {
-			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
-		}
-		if (!$request->isMethod(Request::FORWARD)) {
+		if (!$request->isMethod(Request::Forward)) {
 			$this->error();
 		}
 

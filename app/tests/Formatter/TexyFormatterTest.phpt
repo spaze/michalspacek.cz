@@ -225,7 +225,7 @@ final class TexyFormatterTest extends TestCase
 			}
 
 		};
-		$html = Html::fromText('foo');
+		$html = Html::text('foo');
 		Assert::same('__toString', $this->texyFormatter->substitutePossiblyUnsafeHtml($toString, [])->render());
 		Assert::same('<code>__toString</code>', $this->texyFormatter->substitutePossiblyUnsafeHtml("`%s`", [$toString])->render());
 		Assert::same('__toString', $this->texyFormatter->substitutePossiblyUnsafeHtml($toStringNoInterface, [])->render());

@@ -1,18 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Texy! (https://texy.nette.org)
+ * This file is part of the Texy! (https://texy.deegee.dev)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Texy\Modules;
 
 use Texy;
-use Texy\HtmlElement;
-use Texy\Modifier;
-use Texy\Patterns;
-use Texy\Regexp;
-use function explode, ltrim, rtrim, str_contains, str_replace, strtr;
+use Texy\{HtmlElement, Modifier, Patterns, Regexp};
 
 
 /**

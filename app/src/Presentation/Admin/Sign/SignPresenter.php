@@ -17,6 +17,7 @@ use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationDisa
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationInvalidOrExpiredTokenException;
 use MichalSpacekCz\User\WebAuthn\Registration\Exceptions\PasskeyRegistrationUserMismatchException;
 use MichalSpacekCz\User\WebAuthn\Registration\PasskeyReset;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IRequest;
@@ -27,7 +28,7 @@ use Nette\Security\User;
 final class SignPresenter extends BasePresenter
 {
 
-	/** @persistent */
+	#[Persistent]
 	public string $backlink = '';
 
 

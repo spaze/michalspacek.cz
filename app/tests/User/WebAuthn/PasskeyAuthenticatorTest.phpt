@@ -51,6 +51,7 @@ use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CredentialRecord;
 use Webauthn\Exception\AuthenticatorResponseVerificationException;
 use Webauthn\Exception\CounterException;
+use Webauthn\Exception\InvalidDataException;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\TrustPath\EmptyTrustPath;
@@ -151,6 +152,17 @@ final class PasskeyAuthenticatorTest extends TestCase
 	}
 
 
+	public function testVerifyAuthenticationThrowsOnCredentialJsonOfWrongShape(): void
+	{
+		// Valid JSON the library's own denormalizer refuses, with its own exception rather than one of the serializer's
+		$this->passkeySessionSection->setAuthChallenge(random_bytes(32));
+		$e = Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyAuthentication(Json::encode(['id' => 'AAAA', 'type' => 'public-key']));
+		}, PasskeyAuthenticationCredentialDeserializationException::class);
+		Assert::type(InvalidDataException::class, $e?->getPrevious());
+	}
+
+
 	public function testVerifyAuthenticationThrowsCrossOrigin(): void
 	{
 		$this->passkeyAuthenticator->generateAuthenticationOptions();
@@ -221,6 +233,16 @@ final class PasskeyAuthenticatorTest extends TestCase
 		Assert::exception(function () use ($passkeyAuthenticator): void {
 			$passkeyAuthenticator->verifyRegistration('not-valid-json', 'foo key', 1);
 		}, PasskeyRegistrationCredentialDeserializationException::class);
+	}
+
+
+	public function testVerifyRegistrationThrowsOnCredentialJsonOfWrongShape(): void
+	{
+		$this->passkeySessionSection->setRegChallenge(random_bytes(32));
+		$e = Assert::exception(function (): void {
+			$this->passkeyAuthenticator->verifyRegistration(Json::encode(['id' => 'AAAA', 'type' => 'public-key']), 'foo key', 1);
+		}, PasskeyRegistrationCredentialDeserializationException::class);
+		Assert::type(InvalidDataException::class, $e?->getPrevious());
 	}
 
 

@@ -31,7 +31,7 @@ final class DirectInputFormFactoryTest extends TestCase
 		$input = $form->getComponent('input');
 		assert($input instanceof TextArea);
 		$input->setDefaultValue($value);
-		$form->validate([$input]); // just the textarea, so the form's CSRF token doesn't drown out the rule under test
+		$form->validate();
 		return $input;
 	}
 

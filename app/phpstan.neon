@@ -13,6 +13,9 @@ parameters:
 	bootstrapFiles:
 		- ../dev-tools/vendor/autoload.php
 	ignoreErrors:
+		- # nette/utils declares `Html::text()` and `Html::html()` with `@method static` in the class docblock, which phpstan-nette's own stub of the class replaces, and its reflection extension then takes any method name for a fluent attribute setter, an instance method; drop once phpstan-nette knows the two, https://github.com/phpstan/phpstan-nette/pull/235
+			message: '#^Static call to instance method Nette\\Utils\\Html::(text|html)\(\)\.$#'
+			identifier: method.staticCall
 		- # The getId() and getData() methods are called on a SimpleIdentity object, but are defined in a deprecated Identity class
 			identifier: method.deprecatedClass
 			path: tests/User/ManagerTest.phpt

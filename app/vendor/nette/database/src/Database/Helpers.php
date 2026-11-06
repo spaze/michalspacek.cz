@@ -10,7 +10,7 @@ namespace Nette\Database;
 use Nette;
 use Nette\Bridges\DatabaseTracy\ConnectionPanel;
 use Tracy;
-use function array_filter, array_keys, array_unique, count, fclose, fgets, fopen, fstat, get_resource_type, htmlspecialchars, implode, is_bool, is_float, is_resource, is_string, preg_last_error, preg_match, preg_replace, preg_replace_callback, reset, rtrim, set_time_limit, str_ends_with, str_starts_with, stream_get_meta_data, strlen, strncasecmp, substr, trim, wordwrap;
+use function count, is_array, is_bool, is_float, is_resource, is_string, strlen;
 
 
 /**
@@ -105,20 +105,24 @@ class Helpers
 
 		// syntax highlight
 		$sql = htmlspecialchars($sql, ENT_IGNORE, 'UTF-8');
-		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#is", function (array $matches) {
-			if (!empty($matches[1])) { // comment
-				return '<em style="color:gray">' . $matches[1] . '</em>';
+		$sql = preg_replace_callback(
+			"#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#is",
+			function (array $matches) {
+				if (!empty($matches[1])) { // comment
+					return '<em style="color:gray">' . $matches[1] . '</em>';
 
-			} elseif (!empty($matches[2])) { // error
-				return '<strong style="color:red">' . $matches[2] . '</strong>';
+				} elseif (!empty($matches[2])) { // error
+					return '<strong style="color:red">' . $matches[2] . '</strong>';
 
-			} elseif (!empty($matches[3])) { // most important keywords
-				return '<strong style="color:blue">' . $matches[3] . '</strong>';
+				} elseif (!empty($matches[3])) { // most important keywords
+					return '<strong style="color:blue">' . $matches[3] . '</strong>';
 
-			} elseif (!empty($matches[4])) { // other keywords
-				return '<strong style="color:green">' . $matches[4] . '</strong>';
-			}
-		}, $sql);
+				} elseif (!empty($matches[4])) { // other keywords
+					return '<strong style="color:green">' . $matches[4] . '</strong>';
+				}
+			},
+			$sql,
+		);
 
 		// parameters
 		$sql = preg_replace_callback('#\?#', function () use ($params, $connection): string {
@@ -180,6 +184,20 @@ class Helpers
 		}
 
 		return $types;
+	}
+
+
+	/**
+	 * Formats a float as a string without losing precision. INF and NAN are passed through,
+	 * it is up to the engine whether it accepts them.
+	 * @internal
+	 */
+	public static function formatFloat(float $value): string
+	{
+		$res = (string) $value; // locale-independent, but honours the precision ini and may round the value
+		return is_finite($value) && (float) $res !== $value
+			? str_replace(',', '.', sprintf('%.17G', $value)) // 17 digits always survive the round-trip, but %G is locale-aware
+			: $res;
 	}
 
 
@@ -283,7 +301,7 @@ class Helpers
 				$sql = '';
 				$count++;
 				if ($onProgress) {
-					$onProgress($count, isset($stat['size']) ? $size * 100 / $stat['size'] : null);
+					$onProgress($count, empty($stat['size']) ? null : $size * 100 / $stat['size']);
 				}
 			} else {
 				$sql .= $s;
@@ -294,7 +312,7 @@ class Helpers
 			$pdo->exec($sql);
 			$count++;
 			if ($onProgress) {
-				$onProgress($count, isset($stat['size']) ? 100 : null);
+				$onProgress($count, empty($stat['size']) ? null : 100);
 			}
 		}
 
@@ -357,7 +375,7 @@ class Helpers
 		$return = [];
 		if ($key === null) {
 			foreach ($rows as $row) {
-				$return[] = ($value === null ? $row : $row[$value]);
+				$return[] = $row[$value];
 			}
 		} elseif ($key instanceof \Closure) {
 			foreach ($rows as $row) {
@@ -406,15 +424,53 @@ class Helpers
 
 
 	/**
+	 * Materializes rows for insertion. A Traversable is drained by position, so that rows yielded
+	 * under colliding keys (`yield from`) survive, while a single associative row stays inspectable.
+	 * @param  iterable<mixed>  $data
+	 * @return array<mixed>
+	 * @internal
+	 */
+	public static function materializeRows(iterable $data): array
+	{
+		if (is_array($data)) {
+			return $data;
+		}
+
+		$keys = $values = [];
+		foreach ($data as $key => $value) {
+			$keys[] = $key;
+			$values[] = $value;
+		}
+
+		return $keys === array_filter($keys, 'is_int')
+			? $values
+			: array_combine($keys, $values);
+	}
+
+
+	/**
+	 * Checks whether the data is a list of rows rather than a single row. Integer keys are never
+	 * column names, so any all-integer keys mean a list, even with gaps left by e.g. array_filter().
+	 * @param  array<mixed>  $data
+	 * @internal
+	 */
+	public static function isRowList(array $data): bool
+	{
+		$keys = array_keys($data);
+		return $keys !== [] && $keys === array_filter($keys, 'is_int');
+	}
+
+
+	/**
 	 * Parses a SQL column type string into its components.
-	 * @return array{type: ?string, length: ?int, scale: ?int, parameters: ?string}
+	 * @return array{type: ?string, size: ?int, scale: ?int, parameters: ?string}
 	 */
 	public static function parseColumnType(string $type): array
 	{
 		preg_match('/^([^(]+)(?:\((?:(\d+)(?:,(\d+))?|([^)]+))\))?/', $type, $m, PREG_UNMATCHED_AS_NULL);
 		return [
 			'type' => $m[1] ?? null,
-			'length' => isset($m[2]) ? (int) $m[2] : null,
+			'size' => isset($m[2]) ? (int) $m[2] : null,
 			'scale' => isset($m[3]) ? (int) $m[3] : null,
 			'parameters' => $m[4] ?? null,
 		];

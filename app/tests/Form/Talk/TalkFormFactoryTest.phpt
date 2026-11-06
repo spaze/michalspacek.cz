@@ -187,7 +187,6 @@ final class TalkFormFactoryTest extends TestCase
 		$form->validate();
 
 		$expected = [
-			'This field is required.', // CSRF protection error message because the field is missing in the test
 			'Zadejte prosím jazyk',
 			'Invalid link: Texy title',
 			'Invalid link: Texy description',

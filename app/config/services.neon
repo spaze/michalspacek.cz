@@ -8,7 +8,6 @@ services:
 		type: Nette\CommandLine\Console
 		imported: true
 	- MichalSpacekCz\Application\Error\AppError
-	- MichalSpacekCz\Application\LinkGenerator
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
 	- @MichalSpacekCz\Application\Routing\LocaleRouter::getRouteList
@@ -56,7 +55,6 @@ services:
 	- MichalSpacekCz\Form\BlogPostFormFactory
 	- MichalSpacekCz\Form\Controls\FormControlsFactory
 	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
-	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\InterviewFormFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
@@ -86,7 +84,6 @@ services:
 	passkeyRegistrationFormFactoryAdd: MichalSpacekCz\Form\User\PasskeyRegistrationFormFactory(passkeyRegistration: @passkeyAdd)
 	- MichalSpacekCz\Form\User\RegenerateTokensFormFactory
 	- MichalSpacekCz\Form\User\SignInHoneypotFormFactory
-	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Form\Validators\FormValidators
 	- MichalSpacekCz\Form\Validators\FormValidatorRuleTexy

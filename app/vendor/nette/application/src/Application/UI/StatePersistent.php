@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
-
-declare(strict_types=1);
 
 namespace Nette\Application\UI;
 
@@ -17,11 +15,13 @@ interface StatePersistent
 {
 	/**
 	 * Loads state information.
+	 * @param  array<string, mixed>  $params
 	 */
 	function loadState(array $params): void;
 
 	/**
 	 * Saves state information for next request.
+	 * @param  array<string, mixed>  $params
 	 */
 	function saveState(array &$params): void;
 }

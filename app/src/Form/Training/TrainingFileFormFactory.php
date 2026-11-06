@@ -4,10 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Training;
 
 use DateTimeInterface;
-use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Utils\MimeType;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 
@@ -15,7 +14,6 @@ final readonly class TrainingFileFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
 		private TrainingFiles $trainingFiles,
 	) {
 	}
@@ -27,7 +25,7 @@ final readonly class TrainingFileFormFactory
 	 */
 	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): Form
 	{
-		$form = $this->factory->create();
+		$form = new Form();
 		$allowedExtensions = $this->trainingFiles->getAllowedExtensions();
 		$accept = [];
 		foreach ($allowedExtensions as $extension) {
