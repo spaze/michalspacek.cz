@@ -26,6 +26,12 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	/** @var array<string, list<string>|array<string, string|null>> */
 	private array $allLinksParams = [];
 
+	/** @var list<string> */
+	private array $linksDestinations = [];
+
+	/** @var list<string> */
+	private array $linksForLocaleParamsDestinations = [];
+
 
 	/**
 	 * @param array<string, array{code:string, name:string}> $languages
@@ -44,6 +50,8 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 		$this->allLinks = [];
 		$this->allLinksParams = [];
 		$this->linksForLocaleParams = [];
+		$this->linksDestinations = [];
+		$this->linksForLocaleParamsDestinations = [];
 		$this->wontThrow();
 	}
 
@@ -60,6 +68,7 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	#[Override]
 	public function links(string $destination, array $params = []): array
 	{
+		$this->linksDestinations[] = $destination;
 		$links = [];
 		foreach ($this->links as $locale => $link) {
 			$links[$locale] = new LocaleLink($locale, $this->languages[$locale]['code'], $this->languages[$locale]['name'], $link);
@@ -69,6 +78,17 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 
 
 	/**
+	 * @return list<string>
+	 */
+	public function getLinksDestinations(): array
+	{
+		return $this->linksDestinations;
+	}
+
+
+	/**
+	 * The links to return, only for the locales given to linksForLocaleParams() like the real one does.
+	 *
 	 * @param array<string, string> $linksForLocaleParams locale => URL
 	 */
 	public function setLinksForLocaleParams(array $linksForLocaleParams): void
@@ -80,11 +100,23 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	#[Override]
 	public function linksForLocaleParams(string $destination, array $localeParams): array
 	{
+		$this->linksForLocaleParamsDestinations[] = $destination;
 		$links = [];
 		foreach ($this->linksForLocaleParams as $locale => $link) {
-			$links[$locale] = new LocaleLink($locale, $this->languages[$locale]['code'], $this->languages[$locale]['name'], $link);
+			if (isset($localeParams[$locale]) || isset($localeParams['*'])) {
+				$links[$locale] = new LocaleLink($locale, $this->languages[$locale]['code'], $this->languages[$locale]['name'], $link);
+			}
 		}
 		return $links;
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	public function getLinksForLocaleParamsDestinations(): array
+	{
+		return $this->linksForLocaleParamsDestinations;
 	}
 
 

@@ -57,8 +57,9 @@ final class ArticlesMock extends Articles
 
 	/**
 	 * @param list<ArticleEdit> $edits
+	 * @param list<string> $slugTags
 	 */
-	public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false): void
+	public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false, array $slugTags = []): void
 	{
 		$title = "Title {$suffix}";
 		$lead = "Excerpt {$suffix}";
@@ -82,7 +83,7 @@ final class ArticlesMock extends Articles
 			null,
 			null,
 			[],
-			[],
+			$slugTags,
 			[],
 			null,
 			"https://example.com/{$suffix}",
@@ -103,6 +104,25 @@ final class ArticlesMock extends Articles
 	public function getAll(?int $limit = null): array
 	{
 		return $this->articles;
+	}
+
+
+	/**
+	 * The posts it's been given, whatever their tags.
+	 *
+	 * @return list<BlogPost>
+	 */
+	#[Override]
+	public function getAllByTags(array $tags, ?int $limit = null): array
+	{
+		return $this->articles;
+	}
+
+
+	#[Override]
+	public function getLabelByTag(string $tag): ?string
+	{
+		return $this->tags[$tag] ?? null;
 	}
 
 

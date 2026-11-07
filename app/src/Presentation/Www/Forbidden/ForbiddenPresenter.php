@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Www\Forbidden;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Sitemap\NotInSitemap;
 use MichalSpacekCz\Templating\DefaultTemplate;
@@ -33,6 +34,18 @@ final class ForbiddenPresenter extends BasePresenter
 		if ($this->getRequest()->getMethod() !== Request::Forward) {
 			throw new BadRequestException("Direct access to '{$this->getName()}' is forbidden");
 		}
+	}
+
+
+	/**
+	 * The page stands in for the page the visitor asked for, which it isn't in any language.
+	 *
+	 * @return array<string, LocaleLink>
+	 */
+	#[Override]
+	protected function getAlternateLinks(): array
+	{
+		return [];
 	}
 
 

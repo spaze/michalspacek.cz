@@ -121,6 +121,24 @@ abstract class BasePresenter extends Presenter
 		} catch (InvalidLinkException) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
+		$this->template->alternateLinks = $this->getAlternateLinks();
+	}
+
+
+	/**
+	 * The page in every language it exists in, itself included, for the alternates in the head. Empty for a page in one
+	 * language only: the language switcher may lead to a list page then, but an alternate would claim it's this page.
+	 *
+	 * @return array<string, LocaleLink>
+	 */
+	protected function getAlternateLinks(): array
+	{
+		try {
+			$links = $this->localeLinkGenerator->linksForLocaleParams($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
+		} catch (InvalidLinkException) {
+			return [];
+		}
+		return count($links) > 1 ? $links : [];
 	}
 
 

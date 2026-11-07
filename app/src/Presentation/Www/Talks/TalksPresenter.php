@@ -25,8 +25,8 @@ use Override;
 final class TalksPresenter extends BasePresenter
 {
 
-	/** @var array<string, array{name: string}> */
-	private array $localeLinkParams = [];
+	/** @var array<string, array{name: string}>|null null on the list of talks, which exists in every language */
+	private ?array $localeLinkParams = null;
 
 
 	public function __construct(
@@ -62,7 +62,7 @@ final class TalksPresenter extends BasePresenter
 		try {
 			$templateParameters = $this->talkTemplateParametersFactory->create($name, $slide);
 		} catch (TalkExistsInOtherLocaleException $e) {
-			$links = $this->localeLinkGenerator->links(parent::getLocaleLinkAction(), parent::getLocaleLinkParams());
+			$links = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), parent::getLocaleLinkParams());
 			$this->redirectUrl($links[$e->locale]->getUrl(), IResponse::S301_MovedPermanently);
 		} catch (TalkDoesNotExistException | TalkSlideAliasDoesNotExistException | TalkSlidesNotPublishedException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
@@ -76,20 +76,25 @@ final class TalksPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * The language switcher leads to the list of talks when the talk isn't translated.
+	 */
 	#[Override]
-	protected function getLocaleLinkAction(): string
+	protected function getLocaleLinksGeneratorDestination(): string
 	{
-		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Talks:');
+		return ($this->localeLinkParams === null || count($this->localeLinkParams) > 1 ? parent::getLocaleLinksGeneratorDestination() : 'Www:Talks:');
 	}
 
 
 	/**
-	 * @return array<string, array{name: string}>
+	 * Translated locale parameters for a talk, the default ones for the list of talks.
+	 *
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->localeLinkParams;
+		return $this->localeLinkParams ?? parent::getLocaleLinkParams();
 	}
 
 
