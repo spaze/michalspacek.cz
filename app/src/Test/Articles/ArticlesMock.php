@@ -16,6 +16,9 @@ final class ArticlesMock extends Articles
 	/** @var list<BlogPost> */
 	private array $articles = [];
 
+	/** @var array<string, string> */
+	private array $tags = [];
+
 
 	/**
 	 * @noinspection PhpMissingParentConstructorInspection Intentionally
@@ -30,6 +33,25 @@ final class ArticlesMock extends Articles
 	public function getNearestPublishDate(): ?DateTime
 	{
 		return null;
+	}
+
+
+	/**
+	 * @return array<string, string>
+	 */
+	#[Override]
+	public function getAllTags(): array
+	{
+		return $this->tags;
+	}
+
+
+	/**
+	 * @param array<string, string> $tags slug => label
+	 */
+	public function setAllTags(array $tags): void
+	{
+		$this->tags = $tags;
 	}
 
 
@@ -87,6 +109,7 @@ final class ArticlesMock extends Articles
 	public function reset(): void
 	{
 		$this->articles = [];
+		$this->tags = [];
 	}
 
 }

@@ -9,10 +9,12 @@ use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\DeprecatedEmbedSlideInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideAliasDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlidesNotPublishedException;
 use MichalSpacekCz\Talks\TalkLocaleUrls;
+use MichalSpacekCz\Talks\TalkSitemapEntries;
 use MichalSpacekCz\Talks\TalksList;
 use MichalSpacekCz\Talks\TalksListFactory;
 use Nette\Application\BadRequestException;
@@ -41,6 +43,7 @@ final class TalksPresenter extends BasePresenter
 	/**
 	 * @throws ContentTypeException
 	 */
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->setParameters($this->defaultTemplateParametersFactory->create());
@@ -53,6 +56,7 @@ final class TalksPresenter extends BasePresenter
 	 * @throws InvalidLinkException
 	 * @throws ContentTypeException
 	 */
+	#[InSitemap(TalkSitemapEntries::class)]
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
 		try {

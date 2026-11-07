@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Routing;
 
+use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Routers\RouteList;
+use Nette\Http\Request;
 use Nette\Http\UrlScript;
 use Nette\Routing\Route;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -18,7 +21,15 @@ final class RouterFactoryTest extends TestCase
 
 	public function __construct(
 		private readonly RouterFactory $routerFactory,
+		private readonly Database $database,
 	) {
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
@@ -41,6 +52,22 @@ final class RouterFactoryTest extends TestCase
 			'presenter' => 'Api:Certificates',
 			'action' => 'logIssued',
 		], $refUrl));
+	}
+
+
+	public function testSitemapRoute(): void
+	{
+		$this->database->setFetchDefaultResult(['slug' => 'sitemap.xml']); // a blog post, which the sitemap route goes before
+		$localeRouter = $this->routerFactory->createRouter();
+		$routeLists = [
+			'https://www.rizek.test/sitemap.xml' => $localeRouter->getRouteList(),
+			'https://www.burger.test/sitemap.xml' => $localeRouter->getLocaleRouters()['en_US'],
+		];
+		foreach ($routeLists as $url => $routeList) {
+			$params = $routeList->match(new Request(new UrlScript($url)));
+			Assert::same(['presenter' => 'Www:Sitemap', 'action' => 'default'], $params);
+			Assert::same($url, $routeList->constructUrl(['presenter' => 'Www:Sitemap', 'action' => 'default'], new UrlScript($url)));
+		}
 	}
 
 

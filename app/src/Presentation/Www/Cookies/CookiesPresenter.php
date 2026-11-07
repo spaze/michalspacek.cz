@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Presentation\Www\Cookies;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Http\Cookies\CookieDescriptions;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 
 final class CookiesPresenter extends BasePresenter
 {
@@ -18,6 +19,7 @@ final class CookiesPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.cookies');

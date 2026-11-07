@@ -8,6 +8,7 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Photo;
 use MichalSpacekCz\Media\PhotoFile;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\NotInSitemap;
 
 final class PhotoPresenter extends BasePresenter
 {
@@ -20,6 +21,7 @@ final class PhotoPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('findable, but not promoted on the site on purpose')]
 	public function renderDefault(): void
 	{
 		$photos = [

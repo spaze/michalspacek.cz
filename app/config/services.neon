@@ -27,6 +27,7 @@ services:
 	- MichalSpacekCz\Articles\Blog\BlogPostPreview
 	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%)
 	- MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks
+	- MichalSpacekCz\Articles\Blog\BlogPostSitemapEntries
 	- MichalSpacekCz\Articles\Blog\BlogPostTranslation
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
@@ -126,6 +127,7 @@ services:
 	- MichalSpacekCz\Http\Session\SessionRevoker(tableName: %session.tableName%)
 	- MichalSpacekCz\Http\StructuredHeaders
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
+	- MichalSpacekCz\Interviews\InterviewSitemapEntries
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
 	- MichalSpacekCz\Makefile\Makefile
 	interviewMediaResources: MichalSpacekCz\Media\Resources\InterviewMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
@@ -173,12 +175,17 @@ services:
 	- MichalSpacekCz\SecurityTxtValidator\Statistics\Statistics(@database.securityTxtValidator.explorer)
 	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParametersEnricher
 	- MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultFactory
+	- MichalSpacekCz\Sitemap\Sitemap(entries: typed(MichalSpacekCz\Sitemap\SitemapEntries))
+	- MichalSpacekCz\Sitemap\SitemapActions
+	- MichalSpacekCz\Sitemap\SitemapXml
+	- MichalSpacekCz\Tags\TagSitemapEntries
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Slides\TalkSlides
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
 	- MichalSpacekCz\Talks\TalkInputsFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Talks\TalkLocaleUrls
 	- MichalSpacekCz\Talks\TalkMetadataFactory
+	- MichalSpacekCz\Talks\TalkSitemapEntries
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalksListFactory
 	- MichalSpacekCz\Templating\Filters
@@ -202,6 +209,7 @@ services:
 	- MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses
 	- MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory
 	- MichalSpacekCz\Training\Company\CompanyTrainings
+	- MichalSpacekCz\Training\Company\CompanyTrainingSitemapEntries
 	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
 	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
 	- MichalSpacekCz\Training\Dates\TrainingDateInputsFactory
@@ -223,10 +231,15 @@ services:
 	- MichalSpacekCz\Training\Resolver\Vrana
 	- MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory
 	- MichalSpacekCz\Training\Reviews\TrainingReviews
+	- MichalSpacekCz\Training\Reviews\TrainingReviewSitemapEntries
 	- MichalSpacekCz\Training\TrainingLocales
+	sitemapTrainingsFactory: MichalSpacekCz\Training\Trainings\SitemapTrainingsFactory
+	- @sitemapTrainingsFactory::create()
 	- MichalSpacekCz\Training\Trainings\TrainingFactory
 	- MichalSpacekCz\Training\Trainings\Trainings
+	- MichalSpacekCz\Training\Trainings\TrainingSitemapEntries
 	- MichalSpacekCz\Training\Venues\TrainingVenues
+	- MichalSpacekCz\Training\Venues\TrainingVenueSitemapEntries
 	- MichalSpacekCz\Twitter\TwitterCards
 	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.explorer, apiUrl: %awsLambda.upcKeys.url%, apiKey: %secrets.awsLambdaApiKeys.upcKeys%)
 	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.explorer)

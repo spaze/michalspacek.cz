@@ -77,6 +77,19 @@ final class TrainingReviewsTest extends TestCase
 	}
 
 
+	public function testGetTrainingIdsWithVisibleReviews(): void
+	{
+		// 5 has reviews of its own and those of 1, 7 only those of 6 and 8
+		$this->database->addFetchAllResult([
+			['id' => 1, 'successorId' => 5],
+			['id' => 5, 'successorId' => null],
+			['id' => 6, 'successorId' => 7],
+			['id' => 8, 'successorId' => 7],
+		]);
+		Assert::same([1, 5, 6, 7, 8], $this->trainingReviews->getTrainingIdsWithVisibleReviews());
+	}
+
+
 	public function testGetAllReviews(): void
 	{
 		$reviews = $this->trainingReviews->getAllReviews(3);

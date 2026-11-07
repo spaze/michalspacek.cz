@@ -8,6 +8,7 @@ use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 
 final class ArticlesPresenter extends BasePresenter
 {
@@ -21,6 +22,7 @@ final class ArticlesPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.articles');

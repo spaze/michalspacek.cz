@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Presentation\Www\Redirect;
 
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\NotInSitemap;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Utils\Sleep;
 use Nette\Application\Responses\RedirectResponse;
@@ -27,6 +28,7 @@ final class RedirectPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('redirects an attendee with an access token to their materials')]
 	public function actionFiles(string $token): void
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
@@ -38,6 +40,7 @@ final class RedirectPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('redirects an applicant with an access token to their application')]
 	public function actionApplication(string $token): void
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
@@ -49,6 +52,7 @@ final class RedirectPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('redirects to the newest article with the tag, the article is in the sitemap')]
 	public function actionNewestArticleByTag(string $token): void
 	{
 		$article = current($this->articles->getAllByTags([$token], 1));

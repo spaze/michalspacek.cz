@@ -8,6 +8,7 @@ use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalksList;
 use MichalSpacekCz\Talks\TalksListFactory;
@@ -33,6 +34,7 @@ final class HomepagePresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageHeader = 'Michal Špaček';

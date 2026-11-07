@@ -6,7 +6,9 @@ namespace MichalSpacekCz\Presentation\Www\CompanyTrainings;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
+use MichalSpacekCz\Training\Company\CompanyTrainingSitemapEntries;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
 use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
 use MichalSpacekCz\Training\Prices;
@@ -36,6 +38,7 @@ final class CompanyTrainingsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.companytrainings');
@@ -44,6 +47,7 @@ final class CompanyTrainingsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(CompanyTrainingSitemapEntries::class)]
 	public function actionTraining(string $name): void
 	{
 		$this->trainingAction = $name;

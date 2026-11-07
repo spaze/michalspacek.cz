@@ -14,6 +14,7 @@
 		"ext-pcntl": "*",
 		"ext-pdo": "*",
 		"ext-uri": "*",
+		"ext-xmlwriter": "*",
 		"async-aws/lambda": "^2.10",
 		"composer/pcre": "^3.3.1",
 		"contributte/translation": "^2.0",

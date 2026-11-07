@@ -59,6 +59,40 @@ final readonly class TrainingReviews
 
 
 	/**
+	 * The trainings getVisibleReviews() has a review for, with the same conditions, so a list of trainings can tell
+	 * which have one without asking for each one. A training's reviews count for its successor too.
+	 *
+	 * @return list<int>
+	 */
+	public function getTrainingIdsWithVisibleReviews(): array
+	{
+		$rows = $this->database->fetchAll(
+			'SELECT DISTINCT
+				t.id_training AS id,
+				t2.id_training AS successorId
+			FROM
+				training_reviews r
+				JOIN training_dates d ON r.key_date = d.id_date
+				JOIN trainings t ON t.id_training = d.key_training
+				LEFT JOIN trainings t2 ON t2.id_training = t.key_successor
+			WHERE
+				NOT r.hidden
+				AND t.key_discontinued IS NULL',
+		);
+		$ids = [];
+		foreach ($rows as $row) {
+			assert(is_int($row->id));
+			assert(is_int($row->successorId) || $row->successorId === null);
+			$ids[$row->id] = $row->id;
+			if ($row->successorId !== null) {
+				$ids[$row->successorId] = $row->successorId;
+			}
+		}
+		return array_values($ids);
+	}
+
+
+	/**
 	 * Get all reviews including hidden by training id.
 	 *
 	 * @return list<TrainingReview>

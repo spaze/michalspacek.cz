@@ -5,12 +5,14 @@ namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
+use Nette\Database\Explorer;
 
 final readonly class TrainingLocales
 {
 
 	public function __construct(
-		private TypedDatabase $database,
+		private TypedDatabase $typedDatabase,
+		private Explorer $database,
 		private LocaleLinkGenerator $localeLinkGenerator,
 	) {
 	}
@@ -24,7 +26,7 @@ final readonly class TrainingLocales
 	 */
 	public function getLocaleActions(string $action): array
 	{
-		return $this->database->fetchPairsStringString(
+		return $this->typedDatabase->fetchPairsStringString(
 			'SELECT
 				l.language,
 				a.action
@@ -58,6 +60,35 @@ final readonly class TrainingLocales
 		$params = [];
 		foreach ($this->getLocaleActions($trainingAction) as $key => $value) {
 			$params[$key] = ['name' => $value];
+		}
+		return $params;
+	}
+
+
+	/**
+	 * The parameters of every training's page in the locales it has one in, for a list of trainings to link each of
+	 * them without asking for each one.
+	 *
+	 * @return array<int, array<string, array{name: string}>> training id => locale => ['name' => action]
+	 */
+	public function getAllLocaleLinkParams(): array
+	{
+		$rows = $this->database->fetchAll(
+			'SELECT
+				ta.key_training AS trainingId,
+				l.language,
+				a.action
+			FROM
+				url_actions a
+				JOIN training_url_actions ta ON a.id_url_action = ta.key_url_action
+				JOIN languages l ON a.key_language = l.id_language',
+		);
+		$params = [];
+		foreach ($rows as $row) {
+			assert(is_int($row->trainingId));
+			assert(is_string($row->language));
+			assert(is_string($row->action));
+			$params[$row->trainingId][$row->language] = ['name' => $row->action];
 		}
 		return $params;
 	}

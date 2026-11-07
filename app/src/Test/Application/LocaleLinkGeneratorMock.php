@@ -20,6 +20,9 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	/** @var array<string, string> */
 	private array $allLinks = [];
 
+	/** @var array<string, string> */
+	private array $linksForLocaleParams = [];
+
 	/** @var array<string, list<string>|array<string, string|null>> */
 	private array $allLinksParams = [];
 
@@ -40,6 +43,7 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 		$this->links = [];
 		$this->allLinks = [];
 		$this->allLinksParams = [];
+		$this->linksForLocaleParams = [];
 		$this->wontThrow();
 	}
 
@@ -58,6 +62,26 @@ final class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	{
 		$links = [];
 		foreach ($this->links as $locale => $link) {
+			$links[$locale] = new LocaleLink($locale, $this->languages[$locale]['code'], $this->languages[$locale]['name'], $link);
+		}
+		return $links;
+	}
+
+
+	/**
+	 * @param array<string, string> $linksForLocaleParams locale => URL
+	 */
+	public function setLinksForLocaleParams(array $linksForLocaleParams): void
+	{
+		$this->linksForLocaleParams = $linksForLocaleParams;
+	}
+
+
+	#[Override]
+	public function linksForLocaleParams(string $destination, array $localeParams): array
+	{
+		$links = [];
+		foreach ($this->linksForLocaleParams as $locale => $link) {
 			$links[$locale] = new LocaleLink($locale, $this->languages[$locale]['code'], $this->languages[$locale]['name'], $link);
 		}
 		return $links;

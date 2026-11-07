@@ -9,7 +9,9 @@ use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Tags\TagSitemapEntries;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Override;
@@ -33,6 +35,7 @@ final class TagsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function actionDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.label.tags');
@@ -44,6 +47,7 @@ final class TagsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(TagSitemapEntries::class)]
 	public function actionTag(string $tag): void
 	{
 		$label = $this->articles->getLabelByTag($tag);

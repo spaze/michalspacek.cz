@@ -7,8 +7,10 @@ use MichalSpacekCz\Articles\ArticleHeaderIcons;
 use MichalSpacekCz\Articles\ArticleHeaderIconsFactory;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPostSitemapEntries;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Override;
 use Spaze\ContentSecurityPolicy\CspConfig;
@@ -31,6 +33,7 @@ final class PostPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(BlogPostSitemapEntries::class)]
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPosts->get($slug, $preview);
