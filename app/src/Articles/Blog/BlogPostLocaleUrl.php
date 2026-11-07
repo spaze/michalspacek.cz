@@ -15,6 +15,7 @@ final readonly class BlogPostLocaleUrl
 		private string $locale,
 		private string $slug,
 		private ?DateTime $published,
+		private bool $isPublished,
 		private ?string $previewKey,
 		private array $slugTags,
 	) {
@@ -39,9 +40,18 @@ final readonly class BlogPostLocaleUrl
 	}
 
 
+	/**
+	 * Whether it was out when the URLs were loaded.
+	 */
+	public function isPublished(): bool
+	{
+		return $this->isPublished;
+	}
+
+
 	public function getPreviewKey(): ?string
 	{
-		return $this->published === null || $this->published > new DateTime() ? $this->previewKey : null;
+		return $this->isPublished() ? null : $this->previewKey;
 	}
 
 

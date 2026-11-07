@@ -108,12 +108,15 @@ final readonly class Tags
 				continue;
 			}
 			foreach ($posts as $post) {
+				if (!$post->isPublished()) {
+					continue; // a tag page lists published posts only, so this translation's tag may have no page yet
+				}
 				if (isset($post->getSlugTags()[$tagKey])) {
 					$localeLinkParams[$post->getLocale()] = ['tag' => $post->getSlugTags()[$tagKey]];
 				}
 			}
-			if (isset($post) && isset($localeLinkParams[$post->getLocale()])) {
-				break;
+			if (count($localeLinkParams) > 1) {
+				break; // the tag is found in another locale, not just in the article's own
 			}
 		}
 		return $localeLinkParams;

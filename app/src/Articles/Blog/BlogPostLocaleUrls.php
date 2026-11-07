@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;
 use Nette\Utils\JsonException;
@@ -14,6 +15,7 @@ final readonly class BlogPostLocaleUrls
 	public function __construct(
 		private Explorer $database,
 		private Tags $tags,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -28,6 +30,7 @@ final readonly class BlogPostLocaleUrls
 	public function get(string $slug): array
 	{
 		$posts = [];
+		$now = $this->dateTimeFactory->getNow();
 		$sql = 'SELECT
 				l.locale,
 				bp.slug,
@@ -50,6 +53,7 @@ final readonly class BlogPostLocaleUrls
 				$row->locale,
 				$row->slug,
 				$row->published,
+				$row->published !== null && $row->published <= $now,
 				$row->previewKey,
 				$row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : [],
 			);

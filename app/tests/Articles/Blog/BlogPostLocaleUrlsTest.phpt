@@ -5,9 +5,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
+use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -20,7 +23,16 @@ final class BlogPostLocaleUrlsTest extends TestCase
 	public function __construct(
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly Database $database,
+		private readonly DateTimeMachineFactory $dateTimeFactory,
 	) {
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
+		$this->dateTimeFactory->setDateTime(null);
 	}
 
 
@@ -87,6 +99,33 @@ final class BlogPostLocaleUrlsTest extends TestCase
 		} else {
 			Assert::null($urls[0]->getPreviewKey());
 		}
+	}
+
+
+	public function testIsPublishedFromItsPublishTime(): void
+	{
+		$this->dateTimeFactory->setDateTime(new DateTimeImmutable('2020-05-06 07:08:09 +02:00'));
+		$this->database->setFetchAllDefaultResult([
+			[
+				'locale' => 'cs_CZ',
+				'slug' => 'clanek',
+				'published' => new DateTime('2020-05-06 07:08:09 +02:00'),
+				'previewKey' => 'k3y',
+				'slugTags' => null,
+			],
+			[
+				'locale' => 'en_US',
+				'slug' => 'article',
+				'published' => new DateTime('2020-05-06 07:08:10 +02:00'),
+				'previewKey' => 'rand0m',
+				'slugTags' => null,
+			],
+		]);
+		$urls = $this->blogPostLocaleUrls->get('clanek');
+		Assert::true($urls[0]->isPublished());
+		Assert::null($urls[0]->getPreviewKey());
+		Assert::false($urls[1]->isPublished());
+		Assert::same('rand0m', $urls[1]->getPreviewKey());
 	}
 
 }

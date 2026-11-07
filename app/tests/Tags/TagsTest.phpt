@@ -76,14 +76,14 @@ final class TagsTest extends TestCase
 			[
 				'locale' => 'en_US',
 				'slug' => '',
-				'published' => null,
+				'published' => new DateTime('2025-01-01 00:00:00'),
 				'previewKey' => null,
 				'slugTags' => $this->tags->serialize(['random']),
 			],
 			[
 				'locale' => 'cs_CZ',
 				'slug' => '',
-				'published' => null,
+				'published' => new DateTime('2025-01-01 00:00:00'),
 				'previewKey' => null,
 				'slugTags' => $this->tags->serialize(['nahoda']),
 			],
@@ -92,14 +92,14 @@ final class TagsTest extends TestCase
 			[
 				'locale' => 'en_US',
 				'slug' => '',
-				'published' => null,
+				'published' => new DateTime('2025-01-01 00:00:00'),
 				'previewKey' => null,
 				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
 			],
 			[
 				'locale' => 'cs_CZ',
 				'slug' => '',
-				'published' => null,
+				'published' => new DateTime('2025-01-01 00:00:00'),
 				'previewKey' => null,
 				'slugTags' => $this->tags->serialize([self::SLUG_TAG_CS]),
 			],
@@ -130,6 +130,98 @@ final class TagsTest extends TestCase
 			],
 		]);
 		Assert::same([], $this->tags->findLocaleLinkParams([$this->buildBlogPost(self::SLUG_TAG_EN)], self::SLUG_TAG_EN));
+	}
+
+
+	public function testFindLocaleLinkParamsTranslationNotPublished(): void
+	{
+		$this->database->addFetchAllResult([
+			[
+				'locale' => 'en_US',
+				'slug' => '',
+				'published' => new DateTime('2025-01-01 00:00:00'),
+				'previewKey' => null,
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
+			],
+			[
+				'locale' => 'cs_CZ',
+				'slug' => '',
+				'published' => null,
+				'previewKey' => 'key',
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_CS]),
+			],
+		]);
+		$expected = ['en_US' => ['tag' => self::SLUG_TAG_EN]];
+		Assert::same($expected, $this->tags->findLocaleLinkParams([$this->buildBlogPost(self::SLUG_TAG_EN)], self::SLUG_TAG_EN));
+	}
+
+
+	public function testFindLocaleLinkParamsTranslationPublishedLater(): void
+	{
+		$this->database->addFetchAllResult([
+			[
+				'locale' => 'en_US',
+				'slug' => '',
+				'published' => new DateTime('2025-01-01 00:00:00'),
+				'previewKey' => null,
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
+			],
+			[
+				'locale' => 'cs_CZ',
+				'slug' => '',
+				'published' => new DateTime('+1 day'),
+				'previewKey' => 'key',
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_CS]),
+			],
+		]);
+		$expected = ['en_US' => ['tag' => self::SLUG_TAG_EN]];
+		Assert::same($expected, $this->tags->findLocaleLinkParams([$this->buildBlogPost(self::SLUG_TAG_EN)], self::SLUG_TAG_EN));
+	}
+
+
+	/**
+	 * When the newest article's translation isn't published yet, an older article with a published one still has the tag.
+	 */
+	public function testFindLocaleLinkParamsTranslationNotPublishedOlderArticlePublished(): void
+	{
+		$this->database->addFetchAllResult([
+			[
+				'locale' => 'cs_CZ',
+				'slug' => '',
+				'published' => new DateTime('+1 day'),
+				'previewKey' => 'key',
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_CS]),
+			],
+			[
+				'locale' => 'en_US',
+				'slug' => '',
+				'published' => new DateTime('2025-01-01 00:00:00'),
+				'previewKey' => null,
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
+			],
+		]);
+		$this->database->addFetchAllResult([
+			[
+				'locale' => 'cs_CZ',
+				'slug' => '',
+				'published' => new DateTime('2024-01-01 00:00:00'),
+				'previewKey' => null,
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_CS]),
+			],
+			[
+				'locale' => 'en_US',
+				'slug' => '',
+				'published' => new DateTime('2024-01-01 00:00:00'),
+				'previewKey' => null,
+				'slugTags' => $this->tags->serialize([self::SLUG_TAG_EN]),
+			],
+		]);
+		$expected = [
+			'en_US' => ['tag' => self::SLUG_TAG_EN],
+			'cs_CZ' => ['tag' => self::SLUG_TAG_CS],
+		];
+		$articles = [$this->buildBlogPost(self::SLUG_TAG_EN), $this->buildBlogPost(self::SLUG_TAG_EN)];
+		Assert::same($expected, $this->tags->findLocaleLinkParams($articles, self::SLUG_TAG_EN));
 	}
 
 
