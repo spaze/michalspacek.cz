@@ -18,11 +18,13 @@ use function ini_get;
  *
  * @property object{
  *     debugger: bool|null,
+ *     file: string|null,
  *     smtp: bool,
  *     host: string|null,
  *     port: int|null,
  *     username: string,
  *     password: string,
+ *     accessToken: string|Nette\DI\Expression|null,
  *     secure: 'ssl'|'tls'|null,
  *     encryption: 'ssl'|'tls'|null,
  *     timeout: int,
@@ -45,11 +47,13 @@ class MailExtension extends Nette\DI\CompilerExtension
 	{
 		return Expect::structure([
 			'debugger' => Expect::bool()->nullable(),
+			'file' => Expect::string()->dynamic(),
 			'smtp' => Expect::bool(false),
 			'host' => Expect::string()->dynamic(),
 			'port' => Expect::int()->dynamic(),
 			'username' => Expect::string('')->dynamic(),
 			'password' => Expect::string('')->dynamic(),
+			'accessToken' => Expect::string()->dynamic(),
 			'secure' => Expect::anyOf(null, 'ssl', 'tls')->dynamic(), // deprecated
 			'encryption' => Expect::anyOf(null, 'ssl', 'tls')->dynamic(),
 			'timeout' => Expect::int(20)->dynamic(),
@@ -100,7 +104,14 @@ class MailExtension extends Nette\DI\CompilerExtension
 			$mailer->addSetup('setSigner', [$signer]);
 		}
 
-		if ($config->smtp) {
+		if ($config->accessToken !== null && ($config->file !== null || !$config->smtp)) {
+			throw new Nette\DI\InvalidConfigurationException("Option '{$this->name}\u{a0}›\u{a0}accessToken' requires the SMTP transport, i.e. 'smtp: true' without 'file'.");
+		}
+
+		if ($config->file !== null) {
+			$mailer->setCreator(Nette\Mail\FileMailer::class, ['dir' => $config->file]);
+
+		} elseif ($config->smtp) {
 			$mailer->setCreator(Nette\Mail\SmtpMailer::class, [
 				'host' => $config->host ?? ini_get('SMTP'),
 				'port' => isset($config->host) ? $config->port : (int) ini_get('smtp_port'),
@@ -112,6 +123,10 @@ class MailExtension extends Nette\DI\CompilerExtension
 				'clientHost' => $config->clientHost,
 				'streamOptions' => $config->context ?: null,
 			]);
+
+			if ($config->accessToken !== null) {
+				$mailer->addSetup('setAccessToken', [$config->accessToken]);
+			}
 
 		} else {
 			$mailer->setCreator(Nette\Mail\SendmailMailer::class);

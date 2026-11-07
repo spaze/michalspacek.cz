@@ -8,7 +8,7 @@
 namespace Nette\Mail;
 
 use Nette;
-use function is_resource, is_string, strlen;
+use function ini_get, is_resource, is_string, strlen;
 use const STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT, STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT;
 
 
@@ -24,6 +24,8 @@ class SmtpMailer implements Mailer
 	private const MaxResponseLength = 1_000_000;
 
 	private const WriteChunkLength = 8192;
+
+	private const ProbeTimeout = 5;
 
 	/** @var ?resource */
 	private $connection;
@@ -50,6 +52,10 @@ class SmtpMailer implements Mailer
 		?string $clientHost = null,
 		?array $streamOptions = null,
 	) {
+		if (!in_array($encryption, [null, self::EncryptionSSL, self::EncryptionTLS], true)) {
+			throw new Nette\InvalidArgumentException("Encryption must be 'ssl', 'tls' or null, '$encryption' given.");
+		}
+
 		$this->context = $streamOptions === null
 			? stream_context_get_default()
 			: stream_context_create($streamOptions);
@@ -152,11 +158,17 @@ class SmtpMailer implements Mailer
 			return false;
 		}
 
+		// a silently dropped connection never replies, so the probe does not wait the full timeout
+		$connection = $this->connection;
+		stream_set_timeout($connection, $this->timeout > 0 ? min($this->timeout, self::ProbeTimeout) : self::ProbeTimeout);
 		try {
 			$this->write('NOOP', 250);
 			return true;
 		} catch (SmtpException) {
 			return false;
+		} finally {
+			// a stream timeout cannot be unset; default_socket_timeout is what a socket starts with
+			stream_set_timeout($connection, $this->timeout > 0 ? $this->timeout : (int) ini_get('default_socket_timeout'));
 		}
 	}
 
@@ -169,7 +181,10 @@ class SmtpMailer implements Mailer
 		$connection = $this->openStream($this->getAddress());
 		$this->connection = $connection;
 
-		stream_set_timeout($connection, $this->timeout);
+		if ($this->timeout > 0) {
+			stream_set_timeout($connection, $this->timeout);
+		}
+
 		$this->read(); // greeting
 
 		if ($this->encryption === self::EncryptionTLS) {
@@ -185,6 +200,13 @@ class SmtpMailer implements Mailer
 			$this->write("EHLO $this->clientHost");
 			$ehloResponse = $this->read();
 			if ((int) $ehloResponse !== 250) {
+				if ($this->username !== '' || $this->accessToken) {
+					throw SmtpException::fromReply(
+						'SMTP server rejected EHLO (' . trim($ehloResponse) . '), so it cannot authenticate.',
+						$ehloResponse,
+					);
+				}
+
 				$this->write("HELO $this->clientHost", 250);
 			}
 		}
@@ -310,7 +332,7 @@ class SmtpMailer implements Mailer
 			$address,
 			$errno,
 			$error,
-			$this->timeout,
+			$this->timeout > 0 ? $this->timeout : null, // null means default_socket_timeout
 			STREAM_CLIENT_CONNECT,
 			$this->context,
 		);
