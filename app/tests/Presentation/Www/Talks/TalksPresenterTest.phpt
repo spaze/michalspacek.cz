@@ -27,6 +27,11 @@ final class TalksPresenterTest extends TestCase
 	private const string NAME = 'prednaska';
 	private const string SWITCHER_LINK = 'https://www.burger.test/switcher';
 
+	private const array TRANSLATIONS = [
+		'cs_CZ' => ['name' => self::NAME],
+		'en_US' => ['name' => 'talk'],
+	];
+
 
 	public function __construct(
 		private readonly ApplicationPresenter $applicationPresenter,
@@ -77,12 +82,50 @@ final class TalksPresenterTest extends TestCase
 	{
 		$this->database->setFetchDefaultResult($this->talkTestDataFactory->getDatabaseResultData(locale: 'cs_CZ', translationGroupId: 7, action: self::NAME));
 		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
 		$html = $this->renderTalk();
 		Assert::contains('<link rel="alternate" hreflang="cs" href="https://www.rizek.test/prednasky/prednaska">', $html);
 		Assert::contains('<link rel="alternate" hreflang="en" href="https://www.burger.test/talks/talk">', $html);
 		Assert::contains('href="' . self::SWITCHER_LINK . '"', $html);
 		Assert::same(['Www:Talks:talk'], $this->localeLinkGenerator->getLinksDestinations());
+		Assert::same([self::TRANSLATIONS], $this->localeLinkGenerator->getLinksParams());
 		Assert::same(['Www:Talks:talk'], $this->localeLinkGenerator->getLinksForLocaleParamsDestinations());
+	}
+
+
+	/**
+	 * The translation names the talk whose slides it shows as canonical, so it's not this talk's alternate, but the
+	 * switcher still leads to it.
+	 */
+	public function testTalkTranslationShowsOtherTalksSlides(): void
+	{
+		$this->database->setFetchDefaultResult($this->talkTestDataFactory->getDatabaseResultData(locale: 'cs_CZ', translationGroupId: 7, action: self::NAME));
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME]);
+		$html = $this->renderTalk();
+		Assert::notContains('hreflang', $html);
+		Assert::contains('href="' . self::SWITCHER_LINK . '"', $html);
+		Assert::same(['Www:Talks:talk'], $this->localeLinkGenerator->getLinksDestinations());
+		Assert::same([self::TRANSLATIONS], $this->localeLinkGenerator->getLinksParams());
+		Assert::same(['Www:Talks:talk'], $this->localeLinkGenerator->getLinksForLocaleParamsDestinations());
+	}
+
+
+	/**
+	 * The talk names the one whose slides it shows as canonical, so it has no alternates, but the switcher still leads to
+	 * its translation.
+	 */
+	public function testTalkShowsOtherTalksSlides(): void
+	{
+		$this->database->setFetchDefaultResult($this->talkTestDataFactory->getDatabaseResultData(locale: 'cs_CZ', translationGroupId: 7, action: self::NAME, slidesTalkId: 303));
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
+		// Only used if the alternates were wrongly looked up for this talk
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
+		$html = $this->renderTalk();
+		Assert::notContains('hreflang', $html);
+		Assert::contains('href="' . self::SWITCHER_LINK . '"', $html);
+		Assert::same(['Www:Talks:talk'], $this->localeLinkGenerator->getLinksDestinations());
+		Assert::same([self::TRANSLATIONS], $this->localeLinkGenerator->getLinksParams());
 	}
 
 

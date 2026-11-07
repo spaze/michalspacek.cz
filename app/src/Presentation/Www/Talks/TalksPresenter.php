@@ -28,6 +28,9 @@ final class TalksPresenter extends BasePresenter
 	/** @var array<string, array{name: string}>|null null on the list of talks, which exists in every language */
 	private ?array $localeLinkParams = null;
 
+	/** @var array<string, array{name: string}>|null null on the list of talks */
+	private ?array $alternateLinkParams = null;
+
 
 	public function __construct(
 		private readonly TalkLocaleUrls $talkLocaleUrls,
@@ -72,6 +75,7 @@ final class TalksPresenter extends BasePresenter
 			$this->redirectPermanent('this', ['slide' => null]);
 		}
 		$this->localeLinkParams = $this->talkLocaleUrls->getLinkParams($templateParameters->talk);
+		$this->alternateLinkParams = $this->talkLocaleUrls->getAlternateLinkParams($templateParameters->talk);
 		$this->template->setParameters($templateParameters);
 	}
 
@@ -87,14 +91,27 @@ final class TalksPresenter extends BasePresenter
 
 
 	/**
-	 * Translated locale parameters for a talk, the default ones for the list of talks.
+	 * The language switcher leads to every translation of a talk, even one showing the slides of another talk: for someone
+	 * reading it, it's still the talk in that language.
+	 *
+	 * @return array<string, array<array-key, mixed>>
+	 */
+	#[Override]
+	protected function getLocaleLinksGeneratorParams(): array
+	{
+		return $this->localeLinkParams ?? parent::getLocaleLinksGeneratorParams();
+	}
+
+
+	/**
+	 * The talk in the languages its page is the canonical one in, the default parameters on the list of talks.
 	 *
 	 * @return array<string, array<array-key, mixed>>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->localeLinkParams ?? parent::getLocaleLinkParams();
+		return $this->alternateLinkParams ?? parent::getLocaleLinkParams();
 	}
 
 
