@@ -46,23 +46,43 @@ class LocaleLinkGenerator
 	public function links(string $destination, array $params = []): array
 	{
 		$links = [];
-		foreach ($this->localeRouter->getLocaleRouters() as $locale => $routers) {
-			foreach ($routers->getRouters() as $router) {
-				if (!$router instanceof RouteList) {
-					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", RouteList::class, get_debug_type($router)));
-				}
-				if (count($router->getRouters()) > 0) {
-					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
-					$links[$locale] = new LocaleLink(
-						$locale,
-						$this->languages[$locale]['code'],
-						$this->languages[$locale]['name'],
-						$linkGenerator->link($destination, $this->getParams($params, $locale)),
-					);
-				}
+		foreach ($this->getOtherLocaleLinkGenerators() as $locale => $linkGenerator) {
+			$links[$locale] = $this->createLocaleLink($locale, $linkGenerator->link($destination, $this->getParams($params, $locale)));
+		}
+		return $links;
+	}
+
+
+	/**
+	 * Generates the URLs of a page in the locales it exists in, the current locale included. Unlike links(),
+	 * the locales are only the keys of $localeParams, with the default params standing for all of them.
+	 *
+	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
+	 * @param array<string, array<array-key, mixed>> $localeParams of locale => [position|name => value]
+	 * @return array<string, LocaleLink> of locale => URL
+	 * @throws InvalidLinkException
+	 */
+	public function linksForLocaleParams(string $destination, array $localeParams): array
+	{
+		$linkGenerators = [$this->translator->getDefaultLocale() => $this->linkGenerator] + $this->getOtherLocaleLinkGenerators();
+		$links = [];
+		foreach ($linkGenerators as $locale => $linkGenerator) {
+			if ($this->hasLocale($localeParams, $locale)) {
+				$links[$locale] = $this->createLocaleLink($locale, $linkGenerator->link($destination, $this->getParams($localeParams, $locale)));
 			}
 		}
 		return $links;
+	}
+
+
+	/**
+	 * Whether a page with these parameters exists in the locale, which linksForLocaleParams() would link.
+	 *
+	 * @param array<string, array<array-key, mixed>> $localeParams of locale => [position|name => value]
+	 */
+	public function hasLocale(array $localeParams, string $locale): bool
+	{
+		return isset($localeParams[$locale]) || isset($localeParams[self::DEFAULT_PARAMS]);
 	}
 
 
@@ -110,6 +130,32 @@ class LocaleLinkGenerator
 			[$locale => $this->linkGenerator->link($destination, $this->getParams($params, $locale))],
 			array_map(fn(LocaleLink $localeLink): string => $localeLink->getUrl(), $links),
 		);
+	}
+
+
+	/**
+	 * @return array<string, LinkGenerator> of locale => generator, for the locales other than the current one
+	 */
+	private function getOtherLocaleLinkGenerators(): array
+	{
+		$linkGenerators = [];
+		foreach ($this->localeRouter->getLocaleRouters() as $locale => $routers) {
+			foreach ($routers->getRouters() as $router) {
+				if (!$router instanceof RouteList) {
+					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", RouteList::class, get_debug_type($router)));
+				}
+				if (count($router->getRouters()) > 0) {
+					$linkGenerators[$locale] = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
+				}
+			}
+		}
+		return $linkGenerators;
+	}
+
+
+	private function createLocaleLink(string $locale, string $url): LocaleLink
+	{
+		return new LocaleLink($locale, $this->languages[$locale]['code'], $this->languages[$locale]['name'], $url);
 	}
 
 
