@@ -66,6 +66,9 @@ database:
 			lazy: true
 			PDO::ATTR_EMULATE_PREPARES: false
 
+mail:
+	encryption: ssl # the server and the credentials are in local.neon; local.template.neon turns this off for the local debugging server
+
 translation:
 	locales:
 		default: cs_CZ
