@@ -15,6 +15,8 @@ final readonly class TalkLocaleUrls
 
 
 	/**
+	 * The talk in every language it has a page in.
+	 *
 	 * @return array<string, array{name: string}> locale => ['name' => action]
 	 */
 	public function getLinkParams(Talk $talk): array
@@ -23,7 +25,7 @@ final readonly class TalkLocaleUrls
 			return [];
 		}
 		$actions = $this->database->fetchPairsStringString(
-			'SELECT l.locale, t.action FROM talks t JOIN locales l ON t.key_locale = l.id_locale WHERE t.key_translation_group = ?',
+			'SELECT l.locale, t.action FROM talks t JOIN locales l ON t.key_locale = l.id_locale WHERE t.key_translation_group = ? AND t.action IS NOT NULL',
 			$talk->getTranslationGroupId(),
 		);
 		return array_map(fn($action) => ['name' => $action], $actions);
