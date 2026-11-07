@@ -10,6 +10,7 @@ use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Utils\Html;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -126,6 +127,82 @@ final class BlogPostLocaleUrlsTest extends TestCase
 		Assert::null($urls[0]->getPreviewKey());
 		Assert::false($urls[1]->isPublished());
 		Assert::same('rand0m', $urls[1]->getPreviewKey());
+	}
+
+
+	/**
+	 * @return array<string, array{0: DateTime|null, 1: DateTime|null, 2: array<string, array{slug: string}>}>
+	 */
+	public function getLinkParamsData(): array
+	{
+		$past = new DateTime('2020-05-06 07:08:09');
+		$future = new DateTime('+1 day');
+		return [
+			'published post, published translation' => [$past, $past, ['cs_CZ' => ['slug' => 'clanek'], 'en_US' => ['slug' => 'article']]],
+			'published post, scheduled translation' => [$past, $future, ['cs_CZ' => ['slug' => 'clanek']]],
+			'published post, draft translation' => [$past, null, ['cs_CZ' => ['slug' => 'clanek']]],
+			'preview, published translation' => [$future, $past, ['cs_CZ' => ['slug' => 'clanek'], 'en_US' => ['slug' => 'article']]],
+			'preview, draft translation' => [null, null, ['cs_CZ' => ['slug' => 'clanek']]],
+		];
+	}
+
+
+	/**
+	 * @param array<string, array{slug: string}> $expected
+	 * @dataProvider getLinkParamsData
+	 */
+	public function testGetLinkParams(?DateTime $published, ?DateTime $translationPublished, array $expected): void
+	{
+		$this->database->setFetchAllDefaultResult([
+			[
+				'locale' => 'cs_CZ',
+				'slug' => 'clanek',
+				'published' => $published,
+				'previewKey' => 'k3y',
+				'slugTags' => null,
+			],
+			[
+				'locale' => 'en_US',
+				'slug' => 'article',
+				'published' => $translationPublished,
+				'previewKey' => 'rand0m',
+				'slugTags' => null,
+			],
+		]);
+		Assert::same($expected, $this->blogPostLocaleUrls->getLinkParams($this->buildBlogPost('clanek', 'cs_CZ')));
+	}
+
+
+	private function buildBlogPost(string $slug, string $locale): BlogPost
+	{
+		return new BlogPost(
+			1,
+			$slug,
+			1,
+			$locale,
+			null,
+			Html::text('Title'),
+			'Title',
+			null,
+			null,
+			Html::text('Text'),
+			'Text',
+			null,
+			true,
+			null,
+			null,
+			null,
+			null,
+			[],
+			[],
+			[],
+			null,
+			"https://example.com/{$slug}",
+			[],
+			[],
+			[],
+			false,
+		);
 	}
 
 }

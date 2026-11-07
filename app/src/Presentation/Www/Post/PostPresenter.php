@@ -18,7 +18,7 @@ use Spaze\ContentSecurityPolicy\CspConfig;
 final class PostPresenter extends BasePresenter
 {
 
-	/** @var array<string, array{slug: string, preview: string|null}> */
+	/** @var array<string, array{slug: string}> */
 	private array $localeLinkParams = [];
 
 
@@ -54,9 +54,7 @@ final class PostPresenter extends BasePresenter
 		$this->template->pageHeader = $post->getTitle();
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 
-		foreach ($this->blogPostLocaleUrls->get($post->getSlug()) as $localePost) {
-			$this->localeLinkParams[$localePost->getLocale()] = ['slug' => $localePost->getSlug(), 'preview' => $localePost->getPreviewKey()];
-		}
+		$this->localeLinkParams = $this->blogPostLocaleUrls->getLinkParams($post);
 		foreach ($post->getCspSnippets() as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
@@ -76,7 +74,7 @@ final class PostPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for blog posts.
 	 *
-	 * @return array<string, array{slug: string, preview: string|null}>
+	 * @return array<string, array{slug: string}>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
