@@ -65,10 +65,20 @@ final class TexyShortcutInhouseTrainingTest extends TestCase
 
 	public function testResolve(): void
 	{
-		$this->database->setFetchPairsDefaultResult(['cs_CZ' => 'něco']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => 'cs_CZ', 'action' => 'něco']]);
 		$link = new Link('');
 		$this->resolve('inhouse-training:foo', $link);
 		Assert::same('//:Www:CompanyTrainings:training něco', $link->URL);
+	}
+
+
+	public function testResolveTrainingWithTheUrlInTheLocale(): void
+	{
+		$this->database->setFetchAllDefaultResult([['trainingId' => 2, 'language' => 'cs_CZ', 'action' => 'php']]);
+		$link = new Link('');
+		$this->resolve('inhouse-training:php', $link);
+		Assert::same('//:Www:CompanyTrainings:training php', $link->URL);
+		Assert::same(['php', 'cs_CZ'], $this->database->getParamsForQueryContaining('ORDER BY l.language = ?'));
 	}
 
 
@@ -92,7 +102,7 @@ final class TexyShortcutInhouseTrainingTest extends TestCase
 
 	public function testResolveTrainingDoesNotExistInLocale(): void
 	{
-		$this->database->setFetchPairsDefaultResult(['pt_BR' => 'bar']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => 'pt_BR', 'action' => 'bar']]);
 		Assert::exception(function (): void {
 			$this->resolve('inhouse-training:foo', new Link(''));
 		}, InvalidLinkException::class, "Company training linked in [inhouse-training:foo] doesn't exist in locale cs_CZ");

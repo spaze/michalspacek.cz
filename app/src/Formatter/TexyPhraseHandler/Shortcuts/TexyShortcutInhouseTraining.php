@@ -45,11 +45,11 @@ final readonly class TexyShortcutInhouseTraining implements TexyShortcut
 		if ($training === '') {
 			throw new InvalidLinkException("No company training specified in [{$url}]");
 		}
-		$actions = $this->trainingLocales->getLocaleActions($training);
+		$locale = $this->translator->getDefaultLocale();
+		$actions = $this->trainingLocales->getLocaleActions($training, $locale);
 		if ($actions === []) {
 			throw new InvalidLinkException("Company training linked in [{$url}] doesn't exist");
 		}
-		$locale = $this->translator->getDefaultLocale();
 		if (!isset($actions[$locale])) {
 			throw new InvalidLinkException("Company training linked in [{$url}] doesn't exist in locale {$locale}");
 		}

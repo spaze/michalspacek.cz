@@ -35,13 +35,30 @@ final class TexyFormatterTest extends TestCase
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly AdapterInterface $cacheInterface,
+		private readonly Database $database,
 		Request $httpRequest,
-		Database $database,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
 	) {
 		$applicationPresenter->setLinkCallback($application, $this->buildUrl(...));
-		$database->setFetchAllDefaultResult([
+		$httpRequest->setHeader('Sec-Fetch-Dest', 'iframe');
+		$this->format = '**foo "bar":[training:' . self::TRAINING_ACTION . "]**\n"
+			. "''**FETCH_METADATA:Sec-Fetch-Dest**''\n"
+			. "''**FETCH_METADATA:all**''\n";
+		$this->expectedFormatted = "<strong>foo <a\n"
+			. "href=\"https://example.com/?dest=%2F%2F%3AWww%3ATrainings%3Atraining&amp;args=bezpecnost-php-aplikaci\">bar</a>\n"
+			. "<small>(messages.trainings.nextdates: <strong>5.–7. ledna 2020</strong> messages.label.remote, <strong>5.–7. února 2020</strong> Le city 2)</small></strong>\n"
+			. "Sec-Fetch-Dest: iframe Sec-Fetch-Dest: iframe\n"
+			. "Sec-Fetch-Mode: <em>[messages.httpHeaders.headerNotSent]</em>\n"
+			. "Sec-Fetch-Site: <em>[messages.httpHeaders.headerNotSent]</em>\n"
+			. "Sec-Fetch-User: <em>[messages.httpHeaders.headerNotSent]</em>";
+	}
+
+
+	#[Override]
+	protected function setUp(): void
+	{
+		$this->database->setFetchAllDefaultResult([
 			[
 				'dateId' => 1,
 				'trainingId' => 1,
@@ -105,32 +122,26 @@ final class TexyFormatterTest extends TestCase
 				'note' => 'Note 2',
 			],
 		]);
-		$database->setFetchPairsDefaultResult([
-			'cs_CZ' => 'bezpecnost-php-aplikaci',
-			'en_US' => 'php-application-security',
-		]);
-		$httpRequest->setHeader('Sec-Fetch-Dest', 'iframe');
-		$this->format = '**foo "bar":[training:' . self::TRAINING_ACTION . "]**\n"
-			. "''**FETCH_METADATA:Sec-Fetch-Dest**''\n"
-			. "''**FETCH_METADATA:all**''\n";
-		$this->expectedFormatted = "<strong>foo <a\n"
-			. "href=\"https://example.com/?dest=%2F%2F%3AWww%3ATrainings%3Atraining&amp;args=bezpecnost-php-aplikaci\">bar</a>\n"
-			. "<small>(messages.trainings.nextdates: <strong>5.–7. ledna 2020</strong> messages.label.remote, <strong>5.–7. února 2020</strong> Le city 2)</small></strong>\n"
-			. "Sec-Fetch-Dest: iframe Sec-Fetch-Dest: iframe\n"
-			. "Sec-Fetch-Mode: <em>[messages.httpHeaders.headerNotSent]</em>\n"
-			. "Sec-Fetch-Site: <em>[messages.httpHeaders.headerNotSent]</em>\n"
-			. "Sec-Fetch-User: <em>[messages.httpHeaders.headerNotSent]</em>";
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
 	public function testFormat(): void
 	{
+		$this->addTrainingUrls();
 		Assert::same($this->expectedFormatted, $this->texyFormatter->format($this->format)->toHtml());
 	}
 
 
 	public function testFormatBlock(): void
 	{
+		$this->addTrainingUrls();
 		Assert::same("<p>{$this->expectedFormatted}</p>\n", $this->texyFormatter->formatBlock($this->format)->toHtml());
 	}
 
@@ -327,6 +338,18 @@ final class TexyFormatterTest extends TestCase
 				'dest' => $destination,
 				'args' => implode(',', $args),
 			]);
+	}
+
+
+	/**
+	 * The URLs of the training the text links to, read before the dates of the training, which are every other read.
+	 */
+	private function addTrainingUrls(): void
+	{
+		$this->database->addFetchAllResult([
+			['trainingId' => 1, 'language' => 'cs_CZ', 'action' => self::TRAINING_ACTION],
+			['trainingId' => 1, 'language' => 'en_US', 'action' => 'php-application-security'],
+		]);
 	}
 
 }

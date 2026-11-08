@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
+use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Formatter\Exceptions\TexyFormatterTexyProcessLoopException;
 use MichalSpacekCz\Test\Formatter\TexyFormatterMock;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -30,12 +31,13 @@ final class TexyShortcutLinkWithLocaleTest extends TestCase
 	public function __construct(
 		private readonly TexyShortcutLinkWithLocale $shortcutLinkWithLocale,
 		private readonly TexyFormatterMock $texyFormatter,
-		LocaleLinkGeneratorMock $localeLinkGenerator,
+		private readonly Database $database,
+		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		ApplicationPresenter $applicationPresenter,
 		Application $application,
 	) {
 		$applicationPresenter->setLinkCallback($application, null);
-		$localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://cz.example/']);
+		$this->localeLinkGenerator->setAllLinks(['cs_CZ' => 'https://cz.example/', 'en_US' => 'https://com.example/']);
 	}
 
 
@@ -43,6 +45,13 @@ final class TexyShortcutLinkWithLocaleTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->texyFormatter->willThrow(new TexyFormatterTexyProcessLoopException());
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
@@ -77,6 +86,20 @@ final class TexyShortcutLinkWithLocaleTest extends TestCase
 		Assert::exception(function (): void {
 			$this->resolve('link-pt_BR:foo bar', new Link(''));
 		}, InvalidLinkException::class, 'Unable to generate link to foo for locale pt_BR with params {"pt_BR":["bar"],"*":["bar"]}');
+	}
+
+
+	public function testResolveTrainingWithTheUrlInTheLocale(): void
+	{
+		$this->database->setFetchAllDefaultResult([
+			['trainingId' => 1, 'language' => 'cs_CZ', 'action' => 'skoleni-php'],
+			['trainingId' => 1, 'language' => 'en_US', 'action' => 'php'],
+		]);
+		$link = new Link('');
+		$this->resolve('link-en_US:' . Trainings::TRAINING_ACTION . ' php', $link);
+		Assert::same('https://com.example/', $link->URL);
+		Assert::same(['en_US' => ['php'], '*' => ['php']], $this->localeLinkGenerator->getAllLinksParams());
+		Assert::same(['php', 'en_US'], $this->database->getParamsForQueryContaining('ORDER BY l.language = ?'));
 	}
 
 

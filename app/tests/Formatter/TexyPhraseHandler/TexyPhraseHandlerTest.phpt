@@ -74,7 +74,7 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult([$this->translator->getDefaultLocale() => 'fjó']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => $this->translator->getDefaultLocale(), 'action' => 'fjó']]);
 		$defaultLocaleUrl = 'https://cz.example/skoleni/foo';
 		$this->localeLinkGenerator->setAllLinks([
 			$this->translator->getDefaultLocale() => $defaultLocaleUrl,
@@ -146,7 +146,7 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveInhouseTrainingLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult([$this->translator->getDefaultLocale() => 'fjó']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => $this->translator->getDefaultLocale(), 'action' => 'fjó']]);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:CompanyTrainings:training', ['fjó']),
@@ -157,7 +157,7 @@ final class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingWithDatesLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult([$this->translator->getDefaultLocale() => 'fjó']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => $this->translator->getDefaultLocale(), 'action' => 'fjó']]);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:Trainings:training', ['fjó']),

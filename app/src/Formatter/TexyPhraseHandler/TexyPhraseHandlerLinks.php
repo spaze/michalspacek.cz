@@ -44,7 +44,7 @@ final readonly class TexyPhraseHandlerLinks
 			if (!isset($args[0]) || $args[0] === '') {
 				throw new InvalidLinkException("No training specified in [{$prefix}{$url}]");
 			}
-			$actions = $this->trainingLocales->getLocaleActions($args[0]);
+			$actions = $this->trainingLocales->getLocaleActions($args[0], $locale);
 			if ($actions === []) {
 				throw new InvalidLinkException("Training linked in [{$prefix}{$url}] doesn't exist");
 			}
