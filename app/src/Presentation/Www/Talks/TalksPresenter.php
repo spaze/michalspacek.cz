@@ -75,7 +75,8 @@ final class TalksPresenter extends BasePresenter
 			$this->redirectPermanent('this', ['slide' => null]);
 		}
 		$this->localeLinkParams = $this->talkLocaleUrls->getLinkParams($templateParameters->talk);
-		$this->alternateLinkParams = $this->talkLocaleUrls->getAlternateLinkParams($templateParameters->talk);
+		// A slide's page names the talk's page as canonical
+		$this->alternateLinkParams = $slide === null ? $this->talkLocaleUrls->getAlternateLinkParams($templateParameters->talk) : [];
 		$this->template->setParameters($templateParameters);
 	}
 

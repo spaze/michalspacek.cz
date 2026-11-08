@@ -143,11 +143,41 @@ final class TalksPresenterTest extends TestCase
 	}
 
 
-	private function renderTalk(): string
+	/**
+	 * A slide's page names the talk's page as canonical, so it has no alternates, but the switcher still leads to the
+	 * talk's translation.
+	 */
+	public function testTalkSlide(): void
+	{
+		$this->database->setFetchDefaultResult($this->talkTestDataFactory->getDatabaseResultData(locale: 'cs_CZ', translationGroupId: 7, action: self::NAME, publishSlides: 1));
+		$this->database->addFetchAllResult([
+			[
+				'id' => 42,
+				'alias' => 'slide-1',
+				'number' => 1,
+				'filename' => 'file1.jpg',
+				'filenameAlternative' => 'file1.webp',
+				'title' => 'Slide 1',
+				'speakerNotesTexy' => 'Slide 1',
+			],
+		]);
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
+		// Only used if the alternates were wrongly looked up for a slide's page
+		$this->database->addFetchPairsResult(['cs_CZ' => self::NAME, 'en_US' => 'talk']);
+		$html = $this->renderTalk('slide-1');
+		Assert::contains('<link rel="canonical" href="https://www.rizek.test/prednasky/prednaska">', $html);
+		Assert::notContains('hreflang', $html);
+		Assert::contains('href="' . self::SWITCHER_LINK . '"', $html);
+		Assert::same(['Www:Talks:talk'], $this->localeLinkGenerator->getLinksDestinations());
+		Assert::same([self::TRANSLATIONS], $this->localeLinkGenerator->getLinksParams());
+	}
+
+
+	private function renderTalk(?string $slide = null): string
 	{
 		$presenter = $this->applicationPresenter->createUiPresenter('Www:Talks', 'Talks', 'talk');
 		$presenter->autoCanonicalize = false;
-		$response = $presenter->run(new Request('Www:Talks', IRequest::Get, ['action' => 'talk', 'name' => self::NAME]));
+		$response = $presenter->run(new Request('Www:Talks', IRequest::Get, ['action' => 'talk', 'name' => self::NAME, 'slide' => $slide]));
 		assert($response instanceof TextResponse);
 		$html = $response->getSource();
 		assert(is_string($html) || $html instanceof Stringable);
