@@ -446,11 +446,13 @@ CREATE TABLE `training_url_actions` (
   `id_training_url_action` int unsigned NOT NULL AUTO_INCREMENT,
   `key_training` int unsigned NOT NULL,
   `key_url_action` int unsigned NOT NULL,
+  `key_language` int unsigned NOT NULL,
   PRIMARY KEY (`id_training_url_action`),
-  KEY `key_training` (`key_training`),
-  KEY `key_url_action` (`key_url_action`),
+  UNIQUE KEY `key_training_key_language` (`key_training`,`key_language`),
+  UNIQUE KEY `key_url_action` (`key_url_action`),
+  KEY `key_url_action_key_language` (`key_url_action`,`key_language`),
   CONSTRAINT `training_url_actions_ibfk_1` FOREIGN KEY (`key_training`) REFERENCES `trainings` (`id_training`) ON UPDATE RESTRICT,
-  CONSTRAINT `training_url_actions_ibfk_2` FOREIGN KEY (`key_url_action`) REFERENCES `url_actions` (`id_url_action`) ON UPDATE RESTRICT
+  CONSTRAINT `training_url_actions_ibfk_2` FOREIGN KEY (`key_url_action`, `key_language`) REFERENCES `url_actions` (`id_url_action`, `key_language`) ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `training_venues` (
@@ -532,6 +534,7 @@ CREATE TABLE `url_actions` (
   `action` varchar(200) NOT NULL,
   PRIMARY KEY (`id_url_action`),
   UNIQUE KEY `key_language_action` (`key_language`,`action`),
+  UNIQUE KEY `id_url_action_key_language` (`id_url_action`,`key_language`),
   CONSTRAINT `url_actions_ibfk_1` FOREIGN KEY (`key_language`) REFERENCES `languages` (`id_language`) ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
