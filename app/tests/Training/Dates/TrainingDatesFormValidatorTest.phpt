@@ -92,6 +92,29 @@ final class TrainingDatesFormValidatorTest extends TestCase
 		Assert::same($expectedErrors, $end->getErrors());
 	}
 
+
+	/**
+	 * An empty start or end would be now, starting and ending at the same time, and one not a date would throw.
+	 */
+	public function testValidateFormStartEndFailedRules(): void
+	{
+		$values = [
+			'start empty' => ['', '2022-06-08 18:00'],
+			'end empty' => ['2022-06-07 13:00', ''],
+			'start not a date' => ['foo', '2022-06-08 18:00'],
+			'end not a date' => ['2022-06-07 13:00', 'foo'],
+		];
+		$results = [];
+		foreach ($values as $name => [$valueStart, $valueEnd]) {
+			$start = (new TextInput())->setDefaultValue($valueStart);
+			$end = (new TextInput())->setDefaultValue($valueEnd);
+			($valueStart === '' || $valueStart === 'foo' ? $start : $end)->addError('rule failed');
+			$this->validator->validateFormStartEnd($start, $end);
+			$results[$name] = [...$start->getErrors(), ...$end->getErrors()];
+		}
+		Assert::same(array_fill_keys(array_keys($values), ['rule failed']), $results);
+	}
+
 }
 
 TestCaseRunner::run(TrainingDatesFormValidatorTest::class);

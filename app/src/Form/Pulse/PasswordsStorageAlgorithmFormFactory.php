@@ -176,7 +176,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 
 		$form->addSubmit('submit', 'Add');
 		$form->onValidate[] = function (Form $form): void {
-			$this->validatePasswordsStorages($form, $form->getValues());
+			$this->validatePasswordsStorages($form, $form->getUntrustedValues());
 		};
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$this->passwords->addStorage($form->getValues());
@@ -214,8 +214,14 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		assert($values->algo instanceof ArrayHash);
 		assert($values->algo->new instanceof ArrayHash);
 		assert(is_string($values->algo->new->algoName));
-		if ($values->company->new->name === '') {
-			assert(is_int($values->company->id));
+		if ($values->company->new->name !== '') {
+			if ($this->companies->getByName($values->company->new->name) !== null) {
+				$form->addError("Can't add new company, duplicated name");
+			}
+			if ($values->company->new->alias !== '' && $this->companies->getByAlias($values->company->new->alias) !== null) {
+				$form->addError("Can't add new company, duplicated alias");
+			}
+		} elseif (is_int($values->company->id)) {
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
 			$specificSites = array_filter($storages->getSites(), function ($site) {
 				return $site instanceof StorageSpecificSite;
@@ -225,13 +231,6 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			}
 			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite((string)$values->site->id)) {
 				$form->addError('Invalid combination, the site is already assigned to different company');
-			}
-		} else {
-			if ($this->companies->getByName($values->company->new->name) !== null) {
-				$form->addError("Can't add new company, duplicated name");
-			}
-			if ($values->company->new->alias !== '' && $this->companies->getByAlias($values->company->new->alias) !== null) {
-				$form->addError("Can't add new company, duplicated alias");
 			}
 		}
 		if ($values->site->new->url !== '' && $this->sites->getByUrl($values->site->new->url) !== null) {

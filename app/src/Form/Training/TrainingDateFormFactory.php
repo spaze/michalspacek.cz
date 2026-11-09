@@ -116,8 +116,10 @@ final readonly class TrainingDateFormFactory
 			->setHtmlType('number')
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná cena');
 		$form->onValidate[] = function (Form $form) use ($price): void {
-			$values = $form->getValues();
-			assert(is_int($values->training));
+			$values = $form->getUntrustedValues();
+			if (!is_int($values->training)) {
+				return; // Not one of the options, the select says so itself
+			}
 			$training = $this->trainings->getById($values->training);
 			if ($values->price === '' && $training->getPrice() === null) {
 				$price->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');

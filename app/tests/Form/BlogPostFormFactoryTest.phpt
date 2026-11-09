@@ -163,6 +163,18 @@ final class BlogPostFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * The post is built from every value, which with no locale chosen would fail.
+	 */
+	public function testCreateOnValidateFailedRules(): void
+	{
+		$form = $this->buildFormAdd();
+		$form->setDefaults(['locale' => null]);
+		$form->validate();
+		Assert::contains('Zadejte prosím jazyk', $form->getErrors());
+	}
+
+
 	private function setFormDefaults(Form $form): void
 	{
 		$form->setDefaults([

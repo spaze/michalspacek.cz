@@ -167,6 +167,23 @@ final class TrainingDateFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * A training not among the options, which the select's own rule reports.
+	 */
+	public function testCreateOnValidateNoTraining(): void
+	{
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+			function (): void {
+			},
+		);
+		$this->applicationPresenter->anchorForm($form);
+		Arrays::invoke($form->onValidate, $form);
+		Assert::notContains('Běžná cena není nastavena, je třeba nastavit cenu zde', $form->getErrors());
+	}
+
+
 	private function buildTrainingDate(): TrainingDate
 	{
 		return new TrainingDate(

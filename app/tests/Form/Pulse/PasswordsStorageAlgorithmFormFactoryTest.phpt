@@ -146,6 +146,16 @@ final class PasswordsStorageAlgorithmFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * Neither a company chosen nor a new one, which the select's own rule reports.
+	 */
+	public function testCreateOnValidateNoCompany(): void
+	{
+		Arrays::invoke($this->form->onValidate, $this->form);
+		Assert::same([], $this->form->getErrors());
+	}
+
+
 	public function testCreateOnValidateDuplicateCompany(): void
 	{
 		// For Companies::getByName()

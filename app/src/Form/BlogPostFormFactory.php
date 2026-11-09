@@ -152,7 +152,8 @@ final readonly class BlogPostFormFactory
 		};
 
 		$form->onValidate[] = function (Form $form) use ($previewButton, $post, $previewKeyInput): void {
-			if ($form->isSubmitted() !== $previewButton) {
+			// The post is built from every value, so not from one failing its own rules
+			if ($form->isSubmitted() !== $previewButton && !$form->hasErrors()) {
 				$newPost = $this->buildPost($form->getUntrustedValues(), $post?->getId());
 				if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
 					$previewKeyInput->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
