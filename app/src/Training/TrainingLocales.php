@@ -24,7 +24,7 @@ final readonly class TrainingLocales
 	 * so the action names the training with that URL in $locale, the one a page in $locale shows, and only when there's
 	 * none, the training with the lowest id that has it in another language, so a link written with another language's
 	 * URL still finds its training. The query picks the training, so the URL is compared the way the database compares
-	 * it when finding the training a page shows, where `PHP` is `php`.
+	 * it when finding the training a page shows.
 	 *
 	 * @return array<string, string> locale => action
 	 */

@@ -31,7 +31,7 @@ CREATE TABLE `auth_token_types` (
 CREATE TABLE `auth_tokens` (
   `id_auth_token` int unsigned NOT NULL AUTO_INCREMENT,
   `key_user` int unsigned NOT NULL,
-  `selector` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+  `selector` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `token` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
   `created` datetime NOT NULL,
   `type` int NOT NULL,
@@ -59,11 +59,11 @@ CREATE TABLE `blog_posts` (
   `key_locale` int unsigned NOT NULL,
   `key_twitter_card_type` int unsigned DEFAULT NULL,
   `key_translation_group` int unsigned DEFAULT NULL COMMENT 'No foreign key, yet',
-  `slug` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `slug` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `published` datetime DEFAULT NULL,
   `published_timezone` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `preview_key` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `preview_key` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin DEFAULT NULL,
   `lead` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `originally` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
@@ -111,7 +111,7 @@ CREATE TABLE `certificates` (
 
 CREATE TABLE `files` (
   `id_file` int unsigned NOT NULL AUTO_INCREMENT,
-  `filename` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+  `filename` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `added` datetime NOT NULL,
   `added_timezone` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
   PRIMARY KEY (`id_file`)
@@ -136,7 +136,7 @@ CREATE TABLE `gc_log` (
 
 CREATE TABLE `interviews` (
   `id_interview` int unsigned NOT NULL AUTO_INCREMENT,
-  `action` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
+  `action` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci,
   `date` datetime NOT NULL,
@@ -239,7 +239,7 @@ CREATE TABLE `sessions` (
 CREATE TABLE `talk_slides` (
   `id_slide` int unsigned NOT NULL AUTO_INCREMENT,
   `key_talk` int unsigned NOT NULL,
-  `alias` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
+  `alias` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `number` int unsigned DEFAULT NULL,
   `filename` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
   `filename_alternative` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
@@ -257,7 +257,7 @@ CREATE TABLE `talks` (
   `id_talk` int unsigned NOT NULL AUTO_INCREMENT,
   `key_locale` int unsigned NOT NULL,
   `key_translation_group` int unsigned DEFAULT NULL COMMENT 'No foreign key, yet',
-  `action` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  `action` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin DEFAULT NULL,
   `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci,
   `date` datetime NOT NULL,
@@ -353,7 +353,7 @@ CREATE TABLE `training_applications` (
   `invoice_id` int unsigned DEFAULT NULL,
   `paid` datetime DEFAULT NULL,
   `paid_timezone` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `access_token` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+  `access_token` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin DEFAULT NULL,
   `key_status` int unsigned NOT NULL,
   `status_time` datetime NOT NULL,
   `status_time_timezone` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
@@ -463,7 +463,7 @@ CREATE TABLE `training_venues` (
   `address` varchar(2000) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
   `city` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
   `description` varchar(2000) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `action` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+  `action` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin DEFAULT NULL,
   `entrance` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
   `entrance_navigation` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
   `streetview` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
@@ -531,7 +531,7 @@ CREATE TABLE `twitter_card_types` (
 CREATE TABLE `url_actions` (
   `id_url_action` int unsigned NOT NULL AUTO_INCREMENT,
   `key_language` int unsigned NOT NULL,
-  `action` varchar(200) NOT NULL,
+  `action` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   PRIMARY KEY (`id_url_action`),
   UNIQUE KEY `key_language_action` (`key_language`,`action`),
   UNIQUE KEY `id_url_action_key_language` (`id_url_action`,`key_language`),
