@@ -122,7 +122,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
-	#[NotInSitemap('an applicant\'s own application, opened with their access token')]
+	#[NotInSitemap("an applicant's own application, opened with their access token")]
 	public function actionApplication(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;
@@ -218,8 +218,8 @@ final class TrainingsPresenter extends BasePresenter
 	 * @throws HaliteAlert
 	 * @throws SodiumException
 	 */
-	#[NotInSitemap('an attendee\'s materials, opened with their access token and sent with noindex')]
-	#[NoLanguageSwitcher('the materials are found with what the visitor\'s session holds, which the other language\'s host doesn\'t have')]
+	#[NotInSitemap("an attendee's materials, opened with their access token and sent with noindex")]
+	#[NoLanguageSwitcher("the materials are found with what the visitor's session holds, which the other language's host doesn't have")]
 	public function actionFiles(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;

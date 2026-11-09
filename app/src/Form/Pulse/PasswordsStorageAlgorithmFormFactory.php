@@ -204,19 +204,19 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 				return $site instanceof StorageSpecificSite;
 			});
 			if ($values->site->id === Sites::ALL && $specificSites !== []) {
-				$form->addError('Invalid combination, can\'t add disclosure for all sites when sites already exist');
+				$form->addError("Invalid combination, can't add disclosure for all sites when sites already exist");
 			}
 			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite((string)$values->site->id)) {
 				$form->addError('Invalid combination, the site is already assigned to different company');
 			}
 		} elseif ($this->companies->getByName($values->company->new->name) !== null) {
-			$form->addError('Can\'t add new company, duplicated name');
+			$form->addError("Can't add new company, duplicated name");
 		}
 		if ($values->site->new->url !== '' && $this->sites->getByUrl($values->site->new->url) !== null) {
-			$form->addError('Can\'t add new site, duplicated URL');
+			$form->addError("Can't add new site, duplicated URL");
 		}
 		if ($values->algo->new->algoName !== '' && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName) !== null) {
-			$form->addError('Can\'t add new algorithm, duplicated name');
+			$form->addError("Can't add new algorithm, duplicated name");
 		}
 	}
 

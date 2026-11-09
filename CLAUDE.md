@@ -311,3 +311,5 @@ When reviewing templates: flag any `|formatPossiblyUnsafeHtml:$variable` where t
 Do not end error or UI messages with a full stop (`.`). This applies to short status and error strings (e.g. "Passkey registration failed") — full instructional sentences that are grammatically complete may keep their period.
 
 Use American English spelling: `Canceled` (one L), not `Cancelled`.
+
+Write a string people read, a message or an attribute's reason, with its apostrophes as they are, in double quotes: `"Can't add new site, duplicated URL"`, not `'Can\'t add new site, duplicated URL'`. Only a string that holds a double quote too keeps the escapes.
