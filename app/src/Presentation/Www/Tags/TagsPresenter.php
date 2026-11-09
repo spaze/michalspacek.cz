@@ -10,8 +10,8 @@ use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Sitemap\InSitemap;
-use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Tags\TagSitemapEntries;
+use MichalSpacekCz\Tags\TagTranslations;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Override;
@@ -27,7 +27,7 @@ final class TagsPresenter extends BasePresenter
 		private readonly Articles $articles,
 		private readonly Strings $strings,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly Tags $tags,
+		private readonly TagTranslations $tagTranslations,
 		private readonly ArticleSummaryFactory $articleSummaryFactory,
 		private readonly Translator $translator,
 	) {
@@ -56,7 +56,7 @@ final class TagsPresenter extends BasePresenter
 		}
 
 		$articles = $this->articles->getAllByTags([$tag]);
-		$this->localeLinkParams = $this->tags->findLocaleLinkParams($articles, $tag);
+		$this->localeLinkParams = $this->tagTranslations->getLocaleLinkParams($tag);
 
 		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.label.articlesbytag', [$label]);
 		$this->template->articles = $articles;

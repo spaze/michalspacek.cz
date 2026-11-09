@@ -118,17 +118,15 @@ final class TagsPresenterTest extends TestCase
 		$this->articles->addBlogPost(1, new DateTime('2025-01-01 00:00:00'), 'post', slugTags: [self::TAG]);
 		$this->database->addFetchAllResult([
 			[
+				'translationGroupId' => 1,
 				'locale' => 'cs_CZ',
-				'slug' => 'clanek',
 				'published' => new DateTime('2025-01-01 00:00:00'),
-				'previewKey' => null,
 				'slugTags' => $this->tags->serialize([self::TAG]),
 			],
 			[
+				'translationGroupId' => 1,
 				'locale' => 'en_US',
-				'slug' => 'post',
 				'published' => $translationPublished,
-				'previewKey' => $translationPublished === null ? 'key' : null,
 				'slugTags' => $this->tags->serialize(['something']),
 			],
 		]);

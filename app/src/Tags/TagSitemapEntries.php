@@ -10,15 +10,14 @@ use MichalSpacekCz\Sitemap\SitemapEntry;
 use Override;
 
 /**
- * Every tag of the published blog posts in the current locale. A tag page has no alternate: the translation of a tag
- * is taken from a post that has it, by its position among the post's tags, and the translated tag's page may take its
- * own from a different post, so the two pages wouldn't always point at each other.
+ * Every tag of the published blog posts in the current locale, with its translations.
  */
 final readonly class TagSitemapEntries implements SitemapEntries
 {
 
 	public function __construct(
 		private Articles $articles,
+		private TagTranslations $tagTranslations,
 		private Translator $translator,
 	) {
 	}
@@ -28,9 +27,10 @@ final readonly class TagSitemapEntries implements SitemapEntries
 	public function getEntries(): array
 	{
 		$locale = $this->translator->getDefaultLocale();
+		$translations = $this->tagTranslations->getAllLocaleLinkParams()[$locale] ?? [];
 		$entries = [];
 		foreach (array_keys($this->articles->getAllTags()) as $tag) {
-			$entries[] = new SitemapEntry([$locale => ['tag' => $tag]]);
+			$entries[] = new SitemapEntry($translations[$tag] ?? [$locale => ['tag' => $tag]]);
 		}
 		return $entries;
 	}
