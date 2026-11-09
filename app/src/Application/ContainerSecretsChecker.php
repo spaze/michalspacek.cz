@@ -201,10 +201,10 @@ final class ContainerSecretsChecker extends CompilerExtension
 			throw new RuntimeException('Values of ' . implode(', ', $tooShort) . ' are shorter than ' . self::MIN_CHECKABLE_LENGTH . ' characters, and a value that short can equal an ordinary configuration value by accident, which the compiled-container check would then refuse; use longer values');
 		}
 		if ($controlCharacters !== []) {
-			throw new RuntimeException('Values of ' . implode(', ', $controlCharacters) . ' contain control characters, a newline say, so a copy pasted into a config file splits into several entries carrying the pieces, which the whole-string comparisons can\'t see; use single-line values');
+			throw new RuntimeException('Values of ' . implode(', ', $controlCharacters) . " contain control characters, a newline say, so a copy pasted into a config file splits into several entries carrying the pieces, which the whole-string comparisons can't see; use single-line values");
 		}
 		if ($activeConfigSyntax !== []) {
-			throw new RuntimeException('Values of ' . implode(', ', $activeConfigSyntax) . ' read as Nette config syntax: a leading @ is a service reference and a % pair expands as a parameter, so a copy pasted into a config file changes shape before the compiled-container check can see it, or makes Nette\'s own error message quote it; use values that don\'t start with @ and have at most one %');
+			throw new RuntimeException('Values of ' . implode(', ', $activeConfigSyntax) . " read as Nette config syntax: a leading @ is a service reference and a % pair expands as a parameter, so a copy pasted into a config file changes shape before the compiled-container check can see it, or makes Nette's own error message quote it; use values that don't start with @ and have at most one %");
 		}
 		if ($wrongWhenUnquoted !== []) {
 			throw new RuntimeException('Values of ' . implode(', ', $wrongWhenUnquoted) . ' would decode as something else (a number, a date, an array, a piece of themselves) if copied into a config file without quotes, NEON is quote-optional, and the compiled-container check and the blue screen scrubber compare whole strings only, so such a copy would slip through both; use values that decode back to exactly themselves, hex and base64 without the trailing padding do');
