@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Www;
 
 use MichalSpacekCz\Application\AppRequest;
-use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Http\Redirections;
 use Nette\Application\Request;
 use Nette\Http\IResponse;
@@ -44,18 +43,6 @@ abstract class BaseErrorPresenter extends BasePresenter
 	public function injectAppRequest(AppRequest $appRequest): void
 	{
 		$this->appRequest = $appRequest;
-	}
-
-
-	/**
-	 * The error page stands in for the page that failed, which it isn't in any language.
-	 *
-	 * @return array<string, LocaleLink>
-	 */
-	#[Override]
-	protected function getAlternateLinks(): array
-	{
-		return [];
 	}
 
 
