@@ -36,6 +36,7 @@ final class FormValidatorsTest extends TestCase
 			['foo-bar_baz', true],
 			['foo-bar-1337', true],
 			['foo/bar', false],
+			['Foo', false],
 		];
 	}
 
@@ -49,6 +50,22 @@ final class FormValidatorsTest extends TestCase
 		ComponentProperty::setParentAndName($input, new Form(), null);
 		$input->validate();
 		Assert::same($result ? [] : ['messages.forms.validateSlugParamsError'], $input->getErrors());
+	}
+
+
+	public function testAddValidateSlugRulesPattern(): void
+	{
+		$results = [];
+		foreach (['foo/bar', 'foo,bar', 'Foo/bar'] as $slug) {
+			$input = new TextInput();
+			$input->value = $slug;
+			$this->validators->addValidateSlugRules($input, '[a-z/]+');
+			ComponentProperty::setParentAndName($input, new Form(), null);
+			$input->validate();
+			$results[$slug] = $input->getErrors();
+		}
+		$error = ['messages.forms.validateSlugParamsError'];
+		Assert::same(['foo/bar' => [], 'foo,bar' => $error, 'Foo/bar' => $error], $results);
 	}
 
 }

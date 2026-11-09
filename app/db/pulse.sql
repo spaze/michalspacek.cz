@@ -7,6 +7,7 @@ CREATE TABLE `companies` (
   `alias` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `added` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `alias` (`alias`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Pulse;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -19,6 +20,13 @@ final class CompaniesTest extends TestCase
 		private readonly Companies $companies,
 		private readonly Database $database,
 	) {
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
@@ -70,6 +78,30 @@ final class CompaniesTest extends TestCase
 		Assert::same('dba', $company->getTradeName());
 		Assert::same('one', $company->getCompanyAlias());
 		Assert::same('sort-one', $company->getSortName());
+		Assert::same(['name', 'foo'], $this->database->getParamsForQueryContaining('FROM companies'));
+	}
+
+
+	public function testGetByAlias(): void
+	{
+		$this->database->setFetchDefaultResult([
+			'id' => 123,
+			'name' => 'One',
+			'tradeName' => 'dba',
+			'alias' => 'one',
+			'sortName' => 'sort-one',
+		]);
+		$company = $this->companies->getByAlias('one');
+		assert($company instanceof Company);
+		Assert::same(123, $company->getId());
+		Assert::same('one', $company->getCompanyAlias());
+		Assert::same(['alias', 'one'], $this->database->getParamsForQueryContaining('FROM companies'));
+	}
+
+
+	public function testGetByAliasNotFound(): void
+	{
+		Assert::null($this->companies->getByAlias('one'));
 	}
 
 }

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Pulse;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -19,6 +20,13 @@ final class SitesTest extends TestCase
 		private readonly Sites $sites,
 		private readonly Database $database,
 	) {
+	}
+
+
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
@@ -58,6 +66,28 @@ final class SitesTest extends TestCase
 		Assert::same(123, $site->getId());
 		Assert::same('https://example.com/', $site->getUrl());
 		Assert::same('one', $site->getAlias());
+		Assert::same(['url', 'foo'], $this->database->getParamsForQueryContaining('FROM sites WHERE'));
+	}
+
+
+	public function testGetByAlias(): void
+	{
+		$this->database->setFetchDefaultResult([
+			'id' => 123,
+			'url' => 'https://example.com/',
+			'alias' => 'one',
+		]);
+		$site = $this->sites->getByAlias('one');
+		assert($site instanceof Site);
+		Assert::same(123, $site->getId());
+		Assert::same('one', $site->getAlias());
+		Assert::same(['alias', 'one'], $this->database->getParamsForQueryContaining('FROM sites WHERE'));
+	}
+
+
+	public function testGetByAliasNotFound(): void
+	{
+		Assert::null($this->sites->getByAlias('one'));
 	}
 
 }
