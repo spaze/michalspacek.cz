@@ -4,9 +4,10 @@ CREATE TABLE `companies` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
   `trade_name` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `alias` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `alias` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `added` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `alias` (`alias`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -72,7 +73,7 @@ CREATE TABLE `sites` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `key_companies` int unsigned NOT NULL,
   `url` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `alias` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `alias` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_bin NOT NULL,
   `shared_with` json DEFAULT NULL,
   `added` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),

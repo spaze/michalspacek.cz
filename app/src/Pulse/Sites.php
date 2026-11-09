@@ -38,7 +38,19 @@ final readonly class Sites
 
 	public function getByUrl(string $url): ?Site
 	{
-		$row = $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
+		return $this->getBy('url', $url);
+	}
+
+
+	public function getByAlias(string $alias): ?Site
+	{
+		return $this->getBy('alias', $alias);
+	}
+
+
+	private function getBy(string $column, string $value): ?Site
+	{
+		$row = $this->database->fetch('SELECT id, url, alias FROM sites WHERE ?name = ?', $column, $value);
 		if ($row === null) {
 			return null;
 		}

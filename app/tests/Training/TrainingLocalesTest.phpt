@@ -35,8 +35,8 @@ final class TrainingLocalesTest extends TestCase
 			['trainingId' => 1, 'language' => 'cs_CZ', 'action' => 'skoleni-php'],
 			['trainingId' => 1, 'language' => 'en_US', 'action' => 'php'],
 		]);
-		Assert::same(['cs_CZ' => 'skoleni-php', 'en_US' => 'php'], $this->trainingLocales->getLocaleActions('PHP', 'en_US'));
-		Assert::same(['PHP', 'en_US'], $this->database->getParamsForQueryContaining('ORDER BY l.language = ?'), 'The query picks the training with the URL in the locale');
+		Assert::same(['cs_CZ' => 'skoleni-php', 'en_US' => 'php'], $this->trainingLocales->getLocaleActions('php', 'en_US'));
+		Assert::same(['php', 'en_US'], $this->database->getParamsForQueryContaining('ORDER BY l.language = ?'), 'The query picks the training with the URL in the locale');
 	}
 
 

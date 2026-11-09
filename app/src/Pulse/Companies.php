@@ -46,6 +46,18 @@ final readonly class Companies
 
 	public function getByName(string $name): ?Company
 	{
+		return $this->getBy('name', $name);
+	}
+
+
+	public function getByAlias(string $alias): ?Company
+	{
+		return $this->getBy('alias', $alias);
+	}
+
+
+	private function getBy(string $column, string $value): ?Company
+	{
 		$row = $this->database->fetch(
 			'SELECT
 				id,
@@ -54,8 +66,9 @@ final readonly class Companies
 				alias,
 				COALESCE(trade_name, name) AS sortName
 				FROM companies
-				WHERE name = ?',
-			$name,
+				WHERE ?name = ?',
+			$column,
+			$value,
 		);
 		if ($row === null) {
 			return null;

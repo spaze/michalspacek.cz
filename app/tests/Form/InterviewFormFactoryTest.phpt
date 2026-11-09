@@ -8,6 +8,7 @@ use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Forms\Controls\TextArea;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 use Tester\Assert;
 use Tester\TestCase;
@@ -61,6 +62,27 @@ final class InterviewFormFactoryTest extends TestCase
 				'source_href' => '',
 			],
 		], $this->database->getParamsArrayForQuery('INSERT INTO interviews'));
+	}
+
+
+	public function testCreateActionLowercase(): void
+	{
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+			null,
+		);
+		$this->applicationPresenter->anchorForm($form);
+		$results = [];
+		foreach (['foo-bar', 'Foo-bar'] as $value) {
+			$form->setDefaults(['action' => $value]);
+			$action = $form->getComponent('action');
+			assert($action instanceof TextInput);
+			$action->cleanErrors();
+			$action->validate();
+			$results[$value] = $action->getErrors();
+		}
+		Assert::same(['foo-bar' => [], 'Foo-bar' => ['messages.forms.validateSlugParamsError']], $results);
 	}
 
 

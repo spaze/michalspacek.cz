@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
+use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
@@ -20,6 +21,7 @@ final readonly class InterviewFormFactory
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Interviews $interviews,
 		private VideoThumbnails $videoThumbnails,
+		private FormValidators $validators,
 	) {
 	}
 
@@ -30,9 +32,10 @@ final readonly class InterviewFormFactory
 	public function create(callable $onSuccess, ?Interview $interview = null): Form
 	{
 		$form = new Form();
-		$form->addText('action', 'Akce:')
+		$actionInput = $form->addText('action', 'Akce:')
 			->setRequired('Zadejte prosím akci')
 			->addRule(Form::MaxLength, 'Maximální délka akce je %d znaků', 200);
+		$this->validators->addValidateSlugRules($actionInput);
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
 			->addRule(Form::MaxLength, 'Maximální délka názvu je %d znaků', 200);

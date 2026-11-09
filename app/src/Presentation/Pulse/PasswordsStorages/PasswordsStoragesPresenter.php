@@ -11,6 +11,7 @@ use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Form;
@@ -72,7 +73,13 @@ final class PasswordsStoragesPresenter extends BasePresenter
 
 		$sites = explode(',', $param);
 		$data = $this->passwords->getStoragesBySite($sites);
-		if (count($data->getSites()) === 0) {
+		$found = [];
+		foreach ($data->getSites() as $site) {
+			if ($site instanceof StorageSpecificSite) {
+				$found[] = $site->getAlias();
+			}
+		}
+		if (!$this->isEveryAliasFound($sites, $found)) {
 			throw new BadRequestException('Unknown site alias');
 		}
 
@@ -93,7 +100,11 @@ final class PasswordsStoragesPresenter extends BasePresenter
 
 		$companies = explode(',', $param);
 		$data = $this->passwords->getStoragesByCompany($companies);
-		if (count($data->getSites()) === 0) {
+		$found = [];
+		foreach ($data->getCompanies() as $company) {
+			$found[] = $company->getCompanyAlias();
+		}
+		if (!$this->isEveryAliasFound($companies, $found)) {
 			throw new BadRequestException('Unknown company alias');
 		}
 
@@ -103,6 +114,21 @@ final class PasswordsStoragesPresenter extends BasePresenter
 		}
 
 		$this->setDefaultViewAndVars(implode(', ', $names) . ' password storage disclosures', true, false, null, $data);
+	}
+
+
+	/**
+	 * Each alias in the URL has to name a different site or company, as stored, so a list with an unknown alias, one
+	 * in another case, or one given twice is a 404, not the page of the aliases found.
+	 *
+	 * @param list<string> $aliases
+	 * @param list<string> $found
+	 */
+	private function isEveryAliasFound(array $aliases, array $found): bool
+	{
+		sort($aliases, SORT_STRING);
+		sort($found, SORT_STRING);
+		return $aliases === $found;
 	}
 
 

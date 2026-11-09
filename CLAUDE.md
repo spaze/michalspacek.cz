@@ -208,6 +208,8 @@ Schema dumps (and a small allow-list of lookup-table data) live in `app/db/*.sql
 
 `ip_ranges` and `ip_ranges_sources` are dumped with data too, though they're seeded copies of third parties' published IP range lists (e.g. Cloudflare's) rather than a fixed enumeration. Shipping an initial set beats an importer that would have to be run before anything worked. The data is public either way, and it's only used to label a host in an error message, so it going stale costs a label, not correctness.
 
+A column a URL is looked up by, like an action, a slug, an alias or a token, has the `utf8mb4_0900_bin` collation, so only the value exactly as stored finds the row. With a case- or accent-insensitive collation, every case and accent variant of a URL would serve the same page as its own address, and the older `utf8mb4_bin` and `utf8mb3_bin` ignore trailing spaces. A form input that sets such a value takes `FormValidators::addValidateSlugRules()`, lower case only, with a pattern of its own when it needs other characters, so no two values differ just in case, which a unique key on a binary column no longer prevents.
+
 ### Database transactions
 
 `beginTransaction()` goes before the try block — if it throws, there is nothing to roll back. The try block covers only the work done inside the transaction:

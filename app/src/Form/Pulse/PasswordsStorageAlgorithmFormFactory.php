@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Pulse;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Form\Validators\FormValidators;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
@@ -16,6 +17,17 @@ use Nette\Utils\ArrayHash;
 final readonly class PasswordsStorageAlgorithmFormFactory
 {
 
+	/**
+	 * Without a comma, which separates the aliases of a comparison in the URL
+	 */
+	private const string COMPANY_ALIAS_PATTERN = '[a-z0-9._-]+';
+
+	/**
+	 * Like a company alias, but a site's can have a path too
+	 */
+	private const string SITE_ALIAS_PATTERN = '[a-z0-9./_-]+';
+
+
 	public function __construct(
 		private TrainingControlsFactory $trainingControlsFactory,
 		private Companies $companies,
@@ -23,6 +35,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		private Passwords $passwords,
 		private PasswordHashingAlgorithms $hashingAlgorithms,
 		private PasswordHashingDisclosures $hashingDisclosures,
+		private FormValidators $validators,
 	) {
 	}
 
@@ -47,6 +60,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		$newCompanyContainer->addText('dba', 'Trade name:')
 			->setHtmlAttribute('title', '"doing business as"');
 		$inputAlias = $newCompanyContainer->addText('alias', 'Alias:');
+		$this->validators->addValidateSlugRules($inputAlias, self::COMPANY_ALIAS_PATTERN);
 		$inputAlias->addConditionOn($inputName, Form::Filled)
 			->setRequired('Enter new company alias');
 
@@ -67,6 +81,7 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		$inputUrl = $newSiteContainer->addText('url', 'URL:')
 			->setHtmlType('url');
 		$inputAlias = $newSiteContainer->addText('alias', 'Alias:');
+		$this->validators->addValidateSlugRules($inputAlias, self::SITE_ALIAS_PATTERN);
 		$newSiteContainer->addText('sharedWith', 'Storage shared with:');
 
 		$selectSite->addConditionOn($inputUrl, Form::Blank)
@@ -190,10 +205,12 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		assert($values->company instanceof ArrayHash);
 		assert($values->company->new instanceof ArrayHash);
 		assert(is_string($values->company->new->name));
+		assert(is_string($values->company->new->alias));
 		assert($values->site instanceof ArrayHash);
 		assert(is_int($values->site->id) || $values->site->id === Sites::ALL || $values->site->id === null);
 		assert($values->site->new instanceof ArrayHash);
 		assert(is_string($values->site->new->url));
+		assert(is_string($values->site->new->alias));
 		assert($values->algo instanceof ArrayHash);
 		assert($values->algo->new instanceof ArrayHash);
 		assert(is_string($values->algo->new->algoName));
@@ -209,11 +226,19 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite((string)$values->site->id)) {
 				$form->addError('Invalid combination, the site is already assigned to different company');
 			}
-		} elseif ($this->companies->getByName($values->company->new->name) !== null) {
-			$form->addError("Can't add new company, duplicated name");
+		} else {
+			if ($this->companies->getByName($values->company->new->name) !== null) {
+				$form->addError("Can't add new company, duplicated name");
+			}
+			if ($values->company->new->alias !== '' && $this->companies->getByAlias($values->company->new->alias) !== null) {
+				$form->addError("Can't add new company, duplicated alias");
+			}
 		}
 		if ($values->site->new->url !== '' && $this->sites->getByUrl($values->site->new->url) !== null) {
 			$form->addError("Can't add new site, duplicated URL");
+		}
+		if ($values->site->new->alias !== '' && $this->sites->getByAlias($values->site->new->alias) !== null) {
+			$form->addError("Can't add new site, duplicated alias");
 		}
 		if ($values->algo->new->algoName !== '' && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algoName) !== null) {
 			$form->addError("Can't add new algorithm, duplicated name");

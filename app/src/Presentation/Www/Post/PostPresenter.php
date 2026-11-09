@@ -40,9 +40,6 @@ final class PostPresenter extends BasePresenter
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPosts->get($slug, $preview);
-		if ($slug !== $post->getSlug()) {
-			$this->redirectPermanent($this->getAction(), [$post->getSlug(), $preview]);
-		}
 		if ($preview !== null) {
 			if (!$post->needsPreviewKey()) {
 				$this->redirect($this->getAction(), $slug);
