@@ -91,8 +91,8 @@ final class SitemapActionsTest extends TestCase
 		Assert::equal([new InSitemap()], $actions['Www:Homepage:default']->inSitemap);
 		Assert::equal([new InSitemap(TalkSitemapEntries::class)], $actions['Www:Talks:talk']->inSitemap);
 		Assert::same(['actionTalk'], $actions['Www:Talks:talk']->methods);
-		Assert::same([], $actions['Www:Photo:default']->inSitemap);
-		Assert::count(1, $actions['Www:Photo:default']->notInSitemap);
+		Assert::same([], $actions['Www:Trainings:success']->inSitemap);
+		Assert::count(1, $actions['Www:Trainings:success']->notInSitemap);
 		Assert::false(isset($actions['Admin:Homepage:default']), 'Only the Www module is in the sitemap');
 	}
 
