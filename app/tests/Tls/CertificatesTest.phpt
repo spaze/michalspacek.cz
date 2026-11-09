@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\DatabaseTransactionStatus;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -47,6 +48,7 @@ final class CertificatesTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->logger->reset();
+		$this->database->reset();
 	}
 
 
@@ -80,6 +82,22 @@ final class CertificatesTest extends TestCase
 	{
 		$exception = new DriverException();
 		$this->database->willThrow($exception);
+		$certificate = new Certificate('foo.example', null, null, null, $this->notBefore, $this->notAfter, null, new DateTimeImmutable());
+		Assert::exception(function () use ($certificate): void {
+			$this->certificates->log($certificate);
+		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');
+		Assert::same($exception, $this->logger->getLogged()[0]);
+		$message = 'OK foo.example from ' . $this->notBefore->format(DateTimeFormat::RFC3339_MICROSECONDS) . ' to ' . $this->notAfter->format(DateTimeFormat::RFC3339_MICROSECONDS);
+		Assert::same($message, $this->logger->getLogged()[1]);
+		Assert::same(DatabaseTransactionStatus::RolledBack, $this->database->transactionStatus);
+	}
+
+
+	public function testLogDbErrorsRollBackFails(): void
+	{
+		$exception = new DriverException();
+		$this->database->willThrow($exception);
+		$this->database->willThrowOnRollBack(new DriverException());
 		$certificate = new Certificate('foo.example', null, null, null, $this->notBefore, $this->notAfter, null, new DateTimeImmutable());
 		Assert::exception(function () use ($certificate): void {
 			$this->certificates->log($certificate);

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Talks\Slides;
 
+use Exception;
 use MichalSpacekCz\Application\WindowsSubsystemForLinux;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -338,11 +339,16 @@ final class TalkSlides
 	{
 		$this->otherSlides = [];
 		$this->database->beginTransaction();
-		// Reset slide numbers so they can be shifted around without triggering duplicated key violations
-		$this->database->query('UPDATE talk_slides SET number = null WHERE key_talk = ?', $talkId);
-		$this->updateSlides($talkId, $originalSlides, $updateSlides, $deleteReplaced);
-		$this->addSlides($talkId, $newSlides);
-		$this->database->commit();
+		try {
+			// Reset slide numbers so they can be shifted around without triggering duplicated key violations
+			$this->database->query('UPDATE talk_slides SET number = null WHERE key_talk = ?', $talkId);
+			$this->updateSlides($talkId, $originalSlides, $updateSlides, $deleteReplaced);
+			$this->addSlides($talkId, $newSlides);
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
+		}
 	}
 
 

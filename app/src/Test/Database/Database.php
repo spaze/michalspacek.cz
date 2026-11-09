@@ -27,6 +27,8 @@ final class Database extends Explorer
 
 	private ?Exception $willThrowOnQuery = null;
 
+	private ?Exception $willThrowOnRollBack = null;
+
 	/** @var list<string> */
 	private array $queries = [];
 
@@ -99,6 +101,15 @@ final class Database extends Explorer
 	}
 
 
+	/**
+	 * Throws from rollBack(), like it does when the connection has been lost.
+	 */
+	public function willThrowOnRollBack(Exception $e): void
+	{
+		$this->willThrowOnRollBack = $e;
+	}
+
+
 	private function maybeThrowOnRead(): void
 	{
 		if ($this->willThrowOnRead !== null) {
@@ -132,6 +143,7 @@ final class Database extends Explorer
 		$this->willThrowOnRead = null;
 		$this->willThrowOnQueryStartingWith = null;
 		$this->willThrowOnQuery = null;
+		$this->willThrowOnRollBack = null;
 		$this->transactionStatus = DatabaseTransactionStatus::None;
 	}
 
@@ -153,6 +165,9 @@ final class Database extends Explorer
 	#[Override]
 	public function rollBack(): void
 	{
+		if ($this->willThrowOnRollBack !== null) {
+			throw $this->willThrowOnRollBack;
+		}
 		$this->transactionStatus = DatabaseTransactionStatus::RolledBack;
 	}
 

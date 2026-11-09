@@ -110,9 +110,12 @@ final class Certificates
 	 */
 	public function log(Certificate $cert): void
 	{
-		$dbException = null;
 		try {
 			$this->database->beginTransaction();
+		} catch (DriverException $e) {
+			$this->logToFile($cert, $e);
+		}
+		try {
 			$this->database->query('INSERT INTO certificates', [
 				'key_certificate_request' => $this->logRequest($cert),
 				'not_before' => $cert->getNotBefore(),
@@ -122,19 +125,30 @@ final class Certificates
 			]);
 			$this->database->commit();
 		} catch (DriverException $e) {
-			Debugger::log($e);
-			Debugger::log(sprintf(
-				'OK %s%s from %s to %s',
-				$cert->getCertificateName(),
-				$cert->getCertificateNameExtension() ?? '',
-				$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
-				$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
-			), 'cert');
-			$dbException = $e;
+			try {
+				$this->database->rollBack();
+			} catch (DriverException) {
+				// A connection that can't roll back has lost the transaction already, and the certificate goes to the file still
+			}
+			$this->logToFile($cert, $e);
 		}
-		if ($dbException !== null) {
-			throw new SomeCertificatesLoggedToFileException(previous: $dbException);
-		}
+	}
+
+
+	/**
+	 * @throws SomeCertificatesLoggedToFileException
+	 */
+	private function logToFile(Certificate $cert, DriverException $e): never
+	{
+		Debugger::log($e);
+		Debugger::log(sprintf(
+			'OK %s%s from %s to %s',
+			$cert->getCertificateName(),
+			$cert->getCertificateNameExtension() ?? '',
+			$cert->getNotBefore()->format(DateTimeFormat::RFC3339_MICROSECONDS),
+			$cert->getNotAfter()->format(DateTimeFormat::RFC3339_MICROSECONDS),
+		), 'cert');
+		throw new SomeCertificatesLoggedToFileException(previous: $e);
 	}
 
 
