@@ -8,6 +8,8 @@ use MichalSpacekCz\CompanyInfo\CompanyRegister;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Controls\TextInput;
+use Stringable;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -40,6 +42,29 @@ final class TrainingControlsFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * The patterns take any two digits for a month or a day.
+	 */
+	public function testAddDateExistingDate(): void
+	{
+		$form = new Form();
+		$date = $this->trainingControlsFactory->addDate($form->addText('date'), false, 'YYYY-MM-DD HH:MM', '\\d{4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{2}');
+		$statusDate = $this->trainingControlsFactory->addStatusDate($form->addText('statusDate'), false);
+		$error = ['Takové datum neexistuje'];
+		Assert::same([
+			'2026-02-28 10:00' => [],
+			'2026-02-30 10:00' => $error,
+			'2026-13-01 10:00' => $error,
+			'2026-05-07 25:00' => $error,
+		], $this->getErrors($date, ['2026-02-28 10:00', '2026-02-30 10:00', '2026-13-01 10:00', '2026-05-07 25:00']));
+		Assert::same([
+			'NOW' => [],
+			'2026-05-07 10:00:00' => [],
+			'2026-05-32 10:00:00' => $error,
+		], $this->getErrors($statusDate, ['NOW', '2026-05-07 10:00:00', '2026-05-32 10:00:00']));
+	}
+
+
 	/*
 	 * The countries an application can come from and the countries with a company register are two separate lists,
 	 * and they don't have to match: an application can come from a country whose register has no API. But the form
@@ -61,6 +86,22 @@ final class TrainingControlsFactoryTest extends TestCase
 			array_values(array_diff($countries, $registerCountries)),
 			'Hide the company data lookup (#loadDataControls in scripts.js) for these countries without a company register, and add a messages.label.taxid.{country} translation if their tax id has its own name',
 		);
+	}
+
+
+	/**
+	 * @param list<string> $values
+	 * @return array<string, list<string|Stringable>>
+	 */
+	private function getErrors(TextInput $input, array $values): array
+	{
+		$results = [];
+		foreach ($values as $value) {
+			$input->setDefaultValue($value);
+			$input->validate();
+			$results[$value] = $input->getErrors();
+		}
+		return $results;
 	}
 
 }

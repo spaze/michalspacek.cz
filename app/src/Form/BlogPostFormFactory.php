@@ -12,6 +12,7 @@ use MichalSpacekCz\Articles\Blog\BlogPostPreview;
 use MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Articles\Blog\BlogPostTranslation;
+use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostInvalidRecommendedLinksException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\Validators\FormValidatorRuleTexy;
@@ -24,6 +25,7 @@ use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\UniqueConstraintViolationException;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
@@ -104,7 +106,8 @@ final readonly class BlogPostFormFactory
 		$form->addText('tags', 'Tagy:')
 			->setRequired(false);
 		$form->addText('recommended', 'Doporučené:')
-			->setRequired(false);
+			->setRequired(false)
+			->addRule($this->isRecommendedLinks(...), 'Doporučené musí být JSON se seznamem odkazů, každý s url a text');
 		$editSummaryInput = $form->addText('editSummary', 'Shrnutí editace:');
 		$editSummaryInput->setRequired(false)
 			->setDisabled(true)
@@ -234,6 +237,21 @@ final readonly class BlogPostFormFactory
 			$allowedTagsGroups,
 			$values->omitExports,
 		);
+	}
+
+
+	private function isRecommendedLinks(Control $input): bool
+	{
+		$value = $input->getValue();
+		if (!is_string($value)) {
+			return false;
+		}
+		try {
+			$this->recommendedLinks->getFromJson($value);
+		} catch (JsonException | BlogPostInvalidRecommendedLinksException) {
+			return false;
+		}
+		return true;
 	}
 
 

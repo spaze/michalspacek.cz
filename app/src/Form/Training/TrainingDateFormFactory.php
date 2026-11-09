@@ -12,7 +12,10 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use MichalSpacekCz\Utils\Arrays;
 use Nette\Application\UI\Form;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 final readonly class TrainingDateFormFactory
 {
@@ -78,11 +81,14 @@ final readonly class TrainingDateFormFactory
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
 			->addRule(Form::Pattern, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
+		$this->trainingControlsFactory->addExistingDateRule($start);
+		$this->trainingControlsFactory->addExistingDateRule($end);
 		$form->onValidate[] = function () use ($start, $end): void {
 			$this->trainingDatesFormValidator->validateFormStartEnd($start, $end);
 		};
 
-		$form->addText('label', 'Label:');
+		$form->addText('label', 'Label:')
+			->addRule($this->isJson(...), 'Label musí být JSON');
 
 		$statuses = [];
 		foreach ($this->trainingDateStatuses->getStatuses() as $status) {
@@ -229,6 +235,24 @@ final readonly class TrainingDateFormFactory
 		];
 		$form->setDefaults($values);
 		$submit->setCaption('Upravit');
+	}
+
+
+	/**
+	 * Saved into a JSON column, which refuses anything else with a database error
+	 */
+	private function isJson(Control $input): bool
+	{
+		$value = $input->getValue();
+		if (!is_string($value)) {
+			return false;
+		}
+		try {
+			Json::decode($value);
+		} catch (JsonException) {
+			return false;
+		}
+		return true;
 	}
 
 }

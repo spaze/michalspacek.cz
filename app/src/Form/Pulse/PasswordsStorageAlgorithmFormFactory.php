@@ -9,10 +9,17 @@ use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSharedWithFactory;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Sites;
+use MichalSpacekCz\Utils\Exceptions\JsonItemNotStructureException;
+use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Nette\Application\UI\Form;
+use Nette\Forms\Control;
+use Nette\Schema\ValidationException;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\JsonException;
 
 final readonly class PasswordsStorageAlgorithmFormFactory
 {
@@ -36,6 +43,8 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 		private PasswordHashingAlgorithms $hashingAlgorithms,
 		private PasswordHashingDisclosures $hashingDisclosures,
 		private FormValidators $validators,
+		private StorageAlgorithmAttributesFactory $algorithmAttributesFactory,
+		private StorageSharedWithFactory $sharedWithFactory,
 	) {
 	}
 
@@ -82,7 +91,8 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			->setHtmlType('url');
 		$inputAlias = $newSiteContainer->addText('alias', 'Alias:');
 		$this->validators->addValidateSlugRules($inputAlias, self::SITE_ALIAS_PATTERN);
-		$newSiteContainer->addText('sharedWith', 'Storage shared with:');
+		$newSiteContainer->addText('sharedWith', 'Storage shared with:')
+			->addRule($this->isSharedWith(...), 'Storage shared with must be a JSON list of objects with url and alias');
 
 		$selectSite->addConditionOn($inputUrl, Form::Blank)
 			->setRequired('Choose site or add a new one');
@@ -117,7 +127,8 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			'(\d{4}-\d{1,2}(-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)?)',
 		);
 		$algoContainer->addCheckbox('fromConfirmed', 'From confirmed');
-		$algoContainer->addText('attributes', 'Attributes:');
+		$algoContainer->addText('attributes', 'Attributes:')
+			->addRule($this->isAlgorithmAttributes(...), 'Attributes must be JSON with the inner and outer lists and the params');
 		$algoContainer->addText('note', 'Algorithm note:');
 		$newAlgoContainer = $algoContainer->addContainer('new');
 		$inputAlgo = $newAlgoContainer->addText('algoName', 'Algorithm:');
@@ -183,6 +194,42 @@ final readonly class PasswordsStorageAlgorithmFormFactory
 			$onSuccess('Password storage added successfully');
 		};
 		return $form;
+	}
+
+
+	/**
+	 * Saved into a JSON column, which takes any JSON, and every page listing the storages reads them in this shape
+	 */
+	private function isAlgorithmAttributes(Control $input): bool
+	{
+		$value = $input->getValue();
+		if (!is_string($value)) {
+			return false;
+		}
+		try {
+			$this->algorithmAttributesFactory->get($value);
+		} catch (JsonException | ValidationException) {
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
+	 * Saved into a JSON column, which takes any JSON, and every page listing the storages reads it in this shape
+	 */
+	private function isSharedWith(Control $input): bool
+	{
+		$value = $input->getValue();
+		if (!is_string($value)) {
+			return false;
+		}
+		try {
+			$this->sharedWithFactory->get($value);
+		} catch (JsonException | JsonItemsNotArrayException | JsonItemNotStructureException) {
+			return false;
+		}
+		return true;
 	}
 
 

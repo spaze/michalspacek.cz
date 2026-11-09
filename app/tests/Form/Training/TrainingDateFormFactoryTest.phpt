@@ -10,6 +10,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
 use Override;
 use Tester\Assert;
@@ -181,6 +182,32 @@ final class TrainingDateFormFactoryTest extends TestCase
 		$this->applicationPresenter->anchorForm($form);
 		Arrays::invoke($form->onValidate, $form);
 		Assert::notContains('Běžná cena není nastavena, je třeba nastavit cenu zde', $form->getErrors());
+	}
+
+
+	public function testCreateStartEndLabel(): void
+	{
+		$form = $this->formFactory->create(
+			function (): void {
+			},
+			function (): void {
+			},
+		);
+		$this->applicationPresenter->anchorForm($form);
+		$results = [];
+		foreach (['start' => '2026-13-01 10:00', 'end' => '2026-02-30 18:00', 'label' => '{"cs_CZ": "Nově"}', 'label ' => '{"cs_CZ":'] as $name => $value) {
+			$input = $form->getComponent(trim($name));
+			assert($input instanceof TextInput);
+			$form->setDefaults([trim($name) => $value]);
+			$input->validate();
+			$results[$name] = $input->getErrors();
+		}
+		Assert::same([
+			'start' => ['Takové datum neexistuje'],
+			'end' => ['Takové datum neexistuje'],
+			'label' => [],
+			'label ' => ['Label musí být JSON'],
+		], $results);
 	}
 
 
