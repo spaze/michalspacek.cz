@@ -97,7 +97,7 @@ final class TexyShortcutLinkTest extends TestCase
 
 	public function testResolveTrainingNoLocaleLink(): void
 	{
-		$this->database->setFetchPairsDefaultResult(['cs_BŽ' => 'něco']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => 'cs_BŽ', 'action' => 'něco']]);
 		Assert::exception(function (): void {
 			$this->resolve('link:' . Trainings::TRAINING_ACTION . ' foo', new Link(''));
 		}, InvalidLinkException::class, "Training linked in [link:Www:Trainings:training foo] doesn't exist in locale cs_CZ");

@@ -6,10 +6,12 @@ namespace MichalSpacekCz\Presentation\Www\Venues;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
+use MichalSpacekCz\Training\Venues\TrainingVenueSitemapEntries;
 use Nette\Application\BadRequestException;
 
 final class VenuesPresenter extends BasePresenter
@@ -27,6 +29,7 @@ final class VenuesPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(TrainingVenueSitemapEntries::class)]
 	public function actionVenue(string $name): void
 	{
 		try {

@@ -46,7 +46,7 @@
 	<link rel="apple-touch-icon" href="{='michal-spacek.jpg'|staticImageUrl}">
 	<meta property="article:author" content="https://www.facebook.com/spaze">
 	<link rel="icon" href="{='/favicon.ico'|staticUrl}">
-	<link rel="alternate" n:foreach="$localeLinks as $localeLink" hreflang="{$localeLink->getLanguageCode()}" href="{$localeLink->getUrl()}">
+	<link rel="alternate" n:foreach="$alternateLinks as $alternateLink" hreflang="{$alternateLink->getLanguageCode()}" href="{$alternateLink->getUrl()}">
 	{include #feeds}
 </head>
 <body>

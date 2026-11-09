@@ -81,6 +81,7 @@ final class Response implements IResponse
 	#[Override]
 	public function setContentType(string $type, ?string $charset = null): self
 	{
+		$this->setHeader('Content-Type', $type . ($charset !== null ? '; charset=' . $charset : ''));
 		return $this;
 	}
 

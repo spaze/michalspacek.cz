@@ -11,6 +11,7 @@ use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Application\UiPresenter;
 use MichalSpacekCz\Presentation\Www\BaseErrorPresenter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Sitemap\NotInSitemap;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
@@ -67,6 +68,7 @@ final class ErrorPresenter extends BaseErrorPresenter
 	}
 
 
+	#[NotInSitemap('the error page, shown in place of the page that failed')]
 	public function actionDefault(BadRequestException $exception): void
 	{
 		$code = in_array($exception->getCode(), $this->statuses, true) ? $exception->getCode() : IResponse::S400_BadRequest;

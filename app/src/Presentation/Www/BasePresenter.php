@@ -14,6 +14,7 @@ use MichalSpacekCz\Form\ThemeFormFactory;
 use MichalSpacekCz\Http\SameOrigin\CrossOriginRedirectsTo;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyDirective;
 use MichalSpacekCz\Http\SecurityHeaders\PermissionsPolicy\PermissionsPolicyOrigin;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\BadRequestException;
@@ -121,6 +122,30 @@ abstract class BasePresenter extends Presenter
 		} catch (InvalidLinkException) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
+		$this->template->alternateLinks = $this->getAlternateLinks();
+	}
+
+
+	/**
+	 * The page in every language it exists in, itself included, for the alternates in the head. Only for a page in the
+	 * sitemap: a page left out is one like an error page, standing in for the page asked for, or one showing what the
+	 * visitor's session holds, which the other language's host doesn't have, so its address in the other language
+	 * shows something else. Empty for a page in one language only: the language switcher may lead to a list page then,
+	 * but an alternate would claim it's this page.
+	 *
+	 * @return array<string, LocaleLink>
+	 */
+	protected function getAlternateLinks(): array
+	{
+		if (ActionMethodAttributes::find($this, InSitemap::class) === null) {
+			return [];
+		}
+		try {
+			$links = $this->localeLinkGenerator->linksForLocaleParams($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
+		} catch (InvalidLinkException) {
+			return [];
+		}
+		return count($links) > 1 ? $links : [];
 	}
 
 

@@ -8,6 +8,7 @@ use MichalSpacekCz\Media\Video;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Html;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -24,6 +25,13 @@ final class TalkLocaleUrlsTest extends TestCase
 	}
 
 
+	#[Override]
+	protected function tearDown(): void
+	{
+		$this->database->reset();
+	}
+
+
 	public function testGet(): void
 	{
 		$this->database->setFetchPairsDefaultResult(['cs_CZ' => 'foobar']);
@@ -32,7 +40,25 @@ final class TalkLocaleUrlsTest extends TestCase
 	}
 
 
-	private function buildTalk(?int $translationGroup): Talk
+	public function testGetAlternateLinkParams(): void
+	{
+		$this->database->setFetchPairsDefaultResult(['cs_CZ' => 'foobar']);
+		Assert::same([], $this->talkLocaleUrls->getAlternateLinkParams($this->buildTalk(null)));
+		Assert::same(['cs_CZ' => ['name' => 'foobar']], $this->talkLocaleUrls->getAlternateLinkParams($this->buildTalk(1337)));
+	}
+
+
+	/**
+	 * The talk names the one whose slides it shows as canonical, so it has no alternates, even though it's translated.
+	 */
+	public function testGetAlternateLinkParamsShowsOtherTalksSlides(): void
+	{
+		$this->database->setFetchPairsDefaultResult(['cs_CZ' => 'foobar', 'en_US' => 'waldo']);
+		Assert::same([], $this->talkLocaleUrls->getAlternateLinkParams($this->buildTalk(1337, 303)));
+	}
+
+
+	private function buildTalk(?int $translationGroup, ?int $slidesTalkId = null): Talk
 	{
 		$video = new Video(
 			null,
@@ -73,7 +99,7 @@ final class TalkLocaleUrlsTest extends TestCase
 			null,
 			null,
 			null,
-			null,
+			$slidesTalkId,
 			null,
 			null,
 			null,

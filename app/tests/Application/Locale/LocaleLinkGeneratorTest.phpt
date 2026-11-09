@@ -75,6 +75,55 @@ final class LocaleLinkGeneratorTest extends TestCase
 	}
 
 
+	public function testLinksForLocaleParams(): void
+	{
+		$params = [
+			'en_US' => ['name' => 'foo'],
+			'cs_CZ' => ['name' => 'fuu'],
+		];
+		Assert::equal([
+			'cs_CZ' => new LocaleLink('cs_CZ', 'cs', 'Česky', 'https://www.rizek.test/prednasky/fuu'),
+			'en_US' => new LocaleLink('en_US', 'en', 'English', 'https://www.burger.test/talks/foo'),
+		], $this->localeLinkGenerator->linksForLocaleParams('Www:Talks:talk', $params));
+	}
+
+
+	public function testLinksForLocaleParamsSkipsOthers(): void
+	{
+		Assert::equal([
+			'en_US' => new LocaleLink('en_US', 'en', 'English', 'https://www.burger.test/talks/foo'),
+		], $this->localeLinkGenerator->linksForLocaleParams('Www:Talks:talk', ['en_US' => ['name' => 'foo']]));
+		Assert::equal([
+			'cs_CZ' => new LocaleLink('cs_CZ', 'cs', 'Česky', 'https://www.rizek.test/prednasky/fuu'),
+		], $this->localeLinkGenerator->linksForLocaleParams('Www:Talks:talk', ['cs_CZ' => ['name' => 'fuu']]));
+	}
+
+
+	public function testLinksForLocaleParamsDefaultParams(): void
+	{
+		Assert::equal([
+			'cs_CZ' => new LocaleLink('cs_CZ', 'cs', 'Česky', 'https://www.rizek.test/rozhovory/foo'),
+			'en_US' => new LocaleLink('en_US', 'en', 'English', 'https://www.burger.test/interviews/foo'),
+		], $this->localeLinkGenerator->linksForLocaleParams('Www:Interviews:interview', $this->localeLinkGenerator->defaultParams(['name' => 'foo'])));
+	}
+
+
+	public function testHasLocale(): void
+	{
+		Assert::true($this->localeLinkGenerator->hasLocale(['cs_CZ' => ['name' => 'foo']], 'cs_CZ'));
+		Assert::false($this->localeLinkGenerator->hasLocale(['cs_CZ' => ['name' => 'foo']], 'en_US'));
+		Assert::true($this->localeLinkGenerator->hasLocale($this->localeLinkGenerator->defaultParams([]), 'en_US'));
+	}
+
+
+	public function testLinksForLocaleParamsNoRoute(): void
+	{
+		Assert::exception(function (): void {
+			$this->localeLinkGenerator->linksForLocaleParams('Www:Talks:talk', ['en_US' => []]);
+		}, InvalidLinkException::class);
+	}
+
+
 	public function testAllLinks(): void
 	{
 		$params = [

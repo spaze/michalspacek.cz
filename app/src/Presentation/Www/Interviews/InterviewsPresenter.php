@@ -7,8 +7,10 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interviews;
+use MichalSpacekCz\Interviews\InterviewSitemapEntries;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 use Nette\Application\BadRequestException;
 
 final class InterviewsPresenter extends BasePresenter
@@ -23,6 +25,7 @@ final class InterviewsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
@@ -33,6 +36,7 @@ final class InterviewsPresenter extends BasePresenter
 	/**
 	 * @throws ContentTypeException
 	 */
+	#[InSitemap(InterviewSitemapEntries::class)]
 	public function actionInterview(string $name): void
 	{
 		try {

@@ -16,6 +16,9 @@ final class ArticlesMock extends Articles
 	/** @var list<BlogPost> */
 	private array $articles = [];
 
+	/** @var array<string, string> */
+	private array $tags = [];
+
 
 	/**
 	 * @noinspection PhpMissingParentConstructorInspection Intentionally
@@ -34,9 +37,29 @@ final class ArticlesMock extends Articles
 
 
 	/**
-	 * @param list<ArticleEdit> $edits
+	 * @return array<string, string>
 	 */
-	public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false): void
+	#[Override]
+	public function getAllTags(): array
+	{
+		return $this->tags;
+	}
+
+
+	/**
+	 * @param array<string, string> $tags slug => label
+	 */
+	public function setAllTags(array $tags): void
+	{
+		$this->tags = $tags;
+	}
+
+
+	/**
+	 * @param list<ArticleEdit> $edits
+	 * @param list<string> $slugTags
+	 */
+	public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false, array $slugTags = []): void
 	{
 		$title = "Title {$suffix}";
 		$lead = "Excerpt {$suffix}";
@@ -60,7 +83,7 @@ final class ArticlesMock extends Articles
 			null,
 			null,
 			[],
-			[],
+			$slugTags,
 			[],
 			null,
 			"https://example.com/{$suffix}",
@@ -84,9 +107,29 @@ final class ArticlesMock extends Articles
 	}
 
 
+	/**
+	 * The posts it's been given, whatever their tags.
+	 *
+	 * @return list<BlogPost>
+	 */
+	#[Override]
+	public function getAllByTags(array $tags, ?int $limit = null): array
+	{
+		return $this->articles;
+	}
+
+
+	#[Override]
+	public function getLabelByTag(string $tag): ?string
+	{
+		return $this->tags[$tag] ?? null;
+	}
+
+
 	public function reset(): void
 	{
 		$this->articles = [];
+		$this->tags = [];
 	}
 
 }

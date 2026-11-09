@@ -36,6 +36,7 @@ final readonly class BlogPostPreview
 		$template->showHeaderTabs = false;
 		$template->showFooter = false;
 		$template->localeLinks = [];
+		$template->alternateLinks = [];
 		$this->blogPosts->setTemplateTitleAndHeader($post, $template);
 		foreach ($post->getCspSnippets() as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);

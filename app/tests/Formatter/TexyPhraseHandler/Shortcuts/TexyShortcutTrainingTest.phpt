@@ -41,7 +41,7 @@ final class TexyShortcutTrainingTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->texyFormatter->willThrow(new TexyFormatterTexyProcessLoopException());
-		$this->database->setFetchPairsDefaultResult(['cs_CZ' => 'něco']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => 'cs_CZ', 'action' => 'něco']]);
 	}
 
 
@@ -66,6 +66,14 @@ final class TexyShortcutTrainingTest extends TestCase
 	}
 
 
+	public function testResolveTrainingWithTheUrlInTheLocale(): void
+	{
+		$this->database->setFetchAllDefaultResult([['trainingId' => 2, 'language' => 'cs_CZ', 'action' => 'php']]);
+		Assert::same('Školení <small>(**TRAINING_DATE:php**)</small>', $this->resolve('training:php'));
+		Assert::same(['php', 'cs_CZ'], $this->database->getParamsForQueryContaining('ORDER BY l.language = ?'));
+	}
+
+
 	public function testResolveNoLink(): void
 	{
 		Assert::exception(function (): void {
@@ -85,7 +93,7 @@ final class TexyShortcutTrainingTest extends TestCase
 
 	public function testResolveMissingLocale(): void
 	{
-		$this->database->setFetchPairsDefaultResult(['cs_BŽ' => 'něco']);
+		$this->database->setFetchAllDefaultResult([['trainingId' => 1, 'language' => 'cs_BŽ', 'action' => 'něco']]);
 		Assert::exception(function (): void {
 			$this->resolve('training:fred');
 		}, InvalidLinkException::class, "Training linked in [training:fred] doesn't exist in locale cs_CZ");

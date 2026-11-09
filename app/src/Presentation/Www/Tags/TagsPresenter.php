@@ -9,7 +9,9 @@ use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
-use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Sitemap\InSitemap;
+use MichalSpacekCz\Tags\TagSitemapEntries;
+use MichalSpacekCz\Tags\TagTranslations;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Override;
@@ -17,15 +19,15 @@ use Override;
 final class TagsPresenter extends BasePresenter
 {
 
-	/** @var array<string, array<string, string>> */
-	private array $localeLinkParams = [];
+	/** @var array<string, array<string, string>>|null null on the list of tags, which exists in every language */
+	private ?array $localeLinkParams = null;
 
 
 	public function __construct(
 		private readonly Articles $articles,
 		private readonly Strings $strings,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly Tags $tags,
+		private readonly TagTranslations $tagTranslations,
 		private readonly ArticleSummaryFactory $articleSummaryFactory,
 		private readonly Translator $translator,
 	) {
@@ -33,6 +35,7 @@ final class TagsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function actionDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.label.tags');
@@ -44,6 +47,7 @@ final class TagsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(TagSitemapEntries::class)]
 	public function actionTag(string $tag): void
 	{
 		$label = $this->articles->getLabelByTag($tag);
@@ -52,7 +56,7 @@ final class TagsPresenter extends BasePresenter
 		}
 
 		$articles = $this->articles->getAllByTags([$tag]);
-		$this->localeLinkParams = $this->tags->findLocaleLinkParams($articles, $tag);
+		$this->localeLinkParams = $this->tagTranslations->getLocaleLinkParams($tag);
 
 		$this->template->pageTitle = $this->texyFormatter->translatePossiblyUnsafeHtml('messages.label.articlesbytag', [$label]);
 		$this->template->articles = $articles;
@@ -66,24 +70,24 @@ final class TagsPresenter extends BasePresenter
 
 
 	/**
-	 * Get original module:presenter:action for locale links.
+	 * The language switcher leads to the list of tags when the tag isn't in the posts of the other language.
 	 */
 	#[Override]
-	protected function getLocaleLinkAction(): string
+	protected function getLocaleLinksGeneratorDestination(): string
 	{
-		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Tags:');
+		return ($this->localeLinkParams === null || count($this->localeLinkParams) > 1 ? parent::getLocaleLinksGeneratorDestination() : 'Www:Tags:');
 	}
 
 
 	/**
-	 * Translated locale parameters for tags.
+	 * Translated locale parameters for a tag, the default ones for the list of tags.
 	 *
-	 * @return array<string, array<string, string>>
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->localeLinkParams;
+		return $this->localeLinkParams ?? parent::getLocaleLinkParams();
 	}
 
 }

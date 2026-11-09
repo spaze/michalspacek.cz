@@ -151,6 +151,7 @@ final class RouterFactory
 			new RouterFactoryRoute('/<action>[/<param>]', 'Exports', 'default'),
 			new RouterFactoryRoute('/<name>', 'Venues', 'venue'),
 			new RouterFactoryRoute('/<tag>', 'Tags', 'tag'),
+			new RouterFactoryRoute('sitemap.xml', 'Sitemap', 'default'), // before blog posts, which would look it up as a slug first
 			new RouterFactoryRoute('<slug>', 'Post', 'default', null, RouterRoutes::BlogPostRoute),
 			new RouterFactoryRoute('<presenter>', 'Homepage', 'default'), // Intentionally no action, use presenter-specific route if you need actions
 		]);

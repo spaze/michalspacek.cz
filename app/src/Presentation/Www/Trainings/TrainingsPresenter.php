@@ -12,6 +12,8 @@ use MichalSpacekCz\Http\Robots\Robots;
 use MichalSpacekCz\Http\Robots\RobotsRule;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Sitemap\InSitemap;
+use MichalSpacekCz\Sitemap\NotInSitemap;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
@@ -25,9 +27,11 @@ use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFilesDownload;
 use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
+use MichalSpacekCz\Training\Reviews\TrainingReviewSitemapEntries;
 use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings\Training;
 use MichalSpacekCz\Training\Trainings\Trainings;
+use MichalSpacekCz\Training\Trainings\TrainingSitemapEntries;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
@@ -70,6 +74,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
@@ -87,6 +92,7 @@ final class TrainingsPresenter extends BasePresenter
 	/**
 	 * @throws TrainingDateNotRemoteNoVenueException
 	 */
+	#[InSitemap(TrainingSitemapEntries::class)]
 	public function actionTraining(string $name): void
 	{
 		$this->trainingAction = $name;
@@ -115,6 +121,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('an applicant\'s own application, opened with their access token')]
 	public function actionApplication(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;
@@ -185,6 +192,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(TrainingReviewSitemapEntries::class)]
 	public function actionReviews(string $name): void
 	{
 		$this->trainingAction = $name;
@@ -209,6 +217,7 @@ final class TrainingsPresenter extends BasePresenter
 	 * @throws HaliteAlert
 	 * @throws SodiumException
 	 */
+	#[NotInSitemap('an attendee\'s materials, opened with their access token and sent with noindex')]
 	public function actionFiles(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;
@@ -247,6 +256,7 @@ final class TrainingsPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('shown after applying, to the applicant only')]
 	public function actionSuccess(string $name): void
 	{
 		$this->trainingAction = $name;

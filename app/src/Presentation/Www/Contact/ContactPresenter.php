@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Presentation\Www\Contact;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 
 final class ContactPresenter extends BasePresenter
 {
@@ -16,6 +17,7 @@ final class ContactPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.contact');

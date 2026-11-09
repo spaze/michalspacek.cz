@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Presentation\Www\Pgp;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Pgp\Keyserver;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 
 final class PgpPresenter extends BasePresenter
 {
@@ -19,6 +20,7 @@ final class PgpPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.encryptedmessages');

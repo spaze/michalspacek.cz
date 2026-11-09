@@ -52,11 +52,11 @@ final readonly class TexyShortcutTraining implements TexyShortcut
 		if ($name === '') {
 			throw new InvalidLinkException(sprintf('No training specified in [%s]', self::URL_PREFIX));
 		}
-		$actions = $this->trainingLocales->getLocaleActions($name);
+		$locale = $this->translator->getDefaultLocale();
+		$actions = $this->trainingLocales->getLocaleActions($name, $locale);
 		if ($actions === []) {
 			throw new InvalidLinkException("Training linked in [{$url}] doesn't exist");
 		}
-		$locale = $this->translator->getDefaultLocale();
 		if (!isset($actions[$locale])) {
 			throw new InvalidLinkException("Training linked in [{$url}] doesn't exist in locale {$locale}");
 		}

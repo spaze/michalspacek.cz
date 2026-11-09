@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;
 use Nette\Utils\JsonException;
@@ -14,6 +15,7 @@ final readonly class BlogPostLocaleUrls
 	public function __construct(
 		private Explorer $database,
 		private Tags $tags,
+		private DateTimeFactory $dateTimeFactory,
 	) {
 	}
 
@@ -28,6 +30,7 @@ final readonly class BlogPostLocaleUrls
 	public function get(string $slug): array
 	{
 		$posts = [];
+		$now = $this->dateTimeFactory->getNow();
 		$sql = 'SELECT
 				l.locale,
 				bp.slug,
@@ -50,12 +53,33 @@ final readonly class BlogPostLocaleUrls
 				$row->locale,
 				$row->slug,
 				$row->published,
+				$row->published !== null && $row->published <= $now,
 				$row->previewKey,
 				$row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : [],
 			);
 			$posts[] = $post;
 		}
 		return $posts;
+	}
+
+
+	/**
+	 * The locale link parameters of the post and its published translations. A translation that isn't published could only
+	 * be linked with its preview key, and a link with a preview key is for whoever it's sent to, nothing on the site
+	 * should lead to one. The post itself is in even when it's a preview, it's what tells the translations apart.
+	 *
+	 * @return array<string, array{slug: string}> locale => params
+	 */
+	public function getLinkParams(BlogPost $post): array
+	{
+		$params = [];
+		foreach ($this->get($post->getSlug()) as $localePost) {
+			$isThePost = $localePost->getLocale() === $post->getLocale() && $localePost->getSlug() === $post->getSlug();
+			if ($isThePost || $localePost->isPublished()) {
+				$params[$localePost->getLocale()] = ['slug' => $localePost->getSlug()];
+			}
+		}
+		return $params;
 	}
 
 }

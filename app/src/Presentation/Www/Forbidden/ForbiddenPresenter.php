@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Presentation\Www\Forbidden;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\NotInSitemap;
 use MichalSpacekCz\Templating\DefaultTemplate;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
@@ -35,6 +36,7 @@ final class ForbiddenPresenter extends BasePresenter
 	}
 
 
+	#[NotInSitemap('shown to a visitor blocked for spam, in place of the page they asked for')]
 	public function actionDefault(string $message): void
 	{
 		$this->httpResponse->setCode(IResponse::S403_Forbidden);

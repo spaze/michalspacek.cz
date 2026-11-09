@@ -9,10 +9,12 @@ use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\DeprecatedEmbedSlideInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\IncorrectSlideAliasInUrlException;
 use MichalSpacekCz\Presentation\Www\Talks\Exceptions\TalkExistsInOtherLocaleException;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideAliasDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlidesNotPublishedException;
 use MichalSpacekCz\Talks\TalkLocaleUrls;
+use MichalSpacekCz\Talks\TalkSitemapEntries;
 use MichalSpacekCz\Talks\TalksList;
 use MichalSpacekCz\Talks\TalksListFactory;
 use Nette\Application\BadRequestException;
@@ -23,8 +25,11 @@ use Override;
 final class TalksPresenter extends BasePresenter
 {
 
-	/** @var array<string, array{name: string}> */
-	private array $localeLinkParams = [];
+	/** @var array<string, array{name: string}>|null null on the list of talks, which exists in every language */
+	private ?array $localeLinkParams = null;
+
+	/** @var array<string, array{name: string}>|null null on the list of talks */
+	private ?array $alternateLinkParams = null;
 
 
 	public function __construct(
@@ -41,6 +46,7 @@ final class TalksPresenter extends BasePresenter
 	/**
 	 * @throws ContentTypeException
 	 */
+	#[InSitemap]
 	public function renderDefault(): void
 	{
 		$this->template->setParameters($this->defaultTemplateParametersFactory->create());
@@ -53,12 +59,13 @@ final class TalksPresenter extends BasePresenter
 	 * @throws InvalidLinkException
 	 * @throws ContentTypeException
 	 */
+	#[InSitemap(TalkSitemapEntries::class)]
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
 		try {
 			$templateParameters = $this->talkTemplateParametersFactory->create($name, $slide);
 		} catch (TalkExistsInOtherLocaleException $e) {
-			$links = $this->localeLinkGenerator->links(parent::getLocaleLinkAction(), parent::getLocaleLinkParams());
+			$links = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), parent::getLocaleLinkParams());
 			$this->redirectUrl($links[$e->locale]->getUrl(), IResponse::S301_MovedPermanently);
 		} catch (TalkDoesNotExistException | TalkSlideAliasDoesNotExistException | TalkSlidesNotPublishedException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
@@ -68,24 +75,44 @@ final class TalksPresenter extends BasePresenter
 			$this->redirectPermanent('this', ['slide' => null]);
 		}
 		$this->localeLinkParams = $this->talkLocaleUrls->getLinkParams($templateParameters->talk);
+		// A slide's page names the talk's page as canonical
+		$this->alternateLinkParams = $slide === null ? $this->talkLocaleUrls->getAlternateLinkParams($templateParameters->talk) : [];
 		$this->template->setParameters($templateParameters);
 	}
 
 
+	/**
+	 * The language switcher leads to the list of talks when the talk isn't translated.
+	 */
 	#[Override]
-	protected function getLocaleLinkAction(): string
+	protected function getLocaleLinksGeneratorDestination(): string
 	{
-		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Talks:');
+		return ($this->localeLinkParams === null || count($this->localeLinkParams) > 1 ? parent::getLocaleLinksGeneratorDestination() : 'Www:Talks:');
 	}
 
 
 	/**
-	 * @return array<string, array{name: string}>
+	 * The language switcher leads to every translation of a talk, even one showing the slides of another talk: for someone
+	 * reading it, it's still the talk in that language.
+	 *
+	 * @return array<string, array<array-key, mixed>>
+	 */
+	#[Override]
+	protected function getLocaleLinksGeneratorParams(): array
+	{
+		return $this->localeLinkParams ?? parent::getLocaleLinksGeneratorParams();
+	}
+
+
+	/**
+	 * The talk in the languages its page is the canonical one in, the default parameters on the list of talks.
+	 *
+	 * @return array<string, array<array-key, mixed>>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->localeLinkParams;
+		return $this->alternateLinkParams ?? parent::getLocaleLinkParams();
 	}
 
 

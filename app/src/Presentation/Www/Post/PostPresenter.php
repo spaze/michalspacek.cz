@@ -3,12 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Www\Post;
 
+use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Articles\ArticleHeaderIcons;
 use MichalSpacekCz\Articles\ArticleHeaderIconsFactory;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPostSitemapEntries;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Sitemap\InSitemap;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Override;
 use Spaze\ContentSecurityPolicy\CspConfig;
@@ -16,8 +19,10 @@ use Spaze\ContentSecurityPolicy\CspConfig;
 final class PostPresenter extends BasePresenter
 {
 
-	/** @var array<string, array{slug: string, preview: string|null}> */
+	/** @var array<string, array{slug: string}> */
 	private array $localeLinkParams = [];
+
+	private bool $preview = false;
 
 
 	public function __construct(
@@ -31,6 +36,7 @@ final class PostPresenter extends BasePresenter
 	}
 
 
+	#[InSitemap(BlogPostSitemapEntries::class)]
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPosts->get($slug, $preview);
@@ -42,6 +48,7 @@ final class PostPresenter extends BasePresenter
 				$this->redirect($this->getAction(), $slug);
 			}
 			$this->template->robots = 'noindex';
+			$this->preview = true;
 		}
 		if (!$post->hasId()) {
 			throw new ShouldNotHappenException('Never thought it would be possible to have a published blog post without an id');
@@ -51,9 +58,7 @@ final class PostPresenter extends BasePresenter
 		$this->template->pageHeader = $post->getTitle();
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 
-		foreach ($this->blogPostLocaleUrls->get($post->getSlug()) as $localePost) {
-			$this->localeLinkParams[$localePost->getLocale()] = ['slug' => $localePost->getSlug(), 'preview' => $localePost->getPreviewKey()];
-		}
+		$this->localeLinkParams = $this->blogPostLocaleUrls->getLinkParams($post);
 		foreach ($post->getCspSnippets() as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
@@ -61,19 +66,31 @@ final class PostPresenter extends BasePresenter
 
 
 	/**
-	 * Get original module:presenter:action for locale links.
+	 * A post that isn't out yet isn't at its address in any language until it is.
+	 *
+	 * @return array<string, LocaleLink>
 	 */
 	#[Override]
-	protected function getLocaleLinkAction(): string
+	protected function getAlternateLinks(): array
 	{
-		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Articles:');
+		return $this->preview ? [] : parent::getAlternateLinks();
+	}
+
+
+	/**
+	 * The language switcher leads to the list of articles when the post isn't translated.
+	 */
+	#[Override]
+	protected function getLocaleLinksGeneratorDestination(): string
+	{
+		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinksGeneratorDestination() : 'Www:Articles:');
 	}
 
 
 	/**
 	 * Translated locale parameters for blog posts.
 	 *
-	 * @return array<string, array{slug: string, preview: string|null}>
+	 * @return array<string, array{slug: string}>
 	 */
 	#[Override]
 	protected function getLocaleLinkParams(): array
