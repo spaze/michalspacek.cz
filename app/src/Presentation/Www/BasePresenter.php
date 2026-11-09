@@ -7,6 +7,7 @@ use DateTimeInterface;
 use MichalSpacekCz\Application\ActionMethodAttributes;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\NoLanguageSwitcher;
 use MichalSpacekCz\Css\CriticalCss;
 use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound\FourOhFourButFound;
@@ -117,12 +118,26 @@ abstract class BasePresenter extends Presenter
 	#[Override]
 	public function beforeRender(): void
 	{
-		try {
-			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinksGeneratorDestination(), $this->getLocaleLinksGeneratorParams());
-		} catch (InvalidLinkException) {
-			$this->template->localeLinks = $this->getLocaleLinkDefault();
-		}
+		$this->template->localeLinks = $this->getLanguageSwitcherLinks();
 		$this->template->alternateLinks = $this->getAlternateLinks();
+	}
+
+
+	/**
+	 * The page in the other languages for the language switcher, none on a page with #[NoLanguageSwitcher].
+	 *
+	 * @return array<string, LocaleLink>
+	 */
+	private function getLanguageSwitcherLinks(): array
+	{
+		if (ActionMethodAttributes::find($this, NoLanguageSwitcher::class) !== null) {
+			return [];
+		}
+		try {
+			return $this->localeLinkGenerator->links($this->getLocaleLinksGeneratorDestination(), $this->getLocaleLinksGeneratorParams());
+		} catch (InvalidLinkException) {
+			return $this->getLocaleLinkDefault();
+		}
 	}
 
 

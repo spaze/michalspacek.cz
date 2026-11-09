@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Www\Trainings;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Application\Locale\NoLanguageSwitcher;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Form\TrainingApplication\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplication\TrainingPreliminaryApplicationFormFactory;
@@ -218,6 +219,7 @@ final class TrainingsPresenter extends BasePresenter
 	 * @throws SodiumException
 	 */
 	#[NotInSitemap('an attendee\'s materials, opened with their access token and sent with noindex')]
+	#[NoLanguageSwitcher('the materials are found with what the visitor\'s session holds, which the other language\'s host doesn\'t have')]
 	public function actionFiles(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;

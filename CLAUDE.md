@@ -153,6 +153,8 @@ An empty mask (like `Homepage`) means the presenter handles the domain root. A `
 
 The `hreflang` alternates in a page's head follow the same attribute: only the page of an `#[InSitemap]` action gets them. A page left out that has a head stands in for another page or shows what the visitor's session holds, which the other language's host doesn't have, so its address in the other language shows something else. Leaving a real page out of the sitemap would take its language versions out of its head too.
 
+The language switcher leads to the page in the other language, or to a list page when there's none. A page that can't be shown in the other language at all, like a training's materials, found with what the visitor's session holds, also takes `#[NoLanguageSwitcher('reason')]` on its `action` or `render` method, and gets no switcher, which would lead to an error there.
+
 The XML is cached per language for a day, and every deploy clears it, so a new page is in as soon as it's deployed and only new content waits. An entry whose link can't be built is logged and left out rather than failing the whole sitemap.
 
 ### Naming conventions

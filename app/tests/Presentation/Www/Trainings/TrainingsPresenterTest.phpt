@@ -68,7 +68,7 @@ final class TrainingsPresenterTest extends TestCase
 	/**
 	 * The materials are the attendee's, found with what their session on this host holds.
 	 */
-	public function testFilesNoAlternates(): void
+	public function testFilesNoAlternatesNoSwitcher(): void
 	{
 		$training = $this->session->getSection('training');
 		$training->set('applicationId', self::APPLICATION_ID);
@@ -102,7 +102,8 @@ final class TrainingsPresenterTest extends TestCase
 		Assert::contains('file.zip', $html);
 		Assert::notContains('hreflang', $html);
 		Assert::same([], $this->localeLinkGenerator->getLinksForLocaleParamsDestinations());
-		Assert::contains('href="' . self::SWITCHER_LINK . '"', $html);
+		Assert::notContains(self::SWITCHER_LINK, $html, "The other language's host doesn't have the session to show the materials");
+		Assert::same([], $this->localeLinkGenerator->getLinksDestinations());
 	}
 
 
