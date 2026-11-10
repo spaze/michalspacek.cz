@@ -11,9 +11,11 @@ use MichalSpacekCz\Test\Http\Request as HttpRequestMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
+use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
+use Nette\Http\UrlScript;
 use Override;
 use Stringable;
 use Tester\Assert;
@@ -28,7 +30,7 @@ final class PasswordsStoragesPresenterTest extends TestCase
 	public function __construct(
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Database $database,
-		HttpRequestMock $httpRequest,
+		private readonly HttpRequestMock $httpRequest,
 	) {
 		$httpRequest->setMethod(IRequest::Get);
 	}
@@ -38,6 +40,8 @@ final class PasswordsStoragesPresenterTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		$this->httpRequest->reset();
+		$this->httpRequest->setMethod(IRequest::Get);
 	}
 
 
@@ -70,6 +74,30 @@ final class PasswordsStoragesPresenterTest extends TestCase
 			$results[$name] = $this->getErrorCode('site', $list);
 		}
 		Assert::same(array_fill_keys(array_keys($lists), IResponse::S404_NotFound), $results);
+	}
+
+
+	/**
+	 * The link has the slash in the alias encoded, so the page isn't one of the made-up pages under a site alias that
+	 * robots.txt disallows.
+	 */
+	public function testSiteAliasWithPathRedirectsToLink(): void
+	{
+		$link = 'https://pulse.rizek.test/passwords/storages/site/example.com%2Ffoo';
+		$responses = [];
+		foreach ([$link, 'https://pulse.rizek.test/passwords/storages/site/example.com/foo'] as $url) {
+			$this->database->addFetchAllResult([
+				$this->getStorageRow(1, 'Example', 'example', 10, 'example.com/foo'),
+			]);
+			$this->httpRequest->setUrl(new UrlScript($url));
+			$presenter = $this->applicationPresenter->createUiPresenter('Pulse:PasswordsStorages', 'PasswordsStorages', 'site');
+			$response = $presenter->run(new Request('Pulse:PasswordsStorages', IRequest::Get, ['action' => 'site', 'param' => 'example.com/foo']));
+			$responses[$url] = $response instanceof RedirectResponse ? [$response->getUrl(), $response->getCode()] : $response::class;
+		}
+		Assert::same([
+			$link => TextResponse::class,
+			'https://pulse.rizek.test/passwords/storages/site/example.com/foo' => [$link, IResponse::S301_MovedPermanently],
+		], $responses);
 	}
 
 

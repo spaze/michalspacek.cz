@@ -71,6 +71,22 @@ final class RouterFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * Only the link has the slash encoded, the address with the slash finds the same page, for the presenter to redirect.
+	 */
+	public function testPulseSiteAliasWithPath(): void
+	{
+		$routeList = $this->routerFactory->createRouter()->getRouteList();
+		$url = 'https://pulse.rizek.test/passwords/storages/site/example.com%2Ffoo';
+		$params = ['action' => 'site', 'param' => 'example.com/foo', 'presenter' => 'Pulse:PasswordsStorages'];
+		Assert::same($url, $routeList->constructUrl($params, new UrlScript($url)));
+		Assert::same($params, $routeList->match(new Request(new UrlScript($url))));
+		Assert::same($params, $routeList->match(new Request(new UrlScript('https://pulse.rizek.test/passwords/storages/site/example.com/foo'))));
+		$params = ['presenter' => 'Pulse:PasswordsStorages', 'action' => 'site', 'param' => 'www.facebook.com,twitter.com'];
+		Assert::same('https://pulse.rizek.test/passwords/storages/site/www.facebook.com,twitter.com', $routeList->constructUrl($params, new UrlScript($url)), 'Only the slash is encoded');
+	}
+
+
 	public function testEveryRouteEnforcesHttps(): void
 	{
 		$localeRouter = $this->routerFactory->createRouter();
