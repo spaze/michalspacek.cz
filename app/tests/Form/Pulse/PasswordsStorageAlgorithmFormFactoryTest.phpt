@@ -146,6 +146,16 @@ final class PasswordsStorageAlgorithmFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * Neither a company chosen nor a new one, which the select's own rule reports.
+	 */
+	public function testCreateOnValidateNoCompany(): void
+	{
+		Arrays::invoke($this->form->onValidate, $this->form);
+		Assert::same([], $this->form->getErrors());
+	}
+
+
 	public function testCreateOnValidateDuplicateCompany(): void
 	{
 		// For Companies::getByName()
@@ -310,6 +320,48 @@ final class PasswordsStorageAlgorithmFormFactoryTest extends TestCase
 			'www.Zlavomat.sk' => $error,
 			'www.zlavomat.sk,www.slevomat.cz' => $error,
 		], $this->getNewAliasErrors('site', ['', 'www.zlavomat.sk', 'my.teamio.com/recruit', 'www.Zlavomat.sk', 'www.zlavomat.sk,www.slevomat.cz']));
+	}
+
+
+	public function testCreateAttributes(): void
+	{
+		$input = $this->form->getComponent('algo-attributes');
+		assert($input instanceof TextInput);
+		$error = ['Attributes must be JSON with the inner and outer lists and the params'];
+		$results = [];
+		foreach (['', '{"inner": ["sha1"], "outer": ["bcrypt"]}', '{"inner": "sha1"}', '{"foo": []}', '{"inner":'] as $value) {
+			$this->form->setDefaults(['algo' => ['attributes' => $value]]);
+			$input->validate();
+			$results[$value] = $input->getErrors();
+		}
+		Assert::same([
+			'' => [],
+			'{"inner": ["sha1"], "outer": ["bcrypt"]}' => [],
+			'{"inner": "sha1"}' => $error,
+			'{"foo": []}' => $error,
+			'{"inner":' => $error,
+		], $results);
+	}
+
+
+	public function testCreateSharedWith(): void
+	{
+		$input = $this->form->getComponent('site-new-sharedWith');
+		assert($input instanceof TextInput);
+		$error = ['Storage shared with must be a JSON list of objects with url and alias'];
+		$results = [];
+		foreach (['', '[{"url": "https://a.example/", "alias": "a"}]', '[{"url": "https://a.example/"}]', '"a"', '[{"url":'] as $value) {
+			$this->form->setDefaults(['site' => ['new' => ['sharedWith' => $value]]]);
+			$input->validate();
+			$results[$value] = $input->getErrors();
+		}
+		Assert::same([
+			'' => [],
+			'[{"url": "https://a.example/", "alias": "a"}]' => [],
+			'[{"url": "https://a.example/"}]' => $error,
+			'"a"' => $error,
+			'[{"url":' => $error,
+		], $results);
 	}
 
 

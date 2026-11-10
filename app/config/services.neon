@@ -150,6 +150,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory
+	- MichalSpacekCz\Pulse\Passwords\Storage\StorageSharedWithFactory
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer)
 	- MichalSpacekCz\SecurityTxt\SecurityTxtResponse(dirs: %securityTxtDirs%)

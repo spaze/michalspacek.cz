@@ -11,8 +11,10 @@ use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\DatabaseTransactionStatus;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Database\DriverException;
 use Nette\Forms\Form;
 use Override;
 use Tester\Assert;
@@ -365,78 +367,27 @@ final class PasswordsTest extends TestCase
 
 	public function testAddStorage(): void
 	{
-		// Company
-		$this->database->addFetchAllResult([
-			[
-				'id' => 1,
-				'name' => 'Slevomat.cz, s.r.o.',
-				'tradeName' => null,
-				'alias' => 'slevomat.cz',
-				'sortName' => 'Slevomat.cz, s.r.o.',
-			],
-		]);
-		// Site
-		$this->database->addFetchAllResult([
-			[
-				'id' => 2,
-				'url' => 'https://site.example',
-				'alias' => 'site.example',
-			],
-		]);
-		// Algorithm
-		$this->database->addFetchAllResult([
-			[
-				'id' => 3,
-				'algo' => 'bcrypt',
-				'alias' => 'bcrypt',
-				'salted' => 1,
-				'stretched' => 1,
-			],
-		]);
-		// Disclosure types
-		$this->database->addFetchAllResult([
-			[
-				'id' => 4,
-				'type' => 'Twitter',
-				'alias' => 'twitter',
-			],
-		]);
-		// Disclosure id
-		$this->database->addFetchFieldResult(5);
-		// Storage id
-		$this->database->addFetchFieldResult(6);
-
-		$form = $this->getForm();
-		$form->setDefaults([
-			'company' => [
-				'id' => '1',
-			],
-			'site' => [
-				'id' => '2',
-			],
-			'algo' => [
-				'id' => '3',
-			],
-			'disclosure' => [
-				'new' => [
-					[
-						'url' => 'https://disclosure.example/',
-						'archive' => 'https://archive.disclosure.example/',
-						'disclosureType' => '4',
-						'note' => 'note',
-						'published' => '2020-11-22',
-					],
-				],
-			],
-		]);
-
-		$this->passwords->addStorage($form->getValues());
+		$this->passwords->addStorage($this->getExistingItemsForm()->getValues());
 		Assert::same([], $this->database->getParamsArrayForQuery('INSERT INTO companies'));
 		Assert::same(
 			[['key_password_disclosures' => 5, 'key_password_storages' => 6]],
 			$this->database->getParamsArrayForQuery('INSERT INTO password_disclosures_password_storages'),
 			'Passwords::pairDisclosureStorage() result not as expected',
 		);
+		Assert::same(DatabaseTransactionStatus::Committed, $this->database->transactionStatus);
+	}
+
+
+	public function testAddStorageRollsBackWhenAQueryFails(): void
+	{
+		$form = $this->getExistingItemsForm();
+		$exception = new DriverException();
+		$this->database->willThrowOnQuery('INSERT INTO password_disclosures_password_storages', $exception);
+		$e = Assert::exception(function () use ($form): void {
+			$this->passwords->addStorage($form->getValues());
+		}, DriverException::class);
+		Assert::same($exception, $e);
+		Assert::same(DatabaseTransactionStatus::RolledBack, $this->database->transactionStatus);
 	}
 
 
@@ -569,6 +520,79 @@ final class PasswordsTest extends TestCase
 			$this->database->getParamsArrayForQuery('INSERT INTO password_disclosures_password_storages'),
 			'Passwords::pairDisclosureStorage() result not as expected',
 		);
+	}
+
+
+	/**
+	 * A form choosing an existing company, site and algorithm, with one new disclosure.
+	 */
+	private function getExistingItemsForm(): Form
+	{
+		// Company
+		$this->database->addFetchAllResult([
+			[
+				'id' => 1,
+				'name' => 'Slevomat.cz, s.r.o.',
+				'tradeName' => null,
+				'alias' => 'slevomat.cz',
+				'sortName' => 'Slevomat.cz, s.r.o.',
+			],
+		]);
+		// Site
+		$this->database->addFetchAllResult([
+			[
+				'id' => 2,
+				'url' => 'https://site.example',
+				'alias' => 'site.example',
+			],
+		]);
+		// Algorithm
+		$this->database->addFetchAllResult([
+			[
+				'id' => 3,
+				'algo' => 'bcrypt',
+				'alias' => 'bcrypt',
+				'salted' => 1,
+				'stretched' => 1,
+			],
+		]);
+		// Disclosure types
+		$this->database->addFetchAllResult([
+			[
+				'id' => 4,
+				'type' => 'Twitter',
+				'alias' => 'twitter',
+			],
+		]);
+		// Disclosure id
+		$this->database->addFetchFieldResult(5);
+		// Storage id
+		$this->database->addFetchFieldResult(6);
+
+		$form = $this->getForm();
+		$form->setDefaults([
+			'company' => [
+				'id' => '1',
+			],
+			'site' => [
+				'id' => '2',
+			],
+			'algo' => [
+				'id' => '3',
+			],
+			'disclosure' => [
+				'new' => [
+					[
+						'url' => 'https://disclosure.example/',
+						'archive' => 'https://archive.disclosure.example/',
+						'disclosureType' => '4',
+						'note' => 'note',
+						'published' => '2020-11-22',
+					],
+				],
+			],
+		]);
+		return $form;
 	}
 
 

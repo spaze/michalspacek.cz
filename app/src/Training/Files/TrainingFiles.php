@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Files;
 
 use DateTimeInterface;
+use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
@@ -126,27 +127,31 @@ final readonly class TrainingFiles
 
 		$datetime = $this->dateTimeFactory->create();
 		$this->database->beginTransaction();
-
-		$timeZone = $datetime->getTimezone()->getName();
-		$this->database->query(
-			'INSERT INTO files',
-			[
-				'filename' => $name,
-				'added' => $datetime,
-				'added_timezone' => $timeZone,
-			],
-		);
-		$fileId = $this->database->getInsertId();
-		foreach ($applicationIds as $applicationId) {
+		try {
+			$timeZone = $datetime->getTimezone()->getName();
 			$this->database->query(
-				'INSERT INTO training_materials',
+				'INSERT INTO files',
 				[
-					'key_file' => $fileId,
-					'key_application' => $applicationId,
+					'filename' => $name,
+					'added' => $datetime,
+					'added_timezone' => $timeZone,
 				],
 			);
+			$fileId = $this->database->getInsertId();
+			foreach ($applicationIds as $applicationId) {
+				$this->database->query(
+					'INSERT INTO training_materials',
+					[
+						'key_file' => $fileId,
+						'key_application' => $applicationId,
+					],
+				);
+			}
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
 		}
-		$this->database->commit();
 		return $name;
 	}
 

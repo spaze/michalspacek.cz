@@ -12,7 +12,6 @@ use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStructureException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Nette\Database\Row;
-use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 final readonly class StorageRegistryFactory
@@ -23,6 +22,7 @@ final readonly class StorageRegistryFactory
 		private Sites $sites,
 		private PasswordsSorting $sorting,
 		private StorageAlgorithmAttributesFactory $algorithmAttributesFactory,
+		private StorageSharedWithFactory $sharedWithFactory,
 	) {
 	}
 
@@ -84,7 +84,7 @@ final readonly class StorageRegistryFactory
 						$siteId,
 						$row->siteUrl,
 						$row->siteAlias,
-						$row->sharedWith !== null ? $this->getSharedWith($row->sharedWith) : [],
+						$row->sharedWith !== null ? $this->sharedWithFactory->get($row->sharedWith) : [],
 						$registry->getCompany($row->companyId),
 						$storageKey,
 						$algorithm,
@@ -106,29 +106,6 @@ final readonly class StorageRegistryFactory
 			}
 		}
 		return $this->sorting->sort($registry, $sort);
-	}
-
-
-	/**
-	 * @return list<StorageSharedWith>
-	 * @throws JsonException
-	 * @throws JsonItemsNotArrayException
-	 * @throws JsonItemNotStructureException
-	 */
-	private function getSharedWith(string $json): array
-	{
-		$sharedWith = [];
-		$items = Json::decode($json, forceArrays: true);
-		if (!is_array($items)) {
-			throw new JsonItemsNotArrayException($items, $json);
-		}
-		foreach ($items as $item) {
-			if (!is_array($item) || !isset($item['url']) || !isset($item['alias']) || !is_string($item['url']) || !is_string($item['alias'])) {
-				throw new JsonItemNotStructureException($item, ['url', 'alias'], $json);
-			}
-			$sharedWith[] = new StorageSharedWith($item['url'], $item['alias']);
-		}
-		return $sharedWith;
 	}
 
 }

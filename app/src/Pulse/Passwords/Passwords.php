@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
+use Exception;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
@@ -328,46 +329,51 @@ final readonly class Passwords
 		assert($values->disclosure->new instanceof ArrayHash);
 
 		$this->database->beginTransaction();
-		$companyId = $values->company->new->name === '' && $values->company->id !== null ? $values->company->id : $this->companies->add(
-			$values->company->new->name,
-			$values->company->new->dba,
-			$values->company->new->alias,
-		);
-		$siteId = (string)($values->site->new->url === ''
-			? $values->site->id // the value can also be "all"
-			: $this->sites->add(
-				$values->site->new->url,
-				$values->site->new->alias,
-				$values->site->new->sharedWith,
-				$companyId,
-			)
-		);
-		$algoId = $values->algo->new->algoName === '' && $values->algo->id !== null ? $values->algo->id : $this->hashingAlgorithms->addAlgorithm(
-			$values->algo->new->algoName,
-			$values->algo->new->alias,
-			$values->algo->new->salted,
-			$values->algo->new->stretched,
-		);
-		foreach ($values->disclosure->new as $disclosure) {
-			assert($disclosure instanceof ArrayHash);
-			assert(is_int($disclosure->disclosureType));
-			assert(is_string($disclosure->url));
-			assert(is_string($disclosure->archive));
-			assert(is_string($disclosure->note));
-			assert(is_string($disclosure->published));
-			if ($disclosure->url !== '') {
-				$disclosureId = $this->passwordHashingDisclosures->getDisclosureId($disclosure->url, $disclosure->archive);
-				if ($disclosureId === null) {
-					$disclosureId = $this->passwordHashingDisclosures->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
+		try {
+			$companyId = $values->company->new->name === '' && $values->company->id !== null ? $values->company->id : $this->companies->add(
+				$values->company->new->name,
+				$values->company->new->dba,
+				$values->company->new->alias,
+			);
+			$siteId = (string)($values->site->new->url === ''
+				? $values->site->id // the value can also be "all"
+				: $this->sites->add(
+					$values->site->new->url,
+					$values->site->new->alias,
+					$values->site->new->sharedWith,
+					$companyId,
+				)
+			);
+			$algoId = $values->algo->new->algoName === '' && $values->algo->id !== null ? $values->algo->id : $this->hashingAlgorithms->addAlgorithm(
+				$values->algo->new->algoName,
+				$values->algo->new->alias,
+				$values->algo->new->salted,
+				$values->algo->new->stretched,
+			);
+			foreach ($values->disclosure->new as $disclosure) {
+				assert($disclosure instanceof ArrayHash);
+				assert(is_int($disclosure->disclosureType));
+				assert(is_string($disclosure->url));
+				assert(is_string($disclosure->archive));
+				assert(is_string($disclosure->note));
+				assert(is_string($disclosure->published));
+				if ($disclosure->url !== '') {
+					$disclosureId = $this->passwordHashingDisclosures->getDisclosureId($disclosure->url, $disclosure->archive);
+					if ($disclosureId === null) {
+						$disclosureId = $this->passwordHashingDisclosures->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
+					}
+					$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
+					if ($storageId === null) {
+						$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
+					}
+					$this->pairDisclosureStorage($disclosureId, $storageId);
 				}
-				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
-				if ($storageId === null) {
-					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
-				}
-				$this->pairDisclosureStorage($disclosureId, $storageId);
 			}
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollBack();
+			throw $e;
 		}
-		$this->database->commit();
 	}
 
 }

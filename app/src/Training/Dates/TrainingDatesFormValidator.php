@@ -15,6 +15,9 @@ final class TrainingDatesFormValidator
 	 */
 	public function validateFormStartEnd(TextInput $inputStart, TextInput $inputEnd): void
 	{
+		if ($inputStart->hasErrors() || $inputEnd->hasErrors()) {
+			return; // A start or an end failing its own rules isn't a date to compare
+		}
 		$valueStart = $inputStart->getValue();
 		$valueEnd = $inputEnd->getValue();
 		if (!is_string($valueStart) || !is_string($valueEnd)) {

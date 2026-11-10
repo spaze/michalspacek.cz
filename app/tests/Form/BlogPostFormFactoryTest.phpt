@@ -163,6 +163,39 @@ final class BlogPostFormFactoryTest extends TestCase
 	}
 
 
+	/**
+	 * The post is built from every value, which with no locale chosen would fail.
+	 */
+	public function testCreateOnValidateFailedRules(): void
+	{
+		$form = $this->buildFormAdd();
+		$form->setDefaults(['locale' => null]);
+		$form->validate();
+		Assert::contains('Zadejte prosím jazyk', $form->getErrors());
+	}
+
+
+	public function testCreateRecommended(): void
+	{
+		$form = $this->buildFormAdd();
+		$input = $form->getComponent('recommended');
+		assert($input instanceof TextInput);
+		$error = ['Doporučené musí být JSON se seznamem odkazů, každý s url a text'];
+		$results = [];
+		foreach (['', '[{"url": "https://example.com/", "text": "Example"}]', '[{"url": "https://example.com/"}]', '[{"url":'] as $value) {
+			$form->setDefaults(['recommended' => $value]);
+			$input->validate();
+			$results[$value] = $input->getErrors();
+		}
+		Assert::same([
+			'' => [],
+			'[{"url": "https://example.com/", "text": "Example"}]' => [],
+			'[{"url": "https://example.com/"}]' => $error,
+			'[{"url":' => $error,
+		], $results);
+	}
+
+
 	private function setFormDefaults(Form $form): void
 	{
 		$form->setDefaults([

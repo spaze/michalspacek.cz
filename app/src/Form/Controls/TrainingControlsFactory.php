@@ -4,9 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
+use DateMalformedStringException;
+use DateTimeImmutable;
 use MichalSpacekCz\EasterEgg\WinterIsComing\WinterIsComing;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSources;
 use Nette\Forms\Container;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -103,7 +106,32 @@ final readonly class TrainingControlsFactory
 			->setHtmlAttribute('title', "Formát {$format}")
 			->setRequired($required ? 'Zadejte datum' : false)
 			->addRule(Form::Pattern, "Datum musí být ve formátu {$format}", $pattern);
-		return $field;
+		return $this->addExistingDateRule($field);
+	}
+
+
+	/**
+	 * A date pattern lets through a month or a day that doesn't exist, which `new DateTime()` fails on when the value
+	 * is saved, or moves to another day, February 30 to March 2.
+	 */
+	public function addExistingDateRule(TextInput $field): TextInput
+	{
+		return $field->addRule($this->isExistingDate(...), 'Takové datum neexistuje');
+	}
+
+
+	private function isExistingDate(Control $input): bool
+	{
+		$value = $input->getValue();
+		if (!is_string($value)) {
+			return false;
+		}
+		try {
+			new DateTimeImmutable($value);
+		} catch (DateMalformedStringException) {
+			return false;
+		}
+		return DateTimeImmutable::getLastErrors() === false;
 	}
 
 

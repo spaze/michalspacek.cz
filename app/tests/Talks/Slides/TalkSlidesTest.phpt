@@ -6,10 +6,13 @@ namespace MichalSpacekCz\Talks\Slides;
 
 use DateTime;
 use MichalSpacekCz\Media\Video;
+use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\DatabaseTransactionStatus;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -110,6 +113,20 @@ final class TalkSlidesTest extends TestCase
 			],
 		];
 		Assert::same($expectedParamsInsert, $paramsInsert);
+	}
+
+
+	public function testSaveSlidesRollsBackADuplicatedSlide(): void
+	{
+		$slides = new TalkSlideCollection(303);
+		$slides->add(new TalkSlide(1, 'slide1', 1, 'slide1.jpg', 'slide-alt.jpg', null, 'Title 1', Html::text('Notes 1'), 'Notes 1', null, null, null));
+		$updateSlides = new ArrayHash();
+		$updateSlides[1] = $this->buildSlideArrayHash(1, 'foo1', 'Title 1', 'Speaker notes 1', 'slide1.jpg', null, 'slide-alt1.jpg', null);
+		$this->database->willThrowOnQuery('UPDATE talk_slides SET ? WHERE id_slide = ?', new UniqueConstraintViolationException());
+		Assert::exception(function () use ($slides, $updateSlides): void {
+			$this->talkSlides->saveSlides(303, $slides, $updateSlides, new ArrayHash(), false);
+		}, DuplicatedSlideException::class);
+		Assert::same(DatabaseTransactionStatus::RolledBack, $this->database->transactionStatus);
 	}
 
 

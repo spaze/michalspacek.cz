@@ -7,10 +7,12 @@ namespace MichalSpacekCz\Training\Files;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormat;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Database\DatabaseTransactionStatus;
 use MichalSpacekCz\Test\DateTime\DateTimeMachineFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Test\Training\TrainingFilesNullStorage;
 use MichalSpacekCz\Training\Exceptions\TrainingFileUnsupportedExtensionException;
+use Nette\Database\DriverException;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 use Override;
@@ -125,6 +127,34 @@ final class TrainingFilesTest extends TestCase
 				[['key_file' => '1337', 'key_application' => 42]],
 				$this->database->getParamsArrayForQuery('INSERT INTO training_materials'),
 			);
+		} finally {
+			FileSystem::delete($filesDir);
+			FileSystem::delete($tmpName);
+		}
+	}
+
+
+	public function testAddFileRollsBackWhenAQueryFails(): void
+	{
+		$filesDir = $this->uniqueTempPath() . '/';
+		$this->storage->setFilesDir($filesDir);
+		$content = "Course notes, plain text.\n";
+		$tmpName = $this->uniqueTempPath();
+		FileSystem::write($tmpName, $content);
+		$file = new FileUpload([
+			'name' => 'notes.txt',
+			'tmp_name' => $tmpName,
+			'size' => strlen($content),
+			'error' => UPLOAD_ERR_OK,
+		]);
+		$exception = new DriverException();
+		$this->database->willThrowOnQuery('INSERT INTO training_materials', $exception);
+		try {
+			$e = Assert::exception(function () use ($file): void {
+				$this->trainingFiles->addFile(new DateTimeImmutable(), $file, [42]);
+			}, DriverException::class);
+			Assert::same($exception, $e);
+			Assert::same(DatabaseTransactionStatus::RolledBack, $this->database->transactionStatus);
 		} finally {
 			FileSystem::delete($filesDir);
 			FileSystem::delete($tmpName);
