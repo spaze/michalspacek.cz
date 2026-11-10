@@ -10,8 +10,11 @@ use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageCompanySitemapEntries;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSiteSitemapEntries;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
+use MichalSpacekCz\Sitemap\InSitemap;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Form;
@@ -39,6 +42,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	/**
 	 * @throws InvalidLinkException
 	 */
+	#[InSitemap]
 	public function actionDefault(?string $param, ?string $rating, ?string $sort, ?string $search): void
 	{
 		// Keep old, published URLs alive
@@ -65,6 +69,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	 *
 	 * @param string $param
 	 */
+	#[InSitemap(StorageSiteSitemapEntries::class)]
 	public function actionSite(string $param): void
 	{
 		if ($param === '') {
@@ -92,6 +97,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	 *
 	 * @param string $param
 	 */
+	#[InSitemap(StorageCompanySitemapEntries::class)]
 	public function actionCompany(string $param): void
 	{
 		if ($param === '') {
@@ -150,6 +156,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	/**
 	 * Storages rating action handler.
 	 */
+	#[InSitemap]
 	public function actionRating(): void
 	{
 		$this->template->pageTitle = 'Password storage disclosures rating guide';
@@ -163,6 +170,7 @@ final class PasswordsStoragesPresenter extends BasePresenter
 	/**
 	 * Storages questions action handler.
 	 */
+	#[InSitemap]
 	public function actionQuestions(): void
 	{
 		$this->template->pageTitle = 'Password storage disclosures questions';

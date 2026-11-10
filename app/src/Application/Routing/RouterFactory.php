@@ -130,6 +130,7 @@ final class RouterFactory
 		]);
 
 		$this->initRouterLists($router, self::MODULE_PULSE, [
+			new RouterFactoryRoute('sitemap.xml', 'Sitemap', 'default'),
 			new RouterFactoryRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+', Route::FilterOut => self::encodeSlashes(...)]]),
 			new RouterFactoryRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default'),
 		]);

@@ -31,17 +31,17 @@ final readonly class Sitemap
 
 
 	/**
-	 * The sitemap of the current locale's host, with every page that exists in another locale too linked as its alternate.
+	 * The sitemap of the module's host in the current locale, with every page that exists in another locale too linked as its alternate.
 	 */
-	public function getXml(): string
+	public function getXml(SitemapModule $module): string
 	{
 		$locale = $this->translator->getDefaultLocale();
-		$xml = $this->cache->load($locale, function (array|null &$dependencies) use ($locale): string {
+		$xml = $this->cache->load([$module->value, $locale], function (array|null &$dependencies) use ($module, $locale): string {
 			$dependencies[Cache::Expire] = '1 day';
-			return $this->sitemapXml->create($locale, $this->getPages());
+			return $this->sitemapXml->create($locale, $this->getPages($module));
 		});
 		if (!is_string($xml)) {
-			throw new ShouldNotHappenException(sprintf("Cached sitemap for %s is a '%s' not a string", $locale, get_debug_type($xml)));
+			throw new ShouldNotHappenException(sprintf("Cached sitemap for %s in %s is a '%s' not a string", $module->value, $locale, get_debug_type($xml)));
 		}
 		return $xml;
 	}
@@ -50,10 +50,10 @@ final readonly class Sitemap
 	/**
 	 * @return array<string, list<SitemapEntry>> destination => its entries
 	 */
-	private function getPages(): array
+	private function getPages(SitemapModule $module): array
 	{
 		$pages = [];
-		foreach ($this->sitemapActions->getActions() as $action) {
+		foreach ($this->sitemapActions->getActions($module) as $action) {
 			$inSitemap = $action->inSitemap[0] ?? null;
 			if ($inSitemap === null) {
 				continue;

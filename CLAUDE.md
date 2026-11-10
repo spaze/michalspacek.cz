@@ -146,7 +146,7 @@ An empty mask (like `Homepage`) means the presenter handles the domain root. A `
 
 ### Sitemap
 
-`/sitemap.xml` on the `www` hosts lists the pages of the `Www` module, each with its other-language versions as alternates. Every action of a `Www` presenter carries one of two attributes on its `action` or `render` method, and `SitemapActionsTest` fails for an action with neither, a page with only a template included, which needs a `render` method to carry it, so a new page is a decision rather than something forgotten:
+`/sitemap.xml` lists the pages of its host's module, for the modules in `SitemapModule`, each page with its other-language versions as alternates when the module has more than one language. A module gets a sitemap with a case there, a `Sitemap` presenter and route of its own, and a `Sitemap:` line in its host's `robots.txt`. Every action of a presenter in such a module carries one of two attributes on its `action` or `render` method, and `SitemapActionsTest` fails for an action with neither, a page with only a template included, which needs a `render` method to carry it, so a new page is a decision rather than something forgotten:
 
 - `#[InSitemap]` for a page any visitor gets at its own address, whether anything on the site links to it or not: the sitemap is for search engines, not the site's navigation. A page without parameters takes the attribute as it is, an action with parameters names a `SitemapEntries` service that lists its pages, `#[InSitemap(FooSitemapEntries::class)]`. One `SitemapEntry` is one page in every language it exists in, so a translated page is a single entry; give it only the languages where the page really exists, or the sitemap claims an alternate that redirects or 404s. List only pages that are their own canonical page: one naming another page as canonical, like a talk showing another talk's slides, is left out.
 - `#[NotInSitemap('reason')]` for everything that isn't such a page, with the reason: one standing in for the page asked for, like an error page, one showing what the visitor's session holds, a redirect, a feed or a download.
@@ -155,7 +155,7 @@ The `hreflang` alternates in a page's head follow the same attribute: only the p
 
 The language switcher leads to the page in the other language, or to a list page when there's none. A page that can't be shown in the other language at all, like a training's materials, found with what the visitor's session holds, also takes `#[NoLanguageSwitcher('reason')]` on its `action` or `render` method, and gets no switcher, which would lead to an error there.
 
-The XML is cached per language for a day, and every deploy clears it, so a new page is in as soon as it's deployed and only new content waits. An entry whose link can't be built is logged and left out rather than failing the whole sitemap.
+The XML is cached per module and language for a day, and every deploy clears it, so a new page is in as soon as it's deployed and only new content waits. An entry whose link can't be built is logged and left out rather than failing the whole sitemap.
 
 ### Naming conventions
 

@@ -4,11 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Presentation\Pulse\Heartbleed;
 
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Sitemap\InSitemap;
 use Nette\Utils\Html;
 
 final class HeartbleedPresenter extends BasePresenter
 {
 
+	#[InSitemap]
 	public function actionDefault(): void
 	{
 		$this->template->vulnerable = 1543;

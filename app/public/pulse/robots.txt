@@ -7,3 +7,5 @@ Disallow: /*/search/
 Disallow: /*/searches/
 Disallow: /passwords/storages/site/*/
 Disallow: /passwords/storages/site/*?
+
+Sitemap: https://pulse.michalspacek.cz/sitemap.xml
