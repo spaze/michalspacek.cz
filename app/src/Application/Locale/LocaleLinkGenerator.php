@@ -55,7 +55,8 @@ class LocaleLinkGenerator
 
 	/**
 	 * Generates the URLs of a page in the locales it exists in, the current locale included. Unlike links(),
-	 * the locales are only the keys of $localeParams, with the default params standing for all of them.
+	 * the locales are only the keys of $localeParams, with the default params standing for all the locales of
+	 * the destination's module, so a page of a module served in one locale, like Pulse, has just the one link.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
 	 * @param array<string, array<array-key, mixed>> $localeParams of locale => [position|name => value]
@@ -64,7 +65,7 @@ class LocaleLinkGenerator
 	 */
 	public function linksForLocaleParams(string $destination, array $localeParams): array
 	{
-		$linkGenerators = [$this->translator->getDefaultLocale() => $this->linkGenerator] + $this->getOtherLocaleLinkGenerators();
+		$linkGenerators = [$this->translator->getDefaultLocale() => $this->linkGenerator] + $this->getOtherLocaleLinkGenerators($destination);
 		$links = [];
 		foreach ($linkGenerators as $locale => $linkGenerator) {
 			if ($this->hasLocale($localeParams, $locale)) {
@@ -134,15 +135,21 @@ class LocaleLinkGenerator
 
 
 	/**
+	 * The locale routers hold the routes of every module served in more than one locale. With a destination, only the
+	 * locales of its module, so one served in one locale has no other locales rather than links that fail to build.
+	 *
 	 * @return array<string, LinkGenerator> of locale => generator, for the locales other than the current one
 	 */
-	private function getOtherLocaleLinkGenerators(): array
+	private function getOtherLocaleLinkGenerators(?string $destination = null): array
 	{
 		$linkGenerators = [];
 		foreach ($this->localeRouter->getLocaleRouters() as $locale => $routers) {
 			foreach ($routers->getRouters() as $router) {
 				if (!$router instanceof RouteList) {
 					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", RouteList::class, get_debug_type($router)));
+				}
+				if ($destination !== null && !str_starts_with(ltrim($destination, ':'), (string)$router->getModule())) {
+					continue;
 				}
 				if (count($router->getRouters()) > 0) {
 					$linkGenerators[$locale] = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);

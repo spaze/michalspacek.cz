@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Routing;
 
+use Closure;
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route;
 use Nette\Http\IRequest;
@@ -16,7 +17,7 @@ final class BlogPostRoute extends Route
 {
 
 	/**
-	 * @param array<string, array<string, array<string, string>|string>> $metadata
+	 * @param array<string, array<string, array<string, string>|string|Closure(string): string>> $metadata
 	 */
 	public function __construct(
 		private readonly BlogPostLoader $blogPostLoader,

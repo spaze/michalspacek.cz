@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Presentation\Www\Sitemap;
 
+use MichalSpacekCz\Http\FetchMetadata\FetchMetadataHeader;
+use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicy;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Http\Request as HttpRequestMock;
@@ -12,6 +14,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Request;
 use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Override;
@@ -29,6 +32,7 @@ final class SitemapPresenterTest extends TestCase
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		private readonly HttpRequestMock $httpRequest,
 		private readonly HttpResponseMock $httpResponse,
+		private readonly ResourceIsolationPolicy $resourceIsolationPolicy,
 	) {
 		$httpRequest->setMethod(IRequest::Get);
 	}
@@ -58,6 +62,9 @@ final class SitemapPresenterTest extends TestCase
 		$xml = $response->getSource();
 		assert(is_string($xml));
 		Assert::contains('<url><loc>https://www.rizek.test/page</loc></url>', $xml);
+		$destinations = $this->localeLinkGenerator->getLinksForLocaleParamsDestinations();
+		Assert::notSame([], $destinations);
+		Assert::same([], array_values(array_filter($destinations, fn(string $destination): bool => !str_starts_with($destination, 'Www:'))), 'Only the Www pages');
 		Assert::same('application/xml; charset=utf-8', $this->httpResponse->getHeader('Content-Type'));
 		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
 		Assert::notNull($this->httpResponse->getHeader('ETag'));
@@ -77,11 +84,30 @@ final class SitemapPresenterTest extends TestCase
 	}
 
 
+	/**
+	 * A crawler's fetch of the sitemap isn't a navigation, and it comes from another site when anything sends one.
+	 */
+	public function testDefaultCrossSite(): void
+	{
+		$this->httpRequest->setHeader(FetchMetadataHeader::Site->value, 'cross-site');
+		$this->httpRequest->setHeader(FetchMetadataHeader::Mode->value, 'no-cors');
+		$presenter = $this->createPresenter();
+		$presenter->run(new Request('Www:Sitemap', IRequest::Get, ['action' => 'default']));
+		Assert::true($this->resourceIsolationPolicy->isRequestAllowed($presenter));
+	}
+
+
 	private function runPresenter(): Response
+	{
+		return $this->createPresenter()->run(new Request('Www:Sitemap', IRequest::Get, ['action' => 'default']));
+	}
+
+
+	private function createPresenter(): Presenter
 	{
 		$presenter = $this->applicationPresenter->createUiPresenter('Www:Sitemap', 'Sitemap', 'default');
 		$presenter->autoCanonicalize = false;
-		return $presenter->run(new Request('Www:Sitemap', IRequest::Get, ['action' => 'default']));
+		return $presenter;
 	}
 
 }

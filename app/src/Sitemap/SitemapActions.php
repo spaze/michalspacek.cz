@@ -14,13 +14,10 @@ use ReflectionClass;
 use ReflectionMethod;
 
 /**
- * The actions of the module the sitemap is for, with their InSitemap and NotInSitemap attributes.
+ * The actions of a module with a sitemap, with their InSitemap and NotInSitemap attributes.
  */
 final readonly class SitemapActions
 {
-
-	private const string MODULE = 'Www';
-
 
 	public function __construct(
 		private Container $container,
@@ -32,12 +29,12 @@ final readonly class SitemapActions
 	/**
 	 * @return list<SitemapAction>
 	 */
-	public function getActions(): array
+	public function getActions(SitemapModule $module): array
 	{
 		$actions = [];
 		foreach ($this->container->findByType(IPresenter::class) as $name) {
 			$class = $this->container->getServiceType($name);
-			$presenter = $this->getPresenterName($class);
+			$presenter = $this->getPresenterName($module, $class);
 			if ($presenter === null) {
 				continue;
 			}
@@ -74,16 +71,16 @@ final readonly class SitemapActions
 	 *
 	 * @param class-string $class
 	 */
-	private function getPresenterName(string $class): ?string
+	private function getPresenterName(SitemapModule $module, string $class): ?string
 	{
-		$result = Regex::matchStrictGroups(sprintf('/^MichalSpacekCz\\\\Presentation\\\\%s\\\\([A-Za-z0-9]+)\\\\\1Presenter\z/', self::MODULE), $class);
+		$result = Regex::matchStrictGroups(sprintf('/^MichalSpacekCz\\\\Presentation\\\\%s\\\\([A-Za-z0-9]+)\\\\\1Presenter\z/', $module->value), $class);
 		if (!$result->matched) {
-			if (str_starts_with($class, sprintf('MichalSpacekCz\\Presentation\\%s\\', self::MODULE))) {
-				throw new ShouldNotHappenException(sprintf("%s isn't named Foo\\FooPresenter like the other %s presenters, rename it or teach SitemapActions its presenter name", $class, self::MODULE));
+			if (str_starts_with($class, sprintf('MichalSpacekCz\\Presentation\\%s\\', $module->value))) {
+				throw new ShouldNotHappenException(sprintf("%s isn't named Foo\\FooPresenter like the other %s presenters, rename it or teach SitemapActions its presenter name", $class, $module->value));
 			}
 			return null;
 		}
-		$presenter = self::MODULE . ':' . $result->matches[1];
+		$presenter = $module->value . ':' . $result->matches[1];
 		try {
 			$mapped = $this->presenterFactory->getPresenterClass($presenter);
 		} catch (InvalidPresenterException $e) {

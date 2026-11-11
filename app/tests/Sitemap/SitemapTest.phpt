@@ -85,24 +85,33 @@ final class SitemapTest extends TestCase
 
 	public function testGetXml(): void
 	{
-		Assert::same($this->getExpectedXml(), $this->createSitemap()->getXml());
+		Assert::same($this->getExpectedXml(), $this->createSitemap()->getXml(SitemapModule::Www));
 	}
 
 
 	public function testGetXmlCached(): void
 	{
 		$sitemap = $this->createSitemap();
-		$xml = $sitemap->getXml();
+		$xml = $sitemap->getXml(SitemapModule::Www);
 		$this->articles->setAllTags(['foo' => 'Foo']);
-		Assert::same($xml, $sitemap->getXml());
+		Assert::same($xml, $sitemap->getXml(SitemapModule::Www));
 		$this->cacheStorage->reset();
-		Assert::same($this->getExpectedXml('<url><loc>https://www.rizek.test/tema/foo</loc></url>'), $sitemap->getXml());
+		Assert::same($this->getExpectedXml('<url><loc>https://www.rizek.test/tema/foo</loc></url>'), $sitemap->getXml(SitemapModule::Www));
+	}
+
+
+	public function testGetXmlCachedPerModule(): void
+	{
+		$sitemap = $this->createSitemap();
+		$www = $sitemap->getXml(SitemapModule::Www);
+		Assert::same($this->getExpectedPulseXml(), $sitemap->getXml(SitemapModule::Pulse));
+		Assert::same($www, $sitemap->getXml(SitemapModule::Www));
 	}
 
 
 	public function testGetXmlExpiresInADay(): void
 	{
-		$this->createSitemap()->getXml();
+		$this->createSitemap()->getXml(SitemapModule::Www);
 		$expire = $this->cacheStorage->getWrittenDependencies()[0][Cache::Expire];
 		assert(is_int($expire));
 		Assert::true($expire === 86400 || $expire === 86399, "Expires in {$expire} seconds"); // Cache counts from the real time(), a second may tick between the two
@@ -175,7 +184,40 @@ final class SitemapTest extends TestCase
 			'https://www.rizek.test/kudy-tudy/action',
 			'https://www.rizek.test/kdo',
 		];
-		Assert::same($expected, Regex::matchAll('~<loc>([^<]+)</loc>~', $this->createSitemap()->getXml())->matches[1]);
+		Assert::same($expected, Regex::matchAll('~<loc>([^<]+)</loc>~', $this->createSitemap()->getXml(SitemapModule::Www))->matches[1]);
+		Assert::same([], $this->logger->getLogged());
+	}
+
+
+	/**
+	 * A module served in one locale has no alternates, and its pages aren't dropped for not having a link in another
+	 * module's other locale.
+	 */
+	public function testGetXmlPulse(): void
+	{
+		Assert::same($this->getExpectedPulseXml(), $this->createSitemap()->getXml(SitemapModule::Pulse));
+		Assert::same([], $this->logger->getLogged());
+	}
+
+
+	/**
+	 * The sitemap is created first, the trainings list it builds reads rows of another shape.
+	 */
+	public function testGetXmlPulseEveryEntriesClassMakesAPage(): void
+	{
+		$sitemap = $this->createSitemap();
+		$this->database->setFetchAllDefaultResult([['alias' => 'example']]);
+		$expected = [
+			'https://pulse.rizek.test/heartbleed',
+			'https://pulse.rizek.test/',
+			'https://pulse.rizek.test/passwords',
+			'https://pulse.rizek.test/passwords/storages',
+			'https://pulse.rizek.test/passwords/storages/site/example',
+			'https://pulse.rizek.test/passwords/storages/company/example',
+			'https://pulse.rizek.test/passwords/storages/rating',
+			'https://pulse.rizek.test/passwords/storages/questions',
+		];
+		Assert::same($expected, Regex::matchAll('~<loc>([^<]+)</loc>~', $sitemap->getXml(SitemapModule::Pulse))->matches[1]);
 		Assert::same([], $this->logger->getLogged());
 	}
 
@@ -196,6 +238,19 @@ final class SitemapTest extends TestCase
 			};
 		}
 		return new Sitemap($this->sitemapActions, new SitemapXml($this->localeLinkGenerator), $this->localeLinkGenerator, $this->translator, $entries, $this->cacheStorage);
+	}
+
+
+	private function getExpectedPulseXml(): string
+	{
+		$urls = '';
+		foreach (['heartbleed', '', 'passwords', 'passwords/storages', 'passwords/storages/rating', 'passwords/storages/questions'] as $path) {
+			$urls .= "<url><loc>https://pulse.rizek.test/{$path}</loc></url>";
+		}
+		return '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
+			. '<urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+			. $urls
+			. "</urlset>\n";
 	}
 
 

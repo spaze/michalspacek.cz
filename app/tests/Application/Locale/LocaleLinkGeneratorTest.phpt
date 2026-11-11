@@ -108,6 +108,26 @@ final class LocaleLinkGeneratorTest extends TestCase
 	}
 
 
+	/**
+	 * The other locale's routes are the Www module's only, where a Pulse page has no route.
+	 */
+	public function testLinksForLocaleParamsModuleInOneLocale(): void
+	{
+		Assert::equal([
+			'cs_CZ' => new LocaleLink('cs_CZ', 'cs', 'Česky', 'https://pulse.rizek.test/passwords/storages/site/foo'),
+		], $this->localeLinkGenerator->linksForLocaleParams('Pulse:PasswordsStorages:site', $this->localeLinkGenerator->defaultParams(['param' => 'foo'])));
+	}
+
+
+	public function testLinksForLocaleParamsAbsoluteDestination(): void
+	{
+		Assert::equal([
+			'cs_CZ' => new LocaleLink('cs_CZ', 'cs', 'Česky', 'https://www.rizek.test/rozhovory/foo'),
+			'en_US' => new LocaleLink('en_US', 'en', 'English', 'https://www.burger.test/interviews/foo'),
+		], $this->localeLinkGenerator->linksForLocaleParams(':Www:Interviews:interview', $this->localeLinkGenerator->defaultParams(['name' => 'foo'])));
+	}
+
+
 	public function testHasLocale(): void
 	{
 		Assert::true($this->localeLinkGenerator->hasLocale(['cs_CZ' => ['name' => 'foo']], 'cs_CZ'));

@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Routing;
 
+use Closure;
+
 final readonly class RouterFactoryRoute
 {
 
 	/**
-	 * @param array<string, array<string, string>>|null $initialMetadata
+	 * @param array<string, array<string, string|Closure(string): string>>|null $initialMetadata
 	 */
 	public function __construct(
 		public string $mask,

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Sitemap;
 
 use MichalSpacekCz\Presentation\Www\BasePresenter;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSiteSitemapEntries;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\TalkSitemapEntries;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -30,11 +31,15 @@ final class SitemapActionsTest extends TestCase
 
 
 	public function __construct(
-		SitemapActions $sitemapActions,
+		private readonly SitemapActions $sitemapActions,
 		private readonly Container $container,
 		private readonly IPresenterFactory $presenterFactory,
 	) {
-		$this->actions = $sitemapActions->getActions();
+		$actions = [];
+		foreach (SitemapModule::cases() as $module) {
+			$actions = [...$actions, ...$sitemapActions->getActions($module)];
+		}
+		$this->actions = $actions;
 	}
 
 
@@ -83,17 +88,33 @@ final class SitemapActionsTest extends TestCase
 
 	public function testActionsAreFound(): void
 	{
-		$actions = [];
-		foreach ($this->actions as $action) {
-			$actions[$action->destination] = $action;
-		}
+		$actions = $this->getActions(SitemapModule::Www);
 		Assert::same([], $actions['Www:Homepage:default']->notInSitemap);
 		Assert::equal([new InSitemap()], $actions['Www:Homepage:default']->inSitemap);
 		Assert::equal([new InSitemap(TalkSitemapEntries::class)], $actions['Www:Talks:talk']->inSitemap);
 		Assert::same(['actionTalk'], $actions['Www:Talks:talk']->methods);
 		Assert::same([], $actions['Www:Trainings:success']->inSitemap);
 		Assert::count(1, $actions['Www:Trainings:success']->notInSitemap);
-		Assert::false(isset($actions['Admin:Homepage:default']), 'Only the Www module is in the sitemap');
+		Assert::false(isset($actions['Admin:Homepage:default']), 'Only the Www module is in its sitemap');
+		Assert::false(isset($actions['Pulse:Homepage:default']), 'Only the Www module is in its sitemap');
+
+		$actions = $this->getActions(SitemapModule::Pulse);
+		Assert::equal([new InSitemap()], $actions['Pulse:Homepage:default']->inSitemap);
+		Assert::equal([new InSitemap(StorageSiteSitemapEntries::class)], $actions['Pulse:PasswordsStorages:site']->inSitemap);
+		Assert::false(isset($actions['Www:Homepage:default']), 'Only the Pulse module is in its sitemap');
+	}
+
+
+	/**
+	 * @return array<string, SitemapAction> destination => action
+	 */
+	private function getActions(SitemapModule $module): array
+	{
+		$actions = [];
+		foreach ($this->sitemapActions->getActions($module) as $action) {
+			$actions[$action->destination] = $action;
+		}
+		return $actions;
 	}
 
 
@@ -124,7 +145,7 @@ final class SitemapActionsTest extends TestCase
 		};
 		$sitemapActions = new SitemapActions($container, $this->presenterFactory);
 		Assert::exception(function () use ($sitemapActions): void {
-			$sitemapActions->getActions();
+			$sitemapActions->getActions(SitemapModule::Www);
 		}, ShouldNotHappenException::class, "MichalSpacekCz\\Presentation\\Www\\BasePresenter isn't named Foo\\FooPresenter like the other Www presenters, rename it or teach SitemapActions its presenter name");
 	}
 

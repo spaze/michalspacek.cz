@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Presentation\Pulse\Error;
 
 use MichalSpacekCz\Presentation\Www\BaseErrorPresenter;
 use MichalSpacekCz\Pulse\Error\PulseError;
+use MichalSpacekCz\Sitemap\NotInSitemap;
 use Override;
 
 final class ErrorPresenter extends BaseErrorPresenter
@@ -21,6 +22,7 @@ final class ErrorPresenter extends BaseErrorPresenter
 	}
 
 
+	#[NotInSitemap('the error page, shown in place of the page that failed')]
 	public function actionDefault(): void
 	{
 		$this->pulseError->action($this->sendResponse(...));

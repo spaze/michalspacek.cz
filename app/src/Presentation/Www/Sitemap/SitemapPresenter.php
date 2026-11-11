@@ -7,6 +7,7 @@ use MichalSpacekCz\Http\FetchMetadata\ResourceIsolationPolicyCrossSite;
 use MichalSpacekCz\Presentation\Www\BasePresenter;
 use MichalSpacekCz\Sitemap\NotInSitemap;
 use MichalSpacekCz\Sitemap\Sitemap;
+use MichalSpacekCz\Sitemap\SitemapModule;
 use MichalSpacekCz\Utils\Hash;
 use Nette\Application\Responses\TextResponse;
 
@@ -28,7 +29,7 @@ final class SitemapPresenter extends BasePresenter
 	#[NotInSitemap('the sitemap itself')]
 	public function actionDefault(): never
 	{
-		$xml = $this->sitemap->getXml();
+		$xml = $this->sitemap->getXml(SitemapModule::Www);
 		$this->lastModified(null, Hash::nonCryptographic($xml), '1 hour');
 		$this->getHttpResponse()->setContentType('application/xml', 'utf-8');
 		$this->sendResponse(new TextResponse($xml));

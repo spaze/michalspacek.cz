@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Routing;
 
+use Closure;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use MichalSpacekCz\EasterEgg\NetteCve202015227;
@@ -129,7 +130,8 @@ final class RouterFactory
 		]);
 
 		$this->initRouterLists($router, self::MODULE_PULSE, [
-			new RouterFactoryRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+']]),
+			new RouterFactoryRoute('sitemap.xml', 'Sitemap', 'default'),
+			new RouterFactoryRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+', Route::FilterOut => self::encodeSlashes(...)]]),
 			new RouterFactoryRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default'),
 		]);
 
@@ -193,7 +195,7 @@ final class RouterFactory
 
 
 	/**
-	 * @param array<string, array<string, array<string, string>|string>> $metadata
+	 * @param array<string, array<string, array<string, string>|string|Closure(string): string>> $metadata
 	 */
 	private function createRoute(RouterRoutes $class, string $mask, array $metadata): Router
 	{
@@ -201,6 +203,17 @@ final class RouterFactory
 			RouterRoutes::BlogPostRoute => new BlogPostRoute($this->blogPostLoader, $mask, $metadata),
 			RouterRoutes::Route => new ApplicationRoute($mask, $metadata),
 		};
+	}
+
+
+	/**
+	 * A site alias may have a path, like `example.com/foo`, and with the slash in its link the page would be one of the
+	 * made-up pages under a site alias, which `robots.txt` disallows. The address with the slash still finds the page,
+	 * and the presenter's canonicalization redirects it to the link.
+	 */
+	private static function encodeSlashes(string $param): string
+	{
+		return str_replace('/', '%2F', Route::param2path($param));
 	}
 
 

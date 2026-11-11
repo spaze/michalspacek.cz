@@ -150,8 +150,10 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory
-	- MichalSpacekCz\Pulse\Passwords\Storage\StorageSharedWithFactory
+	- MichalSpacekCz\Pulse\Passwords\Storage\StorageCompanySitemapEntries(@database.pulse.explorer)
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
+	- MichalSpacekCz\Pulse\Passwords\Storage\StorageSharedWithFactory
+	- MichalSpacekCz\Pulse\Passwords\Storage\StorageSiteSitemapEntries(@database.pulse.explorer)
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer)
 	- MichalSpacekCz\SecurityTxt\SecurityTxtResponse(dirs: %securityTxtDirs%)
 	securityTxtValidatorFetch: MichalSpacekCz\SecurityTxtValidator\Fetch\SecurityTxtValidatorLambdaFetch(lambdaClient: @securityTxtValidatorLambdaClient, noIpv6: true, userAgent: %securityTxtValidator.userAgent%, timeout: %securityTxtValidator.fetchTimeout%, connectTimeout: %securityTxtValidator.fetchConnectTimeout%, maxAllowedRedirects: %securityTxtValidator.fetchMaxRedirects%)
