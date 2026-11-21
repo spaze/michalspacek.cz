@@ -40,7 +40,7 @@ code {
 	padding: 0 0.2rem;
 	border-radius: 2px;
 }
-#logo code, #enter code, .valid code, .error code {
+#logo code, #enter code, .message code {
 	background-color: unset;
 	padding: unset;
 	border-radius: unset;
@@ -59,13 +59,13 @@ code {
 	margin-bottom: 0;
 	overflow-wrap: break-word;
 }
-#result p { padding: 0; }
+#result p { margin: auto; }
 #intro p {
 	max-width: 670px;
 	margin: 1rem auto;
-	padding: 0;
 }
 #issues p {
+	margin: auto;
 	padding: 0.2rem 0 0.2rem 2rem;
 	text-indent: -1rem;
 }
@@ -162,15 +162,15 @@ pre .number {
 	padding: 1rem;
 	margin: 0 auto;
 }
-.container p, .container pre {
+.message p, .container pre {
 	margin: auto;
 	padding: 1rem;
 	border-radius: 3px;
 }
-.container.valid p { background-color: hsl(140 40% 58% / 1); }
-.container.warning p, .issues-warning { background-color: hsl(30 20% 70% / 1); }
-.container.error p, .issues-error, form.has-errors .field-error { background-color: hsl(0 100% 77% / 1); }
-.container.valid p:not(:last-child), .container.warning p:not(:last-child), .container.error p:not(:last-child) { margin-bottom: -1.25rem; }
+.message.valid p { background-color: hsl(140 40% 58% / 1); }
+.message.warning p, .issues-warning { background-color: hsl(30 20% 70% / 1); }
+.message.error p, .issues-error, form.has-errors .field-error { background-color: hsl(0 100% 77% / 1); }
+.message p:not(:last-child) { margin-bottom: -1.25rem; }
 .container .humbleicons { transition: opacity .5s ease-out; }
 .container:hover .humbleicons { opacity: 1; }
 .container h4 {
@@ -201,9 +201,9 @@ input[disabled] {
 	#logo.warning { background: linear-gradient(to bottom, hsl(30 80% 40% / 1), hsl(30 80% 40% / 0)); }
 	#logo.invalid { background: linear-gradient(to bottom, hsl(0 80% 40% / 1), hsl(0 80% 40% / 0)); }
 	#logo.error { background: linear-gradient(to bottom, hsl(0 0% 33% / 1), hsl(0 0% 33% / 0)); }
-	.container.valid p { background-color: hsl(140 29% 40% / 1); }
-	.container.warning p, .issues-warning { background-color: hsl(40 100% 30% / 1); }
-	.container.error p, .issues-error, form.has-errors .field-error { background-color: hsl(0 59% 40% / 1); }
+	.message.valid p { background-color: hsl(140 29% 40% / 1); }
+	.message.warning p, .issues-warning { background-color: hsl(40 100% 30% / 1); }
+	.message.error p, .issues-error, form.has-errors .field-error { background-color: hsl(0 59% 40% / 1); }
 	#menu { background-color: hsl(287 15% 18% / 1); }
 	#menu a { color: #EEEEEEAF; }
 	#menu a:hover {
