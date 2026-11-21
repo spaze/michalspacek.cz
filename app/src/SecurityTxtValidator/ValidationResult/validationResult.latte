@@ -1,20 +1,20 @@
 {templateType MichalSpacekCz\SecurityTxtValidator\ValidationResult\ValidationResultTemplateParameters}
-<div class="container warning" n:if="$isTruncated">
+<div class="container message warning" n:if="$isTruncated">
 	<p>{icon scissors} The file contents have been truncated, the validation result may be incorrect</p>
 </div>
-<div class="container error" n:if="$errorMessage !== null">
+<div class="container message error" n:if="$errorMessage !== null">
 	<p>{icon exclamation-triangle} {$errorMessage}</p>
 </div>
-<div class="container valid" n:if="$isValid === true">
+<div class="container message valid" n:if="$isValid === true">
 	<p>{icon check-circle} The file is valid, expires {_messages.timeIntervalIn.days, $expiresInDays}</p>
 </div>
-<div class="container warning" n:if="$isValidWithWarnings === true">
+<div class="container message warning" n:if="$isValidWithWarnings === true">
 	<p>{icon check-circle} The file is valid, but there are some warnings you should still fix. The file expires {_messages.timeIntervalIn.days, $expiresInDays}</p>
 </div>
-<div class="container error" n:if="$isInvalid === true">
+<div class="container message error" n:if="$isInvalid === true">
 	<p>{icon exclamation-triangle} The file is not valid, please fix the issues listed below</p>
 </div>
-<div class="container valid" n:if="$signed !== null">
+<div class="container message valid" n:if="$signed !== null">
 	<p>
 		{icon key} Signed on {$signed->getDate()|date:DateTime::RFC3339} with a key <code>{$signed->getShortKeyId()}</code>, <a href="#signing-key">see below</a>
 	</p>
