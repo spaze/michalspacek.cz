@@ -16,30 +16,30 @@ use function extension_loaded;
  */
 class Engine
 {
-	public const Version = '3.1.7';
-	public const VersionId = 30107;
+	public const Version = '3.1.9';
+	public const VersionId = 30109;
 
 	/** @deprecated use Engine::Version */
 	public const
 		VERSION = self::Version,
 		VERSION_ID = self::VersionId;
 
-	#[\Deprecated('use Latte\ContentType::Html')]
+	#[\Deprecated('use Latte\ContentType::Html', since: '3.0')]
 	public const CONTENT_HTML = ContentType::Html;
 
-	#[\Deprecated('use Latte\ContentType::Xml')]
+	#[\Deprecated('use Latte\ContentType::Xml', since: '3.0')]
 	public const CONTENT_XML = ContentType::Xml;
 
-	#[\Deprecated('use Latte\ContentType::JavaScript')]
+	#[\Deprecated('use Latte\ContentType::JavaScript', since: '3.0')]
 	public const CONTENT_JS = ContentType::JavaScript;
 
-	#[\Deprecated('use Latte\ContentType::Css')]
+	#[\Deprecated('use Latte\ContentType::Css', since: '3.0')]
 	public const CONTENT_CSS = ContentType::Css;
 
-	#[\Deprecated('use Latte\ContentType::ICal')]
+	#[\Deprecated('use Latte\ContentType::ICal', since: '3.0')]
 	public const CONTENT_ICAL = ContentType::ICal;
 
-	#[\Deprecated('use Latte\ContentType::Text')]
+	#[\Deprecated('use Latte\ContentType::Text', since: '3.0')]
 	public const CONTENT_TEXT = ContentType::Text;
 
 	private ?Loader $loader = null;
@@ -108,13 +108,7 @@ class Engine
 		$this->configurationHash = $clearCache ? null : $this->configurationHash;
 		$class = $this->loadTemplate($name);
 		$this->providers->fn = $this->functions;
-		return new $class(
-			$this,
-			$params,
-			$this->filters,
-			$this->providers,
-			$name,
-		);
+		return new $class($this, $params, $this->filters, $this->providers, $name);
 	}
 
 
@@ -196,7 +190,7 @@ class Engine
 	public function generate(TemplateNode $node, string $name): string
 	{
 		$generator = new Compiler\TemplateGenerator;
-		$generator->buildClass($node, $this->features);
+		$generator->buildClass($node, $this->features, $this->getAttributeContentTypes());
 		return $generator->generateCode($this->getTemplateClass($name), $name, $this->hasFeature(Feature::StrictTypes));
 	}
 
@@ -278,11 +272,42 @@ class Engine
 			$this->contentType,
 			$this->features,
 			$this->syntax,
+			$this->getAttributeContentTypes(),
 			array_map(
 				fn($extension) => [get_debug_type($extension), $extension->getCacheKey($this)],
 				$this->extensions,
 			),
 		];
+	}
+
+
+	/**
+	 * Returns content types of HTML attributes: the built-in ones and those registered by extensions.
+	 * @return array<string, string>
+	 */
+	private function getAttributeContentTypes(): array
+	{
+		$res = Runtime\HtmlHelpers::AttributeContentTypes;
+		$builtins = array_keys($res);
+		foreach ($this->extensions as $extension) {
+			foreach ($extension->getAttributeContentTypes() as $name => $contentType) {
+				$name = strtolower((string) $name);
+				$prefix = str_ends_with($name, '*') ? substr($name, 0, -1) : null;
+				if (!in_array($contentType, [ContentType::JavaScript, ContentType::Css, ContentType::Html], true)) {
+					throw new \LogicException("Invalid content type of attribute '$name', expected ContentType::JavaScript, Css or Html.");
+				} elseif (!preg_match('~' . Compiler\TemplateLexer::ReAttrName . '+$~DAu', $name)
+					|| str_contains($prefix ?? $name, '*') // * is allowed only at the end
+				) {
+					throw new \LogicException("Invalid attribute name '$name'.");
+				} elseif (Runtime\HtmlHelpers::matchAttributeContentType($prefix ?? $name) !== null // a built-in applies to it
+					|| ($prefix !== null && array_filter($builtins, fn($key) => str_starts_with($key, $prefix))) // it applies to a built-in
+				) {
+					throw new \LogicException("Attribute '$name' would override the built-in content type of on*, style or srcdoc.");
+				}
+				$res[$name] = $contentType;
+			}
+		}
+		return $res;
 	}
 
 
@@ -301,7 +326,7 @@ class Engine
 	}
 
 
-	#[\Deprecated('Use addFilter() instead.')]
+	#[\Deprecated('Use addFilter() instead.', since: '3.1')]
 	public function addFilterLoader(callable $loader): static
 	{
 		trigger_error('Filter loader is deprecated, use addFilter() instead.', E_USER_DEPRECATED);

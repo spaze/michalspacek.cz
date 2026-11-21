@@ -10,7 +10,6 @@ namespace Latte\Compiler\Nodes\Php\Expression;
 use Latte\Compiler\Nodes\Php;
 use Latte\Compiler\Nodes\Php\{ExpressionNode, IdentifierNode, NameNode};
 use Latte\Compiler\{Position, PrintContext};
-use Latte\Helpers;
 
 
 /**
@@ -21,18 +20,18 @@ class StaticMethodCallNode extends ExpressionNode
 	public function __construct(
 		public NameNode|ExpressionNode $class,
 		public IdentifierNode|ExpressionNode $name,
-		/** @var array<Php\ArgumentNode|Php\VariadicPlaceholderNode> */
+		/** @var array<Php\ArgumentNode|Php\VariadicPlaceholderNode|Php\ArgumentPlaceholderNode> */
 		public array $args = [],
 		public ?Position $position = null,
 		public ?Position $end = null,
 	) {
-		(function (Php\ArgumentNode|Php\VariadicPlaceholderNode ...$args) {})(...$args);
+		(function (Php\ArgumentNode|Php\VariadicPlaceholderNode|Php\ArgumentPlaceholderNode ...$args) {})(...$args);
 	}
 
 
 	public function isPartialApplication(): bool
 	{
-		return ($this->args[0] ?? null) instanceof Php\VariadicPlaceholderNode;
+		return (bool) array_filter($this->args, fn($arg) => !$arg instanceof Php\ArgumentNode);
 	}
 
 
@@ -54,9 +53,11 @@ class StaticMethodCallNode extends ExpressionNode
 	{
 		yield $this->class;
 		yield $this->name;
-		foreach ($this->args as &$item) {
+		foreach (self::walk(
+			$this->args,
+			fn(Php\ArgumentNode|Php\VariadicPlaceholderNode|Php\ArgumentPlaceholderNode ...$args) => null,
+		) as &$item) {
 			yield $item;
 		}
-		Helpers::removeNulls($this->args);
 	}
 }
