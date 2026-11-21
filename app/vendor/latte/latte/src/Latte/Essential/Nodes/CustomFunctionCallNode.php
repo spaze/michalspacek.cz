@@ -10,7 +10,6 @@ namespace Latte\Essential\Nodes;
 use Latte\Compiler\Nodes\Php;
 use Latte\Compiler\Nodes\Php\ExpressionNode;
 use Latte\Compiler\{Position, PrintContext};
-use Latte\Helpers;
 
 
 /**
@@ -20,12 +19,12 @@ class CustomFunctionCallNode extends ExpressionNode
 {
 	public function __construct(
 		public Php\NameNode $name,
-		/** @var array<Php\ArgumentNode> */
+		/** @var array<Php\ArgumentNode|Php\VariadicPlaceholderNode|Php\ArgumentPlaceholderNode> */
 		public array $args = [],
 		public ?Position $position = null,
 		public ?Position $end = null,
 	) {
-		(function (Php\ArgumentNode ...$args) {})(...$args);
+		(function (Php\ArgumentNode|Php\VariadicPlaceholderNode|Php\ArgumentPlaceholderNode ...$args) {})(...$args);
 	}
 
 
@@ -38,9 +37,11 @@ class CustomFunctionCallNode extends ExpressionNode
 	public function &getIterator(): \Generator
 	{
 		yield $this->name;
-		foreach ($this->args as &$item) {
+		foreach (self::walk(
+			$this->args,
+			fn(Php\ArgumentNode|Php\VariadicPlaceholderNode|Php\ArgumentPlaceholderNode ...$args) => null,
+		) as &$item) {
 			yield $item;
 		}
-		Helpers::removeNulls($this->args);
 	}
 }

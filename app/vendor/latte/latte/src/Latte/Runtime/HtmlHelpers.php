@@ -10,7 +10,7 @@ namespace Latte\Runtime;
 use Latte;
 use Latte\ContentType;
 use Nette;
-use function in_array, is_array, is_bool, is_float, is_int, is_string;
+use function count, in_array, is_array, is_bool, is_float, is_int, is_string, strlen;
 use const ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES, ENT_SUBSTITUTE, JSON_INVALID_UTF8_SUBSTITUTE, JSON_THROW_ON_ERROR, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE;
 
 
@@ -20,6 +20,13 @@ use const ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES, ENT_SUBSTITUTE, JSON_INVALID_UTF8
  */
 final class HtmlHelpers
 {
+	/** built-in content types of attributes: lowercase name or prefix with trailing * => ContentType::JavaScript, Css or Html */
+	public const AttributeContentTypes = [
+		'on*' => ContentType::JavaScript,
+		'style' => ContentType::Css,
+		'srcdoc' => ContentType::Html,
+	];
+
 	private const BooleanAttributes = [
 		'allowfullscreen' => 1, 'async' => 1, 'autofocus' => 1, 'autoplay' => 1, 'checked' => 1, 'controls' => 1,
 		'default' => 1, 'defer' => 1, 'disabled' => 1, 'formnovalidate' => 1, 'inert' => 1, 'ismap' => 1,
@@ -41,6 +48,11 @@ final class HtmlHelpers
 		'accesskey' => 1, 'class' => 1, 'headers' => 1, 'itemprop' => 1, 'ping' => 1, 'rel' => 1, 'role' => 1, 'sandbox' => 1,
 	];
 
+	/** named character references that browsers decode even without a semicolon */
+	private const LegacyEntities = '(?:[aeiou](?:acute|circ|grave|uml)|[ano]tilde|y(?:acute|uml)|aring|aelig|ccedil|eth|oslash|thorn|szlig'
+		. '|amp|lt|gt|quot|nbsp|iexcl|cent|pound|curren|yen|brvbar|sect|uml|copy|ord[fm]|[lr]aquo|not|shy|reg|macr|deg|plusmn'
+		. '|sup[123]|acute|micro|para|middot|cedil|frac(?:1[24]|34)|iquest|times|divide)';
+
 
 	/**
 	 * Escapes string for use inside HTML text.
@@ -51,9 +63,18 @@ final class HtmlHelpers
 			return $s->__toString();
 		}
 
-		$s = htmlspecialchars((string) $s, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
-		$s = strtr($s, ['{{' => '{<!-- -->{', '{' => '&#123;']);
-		return $s;
+		return self::separateBraces(htmlspecialchars((string) $s, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8'));
+	}
+
+
+	/**
+	 * Escapes string for use inside <textarea> and <title>, whose content is kept intact.
+	 */
+	public static function escapeRcData(mixed $s): string
+	{
+		return $s instanceof HtmlStringable || $s instanceof Nette\HtmlStringable
+			? self::convertHtmlToRcData($s->__toString())
+			: htmlspecialchars((string) $s, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	}
 
 
@@ -69,6 +90,27 @@ final class HtmlHelpers
 		$s = htmlspecialchars($s, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8');
 		$s = str_replace('{', '&#123;', $s);
 		return $s;
+	}
+
+
+	/**
+	 * Escapes HTML for use inside attribute holding an HTML document (srcdoc).
+	 */
+	public static function escapeHtmlAttr(mixed $s): string
+	{
+		$document = $s instanceof HtmlStringable || $s instanceof Nette\HtmlStringable
+			? $s->__toString()
+			: self::escapeAttr($s); // the value can land in the text as well as in an attribute of the document
+		return self::escapeAttr($document);
+	}
+
+
+	/**
+	 * Escapes string for use as JavaScript string inside HTML attribute value.
+	 */
+	public static function escapeJsAttr(mixed $s): string
+	{
+		return self::escapeAttr(Helpers::escapeJs($s));
 	}
 
 
@@ -115,7 +157,7 @@ final class HtmlHelpers
 			return self::convertHtmlToRawText($s->__toString());
 		}
 
-		return htmlspecialchars((string) $s, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8');
+		return self::escapeAttr($s); // the value can land in the text as well as in an attribute of the template
 	}
 
 
@@ -160,7 +202,44 @@ final class HtmlHelpers
 	 */
 	public static function convertAttrToHtml(string $s): string
 	{
-		return self::escapeAttr(html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+		return self::escapeText(html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+	}
+
+
+	/**
+	 * Converts an HTML attribute value to an attribute holding an HTML document (srcdoc).
+	 */
+	public static function convertAttrToHtmlAttr(string $s): string
+	{
+		return self::escapeHtmlAttr(html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+	}
+
+
+	/**
+	 * Converts an attribute value holding an HTML document (srcdoc) to HTML text.
+	 */
+	public static function convertHtmlAttrToHtml(string $s): string
+	{
+		$s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		return self::separateBraces(str_replace('&#123;', '{', $s)); // a brace of an escaped value is still an entity
+	}
+
+
+	/**
+	 * Converts HTML to content of <textarea> or <title>.
+	 */
+	public static function convertHtmlToRcData(string $s): string
+	{
+		return preg_replace('#</(textarea|title)#i', '&lt;/$1', $s);
+	}
+
+
+	/**
+	 * Converts content of <textarea> or <title> to HTML text.
+	 */
+	public static function convertRcDataToHtml(string $s): string
+	{
+		return self::separateBraces($s);
 	}
 
 
@@ -175,21 +254,72 @@ final class HtmlHelpers
 
 
 	/**
-	 * Returns the type category of an HTML attribute: 'bool', 'tristate', 'valuedBool', 'list', 'data', 'aria', 'style', or ''.
+	 * Separates braces by an empty comment so that {{ cannot form, not even with the adjacent output.
 	 */
-	public static function classifyAttributeType(string $name): string
+	private static function separateBraces(string $s): string
+	{
+		if (str_contains($s, '{')) {
+			$s = preg_replace('~\{(?=\{|$)~D', '{<!-- -->', $s);
+			$s = $s[0] === '{' ? '<!-- -->' . $s : $s;
+		}
+		return $s;
+	}
+
+
+	/**
+	 * Returns the content type of an HTML attribute (exact name first, then the longest prefix), or null if there is none.
+	 * @param  array<string, string>  $contentTypes  lowercase name or prefix with trailing * => content type, see AttributeContentTypes
+	 */
+	public static function matchAttributeContentType(string $name, array $contentTypes = self::AttributeContentTypes): ?string
 	{
 		$name = strtolower($name);
-		return match (true) {
+		if (isset($contentTypes[$name])) {
+			return $contentTypes[$name];
+		}
+
+		$res = null;
+		$len = 0;
+		foreach ($contentTypes as $key => $contentType) {
+			if (str_ends_with($key, '*') && strlen($key) > $len && str_starts_with($name, substr($key, 0, -1))) {
+				$res = $contentType;
+				$len = strlen($key);
+			}
+		}
+		return $res;
+	}
+
+
+	/**
+	 * Returns the type category of an HTML attribute: 'bool', 'tristate', 'valuedBool', 'list', 'data', 'aria', 'style', 'srcdoc', or ''.
+	 * @param  array<string, string>  $contentTypes  see matchAttributeContentType()
+	 */
+	public static function classifyAttributeType(string $name, array $contentTypes = self::AttributeContentTypes): string
+	{
+		static $cache = [];
+		if (isset($cache[$name]) && $cache[$name][0] === $contentTypes) {
+			return $cache[$name][1];
+		} elseif (count($cache) >= 1000) { // names in n:attr may come from data
+			$cache = [];
+		}
+
+		$key = $name;
+		$name = strtolower($name);
+		$contentType = self::matchAttributeContentType($name, $contentTypes);
+		$type = match (true) {
+			$contentType === ContentType::JavaScript => '',
+			$contentType === ContentType::Css => 'style',
+			$contentType === ContentType::Html => 'srcdoc',
+			$contentType !== null => throw new \LogicException("Unknown content type '$contentType' of attribute '$name'."),
 			isset(self::BooleanAttributes[$name]) => 'bool',
 			isset(self::TristateAttributes[$name]) => 'tristate',
 			isset(self::ValuedBooleanAttributes[$name]) => 'valuedBool',
 			isset(self::SpaceSeparatedAttributes[$name]) => 'list',
 			str_starts_with($name, 'data-') => 'data',
 			str_starts_with($name, 'aria-') => 'aria',
-			$name === 'style' => 'style',
 			default => '',
 		};
+		$cache[$key] = [$contentTypes, $type];
+		return $type;
 	}
 
 
@@ -272,6 +402,30 @@ final class HtmlHelpers
 			is_array($value) => self::formatArrayAttribute($namePart, $value, fn($v, $k) => is_string($k) ? $k . ': ' . $v : $v, '; '),
 			default => self::formatAttribute($namePart, $value),
 		};
+	}
+
+
+	/**
+	 * Formats HTML attribute 'srcdoc', whose value is an HTML document.
+	 */
+	public static function formatSrcdocAttribute(string $namePart, mixed $value, bool $migrationWarnings = false): string
+	{
+		if (!is_string($value) && !is_int($value) && !is_float($value) && !$value instanceof \Stringable) {
+			return self::formatAttribute($namePart, $value, $migrationWarnings);
+		}
+
+		if ($migrationWarnings
+			&& !$value instanceof HtmlStringable
+			&& !$value instanceof Nette\HtmlStringable
+			&& (preg_match('~<[a-z/!?]|&(?:#(?:\d|x[\da-f])|' . self::LegacyEntities . ')~i', $s = (string) $value)
+				|| html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8') !== $s) // the document differs from the text
+		) {
+			self::triggerMigrationWarning(
+				trim($namePart),
+				'string value: previously it was rendered as HTML, now it is escaped as text (wrap trusted HTML in Latte\Runtime\Html)',
+			);
+		}
+		return $namePart . '="' . self::escapeHtmlAttr($value) . '"';
 	}
 
 
@@ -369,6 +523,15 @@ final class HtmlHelpers
 
 
 	/**
+	 * Checks if the browser does not parse the content of the element as HTML, only decodes entities in it.
+	 */
+	public static function isRcDataElement(string $name): bool
+	{
+		return in_array(strtolower($name), ['textarea', 'title'], true);
+	}
+
+
+	/**
 	 * Determines if the given HTML attribute is a URL attribute that requires special handling.
 	 */
 	public static function isUrlAttribute(string $tag, string $attr): bool
@@ -414,6 +577,7 @@ final class HtmlHelpers
 
 		} elseif (self::isVoidElement($name) !== self::isVoidElement($origName ?? 'div') // non-void is default
 			|| in_array(strtolower($name), ['style', 'script'], true)
+			|| self::isRcDataElement($name) !== self::isRcDataElement($origName ?? 'div') // their content is escaped differently
 		) {
 			throw new Latte\RuntimeException("Forbidden: Cannot change element to <$name>");
 		}

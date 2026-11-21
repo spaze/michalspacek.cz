@@ -12,6 +12,7 @@ use Latte\CompileException;
 use Latte\Compiler\Nodes\Php as Node;
 use Latte\Compiler\Nodes\Php\{Expression, ExpressionNode, NameNode, Scalar};
 use function count, strlen;
+use const PHP_VERSION_ID;
 
 
 /**
@@ -62,6 +63,25 @@ final class TagParser
 	public function parseArguments(): Expression\ArrayNode
 	{
 		return $this->parse(self::SchemaArguments, recovery: true);
+	}
+
+
+	/**
+	 * Parses optional list of arguments passed to parameters, where no positional argument may follow a named one.
+	 */
+	public function parseCallArguments(): Expression\ArrayNode
+	{
+		$args = $this->parseArguments();
+		$named = false;
+		foreach ($args->items as $item) {
+			if ($item->key) {
+				$named = true;
+			} elseif ($named) {
+				trigger_error("Positional argument after a named argument is deprecated ($item->position)", E_USER_DEPRECATED);
+				break;
+			}
+		}
+		return $args;
 	}
 
 
@@ -143,7 +163,7 @@ final class TagParser
 	}
 
 
-	#[\Deprecated('use tryConsumeTokenBeforeUnquotedString()')]
+	#[\Deprecated('use tryConsumeTokenBeforeUnquotedString()', since: '3.0.5')]
 	public function tryConsumeModifier(string ...$kind): ?Token
 	{
 		trigger_error(__METHOD__ . '() was renamed to tryConsumeTokenBeforeUnquotedString()', E_USER_DEPRECATED);
@@ -331,6 +351,32 @@ final class TagParser
 			$this->throwReservedKeywordException(new Token(0, (string) $func->name, $func->name->position));
 		}
 		return $func;
+	}
+
+
+	/**
+	 * @param  array<Node\ArgumentNode|Node\VariadicPlaceholderNode|Node\ArgumentPlaceholderNode>  $args
+	 * @return array<Node\ArgumentNode|Node\VariadicPlaceholderNode|Node\ArgumentPlaceholderNode>
+	 */
+	private function checkPlaceholders(array $args): array
+	{
+		$partial = $unpack = null;
+		foreach ($args as $i => $arg) {
+			if ($arg instanceof Node\ArgumentNode) {
+				$unpack ??= $arg->unpack ? $arg : null;
+			} elseif ($arg instanceof Node\VariadicPlaceholderNode && $i < count($args) - 1) {
+				throw new CompileException('Variadic placeholder must be last', $arg->position);
+			} elseif ($arg instanceof Node\ArgumentPlaceholderNode || count($args) > 1) {
+				$partial ??= $arg;
+			}
+		}
+
+		if ($partial && PHP_VERSION_ID < 80600) {
+			throw new CompileException('Partial function application requires PHP 8.6', $partial->position);
+		} elseif ($partial && $unpack) {
+			throw new CompileException('Cannot combine partial application and unpacking', $unpack->position);
+		}
+		return $args;
 	}
 
 

@@ -8,7 +8,7 @@
 namespace Nette\Security;
 
 use Nette;
-use function count, is_array, is_string;
+use function is_array, is_string;
 
 
 /**
@@ -466,7 +466,7 @@ class Permission implements Authorizator
 			foreach ($resources as $resource) {
 				foreach ($roles as $role) {
 					$rules = &$this->getRules($resource, $role, create: true);
-					if (count($privileges) === 0) {
+					if ($privileges === []) {
 						$rules['allPrivileges']['type'] = $type;
 						$rules['allPrivileges']['assert'] = $assertion;
 						if (!isset($rules['byPrivilege'])) {
@@ -488,7 +488,7 @@ class Permission implements Authorizator
 						continue;
 					}
 
-					if (count($privileges) === 0) {
+					if ($privileges === []) {
 						if ($resource === self::All && $role === self::All) {
 							if ($type === $rules['allPrivileges']['type']) {
 								$rules = [
@@ -573,8 +573,8 @@ class Permission implements Authorizator
 
 				if ($privilege === self::All) {
 					if ($rules = $this->getRules($resource, self::All)) { // look for rule on 'allRoles' psuedo-parent
-						foreach ($rules['byPrivilege'] as $privilege => $rule) {
-							if (($result = $this->getRuleType($resource, null, $privilege)) === self::Deny) {
+						foreach ($rules['byPrivilege'] as $privilege2 => $rule) {
+							if (($result = $this->getRuleType($resource, null, $privilege2)) === self::Deny) {
 								break 2;
 							}
 						}

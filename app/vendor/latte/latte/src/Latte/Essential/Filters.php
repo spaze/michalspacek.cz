@@ -23,15 +23,21 @@ final class Filters
 {
 	public ?string $locale = null;
 
+	/** @var array<string, \NumberFormatter> */
+	private array $numberFormatters = [];
+
 
 	/**
 	 * Converts HTML to plain text.
 	 */
 	public static function stripHtml(FilterInfo $info, string|Stringable|null $s): string
 	{
-		$info->validate([null, 'html', 'html/attr', 'xml', 'xml/attr'], __FUNCTION__);
+		$info->validate([null, 'html', 'html/attr', 'html/attr/html', 'html/rcdata', 'xml', 'xml/attr'], __FUNCTION__);
+		$s = $info->contentType === 'html/attr/html'
+			? Latte\Runtime\HtmlHelpers::convertHtmlAttrToHtml((string) $s)
+			: (string) $s;
 		$info->contentType = ContentType::Text;
-		return Latte\Runtime\HtmlHelpers::convertHtmlToText((string) $s);
+		return Latte\Runtime\HtmlHelpers::convertHtmlToText($s);
 	}
 
 
@@ -41,8 +47,10 @@ final class Filters
 	public static function stripTags(FilterInfo $info, string|Stringable|null $s): string
 	{
 		$info->contentType ??= ContentType::Html;
-		$info->validate(['html', 'html/attr', 'xml', 'xml/attr'], __FUNCTION__);
-		return strip_tags((string) $s);
+		$info->validate(['html', 'html/attr', 'html/attr/html', 'html/rcdata', 'xml', 'xml/attr'], __FUNCTION__);
+		return $info->contentType === 'html/attr/html'
+			? Latte\Runtime\HtmlHelpers::escapeAttr(strip_tags(Latte\Runtime\HtmlHelpers::convertHtmlAttrToHtml((string) $s)))
+			: strip_tags((string) $s);
 	}
 
 
@@ -63,7 +71,7 @@ final class Filters
 		$indent = str_repeat(addcslashes($chars, '$\\'), max(0, $level));
 		if ($level < 1) {
 			// do nothing
-		} elseif ($info->contentType === ContentType::Html) {
+		} elseif (in_array($info->contentType, [ContentType::Html, ContentType::Xml], true)) {
 			$s = preg_replace_callback('#<(textarea|pre).*?</\1#si', fn($m) => strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A"), $s);
 			if (preg_last_error()) {
 				throw new Latte\RuntimeException(preg_last_error_msg());
@@ -222,13 +230,7 @@ final class Filters
 			return number_format($number, $patternOrDecimals, $decimalSeparator, $thousandsSeparator);
 		}
 
-		$formatter = new \NumberFormatter($this->locale, \NumberFormatter::DECIMAL);
-		if (is_string($patternOrDecimals)) {
-			$formatter->setPattern($patternOrDecimals);
-		} else {
-			$formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, $patternOrDecimals);
-		}
-		return $formatter->format($number);
+		return $this->getNumberFormatter($this->locale, $patternOrDecimals)->format($number);
 	}
 
 
@@ -250,12 +252,34 @@ final class Filters
 		if ($this->locale === null) {
 			$bytes = (string) round($bytes, $precision);
 		} else {
-			$formatter = new \NumberFormatter($this->locale, \NumberFormatter::DECIMAL);
-			$formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $precision);
-			$bytes = $formatter->format($bytes);
+			$bytes = $this->getNumberFormatter($this->locale, $precision, \NumberFormatter::MAX_FRACTION_DIGITS)->format($bytes);
 		}
 
 		return $bytes . ' ' . $unit;
+	}
+
+
+	/**
+	 * Returns a formatter that rounds half up like round() and number_format().
+	 */
+	private function getNumberFormatter(
+		string $locale,
+		string|int $patternOrDigits,
+		int $digitsAttribute = \NumberFormatter::FRACTION_DIGITS,
+	): \NumberFormatter
+	{
+		$key = $locale . (is_string($patternOrDigits) ? " p$patternOrDigits" : " $digitsAttribute:$patternOrDigits");
+		if (!isset($this->numberFormatters[$key])) {
+			$formatter = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+			$formatter->setAttribute(\NumberFormatter::ROUNDING_MODE, \NumberFormatter::ROUND_HALFUP);
+			if (is_string($patternOrDigits)) {
+				$formatter->setPattern($patternOrDigits);
+			} else {
+				$formatter->setAttribute($digitsAttribute, $patternOrDigits);
+			}
+			$this->numberFormatters[$key] = $formatter;
+		}
+		return $this->numberFormatters[$key];
 	}
 
 

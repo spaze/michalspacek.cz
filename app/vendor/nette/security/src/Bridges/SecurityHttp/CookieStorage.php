@@ -42,14 +42,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 
 		$this->uid = $uid;
 		$this->response->setCookie(
-			$this->cookieName,
-			$uid,
-			$this->cookieExpiration,
-			null,
-			$this->cookieDomain,
-			null,
-			true,
-			$this->cookieSameSite,
+			$this->cookieName, $uid, $this->cookieExpiration, null, $this->cookieDomain, null, true, $this->cookieSameSite,
 		);
 	}
 
@@ -57,11 +50,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	public function clearAuthentication(bool $clearIdentity): void
 	{
 		$this->uid = '';
-		$this->response->deleteCookie(
-			$this->cookieName,
-			null,
-			$this->cookieDomain,
-		);
+		$this->response->deleteCookie($this->cookieName, null, $this->cookieDomain);
 	}
 
 
@@ -73,7 +62,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 		}
 
 		return $this->uid
-			? [true, new Nette\Security\SimpleIdentity($this->uid), null]
+			? [true, new Nette\Security\TokenIdentity($this->uid), null]
 			: [false, null, null];
 	}
 

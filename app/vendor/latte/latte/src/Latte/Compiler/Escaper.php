@@ -11,7 +11,7 @@ use Latte;
 use Latte\Compiler\Nodes\Html\ElementNode;
 use Latte\ContentType;
 use Latte\Runtime\{Helpers, HtmlHelpers};
-use function is_string;
+use function is_string, sprintf, strlen;
 
 
 /**
@@ -23,7 +23,8 @@ class Escaper
 		Text = 'text',
 		JavaScript = 'js',
 		Css = 'css',
-		ICal = 'ical';
+		ICal = 'ical',
+		RcData = 'rcdata';
 
 	public const
 		HtmlText = 'html',
@@ -33,41 +34,77 @@ class Escaper
 		HtmlTag = 'html/tag',
 		HtmlAttribute = 'html/attr';
 
+	/** XML uses the HTML states, export() names them after XML */
+	public const
+		XmlText = 'xml',
+		XmlComment = 'xml/comment',
+		XmlAttribute = 'xml/attr';
+
 	private const Convertors = [
 		self::Text => [
 			self::HtmlText => 'HtmlHelpers::escapeText',
 			self::HtmlAttribute => 'HtmlHelpers::escapeAttr',
-			self::HtmlAttribute . '/' . self::JavaScript => 'HtmlHelpers::escapeAttr',
-			self::HtmlAttribute . '/' . self::Css => 'HtmlHelpers::escapeAttr',
+			self::HtmlAttribute . '/' . self::HtmlText => 'HtmlHelpers::escapeHtmlAttr',
+			self::HtmlText . '/' . self::RcData => 'HtmlHelpers::escapeRcData',
 			self::HtmlComment => 'HtmlHelpers::escapeComment',
-			'xml' => 'XmlHelpers::escapeText',
-			'xml/attr' => 'XmlHelpers::escapeAttr',
+			self::XmlText => 'XmlHelpers::escapeText',
+			self::XmlAttribute => 'XmlHelpers::escapeAttr',
+			self::XmlComment => 'HtmlHelpers::escapeComment',
 		],
 		self::JavaScript => [
 			self::HtmlText => 'HtmlHelpers::escapeText',
 			self::HtmlAttribute => 'HtmlHelpers::escapeAttr',
 			self::HtmlAttribute . '/' . self::JavaScript => 'HtmlHelpers::escapeAttr',
+			self::HtmlAttribute . '/' . self::HtmlText => 'HtmlHelpers::escapeHtmlAttr',
+			self::HtmlText . '/' . self::RcData => 'HtmlHelpers::escapeRcData',
 			self::HtmlRawText . '/' . self::JavaScript => 'HtmlHelpers::convertJSToRawText',
 			self::HtmlComment => 'HtmlHelpers::escapeComment',
+			self::XmlText => 'XmlHelpers::escapeText',
+			self::XmlAttribute => 'XmlHelpers::escapeAttr',
+			self::XmlComment => 'HtmlHelpers::escapeComment',
 		],
 		self::Css => [
 			self::HtmlText => 'HtmlHelpers::escapeText',
 			self::HtmlAttribute => 'HtmlHelpers::escapeAttr',
 			self::HtmlAttribute . '/' . self::Css => 'HtmlHelpers::escapeAttr',
+			self::HtmlAttribute . '/' . self::HtmlText => 'HtmlHelpers::escapeHtmlAttr',
+			self::HtmlText . '/' . self::RcData => 'HtmlHelpers::escapeRcData',
 			self::HtmlRawText . '/' . self::Css => 'HtmlHelpers::convertJSToRawText',
 			self::HtmlComment => 'HtmlHelpers::escapeComment',
+			self::XmlText => 'XmlHelpers::escapeText',
+			self::XmlAttribute => 'XmlHelpers::escapeAttr',
+			self::XmlComment => 'HtmlHelpers::escapeComment',
 		],
 		self::HtmlText => [
 			self::Text => 'HtmlHelpers::convertHtmlToText',
 			self::HtmlAttribute => 'HtmlHelpers::convertHtmlToAttr',
-			self::HtmlAttribute . '/' . self::JavaScript => 'HtmlHelpers::convertHtmlToAttr',
-			self::HtmlAttribute . '/' . self::Css => 'HtmlHelpers::convertHtmlToAttr',
+			self::HtmlAttribute . '/' . self::HtmlText => 'HtmlHelpers::escapeAttr',
+			self::HtmlText . '/' . self::RcData => 'HtmlHelpers::convertHtmlToRcData',
 			self::HtmlComment => 'HtmlHelpers::escapeComment',
 			self::HtmlRawText . '/' . self::HtmlText => 'HtmlHelpers::convertHtmlToRawText',
 		],
 		self::HtmlAttribute => [
 			self::HtmlText => 'HtmlHelpers::convertAttrToHtml',
+			self::HtmlAttribute . '/' . self::HtmlText => 'HtmlHelpers::convertAttrToHtmlAttr',
 		],
+		self::HtmlAttribute . '/' . self::HtmlText => [
+			self::HtmlText => 'HtmlHelpers::convertHtmlAttrToHtml',
+		],
+		self::XmlText => [
+			self::Text => 'HtmlHelpers::convertHtmlToText',
+			self::XmlAttribute => 'XmlHelpers::convertXmlToAttr',
+			self::XmlComment => 'HtmlHelpers::escapeComment',
+		],
+		self::XmlAttribute => [
+			self::XmlText => 'Helpers::nop', // XML escapes attribute values and text alike
+		],
+	];
+
+	/** JS contexts where included text or HTML becomes a string literal, which makes no block types compatible */
+	private const JsLiterals = [
+		self::HtmlAttribute . '/' . self::JavaScript => 'HtmlHelpers::escapeJsAttr',
+		self::HtmlRawText . '/' . self::JavaScript => 'Helpers::escapeJs',
+		self::JavaScript => 'Helpers::escapeJs',
 	];
 
 	private string $state = '';
@@ -76,6 +113,8 @@ class Escaper
 
 	public function __construct(
 		private string $contentType,
+		/** @var array<string, string> see HtmlHelpers::matchAttributeContentType() */
+		private readonly array $attributeContentTypes = HtmlHelpers::AttributeContentTypes,
 	) {
 		$this->state = in_array($contentType, [ContentType::Html, ContentType::Xml], true)
 			? self::HtmlText
@@ -89,6 +128,13 @@ class Escaper
 	}
 
 
+	/** @return array<string, string> */
+	public function getAttributeContentTypes(): array
+	{
+		return $this->attributeContentTypes;
+	}
+
+
 	public function getState(): string
 	{
 		return $this->state;
@@ -96,11 +142,14 @@ class Escaper
 
 
 	/**
-	 * Returns the current escaping state as a string (e.g. "html/attr/js").
+	 * Returns the current escaping state as a string (e.g. "html/attr/js", "xml/attr").
 	 */
 	public function export(): string
 	{
-		return $this->state . ($this->subType ? '/' . $this->subType : '');
+		$state = $this->contentType === ContentType::Xml && str_starts_with($this->state, self::HtmlText)
+			? self::XmlText . substr($this->state, strlen(self::HtmlText))
+			: $this->state;
+		return $state . ($this->subType ? '/' . $this->subType : '');
 	}
 
 
@@ -125,7 +174,7 @@ class Escaper
 
 		} else {
 			$this->state = self::HtmlText;
-			$this->subType = '';
+			$this->subType = $this->contentType === ContentType::Html && self::isRcData($el) ? self::RcData : '';
 		}
 	}
 
@@ -149,12 +198,8 @@ class Escaper
 		$this->subType = '';
 
 		if ($this->contentType === ContentType::Html && is_string($name)) {
-			$name = strtolower($name);
-			if (str_starts_with($name, 'on')) {
-				$this->subType = self::JavaScript;
-			} elseif ($name === 'style') {
-				$this->subType = self::Css;
-			}
+			// ContentType::JavaScript, Css and Html equal the subTypes JavaScript, Css and HtmlText
+			$this->subType = HtmlHelpers::matchAttributeContentType($name, $this->attributeContentTypes) ?? '';
 		}
 	}
 
@@ -175,12 +220,16 @@ class Escaper
 	{
 		return match ($this->contentType) {
 			ContentType::Html => match ($this->state) {
-				self::HtmlText => 'LR\HtmlHelpers::escapeText(' . $str . ')',
+				self::HtmlText => match ($this->subType) {
+					'' => 'LR\HtmlHelpers::escapeText(' . $str . ')',
+					self::RcData => 'LR\HtmlHelpers::escapeRcData(' . $str . ')',
+				},
 				self::HtmlTag => 'LR\HtmlHelpers::escapeTag(' . $str . ')',
 				self::HtmlAttribute => match ($this->subType) {
 					'' => 'LR\HtmlHelpers::escapeAttr(' . $str . ')',
 					self::JavaScript => 'LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs(' . $str . '))',
 					self::Css => 'LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeCss(' . $str . '))',
+					self::HtmlText => 'LR\HtmlHelpers::escapeHtmlAttr(' . $str . ')',
 				},
 				self::HtmlComment => 'LR\HtmlHelpers::escapeComment(' . $str . ')',
 				self::HtmlBogusTag => 'LR\HtmlHelpers::escapeTag(' . $str . ')',
@@ -217,7 +266,14 @@ class Escaper
 	{
 		return match ($this->contentType) {
 			ContentType::Html => match ($this->state) {
-				self::HtmlAttribute => "LR\\HtmlHelpers::escapeQuotes($str)",
+				self::HtmlText => match ($this->subType) {
+					self::RcData => "LR\\HtmlHelpers::convertHtmlToRcData((string) $str)",
+					default => $str,
+				},
+				self::HtmlAttribute => match ($this->subType) {
+					self::HtmlText => "LR\\HtmlHelpers::escapeAttr((string) $str)",
+					default => "LR\\HtmlHelpers::escapeQuotes($str)",
+				},
 				self::HtmlRawText => match ($this->subType) {
 					self::HtmlText => 'LR\HtmlHelpers::convertHtmlToRawText(' . $str . ')',
 					default => "LR\\HtmlHelpers::convertJSToRawText($str)",
@@ -252,10 +308,76 @@ class Escaper
 	 */
 	public static function getConvertor(string $source, string $dest): ?callable
 	{
+		return self::findConvertor($source, $dest, literals: true);
+	}
+
+
+	/**
+	 * Can a block of content type $type be overridden by a block of type $by?
+	 */
+	public static function canBeOverridden(string $type, string $by): bool
+	{
+		return self::findConvertor($type, $by, literals: false) !== null;
+	}
+
+
+	private static function findConvertor(string $source, string $dest, bool $literals): ?callable
+	{
 		return match (true) {
 			$source === $dest => Helpers::nop(...),
 			isset(self::Convertors[$source][$dest]) => 'Latte\Runtime\\' . self::Convertors[$source][$dest],
-			default => null,
+			$literals && in_array($source, [self::Text, self::HtmlText], true) && isset(self::JsLiterals[$dest])
+				=> 'Latte\Runtime\\' . self::JsLiterals[$dest],
+			$source === self::HtmlAttribute . '/' . self::HtmlText => ($convertor = self::findConvertor(self::HtmlText, $dest, $literals))
+				? fn(string $s): string => $convertor(HtmlHelpers::convertHtmlAttrToHtml($s))
+				: null,
+			$source === self::HtmlText . '/' . self::RcData => ($convertor = self::findConvertor(self::HtmlText, $dest, $literals))
+				? fn(string $s): string => $convertor(HtmlHelpers::convertRcDataToHtml($s))
+				: null,
+			default => self::getXmlHtmlConvertor($source, $dest, $literals),
 		};
+	}
+
+
+	/**
+	 * Converts XML and HTML into each other like HTML into HTML, which is deprecated.
+	 */
+	private static function getXmlHtmlConvertor(string $source, string $dest, bool $literals): ?callable
+	{
+		$isXml = fn(string $type): bool => $type === self::XmlText || str_starts_with($type, self::XmlText . '/');
+		$isHtml = fn(string $type): bool => $type === self::HtmlText || str_starts_with($type, self::HtmlText . '/');
+		if (!($isXml($source) && $isHtml($dest)) && !($isHtml($source) && $isXml($dest))) {
+			return null;
+		}
+
+		$toHtml = fn(string $type): string => $isXml($type) ? self::HtmlText . substr($type, strlen(self::XmlText)) : $type;
+		$twin = $source === self::XmlText
+			? self::HtmlText . '/' . self::RcData // XML text does not separate braces, like the content of <textarea>
+			: $toHtml($source);
+		$convertor = self::findConvertor($twin, $toHtml($dest), $literals);
+		if ($convertor !== null) {
+			trigger_error(sprintf(
+				'Converting content type %s into %s is deprecated, XML and HTML will be incompatible.',
+				strtoupper($source),
+				strtoupper($dest),
+			), E_USER_DEPRECATED);
+		}
+		return $convertor;
+	}
+
+
+	/**
+	 * Is the element inside <textarea> or <title>, whose content the browser does not parse as HTML?
+	 */
+	private static function isRcData(ElementNode $el): bool
+	{
+		$res = false;
+		for (; $el; $el = $el->parent) {
+			if ($el->is('svg') || $el->is('math')) {
+				return false; // <title> in SVG is an ordinary element
+			}
+			$res = $res || $el->is('textarea') || $el->is('title');
+		}
+		return $res;
 	}
 }
