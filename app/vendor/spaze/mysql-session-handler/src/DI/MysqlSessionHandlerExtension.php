@@ -8,7 +8,6 @@ use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use Spaze\Encryption\SymmetricKeyEncryption;
 use stdClass;
 
 /**
@@ -23,7 +22,7 @@ class MysqlSessionHandlerExtension extends CompilerExtension
 			'tableName' => Expect::string()->default('sessions'),
 			'lockTimeout' => Expect::int()->default(5),
 			'unchangedUpdateDelay' => Expect::int()->default(300),
-			'encryptionService' => Expect::string(SymmetricKeyEncryption::class),
+			'encryptionService' => Expect::string()->nullable(),
 		]);
 	}
 

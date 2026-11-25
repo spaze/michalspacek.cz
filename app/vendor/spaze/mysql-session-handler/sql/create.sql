@@ -2,5 +2,6 @@ CREATE TABLE `sessions` (
   `id` BINARY(32) NOT NULL,
   `timestamp` BIGINT UNSIGNED NOT NULL,
   `data` LONGTEXT CHARSET 'utf8mb4' NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `timestamp` (`timestamp`)
 ) ENGINE=InnoDB;
