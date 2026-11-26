@@ -33,6 +33,26 @@ sessionHandler:
 		sessionHandler: Spaze\Session\DI\MysqlSessionHandlerExtension
 ```
 
+## Garbage collection
+
+Expired sessions are deleted only when the handler's `gc()` method runs. It deletes rows with a `timestamp` older than the lifetime it's called with. When PHP calls it, the lifetime is `session.gc_maxlifetime`.
+
+The timestamp is updated when the session data changes. When the data doesn't change, the timestamp is updated at most once per `unchangedUpdateDelay` seconds, 300 by default. Keep the lifetime well above that.
+
+On MySQL servers with `@@server_id` from 2 to 9, `gc()` keeps rows longer, to avoid conflicts in master-master replication. For each server ID above 1, it adds a day or a tenth of the lifetime, whichever is more.
+
+Until a row is deleted, the expired session is still accepted, even with `session.use_strict_mode` enabled. PHP's own `files` session handler works the same way.
+
+PHP calls `gc()` when a session is started, with a probability of `session.gc_probability`/`session.gc_divisor`. It also calls it every time `session_gc()` is called while a session is active. With a low probability and little traffic, expired sessions can stay usable for a long time.
+
+Some Linux distributions set `session.gc_probability` to 0 and delete expired sessions with their own cron job instead. Such a job deletes only the files of the `files` session handler, not the rows in your sessions table. In that case, call the handler's `gc()` with your session lifetime from your own cron job.
+
+The `timestamp` column has an index, so that `gc()` doesn't have to read the whole table. With the default transaction isolation level, `gc()` keeps the rows it reads locked until it's done. Without the index, it reads and locks all rows, and other requests have to wait before they can save their sessions. If your table doesn't have the index, add it:
+
+```sql
+ALTER TABLE `sessions` ADD KEY `timestamp` (`timestamp`);
+```
+
 ## Features
 
 - For security reasons, the session id is stored in the database as an SHA-256 hash.
@@ -46,7 +66,7 @@ Follow the guide at [spaze/encryption](https://github.com/spaze/encryption#usage
 
 Define a new service:
 ```
-sessionEncryption: \Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
+sessionEncryption: \Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.session%, %encryption.activeKeyIds.session%, %encryption.prefixes.session%)
 ```
 
 Add the new encryption service to the session handler:
@@ -69,6 +89,17 @@ You can add a new column to the session table by calling `setAdditionalData()` i
 setAdditionalData(string $key, $value): void
 ```
 Use it to store, for example, the user id the session belongs to. See for example [this code](https://github.com/spaze/michalspacek.cz/blob/fbd438e8f4c1da658a88bc8c3bf5af59fcd063e6/app/src/Application/WebApplication.php#L42-L50) which uses the `Nette\Security\User::onLoggedIn` handler to do that.
+
+## Locking
+
+Requests using the same session wait for each other, the session is locked with a MySQL named lock from when it's started until it's closed. If the lock is not acquired within the timeout, 5 seconds by default, `Spaze\Session\Exceptions\SessionLockException` is thrown, so that the request doesn't overwrite changes made by the request holding the lock. Close the session early in long-running requests, with `session_write_close()` or `Nette\Http\Session::close()`, or change the timeout:
+```neon
+sessionHandler:
+    lockTimeout: 10
+```
+A timeout of 0 doesn't wait at all. On MySQL, a negative timeout waits indefinitely, like PHP's own `files` session handler, but MariaDB doesn't support negative timeouts.
+
+If the session is started automatically, for example by your framework when a request has a session cookie, the request holds the lock even if it doesn't use the session. The exception can then come from the framework's startup code, before your application's own error page can handle it.
 
 ## Credits
 
