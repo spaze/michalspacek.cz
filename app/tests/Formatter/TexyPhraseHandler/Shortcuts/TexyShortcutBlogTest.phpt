@@ -136,7 +136,7 @@ final class TexyShortcutBlogTest extends TestCase
 		]);
 		Assert::exception(function (): void {
 			$this->resolve('blog:fred', new Link(''));
-		}, JsonException::class, 'Syntax error');
+		}, JsonException::class, 'Syntax error%a?%');
 	}
 
 
