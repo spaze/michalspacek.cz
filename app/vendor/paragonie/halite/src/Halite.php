@@ -43,7 +43,7 @@ use function
  */
 final class Halite
 {
-    const VERSION              = '5.1.5';
+    const VERSION              = '5.2.0';
 
     const HALITE_VERSION_KEYS  = "\x31\x40\x05\x01";
     const HALITE_VERSION_FILE  = "\x31\x41\x05\x01";
