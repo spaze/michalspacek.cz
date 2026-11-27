@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "606c98ef3b3a29fd5085ccaff2f3f7d0",
+    "content-hash": "b501f7c452d2765e6ed1f4a1396ac4e2",
     "packages": [],
     "packages-dev": [
         {
@@ -573,16 +573,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "6.21.4",
+            "version": "7.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "af85daf7fbd762320ad2ac4e37f45f46c0fe3de2"
+                "reference": "16b5ac0498e8a0577f17f4f3d8fe5b427e5aa5b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/af85daf7fbd762320ad2ac4e37f45f46c0fe3de2",
-                "reference": "af85daf7fbd762320ad2ac4e37f45f46c0fe3de2",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/16b5ac0498e8a0577f17f4f3d8fe5b427e5aa5b5",
+                "reference": "16b5ac0498e8a0577f17f4f3d8fe5b427e5aa5b5",
                 "shasum": ""
             },
             "require": {
@@ -602,10 +602,10 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/6.21.4"
+                "source": "https://github.com/psalm/phar/tree/7.22.0"
             },
-            "time": "2026-11-24T00:44:54+00:00",
-            "published-time": "2026-11-24T00:45:06+00:00"
+            "time": "2026-11-26T22:10:52+00:00",
+            "published-time": "2026-11-26T22:11:01+00:00"
         },
         {
             "name": "roave/security-advisories",
