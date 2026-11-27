@@ -233,6 +233,10 @@ Use explicit `if ($x === null)` guards rather than the null coalescing throw (`?
 
 `TestCaseRunner::run(FooTest::class)` boots a full DI container via `Bootstrap::bootTest()` and resolves constructor parameters from the container by type. Tests are plain `Tester\TestCase` subclasses — no mocking framework, test doubles are hand-written classes in `app/src/Test/`. Test files live in `app/tests/` and use the `.phpt` extension.
 
+### Unused code detection in Psalm
+
+Psalm reports a class, a method or a property as unused when nothing that is itself used leads to it. What Nette, Nette Tester and the DI container call, it knows from `spaze/psalm-plugin-nette`, which `app/psalm.xml` loads by the path to its file in `dev-tools/`. When Psalm reports as unused something Nette calls, the plugin doesn't know that kind of call yet, and that is where to fix it. Don't suppress the issue in `psalm.xml` and don't mark the code `@api`, which is for a public API: a suppression only hides the report, Psalm goes on to report what the suppressed code calls.
+
 ### PHPStan-enforced API restrictions (`app/disallowed-calls.neon`)
 
 PHPStan at level max with strict rules. Project-specific restrictions:
