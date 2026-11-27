@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
+use MichalSpacekCz\Application\Cli\CliSapi;
 use Nette\Bootstrap\Configurator;
 use Nette\CommandLine\ColorDepth;
 use Nette\CommandLine\Console;
@@ -58,9 +59,11 @@ final class Bootstrap
 
 	/**
 	 * @param class-string<CliArgsProvider> $argsProvider
+	 * @psalm-assert 'cli' PHP_SAPI
 	 */
 	public static function bootCli(string $argsProvider): Container
 	{
+		CliSapi::enforce();
 		ServerEnv::setString('HTTPS', 'on');
 		try {
 			$cliArgs = CliArgs::parse($argsProvider);

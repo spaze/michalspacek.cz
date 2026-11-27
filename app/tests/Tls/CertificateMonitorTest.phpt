@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Tls;
 use DateTimeImmutable;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Net\DnsRecord;
+use MichalSpacekCz\Net\PublicIpAddressValidator;
 use MichalSpacekCz\Test\Http\Client\HttpClientMock;
 use MichalSpacekCz\Test\Net\DnsResolverMock;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -26,12 +27,15 @@ final class CertificateMonitorTest extends TestCase
 {
 
 	private const string NAME = 'example.com';
-	private const string ADDRESS = '192.0.2.1';
+
+	/** A public address, the monitor connects to no other; nothing connects to it here, the HTTP client is a mock */
+	private const string ADDRESS = '1.1.1.1';
 
 
 	public function __construct(
 		private readonly CertificateFactory $certificateFactory,
 		private readonly CertificatesApiClient $certificatesApiClient,
+		private readonly PublicIpAddressValidator $publicIpAddressValidator,
 		private readonly HttpClientMock $httpClient,
 	) {
 	}
@@ -73,6 +77,16 @@ final class CertificateMonitorTest extends TestCase
 	}
 
 
+	public function testAddressThatIsNotPublicStopsTheRun(): void
+	{
+		$served = $this->issue(10);
+		[$code, $output] = $this->runWithLogged($served, $this->notAfter($served), '10.0.0.1');
+		Assert::same(2, $code);
+		Assert::contains('ERROR: ' . self::NAME . ': 10.0.0.1 is not a public IP address', $output);
+		Assert::count(1, $this->httpClient->getRequests()); // the one to the API, none to the address
+	}
+
+
 	public function testApiRefusalStopsTheRun(): void
 	{
 		$this->httpClient->setStatusCode(403);
@@ -87,23 +101,24 @@ final class CertificateMonitorTest extends TestCase
 	/**
 	 * @return array{0: int, 1: string} The exit status and the printed report
 	 */
-	private function runWithLogged(OpenSSLCertificate $served, DateTimeImmutable $loggedNotAfter): array
+	private function runWithLogged(OpenSSLCertificate $served, DateTimeImmutable $loggedNotAfter, string $address = self::ADDRESS): array
 	{
 		$logged = new Certificate(self::NAME, null, self::NAME, [self::NAME], $loggedNotAfter->modify('-6 days'), $loggedNotAfter, null, new DateTimeImmutable());
 		$this->httpClient->setResponse(Json::encode(['message' => 'OK', 'certificates' => [$logged]]));
-		return $this->runMonitor($served, CliArgs::parse(CertificateMonitor::class, ['--no-ipv6']));
+		return $this->runMonitor($served, CliArgs::parse(CertificateMonitor::class, ['--no-ipv6']), $address);
 	}
 
 
 	/**
 	 * @return array{0: int, 1: string} The exit status and the printed report
 	 */
-	private function runMonitor(OpenSSLCertificate $served, CliArgs $cliArgs): array
+	private function runMonitor(OpenSSLCertificate $served, CliArgs $cliArgs, string $address = self::ADDRESS): array
 	{
 		$this->httpClient->setTlsCertificate($served);
 		$dnsResolver = new DnsResolverMock();
-		$dnsResolver->setRecords(self::NAME, [new DnsRecord(self::NAME, 'IN', 300, 'A', self::ADDRESS)]);
-		$monitor = new CertificateMonitor(new CertificateGatherer($this->certificateFactory, $this->httpClient, $dnsResolver), $this->certificatesApiClient, new Console(colorDepth: ColorDepth::None), $cliArgs);
+		$dnsResolver->setRecords(self::NAME, [new DnsRecord(self::NAME, 'IN', 300, 'A', $address)]);
+		$gatherer = new CertificateGatherer($this->certificateFactory, $this->httpClient, $dnsResolver, $this->publicIpAddressValidator);
+		$monitor = new CertificateMonitor($gatherer, $this->certificatesApiClient, new Console(colorDepth: ColorDepth::None), $cliArgs);
 		ob_start();
 		$code = $monitor->run();
 		$output = ob_get_clean();

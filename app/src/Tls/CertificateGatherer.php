@@ -11,6 +11,8 @@ use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException
 use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use MichalSpacekCz\Net\DnsResolver;
 use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
+use MichalSpacekCz\Net\Exceptions\IpAddressNotPublicException;
+use MichalSpacekCz\Net\PublicIpAddressValidator;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 
@@ -21,6 +23,7 @@ final readonly class CertificateGatherer
 		private CertificateFactory $certificateFactory,
 		private HttpClient $httpClient,
 		private DnsResolver $dnsResolver,
+		private PublicIpAddressValidator $publicIpAddressValidator,
 	) {
 	}
 
@@ -43,10 +46,14 @@ final readonly class CertificateGatherer
 		$records = $this->dnsResolver->getRecords($hostname, $includeIpv6 ? DNS_A | DNS_AAAA : DNS_A);
 		foreach ($records as $record) {
 			$ipAddress = null;
-			if ($record->getIpv6() !== null) {
-				$ipAddress = "[{$record->getIpv6()}]";
-			} elseif ($record->getIp() !== null) {
-				$ipAddress = $record->getIp();
+			try {
+				if ($record->getIpv6() !== null) {
+					$ipAddress = "[{$this->publicIpAddressValidator->validate($record->getIpv6())}]";
+				} elseif ($record->getIp() !== null) {
+					$ipAddress = $this->publicIpAddressValidator->validate($record->getIp());
+				}
+			} catch (IpAddressNotPublicException $e) {
+				throw new DnsGetRecordException("{$hostname}: {$e->getMessage()}", $e);
 			}
 			if ($ipAddress === null) {
 				throw new DnsGetRecordException("No IPv4/v6 address for {$hostname}");

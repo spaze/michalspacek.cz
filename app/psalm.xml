@@ -14,7 +14,6 @@
 	<projectFiles>
 		<directory name="." />
 		<ignoreFiles>
-			<directory name="bin" />
 			<directory name="temp" />
 			<directory name="vendor" />
 			<directory name="../dev-tools" />
@@ -37,6 +36,9 @@
 		<file name="stubs/Nette/Application/UI/Component.phpstub"/>
 		<file name="stubs/Nette/DI/Container.phpstub"/>
 	</stubs>
+	<plugins>
+		<plugin filename="../dev-tools/vendor/spaze/psalm-plugin-nette/src/Plugin.php"/> <!-- Loaded by the path to its file because psalm.phar is installed in dev-tools/ and loads plugins before the autoloader above -->
+	</plugins>
 	<issueHandlers>
 		<DeprecatedInterface>
 			<errorLevel type="suppress">
@@ -61,25 +63,6 @@
 				<referencedFunction name="Nette\Forms\Controls\TextArea::addRule" /> <!-- the same -->
 			</errorLevel>
 		</PossiblyInvalidArgument>
-		<PossiblyUnusedMethod>
-			<errorLevel type="suppress">
-				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
-				<referencedMethod name="/.*::createComponent.*/" /> <!-- Classes that extend Nette\Application\UI\Control -->
-				<referencedMethod name="/.*::get.*/" /> <!-- Getters used mostly in templates -->
-				<referencedMethod name="/.*::is.*/" /> <!-- Used mostly in templates -->
-				<referencedMethod name="/.*::has.*/" /> <!-- Used mostly in templates -->
-				<referencedMethod name="/.*::jsonSerialize$/" /> <!-- Used by Nette\Application\UI\Presenter::sendJson() or by Nette\Utils\Json::encode() -->
-				<referencedMethod name="/.*::render$/" /> <!-- Classes that extend Nette\Application\UI\Control -->
-				<referencedMethod name="/.*Presenter::inject.*/" />
-				<referencedMethod name="/.*Presenter::(action|render).*/" /> <!-- action and render methods are called by Nette\Application\UI\Presenter via reflection -->
-				<referencedMethod name="/.*Test::test.*/" />
-				<referencedMethod name="MichalSpacekCz\Application\Routing\RouterFactory::createRouter" /> <!-- Used in services.neon -->
-				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->
-				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
-				<referencedMethod name="MichalSpacekCz\Formatter\TexyFormatter::translateText" /> <!-- Used in the passkeys UI, separate PR #737 -->
-				<referencedMethod name="MichalSpacekCz\Application\Bootstrap::bootCli" /> <!-- Used in bin/*.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
-			</errorLevel>
-		</PossiblyUnusedMethod>
 		<PossiblyUnusedReturnValue>
 			<errorLevel type="suppress">
 				<file name="src/Form/Controls/TrainingControlsFactory.php" /> <!-- Keep all add<Field>() methods similar and return even if not used -->
@@ -92,26 +75,5 @@
 				<file name="src/Application/ContainerSecretsChecker.php"/> <!-- $compiler, $name and $initialization are declared by Nette\DI\CompilerExtension and set by Compiler::addExtension() right after construction -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
-		<ReservedWord>
-			<errorLevel type="suppress">
-				<directory name="src/Test" /> <!-- The void keyword is reported in @throws void -->
-			</errorLevel>
-		</ReservedWord>
-		<UnusedClass>
-			<errorLevel type="suppress">
-				<referencedClass name="*Presenter" />
-				<referencedClass name="MichalSpacekCz\Formatter\Placeholders\*" /> <!-- An array of these is passed to MichalSpacekCz\Formatter\TexyFormatter::__construct() by the DIC -->
-				<referencedClass name="MichalSpacekCz\Formatter\TexyPhraseHandler\Shortcuts\TexyShortcut*" /> <!-- An array of these is passed to MichalSpacekCz\Formatter\TexyPhraseHandler\TexyPhraseHandler::__construct() by the DIC -->
-				<referencedClass name="MichalSpacekCz\Templating\LatteLinter" /> <!-- Used in bin/latte-lint.php -->
-				<referencedClass name="MichalSpacekCz\SecurityTxtValidator\Fetch\*" /> <!-- Used in services.neon -->
-				<referencedClass name="MichalSpacekCz\Test\*\Null*" /> <!-- Used in tests.neon -->
-				<referencedClass name="MichalSpacekCz\Tls\CertificateMonitor" /> <!-- Used in bin/certmonitor.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
-				<referencedClass name="MichalSpacekCz\Training\Resolver\*" /> <!-- Used in services.neon -->
-				<referencedClass name="MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyDefault" /> <!-- Used in services.neon -->
-				<referencedClass name="MichalSpacekCz\Http\SecurityHeaders\IntegrityPolicy\IntegrityPolicyNone" /> <!-- Used in services.neon -->
-				<referencedClass name="MichalSpacekCz\Net\SystemDnsResolver" /> <!-- Used in services.neon -->
-				<referencedClass name="MichalSpacekCz\Http\Session\SessionGarbageCollector" /> <!-- Used in bin/clean_sessions.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
-			</errorLevel>
-		</UnusedClass>
 	</issueHandlers>
 </psalm>

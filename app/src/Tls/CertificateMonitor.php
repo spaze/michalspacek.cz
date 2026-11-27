@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Tls;
 use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
+use MichalSpacekCz\Application\Cli\CliSapi;
 use Nette\CommandLine\Command;
 use Nette\CommandLine\Console;
 use Override;
@@ -154,6 +155,7 @@ final class CertificateMonitor implements CliArgsProvider
 
 	private function message(?Certificate $certificate, string $format, string $message): void
 	{
+		CliSapi::enforce();
 		printf(
 			$format . "\n",
 			date(DATE_RFC3339),

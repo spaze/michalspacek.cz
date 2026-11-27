@@ -41,7 +41,7 @@ check-dependabot-directories:
 	bin/check-dependabot-directories.sh
 
 lint-php:
-	../dev-tools/vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub src/ public/ stubs/ tests/
+	../dev-tools/vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub src/ public/ stubs/ tests/ bin/
 
 lint-latte:
 	bin/latte-lint.php src/
