@@ -17,7 +17,8 @@
 		"spaze/coding-standard": "^1.9",
 		"spaze/phpcs-phar": "^4.0",
 		"spaze/phpstan-disallowed-calls": "^4.13",
-		"spaze/phpstan-disallowed-calls-nette": "^3.0"
+		"spaze/phpstan-disallowed-calls-nette": "^3.0",
+		"spaze/psalm-plugin-nette": "^0.1"
 	},
 	"replace": {
 		"symfony/polyfill-uuid": "*"
