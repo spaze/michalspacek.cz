@@ -96,6 +96,8 @@ Tests never build `CliArgs` by hand, they parse an explicit command line against
 
 `exit()` belongs in the script file, not in the service class. Services return values or throw exceptions; the script file handles output and exit codes. The exception is `bootCli()` answering `--help` and reporting a wrong command line, where nothing is running yet that could return a status.
 
+What a script prints goes to a terminal, not to a browser, and Psalm's taint analysis has to know that, or it reports printing something like an exception message as `TaintedHtml`. In a script it knows after the `bootCli()` call, which checks that it runs from the command line. A service that prints calls the same check, `CliSapi::enforce()`, in the method that prints, as `CertificateMonitor::message()` does. That's the fix, not a suppression.
+
 ### Config loading order
 
 `Bootstrap::boot()` loads these in sequence (later files win):
