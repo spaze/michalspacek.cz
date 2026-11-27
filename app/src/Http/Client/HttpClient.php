@@ -103,7 +103,7 @@ class HttpClient
 				throw new HttpClientRequestException($request->getUrl());
 			}
 			$result = stream_get_contents($fp);
-			$wrapperData = stream_get_meta_data($fp)['wrapper_data'];
+			$wrapperData = stream_get_meta_data($fp)['wrapper_data'] ?? [];
 			$options = stream_context_get_options($fp);
 			fclose($fp);
 		} catch (HttpStreamException $e) {
