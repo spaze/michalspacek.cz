@@ -12,9 +12,11 @@ jobs:
   tester-include-skipped:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php-version:
           - "8.5"
+          - "8.6"
     steps:
     - uses: actions/checkout@v7.0.1
       with:
