@@ -139,6 +139,7 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\SystemDnsResolver
 	- MichalSpacekCz\Net\IpRanges
+	- MichalSpacekCz\Net\PublicIpAddressValidator
 	- MichalSpacekCz\Pgp\Keyserver
 	- MichalSpacekCz\Presentation\Www\Talks\TalksDefaultTemplateParametersFactory
 	- MichalSpacekCz\Presentation\Www\Talks\TalksTalkTemplateParametersFactory
