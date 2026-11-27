@@ -92,11 +92,6 @@
 				<file name="src/Application/ContainerSecretsChecker.php"/> <!-- $compiler, $name and $initialization are declared by Nette\DI\CompilerExtension and set by Compiler::addExtension() right after construction -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
-		<ReservedWord>
-			<errorLevel type="suppress">
-				<directory name="src/Test" /> <!-- The void keyword is reported in @throws void -->
-			</errorLevel>
-		</ReservedWord>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
