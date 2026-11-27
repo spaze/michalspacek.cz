@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\TestCaseRunner;
+use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -50,8 +51,9 @@ final class DefaultTemplateTest extends TestCase
 		$presenter->flashMessage('waldo');
 		$template = $presenter->getTemplate();
 		assert($template instanceof DefaultTemplate);
-		assert(isset($template->flashes[0]));
-		Assert::same('waldo', $template->flashes[0]->message);
+		$flash = $template->flashes[0] ?? null;
+		assert($flash instanceof stdClass);
+		Assert::same('waldo', $flash->message);
 	}
 
 }
