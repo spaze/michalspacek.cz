@@ -730,7 +730,7 @@ final class File
             sodium_crypto_generichash_update($mac, $hkdfSalt);
             if (!is_null($aad)) {
                 sodium_crypto_generichash_update($mac, pack('P', Binary::safeStrlen($aad)));
-                // we do not support encrypting with insecure AAD values:
+                // Bind the AAD contents in the newer file format.
                 sodium_crypto_generichash_update($mac, $aad);
             }
             sodium_crypto_generichash_update($mac, pack('P', $input->remainingBytes()));
@@ -831,7 +831,7 @@ final class File
             if (!is_null($aad)) {
                 sodium_crypto_generichash_update($mac, pack('P', Binary::safeStrlen($aad)));
                 if ($config->HALITE_5_AAD_COMPAT) {
-                    // decrypt-only quirk we still support for decrypting old files to re-encrypt them:
+                    // Legacy AAD behavior, retained for reading old files:
                     trigger_error(
                         'Please re-encrypt this to ensure it is properly bound to AAD',
                         E_USER_WARNING
@@ -979,6 +979,7 @@ final class File
             sodium_crypto_generichash_update($mac, $hkdfSalt);
             if (!is_null($aad)) {
                 sodium_crypto_generichash_update($mac, pack('P', Binary::safeStrlen($aad)));
+                // Bind the AAD contents in the newer file format.
                 sodium_crypto_generichash_update($mac, $aad);
             }
             sodium_crypto_generichash_update($mac, pack('P', $input->remainingBytes()));
@@ -1111,7 +1112,7 @@ final class File
             if (!is_null($aad)) {
                 sodium_crypto_generichash_update($mac, pack('P', Binary::safeStrlen($aad)));
                 if ($config->HALITE_5_AAD_COMPAT) {
-                    // decrypt-only quirk we still support for decrypting old files to re-encrypt them:
+                    // Legacy AAD behavior, retained for reading old files:
                     trigger_error(
                         'Please re-encrypt this to ensure it is properly bound to AAD',
                         E_USER_WARNING

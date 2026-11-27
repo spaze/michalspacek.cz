@@ -447,8 +447,9 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
 
             $type = $this->getType($resolvedClass, $attribute);
 
-            // the current value is used only to denormalize typed attributes
-            if (null !== $type && ($attributeContext[self::DEEP_OBJECT_TO_POPULATE] ?? $this->defaultContext[self::DEEP_OBJECT_TO_POPULATE] ?? false)) {
+            // normalizers without a type extractor may resolve types themselves and use the current value;
+            // ObjectNormalizer doesn't use it untyped, and reading it could call any method named after the attribute
+            if ((null !== $type || (null === $this->propertyTypeExtractor && !$this instanceof ObjectNormalizer)) && ($attributeContext[self::DEEP_OBJECT_TO_POPULATE] ?? $this->defaultContext[self::DEEP_OBJECT_TO_POPULATE] ?? false)) {
                 $discriminatorMapping = $this->classDiscriminatorResolver?->getMappingForMappedObject($object);
 
                 try {
@@ -631,6 +632,11 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                             break;
                         case TypeIdentifier::FLOAT:
                             if (is_numeric($data)) {
+                                if ($type->isIdentifiedBy(TypeIdentifier::INT) && ctype_digit(ltrim($data, '-')) && \is_int($data + 0)) {
+                                    // an integer string goes to the int member of the union, like a JSON integer
+                                    continue 2;
+                                }
+
                                 return (float) $data;
                             }
 
@@ -650,9 +656,11 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                         case TypeIdentifier::STRING:
                             return (string) $data;
                         case TypeIdentifier::FLOAT:
+                            if (\is_int($data) && $type->isIdentifiedBy(TypeIdentifier::INT)) {
+                                continue 2;
+                            }
+
                             return (float) $data;
-                        case TypeIdentifier::INT:
-                            return (int) $data;
                     }
                 }
 
@@ -790,8 +798,8 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                 // floating-point numbers like 12.0 to 12 (the decimal part is dropped when possible).
                 // PHP's json_decode automatically converts Numbers without a decimal part to integers.
                 // To circumvent this behavior, integers are converted to floats when denormalizing JSON based formats and when
-                // a float is expected.
-                if (TypeIdentifier::FLOAT === $typeIdentifier && \is_int($data) && null !== $format && str_contains($format, JsonEncoder::FORMAT)) {
+                // a float is expected, unless int is accepted as well.
+                if (TypeIdentifier::FLOAT === $typeIdentifier && \is_int($data) && !$type->isIdentifiedBy(TypeIdentifier::INT) && null !== $format && str_contains($format, JsonEncoder::FORMAT)) {
                     return (float) $data;
                 }
 
@@ -953,8 +961,12 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
         }
 
         // asking PropertyInfo about attributes that the class doesn't have would fill its cache with each unknown key
-        if (null !== ($name = $this->getDeclaredAttributeName($currentClass, $attribute)) && null !== $type = $this->propertyTypeExtractor->getType($currentClass, $name)) {
-            return $this->typeCache[$key] = $type;
+        if (null !== $declared = $this->getDeclaredAttribute($currentClass, $attribute)) {
+            [$declaringClass, $name] = $declared;
+
+            if (null !== $type = $this->propertyTypeExtractor->getType($declaringClass, $name)) {
+                return $this->typeCache[$key] = $type;
+            }
         }
 
         if ($discriminatorMapping = $this->classDiscriminatorResolver?->getMappingForClass($currentClass)) {
@@ -963,8 +975,12 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
             }
 
             foreach ($discriminatorMapping->getTypesMapping() as $mappedClass) {
-                if (null !== ($name = $this->getDeclaredAttributeName($mappedClass, $attribute)) && null !== $type = $this->propertyTypeExtractor->getType($mappedClass, $name)) {
-                    return $this->typeCache[$key] = $type;
+                if (null !== $declared = $this->getDeclaredAttribute($mappedClass, $attribute)) {
+                    [$declaringClass, $name] = $declared;
+
+                    if (null !== $type = $this->propertyTypeExtractor->getType($declaringClass, $name)) {
+                        return $this->typeCache[$key] = $type;
+                    }
                 }
             }
         }
@@ -975,18 +991,20 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
     }
 
     /**
-     * Returns the name of the property, getter, setter or constructor argument that the attribute refers to, as PropertyInfo lists it.
+     * Returns the class and name of the property, getter, setter or constructor argument that the attribute refers to, as PropertyInfo lists it.
+     *
+     * @return array{string, string}|null
      */
-    private function getDeclaredAttributeName(string $class, string $attribute): ?string
+    private function getDeclaredAttribute(string $class, string $attribute): ?array
     {
         if (property_exists($class, $attribute)) {
-            return $attribute;
+            return [$class, $attribute];
         }
 
         if (method_exists($class, '__construct')) {
             foreach ((new \ReflectionMethod($class, '__construct'))->getParameters() as $parameter) {
                 if ($attribute === $parameter->name) {
-                    return $attribute;
+                    return [$class, $attribute];
                 }
             }
         }
@@ -996,7 +1014,14 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                 // method names are case-insensitive, so the name is read from the method, the way ReflectionExtractor::getProperties() does
                 $name = substr((new \ReflectionMethod($class, $prefix.$attribute))->name, 3);
 
-                return property_exists($class, lcfirst($name)) || (!property_exists($class, $name) && !preg_match('/^[A-Z]{2,}/', $name)) ? lcfirst($name) : $name;
+                return [$class, property_exists($class, lcfirst($name)) || (!property_exists($class, $name) && !preg_match('/^[A-Z]{2,}/', $name)) ? lcfirst($name) : $name];
+            }
+        }
+
+        // PropertyInfo doesn't resolve private properties of parent classes when asked about the child class
+        foreach (class_parents($class) ?: [] as $parent) {
+            if (property_exists($parent, $attribute)) {
+                return [$parent, $attribute];
             }
         }
 
