@@ -14,7 +14,6 @@
 	<projectFiles>
 		<directory name="." />
 		<ignoreFiles>
-			<directory name="bin" />
 			<directory name="temp" />
 			<directory name="vendor" />
 			<directory name="../dev-tools" />
@@ -64,11 +63,6 @@
 				<referencedFunction name="Nette\Forms\Controls\TextArea::addRule" /> <!-- the same -->
 			</errorLevel>
 		</PossiblyInvalidArgument>
-		<PossiblyUnusedMethod>
-			<errorLevel type="suppress">
-				<referencedMethod name="MichalSpacekCz\Application\Bootstrap::bootCli" /> <!-- Used in bin/*.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
-			</errorLevel>
-		</PossiblyUnusedMethod>
 		<PossiblyUnusedReturnValue>
 			<errorLevel type="suppress">
 				<file name="src/Form/Controls/TrainingControlsFactory.php" /> <!-- Keep all add<Field>() methods similar and return even if not used -->
@@ -81,12 +75,5 @@
 				<file name="src/Application/ContainerSecretsChecker.php"/> <!-- $compiler, $name and $initialization are declared by Nette\DI\CompilerExtension and set by Compiler::addExtension() right after construction -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
-		<UnusedClass>
-			<errorLevel type="suppress">
-				<referencedClass name="MichalSpacekCz\Templating\LatteLinter" /> <!-- Used in bin/latte-lint.php -->
-				<referencedClass name="MichalSpacekCz\Tls\CertificateMonitor" /> <!-- Used in bin/certmonitor.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
-				<referencedClass name="MichalSpacekCz\Http\Session\SessionGarbageCollector" /> <!-- Used in bin/clean_sessions.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
-			</errorLevel>
-		</UnusedClass>
 	</issueHandlers>
 </psalm>
